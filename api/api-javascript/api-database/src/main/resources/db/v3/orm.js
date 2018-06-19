@@ -158,7 +158,7 @@ ORM.prototype.validate = function(){
 	if(this.properties.constructor !== Array)
 		throw new Error("Illegal configuration: property 'properties' type is expected ot be Array. Instead, it was "+(typeof this.properties));
 	if(!this.getPrimaryKey())
-		throw new Error('Illegal configuration: No rimary key specifed');
+		throw new Error('Illegal configuration: No primary key specifed');
 	for(var i = 0; i< this.properties.length; i++){
 		var property = this.properties[i];
 		if(!property.name)

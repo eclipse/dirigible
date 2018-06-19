@@ -10,6 +10,9 @@
 
 "use strict";
 
+var database = require("db/v3/database");
+var globals = require("core/v3/globals");
+
 var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	if(orm === undefined)
 		throw Error('Illegal argument: orm['+ orm + ']');
@@ -25,7 +28,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		return sequences.nextval(this.sequenceName, databaseType, dataSourceName);
 	};	
 	
-	var conn = require("db/v3/database").getConnection(databaseType, dataSourceName);
+	var conn = database.getConnection(databaseType, dataSourceName);
 	try{
 		this.ormstatements = require('db/v3/ormstatements').create(this.orm, conn);
 	} finally {
@@ -785,62 +788,74 @@ DAO.prototype.dropTable = function(dropIdSequence) {
 };
 
 
-var toCamelCase = function(str){
-	return str.toLowerCase().replace(/(?:_| |\b)(\w)/g, function(str, p1, offset) {
-		return offset===0 ? p1 : p1.toUpperCase();
-	});
-};
+//var toCamelCase = function(str){
+//	return str.toLowerCase().replace(/(?:_| |\b)(\w)/g, function(str, p1, offset) {
+//		return offset===0 ? p1 : p1.toUpperCase();
+//	});
+//};
 
-var fromTableDef = exports.ormFromTable = function(tableDef){
-	var orm = {};
-	orm["table"] = tableDef["name"];
-	if(tableDef["columns"]){
-		orm["properties"] = tableDef["columns"].map(function(columnDef, idx, arr){
-			var property = {
-				"name": toCamelCase(columnDef["name"]),
-				"column": columnDef["name"],
-				"type": columnDef["type"],
-				"size": columnDef["length"] !== undefined && columnDef["length"] !=="0"? parseInt(columnDef["length"], 10) : undefined,
-				"id": columnDef["primaryKey"]==='true',
-				"required": columnDef["nullable"] !== 'true'
-			};
-			if(tableDef.constraints && tableDef.constraints.uniqueIndices && tableDef.constraints.uniqueIndices.columns && tableDef.constraints.uniqueIndices.columns.indexOf(columnDef['name'])>-1){
-				property["unique"] = true;
-			}
-			return property;
-		});
-	}
-	return orm;
-};
+//var fromTableDef = exports.ormFromTable = function(tableDef){
+//	var orm = {};
+//	orm["table"] = tableDef["name"];
+//	if(tableDef["columns"]){
+//		orm["properties"] = tableDef["columns"].map(function(columnDef, idx, arr){
+//			var property = {
+//				"name": toCamelCase(columnDef["name"]),
+//				"column": columnDef["name"],
+//				"type": columnDef["type"],
+//				"size": columnDef["length"] !== undefined && columnDef["length"] !=="0"? parseInt(columnDef["length"], 10) : undefined,
+//				"id": columnDef["primaryKey"]==='true',
+//				"required": columnDef["nullable"] !== 'true'
+//			};
+//			if(tableDef.constraints && tableDef.constraints.uniqueIndices && tableDef.constraints.uniqueIndices.columns && tableDef.constraints.uniqueIndices.columns.indexOf(columnDef['name'])>-1){
+//				property["unique"] = true;
+//			}
+//			return property;
+//		});
+//	}
+//	return orm;
+//};
 
 /**
  * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
  * a .table file, or any other text file contianing a standard dao orm definition.
  */
-exports.create = exports.dao = function(oDefinition, logCtxName, ds){
+exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName, databaseType){
 	var orm;
-	if(typeof oDefinition === 'string'){
-		var files = require('io/v3/files');
-		if(files.isReadable(oDefinition)){
-			var defText = files.readText(oDefinition);
-			try{
-				oDefinition = JSON.parse(defText);
-			} catch (parseError){
-				var logger = require('log/logging').getLogger("db.dao");
-				logger.error("Invalid JSON in {}", parseError, oDefinition);
-				throw parseError;
-			}
-		} else {
-			throw Error('Cannot get dao definition from ' + oDefinition + '. Check path and read permissions.');
-		}
-	} 
-
-	if(oDefinition["name"] && oDefinition["type"] && ["TABLE","VIEW"].indexOf(oDefinition["type"])>-1){
-		orm = fromTableDef(oDefinition);
-	} else {
+//	if(typeof oDefinition === 'string'){
+//		var files = require('io/v3/files');
+//		if(files.isReadable(oDefinition)){
+//			var defText = files.readText(oDefinition);
+//			try{
+//				oDefinition = JSON.parse(defText);
+//			} catch (parseError){
+//				var logger = require('log/logging').getLogger("db.dao");
+//				logger.error("Invalid JSON in {}", parseError, oDefinition);
+//				throw parseError;
+//			}
+//		} else {
+//			throw Error('Cannot get dao definition from ' + oDefinition + '. Check path and read permissions.');
+//		}
+//	} 
+//
+//	if(oDefinition["name"] && oDefinition["type"] && ["TABLE","VIEW"].indexOf(oDefinition["type"])>-1){
+//		orm = fromTableDef(oDefinition);
+//	} else {
 		orm = oDefinition;
-	}
-	return new DAO(orm, logCtxName, ds);
+		
+		var productName = globals.get(databaseType + "_" + dataSourceName);
+		if (!productName) {
+			productName = database.getProductName(databaseType, dataSourceName);
+			globals.set(databaseType + "_" + dataSourceName, productName);
+		}
+		
+		if (productName === "PostgreSQL") {
+			orm["properties"].map(function(property) {
+				property.column = property.column.toLowerCase();
+			});	
+		}
+//	}
+	return new DAO(orm, logCtxName, dataSourceName, databaseType);
 };
 
 //TODO: ability to defien easily associations on daos created from .table definitions. 

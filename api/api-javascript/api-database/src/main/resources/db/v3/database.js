@@ -34,6 +34,11 @@ exports.getMetadata = function(databaseType, datasourceName) {
 	return metadata;
 };
 
+exports.getProductName = function(databaseType, datasourceName) {
+	var productName = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getProductName', [databaseType, datasourceName]);
+	return productName;
+};
+
 exports.getConnection = function(databaseType, datasourceName) {
 	var connectionInstance = java.call('org.eclipse.dirigible.api.v3.db.DatabaseFacade', 'getConnection', [databaseType, datasourceName], true);
 	var connection = new Connection();
