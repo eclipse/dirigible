@@ -56,6 +56,7 @@ import org.eclipse.dirigible.database.ds.model.processors.ViewDropProcessor;
 import org.eclipse.dirigible.database.ds.model.transfer.TableDataReader;
 import org.eclipse.dirigible.database.ds.model.transfer.TableExporter;
 import org.eclipse.dirigible.database.ds.model.transfer.TableImporter;
+import org.eclipse.dirigible.database.ds.model.transfer.TableMetadataHelper;
 import org.eclipse.dirigible.database.ds.service.DataStructuresCoreService;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -1123,7 +1124,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		Connection connection = null;
 		try {
 			connection = this.dataSource.getConnection();
-			ResultSet primaryKeys = TableExporter.getPrimaryKeys(connection, tableName);
+			ResultSet primaryKeys = TableMetadataHelper.getPrimaryKeys(connection, tableName);
 			List<String> primaryKeysList = new ArrayList<String>();
 			while (primaryKeys.next()) {
 				String columnName = primaryKeys.getString(COLUMN_NAME);

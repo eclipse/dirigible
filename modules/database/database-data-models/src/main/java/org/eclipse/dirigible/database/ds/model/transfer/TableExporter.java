@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.database.ds.model.transfer;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public class TableExporter {
 
-	private static final String DATA_TYPE = "DATA_TYPE";
-	private static final String COLUMN_NAME = "COLUMN_NAME";
 	private static final String SELECT_FROM = "SELECT * FROM ";
 	private static final String THERE_IS_NO_DATA_IN_TABLE = "There is no data in table ";
 	private static final String COULD_NOT_RETRIEVE_TABLE_DATA = "Could not retrieve table data reason: Table name is null";
@@ -56,36 +53,10 @@ public class TableExporter {
 		}
 
 		try {
-
 			Connection connection = null;
-
 			try {
-
 				connection = dataSource.getConnection();
-
-				List<TableColumn> availableTableColumns = new ArrayList<TableColumn>();
-
-				ResultSet primaryKeys = getPrimaryKeys(connection, getTableName());
-
-				while (primaryKeys.next()) {
-					// pk columns
-					String columnName = primaryKeys.getString(COLUMN_NAME);
-					TableColumn tableColumn = new TableColumn(columnName, 0, true, true);
-					availableTableColumns.add(tableColumn);
-				}
-
-				ResultSet columns = getColumns(connection, getTableName());
-				while (columns.next()) {
-					// columns
-					String columnName = columns.getString(COLUMN_NAME);
-					int columnType = columns.getInt(DATA_TYPE);
-
-					TableColumn tableColumn = new TableColumn(columnName, columnType, false, true);
-					if (!exists(availableTableColumns, tableColumn)) {
-						availableTableColumns.add(tableColumn);
-					}
-				}
-
+				List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, getTableName());
 				setTableColumns(availableTableColumns.toArray(new TableColumn[] {}));
 				data = getDataForTable();
 
@@ -187,40 +158,6 @@ public class TableExporter {
 
 	public void setTableColumns(TableColumn[] tableColumns) {
 		this.tableColumns = tableColumns;
-	}
-
-	public static ResultSet getColumns(Connection connection, String name) throws SQLException {
-		DatabaseMetaData meta = connection.getMetaData();
-		if (name == null) {
-			throw new SQLException("Error on getting columns of table: null");
-		}
-		ResultSet columns = meta.getColumns(null, null, name, null);
-		if (columns.next()) {
-			return meta.getColumns(null, null, name, null);
-		}
-		columns = meta.getColumns(null, null, name.toLowerCase(), null);
-		if (columns.next()) {
-			return meta.getColumns(null, null, name.toLowerCase(), null);
-		}
-		columns = meta.getColumns(null, null, name.toUpperCase(), null);
-		return columns;
-	}
-
-	public static ResultSet getPrimaryKeys(Connection connection, String name) throws SQLException {
-		DatabaseMetaData meta = connection.getMetaData();
-		if (name == null) {
-			throw new SQLException("Error on getting primary keys of table: null");
-		}
-		ResultSet columns = meta.getPrimaryKeys(null, null, name);
-		if (columns.next()) {
-			return meta.getPrimaryKeys(null, null, name);
-		}
-		columns = meta.getPrimaryKeys(null, null, name.toLowerCase());
-		if (columns.next()) {
-			return meta.getPrimaryKeys(null, null, name.toLowerCase());
-		}
-		columns = meta.getPrimaryKeys(null, null, name.toUpperCase());
-		return columns;
 	}
 
 }
