@@ -6,7 +6,10 @@ function Entity(name) {
 Entity.prototype.type = 'PRIMARY'; // the type of the entity - PRIMARY, DEPENDENT, REPORT
 Entity.prototype.dataName = null;
 Entity.prototype.dataQuery = null; // database query in case of a report type of the entity
-Entity.prototype.menuKey = ''; // the hidden key for the menu
+Entity.prototype.dataCount = null; // database query for the count of the entities
+Entity.prototype.title = '';
+Entity.prototype.tooltip = '';
+Entity.prototype.icon = 'file-o';
 Entity.prototype.menuLabel = ''; // the visible name of the menu
 Entity.prototype.menuIndex = 100;
 Entity.prototype.layoutType = 'MANAGE';
