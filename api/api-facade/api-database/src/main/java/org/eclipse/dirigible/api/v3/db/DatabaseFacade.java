@@ -95,7 +95,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return metadata;
 	}
-
+	
 	/**
 	 * Gets the metadata.
 	 *
@@ -127,6 +127,58 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return metadata;
+	}
+	
+	/**
+	 * Gets the product name of the database.
+	 *
+	 * @param databaseType the database type
+	 * @param datasourceName the datasource name
+	 * @return the product name
+	 * @throws SQLException the SQL exception
+	 */
+	public static final String getProductName(String databaseType, String datasourceName) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, datasourceName);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Database Type {1} not known.", datasourceName, databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		String productName = DatabaseMetadataHelper.getProductName(dataSource);
+		return productName;
+	}
+	
+	/**
+	 * Gets the product name of the database.
+	 *
+	 * @param databaseType the database type
+	 * @return the product name
+	 * @throws SQLException the SQL exception
+	 */
+	public static final String getProductName(String databaseType) throws SQLException {
+		DataSource dataSource = getDataSource(databaseType, null);
+		if (dataSource == null) {
+			String error = format("No default DataSource in the Database of Type {0} not known.", databaseType);
+			throw new IllegalArgumentException(error);
+		}
+		String productName = DatabaseMetadataHelper.getProductName(dataSource);
+		return productName;
+	}
+	
+	/**
+	 * Gets the product name of the database.
+	 *
+	 * @param databaseType the database type
+	 * @return the product name
+	 * @throws SQLException the SQL exception
+	 */
+	public static final String getProductName() throws SQLException {
+		DataSource dataSource = getDataSource(null, null);
+		if (dataSource == null) {
+			String error = format("No default DataSource in the Default Database.");
+			throw new IllegalArgumentException(error);
+		}
+		String productName = DatabaseMetadataHelper.getProductName(dataSource);
+		return productName;
 	}
 
 	/**

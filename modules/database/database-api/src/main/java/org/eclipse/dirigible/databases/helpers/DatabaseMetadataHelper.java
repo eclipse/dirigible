@@ -376,5 +376,31 @@ public class DatabaseMetadataHelper {
 			}
 		}
 	}
+	
+	/**
+	 * Gets the product name
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @return the product name
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getProductName(DataSource dataSource) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
+			return database.getDatabaseProductName();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
 
 }
