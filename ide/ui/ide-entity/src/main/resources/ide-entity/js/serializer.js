@@ -10,12 +10,19 @@ function createModel(graph) {
 		
 		if (!graph.model.isEdge(child)) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
+			child.value.dataCount = child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
+			child.value.title = child.value.title ? child.value.title : child.value.name;
+			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
 			model.push('  <entity name="'+_.escape(child.value.name)+
 				'" dataName="'+_.escape(child.value.dataName)+
+				'" dataCount="'+_.escape(child.value.dataCount)+
 				'" dataQuery="'+_.escape(child.value.dataQuery)+
 				'" type="'+_.escape(child.value.type ? child.value.type : 'primary')+
+				'" title="'+_.escape(child.value.title)+
+				'" tooltip="'+_.escape(child.value.tooltip)+
+				'" icon="'+_.escape(child.value.icon)+
 				'" menuKey="'+_.escape(child.value.menuKey)+
 				'" menuLabel="'+_.escape(child.value.menuLabel)+
 				'" menuIndex="'+_.escape(child.value.menuIndex)+
@@ -136,16 +143,16 @@ function createModelJson(graph) {
 		if (graph.model.isEdge(child)) {
 			// Relationship Properties
 			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
-			child.source.value.relationshipName = relationName;
-			child.source.value.relationshipEntityName = child.target.parent.value.name;
-			child.source.value.widgetDropDownKey = child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name;
-			child.source.value.widgetDropDownValue = child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name;
+			child.source.value.relationshipName = _.escape(relationName);
+			child.source.value.relationshipEntityName = _.escape(child.target.parent.value.name);
+			child.source.value.widgetDropDownKey = _.escape(child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name);
+			child.source.value.widgetDropDownValue = _.escape(child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name);
 			
 			if (child.source.value.relationshipType === 'COMPOSITION') {
 				var composition = {};
-				composition.entityName = child.source.parent.value.name;
-				composition.entityProperty = child.source.value.name;
-				composition.localProperty = child.target.value.name;
+				composition.entityName = _.escape(child.source.parent.value.name);
+				composition.entityProperty = _.escape(child.source.value.name);
+				composition.localProperty = _.escape(child.target.value.name);
 				if (!compositions[child.target.parent.value.name]) {
 					compositions[child.target.parent.value.name] = [];
 				}
@@ -158,17 +165,21 @@ function createModelJson(graph) {
 		var child = graph.model.getChildAt(parent, i);
 		if (!graph.model.isEdge(child)) {
 			var entity = {};
-			entity.name = child.value.name;
-			entity.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
-			entity.dataQuery = child.value.dataQuery;
-			entity.type = child.value.type ? child.value.type : "primary";
-			entity.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
-			entity.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
+			entity.name = _.escape(child.value.name);
+			entity.dataName = _.escape(child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
+			entity.dataCount = _.escape(child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
+			entity.dataQuery = _.escape(child.value.dataQuery);
+			entity.type = _.escape(child.value.type ? child.value.type : "PRIMARY");
+			entity.title = _.escape(child.value.title ? child.value.title : child.value.name);
+			entity.tooltip = _.escape(child.value.tooltip ? child.value.tooltip : child.value.name);
+			entity.icon = _.escape(child.value.icon);
+			entity.menuKey = _.escape(child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase());
+			entity.menuLabel = _.escape(child.value.menuLabel ? child.value.menuLabel : child.value.name);
 			entity.menuIndex = child.value.menuIndex ? child.value.menuIndex : 100;
 			entity.layoutType = child.value.layoutType;
-			entity.perspectiveName = child.value.perspectiveName;
-			entity.perspectiveIcon = child.value.perspectiveIcon;
-			entity.perspectiveOrder = child.value.perspectiveOrder;
+			entity.perspectiveName = _.escape(child.value.perspectiveName);
+			entity.perspectiveIcon = _.escape(child.value.perspectiveIcon);
+			entity.perspectiveOrder = _.escape(child.value.perspectiveOrder);
 			entity.properties = [];
 			
 			if (compositions[entity.name]) {
@@ -182,13 +193,13 @@ function createModelJson(graph) {
 					var property = {};
 					
 					// General
-					property.name = childProperty.name;
+					property.name = _.escape(childProperty.name);
 					
 					// Data Properties
-					property.dataName = childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase();
+					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());
 					property.dataType = childProperty.dataType;
 					property.dataLength = childProperty.dataLength;
-					property.dataDefaultValue = childProperty.dataDefaultValue;
+					property.dataDefaultValue = _.escape(childProperty.dataDefaultValue);
 					property.dataPrimaryKey = childProperty.dataPrimaryKey ? childProperty.dataPrimaryKey : "false";
 					property.dataAutoIncrement = childProperty.dataAutoIncrement ? childProperty.dataAutoIncrement : "false";
 					property.dataNotNull = childProperty.dataNotNull ? childProperty.dataNotNull : "false";
@@ -199,21 +210,21 @@ function createModelJson(graph) {
 					// Relationship Properties
 					property.relationshipType = childProperty.relationshipType;
 					property.relationshipCardinality = childProperty.relationshipCardinality;
-					property.relationshipName = childProperty.relationshipName;
-					property.relationshipEntityName = childProperty.relationshipEntityName;
+					property.relationshipName = _.escape(childProperty.relationshipName);
+					property.relationshipEntityName = _.escape(childProperty.relationshipEntityName);
 					
 					// Widget Properties
 					property.widgetType = childProperty.widgetType;
 					property.widgetLength = childProperty.widgetLength;
-					property.widgetLabel = childProperty.widgetLabel;
-					property.widgetShortLabel = childProperty.widgetShortLabel;
-					property.widgetPattern = childProperty.widgetPattern;
-					property.widgetFormat = childProperty.widgetFormat;
-					property.widgetSection = childProperty.widgetSection;
-					property.widgetService = childProperty.widgetService;
+					property.widgetLabel = _.escape(childProperty.widgetLabel ? childProperty.widgetLabel : childProperty.name);
+					property.widgetShortLabel = _.escape(childProperty.widgetShortLabel ? childProperty.widgetShortLabel : childProperty.name);
+					property.widgetPattern = _.escape(childProperty.widgetPattern);
+					property.widgetFormat = _.escape(childProperty.widgetFormat);
+					property.widgetSection = _.escape(childProperty.widgetSection);
+					property.widgetService = _.escape(childProperty.widgetService);
 					property.widgetIsMajor = childProperty.widgetIsMajor ? childProperty.widgetIsMajor : "false";
-					property.widgetDropDownKey = childProperty.widgetDropDownKey;
-					property.widgetDropDownValue = childProperty.widgetDropDownValue;
+					property.widgetDropDownKey = _.escape(childProperty.widgetDropDownKey);
+					property.widgetDropDownValue = _.escape(childProperty.widgetDropDownValue);
 					
 					entity.properties.push(property);
 				}

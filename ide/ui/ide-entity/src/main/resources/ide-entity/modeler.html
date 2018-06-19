@@ -138,6 +138,12 @@
 						</div>
 					</div>
 					<div class="row">
+						<label class="col-xs-3 col-form-label">Database Count: </label>
+						<div class="col-xs-5">
+							<textarea class="form-control" type="text" placeholder="data query for entities count" ng-model="ctrl.$scope.$parent.cell.value.dataCount" cols="50" rows="10"></textarea>
+						</div>
+					</div>
+					<div class="row">
 						<label class="col-xs-3 col-form-label">Database Query: </label>
 						<div class="col-xs-5">
 							<textarea class="form-control" type="text" placeholder="data query in case of report entity" ng-model="ctrl.$scope.$parent.cell.value.dataQuery" cols="50" rows="10"></textarea>
@@ -148,6 +154,28 @@
 			    <div id="uiEntity" class="tab-pane fade">
 			      <br><br>
 			      <div class="form-group row">
+			        
+			        <div class="row">
+						<label class="col-xs-3 col-form-label">Title: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="title" ng-model="ctrl.$scope.$parent.cell.value.title" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Tooltip: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="tooltip" ng-model="ctrl.$scope.$parent.cell.value.tooltip" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Icon: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="icon" ng-model="ctrl.$scope.$parent.cell.value.icon" required="required">
+						</div>
+					</div>
+					
+					
+					
 			      	<div class="row">
 						<label class="col-xs-3 col-form-label">Menu Key: </label>
 						<div class="col-xs-5">

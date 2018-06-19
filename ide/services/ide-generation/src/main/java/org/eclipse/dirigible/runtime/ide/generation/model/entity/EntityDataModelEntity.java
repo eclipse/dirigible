@@ -13,9 +13,17 @@ public class EntityDataModelEntity {
 	
 	private String dataName;
 	
+	private String dataCount;
+	
 	private String dataQuery;
 	
 	private String type;
+	
+	private String title;
+	
+	private String tooltip;
+	
+	private String icon;
 	
 	private String menuKey;
 	
@@ -64,6 +72,20 @@ public class EntityDataModelEntity {
 	}
 	
 	/**
+	 * @return the dataCount
+	 */
+	public String getDataCount() {
+		return dataCount;
+	}
+
+	/**
+	 * @param dataCount the dataCount to set
+	 */
+	public void setDataCount(String dataCount) {
+		this.dataCount = dataCount;
+	}
+	
+	/**
 	 * @return the dataQuery
 	 */
 	public String getDataQuery() {
@@ -89,6 +111,48 @@ public class EntityDataModelEntity {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the tooltip
+	 */
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	/**
+	 * @param tooltip the tooltip to set
+	 */
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
+	}
+
+	/**
+	 * @return the icon
+	 */
+	public String getIcon() {
+		return icon;
+	}
+
+	/**
+	 * @param icon the icon to set
+	 */
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 	/**

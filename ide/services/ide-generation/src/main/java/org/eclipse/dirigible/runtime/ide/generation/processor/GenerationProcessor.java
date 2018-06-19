@@ -412,8 +412,12 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.put("name", entity.getName());
 			model.put("type", entity.getType());
 			model.put("dataName", entity.getDataName());
+			model.put("dataCount", entity.getDataCount());
 			model.put("dataQuery", entity.getDataQuery());
 			model.put("layoutType", entity.getLayoutType());
+			model.put("title", entity.getTitle());
+			model.put("tooltip", entity.getTooltip());
+			model.put("icon", entity.getIcon());
 			model.put("menuKey", entity.getMenuKey());
 			model.put("menuLabel", entity.getMenuLabel());
 			model.put("menuIndex", entity.getMenuIndex());
