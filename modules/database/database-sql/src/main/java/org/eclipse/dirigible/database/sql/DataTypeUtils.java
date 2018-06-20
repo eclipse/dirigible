@@ -19,6 +19,7 @@ import java.sql.Types;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The Class DataTypeUtils.
@@ -137,6 +138,11 @@ public class DataTypeUtils {
 	public static Integer getDatabaseTypeByJavaType(Class clazz) {
 		Integer type = JAVA_TYPE_TO_DATABASE_TYPE.get(clazz);
 		if (type == null) {
+			for (Entry<Class, Integer> entry : JAVA_TYPE_TO_DATABASE_TYPE.entrySet()) {
+				if (entry.getKey().isAssignableFrom(clazz)) {
+					return entry.getValue();
+				}
+			}
 			throw new SqlException(format("Class {0} does not have mapping to a data type", clazz));
 		}
 		return type;
