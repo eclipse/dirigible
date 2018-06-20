@@ -326,6 +326,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 
 	private void distributeByLayoutType(List<Map<String, Object>> models, GenerationTemplateModelParameters parameters) {
 		
+		List<Map<String, Object>> uiPrimaryModels = new ArrayList<>();
 		List<Map<String, Object>> uiManageModels = new ArrayList<>();
 		List<Map<String, Object>> uiListModels = new ArrayList<>();
 		List<Map<String, Object>> uiManageMasterModels = new ArrayList<>();
@@ -345,6 +346,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			Object layoutType = model.get("layoutType");
 			Boolean isPrimary = model.get("type") != null ? "PRIMARY".equals(model.get("type").toString()) : false;
 			Boolean isReport = model.get("type") != null ? "REPORT".equals(model.get("type").toString()) : false;
+			if (isPrimary) {
+				uiPrimaryModels.add(model);
+			}
 			if ("MANAGE".equals(layoutType) && isPrimary) {
 				uiManageModels.add(model);
 			} else if ("LIST".equals(layoutType) && isPrimary) {
@@ -366,7 +370,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			} else if ("REPORT_PIE".equals(layoutType) && isReport) {
 				uiReportPieModels.add(model);
 			}
-			
+
 			String perspectiveName = model.get("perspectiveName").toString();
 			if (perspectiveName != null && !perspectiveCheck.contains(perspectiveName)) {
 				Map<String, Object> uiPerspective = new HashMap<String, Object>();
@@ -388,6 +392,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				perspectiveCheck.add(perspectiveName);
 			}
 		}
+		parameters.getParameters().put("uiPrimaryModels", uiPrimaryModels);
 		parameters.getParameters().put("uiManageModels", uiManageModels);
 		parameters.getParameters().put("uiListModels", uiListModels);
 		parameters.getParameters().put("uiManageMasterModels", uiManageMasterModels);

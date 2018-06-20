@@ -10,12 +10,16 @@
 
 exports.getTile = function() {
 	return {
-#if($perspectiveName)
+#if($title)
+		'name': '${title}',
+#elseif($perspectiveName)
 		'name': '${perspectiveName}',
 #else
 		'name': '${projectName}',
 #end
-#if($perspectiveIcon)
+#if($icon)
+		'icon': '${icon}',
+#elseif($perspectiveIcon)
 		'icon': '${perspectiveIcon}',
 #else
 		'icon': 'life-ring',
