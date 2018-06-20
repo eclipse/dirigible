@@ -21,7 +21,11 @@ for (var i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
 }
 
 tiles.sort(function(p, n) {
-	return parseInt(p.order, 0) - parseInt(n.order, 0);
+	var result = parseInt(p.order, 0) - parseInt(n.order, 0);
+	if (result === 0) {
+		result = p.name > n.name ? 1 : p.name < n.name ? -1 : 0;
+	}
+	return result;
 });
 
 response.println(JSON.stringify(tiles));

@@ -6,7 +6,7 @@
 					<i class="fa fa-{{next.icon}} fa-4x"></i>
 				</div>
 				<div class="col-xs-9 text-right">
-					<div class="huge">26</div>
+					<div class="huge">{{next.count}}</div>
 					<div>{{next.name}}</div>
 				</div>
 			</div>

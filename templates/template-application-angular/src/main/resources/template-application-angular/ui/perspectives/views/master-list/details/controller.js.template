@@ -19,7 +19,7 @@ angular.module('page')
 			on('${launchpadName}.${projectName}.${name}.refresh', callback);
 		},
 #foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName)
+#if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName != "")
 		on${property.relationshipEntityName}Modified: function(callback) {
 			on('${launchpadName}.${projectName}.${property.relationshipEntityName}.modified', callback);
 		},
@@ -106,7 +106,7 @@ angular.module('page')
 
 	$messageHub.onEntityRefresh(load);
 #foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName)
+#if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName != "")
 	${dollar}messageHub.on${property.relationshipEntityName}Modified(${property.name.toLowerCase()}OptionsLoad);
 #end
 #end
