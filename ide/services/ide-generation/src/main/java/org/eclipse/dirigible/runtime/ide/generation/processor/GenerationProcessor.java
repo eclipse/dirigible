@@ -375,6 +375,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder"));
 				uiPerspective.put("launchpadName", model.get("launchpadName"));
 				uiPerspective.put("extensionName", model.get("extensionName"));
+				uiPerspective.put("brand", model.get("brand"));
 				uiPerspective.put(GenerationParameters.PARAMETER_WORKSPACE_NAME, model.get(GenerationParameters.PARAMETER_WORKSPACE_NAME));
 				uiPerspective.put(GenerationParameters.PARAMETER_PROJECT_NAME, model.get(GenerationParameters.PARAMETER_PROJECT_NAME));
 				uiPerspective.put(GenerationParameters.PARAMETER_FILE_NAME, model.get(GenerationParameters.PARAMETER_FILE_NAME));

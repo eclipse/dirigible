@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{brand}} | {{moduleName}}</title>
+    <title>{{brand}} | {{perspectiveName}}</title>
 
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
