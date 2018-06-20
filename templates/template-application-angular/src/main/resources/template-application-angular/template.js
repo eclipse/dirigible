@@ -51,24 +51,32 @@ exports.getTemplate = function() {
 			'collection': 'uiPerspectives'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.extension.template', 
-			'action': 'generate',
-			'rename': 'ui/{{perspectiveName}}/extensions/tile/tile.extension',
-			'collection': 'uiPerspectives'
-		}, {
-			'_section': 'Extensions',
-			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.js.template', 
-			'action': 'generate',
-			'rename': 'ui/{{perspectiveName}}/extensions/tile/tile.js',
-			'engine': 'velocity',
-			'collection': 'uiPerspectives'
-		}, {
-			'_section': 'Extensions',
 			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/view.extensionpoint.template', 
 			'action': 'generate',
 			'rename': 'ui/{{perspectiveName}}/extensions/view.extensionpoint',
 			'collection': 'uiPerspectives'
+		},
+
+
+
+		{
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/{{name}}/extensions/tile/tile.extension',
+			'collection': 'uiPrimaryModels'
 		}, {
+			'_section': 'Extensions',
+			'location': '/template-application-angular/ui/perspectives/extensions/tile/tile.js.template', 
+			'action': 'generate',
+			'rename': 'ui/{{perspectiveName}}/views/{{name}}/extensions/tile/tile.js',
+			'engine': 'velocity',
+			'collection': 'uiPrimaryModels'
+		},
+
+
+
+		{
 			'_section': 'Extensions',
 			'location': '/template-application-angular/ui/perspectives/views/manage/extensions/entity.extension.template', 
 			'action': 'generate',
