@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -163,16 +164,23 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			}
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
-
+			
+			List<String> columnNames = new ArrayList<>();
 			for (int i = 1; i <= columnCount; i++ ) {
 			  String name = rsmd.getColumnName(i);
+			  columnNames.add(name);
 			  if ("ACCESS_URI".equals(name)) {
 				  logger.warn("Upgrading Security Access Synchronizer from 3.1.x version to 3.2.x ...");
 				  Statement drop = connection.createStatement();
 				  drop.executeUpdate("DROP TABLE DIRIGIBLE_SECURITY_ACCESS");
 				  logger.warn("Upgrade of Security Access Synchronizer from 3.1.x version to 3.2.x passed successfully.");
-				  break;
 			  }
+			}
+			if (!columnNames.contains("ACCESS_HASH")) {
+				logger.warn("Upgrading Security Access Synchronizer from 3.2.1 version to 3.2.2 ...");
+				  Statement drop = connection.createStatement();
+				  drop.executeUpdate("DROP TABLE DIRIGIBLE_SECURITY_ACCESS");
+				  logger.warn("Upgrade of Security Access Synchronizer from 3.2.1 version to 3.2.2 passed successfully.");
 			}
 		}
 		return true;
@@ -315,7 +323,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(resource.getContent());
 			String hash = DigestUtils.md5Hex(resource.getContent());
 			try {
-				securityCoreService.dropModifiedAccessDefinitions(resource.getPath(), hash);
+				securityCoreService.dropModifiedAccessDefinitions(getRegistryPath(resource), hash);
 			} catch (AccessException e) {
 				logger.error("Error deleting the modified Access Definitions", e);
 			}

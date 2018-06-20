@@ -512,7 +512,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ?").where("ACCESS_HASH <> ?").toString();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ? AND ACCESS_HASH <> ?").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
 				try {
 					statement.setString(1, location);
