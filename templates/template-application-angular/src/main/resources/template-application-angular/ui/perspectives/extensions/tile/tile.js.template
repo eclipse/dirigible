@@ -8,6 +8,8 @@
  * SAP - initial API and implementation
  */
 
+var dao = require('${projectName}/data/dao/${name}.js')
+
 exports.getTile = function() {
 	return {
 #if($title)
@@ -25,6 +27,7 @@ exports.getTile = function() {
 		'icon': 'life-ring',
  #end
 		'location': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+		'count': dao.count(),
 #if($perspectiveOrder)
 		'order': '${perspectiveOrder}'
 #else
