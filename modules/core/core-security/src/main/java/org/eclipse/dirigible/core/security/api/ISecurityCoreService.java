@@ -121,11 +121,13 @@ public interface ISecurityCoreService extends ICoreService {
 	 *            the role
 	 * @param description
 	 *            the description
+	 * @param hash
+	 *            the hash
 	 * @return the access definition
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description)
+	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description, String hash)
 			throws AccessException;
 
 	/**
@@ -200,10 +202,12 @@ public interface ISecurityCoreService extends ICoreService {
 	 *            the role
 	 * @param description
 	 *            the description
+	 * @param hash
+	 *            the hash
 	 * @throws AccessException
 	 *             the access exception
 	 */
-	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description) throws AccessException;
+	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description, String hash) throws AccessException;
 
 	/**
 	 * Gets the access definitions.
