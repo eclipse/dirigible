@@ -45,8 +45,8 @@
 #end
 #end
 					<td>
-						<button type="button" ng-click="openDeleteDialog(next)" class="btn btn-lg btn-danger pull-right"><i class="fa fa-remove"></i></button>
-    					<button type="button" ng-click="openEditDialog(next)" class="btn btn-lg btn-success pull-right" style="margin-right: 0.5em"><i class="fa fa-pencil"></i></button>
+						<i class="close fa fa-remove" ng-click="openDeleteDialog(next)" style="font-size: 1.4em"></i>
+-						<i class="close fa fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em; font-size: 1.4em"></i>
 					</td>
 				</tr>
 			</tbody>
