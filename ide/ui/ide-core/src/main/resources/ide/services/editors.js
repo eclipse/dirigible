@@ -15,8 +15,14 @@ var editors = [];
 var editorExtensions = extensions.getExtensions('ide-editor');
 for (var i=0; i<editorExtensions.length; i++) {
     var module = editorExtensions[i];
-    var editorExtension = require(module);
-    var editor = editorExtension.getEditor();
-    editors.push(editor);
+    try {
+    	var editorExtension = require(module);
+    	var editor = editorExtension.getEditor();
+    	editors.push(editor);	
+    } catch(error) {
+    	console.error('Error occured while loading metadata for the editor: ' + module);
+    	console.error(error);
+    }
+    
 }
 response.println(JSON.stringify(editors));

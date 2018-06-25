@@ -18,6 +18,8 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
+import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSource;
 import org.mozilla.javascript.commonjs.module.provider.ModuleSourceProviderBase;
@@ -81,7 +83,11 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 	private ModuleSource createModule(String module) throws URISyntaxException {
 		byte[] sourceCode;
 		ModuleSource moduleSource;
-		sourceCode = executor.retrieveModule(root, module).getContent();
+		try {
+			sourceCode = executor.retrieveModule(root, module).getContent();
+		} catch (RepositoryNotFoundException e) {
+			throw new EcmaError(null, module, 0, 0, e.getMessage());
+		}
 		moduleSource = new ModuleSource(new InputStreamReader(new ByteArrayInputStream(sourceCode), StandardCharsets.UTF_8), null, new URI(module),
 				null, null);
 		return moduleSource;

@@ -15,8 +15,14 @@ var views = [];
 var viewExtensions = extensions.getExtensions('ide-view');
 for (var i=0; i<viewExtensions.length; i++) {
     var module = viewExtensions[i];
-    viewExtension = require(module);
-    var view = viewExtension.getView();
-    views.push(view);
+    try {
+    	var viewExtension = require(module);
+    	var view = viewExtension.getView();
+    	views.push(view);	
+    } catch(error) {
+    	console.error('Error occured while loading metadata for the view: ' + module);
+    	console.error(error);
+    }
+    
 }
 response.println(JSON.stringify(views));
