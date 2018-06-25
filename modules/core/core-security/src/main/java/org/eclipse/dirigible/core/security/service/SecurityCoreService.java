@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -221,7 +222,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description)
+	public AccessDefinition createAccessDefinition(String location, String scope, String path, String method, String role, String description, String hash)
 			throws AccessException {
 		AccessDefinition accessDefinition = new AccessDefinition();
 		accessDefinition.setLocation(location);
@@ -230,6 +231,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		accessDefinition.setMethod(method);
 		accessDefinition.setRole(role);
 		accessDefinition.setDescription(description);
+		accessDefinition.setHash(hash);
 		accessDefinition.setCreatedBy(UserFacade.getName());
 		accessDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
@@ -342,7 +344,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description) throws AccessException {
+	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description, String hash) throws AccessException {
 		try {
 			Connection connection = null;
 			try {
@@ -354,6 +356,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 				accessDefinition.setMethod(method);
 				accessDefinition.setRole(role);
 				accessDefinition.setDescription(description);
+				accessDefinition.setHash(hash);
 				accessPersistenceManager.update(connection, accessDefinition);
 				clearCache();
 			} finally {
@@ -502,6 +505,30 @@ public class SecurityCoreService implements ISecurityCoreService {
 	 */
 	public void clearCache() {
 		CACHE.clear();
+	}
+
+	public void dropModifiedAccessDefinitions(String location, String hash) throws AccessException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ? AND ACCESS_HASH <> ?").toString();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				try {
+					statement.setString(1, location);
+					statement.setString(2, hash);
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
 	}
 
 }

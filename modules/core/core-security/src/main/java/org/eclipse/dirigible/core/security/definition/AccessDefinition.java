@@ -47,6 +47,9 @@ public class AccessDefinition {
 
 	@Column(name = "ACCESS_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
+	
+	@Column(name = "ACCESS_HASH", columnDefinition = "VARCHAR", nullable = true, length = 32)
+	private String hash;
 
 	@Column(name = "ACCESS_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
@@ -175,6 +178,25 @@ public class AccessDefinition {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/**
+	 * Gets the hash.
+	 *
+	 * @return the hash
+	 */
+	public String getHash() {
+		return hash;
+	}
+
+	/**
+	 * Sets the hash.
+	 *
+	 * @param hash
+	 *            the new hash
+	 */
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
 	/**

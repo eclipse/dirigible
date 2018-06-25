@@ -15,9 +15,15 @@ var mainmenu = [];
 var menuExtensions = extensions.getExtensions('ide-menu');
 for (var i=0; i<menuExtensions.length; i++) {
     var module = menuExtensions[i];
-    menuExtension = require(module);
-    var menu = menuExtension.getMenu();
-    mainmenu.push(menu);
+    try {
+    	menuExtension = require(module);
+    	var menu = menuExtension.getMenu();
+    	mainmenu.push(menu);	
+    } catch(error) {
+    	console.error('Error occured while loading metadata for the menu: ' + module);
+    	console.error(error);
+    }
+    
 }
 mainmenu.sort(function(p, n) {
 	return (parseInt(p.order) - parseInt(n.order));

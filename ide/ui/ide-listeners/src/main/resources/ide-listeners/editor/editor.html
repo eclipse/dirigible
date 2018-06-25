@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="page">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link type="image/png" rel="shortcut icon" href="/services/v3/web/resources/images/favicon.png" />
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/ide.css" />
+</head>
+
+<body ng-controller="PageController">
+	<div class="container">
+		<div class="page-header">
+			<h1>Listener Description: {{file}}</h1>
+		</div>
+		<form>
+			<div class="form-group">
+				<label>Name</label>
+				<input type="text" class="form-control" placeholder="Name of the Queue or the Topic" ng-model="listener.name">
+			</div>
+			<div class="form-group">
+				<label>Type</label>
+				<div>
+				    <select class="form-control" ng-model="listener.type">
+				    	<option ng-repeat="option in types" value="{{option.key}}">{{option.label}}</option>
+				    </select>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label>Handler</label>
+				<input type="text" class="form-control" placeholder="Enter handler" ng-model="listener.handler">
+			</div>
+			<div class="form-group">
+				<label>Description</label>
+				<textarea class="form-control" placeholder="Enter description" ng-model="listener.description" cols=20 rows=5></textarea>
+			</div>
+			<button type="button" class="btn btn-primary" ng-click="save()">Save</button>
+		</form>
+	</div>
+
+
+	<script type="text/javascript" src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+
+	<script src="/services/v3/web/ide/ui/message-hub.js"></script>
+
+	<script type="text/javascript" src="editor.js"></script>
+
+</body>
+</html>

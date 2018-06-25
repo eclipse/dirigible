@@ -15,9 +15,14 @@ var templates = [];
 var templateExtensions = extensions.getExtensions('ide-template');
 for (var i=0; i<templateExtensions.length; i++) {
     var module = templateExtensions[i];
-    templateExtension = require(module);
-    var template = templateExtension.getTemplate();
-    template.id = module;
-    templates.push(template);
+    try {
+    	var templateExtension = require(module);
+    	var template = templateExtension.getTemplate();
+    	template.id = module;
+    	templates.push(template);	
+    } catch(error) {
+    	console.error('Error occured while loading metadata for the template: ' + module);
+    	console.error(error);
+    }
 }
 response.println(JSON.stringify(templates));
