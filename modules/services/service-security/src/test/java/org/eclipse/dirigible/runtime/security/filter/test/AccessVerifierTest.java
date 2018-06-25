@@ -65,12 +65,12 @@ public class AccessVerifierTest extends AbstractGuiceTest {
 		securityCoreService.createRole("test_role2", "/abc/my.roles", "Test 2");
 		securityCoreService.createRole("test_role3", "/abc/my.roles", "Test 3");
 
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role1", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role2", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "GET", "test_role1", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "*", "test_role2", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/e/f", "*", "test_role3", "Test");
-		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/x", "*", "test_role3", "Test");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role1", "Test", "1234");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d", "GET", "test_role2", "Test", "1234");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "GET", "test_role1", "Test", "1234");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/", "*", "test_role2", "Test", "1234");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/d/e/f", "*", "test_role3", "Test", "1234");
+		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "/a/b/c/x", "*", "test_role3", "Test", "1234");
 
 		List<AccessDefinition> matchingAccessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, "HTTP", "/a/b", "GET");
 		assertTrue(matchingAccessDefinitions.isEmpty());

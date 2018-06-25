@@ -164,6 +164,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 					if (data[0]) {
 						$scope.selectedDatasource = data[0];
 						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
+						messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
 					} else {
 						$scope.selectedDatasource = undefined;
 					}
