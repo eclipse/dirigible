@@ -1,0 +1,138 @@
+angular.module('page', []);
+angular.module('page').controller('PageController', function ($scope, $http) {
+	
+	
+	$scope.types = [
+		{"key":"VARCHAR","label":"VARCHAR"},
+		{"key":"CHAR","label":"CHAR"},
+		{"key":"DATE","label":"DATE"},
+		{"key":"TIME","label":"TIME"},
+		{"key":"TIMESTAMP","label":"TIMESTAMP"},
+		{"key":"INTEGER","label":"INTEGER"},
+		{"key":"TINYINT","label":"TINYINT"},
+		{"key":"BIGINT","label":"BIGINT"},
+		{"key":"SMALLINT","label":"SMALLINT"},
+		{"key":"REAL","label":"REAL"},
+		{"key":"DOUBLE","label":"DOUBLE"},
+		{"key":"BOOLEAN","label":"BOOLEAN"},
+		{"key":"BLOB","label":"BLOB"},
+		{"key":"DECIMAL","label":"DECIMAL"},
+		{"key":"BIT","label":"BIT"}
+	];
+	
+	$scope.openNewDialog = function() {
+		$scope.actionType = 'new';
+		$scope.entity = {};
+		$scope.entity.type = "VARCHAR";
+		$scope.entity.length = 20;
+		toggleEntityModal();
+	};
+
+	$scope.openEditDialog = function(entity) {
+		$scope.actionType = 'update';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.openDeleteDialog = function(entity) {
+		$scope.actionType = 'delete';
+		$scope.entity = entity;
+		toggleEntityModal();
+	};
+
+	$scope.close = function() {
+		load();
+		toggleEntityModal();
+	};
+	
+	$scope.create = function() {
+		var exists = $scope.table.columns.filter(function(e) {
+			return e.name === $scope.entity.name;
+		});
+		if (exists.length === 0) {
+			$scope.table.columns.push($scope.entity);
+			toggleEntityModal();
+		} else {
+			$scope.error = "Column with a name [" + $scope.entity.name + "] already exists!";
+		}
+		
+	};
+
+	$scope.update = function() {
+		// auto-wired
+		toggleEntityModal();
+	};
+
+	$scope.delete = function() {
+		$scope.table.columns = $scope.table.columns.filter(function(e) {
+			return e !== $scope.entity;
+		}); 
+		toggleEntityModal();
+	};
+
+	
+	function toggleEntityModal() {
+		$('#entityModal').modal('toggle');
+		$scope.error = null;
+	}
+
+	
+	var messageHub = new FramesMessageHub();
+	var contents;
+	
+	function getResource(resourcePath) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', resourcePath, false);
+        xhr.send();
+        if (xhr.status === 200) {
+        	return xhr.responseText;
+        }
+	}
+	
+	function loadContents(file) {
+		if (file) {
+			return getResource('/services/v3/ide/workspaces' + file);
+		}
+		console.error('file parameter is not present in the URL');
+	}
+
+	function load() {
+		var searchParams = new URLSearchParams(window.location.search);
+		$scope.file = searchParams.get('file');
+		contents = loadContents($scope.file);
+		$scope.table = JSON.parse(contents);
+	}
+	
+	load();
+
+	function saveContents(text) {
+		console.log('Save called...');
+		if ($scope.file) {
+			var xhr = new XMLHttpRequest();
+			xhr.open('PUT', '/services/v3/ide/workspaces' + $scope.file);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4) {
+					console.log('file saved: ' + $scope.file);
+				}
+			};
+			xhr.send(text);
+			messageHub.post({data: $scope.file}, 'editor.file.saved');
+		} else {
+			console.error('file parameter is not present in the request');
+		}
+	}
+
+	$scope.save = function() {
+		contents = JSON.stringify($scope.table);
+		saveContents(contents);
+	};
+	
+	$scope.$watch(function() {
+		var table = JSON.stringify($scope.table);
+		if (contents !== table) {
+			messageHub.post({data: $scope.file}, 'editor.file.dirty');
+		}
+	});
+	
+
+});
