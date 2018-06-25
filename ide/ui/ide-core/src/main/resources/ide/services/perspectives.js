@@ -15,9 +15,15 @@ var perspectives = [];
 var perspectiveExtensions = extensions.getExtensions('ide-perspective');
 for (var i=0; i<perspectiveExtensions.length; i++) {
     var module = perspectiveExtensions[i];
-    perspectiveExtension = require(module);
-    var perspective = perspectiveExtension.getPerspective();
-    perspectives.push(perspective);
+    try {
+    	var perspectiveExtension = require(module);
+    	var perspective = perspectiveExtension.getPerspective();
+    	perspectives.push(perspective);
+    } catch(error) {
+    	console.error('Error occured while loading metadata for the perspective: ' + module);
+    	console.error(error);
+    }
+    
 }
 perspectives.sort(function(p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
