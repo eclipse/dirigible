@@ -53,10 +53,16 @@ angular.module('preview', [])
 				url += '/wiki';
 				break;
 			case 'edm':
-				return;
 			case 'dsm':
-				return;
 			case 'bpmn':
+			case 'job':
+			case 'listener':
+			case 'extensionpoint':
+			case 'extension':
+			case 'table':
+			case 'view':
+			case 'access':
+			case 'roles':
 				return;
 			default:
 				url += '/web';
