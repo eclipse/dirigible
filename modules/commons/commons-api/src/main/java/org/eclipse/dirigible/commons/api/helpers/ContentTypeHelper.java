@@ -424,6 +424,30 @@ public class ContentTypeHelper {
 	
 	/** The Constant APPLICATION_ENTITY_DATA_MODEL. */
 	public static final String APPLICATION_ENTITY_DATA_MODEL = "application/entity-data-model+xml";
+	
+	/** The Constant APPLICATION_JSON_JOB. */
+	public static final String APPLICATION_JSON_JOB = "application/json+job";
+	
+	/** The Constant APPLICATION_JSON_LISTENER. */
+	public static final String APPLICATION_JSON_LISTENER = "application/json+listener";
+	
+	/** The Constant APPLICATION_JSON_TABLE. */
+	public static final String APPLICATION_JSON_TABLE = "application/json+table";
+	
+	/** The Constant APPLICATION_JSON_VIEW. */
+	public static final String APPLICATION_JSON_VIEW = "application/json+view";
+	
+	/** The Constant APPLICATION_JSON_ACCESS. */
+	public static final String APPLICATION_JSON_ACCESS = "application/json+access";
+	
+	/** The Constant APPLICATION_JSON_ROLES. */
+	public static final String APPLICATION_JSON_ROLES = "application/json+roles";
+	
+	/** The Constant APPLICATION_JSON_EXTENSION_POINT. */
+	public static final String APPLICATION_JSON_EXTENSION_POINT = "application/json+extension-point";
+	
+	/** The Constant APPLICATION_JSON_EXTENSION. */
+	public static final String APPLICATION_JSON_EXTENSION = "application/json+extension";
 
 	/** The Constant CONTENT_TYPES. */
 	private static final Map<String, String> CONTENT_TYPES = new HashMap<String, String>();
@@ -617,12 +641,18 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("xml", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("json", APPLICATION_JSON); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("js", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
-		TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$
+		//TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON_TABLE); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON_VIEW); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("job", APPLICATION_JSON_JOB); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("listener", APPLICATION_JSON_LISTENER); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("extensionpoint", APPLICATION_JSON_EXTENSION_POINT); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("extension", APPLICATION_JSON_EXTENSION); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("access", APPLICATION_JSON_ACCESS); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("roles", APPLICATION_JSON_ROLES); //$NON-NLS-1$
+		//TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
+		//TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
+		//TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("wsdl", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsl", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xslt", TEXT_XML); //$NON-NLS-1$
@@ -642,6 +672,10 @@ public class ContentTypeHelper {
 		// TEXT_CONTENT_TYPES.put("svg", "image/svg+xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		TEXT_CONTENT_TYPES.put("tsv", TEXT_TAB_SEPARATED_VALUES); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("dsv", TEXT_DELIMITER_SEPARATED_VALUES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("append", TEXT_DELIMITER_SEPARATED_VALUES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("replace", TEXT_DELIMITER_SEPARATED_VALUES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("delete", TEXT_DELIMITER_SEPARATED_VALUES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("update", TEXT_DELIMITER_SEPARATED_VALUES); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("uls", TEXT_IULS); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("htc", TEXT_X_COMPONENT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("vcf", TEXT_X_VCARD); //$NON-NLS-1$
