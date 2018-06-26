@@ -96,6 +96,8 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 			case 'DOUBLE':
 			case 'FLOAT':
 				return parseFloat(value);
+			case 'BOOLEAN':
+				return value ? 'true' : 'false';
 			default:
 				return value;
 		}
@@ -180,7 +182,7 @@ DAO.prototype.validateEntity = function(entity, skip){
 	var mandatories = this.orm.getMandatoryProperties();
 	for(var i = 0; i< mandatories.length; i++){
 		var propName = mandatories[i].name;
-		if(skip && skip.indexOf(propName)>-1)
+		if((skip && skip.indexOf(propName)>-1) || mandatories[i].type.toUpperCase() === 'BOOLEAN')
 			continue;
 		var propValue = entity[propName];
 		if(propValue === undefined || propValue === null){
