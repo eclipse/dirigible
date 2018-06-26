@@ -45,6 +45,7 @@
 		<module>resources-fonts</module>
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
+		<module>resources-jqplot</module>
 	</modules>
 
 	<profiles>
