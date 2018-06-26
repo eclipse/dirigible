@@ -19,47 +19,27 @@
 
 	<div class="container">
 		<div class="page-header">
-			<h1>Table Description: {{file}}</h1>
+			<h1>Access Description: {{file}}</h1>
 		</div>
 		<form>
-			<div class="form-group">
-				<label>Type</label>
-				<input type="text" class="form-control" ng-model="table.type" value="TABLE" readonly>
-			</div>
-			<div class="form-group">
-				<label>Name</label>
-				<input type="text" class="form-control" placeholder="Enter name" ng-model="table.name">
-			</div>
-			
-			
 			<div class="container">
 				<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
 				<table class="table product-table">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Type</th>
-							<th>Length</th>
-							<th>Primary Key</th>
-							<th>Unique</th>
-							<th>Nullable</th>
-							<th>Default</th>
-							<th>Precision</th>
-							<th>Scale</th>
+							<th>Path</th>
+							<th>Method</th>
+							<th>Scope</th>
+							<th>Roles</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="next in table.columns">
-							<td>{{next.name}}</td>
-							<td>{{next.type}}</td>
-							<td>{{next.length}}</td>
-							<td><span class="fa" ng-class="{'fa-square-o': !next.primaryKey , 'fa-check-square-o': next.primaryKey}"></td>
-							<td><span class="fa" ng-class="{'fa-square-o': !next.unique , 'fa-check-square-o': next.unique}"></td>
-							<td><span class="fa" ng-class="{'fa-square-o': !next.nullable , 'fa-check-square-o': next.nullable}"></span></td>
-							<td>{{next.defaultValue}}</td>
-							<td>{{next.precision}}</td>
-							<td>{{next.scale}}</td>
+						<tr ng-repeat="next in access.constraints">
+							<td>{{next.path}}</td>
+							<td>{{next.method}}</td>
+							<td>{{next.scope}}</td>
+							<td>{{next.rolesLine}}</td>
 							<td>
 								<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
 								<i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
@@ -78,9 +58,9 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Column</h3>
-					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Column</h3>
-					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Column</h3>
+					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Constraint</h3>
+					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Constraint</h3>
+					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Constraint</h3>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -91,48 +71,32 @@
 					</div>
 					<form ng-hide="actionType === 'delete'">
 						<div class="form-group">
-							<label>Name</label>
-							<input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
+							<label>Path</label>
+							<input type="text" class="form-control" placeholder="Enter path" ng-model="entity.path">
 						</div>
 						<div class="form-group">
-						    <label for="type">Type: </label>
+						    <label for="type">Method: </label>
 						    <div>
-							    <select class="form-control" name="type" id="type" ng-model="entity.type">
-							    	<option ng-repeat="option in types" value="{{option.key}}">{{option.label}}</option>
+							    <select class="form-control" name="method" id="method" ng-model="entity.method">
+							    	<option ng-repeat="option in methods" value="{{option.key}}">{{option.label}}</option>
 							    </select>
 							</div>
 						</div>
 						<div class="form-group">
-							<label>Length</label>
-							<input type="number" class="form-control" placeholder="Enter length" ng-model="entity.length">
+						    <label for="type">Scope: </label>
+						    <div>
+							    <select class="form-control" name="scope" id="scope" ng-model="entity.scope">
+							    	<option ng-repeat="option in scopes" value="{{option.key}}">{{option.label}}</option>
+							    </select>
+							</div>
 						</div>
 						<div class="form-group">
-							<label>Primary Key</label>
-							<input type="checkbox" class="form-control" placeholder="Enter primary key flag" ng-model="entity.primaryKey" ng-true-value="'true'" ng-false-value="'false'">
-						</div>
-						<div class="form-group">
-							<label>Unique</label>
-							<input type="checkbox" class="form-control" placeholder="Enter unique flag" ng-model="entity.unique" ng-true-value="'true'" ng-false-value="'false'">
-						</div>
-						<div class="form-group">
-							<label>Nullable</label>
-							<input type="checkbox" class="form-control" placeholder="Enter nullable flag" ng-model="entity.nullable" ng-true-value="'true'" ng-false-value="'false'">
-						</div>
-						<div class="form-group">
-							<label>Default Value</label>
-							<input type="text" class="form-control" placeholder="Enter default value" ng-model="entity.defaultValue">
-						</div>
-						<div class="form-group">
-							<label>Precision</label>
-							<input type="number" class="form-control" placeholder="Enter precision" ng-model="entity.precision">
-						</div>
-						<div class="form-group">
-							<label>Scale</label>
-							<input type="number" class="form-control" placeholder="Enter scale" ng-model="entity.scale">
+							<label>Roles</label>
+							<input type="text" class="form-control" placeholder="Enter roles" ng-model="entity.rolesLine">
 						</div>
 					</form>
 					<div ng-show="actionType === 'delete'">
-						You are going to delete <b>Column</b> with <b>name = {{entity.name}}</b>?
+						You are going to delete <b>Constraint</b> with <b>path = {{entity.path}}</b>?
 					</div>
 				</div>
 				<div class="modal-footer">
