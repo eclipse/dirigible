@@ -39,6 +39,8 @@
 					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
 #elseif($property.widgetType == "DATE")
 					<td>{{next.${property.name} | date:dateFormat}}</td>
+#elseif($property.widgetType == "CHECKBOX")
+					<td><input type="checkbox" ng-model="next.${property.name}" disabled></td>
 #else
 					<td>{{next.${property.name}}}</td>
 #end
@@ -46,8 +48,7 @@
 #end
 					<td>
 						<i class="close fa fa-remove" ng-click="openDeleteDialog(next)" style="font-size: 1.4em"></i>
--						<i class="close fa fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em; font-size: 1.4em"></i>
-					</td>
+						<i class="close fa fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em; font-size: 1.4em"></i>					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -104,6 +105,11 @@
 									</button>
 								</span>
 		           			</p>
+						</div>
+#elseif($property.widgetType == "CHECKBOX")
+						<div class="form-group">
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<input type="checkbox" ng-model="entity.${property.name}">
 						</div>
 #else
 						<div class="form-group">
