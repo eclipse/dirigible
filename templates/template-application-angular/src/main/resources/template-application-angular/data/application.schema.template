@@ -1,26 +1,40 @@
 {
-    "schema": {
-        "structures": [
-        {{#models_}}
+    'schema': {
+        'structures': [
+#foreach ($model in $models)
             {
-                "name": "{{value.dataName}}",
-                "type": "TABLE",
-                "columns": 
+                'name': '${model.dataName}',
+                'type': 'TABLE',
+                'columns': 
                 [
-                {{#value.properties_}}
+#foreach ($property in $model.properties)
                     {
-                        "name": "{{value.dataName}}",
-                        "type": "{{value.dataType}}",
-                        "length": "{{value.dataLength}}",
-                        "primaryKey": "{{value.dataPrimaryKey}}",
-                        "identity": "{{value.dataAutoIncrement}}",
-                        "precision": "{{value.dataPrecision}}",
-                        "scale": "{{value.dataScale}}"
-                    }{{^last}},{{/last}}
-                {{/value.properties_}}
+                        'name': '${property.dataName}',
+                        'type': '${property.dataType}',
+#if($property.dataLength)
+                        'length': ${property.dataLength},
+#end
+#if($propert.dataPrimaryKey)
+                        'primaryKey': true,
+#end
+#if($propert.dataAutoIncrement)
+                        'identity': true,
+#end
+#if($property.dataPrecision)
+                        'precision': '${property.dataPrecision}',
+#end
+#if($property.dataScale)
+                        'scale': '${property.dataScale}'
+#end
+#if($property.dataNotNull)
+#else
+                        'nullable': true
+#end
+                    }#if($foreach.hasNext),#end
+#end
                 ]
-            }{{^last}},{{/last}}
-        {{/models_}}
+            }#if($foreach.hasNext),#end
+#end
         ]
     }
 }

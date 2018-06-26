@@ -24,7 +24,8 @@ exports.getTemplate = function() {
 			'_section': 'Data',
 			'location': '/template-application-angular/data/application.schema.template', 
 			'action': 'generate',
-			'rename': 'data/{{fileNameBase}}.schema'
+			'rename': 'data/{{fileNameBase}}.schema',
+			'engine': 'velocity'
 		}, {
 			'_section': 'Data',
 			'location': '/template-application-angular/data/dao/entity.js.template', 
