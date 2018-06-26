@@ -6,15 +6,19 @@ var dao = daoApi.create({
 	'table': '${dataName}',
 	'properties': [
 #foreach ($property in $properties)
+#if($foreach.isFirst())
 		{
-			'name':  '${property.name}',
+#else
+ {
+#end
+			'name': '${property.name}',
 			'column': '${property.dataName}',
-			'type':'${property.dataType}',
-			'id': ${property.dataPrimaryKey},
+			'type': '${property.dataType}',
+#if($property.dataPrimaryKey)
+			'id': true,
+#end
 #if($property.dataNotNull)
 			'required': true
-#else
-			'required': false
 #end
 		}#if($foreach.hasNext),#end
 #end
