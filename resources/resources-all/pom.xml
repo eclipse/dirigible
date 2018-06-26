@@ -74,5 +74,10 @@
             <artifactId>dirigible-resources-mxgraph</artifactId>
             <version>3.2.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-jqplot</artifactId>
+            <version>3.2.2-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 </project>
