@@ -38,13 +38,15 @@
 					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
 #elseif($property.widgetType == "DATE")
 					<td>{{next.${property.name} | date:dateFormat}}</td>
+#elseif($property.widgetType == "CHECKBOX")
+					<td><input type="checkbox" ng-model="next.${property.name}" disabled></td>
 #else
 					<td>{{next.${property.name}}}</td>
 #end
 #end
 #end
 					<td>
-						<i class="close fa fa-2x fa-search" ng-click="openInfoDialog(next)"></i>
+						<i class="close fa fa-bars" ng-click="openInfoDialog(next)" style="margin-right: 0.5em; font-size: 1.4em"></i>
 					</td>
 				</tr>
 			</tbody>
