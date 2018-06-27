@@ -369,7 +369,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		if (file.isBinary()) {
 			return Response.ok().entity(file.getContent()).type(file.getContentType()).build();
 		}
-		return Response.ok(new String(file.getContent(), StandardCharsets.UTF_8)).type(ContentTypeHelper.TEXT_PLAIN).build();
+		return Response.ok(new String(file.getContent(), StandardCharsets.UTF_8)).type(file.getContentType()).build();
 	}
 
 	/**

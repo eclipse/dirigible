@@ -16,7 +16,19 @@ exports.getEditor = function() {
 			"region":"center-top",
 			"label":"Orion",
 			"link":"../ide-orion/editor.html",
-			"contentTypes":["application/javascript","application/json","text/plain","text/html"]
+			"contentTypes":[
+				"application/javascript",
+				"application/json",
+				"text/plain",
+				"text/html",
+				"application/json+extensionpoint",
+				"application/json+extension",
+				"application/json+table",
+				"application/json+view",
+				"application/json+job",
+				"application/json+listener",
+				"application/json+access",
+				"application/json+roles"]
 	};
 	return editor;
 }

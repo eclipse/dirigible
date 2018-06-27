@@ -135,7 +135,25 @@ angular.module('ideUiCore', ['ngResource'])
 						if (Object.keys(self.editors.editorsForContentType).indexOf(componentState.contentType) < 0) {
 							editorPath = self.editors.editorProviders[self.editors.defaultEditorId];
 						} else {
-							componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+							if (self.editors.editorsForContentType[componentState.contentType].length > 1) {
+								var formEditors = self.editors.editorsForContentType[componentState.contentType].filter(function(e){
+									switch (e) {
+										case "orion":
+										case "monaco":
+										case "ace":
+											return false;
+										default:
+											return true;
+									} 
+								});
+								if (formEditors.length > 0) {
+									componentState.editorId = formEditors[0];
+								} else {
+									componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+								}
+							} else {
+								componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+							}
 							editorPath = self.editors.editorProviders[componentState.editorId];
 						}
 					}
