@@ -21,14 +21,15 @@ exports.getEditor = function() {
 				"application/json",
 				"text/plain",
 				"text/html",
-				"application/json+extensionpoint",
+				"application/json+extension-point",
 				"application/json+extension",
 				"application/json+table",
 				"application/json+view",
 				"application/json+job",
 				"application/json+listener",
 				"application/json+access",
-				"application/json+roles"]
+				"application/json+roles"
+			]
 	};
 	return editor;
 }
