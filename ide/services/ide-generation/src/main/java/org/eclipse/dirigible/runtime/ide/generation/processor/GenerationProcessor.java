@@ -50,6 +50,8 @@ import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+
 /**
  * Processing the Generation Service incoming requests.
  */
@@ -192,7 +194,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		String wrapper = new StringBuilder()
 			.append("var template = require('")
 			.append(parameters.getTemplate())
-			.append("');JSON.stringify(template.getTemplate());").toString();
+			.append("');JSON.stringify(template.getTemplate(")
+			.append(new Gson().toJson(parameters.getParameters()) + "));").toString();
 		return wrapper;
 	}
 
@@ -387,6 +390,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				uiPerspective.put(GenerationParameters.PARAMETER_FILE_NAME_BASE, model.get(GenerationParameters.PARAMETER_FILE_NAME_BASE));
 				uiPerspective.put(GenerationParameters.PARAMETER_FILE_PATH, model.get(GenerationParameters.PARAMETER_FILE_PATH));
 				uiPerspective.put(GenerationParameters.PARAMETER_PACKAGE_PATH, model.get(GenerationParameters.PARAMETER_PACKAGE_PATH));
+				uiPerspective.putAll(parameters.getParameters());
 
 				uiPerspectives.add(uiPerspective);
 				perspectiveCheck.add(perspectiveName);
