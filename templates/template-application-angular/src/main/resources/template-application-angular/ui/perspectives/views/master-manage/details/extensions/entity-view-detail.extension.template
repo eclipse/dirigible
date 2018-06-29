@@ -1,9 +1,9 @@
 {
-	'description': '${name} view',
+	"description": "${name} view",
 #foreach ($property in $properties)
 #if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")
-	'extensionPoint': 'launchpad-${perspectiveName}-${property.relationshipEntityName}-view',
+	"extensionPoint": "launchpad-${perspectiveName}-${property.relationshipEntityName}-view",
 #end
 #end
-	'module': '${projectName}/ui/${perspectiveName}/views/master/details/${name}/extensions/view.js'
+	"module": "${projectName}/ui/${perspectiveName}/views/master/details/${name}/extensions/view.js"
 }

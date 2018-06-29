@@ -1,4 +1,4 @@
 {
-	'description': 'Extension Point for the {{perspectiveName}} - {{name}} Master View Providers',
-	'name': 'launchpad-{{perspectiveName}}-{{name}}-view'
+	"description": "Extension Point for the {{perspectiveName}} - {{name}} Master View Providers",
+	"name": "launchpad-{{perspectiveName}}-{{name}}-view"
 }

@@ -1,4 +1,4 @@
 {
-	'description': 'Extension Point for the {{projectName}} Menu Providers',
-	'name': 'launchpad-{{projectName}}-menu'
+	"description": "Extension Point for the {{projectName}} Menu Providers",
+	"name": "launchpad-{{projectName}}-menu"
 }
