@@ -5,7 +5,11 @@ angular.module('page')
 	var messageHub = new FramesMessageHub();
 
 	var message = function(evtName, data){
-		messageHub.post({data: data}, '${launchpadName}.${projectName}.${name}.' + evtName);
+#if($includeLaunchpad)
+		messageHub.post({data: data}, '${projectName}.${perspectiveName}.${name}.' + evtName);
+#else
+		messageHub.post({data: data}, '${launchpadName}.${perspectiveName}.${name}.' + evtName);
+#end
 	};
 
 	var on = function(topic, callback){
@@ -16,19 +20,31 @@ angular.module('page')
 		message: message,
 		on: on,
 		onEntityRefresh: function(callback) {
-			on('${launchpadName}.${projectName}.${name}.refresh', callback);
+#if($includeLaunchpad)
+			on('${projectName}.${perspectiveName}.${name}.refresh', callback);
+#else
+			on('${launchpadName}.${perspectiveName}.${name}.refresh', callback);
+#end
 		},
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName != "")
 		on${property.relationshipEntityName}Modified: function(callback) {
-			on('${launchpadName}.${projectName}.${property.relationshipEntityName}.modified', callback);
+#if($includeLaunchpad)
+			on('${projectName}.${perspectiveName}.${property.relationshipEntityName}.modified', callback);
+#else
+			on('${launchpadName}.${perspectiveName}.${property.relationshipEntityName}.modified', callback);
+#end
 		},
 #end
 #end
 #foreach ($property in $properties)
 #if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")
 		on${property.relationshipEntityName}Selected: function(callback) {
-			on('${launchpadName}.${projectName}.${property.relationshipEntityName}.selected', callback);
+#if($includeLaunchpad)
+			on('${projectName}.${perspectiveName}.${property.relationshipEntityName}.selected', callback);
+#else
+			on('${launchpadName}.${perspectiveName}.${property.relationshipEntityName}.selected', callback);
+#end
 		},
 #end
 #end

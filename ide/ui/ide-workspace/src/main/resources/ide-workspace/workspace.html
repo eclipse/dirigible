@@ -182,9 +182,23 @@
 				</div>
 			</div>
 			<div class="form-group row" ng-repeat="parameter in workspace.templateParameters[workspace.selectedTemplate]">
-				<label class="col-xs-3 col-form-label">{{parameter.label}}</label>
+				<label class="col-xs-3 col-form-label" ng-show="workspace.shouldShow(parameter)">{{parameter.label}}</label>
 				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="{{parameter.label}}" ng-model="workspace.parameters[parameter.name]" required="required">
+					<input
+						class="form-control"
+						type="text"
+						placeholder="{{parameter.placeholder}}"
+						ng-model="workspace.parameters[parameter.name]"
+						required="required"
+						ng-show="workspace.shouldShow(parameter) && workspace.shouldShowText(parameter)"
+					>
+					<input
+						class="form-control"
+						type="checkbox"
+						ng-model="workspace.parameters[parameter.name]"
+						required="required"
+						ng-show="workspace.shouldShow(parameter) && workspace.shouldShowCheckbox(parameter)"
+					>
 				</div>
 			</div>
 	    </div>
