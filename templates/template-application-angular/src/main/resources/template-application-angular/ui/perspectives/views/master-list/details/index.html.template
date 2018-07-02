@@ -104,7 +104,7 @@
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 #if($includeLaunchpad)
-	<script type="text/javascript" src="/services/v3/web/${projectName}/resources/js/message-hub.js"></script>
+	<script type="text/javascript" src="/services/v3/web/${projectName}/ui/resources/js/message-hub.js"></script>
 #else
 	<script type="text/javascript" src="/services/v3/web/${launchpadName}/resources/js/message-hub.js"></script>
 #end

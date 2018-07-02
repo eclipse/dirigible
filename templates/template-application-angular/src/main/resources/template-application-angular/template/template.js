@@ -1,7 +1,7 @@
-var apiTemplate = require('template-application-angular/template/api');
-var dataTemplate = require('template-application-angular/template/data');
-var extensionTemplate = require('template-application-angular/template/extension');
-var uiTemplate = require('template-application-angular/template/ui');
+var apiTemplate = require('template-application-angular/template/api/template');
+var dataTemplate = require('template-application-angular/template/data/template');
+var extensionTemplate = require('template-application-angular/template/extension/template');
+var uiTemplate = require('template-application-angular/template/ui/template');
 
 exports.getTemplate = function(parameters) {
 	return {

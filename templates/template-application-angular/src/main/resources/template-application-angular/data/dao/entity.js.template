@@ -27,6 +27,7 @@ var dao = daoApi.create({
 exports.list = function(settings) {
 	return dao.list(settings);
 };
+#if($type != 'REPORT')
 
 exports.get = function(id) {
 	return dao.find(id);
@@ -43,6 +44,7 @@ exports.update = function(entity) {
 exports.delete = function(id) {
 	dao.remove(id);
 };
+#end
 
 exports.count = function() {
 #if($dataCount)

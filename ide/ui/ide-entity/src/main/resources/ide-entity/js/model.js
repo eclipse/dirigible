@@ -40,6 +40,7 @@ Property.prototype.relationshipType = null;
 Property.prototype.relationshipCardinality = null;
 Property.prototype.relationshipName = null;
 Property.prototype.relationshipEntityName = null;
+Property.prototype.relationshipEntityPerspectiveName = null;
 Property.prototype.widgetType = 'TEXTBOX';
 Property.prototype.widgetLength = '20';
 Property.prototype.widgetPattern = null; // the input validation patern
