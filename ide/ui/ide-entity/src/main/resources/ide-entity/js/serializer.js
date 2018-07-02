@@ -145,6 +145,7 @@ function createModelJson(graph) {
 			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
 			child.source.value.relationshipName = _.escape(relationName);
 			child.source.value.relationshipEntityName = _.escape(child.target.parent.value.name);
+			child.source.value.relationshipEntityPerspectiveName = _.escape(child.target.parent.value.perspectiveName);
 			child.source.value.widgetDropDownKey = _.escape(child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name);
 			child.source.value.widgetDropDownValue = _.escape(child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name);
 			
@@ -212,6 +213,7 @@ function createModelJson(graph) {
 					property.relationshipCardinality = childProperty.relationshipCardinality;
 					property.relationshipName = _.escape(childProperty.relationshipName);
 					property.relationshipEntityName = _.escape(childProperty.relationshipEntityName);
+					property.relationshipEntityPerspectiveName = _.escape(childProperty.relationshipEntityPerspectiveName);
 					
 					// Widget Properties
 					property.widgetType = childProperty.widgetType;
