@@ -19,6 +19,7 @@ public class EntityDataModelProperty {
 	private String relationshipCardinality;
 	private String relationshipName;
 	private String relationshipEntityName;
+	private String relationshipEntityPerspectiveName;
 	
 	private String widgetType;
 	private String widgetLength;
@@ -254,6 +255,20 @@ public class EntityDataModelProperty {
 	 */
 	public void setRelationshipEntityName(String relationshipEntityName) {
 		this.relationshipEntityName = relationshipEntityName;
+	}
+
+	/**
+	 * @return the relationshipEntityPerspectiveName
+	 */
+	public String getRelationshipEntityPerspectiveName() {
+		return relationshipEntityPerspectiveName;
+	}
+
+	/**
+	 * @param relationshipEntityPerspectiveName the relationship entity perspective name to set
+	 */
+	public void setRelationshipEntityPerspectiveName(String relationshipEntityPerspectiveName) {
+		this.relationshipEntityPerspectiveName = relationshipEntityPerspectiveName;
 	}
 
 	/**
