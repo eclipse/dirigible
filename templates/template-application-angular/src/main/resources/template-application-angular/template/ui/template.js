@@ -7,7 +7,6 @@ var perspective = require('template-application-angular/template/ui/perspective'
 var launchpad = require('template-application-angular/template/ui/launchpad');
 
 exports.getSources = function(parameters) {
-    console.error('Get sources for UI!!!');
     var sources = [];
     sources = sources.concat(listTemplate.getSources(parameters));
     sources = sources.concat(manageTemplate.getSources(parameters));

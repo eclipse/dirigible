@@ -1,5 +1,4 @@
 exports.getSources = function(parameters) {
-	console.error('Report Table get Sources!!!');
 	return [{
 		'location': '/template-application-angular/ui/perspectives/views/report/table/index.html.template', 
 		'action': 'generate',
