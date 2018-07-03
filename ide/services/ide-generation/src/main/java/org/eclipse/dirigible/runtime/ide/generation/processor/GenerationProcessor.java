@@ -454,6 +454,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("relationshipCardinality", property.getRelationshipCardinality());
 				propertyModel.put("relationshipName", property.getRelationshipName());
 				propertyModel.put("relationshipEntityName", property.getRelationshipEntityName());
+				propertyModel.put("relationshipEntityPerspectiveName", property.getRelationshipEntityPerspectiveName());
 				
 				propertyModel.put("widgetLength", property.getWidgetLength());
 				propertyModel.put("widgetPattern", property.getWidgetPattern());
