@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-var dao = require('${projectName}/data/dao/${name}.js')
+var dao = require('${projectName}/data/dao/${perspectiveName}/${name}.js')
 
 exports.getTile = function() {
 	return {
