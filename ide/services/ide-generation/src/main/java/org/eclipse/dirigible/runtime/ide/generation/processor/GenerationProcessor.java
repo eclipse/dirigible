@@ -330,6 +330,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	private void distributeByLayoutType(List<Map<String, Object>> models, GenerationTemplateModelParameters parameters) {
 		
 		List<Map<String, Object>> uiPrimaryModels = new ArrayList<>();
+		List<Map<String, Object>> uiReportModels = new ArrayList<>();
 		List<Map<String, Object>> uiManageModels = new ArrayList<>();
 		List<Map<String, Object>> uiListModels = new ArrayList<>();
 		List<Map<String, Object>> uiManageMasterModels = new ArrayList<>();
@@ -351,6 +352,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			Boolean isReport = model.get("type") != null ? "REPORT".equals(model.get("type").toString()) : false;
 			if (isPrimary) {
 				uiPrimaryModels.add(model);
+			} else if(isReport) {
+				uiReportModels.add(model);
 			}
 			if ("MANAGE".equals(layoutType) && isPrimary) {
 				uiManageModels.add(model);
@@ -397,6 +400,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			}
 		}
 		parameters.getParameters().put("uiPrimaryModels", uiPrimaryModels);
+		parameters.getParameters().put("uiReportModels", uiReportModels);
 		parameters.getParameters().put("uiManageModels", uiManageModels);
 		parameters.getParameters().put("uiListModels", uiListModels);
 		parameters.getParameters().put("uiManageMasterModels", uiManageMasterModels);
