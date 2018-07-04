@@ -3,9 +3,9 @@
 You can propose contributions by sending pull requests through GitHub.
 
 And of course you can [report
-issues](https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Dirigible) and
+issues](https://github.com/eclipse/dirigible/issues/new) and
 [browse the current
-ones](https://bugs.eclipse.org/bugs/buglist.cgi?list_id=12171979&product=Dirigible&query_format=advanced).
+ones](https://github.com/eclipse/dirigible/issues).
 
 ## Legal considerations
 
@@ -48,3 +48,7 @@ Do not forget to mention the related Eclipse Bugzilla issue, if any.
 
 Finally, a contribution is not a good contribution unless it comes with unit
 tests, integration tests and documentation.
+
+## Coding Style
+
+Please, consider Coding Style for the different languages used in the codebase as described here: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Coding_Style
