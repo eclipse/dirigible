@@ -14,8 +14,8 @@ function getApi(parameters) {
 		'location': '/template-application-angular/api/entity.js.template', 
 		'action': 'generate',
 		'rename': 'api/{{perspectiveName}}/{{fileName}}.js',
-		'collection': 'models',
-		'engine': 'velocity'
+		'engine': 'velocity',
+		'collection': 'models'
 	}];
 }
 

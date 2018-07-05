@@ -39,7 +39,7 @@
 <body ng-app="workbench" ng-controller="WorkbenchController">
 
 	<div class="shell">
-		<div id="${projectName}-${name}" class="plane plane-inner" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${perspectiveName}-${name}-view"></div>
+		<div id="${projectName}-${name}" class="plane plane-inner" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${extensionName}-${perspectiveName}-${name}-view"></div>
 	</div>
 	<!-- div class="statusbar" status-bar>${message}</div -->
 	
@@ -99,9 +99,9 @@
 			};
 
 #if($includeLaunchpad)
-			${dollar}http.get('/services/v3/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${perspectiveName}-${name}-view')
+			${dollar}http.get('/services/v3/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view')
 #else
-			${dollar}http.get('/services/v3/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${perspectiveName}-${name}-view')
+			${dollar}http.get('/services/v3/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view')
 #end
 			.success(function(views) {
 				var master = [];

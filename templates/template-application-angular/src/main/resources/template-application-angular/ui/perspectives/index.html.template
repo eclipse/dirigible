@@ -41,7 +41,7 @@
 
 	<div class="shell">
 		<div class="sidebar list-group" sidebar active="Workbench"></div>
-		<div id="${perspectiveName}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${perspectiveName}-view""></div>
+		<div id="${perspectiveName}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${extensionName}-${perspectiveName}-view""></div>
 	</div>
 	<div class="statusbar" status-bar>${message}</div>
 	
@@ -101,9 +101,9 @@
 			};
 
 #if($includeLaunchpad)
-			${dollar}http.get('/services/v3/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${perspectiveName}-view')
+			${dollar}http.get('/services/v3/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view')
 #else
-			${dollar}http.get('/services/v3/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${perspectiveName}-view')
+			${dollar}http.get('/services/v3/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view')
 #end
 			.success(function(views) {
 				for (var i = 0 ; i < views.length; i ++) {

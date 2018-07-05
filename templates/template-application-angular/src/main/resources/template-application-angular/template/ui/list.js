@@ -3,19 +3,24 @@ exports.getSources = function(parameters) {
 		'location': '/template-application-angular/ui/perspectives/views/list/index.html.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/index.html',
-		'collection': 'uiListModels',
-		'engine': 'velocity'
+		'engine': 'velocity',
+		'collection': 'uiListModels'
 	}, {
 		'location': '/template-application-angular/ui/perspectives/views/list/controller.js.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/controller.js',
-		'collection': 'uiListModels',
-		'engine': 'velocity'
+		'engine': 'velocity',
+		'collection': 'uiListModels'
 	}, {
 		'location': '/template-application-angular/ui/perspectives/views/list/extensions/view.js.template', 
 		'action': 'generate',
-		'collection': 'uiListModels',
-		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js'
+		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js',
+		'collection': 'uiListModels'
+	}, {
+		'location': '/template-application-angular/ui/perspectives/views/list/extensions/view.extension.template', 
+		'action': 'generate',
+		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension',
+		'collection': 'uiListModels'
 	}, {
 		'location': '/template-application-angular/ui/perspectives/views/list/extensions/menu/item.extension.template', 
 		'action': 'generate',

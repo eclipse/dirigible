@@ -3,8 +3,11 @@ var manageTemplate = require('template-application-angular/template/ui/manage');
 var masterDetailsListTemplate = require('template-application-angular/template/ui/masterDetailsList');
 var masterDetailsManageTemplate = require('template-application-angular/template/ui/masterDetailsManage');
 var reportTableTemplate = require('template-application-angular/template/ui/reportTable');
+var reportPieTemplate = require('template-application-angular/template/ui/reportPie');
 var perspective = require('template-application-angular/template/ui/perspective');
 var launchpad = require('template-application-angular/template/ui/launchpad');
+var tiles = require('template-application-angular/template/ui/tiles');
+var menu = require('template-application-angular/template/ui/menu');
 
 exports.getSources = function(parameters) {
     var sources = [];
@@ -13,7 +16,10 @@ exports.getSources = function(parameters) {
     sources = sources.concat(masterDetailsListTemplate.getSources(parameters));
     sources = sources.concat(masterDetailsManageTemplate.getSources(parameters));
     sources = sources.concat(reportTableTemplate.getSources(parameters));
+    sources = sources.concat(reportPieTemplate.getSources(parameters));
     sources = sources.concat(perspective.getSources(parameters));
     sources = sources.concat(launchpad.getSources(parameters));
+    sources = sources.concat(tiles.getSources(parameters));
+    sources = sources.concat(menu.getSources(parameters));
     return sources;
 };

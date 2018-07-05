@@ -8,7 +8,7 @@ exports.getSources = function(parameters) {
 		'location': '/template-application-angular/data/dao/entity.js.template', 
 		'action': 'generate',
 		'rename': 'data/dao/{{perspectiveName}}/{{fileName}}.js',
-		'collection': 'models',
-		'engine': 'velocity'
+		'engine': 'velocity',
+		'collection': 'models'
 	}];
 };

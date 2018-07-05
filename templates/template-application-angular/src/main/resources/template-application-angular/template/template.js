@@ -1,6 +1,5 @@
 var apiTemplate = require('template-application-angular/template/api/template');
 var dataTemplate = require('template-application-angular/template/data/template');
-var extensionTemplate = require('template-application-angular/template/extension/template');
 var uiTemplate = require('template-application-angular/template/ui/template');
 
 exports.getTemplate = function(parameters) {
@@ -69,7 +68,6 @@ function getSources(parameters) {
 	var sources = [];
 	sources = sources.concat(apiTemplate.getSources(parameters));
 	sources = sources.concat(dataTemplate.getSources(parameters));
-	sources = sources.concat(extensionTemplate.getSources(parameters));
 	sources = sources.concat(uiTemplate.getSources(parameters));
 	return sources;
 }
