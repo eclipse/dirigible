@@ -167,7 +167,6 @@ public class DatabaseFacade implements IScriptingFacade {
 	/**
 	 * Gets the product name of the database.
 	 *
-	 * @param databaseType the database type
 	 * @return the product name
 	 * @throws SQLException the SQL exception
 	 */
