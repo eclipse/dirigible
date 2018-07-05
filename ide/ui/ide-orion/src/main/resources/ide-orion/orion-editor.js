@@ -28,8 +28,9 @@ exports.getEditor = function() {
 				"application/json+job",
 				"application/json+listener",
 				"application/json+access",
-				"application/json+roles"
-			]
+				"application/json+roles",
+				"application/xml",
+				"application/bpmn+xml"]
 	};
 	return editor;
 }

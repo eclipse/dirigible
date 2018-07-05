@@ -93,6 +93,10 @@
 					return 'application/json';
 				} else if (fileName.endsWith('.access')) {
 					return 'application/json';
+				} else if (fileName.endsWith('.xml')) {
+					return 'application/xml';
+				} else if (fileName.endsWith('.bpmn')) {
+					return 'application/xml';
 				} else if (fileName.endsWith('.roles')) {
 					return 'application/json';
 				}
