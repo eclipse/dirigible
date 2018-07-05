@@ -35,6 +35,22 @@ exports.getSources = function(parameters) {
 			'location': '/template-application-angular/ui/resources/js/ui-layout.js.template', 
 			'action': 'generate',
 			'rename': 'ui/resources/js/ui-layout.js'
+		}, {
+			'location': '/template-application-angular/ui/extensions/perspective.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'ui/extensions/perspective.extensionpoint'
+		}, {
+			'location': '/template-application-angular/ui/extensions/perspective.extension.template', 
+			'action': 'generate',
+			'rename': 'ui/extensions/perspective.extension'
+		}, {
+			'location': '/template-application-angular/ui/extensions/perspective.js.template', 
+			'action': 'generate',
+			'rename': 'ui/extensions/perspective.js'
+		}, {
+			'location': '/template-application-angular/ui/extensions/tiles.extensionpoint.template', 
+			'action': 'generate',
+			'rename': 'ui/extensions/tiles.extensionpoint'
 		}];
     }
     return sources;

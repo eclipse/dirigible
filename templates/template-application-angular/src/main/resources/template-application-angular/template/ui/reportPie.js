@@ -1,35 +1,35 @@
 exports.getSources = function(parameters) {
 	return [{
-		'location': '/template-application-angular/ui/perspectives/views/report/table/index.html.template', 
+		'location': '/template-application-angular/ui/perspectives/views/report/pie/index.html.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/index.html',
 		'engine': 'velocity',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}, {
-		'location': '/template-application-angular/ui/perspectives/views/report/table/controller.js.template', 
+		'location': '/template-application-angular/ui/perspectives/views/report/pie/controller.js.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/controller.js',
 		'engine': 'velocity',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}, {
-		'location': '/template-application-angular/ui/perspectives/views/report/table/extensions/view.js.template', 
+		'location': '/template-application-angular/ui/perspectives/views/report/pie/extensions/view.js.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}, {
 		'location': '/template-application-angular/ui/perspectives/views/list/extensions/entity.extension.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}, {
-		'location': '/template-application-angular/ui/perspectives/views/report/table/extensions/menu/item.extension.template', 
+		'location': '/template-application-angular/ui/perspectives/views/report/pie/extensions/menu/item.extension.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}, {
-		'location': '/template-application-angular/ui/perspectives/views/report/table/extensions/menu/item.js.template', 
+		'location': '/template-application-angular/ui/perspectives/views/report/pie/extensions/menu/item.js.template', 
 		'action': 'generate',
 		'rename': 'ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js',
-		'collection': 'uiReportTableModels'
+		'collection': 'uiReportPieModels'
 	}];
 };
