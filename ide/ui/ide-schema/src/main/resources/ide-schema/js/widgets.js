@@ -15,7 +15,7 @@ function addToolbarButton(editor, toolbar, action, label, image, isTransparent) 
 		//button.style.color = 'white';
 		//button.style.border = 'none';
 		button.setAttribute('class', 'button');
-		button.setAttribute('style', 'background: black; color: white; border: none');
+		button.setAttribute('style', 'background: transparent; color: white; border: none');
 	}
 	mxEvent.addListener(button, 'click', function(evt) {
 		editor.execute(action);
