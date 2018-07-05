@@ -177,6 +177,7 @@ public class PushCommand {
 				String message = String.format(
 						"Project has %d conflicting file(s). Pushed to remote branch [%s]. Please merge to [%s] and then continue working on project.",
 						numberOfConflictingFiles, changesBranch, gitRepositoryBranch);
+				logger.warn(message);
 			}
 		} catch (IOException e) {
 			logger.error(errorMessage, e);
