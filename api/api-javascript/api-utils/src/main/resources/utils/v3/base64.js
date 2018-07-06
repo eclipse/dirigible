@@ -11,7 +11,14 @@
 var java = require('core/v3/java');
 
 exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(input)]);
+	var bytes = input;
+	if (typeof bytes === 'string') {
+		var streams = require('io/v3/streams');
+		var baos = streams.createByteArrayOutputStream();
+		baos.writeText(bytes);
+		bytes = baos.getBytes();
+	}
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.Base64Facade', 'encode', [JSON.stringify(bytes)]);
 	return output;
 };
 

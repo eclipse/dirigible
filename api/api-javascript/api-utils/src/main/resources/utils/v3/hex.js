@@ -11,13 +11,20 @@
 var java = require('core/v3/java');
 
 exports.encode = function(input) {
-	var output = java.call('org.eclipse.dirigible.api.v3.utils.HexFacade', 'encode', [JSON.stringify(input)]);
+	var bytes = input;
+	if (typeof bytes === 'string') {
+		var streams = require('io/v3/streams');
+		var baos = streams.createByteArrayOutputStream();
+		baos.writeText(bytes);
+		bytes = baos.getBytes();
+	}
+	var output = java.call('org.eclipse.dirigible.api.v3.utils.HexFacade', 'encode', [JSON.stringify(bytes)]);
 	return output;
 };
 
 exports.decode = function(input) {
 	var output = java.call('org.eclipse.dirigible.api.v3.utils.HexFacade', 'decode', [input]);
-	if (output && output != null) {
+	if (output && output !== null) {
 		return JSON.parse(output);
 	}
 	return output;
