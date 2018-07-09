@@ -29,8 +29,6 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
-	private Injector injector;
-	
 	private static DirigibleInitializer initializer = new DirigibleInitializer();
 
 	/*

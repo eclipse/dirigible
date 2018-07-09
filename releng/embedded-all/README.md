@@ -1,79 +1,51 @@
 Sample class showing how to embed Dirigible into an arbitrary Java application
 ---
 
+1. Create a Java project
+2. Create a folder "content"
+3. Create sub-folder "project1" under the "content" folder
+4. Create a file named "hello1.js" under the "project1" folder with the following content
+
+```javascript
+console.log('Hello World!');
+```
+
+5. Create a Java class named "MyApp" with the following content:
+
 ```java
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
-import org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.RepositoryWriteException;
-import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
+import org.eclipse.dirigible.runtime.core.embed.EmbeddedDirigible;
 
 public class MyApp {
 
-	private IRepository repository;
-	private IJavascriptEngineExecutor executor;
-
-	public static void main(String[] args) throws ContextException, IOException, ScriptingException {
-		MyApp app = new MyApp();
-		// name of the module playing a role of an identifier
-		String module = "encoder.js";
-		// source code for this module, which can be taken from the file system, remote storages, databases, etc.
-		String source = "var base64 = require('utils/v3/base64');\n"
-				+ "console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + base64.encode('admin:admin'));";
-		// execute the module in non-servlet context
-		app.execute(null, null, module, source);
-	}
-
-	private void execute(HttpServletRequest req, HttpServletResponse res, String module, String source) throws ContextException, IOException, ScriptingException {
-		DirigibleInitializer initializer = new DirigibleInitializer();
-		
-		// initialize the Dirigible instance
-		initializer.initialize();
-		
-		// initialize the repository object
-		this.repository = initializer.getInjector().getInstance(IRepository.class);
-		// initialize the particular executor - Rhino*, Nashorn* or V8*
-		this.executor = initializer.getInjector().getInstance(RhinoJavascriptEngineExecutor.class);
-
-		// initialize the context
-		ThreadContextFacade.setUp();
+	public static void main(String[] args) {
+		// create a Dirigible instance
+		EmbeddedDirigible dirigible = new EmbeddedDirigible();
 		try {
-			// set the request object in a servlet context or null oterwise
-			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), req);
-			// set the response object in a servlet context or null oterwise
-			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), res);
-			// execute module
-			executeModule(executor, repository, module, source);
+			// initialize the Dirigible instance
+			dirigible.initialize();
+			// import the content under the specified folder to the Dirigible's registry
+			dirigible.load("./content");
+			// execute a given service module
+			dirigible.executeJavaScript("project1/hello1.js");
+			// or more generic dirigible.execute(dirigible.ENGINE_TYPE_JAVASCRIPT, "project1/hello1.js");
+			// or richer dirigible.execute(dirigible.ENGINE_TYPE_JAVASCRIPT, "project1/hello1.js", context, request, response);
+		} catch (IOException | ScriptingException | ContextException e) {
+			e.printStackTrace();
 		} finally {
-			ThreadContextFacade.tearDown();
 			// destroy the Dirigible instance
-			initializer.destory();
+			dirigible.destroy();
 			System.exit(0);
 		}
 	}
 
-	private Object executeModule(IJavascriptEngineExecutor executor, IRepository repository, String module, String source) throws IOException, ScriptingException {
-		try {
-			// create the provided source code as module in the Dirigible's registry
-			repository.createResource(
-				IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + module,
-				source.getBytes());
-		} catch (RepositoryWriteException e) {
-			throw new IOException(IRepositoryStructure.SEPARATOR + module, e);
-		}
-		// execute the module
-		Object result = executor.executeServiceModule(module, null);
-		return result;
-	}
-
 }
 ```
+
+6. Run it as a Java application
+7. You have to be able to find the following log record in the system output
+
+> [main] INFO org.eclipse.dirigible.api.v3.core.Console - Hello World!

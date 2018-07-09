@@ -13,6 +13,7 @@ package org.eclipse.dirigible.commons.api.content;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.ServiceLoader;
 import java.util.jar.JarEntry;
@@ -49,15 +50,18 @@ public class ClasspathContentLoader {
 				Enumeration<URL> urls = ClasspathContentLoader.class.getClassLoader().getResources("META-INF");
 				while (urls.hasMoreElements()) {
 					URL url = urls.nextElement();
-					JarURLConnection urlConnection = (JarURLConnection) (url.openConnection());
-					try (JarFile jar = urlConnection.getJarFile();) {
-						Enumeration<JarEntry> entries = jar.entries();
-						while (entries.hasMoreElements()) {
-							String entry = entries.nextElement().getName();
-							for (IClasspathContentHandler contentHandler : contentHandlers) {
-								contentHandler.accept(ROOT + entry);
+					URLConnection urlConnection = url.openConnection();
+					if (urlConnection instanceof JarURLConnection) {
+						JarURLConnection jarUrlConnection = (JarURLConnection) (url.openConnection());
+						try (JarFile jar = jarUrlConnection.getJarFile();) {
+							Enumeration<JarEntry> entries = jar.entries();
+							while (entries.hasMoreElements()) {
+								String entry = entries.nextElement().getName();
+								for (IClasspathContentHandler contentHandler : contentHandlers) {
+									contentHandler.accept(ROOT + entry);
+								}
+								logger.trace("resource found: " + entry);
 							}
-							logger.trace("resource found: " + entry);
 						}
 					}
 				}
