@@ -19,6 +19,11 @@ exports.getTile = function() {
 #else
 		'name': '${projectName}',
 #end
+#if(${perspectiveName})
+		'group': '${perspectiveName}',
+#else
+		'group': '${projectName}',
+#end
 #if($icon)
 		'icon': '${icon}',
 #elseif($perspectiveIcon)

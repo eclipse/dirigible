@@ -17,15 +17,20 @@ var tileExtensions = extensions.getExtensions('launchpad-{{extensionName}}-tiles
 for (var i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     var tileExtension = require(tileExtensions[i]);
     var tile = tileExtension.getTile();
-    tiles.push(tile);
+    var found = false;
+    for (var j = 0 ; j < tiles.length ; j ++) {
+    	if (tiles[j].group === tile.group) {
+    		tiles[j].tiles.push(tile);
+    		found = true;
+    	}
+    }
+    if (!found) {
+    	tiles.push({
+    		'group': tile.group,
+    		'tiles': [tile]
+    	});
+    }
 }
 
-tiles.sort(function(p, n) {
-	var result = parseInt(p.order, 0) - parseInt(n.order, 0);
-	if (result === 0) {
-		result = p.name > n.name ? 1 : p.name < n.name ? -1 : 0;
-	}
-	return result;
-});
 
 response.println(JSON.stringify(tiles));
