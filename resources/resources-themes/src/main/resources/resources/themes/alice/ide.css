@@ -278,3 +278,50 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	font-size: 12px;
 }
 
+.panel {
+	border-radius: 8px;
+}
+.panel > a {
+    color: #666;
+}
+.panel > a:hover {
+    color: #444;
+}
+.panel-heading {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+    opacity: 0.8;
+    -webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+}
+.panel-footer {
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.panel > header {
+	background-color: #555;
+	color: #eee;
+	background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+	background-size: cover;
+	opacity: 0.8;
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+}
+.leading {
+	font-size: 38px;
+	/*font-weight: 500 !important;*/
+	line-height: 1 !important;
+	font-family: Helvetica Neue, Arial;
+}
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #666;
+}
+.panel-primary {
+	border-color: #666;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+}
+
