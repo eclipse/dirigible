@@ -87,7 +87,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 	 */
 	@Override
 	public PublishRequestDefinition createPublishRequest(String workspace, String path) throws PublisherException {
-		return createPublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY);
+		return createPublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 	}
 
 	/*

@@ -75,6 +75,29 @@
 					}
 				}
 			};
+			
+			var getParameterByName = function (name) {
+		        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		            results = regex.exec(location.search);
+		        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		    };
+		    
+		    var messageHub = new FramesMessageHub();
+			var send = function(evtName, data, absolute){
+				messageHub.post({data: data}, (absolute ? '' : 'git.') + evtName);
+			};
+			var run = function() {
+				send("repository.run", metadata, false);
+			}
+			var metadata = {};
+		    metadata.repository = getParameterByName("repository");
+		    metadata.username = getParameterByName("username");
+		    metadata.password = getParameterByName("password");
+		    metadata.uri = getParameterByName("uri");
+		    if (metadata.repository) {
+		    	window.setTimeout(run, 2000);
+		    }
 					
 		}]);
 	</script>
