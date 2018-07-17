@@ -456,7 +456,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		announceFileSelected: announceFileSelected,
 		announceFileCreated: announceFileCreated,
 		announceFileOpen: announceFileOpen,
-		announcePull: announcePull
+		announcePull: announcePull,
+		on: function(evt, cb){
+			messageHub.subscribe(cb, evt);
+		}
 	};
 }])
 .factory('$treeConfig', [function(){
@@ -543,7 +546,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'gitService', '$messageHub', function($treeConfig, WorkspaceService, GitService, $messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, GitService, $messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', function (workspaceService, workspaceTreeAdapter, gitService) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', '$messageHub', function (workspaceService, workspaceTreeAdapter, gitService, $messageHub) {
 
 	this.wsTree;
 	this.workspaces;
@@ -603,5 +606,21 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	this.refresh = function(){
 		this.wsTree.refresh();
 	};
+	
+	$messageHub.on('git.repository.run', function(msg){
+		gitService.cloneProject(this.wsTree, this.selectedWs, msg.data.repository, msg.data.username, msg.data.password);
+		if (msg.data.uri) {
+			run();
+		}
+		
+		function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+		}
+			
+		async function run() {
+		  await sleep(2000);
+		  window.open(msg.data.uri, '_blank');
+		}
+	}.bind(this));
 	
 }]);

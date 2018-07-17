@@ -30,9 +30,11 @@ import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
+import org.eclipse.dirigible.core.publisher.synchronizer.PublisherSynchronizer;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -271,7 +273,8 @@ public class CloneCommand {
 				for (IProject project : projects) {
 					if (project.getName().equals(projectName)) {
 						try {
-							publisherCoreService.createPublishRequest(workspace.getName(), projectName);
+							publisherCoreService.createPublishRequest(generateWorkspacePath(workspace.getName()), projectName);
+							PublisherSynchronizer.forceSynchronization();
 							logger.info(String.format("Project [%s] has been published", project.getName()));
 						} catch (PublisherException e) {
 							logger.error(String.format("An error occurred while publishing the cloned project [%s]", project.getName()), e);
@@ -281,6 +284,21 @@ public class CloneCommand {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Generate workspace path.
+	 *
+	 * @param user
+	 *            the user
+	 * @param workspace
+	 *            the workspace
+	 * @return the string builder
+	 */
+	private String generateWorkspacePath(String workspace) {
+		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR).append(UserFacade.getName())
+				.append(IRepositoryStructure.SEPARATOR).append(workspace);
+		return relativePath.toString();
 	}
 
 }
