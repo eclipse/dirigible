@@ -30,7 +30,10 @@ exports.getEditor = function() {
 				"application/json+access",
 				"application/json+roles",
 				"application/xml",
-				"application/bpmn+xml"]
+				"application/bpmn+xml",
+				"application/database-schema-model+xml",
+				"application/entity-data-model+xml"
+			]
 	};
 	return editor;
 }
