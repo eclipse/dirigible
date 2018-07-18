@@ -3,7 +3,7 @@
   <parent>
     <artifactId>dirigible-parent</artifactId>
     <groupId>org.eclipse.dirigible</groupId>
-    <version>3.2.3</version>
+    <version>3.2.4-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -18,6 +18,22 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>javadoc-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <includeDependencySources>false</includeDependencySources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -48,6 +64,8 @@
                 </filter>
               </filters>
               <minimizeJar>false</minimizeJar>
+              <createSourcesJar>true</createSourcesJar>
+              <shadeSourcesContent>true</shadeSourcesContent>
               <transformers>
                 <transformer />
               </transformers>

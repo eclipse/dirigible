@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-api-javascript-parent</artifactId>
-		<version>3.2.3</version>
+		<version>3.2.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,67 +34,67 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-cms</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-core</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-database</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-http</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-indexing</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-io</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-log</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-messaging</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-test</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
          <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-utils</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-bpm</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-workspace</artifactId>
-            <version>3.2.3</version>
+            <version>3.2.4-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 </project>
