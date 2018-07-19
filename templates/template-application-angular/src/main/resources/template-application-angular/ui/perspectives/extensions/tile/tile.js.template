@@ -32,7 +32,7 @@ exports.getTile = function() {
 		'icon': 'life-ring',
  #end
 		'location': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
-		'count': dao.count(),
+		'count': dao.customDataCount(),
 #if($perspectiveOrder)
 		'order': '${perspectiveOrder}'
 #else

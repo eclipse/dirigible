@@ -70,13 +70,40 @@ angular.module('page')
 	$scope.dateFormats = ['yyyy/MM/dd', 'dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
 	$scope.dateFormat = $scope.dateFormats[0];
 
-	function load() {
-		${dollar}http.get(api)
+	$scope.dataPage = 1;
+	$scope.dataCount = 0;
+	$scope.dataOffset = 0;
+	$scope.dataLimit = 10;
+
+	$scope.getPages = function() {
+		return new Array($scope.dataPages);
+	};
+
+	$scope.nextPage = function() {
+		if ($scope.dataPage < $scope.dataPages) {
+			${dollar}scope.loadPage(${dollar}scope.dataPage + 1);
+		}
+	};
+
+	$scope.previousPage = function() {
+		if ($scope.dataPage > 1) {
+			${dollar}scope.loadPage(${dollar}scope.dataPage - 1);
+		}
+	};
+
+	$scope.loadPage = function(pageNumber) {
+		$scope.dataPage = pageNumber;
+		${dollar}http.get(api + '/count')
 		.success(function(data) {
-			$scope.data = data;
+			$scope.dataCount = data;
+			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
+			${dollar}http.get(api + '?${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
+			.success(function(data) {
+				$scope.data = data;
+			});
 		});
-	}
-	load();
+	};
+	$scope.loadPage($scope.dataPage);
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 
@@ -96,11 +123,11 @@ angular.module('page')
 	};
 
 	$scope.close = function() {
-		load();
+		$scope.loadPage($scope.dataPage);
 		toggleEntityModal();
 	};
 
-	$messageHub.onEntityRefresh(load);
+	$messageHub.onEntityRefresh($scope.loadPage($scope.dataPage));
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 	${dollar}scope.${property.name.toLowerCase()}OptionValue = function(optionKey) {
