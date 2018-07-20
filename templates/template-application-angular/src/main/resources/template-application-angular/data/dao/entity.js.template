@@ -47,6 +47,10 @@ exports.delete = function(id) {
 #end
 
 exports.count = function() {
+	return dao.count();
+};
+
+exports.customDataCount = function() {
 #if($dataCount)
 	var resultSet = query.execute("${dataCount}");
 	return resultSet !== null ? resultSet[0].COUNT : 0;

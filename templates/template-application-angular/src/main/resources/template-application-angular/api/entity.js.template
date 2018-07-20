@@ -14,6 +14,10 @@ rs.service()
 			var entities = dao.list(queryOptions);
 			http.sendResponseOk(entities);
 		})
+	.resource('count')
+		.get(function(ctx, request) {
+			http.sendResponseOk(dao.count());
+		})
 	.resource('{id}')
 		.get(function(ctx) {
 			var id = ctx.pathParameters.id;

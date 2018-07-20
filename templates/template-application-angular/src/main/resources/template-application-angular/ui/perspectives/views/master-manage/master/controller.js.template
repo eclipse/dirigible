@@ -82,13 +82,40 @@ angular.module('page')
 #end
 #end
 
-	function load() {
-		$http.get(api)
+	$scope.dataPage = 1;
+	$scope.dataCount = 0;
+	$scope.dataOffset = 0;
+	$scope.dataLimit = 10;
+
+	$scope.getPages = function() {
+		return new Array($scope.dataPages);
+	};
+
+	$scope.nextPage = function() {
+		if ($scope.dataPage < $scope.dataPages) {
+			${dollar}scope.loadPage(${dollar}scope.dataPage + 1);
+		}
+	};
+
+	$scope.previousPage = function() {
+		if ($scope.dataPage > 1) {
+			${dollar}scope.loadPage(${dollar}scope.dataPage - 1);
+		}
+	};
+
+	$scope.loadPage = function(pageNumber) {
+		$scope.dataPage = pageNumber;
+		${dollar}http.get(api + '/count')
 		.success(function(data) {
-			$scope.data = data;
+			$scope.dataCount = data;
+			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
+			${dollar}http.get(api + '?${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
+			.success(function(data) {
+				$scope.data = data;
+			});
 		});
-	}
-	load();
+	};
+	$scope.loadPage($scope.dataPage);
 
 	$scope.openNewDialog = function() {
 		$scope.actionType = 'new';
@@ -109,14 +136,14 @@ angular.module('page')
 	};
 
 	$scope.close = function() {
-		load();
+		$scope.loadPage($scope.dataPage);
 		toggleEntityModal();
 	};
 
 	$scope.create = function() {
 		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
 		.success(function(data) {
-			load();
+			$scope.loadPage($scope.dataPage);
 			toggleEntityModal();
 			$messageHub.messageEntityModified();
 		}).error(function(data) {
@@ -131,9 +158,8 @@ angular.module('page')
 		${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
 #end
 #end
-
 		.success(function(data) {
-			load();
+			$scope.loadPage($scope.dataPage);
 			toggleEntityModal();
 			$messageHub.messageEntityModified();
 		}).error(function(data) {
@@ -148,7 +174,7 @@ angular.module('page')
 #end
 #end
 		.success(function(data) {
-			load();
+			$scope.loadPage($scope.dataPage);
 			toggleEntityModal();
 			$messageHub.messageEntityModified();
 		}).error(function(data) {
@@ -181,7 +207,7 @@ angular.module('page')
 
 #end
 #end
-	$messageHub.onEntityRefresh(load);
+	$messageHub.onEntityRefresh($scope.loadPage($scope.dataPage));
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN" && $property.relationshipEntityName != "")
 	${dollar}messageHub.on${property.relationshipEntityName}Modified(${property.name.toLowerCase()}OptionsLoad);
