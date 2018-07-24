@@ -135,6 +135,14 @@ exports.getLocale = function() {
 	return locale;
 };
 
+exports.getOutputStream = function() {
+    var streams = require("io/v3/streams");
+	var outputStreamInstance = java.call("org.eclipse.dirigible.api.v3.http.HttpResponseFacade", "getOutputStream", [], true);
+	var outputStream = new streams.OutputStream();
+	outputStream.uuid = outputStreamInstance.uuid;
+	return outputStream;
+};
+
 /**
  * Status code (202) indicating that a request was accepted for processing, but was not completed.
  */

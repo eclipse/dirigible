@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.api.v3.http;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -664,6 +665,19 @@ public class HttpResponseFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_RESPONSE);
 		}
 		return GsonHelper.GSON.toJson(response.getLocale());
+	}
+	
+	/**
+	 * Open the output stream of the current servlet response
+	 * @return the created output stream
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final OutputStream getOutputStream() throws IOException {
+		HttpServletResponse response = getResponse();
+		if (response == null) {
+			throw new InvalidStateException(NO_VALID_RESPONSE);
+		}
+		return response.getOutputStream();
 	}
 
 }
