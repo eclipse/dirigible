@@ -77,18 +77,18 @@ function getFullPathAndName(rootPath, fileFullName){
 	return [fullPath, name];
 }
 
-exports.makeZip = function(folderPath) {
+exports.makeZip = function(folderPath, outputStream) {
 	var folder = folderLib.getFolder(folderPath);
 	console.info("Creating zip for folder: " + folderPath);
 
-	var baos = streams.createByteArrayOutputStream();
-	var zipOutputStream = zipAPI.createZipOutputStream(baos);
+//	var baos = streams.createByteArrayOutputStream();
+	var zipOutputStream = zipAPI.createZipOutputStream(outputStream);
 	try {
 		traverseFolder(folder, folder.getName(), zipOutputStream);
 	} finally {
 		zipOutputStream.close();
 	}
-	return baos.getBytes();
+//	return baos.getBytes();
 };
 
 

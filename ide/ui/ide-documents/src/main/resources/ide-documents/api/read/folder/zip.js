@@ -21,13 +21,15 @@ function handleGet(){
 		return;
 	}
 	path = unescapePath(path);
-	var name = getNameFromPath(path);	
-	var result = zipLib.makeZip(path);
-
-	console.warn('Result: ' + result);
+	var name = getNameFromPath(path);
+	var outputStream = response.getOutputStream();
 	response.setContentType("application/zip");
 	response.addHeader("Content-Disposition", "attachment;filename=\"" + name +".zip\"");
-	response.write(result);
+	zipLib.makeZip(path, outputStream);
+
+//	console.warn('Result: ' + result);
+
+//	response.write(result);
 	// response.writeStream(streams.createByteArrayInputStream(result));
 	
 	response.setStatus(response.OK);
