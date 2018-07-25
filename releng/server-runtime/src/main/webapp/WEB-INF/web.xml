@@ -64,6 +64,10 @@
 			<param-name>maxRequestsPerSec</param-name>
 			<param-value>3000</param-value>
 		</init-param>
+		<init-param>
+			<param-name>maxRequestMs</param-name>
+			<param-value>3600000</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>DoSFilter</filter-name>
