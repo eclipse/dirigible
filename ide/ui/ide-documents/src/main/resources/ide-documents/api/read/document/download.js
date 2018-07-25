@@ -5,6 +5,7 @@ var request = require("http/v3/request");
 var response = require("http/v3/response");
 var documentLib = require("ide-documents/api/lib/document");
 var requestHandler = require("ide-documents/api/lib/request-handler");
+var streams = require("io/v3/streams");
 
 requestHandler.handleRequest({
 	handlers : {
@@ -28,7 +29,8 @@ function handleGet(){
 	
 	response.setContentType(contentType);
 	response.addHeader("Content-Disposition", "attachment;filename=\"" + name + "\"");
-	response.write(contentStream.getStream().readBytes());
+	//response.write(contentStream.getStream().readBytes());
+	streams.copy(contentStream.getStream(), response.getOutputStream());
 }
 
 function unescapePath(path){
