@@ -67,6 +67,7 @@
 		<module>ide-listeners</module>
 		<module>ide-data-structures</module>
 		<module>ide-registry</module>
+		<module>ide-plugins</module>
 	</modules>
 
 	<profiles>
