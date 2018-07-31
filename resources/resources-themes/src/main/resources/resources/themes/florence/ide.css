@@ -19,6 +19,13 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  
+  --modeler-entity-border: #6b8194;
+  --modeler-entity-header-background: #4b5a68;
+  --modeler-entity-header-color: #fff;
+  --modeler-entity-background: #fff;
+  --modeler-entity-color: #6b8194;
+  --modeler-entity-connector: #6b8194;
 }
 .navbar {
 	margin-bottom: 0px !important;
@@ -342,4 +349,77 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .sidebarContainer {
 	font-size: 12px;
 }
+
+/** Modelers */
+
+.toolbarContainer {
+	position:absolute;
+	white-space:nowrap;
+	overflow:hidden;
+	top:0px;
+	left:0px;
+	/*max-height:24px;*/
+	height:36px;
+	right:0px;
+	padding:6px;
+	background-color:#4b5a68;
+}
+
+.sidebarContainer {
+	position:absolute;
+	overflow:hidden;
+	top:36px;
+	left:0px;
+	bottom:36px;
+	max-width:34px;
+	width:34px;
+	padding-top:10px;
+	padding-left:4px;
+	background-color:#899aa9;
+	color:#e1e6ea;
+}
+
+.graphContainer {
+	position:absolute;
+	overflow:hidden;
+	top:36px;
+	left:60px;
+	bottom:36px;
+	right:0px;
+}
+
+.outlineContainer {
+	position:absolute;
+	overflow:hidden;
+	top:36px;
+	right:0px;
+	width:200px;
+	height:140px;
+	background:transparent;
+	border-style:solid;
+	border-color:#333333;
+}
+
+.statusContainer {
+	text-align:right;
+	position:absolute;
+	overflow:hidden;
+	bottom:0px;
+	left:0px;
+	/*max-height:24px;*/
+	height:36px;
+	right:0px;
+	color:#3277b3;
+	padding:6px;
+	background-color:#4b5a68;
+}
+
+.button {
+	color:#fff !important;
+}
+
+.button:hover {
+	background: #999 !important;
+	color:#ddd !important;
+} 
 

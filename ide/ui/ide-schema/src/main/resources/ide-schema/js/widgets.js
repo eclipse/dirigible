@@ -152,24 +152,26 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_GRADIENTCOLOR] = '#111';//'#337ab7';
-	style[mxConstants.STYLE_FILLCOLOR] = '#111';//'#337ab7';
+	style[mxConstants.STYLE_GRADIENTCOLOR] = '#555';
+	style[mxConstants.STYLE_FILLCOLOR] = '#555';
 	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999';//'#006292';
+	style[mxConstants.STYLE_STROKECOLOR] = '#555';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
 	style[mxConstants.STYLE_FONTSIZE] = '12';
 	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
 	// Looks better without opacity if shadow is enabled
 	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_SHADOW] = 1;
 	graph.getStylesheet().putCellStyle('table', style);
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
 	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#999';//'#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = '#999';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;

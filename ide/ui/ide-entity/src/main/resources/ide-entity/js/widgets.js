@@ -98,7 +98,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	
 	var img = document.createElement('i');
 	img.setAttribute('class', 'fa fa-'+image+' fa-2x');
-	img.setAttribute('style', 'color: #337ab7');
+	//img.setAttribute('style', 'color: #337ab7');
 	//img.color = '#337ab7';
 	img.title = hint;
 	sidebar.appendChild(img);
@@ -132,7 +132,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#000000';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--modeler-entity-color)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -145,16 +145,18 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_GRADIENTCOLOR] = '#337ab7';
-	style[mxConstants.STYLE_FILLCOLOR] = '#337ab7';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#006292';
-	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
+	style[mxConstants.STYLE_FILLCOLOR] = 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = 'var(--modeler-entity-header-color)';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
 	style[mxConstants.STYLE_FONTSIZE] = '12';
 	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
 	// Looks better without opacity if shadow is enabled
 	style[mxConstants.STYLE_OPACITY] = '80';
 	style[mxConstants.STYLE_SHADOW] = 1;
@@ -162,7 +164,7 @@ function configureStylesheet(graph) {
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
 	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = '#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
