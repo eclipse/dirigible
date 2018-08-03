@@ -432,6 +432,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
 			if (value instanceof Short) {
 				value = Boolean.valueOf(((Short) value) != 0);
+			} else if (value instanceof Integer) {
+				value = Boolean.valueOf(((Integer) value) != 0);
+			} else if (value instanceof Long) {
+				value = Boolean.valueOf(((Long) value) != 0);
 			}
 		}
 		return value;
@@ -468,6 +472,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 		if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
 			if (value instanceof Integer) {
 				value = ((Integer) value).byteValue();
+			} else if (value instanceof Short) {
+				value = ((Short) value).byteValue();
 			}
 		}
 		return value;

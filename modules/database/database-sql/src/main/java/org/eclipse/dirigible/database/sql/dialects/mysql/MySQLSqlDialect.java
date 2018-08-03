@@ -10,6 +10,12 @@
 
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
@@ -75,6 +81,20 @@ public class MySQLSqlDialect extends
 	 */
 	@Override
 	public boolean isSequenceSupported() {
+		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
+	 */
+	@Override
+	public boolean exists(Connection connection, String table) throws SQLException {
+		DatabaseMetaData metadata = connection.getMetaData();
+		ResultSet resultSet = metadata.getTables(null, null, table.toUpperCase(), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+		if (resultSet.next()) {
+			return true;
+		}
 		return false;
 	}
 
