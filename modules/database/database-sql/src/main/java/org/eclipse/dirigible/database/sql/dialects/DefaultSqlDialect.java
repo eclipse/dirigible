@@ -181,10 +181,6 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		if (resultSet.next()) {
 			return true;
 		}
-		resultSet = metadata.getTables(null, null, table.toLowerCase(), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-		if (resultSet.next()) {
-			return true;
-		}
 		return false;
 	}
 

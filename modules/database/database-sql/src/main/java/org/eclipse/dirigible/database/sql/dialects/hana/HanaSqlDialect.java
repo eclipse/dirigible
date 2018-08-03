@@ -10,6 +10,9 @@
 
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
@@ -55,6 +58,20 @@ public class HanaSqlDialect extends
 	@Override
 	public HanaLastValueIdentityBuilder lastval(String... args) {
 		return new HanaLastValueIdentityBuilder(this, args);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String)
+	 */
+	@Override
+	public boolean exists(Connection connection, String table) throws SQLException {
+		try {
+			count(connection, table);
+		} catch(Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 }
