@@ -43,21 +43,41 @@ function createFolder(rootPath, zipEntry, zipInputStream){
 	folderLib.createFolder(parent, name);
 }
 
+function createParentFolder(path){
+	var upperPath = path.substring(0, path.lastIndexOf(SEPARATOR));
+	var upper = folderLib.getFolder(upperPath);
+	var upperName = path.substring(path.lastIndexOf(SEPARATOR) + 1);
+	
+	console.warn('Creating the parent folder first with path: ' + upperPath + ' and name: ' + upperName + ' ...');
+	try {
+		var parentFolder = folderLib.createFolder(upper, upperName);
+		if (parentFolder === null) {
+			createParentFolder(upperPath);
+			folderLib.createFolder(upper, upperName);
+		}
+	} catch(e) {
+		console.error(e.message);
+		createParentFolder(upperPath);
+		folderLib.createFolder(upper, upperName);
+	}
+	
+}
+
 function createFile(rootPath, zipEntry, zipInputStream){
 	var pathAndName = getFullPathAndName(rootPath, zipEntry.getName());
 	var path = pathAndName[0];
 	var name = pathAndName[1];
-	console.log('Creating file with path: ' + path + ' and name: ' + name + ' ...');
+	console.log('Creating file with root: ' + rootPath + ' path: ' + path + ' and name: ' + name + ' ...');
 	
 	var parent = null;
 	try {
 		parent = folderLib.getFolder(path);
+		if (parent === null) {
+			createParentFolder(path);
+		}
 	} catch(e) {
 		console.error(e.message);
-		var upper = folderLib.getFolder(rootPath);
-		var upperPath = path.substring(path.lastIndexOf(SEPARATOR) + 1);
-		console.warn('Creating the parent folder first with path: ' + path + ' ...');
-		folderLib.createFolder(upper, upperPath);
+		createParentFolder(path);
 	}
 	parent = folderLib.getFolder(path);
 
@@ -73,7 +93,9 @@ function getFullPathAndName(rootPath, fileFullName){
 	var innerPath = SEPARATOR + splittedFullName.slice(0, -1).join(SEPARATOR);
 	var fullPath = rootPath + innerPath;
 	var name = splittedFullName[splittedFullName.length - 1];
-	
+//	if (fullPath.startsWith('//')) {
+//		fullPath = fullPath.substring(1, fullPath.length);
+//	}
 	return [fullPath, name];
 }
 
