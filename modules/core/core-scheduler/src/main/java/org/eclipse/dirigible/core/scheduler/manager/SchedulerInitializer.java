@@ -146,9 +146,9 @@ public class SchedulerInitializer {
 		quartzDatabaseLayoutInitializer.initialize();
 		logger.info("Initializing the Quartz database done.");
 		
-		logger.info("Initializing the Repository form Master...");
+		logger.info("Initializing the Repository from Master...");
 		masterToRepositoryInitializer.initialize();
-		logger.info("Initializing the Repository form Master done.");
+		logger.info("Initializing the Repository from Master done.");
 		
 		SchedulerManager.createScheduler();
 		logger.info("Initializing the Scheduler done.");
