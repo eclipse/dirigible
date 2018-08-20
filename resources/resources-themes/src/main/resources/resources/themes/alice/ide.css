@@ -51,13 +51,13 @@ body {
 	vertical-align: top;
 	-webkit-flex: none;
 	flex: none;
-	position: relative;
+	position: fixed;
 	top: 44px;
 }
 .plane {
  	-webkit-flex: 1;
  	flex: 1 1 auto;
-    position: absolute;
+    position: fixed;
 	width: calc(100% - 4.5em - 20px);
 	height: calc(100% - (45px + 2em));
 	left: 4.5em;
@@ -79,7 +79,7 @@ body {
 	height: 2em;
 	background: transparent;
 	color: #000000;
-	position: relative;
+	position: fixed;
 }
 .lm_header .lm_tab {
 	background: transparent;
