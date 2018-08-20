@@ -124,7 +124,9 @@ public class PersistenceManager<T> {
 			}
 		}
 		PersistenceDropTableProcessor dropTableProcessor = new PersistenceDropTableProcessor(getEntityManagerInterceptor());
-		return dropTableProcessor.drop(connection, tableModel);
+		int result = dropTableProcessor.drop(connection, tableModel);
+		reset(connection, clazz);
+		return result;
 	}
 
 	/**
@@ -167,13 +169,13 @@ public class PersistenceManager<T> {
 				}
 				try {
 					tableCreate(connection, clazz);
+					EXISTING_TABLES_CACHE.add(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName());
 				} catch (Exception e) {
 					if (!tableExists(connection, clazz)) {
 						throw e;
 					}
 				}
 			}
-			EXISTING_TABLES_CACHE.add(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName());
 		}
 	}
 
@@ -194,6 +196,10 @@ public class PersistenceManager<T> {
 		EXISTING_TABLES_CACHE.clear();
 	}
 
+	public void reset(Connection connection, Class<T> clazz) {
+		String id = getConnectionIdentity(connection);
+		EXISTING_TABLES_CACHE.remove(id + CONNECTION_ID_SEPARATOR + clazz.getCanonicalName());
+	}
 	/**
 	 * Insert a single record in the table representing the POJO instance.
 	 *

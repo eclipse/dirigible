@@ -42,6 +42,7 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
+import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,10 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	
 	@Inject
 	private DataSource dataSource;
+
+	@Inject
+	private PersistenceManager<AccessDefinition> accessPersistenceManager;
+
 	
 	private volatile boolean upgradePassed; 
 
@@ -171,16 +176,14 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			  columnNames.add(name);
 			  if ("ACCESS_URI".equals(name)) {
 				  logger.warn("Upgrading Security Access Synchronizer from 3.1.x version to 3.2.x ...");
-				  Statement drop = connection.createStatement();
-				  drop.executeUpdate("DROP TABLE DIRIGIBLE_SECURITY_ACCESS");
+				  accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
 				  logger.warn("Upgrade of Security Access Synchronizer from 3.1.x version to 3.2.x passed successfully.");
 			  }
 			}
 			if (!columnNames.contains("ACCESS_HASH")) {
 				logger.warn("Upgrading Security Access Synchronizer from 3.2.1 version to 3.2.2 ...");
-				  Statement drop = connection.createStatement();
-				  drop.executeUpdate("DROP TABLE DIRIGIBLE_SECURITY_ACCESS");
-				  logger.warn("Upgrade of Security Access Synchronizer from 3.2.1 version to 3.2.2 passed successfully.");
+				accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
+				logger.warn("Upgrade of Security Access Synchronizer from 3.2.1 version to 3.2.2 passed successfully.");
 			}
 		}
 		return true;
