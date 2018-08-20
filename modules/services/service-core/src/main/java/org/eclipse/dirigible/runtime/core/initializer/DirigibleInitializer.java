@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ServiceLoader;
 
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
@@ -85,10 +86,29 @@ public class DirigibleInitializer {
 	}
 
 	private void printAllConfigurations() {
+		
+		logger.info("---------- Environment ----------");
+		logger.info("========== Configurations =======");
 		String[] keys = Configuration.getKeys();
 		for (String key : keys) {
 			String value = Configuration.get(key);
 			logger.info("Configuration: {}={}", key, value);
+		}
+		
+		logger.info("========== Properties =======");
+		Properties props = System.getProperties();
+		for (Map.Entry<Object, Object> entry : props.entrySet()) {
+			if (entry.getKey() != null && entry.getKey().toString().startsWith("DIRIGIBLE")) {
+				logger.info("Configuration: {}={}", entry.getKey().toString(), entry.getValue());
+			}
+		}
+		
+		logger.info("========== Variables =======");
+		Map<String, String> env = System.getenv();
+		for (Map.Entry<String, String> entry : env.entrySet()) {
+			if (entry.getKey() != null && entry.getKey().startsWith("DIRIGIBLE")) {
+				logger.info("Configuration: {}={}", entry.getKey(), entry.getValue());
+			}
 		}
 	}
 
