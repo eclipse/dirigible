@@ -97,6 +97,9 @@ nav.navbar .dropdown-menu{
 .lm_header .lm_tab.lm_active{
   box-shadow: none;
   padding-bottom: 4px;
+  border-top: #609dd2;
+  border-top-width: 2px;
+  border-top-style: solid;
 }
  
 .lm_header .lm_tab {

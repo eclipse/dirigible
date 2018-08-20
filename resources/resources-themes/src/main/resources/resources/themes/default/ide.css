@@ -90,7 +90,10 @@ nav.navbar .dropdown-menu{
 }
 .lm_header .lm_tab.lm_active{
   box-shadow: none;
-  padding-bottom: 4px;
+  padding-bottom: 0px;
+  border-top: #daa50e;
+  border-top-width: 2px;
+  border-top-style: solid;
 }
  
 .lm_header .lm_tab {
@@ -280,3 +283,8 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background: #555 !important;
 	color:#eee !important;
 }
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+	color: #daa50e;
+}
+
