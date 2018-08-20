@@ -43,6 +43,7 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 		if (masterType == null) {
 			// no master repository provider configured - default will not be chosen
 			logger.warn("No master repository provider configured.");
+			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
 			return;
 		}
 		
@@ -59,6 +60,7 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 			bind(IMasterRepository.class).toInstance(createZipInstance());
 			logger.info("Bound Zip Repository as the Master Repository for this instance.");
 		} else {
+			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
 			logger.error("Unknown master repository provider configured: " + masterType);
 		}
 		

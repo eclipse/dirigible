@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.ws.commons.schema.internal.DummyInternalClass;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
@@ -37,7 +38,7 @@ public class MasterToRepositoryInitializer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SQLException, IOException {
-		if (this.masterRepository != null) {
+		if (this.masterRepository != null && this.masterRepository.hasCollection("/")) {
 			if (this.repository != null) {
 				copyRepository(masterRepository, repository);
 			} else {
