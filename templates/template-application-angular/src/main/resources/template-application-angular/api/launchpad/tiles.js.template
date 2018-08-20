@@ -32,5 +32,12 @@ for (var i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     }
 }
 
+tiles = tiles.sort(function(a, b) {
+	var result = a.tiles[0].order - b.tiles[0].order;
+	if (result === 0) {
+		return a.group < b.group ? -1 : a.group > b.group ? 1 : 0;
+	}
+	return result;
+});
 
 response.println(JSON.stringify(tiles));

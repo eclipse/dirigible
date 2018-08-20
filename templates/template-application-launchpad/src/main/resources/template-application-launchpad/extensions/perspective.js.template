@@ -11,8 +11,8 @@
 exports.getPerspective = function() {
 	return {
 		'name': 'Home',
+		'image': 'home',
 		'link': '/services/v3/web/{{projectName}}/index.html',
-		'order': '0',
-		'image': 'home'
+		'order': 0
 	};
 };
