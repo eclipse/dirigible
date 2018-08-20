@@ -54,8 +54,6 @@ public class SchedulerManager {
 
 	private static Scheduler scheduler = null;
 
-	private static SchedulerManager INSTANCE = null;
-
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DRIVER = "DIRIGIBLE_SCHEDULER_DATABASE_DRIVER";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_URL = "DIRIGIBLE_SCHEDULER_DATABASE_URL";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_USER = "DIRIGIBLE_SCHEDULER_DATABASE_USER";

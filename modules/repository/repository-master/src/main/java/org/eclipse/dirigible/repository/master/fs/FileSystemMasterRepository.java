@@ -10,10 +10,10 @@
 
 package org.eclipse.dirigible.repository.master.fs;
 
+import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.RepositoryInitializationException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
-import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 /**
  * The File System Master Repository.

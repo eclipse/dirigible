@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.quartz.QuartzDatabaseLayoutInitializer;
+import org.eclipse.dirigible.core.scheduler.repository.MasterToRepositoryInitializer;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ public class SchedulerInitializer {
 
 	@Inject
 	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer;
+	
+	@Inject
+	private MasterToRepositoryInitializer masterToRepositoryInitializer;
 
 	/**
 	 * Initialize the scheduler.
@@ -136,8 +140,18 @@ public class SchedulerInitializer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void initializeScheduler() throws SchedulerException, SQLException, IOException {
+		logger.info("Initializing the Scheduler...");
+		
+		logger.info("Initializing the Quartz database...");
 		quartzDatabaseLayoutInitializer.initialize();
+		logger.info("Initializing the Quartz database done.");
+		
+		logger.info("Initializing the Repository form Master...");
+		masterToRepositoryInitializer.initialize();
+		logger.info("Initializing the Repository form Master done.");
+		
 		SchedulerManager.createScheduler();
+		logger.info("Initializing the Scheduler done.");
 	}
 
 	/**
