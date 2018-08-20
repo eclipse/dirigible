@@ -54,9 +54,10 @@ public class ZipRepository extends FileSystemRepository {
 		if (zipFile.exists()) {
 			try {
 				Path rootFolder = Files.createTempDirectory("zip_repository");
-				unpackZip(new FileInputStream(zip), rootFolder.toString());
 				String zipFileName = zipFile.getName();
 				zipRepositoryRootFolder = zipFileName.substring(0, zipFileName.lastIndexOf("."));
+				Path unpackFolder = Paths.get(rootFolder.toString(), zipRepositoryRootFolder, "root");
+				unpackZip(new FileInputStream(zip), unpackFolder.toString());
 				createRepository(rootFolder.toString(), true);
 			} catch (IOException e) {
 				throw new LocalRepositoryException(e);

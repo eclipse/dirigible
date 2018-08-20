@@ -12,8 +12,8 @@ package org.eclipse.dirigible.repository.master.jar;
 
 import java.io.IOException;
 
+import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
-import org.eclipse.dirigible.repository.master.IMasterRepository;
 
 /**
  * The Jar Master Repository.
