@@ -90,7 +90,10 @@ nav.navbar .dropdown-menu{
 }
 .lm_header .lm_tab.lm_active{
   box-shadow: none;
-  padding-bottom: 4px;
+  padding-bottom: 0px;
+  border-top: #d41;
+  border-top-width: 2px;
+  border-top-style: solid;
 }
  
 .lm_header .lm_tab {
