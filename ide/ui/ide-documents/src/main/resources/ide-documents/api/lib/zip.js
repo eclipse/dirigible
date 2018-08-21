@@ -40,6 +40,10 @@ function createFolder(rootPath, zipEntry, zipInputStream){
 	var name = pathAndName[1];
 	console.log('Creating folder with path:' + path + ' and name: ' + name + ' ...');
 	var parent = folderLib.getFolder(path);
+	if (parent === null) {
+		createParentFolder(path);
+	}
+	var parent = folderLib.getFolder(path);
 	folderLib.createFolder(parent, name);
 }
 
@@ -123,9 +127,9 @@ function traverseFolder(folder, path, zipOutputStream) {
 		var childObject = objectLib.getById(child.getId());
 		var zipEntry;
 		if (isFolder(child)) {
-			// zipEntry = zipOutputStream.createZipEntry(entryPath + SEPARATOR);
-			// console.log("Zip directory entry: " + zipEntry.getName());
-			// zipOutputStream.putNextEntry(zipEntry);
+			zipEntry = zipOutputStream.createZipEntry(entryPath + SEPARATOR);
+			console.log("Zip directory entry: " + zipEntry.getName());
+			//zipOutputStream.putNextEntry(zipEntry);
 			traverseFolder(childObject, path + SEPARATOR + child.getName(), zipOutputStream);
 		} else {
 			zipOutputStream.createZipEntry(entryPath);
