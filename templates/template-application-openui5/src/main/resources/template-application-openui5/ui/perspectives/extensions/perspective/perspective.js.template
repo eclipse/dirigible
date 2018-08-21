@@ -10,8 +10,23 @@
 
 exports.getPerspective = function() {
 	return {
-		'name': '{{brand}}',
-		'icon': 'sap-icon://employee',
-		'url': '../{{projectName}}/index.html'
+#if($perspectiveName)
+		'name': '${perspectiveName}',
+#elseif($brand)
+		'name': '${brand}',
+#else
+		'name': '${projectName}',
+#end
+#if($perspectiveIcon)
+		'image': '${perspectiveIcon}',
+#else
+		'image': 'life-ring',
+#end
+		'link': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+#if($perspectiveOrder)
+		'order': ${perspectiveOrder},
+#else
+		'order': 999
+#end
 	};
 };
