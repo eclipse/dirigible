@@ -88,7 +88,13 @@
             <artifactId>dirigible-repository-local</artifactId>
             <version>3.2.5-SNAPSHOT</version>
             <scope>test</scope>
-        </dependency>    	
+        </dependency>
+        <dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-repository-master</artifactId>
+			<version>3.2.5-SNAPSHOT</version>
+			<scope>test</scope>
+    	</dependency>
     </dependencies>
 
 </project>
