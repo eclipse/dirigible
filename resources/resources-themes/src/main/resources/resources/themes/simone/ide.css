@@ -27,66 +27,93 @@ body {
 	display: flex;
 	flex-wrap: row wrap;
 	width: 100%;
-	height: calc(100% - 24px);
+	height: calc(100% - 23px);
 }
 .sidebar {
+	background: #3f5161;
 	width: 4.5em;
 	vertical-align: top;
 	-webkit-flex: none;
 	flex: none;
 	position: relative;
-	top: 20px;
+	top: 24px;
 }
 .plane {
  	-webkit-flex: 1;
  	flex: 1 1 auto;
     position: absolute;
 	width: calc(100% - 4.5em);
-	height: calc(100% - (24px + 2em));
+	height: calc(100% - (26px + 2em));
 	left: 4.5em;
-	top: 24px;
+	top: 27px;
 }
 .statusbar {
 	width: 100%;
 	height: 2em;
-	background: #6a8faf;
+	background: #65819a;
 	color: #fec600;
 	position: relative;
 }
 .lm_header .lm_tab {
-	background: #acc1d2;
+	background: #748ea4;
+	color: #28343e;
 }
 .lm_header .lm_active {
-    background: #9cb4c9;
+    background: #b2c0cd;
+    color: #3f5161;
 }
 .list-group-item {
   background: none !important;
   border: transparent !important;
+  color: aliceblue !important;
+}
+
+.list-group-item.active {
+	color: #00dddd !important;
+}
+.list-group-item.active:hover {
+	color: #00ffff !important;
 }
 
 a.list-group-item.hover,
 a.list-group-item:hover{
   background-color: #aaa;
-  color: #222;
+  color: white !important;
 }
 
 nav.navbar {
-  background-color: transparent;
+  /*background-color: transparent;*/
+  background-color: #2f3c48;
   border: transparent;
   top: 0;
 }
 
+.navbar-inverse .navbar-brand {
+    color: aliceblue;
+}
+
+.navbar-inverse .navbar-brand:hover {
+    color: #00ffff;
+}
+
 nav.navbar a{
   line-height: 21px;
+  color: aliceblue !important;
 }
 nav.navbar .dropdown-menu{
   border: 0px;
+  background-color: #3f5161 !important;
 }
 .navbar-inverse .navbar-nav>.open>a, 
 .navbar-inverse .navbar-nav>.open>a:focus, 
 .navbar-inverse .navbar-nav>.open>a:hover{
-  background-color: #aaa;
+  background-color: #3f5161;
 }
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+	background-color:  #2f3c48;
+}
+
 
 .lm_header,
 .lm_header .lm_tab,
@@ -108,11 +135,12 @@ nav.navbar .dropdown-menu{
   box-shadow: none;
   /*top: 1px;  */
 }
-.lm_header, .lm_splitter{
-  background-color: #cddae4;
+.lm_header {
+  background-color: #65819a;
 }
 .lm_splitter{
   opacity: inherit;
+  background-color: #65819a;
 }
 .lm_items {
   /*border: 1px solid #aaa;*/
@@ -163,7 +191,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .user {
-	color: #434344;
+	color: #00dddd;
 }
 
 .row {
