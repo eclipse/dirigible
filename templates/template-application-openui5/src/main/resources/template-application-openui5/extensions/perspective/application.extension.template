@@ -1,5 +1,0 @@
-{
-	'description': '{{name}} perspective',
-	'extensionPoint': 'shell-{{extensionName}}-perspective',
-	'module': '{{projectName}}/extensions/perspective/home.js'
-}
