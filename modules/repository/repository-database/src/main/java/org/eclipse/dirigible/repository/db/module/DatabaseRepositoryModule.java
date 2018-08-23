@@ -12,12 +12,11 @@ package org.eclipse.dirigible.repository.db.module;
 
 import java.util.ServiceLoader;
 
-import javax.tools.DocumentationTool.DocumentationTask;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.db.DatabaseRepository;
 import org.slf4j.Logger;
@@ -44,11 +43,15 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 		String dataSourceType = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED);
 		String dataSourceName = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 
-		DatabaseRepository databaseRepository = createInstance(dataSourceType, dataSourceName);
-		bind(DatabaseRepository.class).toInstance(databaseRepository);
+		
 		if (DatabaseRepository.TYPE.equals(repositoryProvider)) {
+			DatabaseRepository databaseRepository = createInstance(dataSourceType, dataSourceName);
+			bind(DatabaseRepository.class).toInstance(databaseRepository);
 			bind(IRepository.class).toInstance(databaseRepository);
 			logger.info("Bound Database Repository as the Repository for this instance.");
+			
+			logger.info("No master repository provider supported in case of a database repository setup.");
+			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
 		}
 	}
 
