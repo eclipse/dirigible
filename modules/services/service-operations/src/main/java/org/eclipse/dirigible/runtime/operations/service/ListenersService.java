@@ -25,7 +25,6 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
-import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.runtime.operations.processor.ListenersProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

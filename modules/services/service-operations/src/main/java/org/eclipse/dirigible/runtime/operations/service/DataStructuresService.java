@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.runtime.operations.processor.DataStructuresProcessor;
 import org.slf4j.Logger;
