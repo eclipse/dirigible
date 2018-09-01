@@ -12,7 +12,9 @@ package org.eclipse.dirigible.commons.api.module;
 
 import static java.text.MessageFormat.format;
 
+import java.util.HashSet;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,8 @@ import com.google.inject.AbstractModule;
 public class DirigibleModulesInstallerModule extends AbstractModule {
 
 	private Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
+	
+	private static Set<String> modules = new HashSet<String>();
 
 	/*
 	 * (non-Javadoc)
@@ -42,8 +46,13 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 				logger.error(format("Failed installing Dirigible Module [{0}].", next.getName()), e);
 			}
 			logger.debug(format("Done installing Dirigible Module [{0}].", next.getName()));
+			modules.add(next.getName());
 		}
 		logger.debug("Done initializing Dirigible Modules.");
+	}
+	
+	public static Set<String> getModules() {
+		return modules;
 	}
 
 }
