@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.2.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,37 +32,37 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-scheduler</artifactId>
-        	<version>3.3.0-SNAPSHOT</version>
+        	<version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-security</artifactId>
-        	<version>3.3.0-SNAPSHOT</version>
+        	<version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-messaging</artifactId>
-        	<version>3.3.0-SNAPSHOT</version>
+        	<version>3.2.6-SNAPSHOT</version>
         </dependency>
          <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-database-data-structures</artifactId>
-        	<version>3.3.0-SNAPSHOT</version>
+        	<version>3.2.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

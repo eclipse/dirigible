@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-core-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.2.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -33,42 +33,42 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-extensions</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-git</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-indexing</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-messaging</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-publisher</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-scheduler</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-security</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-workspace</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <version>3.2.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
