@@ -18,7 +18,10 @@ public class ImageFacade {
 
 	/**
 	 * Resize an image to the given boundaries
-	 * @param path path to file
+	 * @param original original image
+	 * @param type type of the image
+	 * @param width width of the new image
+	 * @param height height of the new image
 	 * @return the created input stream
 	 * @throws IOException in case of failure in underlying layer
 	 */
