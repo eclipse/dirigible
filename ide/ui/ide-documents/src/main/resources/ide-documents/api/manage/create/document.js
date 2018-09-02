@@ -1,6 +1,3 @@
-/* globals $ */
-/* eslint-env node, dirigible */
-
 var request = require("http/v3/request");
 var response = require("http/v3/response");
 var upload = require('http/v3/upload');
