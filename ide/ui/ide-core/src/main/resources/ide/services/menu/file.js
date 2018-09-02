@@ -15,6 +15,43 @@ exports.getMenu = function() {
 			"order":"100",
 			"items":[
 				{
+					"name":"New",
+					"link":"#",
+					"order":"101",
+					"event":"",
+					"data": "",
+					"items":[
+						{
+							"name":"Workspace",
+							"link":"#",
+							"order":"101",
+							"event":"workspace.create.workspace",
+							"data": ""
+						},
+						{
+							"name":"Project",
+							"link":"#",
+							"order":"102",
+							"event":"workspace.create.project",
+							"data": ""
+						}
+					]
+				},
+				{
+					"name":"Publish All",
+					"link":"#",
+					"order":"102",
+					"event":"workspace.publish.all",
+					"data": ""
+				},
+				{
+					"name":"Export All",
+					"link":"#",
+					"order":"103",
+					"event":"workspace.export.all",
+					"data": ""
+				},
+				{
 					"name":"Save All",
 					"link":"#",
 					"order":"105",

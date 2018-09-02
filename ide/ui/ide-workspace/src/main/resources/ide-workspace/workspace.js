@@ -1144,6 +1144,22 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		}.bind(this));
 	}.bind(this), true);
 	
+	messageHub.on('workspace.create.workspace', function(msg){
+		$('#createWorkspace').click();
+	}.bind(this), true);
+	
+	messageHub.on('workspace.create.project', function(msg){
+		$('#createProject').click();
+	}.bind(this), true);
+	
+	messageHub.on('workspace.publish.all', function(msg){
+		publishService.publish(this.selectedWorkspace + '/*');
+	}.bind(this), true);
+	
+	messageHub.on('workspace.export.all', function(msg){
+		exportService.exportProject(this.selectedWorkspace + '/*');
+	}.bind(this), true);
+	
 	//$.jstree.defaults.unique.case_sensitive = true;
 
 }]);
