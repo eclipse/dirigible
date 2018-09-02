@@ -249,6 +249,9 @@ angular.module('ideUiCore', ['ngResource'])
 				} else if(item.name === 'Open Perspective'){
 					// open perspective`
 					window.open(subItem.onClick.substring(subItem.onClick.indexOf('(')+2, subItem.onClick.indexOf(',')-1));//TODO: change the menu service ot provide paths instead
+				} else if(item.event === 'openView'){
+					// open view
+					Layouts.manager.openView(item.name.toLowerCase());
 				} else {
 					if (item.event === 'open') {
 						window.open(item.data, '_blank');
