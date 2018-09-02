@@ -44,11 +44,17 @@ exports.getMenu = function() {
 					"data": "https://github.com/eclipse/dirigible/wiki"
 				},
 				{
-					"name":"About",
+					"name":"Site",
 					"link":"#",
 					"order":"990",
 					"event":"open",
 					"data": "http://www.dirigible.io"
+				},
+				{
+					"name":"About",
+					"link":"#",
+					"order":"991",
+					"event":"openView"
 				}
 			]
 		};
