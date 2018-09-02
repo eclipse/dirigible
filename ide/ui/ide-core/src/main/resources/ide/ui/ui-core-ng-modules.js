@@ -257,7 +257,11 @@ angular.module('ideUiCore', ['ngResource'])
 						window.open(item.data, '_blank');
 					} else {
 						//eval(item.onClick);
-						messageHub.send(item.event, item.data, true);	
+						if (subItem) {
+							messageHub.send(subItem.event, subItem.data, true);
+						} else {
+							messageHub.send(item.event, item.data, true);
+						}
 					}
 				}
 			};
