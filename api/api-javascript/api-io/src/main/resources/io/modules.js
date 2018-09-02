@@ -22,3 +22,8 @@ exports.getZip = function() {
 	var zip = require('io/v3/zip');
 	return zip;
 };
+
+exports.getImage = function() {
+	var image = require('io/v3/image');
+	return image;
+};
