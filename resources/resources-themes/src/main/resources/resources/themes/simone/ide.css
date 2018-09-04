@@ -311,4 +311,33 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .button:hover {
 	background: #999 !important;
 	color:#ddd !important;
-} 
+}
+
+.plane-inner {
+ 	left: 0em;
+    top: 3px;
+    width: 100%;
+    height: calc(100% - 3px);
+}
+
+.panel-heading {
+    background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+}
+.panel > header {
+	background-color: #495a69;
+	color: #e1e6ea;
+	background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+	background-size: cover;
+}
+.leading {
+	font-size: 38px;
+	line-height: 1 !important;
+	font-family: Helvetica Neue, Arial;
+}
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #316f8f;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+}
