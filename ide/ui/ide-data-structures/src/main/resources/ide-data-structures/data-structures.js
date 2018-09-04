@@ -11,7 +11,7 @@
 angular.module('dataStructures', [])
 .controller('DataStructuresController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/v3/ops/data-structures').then(function(response) {
+	$http.get('../../../../services/v3/ops/data-structures').then(function(response) {
 		$scope.dataStructuresList = response.data;
 	});
 

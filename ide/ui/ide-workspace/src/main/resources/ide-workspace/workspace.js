@@ -568,12 +568,12 @@ TemplatesService.prototype.listTemplates = function(){
 }
 
 angular.module('workspace.config', [])
-	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
-	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
-	.constant('PUBLISH_SVC_URL','/services/v3/ide/publisher/request')
-	.constant('EXPORT_SVC_URL','/services/v3/transport/project')
-	.constant('TEMPLATES_SVC_URL','/services/v3/js/ide/services/templates.js')
-	.constant('GENERATION_SVC_URL','/services/v3/ide/generate');
+	.constant('WS_SVC_URL','../../../../services/v3/ide/workspaces')
+	.constant('WS_SVC_MANAGER_URL','../../../../services/v3/ide/workspace')
+	.constant('PUBLISH_SVC_URL','../../../../services/v3/ide/publisher/request')
+	.constant('EXPORT_SVC_URL','../../../../services/v3/transport/project')
+	.constant('TEMPLATES_SVC_URL','../../../../services/v3/js/ide/services/templates.js')
+	.constant('GENERATION_SVC_URL','../../../../services/v3/ide/generate');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -1126,11 +1126,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
-		$('a[href="/services/v3/core/theme/jstree.css"]').remove();
-		$('<link id="theme-stylesheet" href="/services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v3/core/theme/jstree.css"]').remove();
+		$('<link id="theme-stylesheet" href="../../../../services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
 		
-		$('a[href="/services/v3/core/theme/ide.css"]').remove();
-		$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v3/core/theme/ide.css"]').remove();
+		$('<link href="../../../../services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
 		
 		$('#theme-stylesheet').remove();
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');

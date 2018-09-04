@@ -17,7 +17,7 @@
 		
 		<script src="../ide/ui/message-hub.js"></script>
 		
-	    <link rel="stylesheet" type="text/css" href="/services/v3/core/theme/orion.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../../../services/v3/core/theme/orion.css"/>
         <style>
 	        body {
 	            overflow: hidden;
@@ -126,7 +126,7 @@
 				
 			function loadContents() {
 				if (file) {
-					return getResource('/services/v3/ide/workspaces' + file);
+					return getResource('../../../../services/v3/ide/workspaces' + file);
 				}
 				console.error('file parameter is not present in the URL');
 			}
@@ -177,7 +177,7 @@
 				console.log('Save called...');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '/services/v3/ide/workspaces' + file);
+					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
 							console.log('file saved: ' + file);

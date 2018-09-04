@@ -73,8 +73,8 @@ DebuggerService.prototype.listWorkspaces = function() {
 };
 
 angular.module('debugger.config', [])
-	.constant('DEBUGGER_SVC_URL','/services/v3/ide/debug/rhino')
-	.constant('WORKSPACES_SVC_URL','/services/v3/ide/workspaces');
+	.constant('DEBUGGER_SVC_URL','../../../../../../services/v3/ide/debug/rhino')
+	.constant('WORKSPACES_SVC_URL','../../../../../../services/v3/ide/workspaces');
 
 	
 angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])

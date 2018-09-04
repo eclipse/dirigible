@@ -417,9 +417,9 @@ GitService.prototype.shareProject = function(wsTree, workspace, project, reposit
 }
 
 angular.module('workspace.config', [])
-	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
-	.constant('WS_SVC_MANAGER_URL','/services/v3/ide/workspace')
-	.constant('GIT_SVC_URL','/services/v3/ide/git')
+	.constant('WS_SVC_URL','../../../../../services/v3/ide/workspaces')
+	.constant('WS_SVC_MANAGER_URL','../../../../../services/v3/ide/workspace')
+	.constant('GIT_SVC_URL','../../../../../services/v3/ide/git')
 	
 angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {

@@ -11,7 +11,7 @@
 angular.module('about', [])
 .controller('AboutController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/v3/version').then(function(response) {
+	$http.get('../../../../../services/v3/version').then(function(response) {
 		$scope.version = response.data;
 	});
 
