@@ -5,13 +5,11 @@ var documentLib = require("ide-documents/api/lib/document");
  
 exports.uploadImageWithResize = function(folder, name, image, width, height) {
 	
-	console.error(">>>>>>>>>>>>>>");
-	
-	var fileName = name;
+    var fileName = name;
     var mimetype = image.getContentType();
     var originalInputStream = image.getInputStream();
     var inputStream = new streams.InputStream();
-	inputStream.uuid = originalInputStream.uuid;
+    inputStream.uuid = originalInputStream.uuid;
                
     var imageType = mimetype.split('/')[1];
     

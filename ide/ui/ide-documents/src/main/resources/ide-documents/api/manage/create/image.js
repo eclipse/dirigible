@@ -21,17 +21,17 @@ function handlePost(){
 		var result = [];
 		var overwrite = request.getParameter('overwrite');
 		var width = request.getParameter('width');
-        var height = request.getParameter('height');
+		var height = request.getParameter('height');
         
 		
 		for (var i = 0 ; i < documents.size(); i ++) {
 			var folder = folderLib.getFolder(path);
-            var name = documents.get(i).getName();
-            if (width && height && name){
-            	result.push(imageLib.uploadImageWithResize(folder, name, documents.get(i), parseInt(width), parseInt(height)));
-            } else {
-                result.push(documentLib.uploadDocument(folder, documents.get(i)));
-            }
+			var name = documents.get(i).getName();
+			if (width && height && name){
+				result.push(imageLib.uploadImageWithResize(folder, name, documents.get(i), parseInt(width), parseInt(height)));
+			} else {
+				result.push(documentLib.uploadDocument(folder, documents.get(i)));
+			}
 		}
 	} else {
 		printError(response.BAD_REQUEST, 4, "The request's content must be 'multipart'");
