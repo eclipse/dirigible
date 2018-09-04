@@ -30,7 +30,7 @@
 		<script src="lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/ace/ext-language_tools.js" type="text/javascript"></script>
 		
-		<link rel="stylesheet" href="/services/v3/core/theme/ace.css">
+		<link rel="stylesheet" href="../../../../services/v3/core/theme/ace.css">
 
 		<script src="../ide/ui/message-hub.js"></script>
 	</head>
@@ -212,7 +212,7 @@
 			
 			function loadContents() {
 				if (file) {
-					return getResource('/services/v3/ide/workspaces' + file);
+					return getResource('../../../../services/v3/ide/workspaces' + file);
 				}
 				console.error('file parameter is not present in the URL');
 			}
@@ -226,7 +226,7 @@
 				console.log('Save called...');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '/services/v3/ide/workspaces' + file);
+					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
 							console.log('file saved: ' + file);

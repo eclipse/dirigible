@@ -12,13 +12,13 @@ angular.module('logs', [])
 .controller('LogsController', ['$scope', '$http', function ($scope, $http) {
 
 	$scope.selectedLog = null;
-	$http.get('/services/v3/ops/logs').then(function(response) {
+	$http.get('../../../../services/v3/ops/logs').then(function(response) {
 		$scope.logsList = response.data;
 	});
 	
 	$scope.logChanged = function() {
 		if ($scope.selectedLog) {
-			$http.get('/services/v3/ops/logs/' + $scope.selectedLog).then(function(response) {
+			$http.get('../../../../services/v3/ops/logs/' + $scope.selectedLog).then(function(response) {
 				$scope.logContent = response.data;
 			});	
 		}

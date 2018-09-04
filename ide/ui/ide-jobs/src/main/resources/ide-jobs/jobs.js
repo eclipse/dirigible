@@ -11,7 +11,7 @@
 angular.module('jobs', [])
 .controller('JobsController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/v3/ops/jobs').then(function(response) {
+	$http.get('../../../../services/v3/ops/jobs').then(function(response) {
 		$scope.jobsList = response.data;
 	});
 

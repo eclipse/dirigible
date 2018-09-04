@@ -38,14 +38,14 @@ angular.module('ideUiCore', ['ngResource'])
   }];
 })
 .factory('Theme', ['$resource', function($resource){
-	var themeswitcher = $resource('/services/v3/core/theme?name=:themeName', {themeName: 'default'});
+	var themeswitcher = $resource('../../../../services/v3/core/theme?name=:themeName', {themeName: 'default'});
 	var themes = {
-		"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
-		"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
-		"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css",
-		"simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css",
-		"alice" : "/services/v3/web/resources/themes/alice/bootstrap.min.css",
-		"florence" : "/services/v3/web/resources/themes/florence/bootstrap.min.css"
+		"default": "../../../../services/v3/web/resources/themes/default/bootstrap.min.css",
+		"wendy" : "../../../../services/v3/web/resources/themes/wendy/bootstrap.min.css",
+		"baroness" : "../../../../services/v3/web/resources/themes/baroness/bootstrap.min.css",
+		"simone" : "../../../../services/v3/web/resources/themes/simone/bootstrap.min.css",
+		"alice" : "../../../../services/v3/web/resources/themes/alice/bootstrap.min.css",
+		"florence" : "../../../../services/v3/web/resources/themes/florence/bootstrap.min.css"
 	};
 	return {
 		changeTheme: function(themeName){
@@ -168,7 +168,7 @@ angular.module('ideUiCore', ['ngResource'])
 							src += "&contentType="+componentState.contentType;
 					} else {
 						container.setTitle("Welcome");
-						src = '/services/v3/web/ide/welcome.html';
+						src = '../../../../services/v3/web/ide/welcome.html';
 					}
 					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
 				})(componentState, this);
@@ -272,7 +272,7 @@ angular.module('ideUiCore', ['ngResource'])
 			};
 			scope.user = User.get();
 		},
-		templateUrl: '/services/v3/web/ide/ui/tmpl/menu.html'
+		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -286,7 +286,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			scope.perspectives = Perspectives.query();
 		},
-		templateUrl: '/services/v3/web/ide/ui/tmpl/sidebar.html'
+		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/sidebar.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){

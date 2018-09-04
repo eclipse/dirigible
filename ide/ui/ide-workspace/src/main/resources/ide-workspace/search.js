@@ -164,8 +164,8 @@ WorkspaceTreeAdapter.prototype.refresh = function(node){
 };
 
 angular.module('workspace.config', [])
-	.constant('WS_SVC_URL','/services/v3/ide/workspaces')
-	.constant('WS_SVC_SEARCH_URL','/services/v3/ide/workspace-search');
+	.constant('WS_SVC_URL','../../../../services/v3/ide/workspaces')
+	.constant('WS_SVC_SEARCH_URL','../../../../services/v3/ide/workspace-search');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {
@@ -399,11 +399,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
-		$('a[href="/services/v3/core/theme/jstree.css"]').remove();
-		$('<link id="theme-stylesheet" href="/services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v3/core/theme/jstree.css"]').remove();
+		$('<link id="theme-stylesheet" href="../../../../services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
 		
-		$('a[href="/services/v3/core/theme/ide.css"]').remove();
-		$('<link href="/services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v3/core/theme/ide.css"]').remove();
+		$('<link href="../../../../services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
 		
 		$('#theme-stylesheet').remove();
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
