@@ -33,8 +33,7 @@ UriBuilder.prototype.path = function(_pathSegments){
 	return this;
 };
 UriBuilder.prototype.build = function(){
-	var uriPath = '/'+this.pathSegments.join('/');
-	return uriPath;
+	return this.pathSegments.join('/');
 };
 
 /**
@@ -576,6 +575,14 @@ angular.module('workspace.config', [])
 	.constant('GENERATION_SVC_URL','../../../../services/v3/ide/generate');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+.factory('httpRequestInterceptor', function () {
+	return {
+		request: function (config) {
+			config.headers['X-Requested-With'] = 'Fetch';
+			return config;
+		}
+	};
+})
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
 	$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status){
@@ -587,6 +594,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		}
 		return data;
 	});
+	$httpProvider.interceptors.push('httpRequestInterceptor');
 }])
 .factory('messageHub', [function(){
 	var messageHub = new FramesMessageHub();	

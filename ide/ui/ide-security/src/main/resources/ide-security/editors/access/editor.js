@@ -2,26 +2,42 @@ angular.module('page', []);
 angular.module('page').controller('PageController', function ($scope, $http) {
 	
 	
-	$scope.methods = [
-		{"key":"*","label":"*"},
-		{"key":"GET","label":"GET"},
-		{"key":"POST","label":"POST"},
-		{"key":"PUT","label":"PUT"},
-		{"key":"DELETE","label":"DELETE"},
-		{"key":"READ","label":"READ"},
-		{"key":"WRITE","label":"WRITE"}
-	];
+	$scope.methods = [{
+		'key': '*',
+		'label': '*'
+	}, {
+		'key': 'GET',
+		'label': 'GET'
+	}, {
+		'key': 'POST',
+		'label': 'POST'
+	}, {
+		'key': 'PUT',
+		'label': 'PUT'
+	}, {
+		'key': 'DELETE',
+		'label': 'DELETE'
+	}, {
+		'key': 'READ',
+		'label': 'READ'
+	}, {
+		'key': 'WRITE',
+		'label': 'WRITE'
+	}];
 	
-	$scope.scopes = [
-		{"key":"HTTP","label":"HTTP"},
-		{"key":"CMIS","label":"CMIS"}
-	];
+	$scope.scopes = [{
+		'key': 'HTTP',
+		'label': 'HTTP'
+	}, {
+		'key': 'CMIS',
+		'label': 'CMIS'
+	}];
 	
 	$scope.openNewDialog = function() {
 		$scope.actionType = 'new';
 		$scope.entity = {};
-		$scope.entity.method = "*";
-		$scope.entity.scope = "HTTP";
+		$scope.entity.method = '*';
+		$scope.entity.scope = 'HTTP';
 		toggleEntityModal();
 	};
 
@@ -103,6 +119,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 		if ($scope.file) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '../../../../../../services/v3/ide/workspaces' + $scope.file);
+			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: ' + $scope.file);

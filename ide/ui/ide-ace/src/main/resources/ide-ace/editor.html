@@ -227,6 +227,7 @@
 				if (file) {
 					var xhr = new XMLHttpRequest();
 					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
+					xhr.setRequestHeader('X-Requested-With', 'Fetch');
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
 							console.log('file saved: ' + file);

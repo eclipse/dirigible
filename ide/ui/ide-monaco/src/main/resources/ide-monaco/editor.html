@@ -68,6 +68,7 @@
 						if (fileName) {
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', this.workspaceApiUrl + fileName);
+							xhr.setRequestHeader('X-Requested-With', 'Fetch');
 							xhr.onload = () => resolve(fileName);
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);

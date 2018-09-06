@@ -11,7 +11,7 @@
 angular.module('access', [])
 .controller('AccessController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('/services/v3/ops/security/access').then(function(response) {
+	$http.get('../../../../../../services/v3/ops/security/access').then(function(response) {
 		$scope.accessList = response.data;
 	});
 

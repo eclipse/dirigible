@@ -83,13 +83,16 @@
 		    }, "database.datasource.selection.changed");
 
 			messageHub.subscribe(function(command) {
-				var url = "/services/v3/ide/databases/" + $scope.database + "/" + $scope.datasource;
+				var url = "../../../../../services/v3/ide/databases/" + $scope.database + "/" + $scope.datasource;
 				if (command.data.toLowerCase().startsWith('select')) {
 					$http({
 						method: 'POST',
 						url: url + "/query",
 						data: command.data,
-						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+							'X-Requested-With': 'Fetch'
+						}
 					}).success(function(result) {
 						cleanScope();
 						if (result != null && result.length > 0) {
@@ -112,7 +115,10 @@
 						method: 'POST',
 						url: url + "/update",
 						data: command.data,
-						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain'}
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain',
+							'X-Requested-With': 'Fetch'
+						}
 					}).success(function(result) {
 						cleanScope();
 						if (!isNaN(result)) {

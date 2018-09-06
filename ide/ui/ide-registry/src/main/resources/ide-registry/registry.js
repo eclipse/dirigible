@@ -31,11 +31,10 @@ UriBuilder.prototype.path = function(_pathSegments){
 		});
 	this.pathSegments = this.pathSegments.concat(_pathSegments);
 	return this;
-}
+};
 UriBuilder.prototype.build = function(){
-	var uriPath = '/'+this.pathSegments.join('/');
-	return uriPath;
-}
+	return this.pathSegments.join('/');
+};
 
 /**
  * Registry Service API delegate
@@ -301,6 +300,14 @@ angular.module('registry.config', [])
 	.constant('REPOSITORY_SVC_URL','../../../../services/v3/core/repository')
 	
 angular.module('registry', ['registry.config'])
+.factory('httpRequestInterceptor', function () {
+	return {
+		request: function (config) {
+			config.headers['X-Requested-With'] = 'Fetch';
+			return config;
+		}
+	};
+})
 .config(['$httpProvider', function($httpProvider) {
 	//check if response is error. errors currently are non-json formatted and fail too early
 	$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status){
@@ -312,6 +319,7 @@ angular.module('registry', ['registry.config'])
 		}
 		return data;
 	});
+	$httpProvider.interceptors.push('httpRequestInterceptor');
 }])
 .factory('$messageHub', [function(){
 	var messageHub = new FramesMessageHub();	
