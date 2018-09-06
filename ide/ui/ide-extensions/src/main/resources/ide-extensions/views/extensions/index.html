@@ -83,7 +83,7 @@
 		angular.module('extensions', []);
 		angular.module('extensions').controller('ExtensionsController', function ($scope, $http) {
 		
-		    var extensionsApi = '/services/v3/core/extensions';
+		    var extensionsApi = '../../../../../../services/v3/core/extensions';
 		
 		    function loadExtensions() {
 		        $http.get(extensionsApi)

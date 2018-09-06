@@ -34,7 +34,7 @@ angular.module('preview', [])
 
 	$messageHub.on('workspace.file.selected', function(msg) {
 		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
-		var url = window.top.location.protocol + '//' + window.top.location.host + '/services/v3';
+		var url = window.top.location.protocol + '//' + window.top.location.host +  window.location.pathname.substr(0, window.location.pathname.indexOf('/web/'));
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
 		switch(type) {
 			case 'rhino':

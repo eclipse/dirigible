@@ -43,7 +43,7 @@ import io.swagger.annotations.Api;
 @Api(value = "Anonymous")
 public class AnonymousRestService extends AbstractRestService implements IRestService {
 
-	private static final String HOME_LOCATION = "/home.html";
+	private static final String HOME_LOCATION = "../../home.html";
 
 	private static final String ANONYMOUS_ACCESS_FAILED = "Anonymous access failed.";
 

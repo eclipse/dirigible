@@ -34,6 +34,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 		if ($scope.file) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '../../../../../../services/v3/ide/workspaces' + $scope.file);
+			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: ' + $scope.file);

@@ -24,7 +24,11 @@
 				const TERMINAL_URL = "/websockets/v3/ide/terminal";
 				try {
 					if (window.terminalSocket === null || window.terminalSocket.readyState !== window.terminalSocket.OPEN) {
-						window.terminalSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") + window.location.host + TERMINAL_URL);
+						window.terminalSocket = new WebSocket(
+							((location.protocol === 'https:') ? "wss://" : "ws://")
+								+ window.location.host
+								+ window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
+								+ TERMINAL_URL);
 					}
 				} catch (e) {
 					console.error(e.message);

@@ -25,8 +25,11 @@
 		<script>
 		var connectToLog = function() {
 			try {
-				var logSocket = new WebSocket(((location.protocol === 'https:') ? "wss://" : "ws://") 
-						+ window.location.host + "/websockets/v3/ide/console");
+				var logSocket = new WebSocket(
+					((location.protocol === 'https:') ? "wss://" : "ws://")
+						+ window.location.host
+						+ window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
+						+ "/websockets/v3/ide/console");
 			} catch(e) {
 				$("#content").after("<div style='ont-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				

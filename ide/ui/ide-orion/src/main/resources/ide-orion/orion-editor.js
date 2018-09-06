@@ -36,4 +36,4 @@ exports.getEditor = function() {
 			]
 	};
 	return editor;
-}
+};
