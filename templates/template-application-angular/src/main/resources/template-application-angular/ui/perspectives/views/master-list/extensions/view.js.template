@@ -8,13 +8,13 @@
  * SAP - initial API and implementation
  */
 
-exports.getView = function() {
+exports.getView = function(relativePath) {
 	return {
 		'id': '{{name}}',
 		'name': '{{menuLabel}}',
 		'label': '{{menuLabel}}',
 		'factory': 'frame',
 		// 'region': 'center-bottom',
-		'link': '/services/v3/web/{{projectName}}/ui/{{perspectiveName}}/views/master/{{name}}/index.html'
+		'link': relativePath + 'services/v3/web/{{projectName}}/ui/{{perspectiveName}}/views/master/{{name}}/index.html'
 	};
 };

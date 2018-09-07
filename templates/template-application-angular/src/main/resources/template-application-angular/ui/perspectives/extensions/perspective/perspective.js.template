@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-exports.getPerspective = function() {
+exports.getPerspective = function(relativePath) {
 	return {
 #if($perspectiveName)
 		'name': '${perspectiveName}',
@@ -22,7 +22,7 @@ exports.getPerspective = function() {
 #else
 		'image': 'life-ring',
 #end
-		'link': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+		'link': relativePath + 'services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
 #if($perspectiveOrder)
 		'order': ${perspectiveOrder},
 #else
