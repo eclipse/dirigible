@@ -8,6 +8,23 @@
  * SAP - initial API and implementation
  */
 
+function getPathSegments() {
+	var path = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'))
+	var pathSegments = path.substr(path.indexOf('services/')).split('/').length;
+	return pathSegments;
+}
+
+function getRelativePath(pathSegments) {
+	var relativePath = '';
+	for (var i = 0; i < pathSegments; i ++) {
+		relativePath += '../';
+	}
+	return relativePath;
+}
+
+var pathSegments = getPathSegments()
+var relativePath = getRelativePath(pathSegments);
+
 /**
  * Provides key microservices for constructing and managing the IDE UI
  *
@@ -38,12 +55,12 @@ angular.module('ideUiCore', ['ngResource'])
   }];
 })
 .factory('Theme', ['$resource', function($resource){
-	var themeswitcher = $resource('/services/v3/core/theme?name=:themeName', {themeName: 'default'});
+	var themeswitcher = $resource(relativePath + 'services/v3/core/theme?name=:themeName', {themeName: 'default'});
 	var themes = {
-		"default": "/services/v3/web/resources/themes/default/bootstrap.min.css",
-		"wendy" : "/services/v3/web/resources/themes/wendy/bootstrap.min.css",
-		"baroness" : "/services/v3/web/resources/themes/baroness/bootstrap.min.css",
-		"simone" : "/services/v3/web/resources/themes/simone/bootstrap.min.css"
+		"default": relativePath + "services/v3/web/resources/themes/default/bootstrap.min.css",
+		"wendy" : relativePath + "services/v3/web/resources/themes/wendy/bootstrap.min.css",
+		"baroness" : relativePath + "services/v3/web/resources/themes/baroness/bootstrap.min.css",
+		"simone" : relativePath + "services/v3/web/resources/themes/simone/bootstrap.min.css"
 	};
 	return {
 		changeTheme: function(themeName){
@@ -58,20 +75,20 @@ angular.module('ideUiCore', ['ngResource'])
 	}
 }])
 .service('Perspectives', ['$resource', function($resource){
-	return $resource('/services/v3/js/{{projectName}}/api/launchpad/perspectives.js');
+	return $resource(relativePath + 'services/v3/js/{{projectName}}/api/launchpad/perspectives.js');
 }])
 .service('Tiles', ['$resource', function($resource){
-	return $resource('/services/v3/js/{{projectName}}/api/launchpad/tiles.js');
+	return $resource(relativePath + 'services/v3/js/{{projectName}}/api/launchpad/tiles.js');
 }])
 .service('Menu', ['$resource', function($resource){
-	return $resource('/services/v3/js/{{projectName}}/api/launchpad/menu.js');
+	return $resource(relativePath + 'services/v3/js/{{projectName}}/api/launchpad/menu.js');
 }])
 .service('User', ['$http', function($http){
 	return {
 		get: function(){
 			var user = {};
 			$http({
-				url: '/services/v3/js/ide/services/user-name.js',
+				url: relativePath + 'services/v3/js/ide/services/user-name.js',
 				method: 'GET'
 			}).success(function(data){
 				user.name = data;
@@ -107,7 +124,11 @@ angular.module('ideUiCore', ['ngResource'])
 		ViewRegistrySvc.factory(factoryName, ViewFactories[factoryName]);
 	});		
 	var get = function(viewsExtensionPoint){
-		return $resource('/services/v3/js/{{projectName}}/api/launchpad/views.js').query({'extensionPoint': viewsExtensionPoint}).$promise
+		return $resource(relativePath + 'services/v3/js/{{projectName}}/api/launchpad/views.js')
+			.query({
+				'extensionPoint': viewsExtensionPoint,
+				'pathSegments': pathSegments
+			}).$promise
 				.then(function(data){
 					data = data.map(function(v){
 						v.id = v.id || v.name.toLowerCase();
@@ -159,9 +180,12 @@ angular.module('ideUiCore', ['ngResource'])
 				var themeUrl = Theme.themeUrl(themeName);
 				Theme.reload();
 			};
+			scope.logout = function() {
+				window.location.href = relativePath + 'logout';
+			};
 			scope.user = User.get();
 		},
-		templateUrl: '/services/v3/web/{{projectName}}/resources/templates/menu.html'
+		templateUrl: relativePath + 'services/v3/web/{{projectName}}/ui/resources/templates/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -173,7 +197,7 @@ angular.module('ideUiCore', ['ngResource'])
 			active: '@'
 		},
 		link: function(scope, el, attrs){
-			scope.perspectives = Perspectives.query();
+			scope.perspectives = Perspectives.query({'pathSegments': pathSegments});
 			scope.activePerspective = localStorage.getItem('DIRIGIBLE.application.{{projectName}}.activePerspective');
 
 			scope.setActivePerspective = function(activePerspective) {
@@ -181,7 +205,7 @@ angular.module('ideUiCore', ['ngResource'])
 				scope.activePerspective = activePerspective;
 			};
 		},
-		templateUrl: '/services/v3/web/{{projectName}}/resources/templates/sidebar.html'
+		templateUrl: relativePath + 'services/v3/web/{{projectName}}/ui/resources/templates/sidebar.html'
 	}
 }])
 .directive('tiles', ['Tiles', function(Tiles){
@@ -193,9 +217,9 @@ angular.module('ideUiCore', ['ngResource'])
 			active: '@'
 		},
 		link: function(scope, el, attrs){
-			scope.tiles= Tiles.query();
+			scope.tiles= Tiles.query({'pathSegments': pathSegments});
 		},
-		templateUrl: '/services/v3/web/{{projectName}}/resources/templates/tiles.html'
+		templateUrl: relativePath + 'services/v3/web/{{projectName}}/ui/resources/templates/tiles.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){
