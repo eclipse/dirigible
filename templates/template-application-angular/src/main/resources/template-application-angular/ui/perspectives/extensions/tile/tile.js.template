@@ -10,7 +10,7 @@
 
 var dao = require('${projectName}/data/dao/${perspectiveName}/${name}.js')
 
-exports.getTile = function() {
+exports.getTile = function(relativePath) {
 	return {
 #if($title)
 		'name': '${title}',
@@ -31,7 +31,7 @@ exports.getTile = function() {
 #else
 		'icon': 'life-ring',
  #end
-		'location': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+		'location': relativePath + 'services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
 		'count': dao.customDataCount(),
 #if($perspectiveOrder)
 		'order': '${perspectiveOrder}'
