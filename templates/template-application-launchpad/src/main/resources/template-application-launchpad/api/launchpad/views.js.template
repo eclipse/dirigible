@@ -16,11 +16,20 @@ var extensionPoint = request.getParameter('extensionPoint');
 
 var views = [];
 
+var relativePath = getRelativePath(request.getParameter('pathSegments'));
 var viewExtensions = extensions.getExtensions(extensionPoint);
 for (var j = 0; viewExtensions !== null && j < viewExtensions.length; j++) {
     var viewExtension = require(viewExtensions[j]);
-    var view = viewExtension.getView();
+    var view = viewExtension.getView(relativePath);
 	views.push(view);
 }
 
 response.println(JSON.stringify(views));
+
+function getRelativePath(pathSegments) {
+	var relativePath = '';
+	for (var i = 0; i < pathSegments; i ++) {
+		relativePath += '../';
+	}
+	return relativePath;
+}

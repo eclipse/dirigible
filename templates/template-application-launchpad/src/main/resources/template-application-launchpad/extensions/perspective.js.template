@@ -8,11 +8,11 @@
  * SAP - initial API and implementation
  */
 
-exports.getPerspective = function() {
+exports.getPerspective = function(relativePath) {
 	return {
 		'name': 'Home',
 		'image': 'home',
-		'link': '/services/v3/web/{{projectName}}/index.html',
+		'link': relativePath + 'services/v3/web/{{projectName}}/index.html',
 		'order': 0
 	};
 };
