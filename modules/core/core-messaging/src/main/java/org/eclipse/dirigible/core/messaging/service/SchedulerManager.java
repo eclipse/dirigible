@@ -28,6 +28,7 @@ import org.apache.activemq.store.PListStore;
 import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +66,11 @@ public class SchedulerManager {
 		synchronized (SchedulerManager.class) {
 			if (broker == null) {
 				broker = new BrokerService();
-				PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
-				broker.setPersistenceAdapter(persistenceAdapter);
+				Configuration.load("/dirigible-messaging.properties");
+				if (Boolean.parseBoolean(Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
+					PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
+					broker.setPersistenceAdapter(persistenceAdapter);
+				}
 				broker.setPersistent(true);
 				broker.setUseJmx(false);
 				// broker.setUseShutdownHook(false);
