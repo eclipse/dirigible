@@ -149,3 +149,10 @@ exports.createOutputStream = function(path) {
 	 return outputStream;
 };
 
+exports.traverse = function(path) {
+ 	 return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "traverse", [path]);
+};
+
+exports.list = function(path) {
+ 	 return java.call("org.eclipse.dirigible.api.v3.io.FilesFacade", "list", [path]);
+};
