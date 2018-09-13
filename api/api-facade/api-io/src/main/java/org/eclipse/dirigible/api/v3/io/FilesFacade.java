@@ -26,9 +26,14 @@ import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.nio.file.attribute.UserPrincipal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -440,6 +445,56 @@ public class FilesFacade {
 	 */
 	public static final OutputStream createOutputStream(String path) throws IOException {
 		return Files.newOutputStream(Paths.get(path));
+	}
+	
+	/**
+	 * Traverse the directory structure
+	 * @param source source location
+	 * @return JSON rendered files and folders tree 
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final String traverse(String source) throws IOException {
+		Path sourcePath = Paths.get(source);
+		List<FolderObject> root = new ArrayList<>();
+		Map<Path, FolderObject> map = new HashMap<>();
+		Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+			
+			FolderObject currentFolder = null;
+			
+			@Override
+			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+				if (!map.containsKey(dir)) {
+					currentFolder = new FolderObject(dir.getFileName().toString(), dir.toString(), "folder");
+					map.put(dir, currentFolder);
+					if (map.containsKey(dir.getParent())) {
+						map.get(dir.getParent()).getFolders().add(currentFolder);
+					}
+				}
+				if (root.isEmpty()) {
+					root.add(currentFolder);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+				FileObject fileObject = new FileObject(file.getFileName().toString(), file.toString(), "file");
+				currentFolder.getFiles().add(fileObject);
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		
+		return GsonHelper.GSON.toJson(root.iterator().next());
+	}
+	
+	/**
+	 * List the directory structure
+	 * @param source source location
+	 * @return JSON rendered files and folders list 
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final String list(String source) throws IOException {
+		return GsonHelper.GSON.toJson(new File(source).listFiles());
 	}
 
 }
