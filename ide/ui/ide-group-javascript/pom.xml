@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ide-ui-parent</artifactId>
-		<version>3.2.7</version>
+		<version>3.2.8-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,97 +32,97 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-core</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-console</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-orion</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-workspace</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-preview</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-help</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-database</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-git</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-repository</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-debugger</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-logs</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-jobs</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-extensions</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-operations</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-security</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-listeners</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-data-structures</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-registry</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-plugins</artifactId>
-		 	<version>3.2.7</version>
+		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
