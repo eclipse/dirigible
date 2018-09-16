@@ -73,11 +73,13 @@ public class UserFacade implements IScriptingFacade {
 			}
 			if (userName == null) {
 				String anonymousUserNamePropertyName = Configuration.get(DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME);
-				userName = Configuration.get(anonymousUserNamePropertyName);
-				try {
-					setName(userName);
-				} catch (ContextException e) {
-					logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
+				if (anonymousUserNamePropertyName != null) {
+					userName = Configuration.get(anonymousUserNamePropertyName);
+					try {
+						setName(userName);
+					} catch (ContextException e) {
+						logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
+					}
 				}
 			}
 		}
