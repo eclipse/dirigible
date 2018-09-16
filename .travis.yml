@@ -13,7 +13,7 @@ script:
   - docker build -f releng/Dockerfile-tomcat -t $REPO:$COMMIT releng/
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker push $REPO:$TAG
-  - docker build -f releng/trial-all/Dockerfile -t $REPO_TRIAL:$COMMIT releng/
+  - docker build -f releng/trial-all/Dockerfile -t $REPO_TRIAL:$COMMIT releng/trial-all
   - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$TAG
   - docker push $REPO_TRIAL:$TAG
 env:
