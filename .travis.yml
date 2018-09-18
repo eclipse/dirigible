@@ -8,41 +8,63 @@ install: mvn install -f pom.xml -DskipTests=true
 before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
 script:
-#  - mvn test -f pom.xml
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+# Dirigible Version (latest | 3.2.5 | 3.3.0 | ...)
+  - export DIRIGIBLE_VERSION=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+
+# Image dirigiblelabs/dirigible-tomcat
   - docker build -f releng/Dockerfile-tomcat -t $REPO:$COMMIT releng/
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker push $REPO:$TAG
-  - docker build -f releng/trial-all/Dockerfile -t $REPO_TRIAL:$COMMIT releng/trial-all
-  - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$TAG
-  - docker push $REPO_TRIAL:$TAG
-  - docker build -f releng/server-all/Dockerfile-base -t $REPO_BASE:$COMMIT releng/server-all
-  - docker tag $REPO_BASE:$COMMIT $REPO_BASE:$TAG
-  - docker push $REPO_BASE:$TAG
-  - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT releng/server-runtime
-  - docker tag $REPO_BASE_RUNTIME:$COMMIT $REPO_BASE_RUNTIME:$TAG
-  - docker push $REPO_BASE_RUNTIME:$TAG
-  - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT releng/server-keycloak-all
-  - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$TAG
-  - docker push $REPO_BASE_KEYCLOAK:$TAG
-  - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT releng/server-all
-  - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$TAG
-  - docker push $REPO_ALL:$TAG
-  - docker build -f releng/server-runtime/Dockerfile -t $REPO_RUNTIME:$COMMIT releng/server-runtime
-  - docker tag $REPO_RUNTIME:$COMMIT $REPO_RUNTIME:$TAG
-  - docker push $REPO_RUNTIME:$TAG
-  - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT releng/server-keycloak-all
-  - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$TAG
-  - docker push $REPO_KEYCLOAK:$TAG
+  - docker tag $REPO:$COMMIT $REPO:$DIRIGIBLE_VERSION
+  - docker push $REPO:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-base-platform-trial
+  - docker build -f releng/trial-all/Dockerfile-base -t $REPO_BASE_TRIAL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker tag $REPO_BASE_TRIAL:$COMMIT $REPO_BASE_TRIAL:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_TRIAL:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-base-platform
+  - docker build -f releng/server-all/Dockerfile-base -t $REPO_BASE:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-all
+  - docker tag $REPO_BASE:$COMMIT $REPO_BASE:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-base-platform-runtime
+  - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker tag $REPO_BASE_RUNTIME:$COMMIT $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-base-platform-keycloak
+  - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
+  - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-all
+  - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-all
+  - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$DIRIGIBLE_VERSION
+  - docker push $REPO_ALL:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-trial
+  - docker build -f releng/trial-all/Dockerfile -t $REPO_TRIAL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$DIRIGIBLE_VERSION
+  - docker push $REPO_TRIAL:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-runtime
+  - docker build -f releng/server-runtime/Dockerfile -t $REPO_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker tag $REPO_RUNTIME:$COMMIT $REPO_RUNTIME:$DIRIGIBLE_VERSION
+  - docker push $REPO_RUNTIME:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-keycloak
+  - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
+  - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
     - REPO=dirigiblelabs/dirigible-tomcat
-    - REPO_TRIAL=dirigiblelabs/dirigible-trial
     - REPO_BASE=dirigiblelabs/dirigible-base-platform
+    - REPO_BASE_TRIAL=dirigiblelabs/dirigible-base-platform-trial
     - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
     - REPO_BASE_KEYCLOAK=dirigiblelabs/dirigible-base-platform-keycloak
     - REPO_ALL=dirigiblelabs/dirigible-all
+    - REPO_TRIAL=dirigiblelabs/dirigible-trial
     - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
     - REPO_KEYCLOAK=dirigiblelabs/dirigible-keycloak
     - secure: "NucLZg3isAoRh1VTQWU1RXmmDggFYBXyTpZDpiPiLQRGRwE2QngKoVk6603ykZUMx3eIXqxB8aYPU2J1O2nnMfsg5MUlnSsR6UT3MIdcw0QQHfsQo8g2gKMzScmpinHXuzfkq567DAeEQNRqcSMsJjqmKAZh+njVMOnuNXceZ92qeVGFdj9IbblixVKPwk2itn+QlwWS1mk6v8JHqefGRnBKnR6Dk/V7Ejivjx50DucAkZLwafXNsOa6LWmKzayiROe2d2px73rRLOLOdNtgWsnZJeuxUHTj1pHIy4zBzGmPag1wFHOEFM7EMlKh6I2UyiEQCEnp66oBd9NyFTae+0dPCV4q21LJ6PZrZqQNe/EN/olTLYWM3ZeznGpKC9OXBjNLuWcXbyiBZ2R5PsqgadlcYDuE5tGhLZHBBfk41NsuxcXcOTivb8spf0rytZsG6cDXkbx6ok9ICASVEse4T+dK0QMsiTnfGW6bdQxWAQL6Zng+MnJ0RHVcBZ6IOrlb3GLbeWWSejX2StKf9kVljt6XrwyQy88IhAoMDOit6pKoRC6VhDBCdlDb0JWnBavwy6Zp1dK9PWKfoHSwI8zxv849JJKfCEGupdAEu/TzLX3O4k+BIUUE9+5vgcFcXDERPHcefYu7XWRbTGRf8uaPTvMHv1VZPgGejnPeunspfQw="
