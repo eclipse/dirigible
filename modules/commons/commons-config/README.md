@@ -1,5 +1,11 @@
 # Configuration Parameters
 
+## Anonymous Access
+- `DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME`: (e.g. MY_USER_VARIABLE)
+
+## Registry
+- `DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER`: (e.g. /User/data)
+
 ## Repository
 
 - `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
