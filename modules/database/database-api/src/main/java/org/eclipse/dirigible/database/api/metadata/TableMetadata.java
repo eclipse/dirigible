@@ -54,7 +54,7 @@ public class TableMetadata {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public TableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName) throws SQLException {
+	public TableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
@@ -63,21 +63,23 @@ public class TableMetadata {
 		this.columns = new ArrayList<ColumnMetadata>();
 		this.indices = new ArrayList<IndexMetadata>();
 
-		DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
-			@Override
-			public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
-				columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
-						Boolean.parseBoolean(isNullable), Boolean.parseBoolean(isKey)));
-			}
-		}, new IndicesIteratorCallback() {
-			@Override
-			public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
-					String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
-				indices.add(new IndexMetadata(indexName, indexType, columnName, Boolean.parseBoolean(isNonUnique), indexQualifier, ordinalPosition,
-						sortOrder, cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
-						filterCondition));
-			}
-		});
+		if (deep) {
+			DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
+				@Override
+				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
+					columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
+							Boolean.parseBoolean(isNullable), Boolean.parseBoolean(isKey)));
+				}
+			}, new IndicesIteratorCallback() {
+				@Override
+				public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
+						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
+					indices.add(new IndexMetadata(indexName, indexType, columnName, Boolean.parseBoolean(isNonUnique), indexQualifier, ordinalPosition,
+							sortOrder, cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
+							filterCondition));
+				}
+			});
+		}
 	}
 
 	/**
