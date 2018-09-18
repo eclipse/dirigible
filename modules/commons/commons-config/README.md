@@ -43,6 +43,7 @@
 - `<CUSTOM_NAME>_URL`: (e.g. jdbc:postgresql://localhost:5432/<database-name>)
 - `<CUSTOM_NAME>_USERNAME`: 
 - `<CUSTOM_NAME>_PASSWORD`: 
+- `<CUSTOM_NAME>_CONNECTION_PROPERTIES`:
 
 #### Database Derby
 
@@ -106,6 +107,10 @@
 - `DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD`: (default: {empty})
 - `DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME`: (default: DefaultDB)
 - `DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE`: (default: true)
+
+### Messaging
+
+- `DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE`: (default: true)
 
 ## Engines
 
