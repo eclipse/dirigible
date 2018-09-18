@@ -25,13 +25,13 @@ script:
   - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT releng/server-keycloak-all
   - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$TAG
   - docker push $REPO_BASE_KEYCLOAK:$TAG
-  - docker build -f releng/server-all/Dockerfile-base -t $REPO_ALL:$COMMIT releng/server-all
+  - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT releng/server-all
   - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$TAG
   - docker push $REPO_ALL:$TAG
-  - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_RUNTIME:$COMMIT releng/server-runtime
+  - docker build -f releng/server-runtime/Dockerfile -t $REPO_RUNTIME:$COMMIT releng/server-runtime
   - docker tag $REPO_RUNTIME:$COMMIT $REPO_RUNTIME:$TAG
   - docker push $REPO_RUNTIME:$TAG
-  - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_KEYCLOAK:$COMMIT releng/server-keycloak-all
+  - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT releng/server-keycloak-all
   - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$TAG
   - docker push $REPO_KEYCLOAK:$TAG
 env:
