@@ -1,8 +1,8 @@
 # Docker descriptor for Dirigible
 # License - http://www.eclipse.org/legal/epl-v10.html
- 
+
 FROM tomcat:8.5.8-jre8
- 
+
 RUN rm -R /usr/local/tomcat/webapps/*
 COPY target/ROOT.war $CATALINA_HOME/webapps/
 RUN unzip $CATALINA_HOME/webapps/ROOT.war -d $CATALINA_HOME/webapps/ROOT
