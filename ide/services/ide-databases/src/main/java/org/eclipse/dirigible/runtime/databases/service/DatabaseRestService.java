@@ -152,6 +152,48 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 		return Response.ok().entity(metadata).build();
 
 	}
+	
+	/**
+	 * List artifacts.
+	 *
+	 * @param type
+	 *            the type
+	 * @param name
+	 *            the datasource name
+	 * @param schema
+	 * 			  the schema name
+	 * @param table
+	 * 			  the table name
+	 * @return the response
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	@GET
+	@Path("{type}/{name}/{schema}/{table}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Returns the metadata of the given data source with {name} and {type}")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Database Metadata", response = DatabaseMetadata.class),
+			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })
+	public Response describeTable(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
+			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name,
+			@ApiParam(value = "Schema Name", required = true) @PathParam("schema") String schema,
+			@ApiParam(value = "Table Name", required = true) @PathParam("table") String table) throws SQLException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		DataSource dataSource = processor.getDataSource(type, name);
+		if (dataSource == null) {
+			String error = format("DataSource {0} of Type {1} not known.", name, type);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+		String metadata = DatabaseMetadataHelper.getTableMetadataAsJson(dataSource, schema, table);
+		return Response.ok().entity(metadata).build();
+
+	}
 
 	/**
 	 * Execute query.

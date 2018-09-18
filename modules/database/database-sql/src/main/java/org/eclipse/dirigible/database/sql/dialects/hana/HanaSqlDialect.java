@@ -73,5 +73,23 @@ public class HanaSqlDialect extends
 		}
 		return true;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#isSchemaFilterSupported()
+	 */
+	@Override
+	public boolean isSchemaFilterSupported() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getSchemaFilterScript()
+	 */
+	@Override
+	public String getSchemaFilterScript() {
+		return "SELECT * FROM \"SYS\".\"SCHEMAS\"";
+	}
 
 }

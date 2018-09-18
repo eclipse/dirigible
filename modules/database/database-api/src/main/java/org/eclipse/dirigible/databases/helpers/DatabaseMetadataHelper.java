@@ -129,13 +129,13 @@ public class DatabaseMetadataHelper {
 	 */
 	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
 			Filter<String> tableNameFilter) throws SQLException {
+		
+		ISqlDialect sqlDialect = getDialect(connection);
 
-		DatabaseMetaData dmd = connection.getMetaData();
+		
 
 		List<SchemaMetadata> result = new ArrayList<SchemaMetadata>();
 		ResultSet rs = null;
-
-		ISqlDialect sqlDialect = getDialect(connection);
 
 		try {
 
@@ -147,16 +147,15 @@ public class DatabaseMetadataHelper {
 					if (rs != null) {
 						rs.close();
 					}
+					DatabaseMetaData dmd = connection.getMetaData();
 					// backup in case of wrong product recognition
 					rs = dmd.getSchemas(catalogName, null);
-				} finally {
-					if (rs != null) {
-						rs.close();
-					}
 				}
 			} else if (sqlDialect.isCatalogForSchema()) {
+				DatabaseMetaData dmd = connection.getMetaData();
 				rs = dmd.getCatalogs();
 			} else {
+				DatabaseMetaData dmd = connection.getMetaData();
 				rs = dmd.getSchemas(catalogName, null);
 			}
 			if (rs != null) {
@@ -218,7 +217,7 @@ public class DatabaseMetadataHelper {
 				if ((tableNameFilter != null) && !tableNameFilter.accepts(tableName)) {
 					continue;
 				}
-				result.add(new TableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName));
+				result.add(new TableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName, false));
 			}
 		} finally {
 			if (rs != null) {
@@ -227,6 +226,50 @@ public class DatabaseMetadataHelper {
 		}
 
 		return result;
+	}
+	
+	
+	/**
+	 * List tables.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param tableName
+	 *            the table name
+	 * @return the TableMetadata
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static TableMetadata describeTable(Connection connection, String catalogName, String schemeName, String tableName)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getTables(schemeName, null, tableName, TABLE_TYPES);
+			} else {
+				rs = dmd.getTables(catalogName, schemeName, tableName, TABLE_TYPES);
+			}
+
+			if (rs.next()) {
+				String tableType = rs.getString("TABLE_TYPE");
+				String tableRemarks = rs.getString("REMARKS");
+				return new TableMetadata(tableName, tableType, tableRemarks, connection, catalogName, schemeName, true);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -365,6 +408,37 @@ public class DatabaseMetadataHelper {
 			connection = dataSource.getConnection();
 			DatabaseMetadata database = new DatabaseMetadata(connection, null, null, null);
 			String json = GsonHelper.GSON.toJson(database);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param schema
+	 * 			  the schema name
+	 * @param table
+	 * 			  the table name
+	 * @return the metadata as json
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getTableMetadataAsJson(DataSource dataSource, String schema, String table) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			TableMetadata tableMetadata = describeTable(connection, null, schema, table);
+			String json = GsonHelper.GSON.toJson(tableMetadata);
 			return json;
 		} finally {
 			if (connection != null) {
