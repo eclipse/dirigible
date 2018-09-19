@@ -32,6 +32,7 @@ public class UserFacade implements IScriptingFacade {
 	private static final String DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME = "DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME";
 
 	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
+	private static final String DIRIGIBLE_ANONYMOUS_USER = "dirigible-anonymous-user";
 
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
@@ -45,49 +46,15 @@ public class UserFacade implements IScriptingFacade {
 	public static final String getName() {
 		// HTTP case
 		String userName = null;
-		try {
-			if (HttpRequestFacade.isValid()) {
-				userName = HttpRequestFacade.getRemoteUser();
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		if (userName != null) {
-			return userName;
-		}
+		userName = getRemoteUser();
+
 		// Anonymous case
-		if (Configuration.isAnonymousModeEnabled()) {
-			if (HttpSessionFacade.isValid()) {
-				userName = HttpSessionFacade.getAttribute(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
-			} else {
-				if (ThreadContextFacade.isValid()) {
-					try {
-						Object value = ThreadContextFacade.get(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
-						if ((value != null) && (value instanceof String)) {
-							userName = (String) value;
-						}
-					} catch (ContextException e) {
-						logger.error(e.getMessage());
-					}
-				}
-			}
-			if (userName == null) {
-				String anonymousUserNamePropertyName = Configuration.get(DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME);
-				if (anonymousUserNamePropertyName != null) {
-					userName = Configuration.get(anonymousUserNamePropertyName);
-					try {
-						setName(userName);
-					} catch (ContextException e) {
-						logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
-					}
-				}
-			}
+		if (userName == null) {
+			userName = getAnonymousUser();
 		}
-		if (userName != null) {
-			return userName;
-		}
-		// Local Case
-		return GUEST;
+
+		// Return HTTP, Anonymous or Local case
+		return userName != null ? userName : GUEST;
 	}
 
 	/**
@@ -98,7 +65,7 @@ public class UserFacade implements IScriptingFacade {
 	 * @return true, if the user is in role
 	 */
 	public static final boolean isInRole(String role) {
-		if (Configuration.isAnonymousModeEnabled()) {
+		if (Configuration.isAnonymousModeEnabled() || Configuration.isAnonymousUserEnabled()) {
 			return true;
 		}
 		try {
@@ -120,19 +87,16 @@ public class UserFacade implements IScriptingFacade {
 	 */
 	public static final void setName(String userName) throws ContextException {
 		if (Configuration.isAnonymousModeEnabled()) {
-			if (HttpSessionFacade.isValid()) {
-				HttpSessionFacade.setAttribute(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-				logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
-			} else {
-				if (ThreadContextFacade.isValid()) {
-					ThreadContextFacade.set(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-				}
-			}
+			setContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
+			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+		} else if (Configuration.isAnonymousUserEnabled()) {
+			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
+			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
 	}
-	
+
 	/**
 	 * Gets the user name by a given request as parameter.
 	 *
@@ -177,4 +141,71 @@ public class UserFacade implements IScriptingFacade {
 		return getName();
 	}
 
+	private static String getContextProperty(String property) throws ContextException {
+		if (HttpSessionFacade.isValid()) {
+			return HttpSessionFacade.getAttribute(property);
+		} else if (ThreadContextFacade.isValid()) {
+			Object value = ThreadContextFacade.get(property);
+			if ((value != null) && (value instanceof String)) { 
+				return (String) value;
+			}
+		}
+		return null;
+	}
+
+	private static void setContextProperty(String property, String value) throws ContextException {
+		if (HttpSessionFacade.isValid()) {
+			HttpSessionFacade.setAttribute(property, value);
+		} else {
+			if (ThreadContextFacade.isValid()) {
+				ThreadContextFacade.set(property, value);
+			}
+		}
+	}
+
+	private static String getRemoteUser() {
+		try {
+			if (HttpRequestFacade.isValid()) {
+				return HttpRequestFacade.getRemoteUser();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return null;
+	}
+
+	private static String getAnonymousUser() {
+		String userName = null;
+		if (Configuration.isAnonymousModeEnabled()) {
+			try {
+				userName = getContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER);
+			} catch (ContextException e) {
+				logger.error(e.getMessage());
+			}
+		} else if (Configuration.isAnonymousUserEnabled()) {
+			try {
+				userName = getContextProperty(DIRIGIBLE_ANONYMOUS_USER);
+				if (userName == null) {
+					userName = setAnonymousUser();
+				}
+			} catch (ContextException e) {
+				logger.error(e.getMessage());
+			}
+		}
+		return userName;
+	}
+
+	private static String setAnonymousUser() {
+		String userName = null;
+		String anonymousUserNamePropertyName = Configuration.get(DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME);
+		if (anonymousUserNamePropertyName != null) {
+			userName = Configuration.get(anonymousUserNamePropertyName);
+			try {
+				setName(userName);
+			} catch (ContextException e) {
+				logger.info("Error while setting userName from DIRIGIBLE_ANONYMOUS_USER_PROPERTY_NAME.", e);
+			}
+		}
+		return userName;
+	}
 }

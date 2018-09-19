@@ -16,6 +16,11 @@ script:
   - docker tag $REPO:$COMMIT $REPO:$DIRIGIBLE_VERSION
   - docker push $REPO:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-base-platform-anonymous
+  - docker build -f releng/trial-all/Dockerfile-base -t $REPO_BASE_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker tag $REPO_BASE_ANONYMOUS:$COMMIT $REPO_BASE_ANONYMOUS:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_ANONYMOUS:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-base-platform-trial
   - docker build -f releng/trial-all/Dockerfile-base -t $REPO_BASE_TRIAL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
   - docker tag $REPO_BASE_TRIAL:$COMMIT $REPO_BASE_TRIAL:$DIRIGIBLE_VERSION
@@ -41,6 +46,11 @@ script:
   - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$DIRIGIBLE_VERSION
   - docker push $REPO_ALL:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-anonymous
+  - docker build -f releng/trial-all/Dockerfile -t $REPO_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker tag $REPO_ANONYMOUS:$COMMIT $REPO_ANONYMOUS:$DIRIGIBLE_VERSION
+  - docker push $REPO_ANONYMOUS:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-trial
   - docker build -f releng/trial-all/Dockerfile -t $REPO_TRIAL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
   - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$DIRIGIBLE_VERSION
@@ -60,10 +70,12 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
     - REPO=dirigiblelabs/dirigible-tomcat
     - REPO_BASE=dirigiblelabs/dirigible-base-platform
+    - REPO_BASE_ANONYMOUS=dirigiblelabs/dirigible-base-platform-anonymous
     - REPO_BASE_TRIAL=dirigiblelabs/dirigible-base-platform-trial
     - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
     - REPO_BASE_KEYCLOAK=dirigiblelabs/dirigible-base-platform-keycloak
     - REPO_ALL=dirigiblelabs/dirigible-all
+    - REPO_ANONYMOUS=dirigiblelabs/dirigible-anonymous
     - REPO_TRIAL=dirigiblelabs/dirigible-trial
     - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
     - REPO_KEYCLOAK=dirigiblelabs/dirigible-keycloak
