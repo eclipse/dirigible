@@ -162,6 +162,20 @@ public class Configuration {
 	}
 
 	/**
+	 * Checks if is anonymous user enabled.
+	 *
+	 * @return true, if is anonymous user enabled
+	 */
+	public static boolean isAnonymousUserEnabled() {
+		try {
+			Class.forName("org.eclipse.dirigible.anonymous.AnonymousUser");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Setter as a System's property.
 	 *
 	 * @param key

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <!-- <Resource
+        name="jdbc/DefaultDB"
+        description="Default Database"
+        type="javax.sql.DataSource"
+        auth="Container"
+        driverClassName="org.apache.derby.jdbc.ClientDriver"
+        maxActive="10" maxIdle="3"
+        maxWait="10000"
+        password="APP"
+        url="jdbc:derby://localhost:1527/derby;create=true"
+        validationQuery="values(1)"
+        username="APP"/> -->
+</Context>
