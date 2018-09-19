@@ -24,6 +24,7 @@
 		<module>engine-listener</module>
 		<module>engine-web</module>
 		<module>engine-wiki</module>
+		<module>engine-command</module>
 	</modules>
 
 </project>

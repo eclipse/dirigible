@@ -13,6 +13,8 @@ package org.eclipse.dirigible.repository.db;
 import java.io.ByteArrayInputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -56,6 +58,8 @@ public class DatabaseRepository implements IRepository {
 	private DatabaseRepositoryDao databaseRepositoryDao;
 
 	private RepositorySearcher repositorySearcher;
+	
+	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -305,6 +309,18 @@ public class DatabaseRepository implements IRepository {
 		} catch (SQLException e) {
 			throw new RepositoryReadException(e);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.String)
+	 */
+	@Override
+	public String getParameter(String key) {
+		return parameters.get(key);
+	}
+	
+	protected void setParameter(String key, String value) {
+		parameters.put(key, value);
 	}
 
 }

@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Engine</name>
-	<artifactId>dirigible-engine</artifactId>
+	<name>Engine - Command</name>
+	<artifactId>dirigible-engine-command</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -20,7 +20,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
-                <inherited>true</inherited>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -30,56 +29,38 @@
     </build>
     
     <dependencies>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-api</artifactId>
+            <version>3.2.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-process</artifactId>
+            <version>3.2.8-SNAPSHOT</version>
+        </dependency>
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-api</artifactId>
+            <version>3.2.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-database-api</artifactId>
+            <version>3.2.8-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
             <version>3.2.8-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript</artifactId>
+            <artifactId>dirigible-api-facade-http</artifactId>
             <version>3.2.8-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript-nashorn</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript-rhino</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript-v8</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-job</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-listener</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-web</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-wiki</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-command</artifactId>
-            <version>3.2.8-SNAPSHOT</version>
-        </dependency>
+		
     </dependencies>
 
 </project>

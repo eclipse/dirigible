@@ -17,9 +17,9 @@ import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.engine.api.resource.ResourcePath;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
-import org.eclipse.dirigible.engine.js.api.ResourcePath;
 import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8CallInstance;
 import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8CallStatic;
 import org.eclipse.dirigible.engine.js.v8.callbacks.JavaV8NewInstance;
