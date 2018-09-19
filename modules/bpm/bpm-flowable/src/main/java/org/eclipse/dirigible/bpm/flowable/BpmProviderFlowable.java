@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.api.IBpmProvider;
@@ -18,6 +19,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.h2.H2Database;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -29,7 +31,6 @@ import org.flowable.engine.TaskService;
 import org.flowable.engine.impl.cfg.StandaloneProcessEngineConfiguration;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
-import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.slf4j.Logger;
@@ -50,6 +51,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD = "DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD";
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME";
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE = "DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE";
+	private static final String DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE = "DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE";
+	
 
 	/** The Constant NAME. */
 	public static final String NAME = "flowable"; //$NON-NLS-1$
@@ -104,8 +107,17 @@ public class BpmProviderFlowable implements IBpmProvider {
 						cfg = new StandaloneProcessEngineConfiguration().setJdbcUrl(url).setJdbcUsername(user)
 								.setJdbcPassword(password).setJdbcDriver(driver);
 					} else {
-						logger.info("Initializng the Flowable Process Engine with the default datasource");
-						cfg = new StandaloneProcessEngineConfiguration().setDataSource(database.getDataSource());
+						String useDefault = Configuration.get(DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE, "true");
+						if (Boolean.parseBoolean(useDefault)) {
+							logger.info("Initializng the Flowable Process Engine with the default datasource");
+							cfg = new StandaloneProcessEngineConfiguration().setDataSource(database.getDataSource());
+						} else {
+							H2Database h2Database = new H2Database();
+							h2Database.initialize();
+							DataSource flowableDataSource = h2Database.getDataSource("flowable");
+							logger.info("Initializng the Flowable Process Engine with the built-in H2 datasource");
+							cfg = new StandaloneProcessEngineConfiguration().setDataSource(flowableDataSource);
+						}
 					}
 				}
 				boolean updateSchema = Boolean
