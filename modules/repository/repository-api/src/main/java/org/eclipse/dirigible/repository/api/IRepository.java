@@ -33,5 +33,8 @@ public interface IRepository
 
 	/** The Constant DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE. */
 	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
+	
+	/** Gets the internal named parameter value*/
+	public String getParameter(String key);
 
 }

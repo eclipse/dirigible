@@ -12,8 +12,8 @@ package org.eclipse.dirigible.engine.js.generic.service;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.dirigible.engine.api.resource.ResourcePath;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
-import org.eclipse.dirigible.engine.js.api.ResourcePath;
 import org.junit.Test;
 
 // TODO: Auto-generated Javadoc

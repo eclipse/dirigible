@@ -44,44 +44,6 @@ public abstract class AbstractJavascriptExecutor extends AbstractScriptExecutor 
 		}
 	}
 
-	/**
-	 * Gets the resource path.
-	 *
-	 * @param module
-	 *            the module
-	 * @param moduleExtensions
-	 *            the module extensions
-	 * @return the resource path
-	 */
-	protected ResourcePath getResourcePath(String module, String... moduleExtensions) {
-		return generateResourcePath(module, moduleExtensions);
-	}
-
-	/**
-	 * Generate resource path.
-	 *
-	 * @param module
-	 *            the module
-	 * @param moduleExtensions
-	 *            the module extensions
-	 * @return the resource path
-	 */
-	public static ResourcePath generateResourcePath(String module, String[] moduleExtensions) {
-		for (String moduleExtension : moduleExtensions) {
-			if (module.indexOf(moduleExtension) > 0) {
-				ResourcePath resourcePath = new ResourcePath();
-				String modulePath = module.substring(0, ((module.indexOf(moduleExtension) + moduleExtension.length()) - 1));
-				resourcePath.setModule(modulePath);
-				if (module.length() > modulePath.length()) {
-					resourcePath.setPath(module.substring(modulePath.length() + 1));
-				} else {
-					resourcePath.setPath("");
-				}
-				return resourcePath;
-			}
-
-		}
-		return new ResourcePath(module, "");
-	}
+	
 
 }

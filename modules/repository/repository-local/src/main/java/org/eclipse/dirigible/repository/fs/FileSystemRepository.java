@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,8 @@ public abstract class FileSystemRepository implements IRepository {
 	private LocalRepositoryDao repositoryDao;
 
 	private RepositorySearcher repositorySearcher;
+	
+	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -651,6 +655,18 @@ public abstract class FileSystemRepository implements IRepository {
 		} catch (IOException e) {
 			throw new RepositorySearchException(e);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepository#getParameter(java.lang.String)
+	 */
+	@Override
+	public String getParameter(String key) {
+		return parameters.get(key);
+	}
+	
+	protected void setParameter(String key, String value) {
+		parameters.put(key, value);
 	}
 
 }

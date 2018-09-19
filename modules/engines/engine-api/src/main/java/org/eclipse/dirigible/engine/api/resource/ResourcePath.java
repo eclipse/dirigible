@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.engine.js.api;
+package org.eclipse.dirigible.engine.api.resource;
 
 /**
  * The Resource Path.
