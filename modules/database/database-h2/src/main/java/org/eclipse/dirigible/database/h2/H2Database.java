@@ -104,11 +104,8 @@ public class H2Database implements IDatabase {
 		if (dataSource != null) {
 			return dataSource;
 		}
-		if (DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT.equals(name) || DIRIGIBLE_DATABASE_DATASOURCE_TEST.equals(name)) {
-			dataSource = createDataSource(name);
-			return dataSource;
-		}
-		return null;
+		dataSource = createDataSource(name);
+		return dataSource;
 	}
 
 	/*
@@ -159,7 +156,7 @@ public class H2Database implements IDatabase {
 				if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
 					BasicDataSource basicDataSource = new BasicDataSource();
 					basicDataSource.setDriverClassName(databaseDriver);
-					basicDataSource.setUrl(databaseUrl);
+					basicDataSource.setUrl(databaseUrl + "/" + name);
 					basicDataSource.setUsername(databaseUsername);
 					basicDataSource.setPassword(databasePassword);
 					basicDataSource.setDefaultAutoCommit(true);
