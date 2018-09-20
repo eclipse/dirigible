@@ -235,5 +235,9 @@ public class RepositorySearcher {
 			reindex();
 		}
 	}
+	
+	public String getRoot() {
+		return root;
+	}
 
 }

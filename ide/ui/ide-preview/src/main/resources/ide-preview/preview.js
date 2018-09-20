@@ -52,6 +52,9 @@ angular.module('preview', [])
 			case 'md':
 				url += '/wiki';
 				break;
+			case 'command':
+				url += '/command';
+				break;
 			case 'edm':
 			case 'dsm':
 			case 'bpmn':
@@ -63,6 +66,7 @@ angular.module('preview', [])
 			case 'view':
 			case 'access':
 			case 'roles':
+			case 'sh':
 				return;
 			default:
 				url += '/web';

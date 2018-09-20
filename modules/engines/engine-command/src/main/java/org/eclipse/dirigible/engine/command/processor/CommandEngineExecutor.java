@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.engine.command.processor;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -33,6 +34,10 @@ import org.slf4j.LoggerFactory;
  */
 public class CommandEngineExecutor extends AbstractScriptExecutor implements IScriptEngineExecutor {
 	
+	private static final String REPOSITORY_ROOT_FOLDER = "REPOSITORY_ROOT_FOLDER";
+
+	private static final String REPOSITORY_FILE_BASED = "REPOSITORY_FILE_BASED";
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
 	
 	/** The Constant ENGINE_TYPE_COMMAND. */
@@ -138,27 +143,12 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			ProcessUtils.addEnvironmentVariables(processBuilder, commandDefinition.getSet());
 			ProcessUtils.removeEnvironmentVariables(processBuilder, commandDefinition.getUnset());
 
-//			if (commandData.isUseContent()) {
-//				if (commandData.getWorkDir() == null) {
-//					commandData.setWorkDir(WORK);
-//				}
-//				String directory = XSSUtils.stripXSS(commandData.getWorkDir());
-//
-//				if ((directory == null) || "".equals(directory)) {
-//					directory = WORK;
-//				}
-//				File targetFolder = FileUtils.createTempDirectory(directory);
-//
-//				for (int i = rootPaths.length - 1; i >= 0; i--) {
-//					ICollection collection = getCollection(repository, rootPaths[i]);
-//					FileUtils.copyCollectionToDirectory(collection, targetFolder, rootPaths);
-//				}
-//
-//				processBuilder.directory(targetFolder);
-//
-//			} else {
-//				processBuilder.directory(new File(commandData.getWorkDir()));
-//			}
+			boolean isFileBasedRepository = Boolean.parseBoolean(getRepository().getParameter(REPOSITORY_FILE_BASED));
+			if (isFileBasedRepository) {
+				String root = getRepository().getParameter(REPOSITORY_ROOT_FOLDER);
+				processBuilder.directory(new File(root + IRepositoryStructure.PATH_REGISTRY_PUBLIC));
+			}
+			
 			processBuilder.redirectErrorStream(true);
 
 			out = new ByteArrayOutputStream();
@@ -166,8 +156,6 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			Piper pipe = new Piper(process.getInputStream(), out);
 			new Thread(pipe).start();
 			try {
-				// process.waitFor();
-
 				int i = 0;
 				boolean deadYet = false;
 				do {

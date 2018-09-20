@@ -448,6 +448,9 @@ public class ContentTypeHelper {
 	
 	/** The Constant APPLICATION_JSON_EXTENSION. */
 	public static final String APPLICATION_JSON_EXTENSION = "application/json+extension";
+	
+	/** The Constant APPLICATION_JSON_COMMAND. */
+	public static final String APPLICATION_JSON_COMMAND = "application/json+command";
 
 	/** The Constant CONTENT_TYPES. */
 	private static final Map<String, String> CONTENT_TYPES = new HashMap<String, String>();
@@ -650,6 +653,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("extension", APPLICATION_JSON_EXTENSION); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("access", APPLICATION_JSON_ACCESS); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("roles", APPLICATION_JSON_ROLES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("command", APPLICATION_JSON_COMMAND); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("ws", APPLICATION_JSON); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("routes", TEXT_XML); //$NON-NLS-1$

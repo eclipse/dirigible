@@ -99,6 +99,8 @@
 					return 'application/xml';
 				} else if (fileName.endsWith('.roles')) {
 					return 'application/json';
+				} else if (fileName.endsWith('.command')) {
+					return 'application/json';
 				}
 				return 'plain/text';
 			}
