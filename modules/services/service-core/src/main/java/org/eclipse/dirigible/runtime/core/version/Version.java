@@ -22,6 +22,8 @@ public class Version {
 	private String databaseProvider = "local";
 	
 	private Set<String> modules = new HashSet<String>();
+	
+	private Set<String> engines = new HashSet<String>();
 
 	/**
 	 * @return the productName
@@ -119,6 +121,20 @@ public class Version {
 	 */
 	public void setModules(Set<String> modules) {
 		this.modules = modules;
+	}
+	
+	/**
+	 * @return the engines
+	 */
+	public Set<String> getEngines() {
+		return engines;
+	}
+
+	/**
+	 * @param modules the modules to set
+	 */
+	public void setEngines(Set<String> engines) {
+		this.engines = engines;
 	}
 
 }

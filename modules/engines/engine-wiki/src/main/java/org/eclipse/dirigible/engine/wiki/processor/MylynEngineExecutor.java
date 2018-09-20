@@ -8,18 +8,18 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.engine.web.processor;
+package org.eclipse.dirigible.engine.wiki.processor;
 
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 
 /**
- * The Web Engine Executor.
+ * The Mylyn Wiki Engine Executor.
  */
-public class WebEngineExecutor extends AbstractResourceExecutor {
+public class MylynEngineExecutor extends AbstractResourceExecutor {
 	
-	public static final String ENGINE_TYPE = "web";
+	public static final String ENGINE_TYPE = "wiki";
 	
-	public static final String ENGINE_NAME = "Default Web Content Engine";
+	public static final String ENGINE_NAME = "Mylyn Wiki Content Engine";
 	
 	/*
 	 * (non-Javadoc)

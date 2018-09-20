@@ -16,5 +16,27 @@ import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
  * The Wiki Engine Executor.
  */
 public class WikiEngineExecutor extends AbstractResourceExecutor {
+	
+	public static final String ENGINE_TYPE = "wiki";
+	
+	public static final String ENGINE_NAME = "Default Wiki Content Engine";
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
+	 */
+	@Override
+	public String getType() {
+		return ENGINE_TYPE;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
+	}
 
 }

@@ -25,6 +25,8 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
 
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
+	
+	public static final String ENGINE_NAME = "Default JavaScript Engine";
 
 	/*
 	 * (non-Javadoc)
@@ -33,6 +35,15 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_DEFAULT;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
 	}
 
 	/*

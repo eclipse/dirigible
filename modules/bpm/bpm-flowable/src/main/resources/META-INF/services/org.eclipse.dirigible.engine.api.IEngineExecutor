@@ -1,0 +1,2 @@
+org.eclipse.dirigible.bpm.executor.ProcessEngineExecutor	# Process Engine Executor
+org.eclipse.dirigible.bpm.executor.FlowableEngineExecutor	# Flowable Engine Executor

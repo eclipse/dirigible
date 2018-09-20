@@ -1,0 +1,2 @@
+org.eclipse.dirigible.engine.messaging.executor.MessagingEngineExecutor	# Messaging Engine Executor
+org.eclipse.dirigible.engine.messaging.executor.ActiveMQEngineExecutor	# Messaging Engine Executor

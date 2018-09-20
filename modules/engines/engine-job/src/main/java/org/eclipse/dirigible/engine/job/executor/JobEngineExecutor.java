@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 SAP and others.
+ * Copyright (c) 2018 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,18 +8,15 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.engine.web.processor;
+package org.eclipse.dirigible.engine.job.executor;
 
-import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
+import org.eclipse.dirigible.engine.api.IEngineExecutor;
 
-/**
- * The Web Engine Executor.
- */
-public class WebEngineExecutor extends AbstractResourceExecutor {
+public class JobEngineExecutor implements IEngineExecutor {
 	
-	public static final String ENGINE_TYPE = "web";
+	public static final String ENGINE_TYPE = "job";
 	
-	public static final String ENGINE_NAME = "Default Web Content Engine";
+	public static final String ENGINE_NAME = "Scheduling Job Engine";
 	
 	/*
 	 * (non-Javadoc)

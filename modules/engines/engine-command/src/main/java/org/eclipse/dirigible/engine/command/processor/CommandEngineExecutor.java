@@ -41,7 +41,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	private static final Logger logger = LoggerFactory.getLogger(AbstractScriptExecutor.class);
 	
 	/** The Constant ENGINE_TYPE_COMMAND. */
-	public static final String ENGINE_TYPE_COMMAND = "command";
+	public static final String ENGINE_TYPE = "command";
 	
 	/** The Constant COMMAND_EXTENSION. */
 	public static final String COMMAND_EXTENSION = ".command";
@@ -49,6 +49,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	/** The Constant MODULE_EXT_COMMAND. */
 	public static final String MODULE_EXT_COMMAND = COMMAND_EXTENSION + "/";
 	
+	public static final String ENGINE_NAME = "Execution Command Engine";
 	
 
 	/*
@@ -57,7 +58,16 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	 */
 	@Override
 	public String getType() {
-		return ENGINE_TYPE_COMMAND;
+		return ENGINE_TYPE;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
 	}
 
 	/*

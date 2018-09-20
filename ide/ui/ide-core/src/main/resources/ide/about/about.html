@@ -72,6 +72,20 @@
 					</tbody>
 				</table>
 			</div>
+			<div class="form-group">
+				<table class="table table-striped" ng-cloak>
+					<thead>
+						<tr>
+							<th>Engines</th>						
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="next in version.engines">
+							<td>{{next}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</form>
 	</div>
 </body>
