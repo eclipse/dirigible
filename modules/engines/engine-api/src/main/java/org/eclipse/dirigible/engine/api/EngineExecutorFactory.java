@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.engine.api.script;
+package org.eclipse.dirigible.engine.api;
 
 import static java.text.MessageFormat.format;
 
@@ -21,35 +21,43 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A factory for creating ScriptEngineExecutor objects.
+ * A factory for creating EngineExecutor objects.
  */
-public class ScriptEngineExecutorFactory {
+public class EngineExecutorFactory {
 
-	private static final ServiceLoader<IScriptEngineExecutor> SCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IScriptEngineExecutor.class);
+	private static final ServiceLoader<IEngineExecutor> ENGINE_EXECUTORS = ServiceLoader.load(IEngineExecutor.class);
 
-	private static final Logger logger = LoggerFactory.getLogger(ScriptEngineExecutorFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(EngineExecutorFactory.class);
 
 	/**
-	 * Gets the script engine executor.
+	 * Gets the engine executor.
 	 *
 	 * @param type
 	 *            the type
-	 * @return the script engine executor
+	 * @return the engine executor
 	 */
-	public static IScriptEngineExecutor getScriptEngineExecutor(String type) {
-		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {
+	public static IEngineExecutor getEngineExecutor(String type) {
+		for (IEngineExecutor next : ENGINE_EXECUTORS) {
 			if (next.getType().equals(type)) {
 				return StaticInjector.getInjector().getInstance(next.getClass());
 			}
 		}
-		logger.error(format("Script Executor of Type {0} does not exist.", type));
+		logger.error(format("Executor of Type {0} does not exist.", type));
 		return null;
 	}
 	
 	public static Set<String> getEnginesTypes() {
 		Set<String> engineTypes = new HashSet<String>();
-		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {
+		for (IEngineExecutor next : ENGINE_EXECUTORS) {
 			engineTypes.add(next.getType());
+		}
+		return engineTypes;
+	}
+	
+	public static Set<String> getEnginesNames() {
+		Set<String> engineTypes = new HashSet<String>();
+		for (IEngineExecutor next : ENGINE_EXECUTORS) {
+			engineTypes.add(next.getName());
 		}
 		return engineTypes;
 	}

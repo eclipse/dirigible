@@ -10,6 +10,7 @@
 
 package org.eclipse.dirigible.engine.api.resource;
 
+import org.eclipse.dirigible.engine.api.IEngineExecutor;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
@@ -17,7 +18,7 @@ import org.eclipse.dirigible.repository.api.RepositoryException;
 /**
  * The Resource Executor interface.
  */
-public interface IResourceExecutor {
+public interface IResourceExecutor extends IEngineExecutor {
 
 	/**
 	 * Gets the resource content.

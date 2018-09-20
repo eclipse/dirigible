@@ -1,0 +1,2 @@
+org.eclipse.dirigible.engine.wiki.processor.WikiEngineExecutor	# Wiki Engine Executor
+org.eclipse.dirigible.engine.wiki.processor.MylynEngineExecutor	# Mylyn Engine Executor

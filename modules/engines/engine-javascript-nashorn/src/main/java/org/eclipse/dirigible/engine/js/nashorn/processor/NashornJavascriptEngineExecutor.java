@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(NashornJavascriptEngineExecutor.class);
+	
+	public static final String ENGINE_NAME = "Nashorn JavaScript Engine";
 
 	/*
 	 * (non-Javadoc)
@@ -143,5 +145,14 @@ public class NashornJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_NASHORN;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
 	}
 }

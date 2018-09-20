@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Abstract Resource Executor.
  */
-public class AbstractResourceExecutor implements IResourceExecutor {
+public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 

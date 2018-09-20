@@ -49,6 +49,8 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	private static final String J2V8_CALL_INSTANCE_FUNCTION_NAME = "j2v8invoke";
 
 	private static final Logger logger = LoggerFactory.getLogger(V8JavascriptEngineExecutor.class);
+	
+	public static final String ENGINE_NAME = "V8 JavaScript Engine";
 
 	/*
 	 * (non-Javadoc)
@@ -175,5 +177,14 @@ public class V8JavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_V8;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
 	}
 }

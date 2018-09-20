@@ -61,6 +61,8 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 	private static final String JAVA_SCRIPT_DEBUGGER = "Javascript Debugger";
 	
 	public static final String DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED = "DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED";
+	
+	public static final String ENGINE_NAME = "Rhino JavaScript Engine";
 
 	static {
 		ContextFactory.initGlobal(new ContextFactory() {
@@ -227,10 +229,19 @@ public class RhinoJavascriptEngineExecutor extends AbstractJavascriptExecutor {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#getType()
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getType()
 	 */
 	@Override
 	public String getType() {
 		return JAVASCRIPT_TYPE_RHINO;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.engine.api.script.IEngineExecutor#getName()
+	 */
+	@Override
+	public String getName() {
+		return ENGINE_NAME;
 	}
 }

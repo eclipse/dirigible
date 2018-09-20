@@ -12,16 +12,14 @@ package org.eclipse.dirigible.engine.api.script;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.engine.api.IEngineExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
 /**
  * The Script Engine Executor interface.
  */
-public interface IScriptEngineExecutor {
+public interface IScriptEngineExecutor extends IEngineExecutor {
 
 	/**
 	 * Retrieve module.
@@ -77,11 +75,6 @@ public interface IScriptEngineExecutor {
 	 */
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public String getType();
+	
 
 }
