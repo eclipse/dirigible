@@ -58,6 +58,16 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FileSystemRepository implements IRepository {
 
+	private static final String REPOSITORY_FILE_BASED = "REPOSITORY_FILE_BASED";
+	
+	private static final String REPOSITORY_INFO_FOLDER = "REPOSITORY_INFO_FOLDER";
+
+	private static final String REPOSITORY_VERSIONS_FOLDER = "REPOSITORY_VERSIONS_FOLDER";
+
+	private static final String REPOSITORY_ROOT_FOLDER = "REPOSITORY_ROOT_FOLDER";
+
+	private static final String REPOSITORY_INDEX_FOLDER = "REPOSITORY_INDEX_FOLDER";
+
 	private static Logger logger = LoggerFactory.getLogger(FileSystemRepository.class);
 
 	private static final String CURRENT_DIR = ".";
@@ -147,9 +157,11 @@ public abstract class FileSystemRepository implements IRepository {
 		try {
 			initializeRepository(root);
 			this.repositorySearcher = new RepositorySearcher(this);
+			this.setParameter(REPOSITORY_INDEX_FOLDER, this.repositorySearcher.getRoot());
 		} catch (IOException e) {
 			throw new LocalRepositoryException();
 		}
+		this.setParameter(REPOSITORY_FILE_BASED, "true");
 		logger.debug(String.format("File-based Repository Client for: %s, has been created.", root));
 	}
 
@@ -201,12 +213,15 @@ public abstract class FileSystemRepository implements IRepository {
 		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
 		repositoryPath = new File(repositoryPath).getCanonicalPath();
+		this.setParameter(REPOSITORY_ROOT_FOLDER, repositoryPath);
 		versionsPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_VERSIONS; // $NON-NLS-1$
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
 		versionsPath = new File(versionsPath).getCanonicalPath();
+		this.setParameter(REPOSITORY_VERSIONS_FOLDER, repositoryPath);
 		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
 		infoPath = new File(infoPath).getCanonicalPath();
+		this.setParameter(REPOSITORY_INFO_FOLDER, repositoryPath);
 		FileSystemUtils.createFolder(repositoryPath);
 		FileSystemUtils.createFolder(versionsPath);
 		FileSystemUtils.createFolder(infoPath);
