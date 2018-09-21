@@ -23,6 +23,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
@@ -69,7 +70,7 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	public Response executeService(@PathParam("path") String path) {
 		try {
 			Object result = processor.executeService(path);
-			return Response.ok(result == null ? "null" : result.toString()).build();
+			return Response.ok(result == null ? "null" : result.toString()).type(HttpResponseFacade.getContentType()).build();
 		} catch (ScriptingDependencyException e) {
 			logger.error(e.getMessage());
 			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
