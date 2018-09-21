@@ -3,6 +3,12 @@
 ## Anonymous Access
 - `DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME`: (e.g. MY_USER_VARIABLE)
 
+## Branding
+- `DIRIGIBLE_BRANDING_NAME`: (default: 'Eclipse Dirigible')
+- `DIRIGIBLE_BRANDING_BRAND`: (default: 'Eclipse Dirigible')
+- `DIRIGIBLE_BRANDING_ICON`: (default: '../../../../services/v3/web/resources/images/favicon.png')
+- `DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT`: (default: '../../../../services/v3/web/ide/welcome.html')
+
 ## Registry
 - `DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER`: (e.g. /User/data)
 
