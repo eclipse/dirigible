@@ -368,7 +368,7 @@ function getBrandingInfo(scope) {
 	scope.branding = JSON.parse(localStorage.getItem('DIRIGIBLE.branding'));
 	if (scope.branding === null) {
 		var xhr = new XMLHttpRequest();
-	    xhr.open('GET', '../../js/ide-branding/api.js', false);
+	    xhr.open('GET', '../../js/ide-branding/api/branding.js', false);
 	    xhr.send();
 	    if (xhr.status === 200) {
 	    	var data = JSON.parse(xhr.responseText)
