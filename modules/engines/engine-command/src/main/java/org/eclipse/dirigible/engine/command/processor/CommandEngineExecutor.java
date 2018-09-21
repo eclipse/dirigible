@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
+import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.process.Piper;
@@ -192,6 +193,12 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		}
 		result = new String(out.toByteArray());
 
+		try {
+			HttpResponseFacade.setContentType(commandDefinition.getContentType());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
 		logger.trace("exiting: executeServiceModule()");
 		return result;
 	}
