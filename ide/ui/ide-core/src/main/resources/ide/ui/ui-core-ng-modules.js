@@ -87,7 +87,7 @@ angular.module('ideUiCore', ['ngResource'])
 	    if (xhr.status === 200) {
 	       	return JSON.parse(xhr.responseText);
 	    }
-	};
+	}
 	var editorProviders = {};
 	var editorsForContentType = {};
 	var editorsList = getEditors();
@@ -168,7 +168,9 @@ angular.module('ideUiCore', ['ngResource'])
 							src += "&contentType="+componentState.contentType;
 					} else {
 						container.setTitle("Welcome");
-						src = '../../../../services/v3/web/ide/welcome.html';
+						var brandingInfo = {};
+						getBrandingInfo(brandingInfo);
+						src = brandingInfo.branding.welcomePage;
 					}
 					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
 				})(componentState, this);
@@ -226,6 +228,31 @@ angular.module('ideUiCore', ['ngResource'])
 		manager: undefined
 	};
 }])
+.directive('brandtitle', [function() {
+	return {
+		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
+		scope: {
+			perspectiveName: '@perspectiveName'
+		},
+		link: function(scope, el, attrs){
+			getBrandingInfo(scope);
+		},
+		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/brandTitle.html'
+	};
+}])
+.directive('brandicon', [function() {
+	return {
+		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
+		link: function(scope, el, attrs){
+			getBrandingInfo(scope);
+		},
+		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/brandIcon.html'
+	};
+}])
 .directive('menu', ['$resource', 'Theme', 'User', 'Layouts', 'messageHub', function($resource, Theme, User, Layouts, messageHub){
 	return {
 		restrict: 'AE',
@@ -240,6 +267,8 @@ angular.module('ideUiCore', ['ngResource'])
 			function loadMenu(){
 				scope.menu = $resource(url).query();
 			}
+			getBrandingInfo(scope);
+
 			if(!scope.menu && url)
 				loadMenu.call(scope);
 			scope.menuClick = function(item, subItem) {
@@ -334,3 +363,17 @@ angular.module('ideUiCore', ['ngResource'])
 		}
 	}
 }])	;
+
+function getBrandingInfo(scope) {
+	scope.branding = JSON.parse(localStorage.getItem('DIRIGIBLE.branding'));
+	if (scope.branding === null) {
+		var xhr = new XMLHttpRequest();
+	    xhr.open('GET', '../../js/ide-branding/api.js', false);
+	    xhr.send();
+	    if (xhr.status === 200) {
+	    	var data = JSON.parse(xhr.responseText)
+	       	scope.branding = data;
+			localStorage.setItem('DIRIGIBLE.branding', JSON.stringify(data));
+	    }
+	}
+}

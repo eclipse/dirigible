@@ -9,19 +9,19 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en">
+<html lang="en"  ng-app="workbench" ng-controller="WorkbenchController as wb">
 <head>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible &trade; | Workbench </title>
+	<title brandtitle perspective-name="Workspace"></title>
 
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link type="text/css" rel="stylesheet" href="../../../../services/v3/core/theme/bootstrap.min.css">
 
-		<!-- GoldenLayout with Theme Support -->
+	<!-- GoldenLayout with Theme Support -->
 	<link type="text/css" rel="stylesheet" href="../../../../services/v3/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
 	<link type="text/css" rel="stylesheet" href="../../../../services/v3/core/theme/goldenlayout-theme.css" />
 	
@@ -30,11 +30,11 @@
 	
 	<!-- FontAwesome icon set -->
     <link type="text/css" href="../../../../services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
-	<link rel="shortcut icon" type="image/png" href="../../../../services/v3/web/resources/images/favicon.png" />
+
+	<link brandicon/>
 </head>
 
-<body ng-app="workbench" ng-controller="WorkbenchController as wb">
+<body>
 
 	<div menu menu-data-url="../../js/ide/services/menu.js"></div>
 	
