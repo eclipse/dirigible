@@ -36,7 +36,8 @@ FLOWABLE.TOOLBAR = {
 		            data: params,
 		            ignoreErrors: true,
 		            headers: {'Accept': 'application/json',
-		                      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+		                      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+		                      'X-Requested-With': 'Fetch'},
 		            transformRequest: function (obj) {
 		                var str = [];
 		                for (var p in obj) {
