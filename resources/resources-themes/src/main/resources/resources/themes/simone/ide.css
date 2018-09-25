@@ -69,10 +69,10 @@ body {
 }
 
 .list-group-item.active {
-	color: #00dddd !important;
+	color: #afcee9 !important;
 }
 .list-group-item.active:hover {
-	color: #00ffff !important;
+	color: #d7e6f4 !important;
 }
 
 a.list-group-item.hover,
@@ -93,7 +93,7 @@ nav.navbar {
 }
 
 .navbar-inverse .navbar-brand:hover {
-    color: #00ffff;
+    color: #d7e6f4;
 }
 
 nav.navbar a{
@@ -124,7 +124,7 @@ nav.navbar .dropdown-menu{
 .lm_header .lm_tab.lm_active{
   box-shadow: none;
   padding-bottom: 4px;
-  border-top: #00ffff;
+  border-top: #d7e6f4;
   border-top-width: 2px;
   border-top-style: solid;
 }
@@ -191,7 +191,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .user {
-	color: #00dddd;
+	color: #afcee9;
 }
 
 .row {
@@ -340,4 +340,8 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     line-height: 1;
+}
+
+.my-list-item {
+	color: #3277b3 !important;
 }
