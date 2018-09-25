@@ -11,6 +11,17 @@
 /*globals angular, $ */
 angular
 .module('import', ['angularFileUpload'])
+.factory('httpRequestInterceptor', function () {
+	return {
+		request: function (config) {
+			config.headers['X-Requested-With'] = 'Fetch';
+			return config;
+		}
+	};
+})
+.config(['$httpProvider', function($httpProvider) {
+	$httpProvider.interceptors.push('httpRequestInterceptor');
+}])
 .factory('$messageHub', [function(){
 	var messageHub = new FramesMessageHub();	
 	var message = function(evtName, data){
@@ -33,6 +44,8 @@ angular
     var uploader = $scope.uploader = new FileUploader({
         url: $scope.TRANSPORT_SNAPSHOT_URL
     });
+    
+    uploader.headers['X-Requested-With'] = 'Fetch';
 
     // UPLOADER FILTERS
 
