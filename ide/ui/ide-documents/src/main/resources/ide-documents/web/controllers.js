@@ -1,6 +1,17 @@
 /*globals angular, $ */
 angular
 .module('app', ['angularFileUpload'])
+.factory('httpRequestInterceptor', function () {
+	return {
+		request: function (config) {
+			config.headers['X-Requested-With'] = 'Fetch';
+			return config;
+		}
+	};
+})
+.config(['$httpProvider', function($httpProvider) {
+	$httpProvider.interceptors.push('httpRequestInterceptor');
+}])
 .controller('DocServiceCtrl', ['$scope', '$http', 'FileUploader', function($scope, $http, FileUploader) {
 	var rootPath = '../../js/ide-documents/api';
 	var managePath = rootPath + '/manage';
@@ -169,6 +180,8 @@ angular
     var uploader = $scope.uploader = new FileUploader({
         url: $scope.createDocPath
     });
+    
+	uploader.headers['X-Requested-With'] = 'Fetch';
 
     // UPLOADER FILTERS
 
