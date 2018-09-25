@@ -337,15 +337,8 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSIONS")
 						.where("EXTENSION_EXTENSIONPOINT_NAME = ?").toString();
-				List<ExtensionDefinition> extensions = extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,
+				return extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,
 						Arrays.asList(extensionPoint));
-				if (extensions.isEmpty()) {
-					ExtensionPointDefinition extensionPointDefinition = this.getExtensionPointByName(extensionPoint);
-					if (extensionPointDefinition == null) {
-						throw new ExtensionsException(format("There is no an ExtensionPoint with name [{0}] at all.", extensionPoint));
-					}
-				}
-				return extensions;
 			} finally {
 				if (connection != null) {
 					connection.close();

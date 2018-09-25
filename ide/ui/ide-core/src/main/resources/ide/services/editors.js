@@ -13,7 +13,8 @@ var response = require('http/v3/response');
 
 var editors = [];
 var editorExtensions = extensions.getExtensions('ide-editor');
-for (var i=0; i<editorExtensions.length; i++) {
+
+for (var i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
     var module = editorExtensions[i];
     try {
     	var editorExtension = require(module);
@@ -25,4 +26,5 @@ for (var i=0; i<editorExtensions.length; i++) {
     }
     
 }
+
 response.println(JSON.stringify(editors));
