@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2018 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="discussions" ng-controller="DiscussionsController as db">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title brandtitle perspective-name="Discussions"></title>
+
+	<link brandicon/>
+	
+	<!-- FontAwesome icon set -->
+    <link type="text/css" href="../../../../services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link type="text/css" rel="stylesheet" href="../../../../services/v3/core/theme/bootstrap.min.css">
+
+	<!-- GoldenLayout with Theme Support -->
+	<link type="text/css" rel="stylesheet" href="../../../../services/v3/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+	<link type="text/css" rel="stylesheet" href="../../../../services/v3/core/theme/goldenlayout-theme.css" />
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="../../../../services/v3/core/theme/ide.css" />
+</head>
+
+<body>
+
+	<div menu menu-data-url="../../js/ide-discussions/extensions/menu-discussions.js"></div>
+	
+	<div class="shell">
+		<div class="sidebar list-group" sidebar active="Discussions"></div>
+		<div id="discussions" class="plane" views-layout views-layout-model="db.layoutModel"></div>
+	</div>
+	<div class="statusbar" status-bar>{{message}}</div>
+	
+	<!-- jQuery -->
+	<script type="text/javascript" src="../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<script type="text/javascript" src="../../../../services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- AngularJS -->
+	<script type="text/javascript" src="../../../../services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="../../../../services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+
+	<!-- GoldenLayout with Theme Support -->
+	<script type="text/javascript" src="../../../../services/v3/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
+
+	<script type="text/javascript" src="../ide/ui/message-hub.js"></script>	
+	<script type="text/javascript" src="../ide/ui/ui-layout.js"></script>
+	<script type="text/javascript" src="../ide/ui/ui-core-ng-modules.js"></script>
+	
+	<script type="text/javascript">
+		angular.module('discussions', ['ngResource', 'ideUiCore'])
+		.config(["messageHubProvider", function(messageHubProvider) {
+			messageHubProvider.evtNamePrefix = 'discussions';
+		}])	
+		.controller('DiscussionsController', ['Layouts', function (Layouts) {
+			
+			this.layoutModel = {
+				views: ['discussions']
+			};
+					
+		}]);
+	</script>
+</body>
+
+</html>

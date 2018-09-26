@@ -69,6 +69,7 @@
 		<module>ide-data-structures</module>
 		<module>ide-registry</module>
 		<module>ide-plugins</module>
+		<module>ide-discussions</module>
 	</modules>
 
 	<profiles>
