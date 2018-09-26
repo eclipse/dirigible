@@ -1,0 +1,5 @@
+{
+	"module": "ide-discussions/extensions/discussions-view.js",
+	"extensionPoint": "ide-view",
+	"description": "Discussions View"
+}

@@ -1,0 +1,69 @@
+<div class="items-list">
+	<div ng-hide="boardsVm.list.length" class="nodata-text">{{boardsVm.i18n.format('list.empty')}}</div>
+	<div class="list-group" ng-if="boardsVm.list.length>0">
+	  <div class="list-group-item" ng-repeat="board in boardsVm.list|filter:{$:boardsVm.filterList.filterText}|orderBy:['-rating', '-lastModifiedTime', '-participants']">
+		<div class="board-list-item">
+			
+			<div class="left-compartment">
+				<div class="user-box">
+					<!-- img ng-src="../../../web/ide-discussions/svc/user/dboards-icon.png" class="user-pic" title="{{boardsVm.i18n.format('board.avatar_title', (board.user||''))}}"/ -->
+					<span class="fa fa-user fa-4x text-primary" title="{{boardsVm.i18n.format('board.avatar_title', (board.user||''))}}"></span>
+					<span ng-bind="board.user" class="user-name text-primary"></span>
+				</div>
+				<span class="publish-time" title="{{board.publishTimeLocal}}" ng-bind="board.timeSincePublish"></span>
+			</div>				
+			
+			<div class="main-compartment">
+				
+				<a class="title" ng-bind="board.shortText" ui-sref="list.entity({boardId:board.id, board: board})" title="{{boardsVm.i18n.format('board.short_text_title')}}"></a>
+
+				<div class="stats">
+					<span title="{{boardsVm.i18n.format('board.views_title', (board.visitsShort||0))}}">{{board.visitsShort||0}} <i class="fa fa-eye"></i></span>
+					|
+					<div ng-if="board.commentsCount" style="display:inline-block">
+						<span title="{{
+							(
+								boardsVm.i18n.format('board.comments_stats.title_0', board.commentsCount, 
+									(board.commentsCount===1 ? 
+										boardsVm.i18n.format('board.comments_stats.comments_num_1') : 
+										boardsVm.i18n.format('board.comments_stats.comments_num_many')))  +
+								boardsVm.i18n.format('board.comments_stats.title_1', board.participantsCountShort,
+									(board.participantsCount===1 ? 
+										boardsVm.i18n.format('board.comments_stats.collaborators_1') : 
+										boardsVm.i18n.format('board.comments_stats.collaborators_many'))
+								)
+							)
+							}}">
+							{{board.commentsCount}} <i class="fa fa-comments-o"></i> {{
+									boardsVm.i18n.format('board.comments_stats.title_1', board.participantsCountShort,
+									(board.participantsCount===1 ? 
+										boardsVm.i18n.format('board.comments_stats.collaborators_1') : 
+										boardsVm.i18n.format('board.comments_stats.collaborators_many'))
+								)}}
+						</span>
+					</div>
+					<div ng-if="!board.commentsCount" style="display:inline-block">
+						{{boardsVm.i18n.format('board.comments_stats.none_0')}} <a ui-sref="list.entity({boardId:board.id, board: board})" href>{{boardsVm.i18n.format('board.comments_stats.none_1')}}</a>
+					</div>
+				</div>
+									
+				<div ng-if="boardsVm.CONFIG.features.tags.enabled && board.tags" class="tags">
+					<span ng-repeat="tag in board.tags" ng-bind="tag.defaultLabel" class="tag-item"><span>
+				</div>
+				<span ng-if="board.latestDiscussionUpdateTime" title="{{board.latestDiscussionUpdateTimeLocal}}" class="text-muted">{{boardsVm.i18n.format('board.comments_stats.lastupd', board.timeSinceLatestDiscussionUpdateTime)}}</span>
+			</div>
+
+			<div class="right-compartment" ng-if="boardsVm.CONFIG.features.votes.enabled">
+				<div class="rating-box">
+					<span class="subtle">{{boardsVm.i18n.format('rating.title')}}</span>
+					<span class="rating-number">{{board.ratingShort||0}}</span>
+					<span class="votes-number" ng-if="board.totalVotes===1">{{boardsVm.i18n.format('rating.votes_singular', board.totalVotesShort||0)}}</span>
+					<span class="votes-number" ng-if="board.totalVotes!==1">{{boardsVm.i18n.format('rating.votes_plural', board.totalVotesShort||0)}}</span>					
+				</div>
+			</div>					
+			
+		</div>
+	  </div>	
+	</div>
+	<button ng-if="boardsVm.hasMore" ng-click="boardsVm.next()" class="btn btn-default">{{boardVm.i18n.format('buttons.more')}}</button>
+</div>

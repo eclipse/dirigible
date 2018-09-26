@@ -1,0 +1,11 @@
+<div>
+	<form>
+	  <div class="form-group">
+	    <label ng-bind="boardVm.i18n.format('board.short_text')"></label><input type="text" class="form-control" placeholder="" ng-model="boardVm.board.shortText" title="{{boardVm.i18n.format('board.short_text_title')}}">
+	  </div>
+	  <div class="form-group">
+	    <label ng-bind="boardVm.i18n.format('board.description')"></label><textarea ck-editor style="width:100%;height:100%" class="form-control" placeholder="Type description here" ck-editor ng-model="boardVm.board.description" ng-bind-html="boardVm.board.description" title="{{boardVm.i18n.format('board.description_title')}}"></textarea>
+	  </div>	  
+	  <button type="submit" class="btn btn-default" ng-click="boardVm.submit()" ng-disabled="!boardVm.board.shortText && !boardVm.board.description" ng-bind="boardVm.i18n.format('buttons.post')" title="{{boardVm.i18n.format('buttons.post')}}"></button>
+	</form>
+</div>
