@@ -571,7 +571,7 @@ angular.module('workspace.config', [])
 	.constant('WS_SVC_MANAGER_URL','../../../../services/v3/ide/workspace')
 	.constant('PUBLISH_SVC_URL','../../../../services/v3/ide/publisher/request')
 	.constant('EXPORT_SVC_URL','../../../../services/v3/transport/project')
-	.constant('TEMPLATES_SVC_URL','../../../../services/v3/js/ide/services/templates.js')
+	.constant('TEMPLATES_SVC_URL','../../../../services/v3/js/ide-core/services/templates.js')
 	.constant('GENERATION_SVC_URL','../../../../services/v3/ide/generate');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])

@@ -44,6 +44,7 @@
 		<module>ide-branding</module>
 		<module>ide-console</module>
 		<module>ide-core</module>
+		<module>ide-workbench</module>
 		<module>ide-database</module>
 		<module>ide-documents</module>
 		<module>ide-git</module>

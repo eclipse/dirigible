@@ -13,7 +13,8 @@ var response = require('http/v3/response');
 
 var perspectives = [];
 var perspectiveExtensions = extensions.getExtensions('ide-perspective');
-for (var i=0; i<perspectiveExtensions.length; i++) {
+
+for (var i = 0; i < perspectiveExtensions.length; i++) {
     var module = perspectiveExtensions[i];
     try {
     	var perspectiveExtension = require(module);
@@ -25,7 +26,9 @@ for (var i=0; i<perspectiveExtensions.length; i++) {
     }
     
 }
+
 perspectives.sort(function(p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
 });
+
 response.println(JSON.stringify(perspectives));

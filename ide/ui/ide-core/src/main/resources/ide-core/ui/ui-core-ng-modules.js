@@ -60,17 +60,17 @@ angular.module('ideUiCore', ['ngResource'])
 	}
 }])
 .service('Perspectives', ['$resource', function($resource){
-	return $resource('../../js/ide/services/perspectives.js');
+	return $resource('../../js/ide-core/services/perspectives.js');
 }])
 .service('Menu', ['$resource', function($resource){
-	return $resource('../../js/ide/services/menu.js');
+	return $resource('../../js/ide-core/services/menu.js');
 }])
 .service('User', ['$http', function($http){
 	return {
 		get: function(){
 			var user = {};
 			$http({
-				url: '../../js/ide/services/user-name.js',
+				url: '../../js/ide-core/services/user-name.js',
 				method: 'GET'
 			}).success(function(data){
 				user.name = data;
@@ -82,7 +82,7 @@ angular.module('ideUiCore', ['ngResource'])
 .provider('Editors', function(){
 	function getEditors(resourcePath) {
 	    var xhr = new XMLHttpRequest();
-	    xhr.open('GET', '../../js/ide/services/editors.js', false);
+	    xhr.open('GET', '../../js/ide-core/services/editors.js', false);
 	    xhr.send();
 	    if (xhr.status === 200) {
 	       	return JSON.parse(xhr.responseText);
@@ -193,7 +193,7 @@ angular.module('ideUiCore', ['ngResource'])
 		ViewRegistrySvc.factory(factoryName, ViewFactories[factoryName]);
 	});		
 	var get = function(){
-		return $resource('../../js/ide/services/views.js').query().$promise
+		return $resource('../../js/ide-core/services/views.js').query().$promise
 				.then(function(data){
 					data = data.map(function(v){
 						v.id = v.id || v.name.toLowerCase();
@@ -239,7 +239,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			getBrandingInfo(scope);
 		},
-		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/brandTitle.html'
+		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/brandTitle.html'
 	};
 }])
 .directive('brandicon', [function() {
@@ -250,7 +250,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			getBrandingInfo(scope);
 		},
-		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/brandIcon.html'
+		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/brandIcon.html'
 	};
 }])
 .directive('menu', ['$resource', 'Theme', 'User', 'Layouts', 'messageHub', function($resource, Theme, User, Layouts, messageHub){
@@ -301,7 +301,7 @@ angular.module('ideUiCore', ['ngResource'])
 			};
 			scope.user = User.get();
 		},
-		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/menu.html'
+		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -315,7 +315,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			scope.perspectives = Perspectives.query();
 		},
-		templateUrl: '../../../../services/v3/web/ide/ui/tmpl/sidebar.html'
+		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/sidebar.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){
