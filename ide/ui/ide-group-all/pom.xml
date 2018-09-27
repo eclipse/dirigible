@@ -174,5 +174,10 @@
 		 	<artifactId>dirigible-ide-ui-plugins</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-discussions</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
