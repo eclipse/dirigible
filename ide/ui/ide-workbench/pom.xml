@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - UI - Core</name>
-	<artifactId>dirigible-ide-ui-core</artifactId>
+	<name>IDE - UI - Workbench</name>
+	<artifactId>dirigible-ide-ui-workbench</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
@@ -20,8 +20,8 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>ide-core</content.repository.name>
-		<content.project.name>ide-core</content.project.name>
+		<content.repository.name>ide-workbench</content.repository.name>
+		<content.project.name>ide</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>

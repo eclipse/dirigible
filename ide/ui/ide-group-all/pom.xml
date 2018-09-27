@@ -41,6 +41,11 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-workbench</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-terminal</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>

@@ -13,7 +13,8 @@ var response = require('http/v3/response');
 
 var templates = [];
 var templateExtensions = extensions.getExtensions('ide-template');
-for (var i=0; i<templateExtensions.length; i++) {
+
+for (var i = 0; i < templateExtensions.length; i++) {
     var module = templateExtensions[i];
     try {
     	var templateExtension = require(module);
@@ -25,4 +26,5 @@ for (var i=0; i<templateExtensions.length; i++) {
     	console.error(error);
     }
 }
+
 response.println(JSON.stringify(templates));

@@ -13,7 +13,8 @@ var response = require('http/v3/response');
 
 var views = [];
 var viewExtensions = extensions.getExtensions('ide-view');
-for (var i=0; i<viewExtensions.length; i++) {
+
+for (var i = 0; i < viewExtensions.length; i++) {
     var module = viewExtensions[i];
     try {
     	var viewExtension = require(module);
@@ -23,6 +24,6 @@ for (var i=0; i<viewExtensions.length; i++) {
     	console.error('Error occured while loading metadata for the view: ' + module);
     	console.error(error);
     }
-    
 }
+
 response.println(JSON.stringify(views));

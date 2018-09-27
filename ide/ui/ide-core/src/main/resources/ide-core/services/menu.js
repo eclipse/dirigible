@@ -13,7 +13,8 @@ var response = require('http/v3/response');
 
 var mainmenu = [];
 var menuExtensions = extensions.getExtensions('ide-menu');
-for (var i=0; i<menuExtensions.length; i++) {
+
+for (var i = 0; i < menuExtensions.length; i++) {
     var module = menuExtensions[i];
     try {
     	menuExtension = require(module);
@@ -23,9 +24,10 @@ for (var i=0; i<menuExtensions.length; i++) {
     	console.error('Error occured while loading metadata for the menu: ' + module);
     	console.error(error);
     }
-    
 }
+
 mainmenu.sort(function(p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
 });
+
 response.println(JSON.stringify(mainmenu));

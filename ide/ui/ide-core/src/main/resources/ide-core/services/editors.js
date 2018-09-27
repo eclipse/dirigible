@@ -24,7 +24,6 @@ for (var i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
     	console.error('Error occured while loading metadata for the editor: ' + module);
     	console.error(error);
     }
-    
 }
 
 response.println(JSON.stringify(editors));
