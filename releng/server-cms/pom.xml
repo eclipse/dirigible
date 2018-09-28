@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>Releng - SAP - All</name>
-	<artifactId>dirigible-sap-all</artifactId>
+    <name>Releng - Server - CMS</name>
+	<artifactId>dirigible-server-cms</artifactId>
 	<packaging>war</packaging>
 
 	<build>
@@ -45,13 +45,34 @@
 	</build>
 
 	<dependencies>
+
+		<!-- Platform -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>${logback.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>${logback.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+	
 		<!-- Commons -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
-
+	
 		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -67,10 +88,15 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-database</artifactId>
+		 	<artifactId>dirigible-repository-local</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
-		
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-master</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+
 		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -79,7 +105,80 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-managed</artifactId>
+		 	<artifactId>dirigible-database-h2</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-custom</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Platform -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-core</artifactId>
+		    <version>${logback.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>${logback.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+	
+		<!-- Commons -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-commons-config</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+	
+		<!-- API -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Repository -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-local</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-master</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Database -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-h2</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-custom</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 
@@ -88,12 +187,6 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
-		 	<exclusions>
-		 		<exclusion>
-		 			<groupId>org.eclipse.dirigible</groupId>
-		 			<artifactId>dirigible-repository-local</artifactId>
-		 		</exclusion>
-		 	</exclusions>
 		</dependency>
 
 		<!-- Services -->
@@ -117,28 +210,14 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-managed</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		
-		<!-- BPM -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-bpm</artifactId>
+		 	<artifactId>dirigible-cms-internal</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 
 		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-
-		<!-- Templates Plugins -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-templates</artifactId>
+		 	<artifactId>dirigible-ide-cms</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 
@@ -148,14 +227,6 @@
 		 	<artifactId>dirigible-resources</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
-
-		<!-- External API modules -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ext-qunit</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-
 
 		<!-- External -->
 		<dependency>
@@ -171,4 +242,5 @@
 			<version>${jetty.version}</version>
 		</dependency>
 	</dependencies>
+	
 </project>

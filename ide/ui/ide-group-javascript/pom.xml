@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - UI</name>
+	<name>IDE - UI Group - JavaScript</name>
 	<artifactId>dirigible-ide-ui-group-javascript</artifactId>
     <packaging>jar</packaging>
 

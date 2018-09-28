@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>Releng - SAP - All</name>
-	<artifactId>dirigible-sap-all</artifactId>
+    <name>Releng - SAP - CMS</name>
+	<artifactId>dirigible-sap-cms</artifactId>
 	<packaging>war</packaging>
 
 	<build>
@@ -88,12 +88,6 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
-		 	<exclusions>
-		 		<exclusion>
-		 			<groupId>org.eclipse.dirigible</groupId>
-		 			<artifactId>dirigible-repository-local</artifactId>
-		 		</exclusion>
-		 	</exclusions>
 		</dependency>
 
 		<!-- Services -->
@@ -120,25 +114,11 @@
 		 	<artifactId>dirigible-cms-managed</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
-		
-		<!-- BPM -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-bpm</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
 
 		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-
-		<!-- Templates Plugins -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-templates</artifactId>
+		 	<artifactId>dirigible-ide-cms</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 
@@ -148,14 +128,6 @@
 		 	<artifactId>dirigible-resources</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
-
-		<!-- External API modules -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ext-qunit</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-
 
 		<!-- External -->
 		<dependency>

@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.registry.synchronizer.RegistrySynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -39,11 +39,6 @@
 			<artifactId>dirigible-commons-config</artifactId>
 			<version>3.2.8-SNAPSHOT</version>
     	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-repository-local</artifactId>
-			<version>3.2.8-SNAPSHOT</version>
-    	</dependency>
 
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
