@@ -24,13 +24,13 @@ import java.util.Properties;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,14 +13,17 @@ var response = require('http/v3/response');
 
 var mainmenu = [];
 var menuExtensions = extensions.getExtensions('ide-documents-menu');
-for (var i=0; i<menuExtensions.length; i++) {
+
+for (var i = 0; menuExtensions != null && i < menuExtensions.length; i ++) {
     var module = menuExtensions[i];
-    menuExtension = require(module);
+    var menuExtension = require(module);
     var menu = menuExtension.getMenu();
     mainmenu.push(menu);
 }
+
 mainmenu.sort(function(p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
 });
+
 response.println(JSON.stringify(mainmenu));
 

@@ -9,19 +9,14 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - JavaScript</name>
-	<artifactId>dirigible-ide-javascript</artifactId>
+	<name>IDE - CMS</name>
+	<artifactId>dirigible-ide-cms</artifactId>
     <packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-group-javascript</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-services-group-javascript</artifactId>
+		 	<artifactId>dirigible-ide-ui-group-cms</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

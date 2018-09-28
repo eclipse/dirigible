@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE</name>
+	<name>IDE - Database</name>
 	<artifactId>dirigible-ide-database</artifactId>
     <packaging>jar</packaging>
 

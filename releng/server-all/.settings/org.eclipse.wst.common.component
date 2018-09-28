@@ -227,6 +227,9 @@
         <dependent-module archiveName="dirigible-engine-wiki-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Engine - Wiki/Engine - Wiki">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-commons-process-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Process/Commons - Process">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-cms-api-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CMS - API/CMS - API">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -315,9 +318,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-ide-service-terminal-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Terminal/IDE - Service - Terminal">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="dirigible-commons-process-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Commons - Process/Commons - Process">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-ide-service-workspaces-3.2.8-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/IDE - Service - Workspaces/IDE - Service - Workspaces">

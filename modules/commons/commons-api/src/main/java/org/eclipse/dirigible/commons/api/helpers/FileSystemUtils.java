@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-package org.eclipse.dirigible.repository.fs;
+package org.eclipse.dirigible.commons.api.helpers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +32,7 @@ import org.slf4j.LoggerFactory;
 public class FileSystemUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
+	private static final String SEPARATOR = "/";
 
 	/**
 	 * Save file.
@@ -312,12 +312,12 @@ public class FileSystemUtils {
 	 */
 	private static String convertToWorkspacePath(String path) {
 		String workspacePath = null;
-		if (path.startsWith(IRepository.SEPARATOR)) {
-			workspacePath = path.substring(IRepository.SEPARATOR.length());
+		if (path.startsWith(SEPARATOR)) {
+			workspacePath = path.substring(SEPARATOR.length());
 		} else {
 			workspacePath = path;
 		}
-		workspacePath = workspacePath.replace(IRepository.SEPARATOR, File.separator);
+		workspacePath = workspacePath.replace(SEPARATOR, File.separator);
 		return workspacePath;
 	}
 

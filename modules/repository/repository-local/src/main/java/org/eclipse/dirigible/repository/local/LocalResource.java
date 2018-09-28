@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
@@ -24,7 +25,6 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

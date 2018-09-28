@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -25,7 +26,6 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.fs.FileSystemUtils;
 
 /**
  * The file system based implementation of {@link ICollection}.

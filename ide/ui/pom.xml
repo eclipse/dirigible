@@ -39,6 +39,7 @@
 		<module>ide-group-all</module>
 		<module>ide-group-javascript</module>
 		<module>ide-group-database</module>
+		<module>ide-group-cms</module>
 		
 		<!-- Plugin Modules -->
 		<module>ide-branding</module>

@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - UI Group - Database</name>
-	<artifactId>dirigible-ide-ui-group-database</artifactId>
+	<name>IDE - UI Group - CMS</name>
+	<artifactId>dirigible-ide-ui-group-cms</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
@@ -41,27 +41,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-workbench</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-console</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-help</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-database</artifactId>
-		 	<version>3.2.8-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-logs</artifactId>
+		 	<artifactId>dirigible-ide-ui-documents</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
