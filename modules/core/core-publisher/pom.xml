@@ -68,7 +68,7 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-derby</artifactId>
+			<artifactId>dirigible-database-h2</artifactId>
 			<version>3.2.8-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
