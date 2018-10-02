@@ -813,6 +813,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 							}
 						} else {
 							logger.warn(format("Table [{0}] already exists during the update process", dsName));
+							if (model instanceof DataStructureTableModel && SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
+								executeTableAlter(connection, (DataStructureTableModel) model);
+							}
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -894,7 +897,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *            the table model
 	 */
 	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) {
-		throw new NotImplementedException("Altering a non-empty table is not implemented yet.");
+		throw new NotImplementedException("Altering of a non-empty table is not implemented yet.");
 	}
 
 	/**
