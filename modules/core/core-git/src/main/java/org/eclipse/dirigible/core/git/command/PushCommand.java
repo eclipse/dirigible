@@ -40,8 +40,6 @@ public class PushCommand {
 
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
-	private static final String MASTER = "master"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
 
 	/** The project metadata manager. */
@@ -121,9 +119,9 @@ public class PushCommand {
 		try {
 			String gitRepositoryURI = gitProperties.getURL();
 
-			String gitRepositoryBranch = MASTER;
+			String gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
 			try {
-				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, MASTER);
+				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
 				gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
 			} catch (IOException e) {
 				logger.error(errorMessage, e);

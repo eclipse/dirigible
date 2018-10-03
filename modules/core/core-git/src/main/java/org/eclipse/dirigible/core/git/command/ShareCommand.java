@@ -100,8 +100,10 @@ public class ShareCommand {
 	private void shareToGitRepository(final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
 			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) {
 		final String errorMessage = String.format("Error occurred while sharing project [%s]", project.getName());
+		
+		String branch = gitRepositoryBranch != null ? gitRepositoryBranch : ProjectMetadataManager.BRANCH_MASTER;
 
-		projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, gitRepositoryBranch);
+		projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, branch);
 
 		File tempGitDirectory = null;
 		try {
@@ -109,8 +111,8 @@ public class ShareCommand {
 			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
+					branch, tempGitDirectory.getCanonicalPath()));
+			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, branch);
 			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 
 			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
@@ -120,7 +122,7 @@ public class ShareCommand {
 			gitConnector.commit(commitMessage, username, email, true);
 			gitConnector.push(username, password);
 
-			String lastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
+			String lastSHA = gitConnector.getLastSHAForBranch(branch);
 			GitProjectProperties properties = new GitProjectProperties(gitRepositoryURI, lastSHA);
 			String user = UserFacade.getName();
 

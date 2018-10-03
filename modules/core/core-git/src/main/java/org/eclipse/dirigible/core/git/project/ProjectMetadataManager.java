@@ -26,6 +26,9 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
  */
 public class ProjectMetadataManager {
 
+	/** The default branch */
+	public static final String BRANCH_MASTER = "master"; //$NON-NLS-1$
+	
 	/** The workspaces core service. */
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
@@ -73,7 +76,7 @@ public class ProjectMetadataManager {
 	public static String getBranch(IProject selectedProject) throws IOException {
 		ProjectMetadata projectMetadata = getProjectMetadata(selectedProject);
 		ProjectMetadataRepository repository = projectMetadata.getRepository();
-		return repository != null ? repository.getBranch() : "master";
+		return repository != null ? repository.getBranch() : BRANCH_MASTER;
 	}
 
 	/**
