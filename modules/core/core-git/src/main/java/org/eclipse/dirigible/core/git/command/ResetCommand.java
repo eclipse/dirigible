@@ -38,8 +38,6 @@ public class ResetCommand {
 
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
-	private static final String MASTER = "master"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
 	/** The project metadata manager. */
@@ -103,9 +101,9 @@ public class ResetCommand {
 			GitProjectProperties gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, project);
 			String gitRepositoryURI = gitProperties.getURL();
 
-			String gitRepositoryBranch = MASTER;
+			String gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
 			try {
-				projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, MASTER);
+				projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
 				gitRepositoryBranch = ProjectMetadataManager.getBranch(project);
 			} catch (IOException e) {
 				logger.error(errorMessage, e);
