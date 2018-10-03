@@ -123,6 +123,9 @@ public class PushCommand {
 			try {
 				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
 				gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
+				if (gitRepositoryBranch == null) {
+					gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+				}
 			} catch (IOException e) {
 				logger.error(errorMessage, e);
 			}
