@@ -130,6 +130,9 @@ public class PullCommand {
 		try {
 			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
 			gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
+			if (gitRepositoryBranch == null) {
+				gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+			}
 			logger.debug(String.format("Repository URL for the project [%s]: %s", selectedProject.getName(), gitRepositoryURI));
 			logger.debug(String.format("Branch for the project [%s]: %s", selectedProject.getName(), gitRepositoryBranch));
 		} catch (IOException e) {
