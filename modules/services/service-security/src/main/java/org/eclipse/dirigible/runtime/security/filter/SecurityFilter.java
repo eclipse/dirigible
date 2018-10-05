@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * The Security Filter.
  */
 @WebFilter(urlPatterns = { "/services/v3/js/*", "/services/v3/rhino/*", "/services/v3/nashorn/*", "/services/v3/v8/*", "/services/v3/public/*",
-		"/services/v3/web/*", "/services/v3/wiki/*" }, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
+		"/services/v3/web/*", "/services/v3/wiki/*", "/services/v3/command/*" }, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
@@ -63,6 +63,7 @@ public class SecurityFilter implements Filter {
 		SECURED_PREFIXES.add("/public");
 		SECURED_PREFIXES.add("/web");
 		SECURED_PREFIXES.add("/wiki");
+		SECURED_PREFIXES.add("/command");
 	}
 
 	/*
