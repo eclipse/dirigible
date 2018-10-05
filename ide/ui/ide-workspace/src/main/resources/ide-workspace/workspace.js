@@ -1039,9 +1039,15 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				if(this.workspaceName) {
 					this.selectedWorkspace = this.workspaceName;
 					this.workspaceSelected();
-				} else if(this.workspaces[0]) {
-					this.selectedWorkspace = this.workspaces[0];
-					this.workspaceSelected();
+				} else {
+					var storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace'));
+					if (storedWorkspace !== null) {
+						this.selectedWorkspace = storedWorkspace.name;
+						this.workspaceSelected();
+					} else if(this.workspaces[0]) {
+						this.selectedWorkspace = this.workspaces[0];
+						this.workspaceSelected();
+					}
 				} 
 			}.bind(this));
 	};
@@ -1050,6 +1056,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	this.workspaceSelected = function(){
 		if (this.wsTree) {
 			this.wsTree.workspaceName = this.selectedWorkspace;
+			localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({"name": this.selectedWorkspace}));
 			this.wsTree.refresh();
 			return;
 		}
