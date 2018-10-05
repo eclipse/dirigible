@@ -558,24 +558,29 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 
 	this.wsTree;
 	this.workspaces;
-	this.selectedWs;
+	this.selectedWorkspace;
 	
 	workspaceService.listWorkspaceNames()
 		.then(function(workspaceNames) {
 			this.workspaces = workspaceNames;
-			if(this.workspaces[0]) {
-				this.selectedWs = this.workspaces[0];
-				this.workspaceSelected()					
+			var storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace'));
+			if (storedWorkspace !== null) {
+				this.selectedWorkspace = storedWorkspace.name;
+				this.workspaceSelected();
+			} else if(this.workspaces[0]) {
+				this.selectedWorkspace = this.workspaces[0];
+				this.workspaceSelected();					
 			} 
 		}.bind(this));
 	
 	this.workspaceSelected = function(){
 		if (this.wsTree) {
-			this.wsTree.workspaceName = this.selectedWs;
+			this.wsTree.workspaceName = this.selectedWorkspace;
+			localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({"name": this.selectedWorkspace}));
 			this.wsTree.refresh();
 			return;
 		}
-		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWs, this);
+		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWorkspace, this);
 		if(!workspaceService.typeMapping)
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();
@@ -583,32 +588,32 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.okClone = function() {
 		if (this.clone.url) {
-			gitService.cloneProject(this.wsTree, this.selectedWs, this.clone.url, this.username, this.password);
+			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, this.username, this.password);
 		}
 	};
 
 	this.okPullAll = function() {
-		gitService.pullAllProjects(this.wsTree, this.selectedWs, this.username, this.password);
+		gitService.pullAllProjects(this.wsTree, this.selectedWorkspace, this.username, this.password);
 	};
 
 	this.okPull = function() {
-		gitService.pullProject(this.wsTree, this.selectedWs, this.selectedProject, this.username, this.password);
+		gitService.pullProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password);
 	};
 	
 	this.okPushAll = function() {
-		gitService.pushAllProjects(this.wsTree, this.selectedWs, this.commitMessage, this.username, this.password, this.email);
+		gitService.pushAllProjects(this.wsTree, this.selectedWorkspace, this.commitMessage, this.username, this.password, this.email);
 	};
 
 	this.okPush = function() {
-		gitService.pushProject(this.wsTree, this.selectedWs, this.selectedProject, this.commitMessage, this.username, this.password, this.email);
+		gitService.pushProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email);
 	};
 	
 	this.okReset = function() {
-		gitService.resetProject(this.wsTree, this.selectedWs, this.selectedProject, this.username, this.password);
+		gitService.resetProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password);
 	};
 	
 	this.okShare = function() {
-		gitService.shareProject(this.wsTree, this.selectedWs, this.selectedProject, this.repository, this.branch, this.commitMessage, this.username, this.password, this.email);
+		gitService.shareProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.repository, this.branch, this.commitMessage, this.username, this.password, this.email);
 	};
 	
 	this.refresh = function(){
@@ -616,7 +621,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 	
 	$messageHub.on('git.repository.run', function(msg){
-		gitService.cloneProject(this.wsTree, this.selectedWs, msg.data.repository, msg.data.username, msg.data.password);
+		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.username, msg.data.password);
 		if (msg.data.uri) {
 			run();
 		}

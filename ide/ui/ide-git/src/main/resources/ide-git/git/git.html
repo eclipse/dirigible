@@ -63,7 +63,7 @@
 			
 			<button type="button" class="btn btn-default" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
-			<select ng-model="workspace.selectedWs" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
+			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
 				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
 		</div>
 	</div>
