@@ -23,17 +23,30 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	$http.get(databasesSvcUrl)
 		.success(function(data) {
 			$scope.databases = data;
-			if(data[0]) {
-				$scope.selectedDatabase = data[0];
-				messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
-				$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
-					$scope.datasources = data;
-					if(data[0]) {
-						$scope.selectedDatasource = data[0];
-						messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
-						$scope.refreshDatabase();
-					}
-				});
+			if(data.length > 0) {
+				var storedDatabase = JSON.parse(localStorage.getItem('DIRIGIBLE.database'));
+				if (storedDatabase !== null) {
+					$scope.selectedDatabase = storedDatabase.type;
+				} else {
+					$scope.selectedDatabase = data[0];
+				}
+				if ($scope.selectedDatabase) {
+					messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
+					$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
+						$scope.datasources = data;
+						if(data.length > 0) {
+							if (storedDatabase !== null) {
+								$scope.selectedDatasource = storedDatabase.name;
+							} else {
+								$scope.selectedDatasource = data[0];
+							}
+							if ($scope.selectedDatasource) {
+								messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
+								$scope.refreshDatabase();
+							}
+						}
+					});
+				}
 			}
 	});
 	
@@ -217,6 +230,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	};
 	
 	$scope.datasourceChanged = function(evt){
+		localStorage.setItem('DIRIGIBLE.database', JSON.stringify({"type": $scope.selectedDatabase, "name": $scope.selectedDatasource}));
 		messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
 		$scope.refreshDatabase();
 	};
