@@ -150,7 +150,8 @@ ORMStatements.prototype.list= function(settings){
     }
 
     if (sort !== undefined) {
-        for(var i=0; i<sort.length; i++){
+    	var _sort = sort.split(',');
+        for(var i=0; i<_sort.length; i++){
         	var _order = true;//ASC
         	//TODO: change to be able to order per sort property
 	        if (order !== undefined) {
@@ -158,7 +159,12 @@ ORMStatements.prototype.list= function(settings){
 	            	_order = order.toLowerCase() === 'desc' ? false : true;
 	            }
 	        }
-	      	builder.order(this.orm.getProperty(sort[i]).column, _order);
+	        if (this.orm.getProperty(_sort[i])) {
+	        	builder.order(this.orm.getProperty(_sort[i]).column, _order);	
+	        } else {
+	        	console.error('Column: ' + _sort[i] + ' not present in ' + JSON.stringify(this.orm));
+	        }
+	      	
     	}
     }
     if (limit !== undefined && offset !== undefined) {
