@@ -50,7 +50,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.from = function(table, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'from', [table, alias]);
 					} else {
 						java.invoke(this.uuid, 'from', [table]);
@@ -59,7 +59,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.join = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'join', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -80,7 +80,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.innerJoin = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'innerJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -101,7 +101,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.outerJoin = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'outerJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -122,7 +122,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.leftJoin = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'leftJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -143,7 +143,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.rightJoin = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'rightJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -164,7 +164,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.fullJoin = function(table, on, alias) {
-					if (alias) {
+					if (alias !== undefined) {
 						java.invoke(this.uuid, 'fullJoin', [table, on, alias]);
 						if(arguments.length>3){
 							if(Array.isArray(arguments[3]))
@@ -196,7 +196,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.order = function(column, asc) {
-					if (asc) {
+					if (asc !== undefined) {
 						java.invoke(this.uuid, 'order', [column, asc]);
 					} else {
 						java.invoke(this.uuid, 'order', [column]);
@@ -406,7 +406,7 @@ exports.getDialect = function(connection) {
 					var CreateTable = function() {
 						
 						this.column = function(column, type, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'column', [column, type, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -428,7 +428,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnVarchar = function(column, length, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnVarchar', [column, length, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -450,7 +450,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnChar = function(column, length, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnChar', [column, length, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -472,7 +472,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnDate = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnDate', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -494,7 +494,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnTime = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnTime', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -516,7 +516,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnTimestamp = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnTimestamp', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -538,7 +538,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnInteger = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnInteger', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -560,7 +560,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnTinyint = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnTinyint', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -582,7 +582,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnBigint = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnBigint', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -604,7 +604,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnSmallint = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnSmallint', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -626,7 +626,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnReal = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnReal', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -648,7 +648,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnDouble = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnDouble', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -670,7 +670,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnBoolean = function(column, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnBoolean', [column, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -692,7 +692,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnBlob = function(column, isNullable, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnBlob', [column, isPrimaryKey, isNullable, isUnique, args]);
 							} else {
 								if (isNullable) {
@@ -706,7 +706,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.columnDecimal = function(column, precision, scale, isPrimaryKey, isNullable, isUnique, args) {
-							if (args) {
+							if (args !== undefined) {
 								java.invoke(this.uuid, 'columnDecimal', [column, precision, scale, isPrimaryKey, isNullable, isUnique, args]);	
 							} else {
 								if (isUnique) {
@@ -728,7 +728,7 @@ exports.getDialect = function(connection) {
 						};
 						
 						this.primaryKey = function(columns, name) {
-							if (name) {
+							if (name !== undefined) {
 								java.invoke(this.uuid, 'primaryKey', [name, columns]);
 							} else {
 								java.invoke(this.uuid, 'primaryKey', [columns]);
