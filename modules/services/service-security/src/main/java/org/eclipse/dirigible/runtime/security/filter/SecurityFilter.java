@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
@@ -40,9 +41,32 @@ import org.slf4j.LoggerFactory;
 /**
  * The Security Filter.
  */
-@WebFilter(urlPatterns = { "/services/v3/js/*", "/services/v3/rhino/*", "/services/v3/nashorn/*", "/services/v3/v8/*", "/services/v3/public/*",
-		"/services/v3/web/*", "/services/v3/wiki/*", "/services/v3/command/*" }, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
+@WebFilter(urlPatterns = {
+		
+		"/services/v3/js/*",
+		"/services/v3/rhino/*",
+		"/services/v3/nashorn/*",
+		"/services/v3/v8/*",
+		"/services/v3/public/*",
+		"/services/v3/web/*",
+		"/services/v3/wiki/*",
+		"/services/v3/command/*",
+		
+		"/public/v3/js/*",
+		"/public/v3/rhino/*",
+		"/public/v3/nashorn/*",
+		"/public/v3/v8/*",
+		"/public/v3/public/*",
+		"/public/v3/web/*",
+		"/public/v3/wiki/*",
+		"/public/v3/command/*"
+		
+	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {
+
+	private static final String PATH_WEB_RESOURCES = "/web/resources";
+
+	private static final String ROLE_PUBLIC = "Public";
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
@@ -79,31 +103,51 @@ public class SecurityFilter implements Filter {
 			HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
 			String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
-			for (String prefix : SECURED_PREFIXES) {
-				if (path.startsWith(prefix)) {
-					path = path.substring(prefix.length());
-					break;
-				}
-			}
-			String method = httpServletRequest.getMethod();
-
-			List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_HTTP, path, method);
-			if (!accessDefinitions.isEmpty()) {
-				Principal principal = httpServletRequest.getUserPrincipal();
-				if (principal == null) {
-					forbidden(path, "No logged in user", httpServletResponse);
-					return;
-				}
-				boolean isInRole = false;
-				for (AccessDefinition accessDefinition : accessDefinitions) {
-					if (httpServletRequest.isUserInRole(accessDefinition.getRole())) {
-						isInRole = true;
+			if (!path.startsWith(PATH_WEB_RESOURCES)) {
+				for (String prefix : SECURED_PREFIXES) {
+					if (path.startsWith(prefix)) {
+	 					path = path.substring(prefix.length());
 						break;
 					}
 				}
-				if (!isInRole) {
-					forbidden(path, "The logged in user does not have any of the required roles for the requested URI", httpServletResponse);
-					return;
+				String method = httpServletRequest.getMethod();
+	
+				boolean isInRole = false;
+				Principal principal = httpServletRequest.getUserPrincipal();
+				
+				List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_HTTP, path, method);
+				if (!accessDefinitions.isEmpty()) {
+					
+					if (principal == null) {
+						// white list check
+						for (AccessDefinition accessDefinition : accessDefinitions) {
+							if (ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole())) {
+								isInRole = true;
+								break;
+							}
+						}
+						
+						if (!isInRole) {
+							forbidden(path, "No logged in user", httpServletResponse);
+							return;
+						}
+					} else {
+						for (AccessDefinition accessDefinition : accessDefinitions) {
+							if (httpServletRequest.isUserInRole(accessDefinition.getRole())) {
+								isInRole = true;
+								break;
+							}
+						}
+						if (!isInRole) {
+							forbidden(path, "The logged in user does not have any of the required roles for the requested URI", httpServletResponse);
+							return;
+						}
+					}
+				} else {
+					if (!Configuration.isAnonymousModeEnabled() && principal == null) {
+						forbidden(path, "No logged in user and no white list constraints", httpServletResponse);
+						return;
+					}
 				}
 			}
 		} catch (IllegalArgumentException e) {

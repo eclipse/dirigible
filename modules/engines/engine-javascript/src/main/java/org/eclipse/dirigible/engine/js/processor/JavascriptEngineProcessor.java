@@ -48,11 +48,13 @@ public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 	 * @return the engine executor
 	 */
 	private IJavascriptEngineExecutor getEngineExecutor() {
-		String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
-		if (!StringUtils.isEmpty(headerEngineType)) {
-			for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
-				if (next.getType().equals(headerEngineType)) {
-					return next;
+		if (HttpRequestFacade.isValid()) {
+			String headerEngineType =  HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
+			if (!StringUtils.isEmpty(headerEngineType)) {
+				for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
+					if (next.getType().equals(headerEngineType)) {
+						return next;
+					}
 				}
 			}
 		}

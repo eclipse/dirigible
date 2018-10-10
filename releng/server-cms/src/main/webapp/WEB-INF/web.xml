@@ -35,6 +35,7 @@
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/v3/*</url-pattern>
+		<url-pattern>/public/v3/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>
@@ -133,6 +134,19 @@
 	    <auth-constraint>
 	        <role-name>Everyone</role-name>
 	    </auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Public Engine Services</web-resource-name>
+	        <url-pattern>/public/v3/web/*</url-pattern>
+	        <url-pattern>/public/v3/js/*</url-pattern>
+	        <url-pattern>/public/v3/nashorn/*</url-pattern>
+	        <url-pattern>/public/v3/rhino/*</url-pattern>
+	        <url-pattern>/public/v3/v8/*</url-pattern>
+	        <url-pattern>/public/v3/wiki/*</url-pattern>
+	        <url-pattern>/public/v3/command/*</url-pattern>
+	    </web-resource-collection>
 	</security-constraint>
 
 	<security-constraint>
