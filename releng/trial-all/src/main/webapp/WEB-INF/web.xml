@@ -35,6 +35,7 @@
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/v3/*</url-pattern>
+		<url-pattern>/public/v3/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>

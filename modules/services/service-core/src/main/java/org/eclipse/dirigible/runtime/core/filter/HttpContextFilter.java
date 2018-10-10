@@ -28,7 +28,7 @@ import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 /**
  * The HTTP Context Filter.
  */
-@WebFilter(urlPatterns = "/services/v3/*", filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
+@WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*"}, filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
 public class HttpContextFilter implements Filter {
 
 	/*
