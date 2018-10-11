@@ -66,6 +66,10 @@ public class CloneCommand {
 	@Inject
 	private GitFileUtils gitFileUtils;
 
+	/** The pull command. */
+	@Inject
+	private PullCommand pull;
+
 	/**
 	 * Execute a Clone command.
 	 *
@@ -226,7 +230,6 @@ public class CloneCommand {
 			String projectName) throws IOException, GitConnectorException {
 		IProject selectedProject = workspace.getProject(projectName);
 		ProjectMetadataDependency[] dependencies = ProjectMetadataManager.getDependencies(selectedProject);
-		PullCommand pull = new PullCommand();
 		for (ProjectMetadataDependency dependency : dependencies) {
 			if (ProjectMetadataRepository.GIT.equalsIgnoreCase(dependency.getType())) {
 				String projectGuid = dependency.getGuid();
