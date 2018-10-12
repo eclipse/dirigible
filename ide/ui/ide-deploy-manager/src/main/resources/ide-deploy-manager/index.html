@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="deployer">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+</head>
+
+<body ng-controller="DeployController">
+
+
+	<div class="container well" style="width:50%">
+		<div>
+			<div class="form-group">
+			    <select class="form-control" ng-model="selectedDirigibleInstance" ng-options="next as next.displayName for next in dirigibleInstances">
+			    	<option value='' selected disabled>--- Select Dirigible Instance ---</option>
+	  			</select>
+			</div>
+		</div>
+		<div class="row" ng-hide="queryParamsProvided">
+			<hr>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Repository" ng-model="queryParams.repository">
+				<br>
+				<input type="text" class="form-control" placeholder="URI" ng-model="queryParams.uri">
+			</div>
+		</div>
+		<hr>
+		<div class="row pull-right">
+			<button class="btn btn-primary" ng-click="run()">Run</button>
+		</div>
+	</div>
+	
+    <!-- jQuery -->
+    <script type="text/javascript" src="../../../../../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script type="text/javascript" src="../../../../../../../../services/v3/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+
+    <!-- AngularJS -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular-resource.min.js"></script>
+
+	<script type="text/javascript" src="controller.js"></script>
+	
+</body>
+
+</html>

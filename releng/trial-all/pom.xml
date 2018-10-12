@@ -316,6 +316,11 @@
 		 	<artifactId>dirigible-ide</artifactId>
 		 	<version>3.2.8-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-ide-ui-deploy-manager</artifactId>
+		 	<version>3.2.8-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Templates Plugins -->
 		<dependency>
