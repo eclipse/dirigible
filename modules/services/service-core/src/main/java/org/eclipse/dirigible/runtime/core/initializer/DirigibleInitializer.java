@@ -30,6 +30,8 @@ import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
+import org.eclipse.dirigible.runtime.core.version.Version;
+import org.eclipse.dirigible.runtime.core.version.VersionProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,9 +172,15 @@ public class DirigibleInitializer {
 		// customize some of the properties
 		feature.setBasePath("/services/v3");
 		feature.setPrettyPrint(true);
-		feature.setDescription(
-				"Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
-		feature.setVersion("3.0");
+		feature.setDescription("Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
+		try {
+			Version version = new VersionProcessor().getVersion();
+			feature.setVersion(version.getProductVersion());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			feature.setVersion("3.0.0");
+		}
+		
 		feature.setTitle("Eclipse Dirigible - RESTful Services API");
 		feature.setContact("dirigible-dev@eclipse.org");
 		feature.setLicense("Eclipse Public License - v 1.0");
