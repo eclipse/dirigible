@@ -12,7 +12,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 
 public class VersionProcessor {
 	
-	public String version() throws IOException {
+	public Version getVersion() throws IOException {
 		Version version = new Version();
 		final Properties properties = new Properties();
 		properties.load(VersionProcessor.class.getResourceAsStream("/dirigible.properties"));
@@ -24,7 +24,13 @@ public class VersionProcessor {
 		version.setDatabaseProvider(Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER));
 		version.getModules().addAll(DirigibleModulesInstallerModule.getModules());
 		version.getEngines().addAll(EngineExecutorFactory.getEnginesNames());
-		return GsonHelper.GSON.toJson(version);
+		return version;
 	}
+	
+	public String version() throws IOException {
+		return GsonHelper.GSON.toJson(getVersion());
+	}
+	
+	
 
 }
