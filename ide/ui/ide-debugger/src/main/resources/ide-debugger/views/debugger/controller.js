@@ -177,7 +177,10 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 
 	debuggerService.listWorkspaces().success(function(data) {
 		$scope.workspaces = data;
-		if ($scope.workspaces[0]) {
+		var storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace'));
+		if (storedWorkspace !== null) {
+			$scope.selectedWorkspace = storedWorkspace.name;
+		} else if(this.workspaces[0]) {
 			$scope.selectedWorkspace = $scope.workspaces[0];
 		}
 	});
