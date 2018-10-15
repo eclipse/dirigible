@@ -280,6 +280,24 @@ function LayoutController(viewRegistry, messageHub){
 			}.bind(this));			
 		}
 		
+		this.layout.on('tabCreated', function(tab){
+		   tab.closeElement.off( 'click' ).click(function(){
+		   	if (tab.contentItem.config.componentName && tab.contentItem.config.componentName === 'editor') {
+		   		if (tab.contentItem.config.title && tab.contentItem.config.title.startsWith('*')) {
+			   		if (confirm('You have unsaved changes, are you sure you want to close ' + tab.contentItem.config.title.substring(1))) {
+			        	tab.contentItem.remove();
+			    	}	
+			   	} else {
+			   		tab.contentItem.remove();
+			   	}
+		   	} else {
+		   		if (confirm( 'Are you sure you want to close ' + tab.contentItem.config.title)) {
+		           tab.contentItem.remove();
+		        }
+		   	}
+		   });
+		});
+		
 		this.layout.init();
 	};
 	
@@ -330,7 +348,7 @@ function LayoutController(viewRegistry, messageHub){
 		} else {
 			this.openView('editor');
 			this.layout.root.getItemsById('editor')[0].parent.addChild( newItemConfig );
-		}		
+		}
 	};
 	
 	this.setEditorDirty = function(resourcePath, dirty){
