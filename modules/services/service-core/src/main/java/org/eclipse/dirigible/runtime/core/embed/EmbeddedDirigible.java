@@ -48,7 +48,7 @@ public class EmbeddedDirigible {
 	 * The folders and files under the root folder is imported to the Dirigible's Registry to be ready for execution.
 	 * 
 	 * @param root the root location of the content to load
-	 * @throws IOException 
+	 * @throws IOException in case of an error
 	 */
 	public void load(File root) throws IOException {
 		Path source = Paths.get(root.getCanonicalPath());
@@ -60,7 +60,7 @@ public class EmbeddedDirigible {
 	 * The folders and files under the root folder is imported to the Dirigible's Registry to be ready for execution.
 	 * 
 	 * @param root the root location of the content to load
-	 * @throws IOException 
+	 * @throws IOException in case of an error
 	 */
 	public void load(String root) throws IOException {
 		load(new File(root));
@@ -70,7 +70,7 @@ public class EmbeddedDirigible {
 	 * Re-load the content from the file system - first clear the Registry content and then import again.
 	 * 
 	 * @param root the root location of the content to load
-	 * @throws IOException 
+	 * @throws IOException in case of an error
 	 */
 	public void reload(File root) throws IOException {
 		this.repository.removeCollection(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
@@ -81,7 +81,7 @@ public class EmbeddedDirigible {
 	 * Re-load the content from the file system - first clear the Registry content and then import again.
 	 * 
 	 * @param root the root location of the content to load
-	 * @throws IOException 
+	 * @throws IOException in case of an error
 	 */
 	public void reload(String root) throws IOException {
 		reload(new File(root));

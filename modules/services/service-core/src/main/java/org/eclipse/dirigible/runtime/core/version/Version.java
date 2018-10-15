@@ -131,7 +131,7 @@ public class Version {
 	}
 
 	/**
-	 * @param modules the modules to set
+	 * @param engines the engines to set
 	 */
 	public void setEngines(Set<String> engines) {
 		this.engines = engines;
