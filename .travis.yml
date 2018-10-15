@@ -31,16 +31,21 @@ script:
   - docker tag $REPO_BASE:$COMMIT $REPO_BASE:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-base-platform-keycloak
+  - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
+  - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
+  
 # Image dirigiblelabs/dirigible-base-platform-runtime
   - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
   - docker tag $REPO_BASE_RUNTIME:$COMMIT $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
 
-# Image dirigiblelabs/dirigible-base-platform-keycloak
-  - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
-  - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
-  - docker push $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
-
+# Image dirigiblelabs/dirigible-base-platform-runtime-keycloak
+  - docker build -f releng/server-runtime-keycloak/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker tag $REPO_BASE_RUNTIME_KEYCLOAK:$COMMIT $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+ 
 # Image dirigiblelabs/dirigible-all
   - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-all
   - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$DIRIGIBLE_VERSION
@@ -56,15 +61,21 @@ script:
   - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$DIRIGIBLE_VERSION
   - docker push $REPO_TRIAL:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-keycloak
+  - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
+  - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-runtime
   - docker build -f releng/server-runtime/Dockerfile -t $REPO_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
   - docker tag $REPO_RUNTIME:$COMMIT $REPO_RUNTIME:$DIRIGIBLE_VERSION
   - docker push $REPO_RUNTIME:$DIRIGIBLE_VERSION
 
-# Image dirigiblelabs/dirigible-keycloak
-  - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
-  - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
-  - docker push $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-runtime-keycloak
+  - docker build -f releng/server-runtime-keycloak/Dockerfile -t $REPO_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker tag $REPO_RUNTIME_KEYCLOAK:$COMMIT $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
@@ -72,12 +83,14 @@ env:
     - REPO_BASE=dirigiblelabs/dirigible-base-platform
     - REPO_BASE_ANONYMOUS=dirigiblelabs/dirigible-base-platform-anonymous
     - REPO_BASE_TRIAL=dirigiblelabs/dirigible-base-platform-trial
-    - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
     - REPO_BASE_KEYCLOAK=dirigiblelabs/dirigible-base-platform-keycloak
+    - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
+    - REPO_BASE_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-base-platform-runtime-keycloak
     - REPO_ALL=dirigiblelabs/dirigible-all
     - REPO_ANONYMOUS=dirigiblelabs/dirigible-anonymous
     - REPO_TRIAL=dirigiblelabs/dirigible-trial
-    - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
     - REPO_KEYCLOAK=dirigiblelabs/dirigible-keycloak
+    - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
+    - REPO_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-runtime-keycloak
     - secure: "NucLZg3isAoRh1VTQWU1RXmmDggFYBXyTpZDpiPiLQRGRwE2QngKoVk6603ykZUMx3eIXqxB8aYPU2J1O2nnMfsg5MUlnSsR6UT3MIdcw0QQHfsQo8g2gKMzScmpinHXuzfkq567DAeEQNRqcSMsJjqmKAZh+njVMOnuNXceZ92qeVGFdj9IbblixVKPwk2itn+QlwWS1mk6v8JHqefGRnBKnR6Dk/V7Ejivjx50DucAkZLwafXNsOa6LWmKzayiROe2d2px73rRLOLOdNtgWsnZJeuxUHTj1pHIy4zBzGmPag1wFHOEFM7EMlKh6I2UyiEQCEnp66oBd9NyFTae+0dPCV4q21LJ6PZrZqQNe/EN/olTLYWM3ZeznGpKC9OXBjNLuWcXbyiBZ2R5PsqgadlcYDuE5tGhLZHBBfk41NsuxcXcOTivb8spf0rytZsG6cDXkbx6ok9ICASVEse4T+dK0QMsiTnfGW6bdQxWAQL6Zng+MnJ0RHVcBZ6IOrlb3GLbeWWSejX2StKf9kVljt6XrwyQy88IhAoMDOit6pKoRC6VhDBCdlDb0JWnBavwy6Zp1dK9PWKfoHSwI8zxv849JJKfCEGupdAEu/TzLX3O4k+BIUUE9+5vgcFcXDERPHcefYu7XWRbTGRf8uaPTvMHv1VZPgGejnPeunspfQw="
     - secure: "DDiE+Nv/KwpPfth5KKN69JNDXA7TIiQ4kfZjsx2mxaRUAiRj1xKBjvJZa1NJ+wNlgFLAlRQkxPwLY35uRnjEO2xFbw6cGdCTO1jxlccax6vbkV2Ywv8ZvTKWAOkBvCfHsLOiN9b2SH+0H/R/b1B3LrfNqJEJtsPP+xNC0sguwYP0Furvg01lAEpcWpnhkH6vod+8MaR/DN9ia5pi+MaGH14q7L/LRvkLOt3VrX1LJaTDFx4sWBz/GXf94KYp8D92cJrIGTEHpwhSroyNwkCzT3iBaidsZF8P2aNHQQQ3yx7iFZge67EUdEv1nYTPlUcG3vLKYdKe5boQXkY4Lz0h7hPvo0GhZEUsoZUfiiitnrY3yzgN7XM8tBmIISrDxpmalm7quPJle8CnON1jB2oAqDxRgCHJeuJbyE0kxKAMDJad8dMSe3L3GLQ6OJmT+sJ3vCN/EoB3oVgC4CPnN+O20gcDrQHJzMGKEdZqN27r2yWA1z5TYnvn0ROlnagMjkzsAw7qfXta30R3taSz53ySEoBR+d972fYHpP2VENhbnkw6ahSI5w6L1K3kSvWQ9iyWnDYN2lDinp09jnXZVEv4houxv5VUx8AtfgNZXOR+o7+aa+OnXfpZjnOKoZFo4aQpTf3Wpm9wZcTmq///qlgeoNBRDbLaptQizzP4HJFHArg="
