@@ -180,7 +180,6 @@ public class DirigibleInitializer {
 			logger.error(e.getMessage(), e);
 			feature.setVersion("3.0.0");
 		}
-		
 		feature.setTitle("Eclipse Dirigible - RESTful Services API");
 		feature.setContact("dirigible-dev@eclipse.org");
 		feature.setLicense("Eclipse Public License - v 1.0");
