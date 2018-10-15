@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ide-service-parent</artifactId>
-		<version>3.2.8</version>
+		<version>3.2.9-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,52 +32,52 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-console</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-databases</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-generation</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-git</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-publisher</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-terminal</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-workspaces</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-bpm</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-generation-mustache</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-service-generation-velocity</artifactId>
-            <version>3.2.8</version>
+            <version>3.2.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
