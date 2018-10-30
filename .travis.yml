@@ -73,7 +73,7 @@ script:
 
 
 # Image dirigiblelabs/dirigible-runtime-keycloak
-  - docker build -f releng/server-runtime-keycloak/Dockerfile -t $REPO_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker build -f releng/server-runtime-keycloak/Dockerfile -t $REPO_RUNTIME_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
   - docker tag $REPO_RUNTIME_KEYCLOAK:$COMMIT $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
   - docker push $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
 env:
