@@ -117,12 +117,12 @@
 	          <dependency>
 	            <groupId>org.apache.tomcat.embed</groupId>
 	            <artifactId>tomcat-embed-logging-juli</artifactId>
-	            <version>${tomcat.version}</version>
+	            <version>${tomcat.log4j.version}</version>
 	          </dependency>
 	          <dependency>
 	            <groupId>org.apache.tomcat.embed</groupId>
 	            <artifactId>tomcat-embed-logging-log4j</artifactId>
-	            <version>${tomcat.version}</version>
+	            <version>${tomcat.log4j.version}</version>
 	          </dependency>
 
 	          </dependencies>
@@ -361,6 +361,7 @@
 	<!-- default properties -->
 	<properties>		
 		<tomcat.version>8.5.34</tomcat.version> <!-- 7.0.37, 8.0.46 -->
+		<tomcat.log4j.version>8.5.2</tomcat.log4j.version>
 		<tomcat.websocket.version>8.5.2</tomcat.websocket.version> <!-- 7.0.52, 8.0.46 -->
 		<tomcat.maven.version>3.0-r1756463</tomcat.maven.version>
 	</properties>
