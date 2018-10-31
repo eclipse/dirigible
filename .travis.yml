@@ -37,12 +37,12 @@ script:
   - docker push $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
   
 # Image dirigiblelabs/dirigible-base-platform-runtime
-  - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker build -f releng/server-runtime/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime-keycloak
   - docker tag $REPO_BASE_RUNTIME:$COMMIT $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE_RUNTIME:$DIRIGIBLE_VERSION
 
 # Image dirigiblelabs/dirigible-base-platform-runtime-keycloak
-  - docker build -f releng/server-runtime-keycloak/Dockerfile-base -t $REPO_BASE_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime
+  - docker build -f releng/server-runtime-keycloak/Dockerfile-base -t $REPO_BASE_RUNTIME_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime-keycloak
   - docker tag $REPO_BASE_RUNTIME_KEYCLOAK:$COMMIT $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
  
