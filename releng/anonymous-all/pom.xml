@@ -259,11 +259,11 @@
 		 	<artifactId>dirigible-database-h2</artifactId>
 		 	<version>3.2.9-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-custom</artifactId>
 		 	<version>3.2.9-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 
 		<!-- Core Services -->
 		<dependency>
