@@ -131,7 +131,7 @@
   </dependencies>
   <properties>
     <tomcat.websocket.version>8.5.2</tomcat.websocket.version>
-    <tomcat.version>8.5.2</tomcat.version>
+    <tomcat.version>8.5.34</tomcat.version>
     <tomcat.maven.version>3.0-r1756463</tomcat.maven.version>
   </properties>
 </project>
