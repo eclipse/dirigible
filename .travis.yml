@@ -17,7 +17,7 @@ script:
   - docker push $REPO:$DIRIGIBLE_VERSION
 
 # Image dirigiblelabs/dirigible-base-platform-anonymous
-  - docker build -f releng/trial-all/Dockerfile-base -t $REPO_BASE_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker build -f releng/anonymous-all/Dockerfile-base -t $REPO_BASE_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
   - docker tag $REPO_BASE_ANONYMOUS:$COMMIT $REPO_BASE_ANONYMOUS:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE_ANONYMOUS:$DIRIGIBLE_VERSION
 
@@ -52,7 +52,7 @@ script:
   - docker push $REPO_ALL:$DIRIGIBLE_VERSION
 
 # Image dirigiblelabs/dirigible-anonymous
-  - docker build -f releng/trial-all/Dockerfile -t $REPO_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
+  - docker build -f releng/anonymous-all/Dockerfile -t $REPO_ANONYMOUS:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/trial-all
   - docker tag $REPO_ANONYMOUS:$COMMIT $REPO_ANONYMOUS:$DIRIGIBLE_VERSION
   - docker push $REPO_ANONYMOUS:$DIRIGIBLE_VERSION
 
