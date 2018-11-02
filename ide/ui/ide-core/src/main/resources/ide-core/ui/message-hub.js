@@ -29,7 +29,17 @@
 	 */
 	function FramesMessageHub(settings) {
 		this.settings = settings || {};
-		this.settings.hubWindow = this.settings.hubWindow || top;
+		var current = window;
+		if (!window.GoldenLayout) {
+			while (current !== top) {
+				current = current.parent;
+				if (current.GoldenLayout) {
+					break;
+				}
+			}
+		}
+			
+		this.settings.hubWindow = this.settings.hubWindow || current || top;
 		this.settings.allowedOrigins = this.settings.allowedOrigins || [location.origin];
 		this.settings.targetOrigin = this.settings.targetOrigin || this.settings.hubWindow.location.origin;
 	}
