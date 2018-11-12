@@ -117,7 +117,7 @@ public class CloneCommand {
 	 */
 	protected File createGitDirectory(String repositoryURI) throws IOException {
 		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf("/") + 1, repositoryURI.lastIndexOf(DOT_GIT));
-		File gitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+		File gitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 		return gitDirectory;
 	}
 

@@ -142,7 +142,7 @@ public class PullCommand {
 		File tempGitDirectory = null;
 		try {
 			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+			tempGitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 			logger.debug(
 					String.format("Temp Git Directory for the project [%s]: %s", selectedProject.getName(), tempGitDirectory.getCanonicalPath()));
 
