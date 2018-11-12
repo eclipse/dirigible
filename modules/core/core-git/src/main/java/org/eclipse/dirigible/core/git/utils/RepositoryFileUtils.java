@@ -28,7 +28,7 @@ import org.eclipse.dirigible.repository.api.IResource;
 public class RepositoryFileUtils {
 
 	/**
-	 * Creates the temp directory.
+	 * Creates the directory.
 	 *
 	 * @param directory
 	 *            the directory
@@ -36,31 +36,10 @@ public class RepositoryFileUtils {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static File createTempDirectory(String directory) throws IOException {
-		String suffix = Long.toString(System.nanoTime());
-		return createTempDirectory(directory, suffix);
-	}
-
-	/**
-	 * Creates the temp directory.
-	 *
-	 * @param directory
-	 *            the directory
-	 * @param suffix
-	 *            the suffix
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public static File createTempDirectory(String directory, String suffix) throws IOException {
-		final File temp = File.createTempFile(directory, suffix);
-		if (!(temp.delete())) {
-			throw new IOException(String.format("Could not delete temp file: %s", temp.getAbsolutePath()));
-		}
-		if (!(temp.mkdir())) {
-			throw new IOException(String.format("Could not create temp directory: %s", temp.getAbsolutePath()));
-		}
-		return temp;
+	public static File createDirectory(String directory) throws IOException {
+		File file = new File(directory);
+		file.mkdirs();
+		return file;
 	}
 
 	/**

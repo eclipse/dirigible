@@ -108,7 +108,7 @@ public class ShareCommand {
 		File tempGitDirectory = null;
 		try {
 			final String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createTempDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+			tempGitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
 
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
 					branch, tempGitDirectory.getCanonicalPath()));

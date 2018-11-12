@@ -9,6 +9,9 @@
 - `DIRIGIBLE_BRANDING_ICON`: (default: '../../../../services/v3/web/resources/images/favicon.png')
 - `DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT`: (default: '../../../../services/v3/web/ide/welcome.html')
 
+## Git
+- `DIRIGIBLE_GIT_ROOT_FOLDER`: (e.g. /User/data)
+
 ## Registry
 - `DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER`: (e.g. /User/data)
 

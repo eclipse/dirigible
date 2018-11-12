@@ -24,8 +24,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.cxf.common.util.StringUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -42,13 +44,20 @@ import org.slf4j.LoggerFactory;
  */
 public class GitFileUtils {
 
+	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
+	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$ 
+
 	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + DOT_GIT; //$NON-NLS-1$
+
 
 	private static final int MINIMUM_URL_LENGTH = 25;
 
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 
 	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_"; //$NON-NLS-1$
+
+	private static String GIT_ROOT_FOLDER;
 
 	/** The repository. */
 	@Inject
@@ -57,27 +66,43 @@ public class GitFileUtils {
 	static {
 		try {
 			// ProxyUtils.setProxySettings();
-			deleteTempDirectories();
+			if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
+				GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
+			} else if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER))) {
+				GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + DOT_GIT;
+			} else {
+				GIT_ROOT_FOLDER = DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER;
+			}
+			deleteGitDirectories();
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 
 	/**
-	 * Delete temp directories.
+	 * Delete git directories.
 	 *
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private static void deleteTempDirectories() throws IOException {
-		File file = GitFileUtils.createTempDirectory("DeleteDirectory");
+	private static void deleteGitDirectories() throws IOException {
+		File gitDirectory = createGitDirectory("DeleteDirectory");
+		deleteDirectories(gitDirectory);
+	}
+
+	private static void deleteDirectories(File file) {
 		File tempDirectory = file.getParentFile();
-		for (File temp : tempDirectory.listFiles()) {
-			if (temp.isDirectory() && temp.getName().startsWith(TEMP_DIRECTORY_PREFIX)) {
-				GitFileUtils.deleteDirectory(temp);
+		if (tempDirectory != null) {
+			File[] listFiles = tempDirectory.listFiles();
+			if (listFiles != null) {
+				for (File temp : listFiles) {
+					if (temp != null && temp.isDirectory() && temp.getName().startsWith(TEMP_DIRECTORY_PREFIX)) {
+						deleteDirectory(temp);
+					}
+				}
+				deleteDirectory(file);
 			}
 		}
-		GitFileUtils.deleteDirectory(file);
 	}
 
 	/**
@@ -91,32 +116,9 @@ public class GitFileUtils {
 		return (repositoryURI.endsWith(DOT_GIT)) && (repositoryURI.length() > MINIMUM_URL_LENGTH);
 	}
 
-	/**
-	 * Creates the temp directory.
-	 *
-	 * @param directory
-	 *            the directory
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public static File createTempDirectory(String directory) throws IOException {
-		return RepositoryFileUtils.createTempDirectory(directory);
-	}
-
-	/**
-	 * Creates the temp directory.
-	 *
-	 * @param directory
-	 *            the directory
-	 * @param suffix
-	 *            the suffix
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public static File createTempDirectory(String directory, String suffix) throws IOException {
-		return RepositoryFileUtils.createTempDirectory(directory, suffix);
+	
+	public static File createGitDirectory(String directory) throws IOException {
+		return RepositoryFileUtils.createDirectory(GIT_ROOT_FOLDER + File.separator + directory + System.nanoTime());
 	}
 
 	/**
@@ -281,12 +283,15 @@ public class GitFileUtils {
 	 */
 	private static void deleteFiles(File directory) {
 		if (directory != null) {
-			for (File file : directory.listFiles()) {
-				if (file.isDirectory()) {
-					deleteDirectory(file);
-				}
-				if (!file.delete()) {
-					file.deleteOnExit();
+			File[] listFiles = directory.listFiles();
+			if (listFiles != null) {
+				for (File file : listFiles) {
+					if (file.isDirectory()) {
+						deleteDirectory(file);
+					}
+					if (!file.delete()) {
+						file.deleteOnExit();
+					}
 				}
 			}
 		}
