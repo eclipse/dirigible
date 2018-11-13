@@ -73,6 +73,11 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-javascript-repository</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
             <version>3.2.9-SNAPSHOT</version>
         </dependency>

@@ -72,6 +72,11 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-repository</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-security</artifactId>
             <version>3.2.9-SNAPSHOT</version>
         </dependency>
