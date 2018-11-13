@@ -85,6 +85,15 @@ exports.copy = function(input, output) {
 	java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'copy', [input.uuid, output.uuid]);
 };
 
+/**
+ * Get an ByteArrayInputStream for the provided resource
+ */
+exports.getResourceAsByteArrayInputStream = function(path) {
+	var inputStream = new exports.InputStream();
+	var inputStreamInstance = java.call('org.eclipse.dirigible.api.v3.io.StreamsFacade', 'getResourceAsByteArrayInputStream', [path], true);
+	inputStream.uuid = inputStreamInstance.uuid;
+	return inputStream;
+};
 
 /**
  * Create an ByteArrayInputStream for byte array provided

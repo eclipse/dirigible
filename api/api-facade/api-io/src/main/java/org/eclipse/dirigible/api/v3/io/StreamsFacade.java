@@ -176,4 +176,15 @@ public class StreamsFacade {
 		return text;
 	}
 
+	public static final ByteArrayInputStream getResourceAsByteArrayInputStream(String path) throws IOException {
+		InputStream in = null;
+		try {
+			in = StreamsFacade.class.getResourceAsStream(path);
+			return new ByteArrayInputStream(IOUtils.toByteArray(in));
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+	}
 }
