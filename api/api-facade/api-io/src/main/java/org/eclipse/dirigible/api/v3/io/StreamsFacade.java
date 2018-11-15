@@ -180,7 +180,10 @@ public class StreamsFacade {
 		InputStream in = null;
 		try {
 			in = StreamsFacade.class.getResourceAsStream(path);
-			return new ByteArrayInputStream(IOUtils.toByteArray(in));
+			if (in != null) {
+				return new ByteArrayInputStream(IOUtils.toByteArray(in));
+			}
+			return new ByteArrayInputStream("".getBytes());
 		} finally {
 			if (in != null) {
 				in.close();
