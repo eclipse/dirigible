@@ -36,8 +36,8 @@ public class RepositoryFacade {
 	 *            the content type
 	 * @return the i resource
 	 */
-	public static IResource createResource(String path, byte[] content, String contentType) {
-		return repositoryProcessor.createResource(path, content, contentType);
+	public static IResource createResource(String path, String content, String contentType) {
+		return repositoryProcessor.createResource(path, content.getBytes(), contentType);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class RepositoryFacade {
 	 *            the content
 	 * @return the i resource
 	 */
-	public static IResource updateResource(String path, byte[] content) {
-		return repositoryProcessor.updateResource(path, content);
+	public static IResource updateResource(String path, String content) {
+		return repositoryProcessor.updateResource(path, content.getBytes());
 	}
 
 	/**
