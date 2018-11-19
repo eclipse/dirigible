@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
@@ -77,6 +78,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				enumerateResourcesForPublish(publishRequestDefinitions);
 
 				synchronizeRegistry();
+
+				ResourcesCache.clear();
 
 				removeProcessedRequests(publishRequestDefinitions);
 

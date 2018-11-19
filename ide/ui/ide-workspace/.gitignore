@@ -16,3 +16,4 @@ dirigible_local/
 *.jar
 derby.log
 /target/
+/target/

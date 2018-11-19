@@ -59,11 +59,6 @@
             <artifactId>dirigible-resources-jstree</artifactId>
             <version>3.2.9-SNAPSHOT</version>
         </dependency>
-		<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-themes</artifactId>
-            <version>3.2.9-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-flowable-libs</artifactId>
@@ -77,6 +72,46 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jqplot</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-resources</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-themes</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-alice</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-baroness</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-default</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-florence</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-simone</artifactId>
+            <version>3.2.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-wendy</artifactId>
             <version>3.2.9-SNAPSHOT</version>
         </dependency>
 	</dependencies>
