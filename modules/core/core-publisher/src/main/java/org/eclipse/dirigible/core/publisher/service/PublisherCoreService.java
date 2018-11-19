@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
@@ -57,6 +58,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 	 */
 	@Override
 	public PublishRequestDefinition createPublishRequest(String workspace, String path, String registry) throws PublisherException {
+		ResourcesCache.clear();
 		PublishRequestDefinition publishRequestDefinition = new PublishRequestDefinition();
 		publishRequestDefinition.setWorkspace(workspace);
 		publishRequestDefinition.setPath(path);

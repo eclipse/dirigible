@@ -68,7 +68,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 	@Context
 	private HttpServletResponse response;
 
-	private static final String THEMES_PATH = "/resources/themes/";
+	private static final String THEMES_PATH = "/theme-";
 
 	/**
 	 * Gets the theme.

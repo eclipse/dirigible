@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.web.service;
 import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
@@ -22,6 +23,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.commons.config.ResourcesCache;
+import org.eclipse.dirigible.commons.config.ResourcesCache.Cache;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -34,6 +37,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractWebEngineRestService extends AbstractRestService implements IRestService {
 
+	private static final Cache WEB_CACHE = ResourcesCache.getWebCache();
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractWebEngineRestService.class);
 
 	private static final String INDEX_HTML = "index.html";
@@ -42,7 +47,18 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 	private WebEngineProcessor processor;
 
 	@Context
+	private HttpServletRequest request;
+
+	@Context
 	private HttpServletResponse response;
+
+	protected HttpServletRequest getRequest() {
+		return request;
+	}
+
+	protected HttpServletResponse getResponse() {
+		return response;
+	}
 
 	/**
 	 * Gets the resource.
@@ -68,23 +84,20 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 	 * @return the resource by path
 	 */
 	private Response getResourceByPath(String path) {
+		if (isCached(path)) {
+			return sendResourceNotModified();
+		}
+
 		if (processor.existResource(path)) {
 			IResource resource = processor.getResource(path);
-			if (resource.isBinary()) {
-				return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
-			}
-			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
-			return Response.ok(content).type(resource.getContentType()).build();
+			String contentType = resource.getContentType();
+			return sendResource(path, resource.isBinary(), resource.getContent(), contentType);
 		}
 		try {
 			byte[] content = processor.getResourceContent(path);
 			if (content != null) {
 				String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(path));
-				if (ContentTypeHelper.isBinary(contentType)) {
-					return Response.ok().entity(content).type(contentType).build();
-				}
-				String text = new String(content, StandardCharsets.UTF_8);
-				return Response.ok(text).type(contentType).build();
+				return sendResource(path, ContentTypeHelper.isBinary(contentType), content, contentType);
 			}
 		} catch (RepositoryNotFoundException e) {
 			String error = "Resource not found: " + path;
@@ -93,6 +106,41 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 		}
 		sendErrorNotFound(response, path);
 		return Response.status(Status.NOT_FOUND).build();
+	}
+
+	private Response sendResourceNotModified() {
+		return Response
+				.notModified()
+				.header("ETag", getTag())
+				.build();
+	}
+
+	private Response sendResource(String path, boolean isBinary, byte[] content, String contentType) {
+		String tag = cacheResource(path);
+		Object responseContent = isBinary ? content : new String(content, StandardCharsets.UTF_8);
+		return Response
+				.ok(responseContent)
+				.type(contentType)
+				.header("Cache-Control", "public, must-revalidate, max-age=0")
+				.header("ETag", tag)
+				.build();
+	}
+
+	private String cacheResource(String path) {
+		String tag = WEB_CACHE.generateTag();
+		WEB_CACHE.setTag(path, tag);
+		return tag;
+	}
+
+	private boolean isCached(String path) {
+		String tag = getTag();
+		String cachedTag = WEB_CACHE.getTag(path);
+		return tag == null || cachedTag == null ? false : tag.equals(cachedTag); 
+		
+	}
+
+	private String getTag() {
+		return getRequest().getHeader("If-None-Match");
 	}
 
 	/*

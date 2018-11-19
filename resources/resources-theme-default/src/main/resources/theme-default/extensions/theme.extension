@@ -1,0 +1,5 @@
+{
+	"description": "IDE Theme - Default",
+	"extensionPoint": "ide-themes",
+	"module": "theme-default/extensions/theme.js"
+}

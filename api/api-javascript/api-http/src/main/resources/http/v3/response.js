@@ -45,7 +45,7 @@ exports.close = function() {
 };
 
 exports.addCookie = function(cookie) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addCookie', [cookie]);
+	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addCookie', [JSON.stringify(cookie)]);
 };
 
 exports.containsHeader = function(name) {

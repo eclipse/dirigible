@@ -36,7 +36,6 @@
 
 	<modules>
 		<module>resources-all</module>
-		<module>resources-themes</module>
 		<module>resources-angular</module>
 		<module>resources-bootstrap</module>
 		<module>resources-goldenlayout</module>
@@ -46,6 +45,14 @@
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
 		<module>resources-jqplot</module>
+		<module>resources-resources</module>
+		<module>resources-themes</module>
+		<module>resources-theme-alice</module>
+		<module>resources-theme-baroness</module>
+		<module>resources-theme-default</module>
+		<module>resources-theme-florence</module>
+		<module>resources-theme-simone</module>
+		<module>resources-theme-wendy</module>
 	</modules>
 
 	<profiles>

@@ -1,0 +1,5 @@
+{
+	"description": "IDE Theme - Wendy",
+	"extensionPoint": "ide-themes",
+	"module": "theme-wendy/extensions/theme.js"
+}

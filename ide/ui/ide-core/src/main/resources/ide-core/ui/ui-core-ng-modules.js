@@ -38,7 +38,7 @@ angular.module('ideUiCore', ['ngResource'])
   }];
 })
 .factory('Theme', ['$resource', function($resource){
-	var themeswitcher = $resource('../../../../services/v3/core/theme?name=:themeName', {themeName: 'default'});
+	var themeswitcher = $resource('../../../../services/v3/js/theme/resources.js?name=:themeName', {themeName: 'default'});
 	var themes = {
 		"default": "../../../../services/v3/web/resources/themes/default/bootstrap.min.css",
 		"wendy" : "../../../../services/v3/web/resources/themes/wendy/bootstrap.min.css",

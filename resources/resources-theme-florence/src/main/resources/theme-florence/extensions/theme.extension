@@ -1,0 +1,5 @@
+{
+	"description": "IDE Theme - Florence",
+	"extensionPoint": "ide-themes",
+	"module": "theme-florence/extensions/theme.js"
+}

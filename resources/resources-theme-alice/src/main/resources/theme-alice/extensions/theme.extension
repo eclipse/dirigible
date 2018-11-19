@@ -1,0 +1,5 @@
+{
+	"description": "IDE Theme - Alice",
+	"extensionPoint": "ide-themes",
+	"module": "theme-alice/extensions/theme.js"
+}
