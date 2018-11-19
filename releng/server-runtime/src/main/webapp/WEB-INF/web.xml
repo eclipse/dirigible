@@ -115,7 +115,7 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Themes</web-resource-name>
-			<url-pattern>/services/v3/js/theme/*</url-pattern>
+			<url-pattern>/services/v3/core/theme/*</url-pattern>
 			<url-pattern>/services/v3/web/resources/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
