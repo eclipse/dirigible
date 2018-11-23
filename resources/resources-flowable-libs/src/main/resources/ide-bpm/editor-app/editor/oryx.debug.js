@@ -19544,7 +19544,7 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
 			
 		jQuery("#shapeTextInput").focus();
 		
-		jQuery("#shapeTextInput").autogrow();
+		// jQuery("#shapeTextInput").autogrow();
 			
 		// Disable the keydown in the editor (that when hitting the delete button, the shapes not get deleted)
 		this.facade.disableEvent(ORYX.CONFIG.EVENT_KEYDOWN);
