@@ -406,6 +406,7 @@
 		<module>groups/runtime-javascript</module>
 
 		<module>releng/anonymous-all</module>
+		<module>releng/anonymous-runtime</module>
 		<module>releng/desktop-all</module>
 		<module>releng/sap-all</module>
 		<module>releng/sap-cms</module>
