@@ -53,7 +53,14 @@ exports.count = function() {
 exports.customDataCount = function() {
 #if($dataCount)
 	var resultSet = query.execute("${dataCount}");
-	return resultSet !== null ? resultSet[0].COUNT : 0;
+	if (resultSet !== null && resultSet[0] !== null) {
+		if (resultSet[0].COUNT !== undefined && resultSet[0].COUNT !== null) {
+			return resultSet[0].COUNT;
+		} else if (resultSet[0].count !== undefined && resultSet[0].count !== null) {
+			return resultSet[0].count;
+		}
+	}
+	return 0;
 #else
 	return dao.count();
 #end
