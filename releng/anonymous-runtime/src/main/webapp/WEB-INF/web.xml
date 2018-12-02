@@ -54,6 +54,10 @@
 			<param-name>cors.allowed.origins</param-name>
 			<param-value>*</param-value>
 		</init-param>
+		<init-param>
+			<param-name>cors.allowed.methods</param-name>
+			<param-value>GET,PUT,PATCH,POST,DELETE,HEAD,OPTIONS,CONNECT,TRACE</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>CorsFilter</filter-name>
