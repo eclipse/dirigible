@@ -71,7 +71,7 @@ public class DataStructuresService extends AbstractRestService implements IRestS
 	@GET
 	@Path("")
 	@Produces({ "application/json" })
-	public Response list()
+	public Response listDataStructures()
 			throws DataStructuresException {
 		String user = UserFacade.getName();
 		if (user == null) {

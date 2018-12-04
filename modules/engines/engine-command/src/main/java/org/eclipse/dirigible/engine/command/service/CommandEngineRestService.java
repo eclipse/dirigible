@@ -67,7 +67,7 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeService(@PathParam("path") String path) {
+	public Response executeCommandServiceGet(@PathParam("path") String path) {
 		try {
 			Object result = processor.executeService(path);
 			return Response.ok(result == null ? "null" : result.toString()).type(HttpResponseFacade.getContentType()).build();
@@ -97,8 +97,8 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePost(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeCommandServicePost(@PathParam("path") String path) {
+		return executeCommandServiceGet(path);
 	}
 
 	/**
@@ -112,8 +112,8 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePut(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeCommandServicePut(@PathParam("path") String path) {
+		return executeCommandServiceGet(path);
 	}
 
 	/**
@@ -127,8 +127,8 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceDelete(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeCommandServiceDelete(@PathParam("path") String path) {
+		return executeCommandServiceGet(path);
 	}
 
 	/**
@@ -142,8 +142,8 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceHead(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeCommandServiceHead(@PathParam("path") String path) {
+		return executeCommandServiceGet(path);
 	}
 
 	/*

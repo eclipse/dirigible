@@ -79,7 +79,7 @@ public class LogsService extends AbstractRestService implements IRestService {
 	@GET
 	@Path("")
 	@Produces({ "application/json" })
-	public Response list()
+	public Response listLogs()
 			throws URISyntaxException, DecoderException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {

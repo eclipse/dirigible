@@ -65,7 +65,7 @@ public class NashornJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeService(@PathParam("path") String path) {
+	public Response executeNashornServiceGet(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
@@ -91,8 +91,8 @@ public class NashornJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePost(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeNashornServicePost(@PathParam("path") String path) {
+		return executeNashornServiceGet(path);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class NashornJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePut(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeNashornServicePut(@PathParam("path") String path) {
+		return executeNashornServiceGet(path);
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class NashornJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceDelete(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeNashornServiceDelete(@PathParam("path") String path) {
+		return executeNashornServiceGet(path);
 	}
 
 	/**
@@ -136,8 +136,8 @@ public class NashornJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceHead(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeNashornServiceHead(@PathParam("path") String path) {
+		return executeNashornServiceGet(path);
 	}
 
 	/*

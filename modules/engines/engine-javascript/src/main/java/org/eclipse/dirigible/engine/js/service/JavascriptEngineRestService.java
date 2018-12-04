@@ -66,7 +66,7 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeService(@PathParam("path") String path) {
+	public Response executeJavascriptServiceGet(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
@@ -96,8 +96,8 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePost(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeJavascriptServicePost(@PathParam("path") String path) {
+		return executeJavascriptServiceGet(path);
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePut(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeJavascriptServicePut(@PathParam("path") String path) {
+		return executeJavascriptServiceGet(path);
 	}
 
 	/**
@@ -126,8 +126,8 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceDelete(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeJavascriptServiceDelete(@PathParam("path") String path) {
+		return executeJavascriptServiceGet(path);
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceHead(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeJavascriptServiceHead(@PathParam("path") String path) {
+		return executeJavascriptServiceGet(path);
 	}
 
 	/*

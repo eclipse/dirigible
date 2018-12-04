@@ -71,7 +71,7 @@ public class ListenersService extends AbstractRestService implements IRestServic
 	@GET
 	@Path("")
 	@Produces({ "application/json" })
-	public Response list()
+	public Response listListeners()
 			throws MessagingException {
 		String user = UserFacade.getName();
 		if (user == null) {
