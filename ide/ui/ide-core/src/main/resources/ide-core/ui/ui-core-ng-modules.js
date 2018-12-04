@@ -39,20 +39,9 @@ angular.module('ideUiCore', ['ngResource'])
 })
 .factory('Theme', ['$resource', function($resource){
 	var themeswitcher = $resource('../../../../services/v3/js/theme/resources.js?name=:themeName', {themeName: 'default'});
-	var themes = {
-		"default": "../../../../services/v3/web/resources/themes/default/bootstrap.min.css",
-		"wendy" : "../../../../services/v3/web/resources/themes/wendy/bootstrap.min.css",
-		"baroness" : "../../../../services/v3/web/resources/themes/baroness/bootstrap.min.css",
-		"simone" : "../../../../services/v3/web/resources/themes/simone/bootstrap.min.css",
-		"alice" : "../../../../services/v3/web/resources/themes/alice/bootstrap.min.css",
-		"florence" : "../../../../services/v3/web/resources/themes/florence/bootstrap.min.css"
-	};
 	return {
 		changeTheme: function(themeName){
 			return themeswitcher.get({'themeName':themeName});
-		},
-		themeUrl: function(themeName){
-			return themes[themeName];
 		},
 		reload: function(){
 			location.reload();
@@ -294,9 +283,11 @@ angular.module('ideUiCore', ['ngResource'])
 					}
 				}
 			};
+
+			getThemes(scope);
+
 			scope.selectTheme = function(themeName){
 				Theme.changeTheme(themeName);
-				var themeUrl = Theme.themeUrl(themeName);
 				Theme.reload();
 			};
 			scope.user = User.get();
@@ -371,9 +362,19 @@ function getBrandingInfo(scope) {
 	    xhr.open('GET', '../../js/ide-branding/api/branding.js', false);
 	    xhr.send();
 	    if (xhr.status === 200) {
-	    	var data = JSON.parse(xhr.responseText)
+	    	var data = JSON.parse(xhr.responseText);
 	       	scope.branding = data;
 			localStorage.setItem('DIRIGIBLE.branding', JSON.stringify(data));
 	    }
 	}
+}
+
+function getThemes(scope) {
+	var xhr = new XMLHttpRequest();
+    xhr.open('GET', '../../js/theme/resources.js/themes', false);
+    xhr.send();
+    if (xhr.status === 200) {
+    	var data = JSON.parse(xhr.responseText);
+       	scope.themes = data;
+    }
 }
