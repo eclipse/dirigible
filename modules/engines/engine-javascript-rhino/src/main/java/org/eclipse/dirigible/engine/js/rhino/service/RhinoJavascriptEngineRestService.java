@@ -65,7 +65,7 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeService(@PathParam("path") String path) {
+	public Response executeRhinoServiceGet(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
@@ -91,8 +91,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePost(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeRhinoServicePost(@PathParam("path") String path) {
+		return executeRhinoServiceGet(path);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePut(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeRhinoServicePut(@PathParam("path") String path) {
+		return executeRhinoServiceGet(path);
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceDelete(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeRhinoServiceDelete(@PathParam("path") String path) {
+		return executeRhinoServiceGet(path);
 	}
 
 	/**
@@ -136,8 +136,8 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceHead(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeRhinoServiceHead(@PathParam("path") String path) {
+		return executeRhinoServiceGet(path);
 	}
 
 	/*

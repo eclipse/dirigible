@@ -73,7 +73,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	 */
 	@GET
 	@Path("/{path:.*}")
-	public Response getResource(@PathParam("path") String path) {
+	public Response getRepositoryResource(@PathParam("path") String path) {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);

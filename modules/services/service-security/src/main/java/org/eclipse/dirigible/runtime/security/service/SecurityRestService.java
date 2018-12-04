@@ -59,7 +59,7 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	 */
 	@GET
 	@Path("/access")
-	public Response listAccess() throws AccessException {
+	public Response listSecurityAccess() throws AccessException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
@@ -78,7 +78,7 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	 */
 	@GET
 	@Path("/roles")
-	public Response listRoles() throws AccessException {
+	public Response listSecurityRoles() throws AccessException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);

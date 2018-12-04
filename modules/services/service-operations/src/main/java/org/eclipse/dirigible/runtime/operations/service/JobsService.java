@@ -71,7 +71,7 @@ public class JobsService extends AbstractRestService implements IRestService {
 	@GET
 	@Path("")
 	@Produces({ "application/json" })
-	public Response list()
+	public Response listJobs()
 			throws SchedulerException {
 		String user = UserFacade.getName();
 		if (user == null) {

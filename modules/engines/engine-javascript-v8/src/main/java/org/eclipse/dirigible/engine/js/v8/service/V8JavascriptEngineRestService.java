@@ -65,7 +65,7 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript V8 Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeService(@PathParam("path") String path) {
+	public Response executeV8ServiceGet(@PathParam("path") String path) {
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
@@ -91,8 +91,8 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePost(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeV8ServicePost(@PathParam("path") String path) {
+		return executeV8ServiceGet(path);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServicePut(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeV8ServicePut(@PathParam("path") String path) {
+		return executeV8ServiceGet(path);
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceDelete(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeV8ServiceDelete(@PathParam("path") String path) {
+		return executeV8ServiceGet(path);
 	}
 
 	/**
@@ -136,8 +136,8 @@ public class V8JavascriptEngineRestService extends AbstractRestService implement
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeServiceHead(@PathParam("path") String path) {
-		return executeService(path);
+	public Response executeV8ServiceHead(@PathParam("path") String path) {
+		return executeV8ServiceGet(path);
 	}
 
 	/*
