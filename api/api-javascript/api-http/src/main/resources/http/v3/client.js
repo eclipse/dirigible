@@ -22,6 +22,7 @@ request = function(url, method, options) {
 };
 
 exports.get = function(url, options) {
+	url = buildUrl(url, options);
 	return request(url, 'get', options);
 };
 
@@ -34,6 +35,7 @@ exports.put = function(url, options) {
 };
 
 exports.delete = function(url, options) {
+	url = buildUrl(url, options);
 	return request(url, 'delete', options);
 };
 
@@ -45,5 +47,18 @@ exports.trace = function(url, options) {
 	return request(url, 'trace', options);
 };
 
+function buildUrl(url, options) {
+	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
+		return url;
+	}
+	for (var i = 0; i < options.params.length; i ++) {
+		if (i === 0) {
+			url += '?' + options.params[i].name + '=' + options.params[i].value;
+		} else {
+			url += '&' + options.params[i].name + '=' + options.params[i].value;
+		}
+	}
+	return url;
+}
 
 
