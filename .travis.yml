@@ -31,6 +31,11 @@ script:
   - docker tag $REPO_BASE:$COMMIT $REPO_BASE:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-base-platform-openshift
+  - docker build -f releng/openshift-all/Dockerfile-base -t $REPO_BASE_OPENSHIFT:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/openshift-all
+  - docker tag $REPO_BASE_OPENSHIFT:$COMMIT $REPO_BASE_OPENSHIFT:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_OPENSHIFT:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-base-platform-keycloak
   - docker build -f releng/server-keycloak-all/Dockerfile-base -t $REPO_BASE_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
   - docker tag $REPO_BASE_KEYCLOAK:$COMMIT $REPO_BASE_KEYCLOAK:$DIRIGIBLE_VERSION
@@ -66,6 +71,11 @@ script:
   - docker tag $REPO_TRIAL:$COMMIT $REPO_TRIAL:$DIRIGIBLE_VERSION
   - docker push $REPO_TRIAL:$DIRIGIBLE_VERSION
 
+# Image dirigiblelabs/dirigible-openshift
+  - docker build -f releng/openshift-all/Dockerfile -t $REPO_OPENSHIFT:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/openshift-all
+  - docker tag $REPO_OPENSHIFT:$COMMIT $REPO_OPENSHIFT:$DIRIGIBLE_VERSION
+  - docker push $REPO_OPENSHIFT:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-keycloak
   - docker build -f releng/server-keycloak-all/Dockerfile -t $REPO_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-keycloak-all
   - docker tag $REPO_KEYCLOAK:$COMMIT $REPO_KEYCLOAK:$DIRIGIBLE_VERSION
@@ -93,6 +103,7 @@ env:
     - REPO_BASE_ANONYMOUS=dirigiblelabs/dirigible-base-platform-anonymous
     - REPO_BASE_ANONYMOUS_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime-anonymous
     - REPO_BASE_TRIAL=dirigiblelabs/dirigible-base-platform-trial
+    - REPO_BASE_OPENSHIFT=dirigiblelabs/dirigible-base-platform-openshift
     - REPO_BASE_KEYCLOAK=dirigiblelabs/dirigible-base-platform-keycloak
     - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
     - REPO_BASE_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-base-platform-runtime-keycloak
@@ -100,6 +111,7 @@ env:
     - REPO_ANONYMOUS=dirigiblelabs/dirigible-anonymous
     - REPO_ANONYMOUS_RUNTIME=dirigiblelabs/dirigible-runtime-anonymous
     - REPO_TRIAL=dirigiblelabs/dirigible-trial
+    - REPO_OPENSHIFT=dirigiblelabs/dirigible-openshift
     - REPO_KEYCLOAK=dirigiblelabs/dirigible-keycloak
     - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
     - REPO_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-runtime-keycloak
