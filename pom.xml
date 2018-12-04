@@ -408,6 +408,7 @@
 		<module>releng/anonymous-all</module>
 		<module>releng/anonymous-runtime</module>
 		<module>releng/desktop-all</module>
+		<module>releng/openshift-all</module>
 		<module>releng/sap-all</module>
 		<module>releng/sap-cms</module>
 		<module>releng/server-all</module>
