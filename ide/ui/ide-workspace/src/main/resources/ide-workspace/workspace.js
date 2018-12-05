@@ -227,14 +227,14 @@ WorkspaceService.prototype.listWorkspaceNames = function(){
 }
 WorkspaceService.prototype.createWorkspace = function(workspace){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
-	return this.$http.post(url)
+	return this.$http.post(url, {})
 			.then(function(response){
 				return response.data;
 			});
 }
 WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
-	return this.$http.post(url)
+	return this.$http.post(url, {})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
@@ -966,7 +966,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	return {
 		publish : function(resourcePath){
 			var url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
-			return $http.post(url);
+			return $http.post(url, {});
 		}
 	}
 }])
