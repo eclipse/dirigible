@@ -25,14 +25,15 @@ rs.service()
 	.resource('themes')
 		.get(function(ctx, request, response) {
 			var themes = themesManager.getThemes();
-			response.print(themes);
 			response.setContentType('application/json');
+			response.print(themes);
 		})
 	.resource('{path}')
 		.get(function(ctx, request, response) {
 			var path = ctx.pathParameters.path;
 
 			if (isCached(request, path)) {
+				response.setContentType('text/css');
 				response.setHeader('ETag', getTag(request));
 				response.setStatus(response.NOT_MODIFIED);
 			} else {
@@ -41,6 +42,7 @@ rs.service()
 				if (content !== null && content !== '') {
 					var tag = cacheResource(path);
 
+					response.setContentType('text/css');
 					response.setStatus(response.OK);
 					response.setHeader('ETag', tag);
 					response.setHeader('Cache-Control', 'public, must-revalidate, max-age=0');
