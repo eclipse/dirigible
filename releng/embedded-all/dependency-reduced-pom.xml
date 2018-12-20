@@ -3,7 +3,7 @@
   <parent>
     <artifactId>dirigible-parent</artifactId>
     <groupId>org.eclipse.dirigible</groupId>
-    <version>3.2.9-SNAPSHOT</version>
+    <version>3.3.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
