@@ -33,7 +33,7 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 	public static final String DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER = "dirigible-js-engine";
 
 	/** The Constant JAVASCRIPT_ENGINE_TYPE. */
-	public static final String JAVASCRIPT_ENGINE_TYPE = "engine";
+	public static final String JAVASCRIPT_ENGINE_TYPE = "__engine";
 
 	/** The Constant JAVASCRIPT_TYPE_RHINO. */
 	public static final String JAVASCRIPT_TYPE_RHINO = "rhino";
@@ -51,7 +51,7 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 	public static final String CONSOLE = "console";
 	
 	/** The Constant CONTEXT. */
-	public static final String CONTEXT = "context";
+	public static final String CONTEXT = "__context";
 
 	/*
 	 * (non-Javadoc)
