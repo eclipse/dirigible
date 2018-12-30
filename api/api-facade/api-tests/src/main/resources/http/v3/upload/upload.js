@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var upload = require('http/v3/upload');
 var request = require('http/v3/request');
 var response = require('http/v3/response');

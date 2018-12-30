@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var hex = require('utils/v3/hex');
 
 var input = [65, 66, 67];

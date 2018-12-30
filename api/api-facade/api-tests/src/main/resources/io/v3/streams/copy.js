@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var streams = require('io/v3/streams');
 
 var bais = streams.createByteArrayInputStream([61, 62, 63]);

@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 const LOGGER = require('log/logging').getLogger('http.rs.tests');
 
 var rs = require('http/v3/rs').get();

@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 const DataService  = require('http/rs-data').DataService;
 var MyDAO = function(){};
 MyDAO.prototype.list = function(){

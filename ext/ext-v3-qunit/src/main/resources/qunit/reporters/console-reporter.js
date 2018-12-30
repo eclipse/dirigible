@@ -7,8 +7,7 @@
  * Contributors:
  * SAP - initial API and implementation
  *******************************************************************************/
- 
-/* eslint-env node, dirigible */
+
 (function() {
 	'use strict';
 
