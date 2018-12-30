@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var session = require('http/v3/session');
 
 session.setAttribute('attr1', 'value1');

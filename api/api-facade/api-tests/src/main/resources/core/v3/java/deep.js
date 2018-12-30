@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var _java = require('core/v3/java');
 
 var process = _java.instantiate('org.eclipse.dirigible.api.v3.test.Process', []);

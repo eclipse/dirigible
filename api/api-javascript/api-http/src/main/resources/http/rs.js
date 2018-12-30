@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-var rest = require('http/v3/rest');
-for(var propertyName in rest) {
+var rs = require('http/v3/rs');
+for(var propertyName in rs) {
 	exports[propertyName] = rest[propertyName];
 }

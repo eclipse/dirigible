@@ -8,8 +8,6 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* eslint-env node, dirigible */
-
 exports.getMenu = function() {
 	var menu = {
 			"name":"Debugger",

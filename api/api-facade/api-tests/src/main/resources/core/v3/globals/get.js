@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var globals = require('core/v3/globals');
 
 globals.set("name1", "value1");

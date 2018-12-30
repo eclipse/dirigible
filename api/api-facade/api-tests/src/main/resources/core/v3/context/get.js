@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var context = require('core/v3/context');
 
 context.set('name1', 'value1');

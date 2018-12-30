@@ -7,8 +7,7 @@
  * Contributors:
  * SAP - initial API and implementation
  *******************************************************************************/
- 
-/* eslint-env node, dirigible */
+
 var QUnit = require("qunit/qunit");
 
 QUnit.module('Module 1:');

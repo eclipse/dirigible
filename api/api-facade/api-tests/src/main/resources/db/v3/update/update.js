@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var query = require('db/v3/query');
 var update = require('db/v3/update');
 

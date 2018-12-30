@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var url = require('utils/v3/url');
 
 var input = '<![CDATA[<meta http-equiv="refresh" content="0;url=javascript:document.vulnerable=true;">]]>';

@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var files = require('io/v3/files');
 
 var tempFile = files.createTempFile("dirigible", ".txt");

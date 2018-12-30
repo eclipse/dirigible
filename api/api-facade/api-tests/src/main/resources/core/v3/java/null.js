@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var _java = require('core/v3/java');
 
 var arrayList = _java.instantiate('java.util.ArrayList', []);

@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var digest = require('utils/v3/digest');
 
 var input = [61, 62, 63];
