@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import static java.text.MessageFormat.format;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 

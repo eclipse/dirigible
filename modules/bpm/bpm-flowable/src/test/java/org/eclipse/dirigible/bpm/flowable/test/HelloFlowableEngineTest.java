@@ -16,27 +16,21 @@ import static org.junit.Assert.assertNull;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
-import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.api.Task;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.BeanUtils;
 
 /**
  * The Flowable Engine Test

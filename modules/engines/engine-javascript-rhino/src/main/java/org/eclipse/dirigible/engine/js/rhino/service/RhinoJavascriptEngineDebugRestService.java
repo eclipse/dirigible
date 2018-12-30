@@ -39,7 +39,6 @@ import org.eclipse.dirigible.engine.js.rhino.debugger.RhinoJavascriptDebugContro
 import org.eclipse.dirigible.engine.js.rhino.debugger.RhinoJavascriptDebugProcessor;
 import org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

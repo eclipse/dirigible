@@ -12,9 +12,9 @@ package org.eclipse.dirigible.database.persistence.test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
