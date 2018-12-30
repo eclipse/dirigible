@@ -33,8 +33,6 @@ import com.eclipsesource.v8.Releasable;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
-import com.eclipsesource.v8.V8Value;
-import com.eclipsesource.v8.utils.V8Map;
 import com.eclipsesource.v8.utils.V8ObjectUtils;
 
 /**

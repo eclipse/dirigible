@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.database.sql.test.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import org.eclipse.dirigible.database.sql.SqlFactory;

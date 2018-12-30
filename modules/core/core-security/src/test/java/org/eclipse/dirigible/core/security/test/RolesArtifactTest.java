@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;

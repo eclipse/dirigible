@@ -11,7 +11,6 @@
 package org.eclipse.dirigible.runtime.anonymous.service;
 
 import java.io.IOException;
-import java.rmi.AccessException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,14 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.runtime.anonymous.AnonymousAccess;

@@ -13,7 +13,6 @@ package org.eclipse.dirigible.repository.local;
 import static org.junit.Assert.fail;
 
 import org.eclipse.dirigible.repository.generic.RepositoryGenericModifiedTest;
-import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 
 // TODO: Auto-generated Javadoc

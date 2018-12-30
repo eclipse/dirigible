@@ -23,7 +23,6 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -10,8 +10,6 @@
  */
 package org.eclipse.dirigible.bpm.api;
 
-import java.io.IOException;
-
 /**
  * The Business Process Management interface implemented by all the BPM providers
  *

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.definition.AccessArtifact;
 import org.eclipse.dirigible.core.security.definition.AccessArtifactConstraint;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;

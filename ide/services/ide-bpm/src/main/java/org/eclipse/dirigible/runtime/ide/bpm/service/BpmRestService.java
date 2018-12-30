@@ -13,7 +13,6 @@ package org.eclipse.dirigible.runtime.ide.bpm.service;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.inject.Inject;
