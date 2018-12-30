@@ -153,11 +153,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		when(mockedRequest.getRemoteUser()).thenReturn("tester");
 		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(Arrays.asList("header1", "header2")));
 		when(mockedRequest.getServerName()).thenReturn("server1");
-		when(mockedRequest.getHeader("header1")).thenReturn("header1");
-		when(mockedRequest.isUserInRole("role1")).thenReturn(true);
+		//when(mockedRequest.getHeader("header1")).thenReturn("header1");
+		//when(mockedRequest.isUserInRole("role1")).thenReturn(true);
 		
 		HttpSession mockedSession = Mockito.mock(HttpSession.class);
-		when(mockedRequest.getSession()).thenReturn(mockedSession);
+		//when(mockedRequest.getSession()).thenReturn(mockedSession);
 		when(mockedRequest.getSession(true)).thenReturn(mockedSession);
 		mockSession(mockedSession);
 	}
