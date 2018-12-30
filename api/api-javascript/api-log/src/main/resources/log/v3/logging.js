@@ -76,9 +76,9 @@ exports.getLogger = function(loggerName) {
 
 	var resolveError = function(err){
 		var stack = [];
-		if (engine==='v8'){
+		if (__engine==='v8'){
 			stack = parseIntoStackTraceElementsV8(err.stack);
-		} else if(engine==='rhino' && err.stack){
+		} else if(__engine==='rhino' && err.stack){
 			stack = parseIntoStackTraceElementsRhino(err.stack);
 		} 
 		return {
