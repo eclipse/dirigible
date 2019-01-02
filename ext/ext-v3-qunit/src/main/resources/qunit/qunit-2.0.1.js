@@ -1,13 +1,14 @@
-/*
- * Copyright (c) 2010-2018 SAP and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/*!
+ * QUnit 2.0.1
+ * https://qunitjs.com/
  *
- * Contributors:
- *   SAP - initial API and implementation
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2016-07-23T19:39Z
  */
+
 ( function( global ) {
 
 var QUnit = {};
@@ -1616,7 +1617,7 @@ function errorString( error ) {
 }
 
 // Test for equality any JavaScript type.
-// Author: Philippe Rathï¿½ <prathe@gmail.com>
+// Author: Philippe Rathé <prathe@gmail.com>
 QUnit.equiv = ( function() {
 
 	// Stack to decide between skip/abort functions
