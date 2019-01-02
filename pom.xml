@@ -102,6 +102,7 @@
 								<exclude>**/src/main/resources/ide-swagger/**</exclude>
 								<exclude>**/src/main/resources/ide-database/sql/lib/ace/**</exclude>
 								<exclude>**/src/main/resources/ide-discussions/ui/js/**</exclude>
+								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>
