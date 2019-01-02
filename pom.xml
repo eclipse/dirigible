@@ -103,6 +103,8 @@
 								<exclude>**/src/main/resources/ide-database/sql/lib/ace/**</exclude>
 								<exclude>**/src/main/resources/ide-discussions/ui/js/**</exclude>
 								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
+								<exclude>**/src/main/resources/ide-core/ui/**</exclude>
+								<exclude>**/src/main/resources/ide-terminal/js/**</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>
