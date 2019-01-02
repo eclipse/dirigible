@@ -8,16 +8,6 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-/**
- * JUnit reporter for QUnit
- *
- * https://github.com/JamesMGreene/QUnit-reporter-junit
- *
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license.
- * https://jquery.org/license/
- */
-
 (function() {
 	'use strict';
 	
