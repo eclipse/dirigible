@@ -1,3 +1,40 @@
+<!--
+
+    Copyright (c) 2010-2019 SAP and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+      SAP - initial API and implementation
+
+	^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+	Standard build:
+		mvn clean install
+		
+	Build without tests:
+		mvn clean install -DskipTests
+		
+	Synchronize WebJars content:
+		mvn clean install -DskipTests -P content
+		mvn clean install -DskipTests
+		
+	Update the years in the license header:
+		mvn license:format -P license
+		
+	Update the version:
+		mvn versions:set -DnewVersion=3.3.1-SNAPSHOT
+		
+	Generate Javadoc:
+		mvn javadoc:javadoc
+		
+	Upload to Maven Central:
+		mvn javadoc:jar
+		mvn deploy -P release -DskipTests
+
+ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
