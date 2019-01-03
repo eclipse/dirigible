@@ -11,90 +11,196 @@
 var java = require('core/v3/java');
 
 exports.isValid = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isValid();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isValid();
+	}
 	var valid = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'isValid', []);
 	return valid;
 };
 
 exports.getMethod = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getMethod();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getMethod();
+	}
 	var method = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getMethod', []);
 	return method;
 };
 
 exports.getRemoteUser = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteUser();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteUser();
+	}
 	var remoteUser = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRemoteUser', []);
 	return remoteUser;
 };
 
 exports.getPathInfo = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getPathInfo();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getPathInfo();
+	}
 	var pathInfo = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getPathInfo', []);
 	return pathInfo;
 };
 
 exports.getPathTranslated = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getPathTranslated();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getPathTranslated();
+	}
 	var pathTranslated = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getPathTranslated', []);
 	return pathTranslated;
 };
 
 exports.getHeader = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeader(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeader(name);
+	}
 	var header = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeader', [name]);
 	return header;
 };
 
 exports.isUserInRole = function(role) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isUserInRole(role);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isUserInRole(role);
+	}
 	var isInRole = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'isUserInRole', [role]);
 	return isInRole;
 };
 
 exports.getAttribute = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttribute(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttribute(name);
+	}
 	var attr = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAttribute', [name]);
 	return attr;
 };
 
 exports.getAuthType = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAuthType();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAuthType();
+	}
 	var authType = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAuthType', []);
 	return authType;
 };
 
 exports.getCookies = function() {
-	var cookiesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getCookies', []);
+	var cookiesJson;
+	if (__engine === 'rhino') {
+		cookiesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCookies();
+	} else if (__engine === 'nashorn') {
+		cookiesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCookies();
+	} else {
+		cookiesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getCookies', []);
+	}
 	var cookies = JSON.parse(cookiesJson);
 	return cookies;
 };
 
 exports.getAttributeNames = function() {
-	var attrNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAttributeNames', []);
+	var attrNamesJson;
+	if (__engine === 'rhino') {
+		attrNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttributeNames();
+	} else if (__engine === 'nashorn') {
+		attrNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttributeNames();
+	} else {
+		attrNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAttributeNames', []);
+	}
 	var attrNames = JSON.parse(attrNamesJson);
 	return attrNames;
 };
 
 exports.getCharacterEncoding = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCharacterEncoding();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCharacterEncoding();
+	}
 	var characterEncoding = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getCharacterEncoding', []);
 	return characterEncoding;
 };
 
 exports.getContentLength = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContentLength();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContentLength();
+	}
 	var contentLength = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getContentLength', []);
 	return contentLength;
 };
 	
 exports.getHeaders = function(name) {
-	var headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaders', [name]);
+	var headersJson;
+	if (__engine === 'rhino') {
+		headersJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaders(name);
+	} else if (__engine === 'nashorn') {
+		headersJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaders(name);
+	} else {
+		headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaders', [name]);
+	}
 	var headers = JSON.parse(headersJson);
 	return headers;
 };
 
 exports.getContentType = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContentType();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContentType();
+	}
 	var contentType = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getContentType', []);
 	return contentType;
 };
 
 exports.getBytes = function() {
-	var bytesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getBytes', []);
+	var bytesJson;
+	if (__engine === 'rhino') {
+		bytesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getBytes();
+	} else if (__engine === 'nashorn') {
+		bytesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getBytes();
+	} else {
+		bytesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getBytes', []);
+	}
 	var bytes = JSON.parse(bytesJson);
 	return bytes;
 };
 
 var getText = exports.getText = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getText();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getText();
+	}
 	return java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getText', []);
 };
 
@@ -106,64 +212,141 @@ exports.getJSON = function() {
 
 
 exports.getParameter = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameter(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameter(name);
+	}
 	var param = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameter', [name]);
 	return param;
 };
 
-exports.getParameters = function(name) {
-	var params = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameters', []);
-	return JSON.parse(params);
+exports.getParameters = function() {
+	var paramsJson;
+	if (__engine === 'rhino') {
+		paramsJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameters();
+	} else if (__engine === 'nashorn') {
+		paramsJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameters();
+	} else {
+		paramsJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameters', []);
+	}
+	var params = JSON.parse(paramsJson);
+	return params;
 };
 
-exports.getResourcePath = function(name) {
+exports.getResourcePath = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getResourcePath();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getResourcePath();
+	}
 	var resourcePath = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getResourcePath', []);
 	return resourcePath;
 };
 
 exports.getHeaderNames = function() {
-	var headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaderNames', []);
+	var headerNamesJson;
+	if (__engine === 'rhino') {
+		headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaderNames();
+	} else if (__engine === 'nashorn') {
+		headerNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaderNames();
+	} else {
+		headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaderNames', []);
+	}
 	var headerNames = JSON.parse(headerNamesJson);
 	return headerNames;
 };
 
 exports.getParameterNames = function() {
-	var paramNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterNames', []);
+	var paramNamesJson;
+	if (__engine === 'rhino') {
+		paramNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterNames();
+	} else if (__engine === 'nashorn') {
+		paramNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterNames();
+	} else {
+		paramNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterNames', []);
+	}
 	var paramNames = JSON.parse(paramNamesJson);
 	return paramNames;
 };
 
 exports.getParameterValues = function(name) {
-	var paramValuesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterValues', [name]);
+	var paramValuesJson;
+	if (__engine === 'rhino') {
+		paramValuesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterValues(name);
+	} else if (__engine === 'nashorn') {
+		paramValuesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterValues(name);
+	} else {
+		paramValuesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterValues', [name]);
+	}
 	var paramValues = JSON.parse(paramValuesJson);
 	return paramValues;
 };
 
 exports.getProtocol = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getProtocol();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getProtocol();
+	}
 	var protocol = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getProtocol', []);
 	return protocol;
 };
 	
 exports.getScheme = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getScheme();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getScheme();
+	}
 	var scheme = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getScheme', []);
 	return scheme;
 };
 
 exports.getContextPath = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContextPath();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getContextPath();
+	}
 	var contextPath = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getContextPath', []);
 	return contextPath;
 };
 
 exports.getServerName = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServerName();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServerName();
+	}
 	var serverName = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getServerName', []);
 	return serverName;
 };
 
 exports.getServerPort = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServerPort();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServerPort();
+	}
 	var serverPort = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getServerPort', []);
 	return serverPort;
 };
 
 var getQueryString = exports.getQueryString = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getQueryString();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getQueryString();
+	}
 	var queryString = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getQueryString', []);
 	return queryString;
 };
@@ -199,65 +382,144 @@ exports.getQueryParametersMap = function() {
 };
 
 exports.getRemoteAddress = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteAddress();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteAddress();
+	}
 	var remoteAddr = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRemoteAddress', []);
 	return remoteAddr;
 };
 
 exports.getRemoteHost = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteHost();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemoteHost();
+	}
 	var remoteHost = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRemoteHost', []);
 	return remoteHost;
 };
 
 exports.setAttribute = function(name, value) {
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpRequestFacade.setAttribute(name, value);
+	}
+	if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.setAttribute(name, value);
+	}
 	java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'setAttribute', [name, value]);
 };
 
 exports.removeAttribute = function(name) {
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpRequestFacade.removeAttribute(name);
+	}
+	if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.removeAttribute(name);
+	}
 	java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'removeAttribute', [name]);
 };
 
 exports.getLocale = function() {
-	var localeJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocale', []);
+	var localeJson;
+	if (__engine === 'rhino') {
+		localeJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocale();
+	} else if (__engine === 'nashorn') {
+		localeJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocale();
+	} else {
+		localeJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocale', []);
+	}
 	var locale = JSON.parse(localeJson);
 	return locale;
 };
 
 exports.getRequestURI = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequestURI();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequestURI();
+	}
 	var requestURI = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRequestURI', []);
 	return requestURI;
 };
 
 exports.isSecure = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isSecure();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isSecure();
+	}
 	var secure = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'isSecure', []);
 	return secure;
 };
 
 exports.getRequestURL = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequestURL();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequestURL();
+	}
 	var requestURL = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRequestURL', []);
 	return requestURL;
 };
 
 exports.getServicePath = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServicePath();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getServicePath();
+	}
 	var servicePath = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getServicePath', []);
 	return servicePath;
 };
 
 exports.getRemotePort = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemotePort();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRemotePort();
+	}
 	var remotePort = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getRemotePort', []);
 	return remotePort;
 };
 
 exports.getLocalName = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalName();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalName();
+	}
 	var localName = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocalName', []);
 	return localName;
 };
 
 exports.getLocalAddress = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalAddress();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalAddress();
+	}
 	var localAddr = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocalAddress', []);
 	return localAddr;
 };
 
 exports.getLocalPort = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalPort();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalPort();
+	}
 	var localPort = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocalPort', []);
 	return localPort;
 };
