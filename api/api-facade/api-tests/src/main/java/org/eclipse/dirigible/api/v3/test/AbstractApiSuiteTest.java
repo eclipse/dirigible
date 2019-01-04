@@ -57,29 +57,29 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	@Before
 	public void registerModules() {
 
-//		TEST_MODULES.add("core/v3/java/call.js");
-//		TEST_MODULES.add("core/v3/java/invoke.js");
-//		TEST_MODULES.add("core/v3/java/deep.js");
-//		TEST_MODULES.add("core/v3/java/null.js");
-//		
-//		TEST_MODULES.add("core/v3/console/log.js");
-//
-//		TEST_MODULES.add("security/v3/user/getName.js");
-//
-//		TEST_MODULES.add("core/v3/env/get.js");
-//		TEST_MODULES.add("core/v3/env/list.js");
-//		TEST_MODULES.add("core/v3/globals/get.js");
-//		TEST_MODULES.add("core/v3/globals/list.js");
-//		TEST_MODULES.add("core/v3/context/get.js");
-//		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
-//		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
-//
-//		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
-//		TEST_MODULES.add("db/v3/database/getDataSources.js");
-//		TEST_MODULES.add("db/v3/database/getMetadata.js");
-//		TEST_MODULES.add("db/v3/database/getConnection.js");
-//		TEST_MODULES.add("db/v3/query/query.js");
-//		TEST_MODULES.add("db/v3/update/update.js");
+		TEST_MODULES.add("core/v3/java/call.js");
+		TEST_MODULES.add("core/v3/java/invoke.js");
+		TEST_MODULES.add("core/v3/java/deep.js");
+		TEST_MODULES.add("core/v3/java/null.js");
+		
+		TEST_MODULES.add("core/v3/console/log.js");
+
+		TEST_MODULES.add("security/v3/user/getName.js");
+
+		TEST_MODULES.add("core/v3/env/get.js");
+		TEST_MODULES.add("core/v3/env/list.js");
+		TEST_MODULES.add("core/v3/globals/get.js");
+		TEST_MODULES.add("core/v3/globals/list.js");
+		TEST_MODULES.add("core/v3/context/get.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
+
+		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
+		TEST_MODULES.add("db/v3/database/getDataSources.js");
+		TEST_MODULES.add("db/v3/database/getMetadata.js");
+		TEST_MODULES.add("db/v3/database/getConnection.js");
+		TEST_MODULES.add("db/v3/query/query.js");
+		TEST_MODULES.add("db/v3/update/update.js");
 
 		TEST_MODULES.add("http/v3/request/isValid.js");
 		TEST_MODULES.add("http/v3/request/getMethod.js");
@@ -100,31 +100,31 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		
 		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
 		
-//		TEST_MODULES.add("io/v3/streams/copy.js");
-//		TEST_MODULES.add("io/v3/streams/text.js");
-//		TEST_MODULES.add("io/v3/files/createTempFile.js");
-//		TEST_MODULES.add("io/v3/files/fileStreams.js");
-//
-//		TEST_MODULES.add("utils/v3/base64/encode.js");
-//		TEST_MODULES.add("utils/v3/base64/decode.js");
-//		TEST_MODULES.add("utils/v3/hex/encode.js");
-//		TEST_MODULES.add("utils/v3/hex/decode.js");
-//		TEST_MODULES.add("utils/v3/digest/sha1.js");
-//		TEST_MODULES.add("utils/v3/xml/fromJson.js");
-//		TEST_MODULES.add("utils/v3/xml/toJson.js");
-//		TEST_MODULES.add("utils/v3/uuid/validate.js");
-//		TEST_MODULES.add("utils/v3/uuid/alias.js");
-//		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
-//		TEST_MODULES.add("utils/v3/url/encode.js");
-//		TEST_MODULES.add("utils/v3/url/decode.js");
-//		
-//		TEST_MODULES.add("indexing/v3/writer/add.js");
-//		TEST_MODULES.add("indexing/v3/searcher/search.js");
-//		TEST_MODULES.add("indexing/v3/searcher/between.js");
-//		
-//		TEST_MODULES.add("cms/v3/cmis/getSession.js");
-//		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
-//		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
+		TEST_MODULES.add("io/v3/streams/copy.js");
+		TEST_MODULES.add("io/v3/streams/text.js");
+		TEST_MODULES.add("io/v3/files/createTempFile.js");
+		TEST_MODULES.add("io/v3/files/fileStreams.js");
+
+		TEST_MODULES.add("utils/v3/base64/encode.js");
+		TEST_MODULES.add("utils/v3/base64/decode.js");
+		TEST_MODULES.add("utils/v3/hex/encode.js");
+		TEST_MODULES.add("utils/v3/hex/decode.js");
+		TEST_MODULES.add("utils/v3/digest/sha1.js");
+		TEST_MODULES.add("utils/v3/xml/fromJson.js");
+		TEST_MODULES.add("utils/v3/xml/toJson.js");
+		TEST_MODULES.add("utils/v3/uuid/validate.js");
+		TEST_MODULES.add("utils/v3/uuid/alias.js");
+		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
+		TEST_MODULES.add("utils/v3/url/encode.js");
+		TEST_MODULES.add("utils/v3/url/decode.js");
+		
+		TEST_MODULES.add("indexing/v3/writer/add.js");
+		TEST_MODULES.add("indexing/v3/searcher/search.js");
+		TEST_MODULES.add("indexing/v3/searcher/between.js");
+		
+		TEST_MODULES.add("cms/v3/cmis/getSession.js");
+		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
+		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
 
 	}
 
@@ -143,11 +143,12 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 			extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
 			try {
 				for (String testModule : TEST_MODULES) {
-					Object result = runTest(executor, repository, testModule);
+					Object result = null;
+					
+					result = runTest(executor, repository, testModule);
+					
 					assertNotNull(result);
 					assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
-					System.out.println(String.format("API test [%s] on engine [%s] passed successfully.", testModule,
-							executor.getType()));
 				} 
 			} finally {
 				extensionsCoreService.removeExtension("/test_ext1");
@@ -204,7 +205,12 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		} catch (RepositoryWriteException e) {
 			throw new IOException(IRepositoryStructure.SEPARATOR + testModule, e);
 		}
-		Object result = executor.executeServiceModule(testModule, null);
+		Object result = null;
+		long start = System.currentTimeMillis();
+		result = executor.executeServiceModule(testModule, null);
+		long time = System.currentTimeMillis() - start;
+		System.out.println(String.format("API test [%s] on engine [%s] passed for: %d ms", testModule,
+				executor.getType(), time));
 		return result;
 	}
 }
