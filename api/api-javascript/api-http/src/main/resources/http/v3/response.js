@@ -11,126 +11,285 @@
 var java = require('core/v3/java');
 
 exports.isValid = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isValid();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isValid();
+	}
 	var valid = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'isValid', []);
 	return valid;
 };
 
 exports.print = function(text) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'print', [text]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.print(text);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.print(text);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'print', [text]);
+	}
 };
 
 exports.println = function(text) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'println', [text]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.println(text);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.println(text);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'println', [text]);
+	}
 };
 
 exports.write = function(bytes) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'write', [bytes]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.write(bytes);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.write(bytes);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'write', [bytes]);
+	}
 };
 
 exports.isCommitted = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isCommitted();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isCommitted();
+	}
 	var committed = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'isCommitted', []);
 	return committed;
 };
 
 exports.setContentType = function(contentType) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setContentType', [contentType]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentType(contentType);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentType(contentType);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setContentType', [contentType]);
+	}
 };
 
 exports.flush = function() {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'flush', []);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.flush();
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.flush();
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'flush', []);
+	}
 };
 
 exports.close = function() {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'close', []);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.close();
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.close();
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'close', []);
+	}
 };
 
 exports.addCookie = function(cookie) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addCookie', [JSON.stringify(cookie)]);
+	var cookieJson = JSON.stringify(cookie);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addCookie(cookieJson);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addCookie(cookieJson);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addCookie', [cookieJson]);
+	}
 };
 
 exports.containsHeader = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.containsHeader(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.containsHeader(name);
+	}
 	var contains = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'containsHeader', [name]);
 	return contains;
 };
 
 exports.encodeURL = function(url) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeURL(url);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeURL(url);
+	}
 	var encoded = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'encodeURL', [url]);
 	return encoded;
 };
 	
 exports.getCharacterEncoding = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getCharacterEncoding();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getCharacterEncoding();
+	}
 	var encoding = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getCharacterEncoding', []);
 	return encoding;
 };
 	
 exports.encodeRedirectURL = function(url) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeRedirectURL(url);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeRedirectURL(url);
+	}
 	var encoded = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'encodeRedirectURL', [url]);
 	return encoded;
 };
 
 exports.getContentType = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getContentType();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getContentType();
+	}
 	var contentType = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getContentType', []);
 	return contentType;
 };
 
 exports.sendError = function(status, message) {
 	if (message) {
-		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status, message]);
+		if (__engine === 'rhino') {
+			org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status, message);
+		} else if (__engine === 'nashorn') {
+			Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status, message);
+		} else {
+			java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status, message]);
+		}
 	} else {
-		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status]);
+		if (__engine === 'rhino') {
+			org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status);
+		} else if (__engine === 'nashorn') {
+			Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status);
+		} else {
+			java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendError', [status]);
+		}
 	}
 };
 
 exports.setCharacterEncoding = function(charset) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setCharacterEncoding', [charset]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setCharacterEncoding(charset);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setCharacterEncoding(charset);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setCharacterEncoding', [charset]);
+	}
 };
 
 exports.sendRedirect = function(location) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendRedirect', [location]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendRedirect(location);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendRedirect(location);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'sendRedirect', [location]);
+	}
 };
 
 exports.setContentLength = function(length) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setContentLength', [length]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentLength(length);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentLength(length);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setContentLength', [length]);
+	}
 };
 
 exports.setHeader = function(name, value) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setHeader', [name, value]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setHeader(name, value);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setHeader(name, value);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setHeader', [name, value]);
+	}
 };
 
 exports.addHeader = function(name, value) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addHeader', [name, value]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addHeader(name, value);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addHeader(name, value);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'addHeader', [name, value]);
+	}
 };
 
 exports.setStatus = function(status) {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setStatus', [status]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setStatus(status);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setStatus(status);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setStatus', [status]);
+	}
 };
 
 exports.reset = function() {
-	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'reset', []);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.reset();
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.reset();
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'reset', []);
+	}
 };
 
 exports.getHeader = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeader(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeader(name);
+	}
 	var header = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getHeader', [name]);
 	return header;
 };
 
 exports.setLocale = function(language, country, variant) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setLocale(language, country, variant);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setLocale(language, country, variant);
+	}
 	java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'setLocale', [language, country, variant]);
 };
 	
 exports.getHeaders = function(name) {
-	var headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getHeaders', [name]);
+	var headersJson;
+	headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getHeaders', [name]);
 	var headers = JSON.parse(headersJson);
 	return headers;
 };
 
 exports.getHeaderNames = function() {
-	var headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getHeaderNames', []);
+	var headerNamesJson;
+	headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getHeaderNames', []);
 	var headerNames = JSON.parse(headerNamesJson);
 	return headerNames;
 };
 
 exports.getLocale = function() {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getLocale();
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getLocale();
+	}
 	var locale = java.call('org.eclipse.dirigible.api.v3.http.HttpResponseFacade', 'getLocale', []);
 	return locale;
 };
@@ -398,7 +557,7 @@ var HttpCodesReasons = exports.HttpCodesReasons = {
 };
 
 /**
- * Utility method that accepts HTTP code as argument (stirng or number) and returns its coresponding reason-phrase as defined in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1)
+ * Utility method that accepts HTTP code as argument (string or number) and returns its corresponding reason-phrase as defined in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1)
  */
 HttpCodesReasons.getReason = function(code){
 	if(isNaN(code))

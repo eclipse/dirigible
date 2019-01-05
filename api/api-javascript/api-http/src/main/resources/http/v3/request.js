@@ -111,26 +111,14 @@ exports.getAuthType = function() {
 
 exports.getCookies = function() {
 	var cookiesJson;
-	if (__engine === 'rhino') {
-		cookiesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCookies();
-	} else if (__engine === 'nashorn') {
-		cookiesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getCookies();
-	} else {
-		cookiesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getCookies', []);
-	}
+	cookiesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getCookies', []);
 	var cookies = JSON.parse(cookiesJson);
 	return cookies;
 };
 
 exports.getAttributeNames = function() {
 	var attrNamesJson;
-	if (__engine === 'rhino') {
-		attrNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttributeNames();
-	} else if (__engine === 'nashorn') {
-		attrNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getAttributeNames();
-	} else {
-		attrNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAttributeNames', []);
-	}
+	attrNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getAttributeNames', []);
 	var attrNames = JSON.parse(attrNamesJson);
 	return attrNames;
 };
@@ -159,13 +147,7 @@ exports.getContentLength = function() {
 	
 exports.getHeaders = function(name) {
 	var headersJson;
-	if (__engine === 'rhino') {
-		headersJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaders(name);
-	} else if (__engine === 'nashorn') {
-		headersJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaders(name);
-	} else {
-		headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaders', [name]);
-	}
+	headersJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaders', [name]);
 	var headers = JSON.parse(headersJson);
 	return headers;
 };
@@ -183,13 +165,7 @@ exports.getContentType = function() {
 
 exports.getBytes = function() {
 	var bytesJson;
-	if (__engine === 'rhino') {
-		bytesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getBytes();
-	} else if (__engine === 'nashorn') {
-		bytesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getBytes();
-	} else {
-		bytesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getBytes', []);
-	}
+	bytesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getBytes', []);
 	var bytes = JSON.parse(bytesJson);
 	return bytes;
 };
@@ -224,13 +200,7 @@ exports.getParameter = function(name) {
 
 exports.getParameters = function() {
 	var paramsJson;
-	if (__engine === 'rhino') {
-		paramsJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameters();
-	} else if (__engine === 'nashorn') {
-		paramsJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameters();
-	} else {
-		paramsJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameters', []);
-	}
+	paramsJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameters', []);
 	var params = JSON.parse(paramsJson);
 	return params;
 };
@@ -248,39 +218,21 @@ exports.getResourcePath = function() {
 
 exports.getHeaderNames = function() {
 	var headerNamesJson;
-	if (__engine === 'rhino') {
-		headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaderNames();
-	} else if (__engine === 'nashorn') {
-		headerNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getHeaderNames();
-	} else {
-		headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaderNames', []);
-	}
+	headerNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getHeaderNames', []);
 	var headerNames = JSON.parse(headerNamesJson);
 	return headerNames;
 };
 
 exports.getParameterNames = function() {
 	var paramNamesJson;
-	if (__engine === 'rhino') {
-		paramNamesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterNames();
-	} else if (__engine === 'nashorn') {
-		paramNamesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterNames();
-	} else {
-		paramNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterNames', []);
-	}
+	paramNamesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterNames', []);
 	var paramNames = JSON.parse(paramNamesJson);
 	return paramNames;
 };
 
 exports.getParameterValues = function(name) {
 	var paramValuesJson;
-	if (__engine === 'rhino') {
-		paramValuesJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterValues(name);
-	} else if (__engine === 'nashorn') {
-		paramValuesJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameterValues(name);
-	} else {
-		paramValuesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterValues', [name]);
-	}
+	paramValuesJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getParameterValues', [name]);
 	var paramValues = JSON.parse(paramValuesJson);
 	return paramValues;
 };
@@ -425,13 +377,7 @@ exports.removeAttribute = function(name) {
 
 exports.getLocale = function() {
 	var localeJson;
-	if (__engine === 'rhino') {
-		localeJson = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocale();
-	} else if (__engine === 'nashorn') {
-		localeJson = Packages.org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocale();
-	} else {
-		localeJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocale', []);
-	}
+	localeJson = java.call('org.eclipse.dirigible.api.v3.http.HttpRequestFacade', 'getLocale', []);
 	var locale = JSON.parse(localeJson);
 	return locale;
 };
