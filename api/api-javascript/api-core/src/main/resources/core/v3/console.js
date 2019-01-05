@@ -11,25 +11,61 @@
 var java = require('core/v3/java');
 
 exports.log = function(message) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'log', [message]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(message);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(message);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'log', [message]);
+	}
 };
 
 exports.error = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'error', [message, args]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(message, args);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(message, args);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'error', [message, args]);
+	}
 };
 
 exports.info = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'info', [message, args]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(message, args);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(message, args);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'info', [message, args]);
+	}
 };
 
 exports.warn = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'warn', [message, args]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(message, args);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(message, args);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'warn', [message, args]);
+	}
 };
 
 exports.debug = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'debug', [message, args]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(message, args);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(message, args);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'debug', [message, args]);
+	}
 };
 
 exports.trace = function(message, args) {
-	java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'trace', [message, args]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(message, args);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(message, args);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ConsoleFacade', 'trace', [message, args]);
+	}
 };

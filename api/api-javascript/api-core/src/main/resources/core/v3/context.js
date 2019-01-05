@@ -11,10 +11,23 @@
 var java = require('core/v3/java');
 
 exports.get = function(name) {
+	if (__engine === 'rhino') {
+		return org.eclipse.dirigible.api.v3.core.ContextFacade.get(name);
+	}
+	if (__engine === 'nashorn') {
+		return Packages.org.eclipse.dirigible.api.v3.core.ContextFacade.get(name);
+	}
 	var value = java.call('org.eclipse.dirigible.api.v3.core.ContextFacade', 'get', [name]);
 	return value;
 };
 
 exports.set = function(name, value) {
-	java.call('org.eclipse.dirigible.api.v3.core.ContextFacade', 'set', [name, value]);
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.api.v3.core.ContextFacade.set(name, value);
+	}
+	if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.api.v3.core.ContextFacade.set(name, value);
+	} else {
+		java.call('org.eclipse.dirigible.api.v3.core.ContextFacade', 'set', [name, value]);
+	}
 };
