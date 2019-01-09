@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,11 +134,14 @@ public class HttpClientFacade implements IScriptingFacade {
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
 
-		HttpEntity entity = EntityBuilder.create().setText(httpClientRequestOptions.getText())
-				.setContentEncoding(httpClientRequestOptions.getCharacterEncoding())
-				.setContentType(ContentType.create(httpClientRequestOptions.getContentType())).build();
+		EntityBuilder entityBuilder = EntityBuilder.create()
+				.setText(httpClientRequestOptions.getText())
+				.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
+			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
+		}
 
-		httpPost.setEntity(entity);
+		httpPost.setEntity(entityBuilder.build());
 
 		CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -248,11 +251,14 @@ public class HttpClientFacade implements IScriptingFacade {
 		httpPut.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPut);
 
-		HttpEntity entity = EntityBuilder.create().setText(httpClientRequestOptions.getText())
-				.setContentEncoding(httpClientRequestOptions.getCharacterEncoding())
-				.setContentType(ContentType.create(httpClientRequestOptions.getContentType())).build();
+		EntityBuilder entityBuilder = EntityBuilder.create()
+				.setText(httpClientRequestOptions.getText())
+				.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
+			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
+		}
 
-		httpPut.setEntity(entity);
+		httpPut.setEntity(entityBuilder.build());
 
 		CloseableHttpResponse response = httpClient.execute(httpPut);
 

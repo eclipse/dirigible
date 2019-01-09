@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,6 +86,10 @@ public class HttpClientRequestOptions {
 	/** The character encoding. */
 	// encoding for POST
 	private String characterEncoding = StandardCharsets.UTF_8.name();
+
+	/** The character encoding enabled. */
+	// enable encoding for POST
+	private boolean characterEncodingEnabled = true;
 
 	/** The content type. */
 	// content type for POST
@@ -481,6 +485,25 @@ public class HttpClientRequestOptions {
 	 */
 	public void setCharacterEncoding(String characterEncoding) {
 		this.characterEncoding = characterEncoding;
+	}
+
+	/**
+	 * Checks if the character encoding is enabled
+	 *
+	 * @return true, if the character encoding is enabled
+	 */
+	public boolean isCharacterEncodingEnabled() {
+		return characterEncodingEnabled;
+	}
+
+	/**
+	 * Sets the character encoding enabled.
+	 *
+	 * @param characcerEncodingEnabled
+	 *            the new character encoding enabled
+	 */
+	public void setCharacterEncodingEnabled(boolean characcerEncodingEnabled) {
+		this.characterEncodingEnabled = characcerEncodingEnabled;
 	}
 
 	/**
