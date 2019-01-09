@@ -12,10 +12,16 @@ var java = require('core/v3/java');
 
 exports.get = function(key, defaultValue) {
 	if (__engine === 'rhino') {
-		return org.eclipse.dirigible.commons.config.Configuration.get(key, defaultValue);
+		if (defaultValue) {
+			return org.eclipse.dirigible.commons.config.Configuration.get(key, defaultValue);
+		}
+		return org.eclipse.dirigible.commons.config.Configuration.get(key);
 	}
 	if (__engine === 'nashorn') {
-		return Packages.org.eclipse.dirigible.commons.config.Configuration.get(key, defaultValue);
+		if (defaultValue) {
+			return Packages.org.eclipse.dirigible.commons.config.Configuration.get(key, defaultValue);
+		}
+		return Packages.org.eclipse.dirigible.commons.config.Configuration.get(key);
 	}
 	return java.call('org.eclipse.dirigible.commons.config.Configuration', 'get', [key, defaultValue]);
 };
