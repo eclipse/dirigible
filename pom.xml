@@ -153,10 +153,10 @@
 						</dependencies>
 						<executions>
 							<execution>
-								<id>check-license</id>
+								<id>format-license</id>
 								<phase>initialize</phase>
 								<goals>
-									<goal>check</goal>
+									<goal>format</goal>
 								</goals>
 							</execution>
 						</executions>
