@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.commons.config.HealthStatus;
+import org.eclipse.dirigible.commons.config.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.quartz.QuartzDatabaseLayoutInitializer;
@@ -76,6 +78,9 @@ public class SchedulerInitializer {
 	private void scheduleInternalJobs() {
 		logger.trace("Initializing the Internal Jobs...");
 		ServiceLoader<IJobDefinitionProvider> jobDefinitionProviders = ServiceLoader.load(IJobDefinitionProvider.class);
+		for (IJobDefinitionProvider next : jobDefinitionProviders) {
+			HealthStatus.getInstance().getJobs().setStatus(next.getJobDefinition().getName(), JobStatus.Running);
+		}
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
 			JobDefinition jobDefinition = next.getJobDefinition();
 			logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getName(), jobDefinition.getGroup()));
