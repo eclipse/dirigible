@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 public class ConsoleFacade {
 
+	private static final String UNDEFINED = "undefined";
 	private static final Console console = new Console();
 
 	/**
@@ -30,6 +31,14 @@ public class ConsoleFacade {
 	public static void error(String message, Object... args) {
 		console.error(message, args);
 	}
+	
+	/**
+	 * Prints undefined error message.
+	 *
+	 */
+	public static void error() {
+		console.error(UNDEFINED);
+	}
 
 	/**
 	 * Prints an info message.
@@ -41,6 +50,14 @@ public class ConsoleFacade {
 	 */
 	public static void info(String message, Object... args) {
 		console.info(message, args);
+	}
+	
+	/**
+	 * Prints undefined info message.
+	 *
+	 */
+	public static void info() {
+		console.info(UNDEFINED);
 	}
 
 	/**
@@ -54,6 +71,14 @@ public class ConsoleFacade {
 	public static void log(String message, Object... args) {
 		console.info(message, args);
 	}
+	
+	/**
+	 * Prints undefined log message.
+	 *
+	 */
+	public static void log() {
+		console.log(UNDEFINED);
+	}
 
 	/**
 	 * Prints a warning message.
@@ -65,6 +90,14 @@ public class ConsoleFacade {
 	 */
 	public static void warn(String message, Object... args) {
 		console.warn(message, args);
+	}
+	
+	/**
+	 * Prints undefined warn message.
+	 *
+	 */
+	public static void warn() {
+		console.warn(UNDEFINED);
 	}
 
 	/**
@@ -78,6 +111,14 @@ public class ConsoleFacade {
 	public static void debug(String message, Object... args) {
 		console.debug(message, args);
 	}
+	
+	/**
+	 * Prints undefined debug message.
+	 *
+	 */
+	public static void debug() {
+		console.debug(UNDEFINED);
+	}
 
 	/**
 	 * Prints a trace message.
@@ -89,6 +130,14 @@ public class ConsoleFacade {
 	 */
 	public static void trace(String message, Object... args) {
 		console.trace(message, args);
+	}
+	
+	/**
+	 * Prints undefined trace message.
+	 *
+	 */
+	public static void trace() {
+		console.trace(UNDEFINED);
 	}
 
 	/**
