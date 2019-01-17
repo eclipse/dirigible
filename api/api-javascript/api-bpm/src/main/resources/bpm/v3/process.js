@@ -30,7 +30,7 @@ exports.start = function(key, parameters) {
 };
 
 exports.getExecutionContext = function() {
-	var data = JSON.parse(context.get('execution'));
+	var data = JSON.parse(__context.get('execution'));
 	var execution = new ExecutionContext(data);
 	return execution;
 };
