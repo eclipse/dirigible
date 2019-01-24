@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
@@ -610,6 +611,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
+			
 			try {
 				return getNextVal(sequence, connection);
 			} catch (SQLException e) {
@@ -617,6 +619,12 @@ public class DatabaseFacade implements IScriptingFacade {
 				logger.warn( format("Implicitly creating a Sequence [{0}] due to: [{1}]", sequence, e.getMessage()));
 				createSequenceInternal(sequence, connection);
 				return getNextVal(sequence, connection);
+			} catch (IllegalStateException e) {
+				// assuming the sequence objects are not supported by the underlying database
+				PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = 
+						new PersistenceNextValueIdentityProcessor(null);
+				long id = persistenceNextValueIdentityProcessor.nextval(connection, sequence);
+				return  id;
 			}
 		} finally {
 			if (connection != null) {

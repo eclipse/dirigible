@@ -11,31 +11,33 @@
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 
 /**
- * The Sybase Next Value Sequence Builder.
+ * The Sybase Create Sequence Builder.
  */
-public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
+public class SybaseCreateSequenceBuilder extends CreateSequenceBuilder {
 
 	/**
-	 * Instantiates a new Sybase next value sequence builder.
+	 * Instantiates a new Sybase create sequence builder.
 	 *
 	 * @param dialect
 	 *            the dialect
 	 * @param sequence
 	 *            the sequence
 	 */
-	public SybaseNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
+	public SybaseCreateSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+	 * @see
+	 * org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder#generateStart(java.lang.StringBuilder)
 	 */
 	@Override
-	public String generate() {
+	protected void generateStart(StringBuilder sql) {
 		throw new IllegalStateException("Sybase ASE does not support Sequences");
 	}
+
 }

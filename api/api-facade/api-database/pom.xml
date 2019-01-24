@@ -39,6 +39,11 @@
             <artifactId>dirigible-database-api</artifactId>
             <version>3.3.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-database-persistence</artifactId>
+            <version>3.3.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -11,31 +11,32 @@
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 
 /**
- * The Sybase Next Value Sequence Builder.
+ * The Sybase Drop Sequence Builder.
  */
-public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
+public class SybaseDropSequenceBuilder extends DropSequenceBuilder {
 
 	/**
-	 * Instantiates a new Sybase next value sequence builder.
+	 * Instantiates a new Sybase drop sequence builder.
 	 *
 	 * @param dialect
 	 *            the dialect
 	 * @param sequence
 	 *            the sequence
 	 */
-	public SybaseNextValueSequenceBuilder(ISqlDialect dialect, String sequence) {
+	public SybaseDropSequenceBuilder(ISqlDialect dialect, String sequence) {
 		super(dialect, sequence);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBuilder#generate()
+	 * @see org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder#generate()
 	 */
 	@Override
 	public String generate() {
-		throw new IllegalStateException("Sybase ASE does not support Sequences");
+		throw new IllegalStateException("Sybase does not support Sequences");
 	}
+
 }

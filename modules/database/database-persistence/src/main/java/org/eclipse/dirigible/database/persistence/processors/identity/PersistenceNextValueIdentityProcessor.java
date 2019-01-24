@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,15 +62,31 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 	 */
 	public long nextval(Connection connection, PersistenceTableModel tableModel) throws PersistenceException {
 		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableModel: " + Serializer.serializeTableModel(tableModel));
+		return nextval(connection, tableModel.getTableName());
+	}
+	
+	/**
+	 * Nextval.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableName
+	 *            the table name
+	 * @return the long
+	 * @throws PersistenceException
+	 *             the persistence exception
+	 */
+	public long nextval(Connection connection, String tableName) throws PersistenceException {
+		logger.trace("nextval -> connection: " + connection.hashCode() + ", tableName: " + tableName);
 		PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();
 		if (!persistenceManager.tableExists(connection, Identity.class)) {
 			persistenceManager.tableCreate(connection, Identity.class);
 		}
 
-		Identity identity = persistenceManager.find(connection, Identity.class, tableModel.getTableName());
+		Identity identity = persistenceManager.find(connection, Identity.class, tableName);
 		if (identity == null) {
 			identity = new Identity();
-			identity.setTable(tableModel.getTableName());
+			identity.setTable(tableName);
 			identity.setValue(1);
 			persistenceManager.insert(connection, identity);
 			return 1;
@@ -83,9 +99,9 @@ public class PersistenceNextValueIdentityProcessor extends AbstractPersistencePr
 					if (autoCommit) {
 						connection.setAutoCommit(false);
 					}
-					identity = persistenceManager.lock(connection, Identity.class, tableModel.getTableName());
+					identity = persistenceManager.lock(connection, Identity.class, tableName);
 					identity.setValue(identity.getValue() + 1);
-					identity.setTable(tableModel.getTableName());
+					identity.setTable(tableName);
 					persistenceManager.update(connection, identity);
 				} finally {
 					connection.commit();
