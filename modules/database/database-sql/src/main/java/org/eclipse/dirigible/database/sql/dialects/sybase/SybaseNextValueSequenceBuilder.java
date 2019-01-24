@@ -18,8 +18,6 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class SybaseNextValueSequenceBuilder extends NextValueSequenceBuilder {
 
-	private static final String PATTERN_SELECT_NEXT_VAL_SEQUENCE = "SELECT {0}.NEXTVAL";
-
 	/**
 	 * Instantiates a new Sybase next value sequence builder.
 	 *

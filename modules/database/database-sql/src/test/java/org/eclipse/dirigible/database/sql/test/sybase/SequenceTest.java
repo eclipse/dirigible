@@ -10,14 +10,7 @@
  */
 package org.eclipse.dirigible.database.sql.test.sybase;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
-import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
-import org.junit.Test;
 
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;

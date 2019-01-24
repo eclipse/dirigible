@@ -1,9 +1,5 @@
 /**
-<<<<<<< HEAD
  * Copyright (c) 2010-2019 SAP and others.
-=======
- * Copyright (c) 2010-2018 SAP and others.
->>>>>>> 7dee4300a835c5e7f67161fc9d48e8d6fa61fa34
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
