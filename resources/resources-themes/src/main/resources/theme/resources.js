@@ -36,7 +36,7 @@ rs.service()
 		.get(function(ctx, request, response) {
 			var themes = themesManager.getThemes();
 			response.setContentType('application/json');
-			response.print(themes);
+			response.print(JSON.stringify(themes));
 		})
 	.resource('{path}')
 		.get(function(ctx, request, response) {
