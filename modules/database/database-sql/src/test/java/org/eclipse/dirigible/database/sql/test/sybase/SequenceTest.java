@@ -19,6 +19,10 @@ import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
 import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
 import org.junit.Test;
 
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.dialects.sybase.SybaseSqlDialect;
+import org.junit.Test;
+
 /**
  * The Class SequenceTest.
  */
