@@ -19,37 +19,40 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	var databasesSvcUrl = "../../../../../services/v3/ide/databases";
 	$scope.selectedDatabase;
 	$scope.jstree;
-	
-	$http.get(databasesSvcUrl)
-		.success(function(data) {
-			$scope.databases = data;
-			if(data.length > 0) {
-				var storedDatabase = JSON.parse(localStorage.getItem('DIRIGIBLE.database'));
-				if (storedDatabase !== null) {
-					$scope.selectedDatabase = storedDatabase.type;
-				} else {
-					$scope.selectedDatabase = data[0];
-				}
-				if ($scope.selectedDatabase) {
-					messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
-					$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
-						$scope.datasources = data;
-						if(data.length > 0) {
-							if (storedDatabase !== null) {
-								$scope.selectedDatasource = storedDatabase.name;
-							} else {
-								$scope.selectedDatasource = data[0];
+
+	function getDatabases() {
+		$http.get(databasesSvcUrl)
+			.success(function(data) {
+				$scope.databases = data;
+				if(data.length > 0) {
+					var storedDatabase = JSON.parse(localStorage.getItem('DIRIGIBLE.database'));
+					if (storedDatabase !== null) {
+						$scope.selectedDatabase = storedDatabase.type;
+					} else {
+						$scope.selectedDatabase = data[0];
+					}
+					if ($scope.selectedDatabase) {
+						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
+						$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function(data) {
+							$scope.datasources = data;
+							if(data.length > 0) {
+								if (storedDatabase !== null) {
+									$scope.selectedDatasource = storedDatabase.name;
+								} else {
+									$scope.selectedDatasource = data[0];
+								}
+								if ($scope.selectedDatasource) {
+									messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
+									$scope.refreshDatabase();
+								}
 							}
-							if ($scope.selectedDatasource) {
-								messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
-								$scope.refreshDatabase();
-							}
-						}
-					});
+						});
+					}
 				}
-			}
-	});
-	
+		});
+	}
+	setTimeout(getDatabases, 500);
+
 	$scope.refreshDatabase = function() {
 		if($scope.selectedDatabase && $scope.selectedDatasource){
 				$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
