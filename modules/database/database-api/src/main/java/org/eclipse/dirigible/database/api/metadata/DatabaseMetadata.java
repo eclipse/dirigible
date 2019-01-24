@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,11 +17,17 @@ import java.util.List;
 
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Database Metadata transport object.
  */
 public class DatabaseMetadata {
+	
+	private static final String NOT_SUPPORTED = "Not supported: ";
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseMetadata.class);
 
 	/** The all procedures are callable. */
 	private boolean allProceduresAreCallable;
@@ -449,144 +455,676 @@ public class DatabaseMetadata {
 			throws SQLException {
 		super();
 		DatabaseMetaData databaseMetaData = connection.getMetaData();
-		this.allProceduresAreCallable = databaseMetaData.allProceduresAreCallable();
-		this.allTablesAreSelectable = databaseMetaData.allTablesAreSelectable();
-		this.getURL = databaseMetaData.getURL();
-		this.getUserName = databaseMetaData.getUserName();
-		this.isReadOnly = databaseMetaData.isReadOnly();
-		this.nullsAreSortedHigh = databaseMetaData.nullsAreSortedHigh();
-		this.nullsAreSortedLow = databaseMetaData.nullsAreSortedLow();
-		this.nullsAreSortedAtStart = databaseMetaData.nullsAreSortedAtStart();
-		this.nullsAreSortedAtEnd = databaseMetaData.nullsAreSortedAtEnd();
-		this.databaseProductName = databaseMetaData.getDatabaseProductName();
-		this.databaseProductVersion = databaseMetaData.getDatabaseProductVersion();
-		this.driverName = databaseMetaData.getDriverName();
-		this.driverVersion = databaseMetaData.getDriverVersion();
-		this.driverMajorVersion = databaseMetaData.getDriverMajorVersion();
-		this.driverMinorVersion = databaseMetaData.getDriverMinorVersion();
-		this.usesLocalFiles = databaseMetaData.usesLocalFiles();
-		this.usesLocalFilePerTable = databaseMetaData.usesLocalFilePerTable();
-		this.supportsMixedCaseIdentifiers = databaseMetaData.supportsMixedCaseIdentifiers();
-		this.storesUpperCaseIdentifiers = databaseMetaData.storesUpperCaseIdentifiers();
-		this.storesLowerCaseIdentifiers = databaseMetaData.storesLowerCaseIdentifiers();
-		this.storesMixedCaseIdentifiers = databaseMetaData.storesMixedCaseIdentifiers();
-		this.supportsMixedCaseQuotedIdentifiers = databaseMetaData.supportsMixedCaseQuotedIdentifiers();
-		this.storesUpperCaseQuotedIdentifiers = databaseMetaData.storesUpperCaseQuotedIdentifiers();
-		this.storesLowerCaseQuotedIdentifiers = databaseMetaData.storesLowerCaseQuotedIdentifiers();
-		this.storesMixedCaseQuotedIdentifiers = databaseMetaData.storesMixedCaseQuotedIdentifiers();
-		this.identifierQuoteString = databaseMetaData.getIdentifierQuoteString();
-		this.sqlKeywords = databaseMetaData.getSQLKeywords();
-		this.numericFunctions = databaseMetaData.getNumericFunctions();
-		this.stringFunctions = databaseMetaData.getStringFunctions();
-		this.systemFunctions = databaseMetaData.getSystemFunctions();
-		this.timeDateFunctions = databaseMetaData.getTimeDateFunctions();
-		this.searchStringEscape = databaseMetaData.getSearchStringEscape();
-		this.extraNameCharacters = databaseMetaData.getExtraNameCharacters();
-		this.supportsAlterTableWithAddColumn = databaseMetaData.supportsAlterTableWithAddColumn();
-		this.supportsAlterTableWithDropColumn = databaseMetaData.supportsAlterTableWithDropColumn();
-		this.supportsColumnAliasing = databaseMetaData.supportsColumnAliasing();
-		this.nullPlusNonNullIsNull = databaseMetaData.nullPlusNonNullIsNull();
-		this.supportsConvert = databaseMetaData.supportsConvert();
-		this.supportsTableCorrelationNames = databaseMetaData.supportsTableCorrelationNames();
-		this.supportsDifferentTableCorrelationNames = databaseMetaData.supportsDifferentTableCorrelationNames();
-		this.supportsExpressionsInOrderBy = databaseMetaData.supportsExpressionsInOrderBy();
-		this.supportsOrderByUnrelated = databaseMetaData.supportsOrderByUnrelated();
-		this.supportsGroupBy = databaseMetaData.supportsGroupBy();
-		this.supportsGroupByUnrelated = databaseMetaData.supportsGroupByUnrelated();
-		this.supportsGroupByBeyondSelect = databaseMetaData.supportsGroupByBeyondSelect();
-		this.supportsLikeEscapeClause = databaseMetaData.supportsLikeEscapeClause();
-		this.supportsMultipleResultSets = databaseMetaData.supportsMultipleResultSets();
-		this.supportsMultipleTransactions = databaseMetaData.supportsMultipleTransactions();
-		this.supportsNonNullableColumns = databaseMetaData.supportsNonNullableColumns();
-		this.supportsMinimumSQLGrammar = databaseMetaData.supportsMinimumSQLGrammar();
-		this.supportsCoreSQLGrammar = databaseMetaData.supportsCoreSQLGrammar();
-		this.supportsExtendedSQLGrammar = databaseMetaData.supportsExtendedSQLGrammar();
-		this.supportsANSI92EntryLevelSQL = databaseMetaData.supportsANSI92EntryLevelSQL();
-		this.supportsANSI92IntermediateSQL = databaseMetaData.supportsANSI92IntermediateSQL();
-		this.supportsANSI92FullSQL = databaseMetaData.supportsANSI92FullSQL();
-		this.supportsIntegrityEnhancementFacility = databaseMetaData.supportsIntegrityEnhancementFacility();
-		this.supportsOuterJoins = databaseMetaData.supportsOuterJoins();
-		this.supportsFullOuterJoins = databaseMetaData.supportsFullOuterJoins();
-		this.supportsLimitedOuterJoins = databaseMetaData.supportsLimitedOuterJoins();
-		this.schemaTerm = databaseMetaData.getSchemaTerm();
-		this.procedureTerm = databaseMetaData.getProcedureTerm();
-		this.catalogTerm = databaseMetaData.getCatalogTerm();
-		this.isCatalogAtStart = databaseMetaData.isCatalogAtStart();
-		this.getCatalogSeparator = databaseMetaData.getCatalogSeparator();
-		this.supportsSchemasInDataManipulation = databaseMetaData.supportsSchemasInDataManipulation();
-		this.supportsSchemasInProcedureCalls = databaseMetaData.supportsSchemasInProcedureCalls();
-		this.supportsSchemasInTableDefinitions = databaseMetaData.supportsSchemasInTableDefinitions();
-		this.supportsSchemasInIndexDefinitions = databaseMetaData.supportsSchemasInIndexDefinitions();
-		this.supportsSchemasInPrivilegeDefinitions = databaseMetaData.supportsSchemasInPrivilegeDefinitions();
-		this.supportsCatalogsInDataManipulation = databaseMetaData.supportsCatalogsInDataManipulation();
-		this.supportsCatalogsInProcedureCalls = databaseMetaData.supportsCatalogsInProcedureCalls();
-		this.supportsCatalogsInTableDefinitions = databaseMetaData.supportsCatalogsInTableDefinitions();
-		this.supportsCatalogsInIndexDefinitions = databaseMetaData.supportsCatalogsInIndexDefinitions();
-		this.supportsCatalogsInPrivilegeDefinitions = databaseMetaData.supportsCatalogsInPrivilegeDefinitions();
-		this.supportsPositionedDelete = databaseMetaData.supportsPositionedDelete();
-		this.supportsPositionedUpdate = databaseMetaData.supportsPositionedUpdate();
-		this.supportsSelectForUpdate = databaseMetaData.supportsSelectForUpdate();
-		this.supportsStoredProcedures = databaseMetaData.supportsStoredProcedures();
-		this.supportsSubqueriesInComparisons = databaseMetaData.supportsSubqueriesInComparisons();
-		this.supportsSubqueriesInExists = databaseMetaData.supportsSubqueriesInExists();
-		this.supportsSubqueriesInIns = databaseMetaData.supportsSubqueriesInIns();
-		this.supportsSubqueriesInQuantifieds = databaseMetaData.supportsSubqueriesInQuantifieds();
-		this.supportsCorrelatedSubqueries = databaseMetaData.supportsCorrelatedSubqueries();
-		this.supportsUnion = databaseMetaData.supportsUnion();
-		this.supportsUnionAll = databaseMetaData.supportsUnionAll();
-		this.supportsOpenCursorsAcrossCommit = databaseMetaData.supportsOpenCursorsAcrossCommit();
-		this.supportsOpenCursorsAcrossRollback = databaseMetaData.supportsOpenCursorsAcrossRollback();
-		this.supportsOpenStatementsAcrossCommit = databaseMetaData.supportsOpenStatementsAcrossCommit();
-		this.supportsOpenStatementsAcrossRollback = databaseMetaData.supportsOpenStatementsAcrossRollback();
-		this.maxBinaryLiteralLength = databaseMetaData.getMaxBinaryLiteralLength();
-		this.maxCharLiteralLength = databaseMetaData.getMaxCharLiteralLength();
-		this.maxColumnNameLength = databaseMetaData.getMaxColumnNameLength();
-		this.maxColumnsInGroupBy = databaseMetaData.getMaxColumnsInGroupBy();
-		this.maxColumnsInIndex = databaseMetaData.getMaxColumnsInIndex();
-		this.maxColumnsInOrderBy = databaseMetaData.getMaxColumnsInOrderBy();
-		this.maxColumnsInSelect = databaseMetaData.getMaxColumnsInSelect();
-		this.maxColumnsInTable = databaseMetaData.getMaxColumnsInTable();
-		this.maxConnections = databaseMetaData.getMaxConnections();
-		this.maxCursorNameLength = databaseMetaData.getMaxCursorNameLength();
-		this.maxIndexLength = databaseMetaData.getMaxIndexLength();
-		this.maxSchemaNameLength = databaseMetaData.getMaxSchemaNameLength();
-		this.maxProcedureNameLength = databaseMetaData.getMaxProcedureNameLength();
-		this.maxCatalogNameLength = databaseMetaData.getMaxCatalogNameLength();
-		this.maxRowSize = databaseMetaData.getMaxRowSize();
-		this.maxRowSizeIncludeBlobs = databaseMetaData.doesMaxRowSizeIncludeBlobs();
-		this.maxStatementLength = databaseMetaData.getMaxStatementLength();
-		this.maxStatements = databaseMetaData.getMaxStatements();
-		this.maxTableNameLength = databaseMetaData.getMaxTableNameLength();
-		this.maxTablesInSelect = databaseMetaData.getMaxTablesInSelect();
-		this.maxUserNameLength = databaseMetaData.getMaxUserNameLength();
-		this.defaultTransactionIsolation = databaseMetaData.getDefaultTransactionIsolation();
-		this.supportsTransactions = databaseMetaData.supportsTransactions();
-		this.supportsDataDefinitionAndDataManipulationTransactions = databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
-		this.supportsDataManipulationTransactionsOnly = databaseMetaData.supportsDataManipulationTransactionsOnly();
-		this.dataDefinitionCausesTransactionCommit = databaseMetaData.dataDefinitionCausesTransactionCommit();
-		this.dataDefinitionIgnoredInTransactions = databaseMetaData.dataDefinitionIgnoredInTransactions();
-		this.supportsBatchUpdates = databaseMetaData.supportsBatchUpdates();
-		this.supportsSavepoints = databaseMetaData.supportsSavepoints();
-		this.supportsNamedParameters = databaseMetaData.supportsNamedParameters();
-		this.supportsMultipleOpenResults = databaseMetaData.supportsMultipleOpenResults();
-		this.supportsGetGeneratedKeys = databaseMetaData.supportsGetGeneratedKeys();
-		this.getResultSetHoldability = databaseMetaData.getResultSetHoldability();
-		this.getDatabaseMajorVersion = databaseMetaData.getDatabaseMajorVersion();
-		this.getDatabaseMinorVersion = databaseMetaData.getDatabaseMinorVersion();
-		this.getJDBCMajorVersion = databaseMetaData.getJDBCMajorVersion();
-		this.getJDBCMinorVersion = databaseMetaData.getJDBCMinorVersion();
-		this.getSQLStateType = databaseMetaData.getSQLStateType();
-		this.locatorsUpdateCopy = databaseMetaData.locatorsUpdateCopy();
-		this.supportsStatementPooling = databaseMetaData.supportsStatementPooling();
-		this.supportsStoredFunctionsUsingCallSyntax = databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
-		this.autoCommitFailureClosesAllResultSets = databaseMetaData.autoCommitFailureClosesAllResultSets();
+		try {
+			this.allProceduresAreCallable = databaseMetaData.allProceduresAreCallable();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.allProceduresAreCallable()");
+		}
+		try {
+			this.allTablesAreSelectable = databaseMetaData.allTablesAreSelectable();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.allTablesAreSelectable()");
+		}
+		try {
+			this.getURL = databaseMetaData.getURL();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getURL()");
+		}
+		try {
+			this.getUserName = databaseMetaData.getUserName();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getUserName()");
+		}
+		try {
+			this.isReadOnly = databaseMetaData.isReadOnly();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.isReadOnly()");
+		}
+		try {
+			this.nullsAreSortedHigh = databaseMetaData.nullsAreSortedHigh();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedHigh()");
+		}
+		try {
+			this.nullsAreSortedLow = databaseMetaData.nullsAreSortedLow();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedLow()");
+		}
+		try {
+			this.nullsAreSortedAtStart = databaseMetaData.nullsAreSortedAtStart();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtStart()");
+		}
+		try {
+			this.nullsAreSortedAtEnd = databaseMetaData.nullsAreSortedAtEnd();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullsAreSortedAtEnd()");
+		}
+		try {
+			this.databaseProductName = databaseMetaData.getDatabaseProductName();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductName()");
+		}
+		try {
+			this.databaseProductVersion = databaseMetaData.getDatabaseProductVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseProductVersion()");
+		}
+		try {
+			this.driverName = databaseMetaData.getDriverName();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverName()");
+		}
+		try {
+			this.driverVersion = databaseMetaData.getDriverVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverVersion()");
+		}
+		try {
+			this.driverMajorVersion = databaseMetaData.getDriverMajorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMajorVersion()");
+		}
+		try {
+			this.driverMinorVersion = databaseMetaData.getDriverMinorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDriverMinorVersion()");
+		}
+		try {
+			this.usesLocalFiles = databaseMetaData.usesLocalFiles();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFiles()");
+		}
+		try {
+			this.usesLocalFilePerTable = databaseMetaData.usesLocalFilePerTable();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.usesLocalFilePerTable()");
+		}
+		try {
+			this.supportsMixedCaseIdentifiers = databaseMetaData.supportsMixedCaseIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseIdentifiers()");
+		}
+		try {
+			this.storesUpperCaseIdentifiers = databaseMetaData.storesUpperCaseIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseIdentifiers()");
+		}
+		try {
+			this.storesLowerCaseIdentifiers = databaseMetaData.storesLowerCaseIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseIdentifiers()");
+		}
+		try {
+			this.storesMixedCaseIdentifiers = databaseMetaData.storesMixedCaseIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseIdentifiers()");
+		}
+		try {
+			this.supportsMixedCaseQuotedIdentifiers = databaseMetaData.supportsMixedCaseQuotedIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMixedCaseQuotedIdentifiers()");
+		}
+		try {
+			this.storesUpperCaseQuotedIdentifiers = databaseMetaData.storesUpperCaseQuotedIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesUpperCaseQuotedIdentifiers()");
+		}
+		try {
+			this.storesLowerCaseQuotedIdentifiers = databaseMetaData.storesLowerCaseQuotedIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesLowerCaseQuotedIdentifiers()");
+		}
+		try {
+			this.storesMixedCaseQuotedIdentifiers = databaseMetaData.storesMixedCaseQuotedIdentifiers();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.storesMixedCaseQuotedIdentifiers()");
+		}
+		try {
+			this.identifierQuoteString = databaseMetaData.getIdentifierQuoteString();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getIdentifierQuoteString()");
+		}
+		try {
+			this.sqlKeywords = databaseMetaData.getSQLKeywords();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLKeywords()");
+		}
+		try {
+			this.numericFunctions = databaseMetaData.getNumericFunctions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getNumericFunctions()");
+		}
+		try {
+			this.stringFunctions = databaseMetaData.getStringFunctions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getStringFunctions()");
+		}
+		try {
+			this.systemFunctions = databaseMetaData.getSystemFunctions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSystemFunctions()");
+		}
+		try {
+			this.timeDateFunctions = databaseMetaData.getTimeDateFunctions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getTimeDateFunctions()");
+		}
+		try {
+			this.searchStringEscape = databaseMetaData.getSearchStringEscape();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSearchStringEscape()");
+		}
+		try {
+			this.extraNameCharacters = databaseMetaData.getExtraNameCharacters();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getExtraNameCharacters()");
+		}
+		try {
+			this.supportsAlterTableWithAddColumn = databaseMetaData.supportsAlterTableWithAddColumn();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithAddColumn()");
+		}
+		try {
+			this.supportsAlterTableWithDropColumn = databaseMetaData.supportsAlterTableWithDropColumn();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsAlterTableWithDropColumn()");
+		}
+		try {
+			this.supportsColumnAliasing = databaseMetaData.supportsColumnAliasing();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsColumnAliasing()");
+		}
+		try {
+			this.nullPlusNonNullIsNull = databaseMetaData.nullPlusNonNullIsNull();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.nullPlusNonNullIsNull()");
+		}
+		try {
+			this.supportsConvert = databaseMetaData.supportsConvert();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsConvert()");
+		}
+		try {
+			this.supportsTableCorrelationNames = databaseMetaData.supportsTableCorrelationNames();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTableCorrelationNames()");
+		}
+		try {
+			this.supportsDifferentTableCorrelationNames = databaseMetaData.supportsDifferentTableCorrelationNames();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDifferentTableCorrelationNames()");
+		}
+		try {
+			this.supportsExpressionsInOrderBy = databaseMetaData.supportsExpressionsInOrderBy();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExpressionsInOrderBy()");
+		}
+		try {
+			this.supportsOrderByUnrelated = databaseMetaData.supportsOrderByUnrelated();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOrderByUnrelated()");
+		}
+		try {
+			this.supportsGroupBy = databaseMetaData.supportsGroupBy();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupBy()");
+		}
+		try {
+			this.supportsGroupByUnrelated = databaseMetaData.supportsGroupByUnrelated();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByUnrelated()");
+		}
+		try {
+			this.supportsGroupByBeyondSelect = databaseMetaData.supportsGroupByBeyondSelect();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGroupByBeyondSelect()");
+		}
+		try {
+			this.supportsLikeEscapeClause = databaseMetaData.supportsLikeEscapeClause();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLikeEscapeClause()");
+		}
+		try {
+			this.supportsMultipleResultSets = databaseMetaData.supportsMultipleResultSets();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleResultSets()");
+		}
+		try {
+			this.supportsMultipleTransactions = databaseMetaData.supportsMultipleTransactions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleTransactions()");
+		}
+		try {
+			this.supportsNonNullableColumns = databaseMetaData.supportsNonNullableColumns();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNonNullableColumns()");
+		}
+		try {
+			this.supportsMinimumSQLGrammar = databaseMetaData.supportsMinimumSQLGrammar();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMinimumSQLGrammar()");
+		}
+		try {
+			this.supportsCoreSQLGrammar = databaseMetaData.supportsCoreSQLGrammar();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCoreSQLGrammar()");
+		}
+		try {
+			this.supportsExtendedSQLGrammar = databaseMetaData.supportsExtendedSQLGrammar();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsExtendedSQLGrammar()");
+		}
+		try {
+			this.supportsANSI92EntryLevelSQL = databaseMetaData.supportsANSI92EntryLevelSQL();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92EntryLevelSQL()");
+		}
+		try {
+			this.supportsANSI92IntermediateSQL = databaseMetaData.supportsANSI92IntermediateSQL();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92IntermediateSQL()");
+		}
+		try {
+			this.supportsANSI92FullSQL = databaseMetaData.supportsANSI92FullSQL();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsANSI92FullSQL()");
+		}
+		try {
+			this.supportsIntegrityEnhancementFacility = databaseMetaData.supportsIntegrityEnhancementFacility();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsIntegrityEnhancementFacility()");
+		}
+		try {
+			this.supportsOuterJoins = databaseMetaData.supportsOuterJoins();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOuterJoins()");
+		}
+		try {
+			this.supportsFullOuterJoins = databaseMetaData.supportsFullOuterJoins();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsFullOuterJoins()");
+		}
+		try {
+			this.supportsLimitedOuterJoins = databaseMetaData.supportsLimitedOuterJoins();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsLimitedOuterJoins()");
+		}
+		try {
+			this.schemaTerm = databaseMetaData.getSchemaTerm();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSchemaTerm()");
+		}
+		try {
+			this.procedureTerm = databaseMetaData.getProcedureTerm();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getProcedureTerm()");
+		}
+		try {
+			this.catalogTerm = databaseMetaData.getCatalogTerm();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogTerm()");
+		}
+		try {
+			this.isCatalogAtStart = databaseMetaData.isCatalogAtStart();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.isCatalogAtStart()");
+		}
+		try {
+			this.getCatalogSeparator = databaseMetaData.getCatalogSeparator();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogSeparator()");
+		}
+		try {
+			this.supportsSchemasInDataManipulation = databaseMetaData.supportsSchemasInDataManipulation();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInDataManipulation()");
+		}
+		try {
+			this.supportsSchemasInProcedureCalls = databaseMetaData.supportsSchemasInProcedureCalls();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInProcedureCalls()");
+		}
+		try {
+			this.supportsSchemasInTableDefinitions = databaseMetaData.supportsSchemasInTableDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInTableDefinitions()");
+		}
+		try {
+			this.supportsSchemasInIndexDefinitions = databaseMetaData.supportsSchemasInIndexDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInIndexDefinitions()");
+		}
+		try {
+			this.supportsSchemasInPrivilegeDefinitions = databaseMetaData.supportsSchemasInPrivilegeDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSchemasInPrivilegeDefinitions()");
+		}
+		try {
+			this.supportsCatalogsInDataManipulation = databaseMetaData.supportsCatalogsInDataManipulation();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInDataManipulation()");
+		}
+		try {
+			this.supportsCatalogsInProcedureCalls = databaseMetaData.supportsCatalogsInProcedureCalls();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInProcedureCalls()");
+		}
+		try {
+			this.supportsCatalogsInTableDefinitions = databaseMetaData.supportsCatalogsInTableDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInTableDefinitions()");
+		}
+		try {
+			this.supportsCatalogsInIndexDefinitions = databaseMetaData.supportsCatalogsInIndexDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInIndexDefinitions()");
+		}
+		try {
+			this.supportsCatalogsInPrivilegeDefinitions = databaseMetaData.supportsCatalogsInPrivilegeDefinitions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCatalogsInPrivilegeDefinitions()");
+		}
+		try {
+			this.supportsPositionedDelete = databaseMetaData.supportsPositionedDelete();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedDelete()");
+		}
+		try {
+			this.supportsPositionedUpdate = databaseMetaData.supportsPositionedUpdate();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsPositionedUpdate()");
+		}
+		try {
+			this.supportsSelectForUpdate = databaseMetaData.supportsSelectForUpdate();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSelectForUpdate()");
+		}
+		try {
+			this.supportsStoredProcedures = databaseMetaData.supportsStoredProcedures();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredProcedures()");
+		}
+		try {
+			this.supportsSubqueriesInComparisons = databaseMetaData.supportsSubqueriesInComparisons();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInComparisons()");
+		}
+		try {
+			this.supportsSubqueriesInExists = databaseMetaData.supportsSubqueriesInExists();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInExists()");
+		}
+		try {
+			this.supportsSubqueriesInIns = databaseMetaData.supportsSubqueriesInIns();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInIns()");
+		}
+		try {
+			this.supportsSubqueriesInQuantifieds = databaseMetaData.supportsSubqueriesInQuantifieds();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSubqueriesInQuantifieds()");
+		}
+		try {
+			this.supportsCorrelatedSubqueries = databaseMetaData.supportsCorrelatedSubqueries();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsCorrelatedSubqueries()");
+		}
+		try {
+			this.supportsUnion = databaseMetaData.supportsUnion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnion()");
+		}
+		try {
+			this.supportsUnionAll = databaseMetaData.supportsUnionAll();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsUnionAll()");
+		}
+		try {
+			this.supportsOpenCursorsAcrossCommit = databaseMetaData.supportsOpenCursorsAcrossCommit();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossCommit()");
+		}
+		try {
+			this.supportsOpenCursorsAcrossRollback = databaseMetaData.supportsOpenCursorsAcrossRollback();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenCursorsAcrossRollback()");
+		}
+		try {
+			this.supportsOpenStatementsAcrossCommit = databaseMetaData.supportsOpenStatementsAcrossCommit();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossCommit()");
+		}
+		try {
+			this.supportsOpenStatementsAcrossRollback = databaseMetaData.supportsOpenStatementsAcrossRollback();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsOpenStatementsAcrossRollback()");
+		}
+		try {
+			this.maxBinaryLiteralLength = databaseMetaData.getMaxBinaryLiteralLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxBinaryLiteralLength()");
+		}
+		try {
+			this.maxCharLiteralLength = databaseMetaData.getMaxCharLiteralLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCharLiteralLength()");
+		}
+		try {
+			this.maxColumnNameLength = databaseMetaData.getMaxColumnNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnNameLength()");
+		}
+		try {
+			this.maxColumnsInGroupBy = databaseMetaData.getMaxColumnsInGroupBy();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInGroupBy()");
+		}
+		try {
+			this.maxColumnsInIndex = databaseMetaData.getMaxColumnsInIndex();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInIndex()");
+		}
+		try {
+			this.maxColumnsInOrderBy = databaseMetaData.getMaxColumnsInOrderBy();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInOrderBy()");
+		}
+		try {
+			this.maxColumnsInSelect = databaseMetaData.getMaxColumnsInSelect();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInSelect()");
+		}
+		try {
+			this.maxColumnsInTable = databaseMetaData.getMaxColumnsInTable();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxColumnsInTable()");
+		}
+		try {
+			this.maxConnections = databaseMetaData.getMaxConnections();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxConnections()");
+		}
+		try {
+			this.maxCursorNameLength = databaseMetaData.getMaxCursorNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCursorNameLength()");
+		}
+		try {
+			this.maxIndexLength = databaseMetaData.getMaxIndexLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxIndexLength()");
+		}
+		try {
+			this.maxSchemaNameLength = databaseMetaData.getMaxSchemaNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxSchemaNameLength()");
+		}
+		try {
+			this.maxProcedureNameLength = databaseMetaData.getMaxProcedureNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxProcedureNameLength()");
+		}
+		try {
+			this.maxCatalogNameLength = databaseMetaData.getMaxCatalogNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxCatalogNameLength()");
+		}
+		try {
+			this.maxRowSize = databaseMetaData.getMaxRowSize();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxRowSize()");
+		}
+		try {
+			this.maxRowSizeIncludeBlobs = databaseMetaData.doesMaxRowSizeIncludeBlobs();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.doesMaxRowSizeIncludeBlobs()");
+		}
+		try {
+			this.maxStatementLength = databaseMetaData.getMaxStatementLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatementLength()");
+		}
+		try {
+			this.maxStatements = databaseMetaData.getMaxStatements();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxStatements()");
+		}
+		try {
+			this.maxTableNameLength = databaseMetaData.getMaxTableNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTableNameLength()");
+		}
+		try {
+			this.maxTablesInSelect = databaseMetaData.getMaxTablesInSelect();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxTablesInSelect()");
+		}
+		try {
+			this.maxUserNameLength = databaseMetaData.getMaxUserNameLength();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxUserNameLength()");
+		}
+		try {
+			this.defaultTransactionIsolation = databaseMetaData.getDefaultTransactionIsolation();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDefaultTransactionIsolation()");
+		}
+		try {
+			this.supportsTransactions = databaseMetaData.supportsTransactions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsTransactions()");
+		}
+		try {
+			this.supportsDataDefinitionAndDataManipulationTransactions = databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataDefinitionAndDataManipulationTransactions()");
+		}
+		try {
+			this.supportsDataManipulationTransactionsOnly = databaseMetaData.supportsDataManipulationTransactionsOnly();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsDataManipulationTransactionsOnly()");
+		}
+		try {
+			this.dataDefinitionCausesTransactionCommit = databaseMetaData.dataDefinitionCausesTransactionCommit();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionCausesTransactionCommit()");
+		}
+		try {
+			this.dataDefinitionIgnoredInTransactions = databaseMetaData.dataDefinitionIgnoredInTransactions();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.dataDefinitionIgnoredInTransactions()");
+		}
+		try {
+			this.supportsBatchUpdates = databaseMetaData.supportsBatchUpdates();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsBatchUpdates()");
+		}
+		try {
+			this.supportsSavepoints = databaseMetaData.supportsSavepoints();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsSavepoints()");
+		}
+		try {
+			this.supportsNamedParameters = databaseMetaData.supportsNamedParameters();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsNamedParameters()");
+		}
+		try {
+			this.supportsMultipleOpenResults = databaseMetaData.supportsMultipleOpenResults();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsMultipleOpenResults()");
+		}
+		try {
+			this.supportsGetGeneratedKeys = databaseMetaData.supportsGetGeneratedKeys();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGetGeneratedKeys()");
+		}
+		try {
+			this.getResultSetHoldability = databaseMetaData.getResultSetHoldability();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getResultSetHoldability()");
+		}
+		try {
+			this.getDatabaseMajorVersion = databaseMetaData.getDatabaseMajorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMajorVersion()");
+		}
+		try {
+			this.getDatabaseMinorVersion = databaseMetaData.getDatabaseMinorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMinorVersion()");
+		}
+		try {
+			this.getJDBCMajorVersion = databaseMetaData.getJDBCMajorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMajorVersion()");
+		}
+		try {
+			this.getJDBCMinorVersion = databaseMetaData.getJDBCMinorVersion();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMinorVersion()");
+		}
+		try {
+			this.getSQLStateType = databaseMetaData.getSQLStateType();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLStateType()");
+		}
+		try {
+			this.locatorsUpdateCopy = databaseMetaData.locatorsUpdateCopy();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.locatorsUpdateCopy()");
+		}
+		try {
+			this.supportsStatementPooling = databaseMetaData.supportsStatementPooling();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStatementPooling()");
+		}
+		try {
+			this.supportsStoredFunctionsUsingCallSyntax = databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsStoredFunctionsUsingCallSyntax()");
+		}
+		try {
+			this.autoCommitFailureClosesAllResultSets = databaseMetaData.autoCommitFailureClosesAllResultSets();
+		} catch (Exception e1) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.autoCommitFailureClosesAllResultSets()");
+		}
 		try {
 			this.generatedKeyAlwaysReturned = databaseMetaData.generatedKeyAlwaysReturned();
 		} catch (Throwable e) {
-			this.generatedKeyAlwaysReturned = false;
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.generatedKeyAlwaysReturned()");
 		}
-		this.getMaxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
-		this.supportsRefCursors = databaseMetaData.supportsRefCursors();
+		try {
+			this.getMaxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
+		} catch (Exception e) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxLogicalLobSize()");
+		}
+		try {
+			this.supportsRefCursors = databaseMetaData.supportsRefCursors();
+		} catch (Exception e) {
+			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsRefCursors()");
+		}
 
 		this.schemas = DatabaseMetadataHelper.listSchemas(connection, catalogName, schemaNameFilter, tableNameFilter);
 	}
