@@ -38,3 +38,8 @@ exports.getJava = function() {
 	return java;
 };
 
+exports.getThreads = function() {
+	var threads = require('core/v3/threads');
+	return threads;
+};
+
