@@ -85,6 +85,13 @@
             <version>3.3.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+        	<groupId>org.apache.httpcomponents</groupId>
+        	<artifactId>httpasyncclient</artifactId>
+        	<version>4.1.4</version>
+        </dependency>
     </dependencies>
+
 
 </project>

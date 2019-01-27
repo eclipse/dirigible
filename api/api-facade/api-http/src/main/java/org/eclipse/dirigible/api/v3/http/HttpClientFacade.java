@@ -45,15 +45,11 @@ import org.eclipse.dirigible.api.v3.http.client.HttpClientRequestOptions;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientResponse;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Java face for HTTP operations
  */
 public class HttpClientFacade implements IScriptingFacade {
-
-	private static final Logger logger = LoggerFactory.getLogger(HttpClientFacade.class);
 
 	/**
 	 * Performs a GET request for the specified URL and options
@@ -67,16 +63,10 @@ public class HttpClientFacade implements IScriptingFacade {
 	 *             In case an I/O exception occurs
 	 */
 	public static final String get(String url, String options) throws IOException {
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpGet httpGet = createGetRequest(url, httpClientRequestOptions);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpGet httpGet = new HttpGet(url);
-		httpGet.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpGet);
-
 		CloseableHttpResponse response = httpClient.execute(httpGet);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -92,108 +82,10 @@ public class HttpClientFacade implements IScriptingFacade {
 	 *             In case an I/O exception occurs
 	 */
 	public static final String post(String url, String options) throws IOException {
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
-		if (httpClientRequestOptions.getData() != null) {
-			return postBinary(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getText() != null) {
-			return postText(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getParams() != null) {
-			return postForm(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getFiles() != null) {
-			return postFiles(url, httpClientRequestOptions);
-		}
-		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
-	}
-
-	private static final String postBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPost httpPost = createPostRequest(url, httpClientRequestOptions);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPost);
-
-		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM)
-				.build();
-
-		httpPost.setEntity(entity);
-
 		CloseableHttpResponse response = httpClient.execute(httpPost);
-
-		return processResponse(response, httpClientRequestOptions.isBinary());
-	}
-
-	private static final String postText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		if (httpClientRequestOptions.getText() == null) {
-			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
-		}
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPost);
-
-		EntityBuilder entityBuilder = EntityBuilder.create()
-				.setText(httpClientRequestOptions.getText())
-				.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
-		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
-			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
-		}
-
-		httpPost.setEntity(entityBuilder.build());
-
-		CloseableHttpResponse response = httpClient.execute(httpPost);
-
-		return processResponse(response, httpClientRequestOptions.isBinary());
-	}
-
-	private static final String postForm(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		if (httpClientRequestOptions.getParams() == null) {
-			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
-		}
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPost);
-
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		for (HttpClientParam httpClientParam : httpClientRequestOptions.getParams()) {
-			params.add(new BasicNameValuePair(httpClientParam.getName(), httpClientParam.getValue()));
-		}
-		HttpEntity entity = new UrlEncodedFormEntity(params);
-
-		httpPost.setEntity(entity);
-
-		CloseableHttpResponse response = httpClient.execute(httpPost);
-
-		return processResponse(response, httpClientRequestOptions.isBinary());
-	}
-
-	private static final String postFiles(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		if (httpClientRequestOptions.getParams() == null) {
-			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
-		}
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPost);
-
-		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
-		for (String filePath : httpClientRequestOptions.getFiles()) {
-			File file = new File(filePath);
-			multipartEntityBuilder.addBinaryBody(file.getName(), file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
-		}
-		HttpEntity entity = multipartEntityBuilder.build();
-
-		httpPost.setEntity(entity);
-
-		CloseableHttpResponse response = httpClient.execute(httpPost);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -210,58 +102,9 @@ public class HttpClientFacade implements IScriptingFacade {
 	 */
 	public static final String put(String url, String options) throws IOException {
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
-		if (httpClientRequestOptions.getData() != null) {
-			return postBinary(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getText() != null) {
-			return postText(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getParams() != null) {
-			return postForm(url, httpClientRequestOptions);
-		} else if (httpClientRequestOptions.getFiles() != null) {
-			return postFiles(url, httpClientRequestOptions);
-		}
-		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
-	}
-
-	private static final String putBinary(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPut httpPut = createPutRequest(url, httpClientRequestOptions);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPut httpPut = new HttpPut(url);
-		httpPut.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPut);
-
-		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM)
-				.build();
-
-		httpPut.setEntity(entity);
-
 		CloseableHttpResponse response = httpClient.execute(httpPut);
-
-		return processResponse(response, httpClientRequestOptions.isBinary());
-	}
-
-	private static final String putText(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
-
-		if (httpClientRequestOptions.getText() == null) {
-			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
-		}
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		HttpPut httpPut = new HttpPut(url);
-		httpPut.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpPut);
-
-		EntityBuilder entityBuilder = EntityBuilder.create()
-				.setText(httpClientRequestOptions.getText())
-				.setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
-		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
-			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
-		}
-
-		httpPut.setEntity(entityBuilder.build());
-
-		CloseableHttpResponse response = httpClient.execute(httpPut);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -277,16 +120,11 @@ public class HttpClientFacade implements IScriptingFacade {
 	 *             In case an I/O exception occurs
 	 */
 	public static final String delete(String url, String options) throws IOException {
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		HttpDelete httpDelete = createDeleteRequest(url, httpClientRequestOptions);
+
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		HttpDelete httpDelete = new HttpDelete(url);
-		httpDelete.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpDelete);
-
 		CloseableHttpResponse response = httpClient.execute(httpDelete);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -302,16 +140,11 @@ public class HttpClientFacade implements IScriptingFacade {
 	 *             In case an I/O exception occurs
 	 */
 	public static final String head(String url, String options) throws IOException {
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		HttpHead httpHead = createHeadRequest(url, httpClientRequestOptions);
+
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		HttpHead httpHead = new HttpHead(url);
-		httpHead.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpHead);
-
 		CloseableHttpResponse response = httpClient.execute(httpHead);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -327,46 +160,12 @@ public class HttpClientFacade implements IScriptingFacade {
 	 *             In case an I/O exception occurs
 	 */
 	public static final String trace(String url, String options) throws IOException {
-
 		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		HttpTrace httpTrace = createTraceRequest(url, httpClientRequestOptions);
+
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
-		RequestConfig config = prepareConfig(httpClientRequestOptions);
-		HttpTrace httpTrace = new HttpTrace(url);
-		httpTrace.setConfig(config);
-		prepareHeaders(httpClientRequestOptions, httpTrace);
-
 		CloseableHttpResponse response = httpClient.execute(httpTrace);
-
 		return processResponse(response, httpClientRequestOptions.isBinary());
-	}
-
-	private static HttpClientRequestOptions parseOptions(String options) {
-		HttpClientRequestOptions httpClientRequestOptions = GsonHelper.GSON.fromJson(options, HttpClientRequestOptions.class);
-		return httpClientRequestOptions;
-	}
-
-	private static RequestConfig prepareConfig(HttpClientRequestOptions httpClientRequestOptions) {
-
-		RequestConfig.Builder configBuilder = RequestConfig.custom();
-		configBuilder.setAuthenticationEnabled(httpClientRequestOptions.isAuthenticationEnabled())
-				.setCircularRedirectsAllowed(httpClientRequestOptions.isCircularRedirectsAllowed())
-				.setContentCompressionEnabled(httpClientRequestOptions.isContentCompressionEnabled())
-				.setExpectContinueEnabled(httpClientRequestOptions.isExpectContinueEnabled())
-				.setRedirectsEnabled(httpClientRequestOptions.isRedirectsEnabled())
-				.setRelativeRedirectsAllowed(httpClientRequestOptions.isRelativeRedirectsAllowed())
-				.setMaxRedirects(httpClientRequestOptions.getMaxRedirects())
-				.setConnectionRequestTimeout(httpClientRequestOptions.getConnectionRequestTimeout())
-				.setConnectTimeout(httpClientRequestOptions.getConnectTimeout()).setSocketTimeout(httpClientRequestOptions.getSocketTimeout())
-				.setCookieSpec(httpClientRequestOptions.getCookieSpec())
-				.setProxyPreferredAuthSchemes(httpClientRequestOptions.getProxyPreferredAuthSchemes())
-				.setTargetPreferredAuthSchemes(httpClientRequestOptions.getTargetPreferredAuthSchemes());
-
-		if ((httpClientRequestOptions.getProxyHost() != null) && (httpClientRequestOptions.getProxyPort() != 0)) {
-			configBuilder.setProxy(new HttpHost(httpClientRequestOptions.getProxyHost(), httpClientRequestOptions.getProxyPort()));
-		}
-
-		RequestConfig config = configBuilder.build();
-		return config;
 	}
 
 	private static void prepareHeaders(HttpClientRequestOptions httpClientRequestOptions, HttpRequestBase httpRequestBase) {
@@ -411,4 +210,275 @@ public class HttpClientFacade implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * Parse HTTP Request Options
+	 * 
+	 * @param options
+	 * @return
+	 */
+	public static HttpClientRequestOptions parseOptions(String options) {
+		return GsonHelper.GSON.fromJson(options, HttpClientRequestOptions.class);
+	}
+
+	/**
+	 * Prepare HTTP Request Configurations
+	 * 
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static RequestConfig prepareConfig(String httpClientRequestOptions) {
+		return prepareConfig(parseOptions(httpClientRequestOptions));
+	}
+
+	/**
+	 * Prepare HTTP Request Configurations
+	 * 
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static RequestConfig prepareConfig(HttpClientRequestOptions httpClientRequestOptions) {
+		RequestConfig.Builder configBuilder = RequestConfig.custom();
+		configBuilder.setAuthenticationEnabled(httpClientRequestOptions.isAuthenticationEnabled())
+				.setCircularRedirectsAllowed(httpClientRequestOptions.isCircularRedirectsAllowed())
+				.setContentCompressionEnabled(httpClientRequestOptions.isContentCompressionEnabled())
+				.setExpectContinueEnabled(httpClientRequestOptions.isExpectContinueEnabled())
+				.setRedirectsEnabled(httpClientRequestOptions.isRedirectsEnabled())
+				.setRelativeRedirectsAllowed(httpClientRequestOptions.isRelativeRedirectsAllowed())
+				.setMaxRedirects(httpClientRequestOptions.getMaxRedirects())
+				.setConnectionRequestTimeout(httpClientRequestOptions.getConnectionRequestTimeout())
+				.setConnectTimeout(httpClientRequestOptions.getConnectTimeout()).setSocketTimeout(httpClientRequestOptions.getSocketTimeout())
+				.setCookieSpec(httpClientRequestOptions.getCookieSpec())
+				.setProxyPreferredAuthSchemes(httpClientRequestOptions.getProxyPreferredAuthSchemes())
+				.setTargetPreferredAuthSchemes(httpClientRequestOptions.getTargetPreferredAuthSchemes());
+
+		if ((httpClientRequestOptions.getProxyHost() != null) && (httpClientRequestOptions.getProxyPort() != 0)) {
+			configBuilder.setProxy(new HttpHost(httpClientRequestOptions.getProxyHost(), httpClientRequestOptions.getProxyPort()));
+		}
+
+		RequestConfig config = configBuilder.build();
+		return config;
+	}
+
+	/**
+	 * Build HTTP GET Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static HttpGet createGetRequest(String url, HttpClientRequestOptions httpClientRequestOptions) {
+		HttpGet httpGet = new HttpGet(url);
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		httpGet.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpGet);
+		return httpGet;
+	}
+
+	/**
+	 * Build HTTP POST Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static final HttpPost createPostRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getData() != null) {
+			return createPostBinaryRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getText() != null) {
+			return createPostTextRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getParams() != null) {
+			return createPostFormRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getFiles() != null) {
+			return createPostFilesRequest(url, httpClientRequestOptions);
+		}
+		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for POST requests");
+	}
+
+	private static final HttpPost createPostBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPost);
+		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		httpPost.setEntity(entity);
+		return httpPost;
+	}
+
+	private static final HttpPost createPostTextRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getText() == null) {
+			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPost);
+
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
+			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
+		}
+		httpPost.setEntity(entityBuilder.build());
+		return httpPost;
+	}
+
+	private static final HttpPost createPostFormRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPost);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		for (HttpClientParam httpClientParam : httpClientRequestOptions.getParams()) {
+			params.add(new BasicNameValuePair(httpClientParam.getName(), httpClientParam.getValue()));
+		}
+		HttpEntity entity = new UrlEncodedFormEntity(params);
+		httpPost.setEntity(entity);
+		return httpPost;
+	}
+
+	private static final HttpPost createPostFilesRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPost);
+		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+		for (String filePath : httpClientRequestOptions.getFiles()) {
+			File file = new File(filePath);
+			multipartEntityBuilder.addBinaryBody(file.getName(), file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+		}
+		HttpEntity entity = multipartEntityBuilder.build();
+		httpPost.setEntity(entity);
+		return httpPost;
+	}
+
+	/**
+	 * Build HTTP PUT Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static final HttpPut createPutRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getData() != null) {
+			return createPutBinaryRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getText() != null) {
+			return createPutTextRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getParams() != null) {
+			return createPutFormRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getFiles() != null) {
+			return createPutFilesRequest(url, httpClientRequestOptions);
+		}
+		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for PUT requests");
+	}
+
+	private static final HttpPut createPutBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPut httpPut = new HttpPut(url);
+		httpPut.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPut);
+		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		httpPut.setEntity(entity);
+		return httpPut;
+	}
+
+	private static final HttpPut createPutTextRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getText() == null) {
+			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPut httpPut = new HttpPut(url);
+		httpPut.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPut);
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
+			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
+		}
+		httpPut.setEntity(entityBuilder.build());
+		return httpPut;
+	}
+
+	private static final HttpPut createPutFormRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPut httpPut = new HttpPut(url);
+		httpPut.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPut);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		for (HttpClientParam httpClientParam : httpClientRequestOptions.getParams()) {
+			params.add(new BasicNameValuePair(httpClientParam.getName(), httpClientParam.getValue()));
+		}
+		HttpEntity entity = new UrlEncodedFormEntity(params);
+		httpPut.setEntity(entity);
+		return httpPut;
+	}
+
+	private static final HttpPut createPutFilesRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPut httpPut = new HttpPut(url);
+		httpPut.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPut);
+		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+		for (String filePath : httpClientRequestOptions.getFiles()) {
+			File file = new File(filePath);
+			multipartEntityBuilder.addBinaryBody(file.getName(), file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+		}
+		HttpEntity entity = multipartEntityBuilder.build();
+		httpPut.setEntity(entity);
+		return httpPut;
+	}
+
+	/**
+	 * Build HTTP DELETE Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static HttpDelete createDeleteRequest(String url, HttpClientRequestOptions httpClientRequestOptions) {
+		HttpDelete httpDelete = new HttpDelete(url);
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		httpDelete.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpDelete);
+		return httpDelete;
+	}
+
+	/**
+	 * Build HTTP HEAD Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static HttpHead createHeadRequest(String url, HttpClientRequestOptions httpClientRequestOptions) {
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpHead httpHead = new HttpHead(url);
+		httpHead.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpHead);
+		return httpHead;
+	}
+
+	/**
+	 * Build HTTP TRACE Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static HttpTrace createTraceRequest(String url, HttpClientRequestOptions httpClientRequestOptions) {
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpTrace httpTrace = new HttpTrace(url);
+		httpTrace.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpTrace);
+		return httpTrace;
+	}
 }
