@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,16 @@ public class ZipFacade {
 		byte[] bytes = BytesHelper.jsonToBytes(data);
 		write(output, bytes);
 	}
+	
+	/**
+	 * Write data to the provided zip output stream
+	 * @param output OutputStream to write to
+	 * @param data The data to be written
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final void writeNative(ZipOutputStream output, byte[] data) throws IOException {
+		write(output, data);
+	}
 
 	/**
 	 * Write text to the provided zip output stream
@@ -97,6 +107,17 @@ public class ZipFacade {
 	public static final String read(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return GsonHelper.GSON.toJson(bytes);
+	}
+	
+	/**
+	 * Read data from the provided {@link InputStream}
+	 * @param input The input stream to read from
+	 * @return The read data
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final byte[] readNative(ZipInputStream input) throws IOException {
+		byte[] bytes = IOUtils.toByteArray(input);
+		return bytes;
 	}
 
 	/**

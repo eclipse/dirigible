@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,6 +186,17 @@ public class FilesFacade {
 	public static final void writeBytes(String path, String input) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		Files.write(Paths.get(path), bytes);
+	}
+	
+	/**
+	 * Write the provided data to the file represented by the provided path.
+	 * If the file exists the old content is discarded.
+	 * @param path path to the file to write to
+	 * @param input the data to write
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final void writeBytesNative(String path, byte[] input) throws IOException {
+		Files.write(Paths.get(path), input);
 	}
 
 	/**

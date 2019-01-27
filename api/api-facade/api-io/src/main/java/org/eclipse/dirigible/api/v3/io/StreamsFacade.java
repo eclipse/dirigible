@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,6 +112,16 @@ public class StreamsFacade {
 	 */
 	public static final void copy(InputStream input, OutputStream output) throws IOException {
 		IOUtils.copy(input, output);
+	}
+	
+	/**
+	 * Write the {@link InputStream} content into the {@link OutputStream}
+	 * @param input the input stream to read from
+	 * @param output the output stream to write to
+	 * @throws IOException in case of failure in underlying layer
+	 */
+	public static final void copyLarge(InputStream input, OutputStream output) throws IOException {
+		IOUtils.copyLarge(input, output);
 	}
 
 	/**
