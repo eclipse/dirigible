@@ -94,6 +94,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void getAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpGet request = HttpClientFacade.createGetRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -113,6 +114,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void postAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPost request = HttpClientFacade.createPostRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -132,6 +134,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void putAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPut request = HttpClientFacade.createPutRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -151,6 +154,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void deleteAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpDelete request = HttpClientFacade.createDeleteRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -170,6 +174,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void headAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpHead request = HttpClientFacade.createHeadRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -189,6 +194,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public void traceAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpTrace request = HttpClientFacade.createTraceRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
@@ -231,9 +237,15 @@ public final class HttpClientAsync implements IScriptingFacade {
 	public class HttpResponseCallback {
 
 		private final FutureCallback<HttpResponse> callback;
+		private HttpClientRequestOptions httpClientRequestOptions;
 
 		HttpResponseCallback(String completeCallback, String failCallback, String cancelCallback) {
 			this.callback = createFutureCallback(completeCallback, failCallback, cancelCallback);
+		}
+
+		public void setOptions(HttpClientRequestOptions httpClientRequestOptions) {
+			this.httpClientRequestOptions = httpClientRequestOptions;
+			
 		}
 
 		public FutureCallback<HttpResponse> getCallback() {
@@ -250,6 +262,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 					countDownLatch.countDown();
 					if (completeCallback != null) {
 						executionContext.put("response", response);
+						executionContext.put("httpClientRequestOptions", httpClientRequestOptions);
 						executeCallback(completeCallback, executionContext);
 					}
 				}
@@ -259,6 +272,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 					countDownLatch.countDown();
 					if (failCallback != null) {
 						executionContext.put("exception", exception);
+						executionContext.put("httpClientRequestOptions", httpClientRequestOptions);
 						executeCallback(failCallback, executionContext);
 					}
 				}
@@ -267,6 +281,7 @@ public final class HttpClientAsync implements IScriptingFacade {
 				public void cancelled() {
 					countDownLatch.countDown();
 					if (cancelCallback != null) {
+						executionContext.put("httpClientRequestOptions", httpClientRequestOptions);
 						executeCallback(cancelCallback, executionContext);
 					}
 				}
