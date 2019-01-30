@@ -13,6 +13,7 @@ var response = require("http/v3/response");
 var documentLib = require("ide-documents/api/lib/document");
 var requestHandler = require("ide-documents/api/lib/request-handler");
 var streams = require("io/v3/streams");
+var contentTypeHandler = require("ide-documents/services/content-type-handler");
 
 requestHandler.handleRequest({
 	handlers : {
@@ -33,7 +34,9 @@ function handleGet(){
 	var name = nameAndStream[0];
 	var contentStream = nameAndStream[1];
 	var contentType = contentStream.getMimeType();
-	
+
+	contentType = contentTypeHandler.getContentTypeBeforeDownload(name, contentType);
+
 	response.setContentType(contentType);
 	response.addHeader("Content-Disposition", "attachment;filename=\"" + name + "\"");
 	//response.write(contentStream.getStream().readBytes());
