@@ -36,6 +36,16 @@ exports.set = function(key, value) {
 	}
 };
 
+exports.remove = function(key) {
+	if (__engine === 'rhino') {
+		org.eclipse.dirigible.commons.config.Configuration.remove(key);
+	} else if (__engine === 'nashorn') {
+		Packages.org.eclipse.dirigible.commons.config.Configuration.remove(key);
+	} else {
+		java.call('org.eclipse.dirigible.commons.config.Configuration', 'remove', [key]);
+	}
+};
+
 exports.getKeys = function() {
 	if (__engine === 'rhino') {
 		return org.eclipse.dirigible.commons.config.Configuration.getKeys();

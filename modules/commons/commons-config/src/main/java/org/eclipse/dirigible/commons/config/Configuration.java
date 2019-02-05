@@ -121,6 +121,14 @@ public class Configuration {
 	}
 
 	/**
+	 * Remove property 
+	 * @param key the key
+	 */
+	public static void remove(String key) {
+		getInstance().parameters.remove(key);
+	}
+
+	/**
 	 * Getter for all the keys.
 	 *
 	 * @return the keys
