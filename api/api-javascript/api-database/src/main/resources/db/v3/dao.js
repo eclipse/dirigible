@@ -79,7 +79,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 	 	}
 	 	
 	 	var result;
-	 	
+
 	 	if(sql.toLowerCase().startsWith('select')){
 	 		result = execQuery.execute(sql, _parameterBindings, databaseType, dataSourceName);
 	 	} else {
@@ -749,6 +749,17 @@ DAO.prototype.list = function(settings) {
   	this.$log.error("Listing {} entities failed.", e, this.orm.table);
 	throw e;
   } 
+};
+
+DAO.prototype.existsTable = function() {
+	this.$log.info('Check exists table ' + this.orm.table);
+    try {
+    	var parametericStatement = this.ormstatements.count.apply(this.ormstatements);
+		var rs = this.execute(parametericStatement);
+		return rs.length > 0;
+    } catch(e) {
+    	return false;
+    }
 };
 
 DAO.prototype.createTable = function() {

@@ -25,7 +25,8 @@ function ProcessEngine() {
 }
 
 exports.start = function(key, parameters) {
-	var processInstanceId = java.call('org.eclipse.dirigible.api.v3.bpm.BpmFacade', 'startProcess', [key, JSON.stringify(parameters)]);
+	var processParameters = parameters ? parameters : {};
+	var processInstanceId = java.call('org.eclipse.dirigible.api.v3.bpm.BpmFacade', 'startProcess', [key, JSON.stringify(processParameters)]);
 	return processInstanceId;
 };
 

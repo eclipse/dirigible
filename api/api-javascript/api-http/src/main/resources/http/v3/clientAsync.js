@@ -59,11 +59,27 @@ function createHttpResponseCallback(httpClient, successCallback, errorCallback, 
 	);
 }
 
+function buildUrl(url, options) {
+	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
+		return url;
+	}
+	var newUrl = url;
+	for (var i = 0; i < options.params.length; i ++) {
+		if (i === 0) {
+			newUrl += '?' + options.params[i].name + '=' + options.params[i].value;
+		} else {
+			newUrl += '&' + options.params[i].name + '=' + options.params[i].value;
+		}
+	}
+	return newUrl;
+}
+
 function HttpAsyncClient() {
 	
 	this.httpClient = new org.eclipse.dirigible.engine.js.rhino.api.v3.http.HttpClientAsync();
 
 	this.getAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -71,13 +87,14 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.getAsync(url, JSON.stringify(options), callback);
+			this.httpClient.getAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.getAsync(url, JSON.stringify({}), callback);
+			this.httpClient.getAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
 	this.postAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -85,13 +102,14 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.postAsync(url, JSON.stringify(options), callback);
+			this.httpClient.postAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.postAsync(url, JSON.stringify({}), callback);
+			this.httpClient.postAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
 	this.putAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -99,13 +117,14 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.putAsync(url, JSON.stringify(options), callback);
+			this.httpClient.putAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.putAsync(url, JSON.stringify({}), callback);
+			this.httpClient.putAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
 	this.deleteAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -113,13 +132,14 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.deleteAsync(url, JSON.stringify(options), callback);
+			this.httpClient.deleteAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.deleteAsync(url, JSON.stringify({}), callback);
+			this.httpClient.deleteAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
 	this.headAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -127,13 +147,14 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.headAsync(url, JSON.stringify(options), callback);
+			this.httpClient.headAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.headAsync(url, JSON.stringify({}), callback);
+			this.httpClient.headAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
 	this.traceAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
@@ -141,9 +162,9 @@ function HttpAsyncClient() {
 			config.cancel
 		);
 		if (options) {
-			this.httpClient.traceAsync(url, JSON.stringify(options), callback);
+			this.httpClient.traceAsync(newUrl, JSON.stringify(options), callback);
 		} else {
-			this.httpClient.traceAsync(url, JSON.stringify({}), callback);
+			this.httpClient.traceAsync(newUrl, JSON.stringify({}), callback);
 		}
 	};
 
