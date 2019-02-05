@@ -17,9 +17,11 @@
         <module>engine-all</module>
 		<module>engine-api</module>
 		<module>engine-javascript</module>
-		<module>engine-javascript-nashorn</module>
 		<module>engine-javascript-rhino</module>
+		<!-- 
+		<module>engine-javascript-nashorn</module>
 		<module>engine-javascript-v8</module>
+		 -->
 		<module>engine-job</module>
 		<module>engine-listener</module>
 		<module>engine-web</module>
