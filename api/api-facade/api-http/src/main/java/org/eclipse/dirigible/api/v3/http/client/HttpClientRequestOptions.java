@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 /**
  * The Class HttpClientRequestOptions.
  */
@@ -106,6 +108,10 @@ public class HttpClientRequestOptions {
 	/** The binary. */
 	// whether to request as binary or text
 	private boolean binary;
+
+	/** The context. */
+	// context
+	private JsonObject context;
 
 	/**
 	 * Checks if is expect continue enabled.
@@ -582,4 +588,21 @@ public class HttpClientRequestOptions {
 		this.binary = binary;
 	}
 
+	/**
+	 * Gets the context.
+	 * 
+	 * @return the context
+	 */
+	public JsonObject getContext() {
+		return context;
+	}
+
+	/**
+	 * Sets the context.
+	 * 
+	 * @param context the new context
+	 */
+	public void setContext(JsonObject context) {
+		this.context = context;
+	}
 }
