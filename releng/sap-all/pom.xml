@@ -82,6 +82,11 @@
 		 	<artifactId>dirigible-database-managed</artifactId>
 		 	<version>3.3.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-database-h2</artifactId>
+		 	<version>3.3.1-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
