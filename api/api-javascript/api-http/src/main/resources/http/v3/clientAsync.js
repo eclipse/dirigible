@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  */
 function createSuccessCallback(callback) {
-	return "(function(httpResponse, isBinary) {\n"
+	return "(function(httpResponse, isBinary, context) {\n"
 		+ "var response = {};\n"
 		+ "response.statusCode = httpResponse.getStatusLine().getStatusCode();\n"
 		+ "response.statusMessage = httpResponse.getStatusLine().getReasonPhrase();\n"
@@ -35,8 +35,8 @@ function createSuccessCallback(callback) {
 		+ "    }\n"
 		+ "}\n"
 
-		+ "(" + callback + ")(response);\n"
-		+ "})(__context.get('response'), __context.get('httpClientRequestOptions').isBinary());\n";
+		+ "(" + callback + ")(response, JSON.parse(context));\n"
+		+ "})(__context.get('response'), __context.get('httpClientRequestOptions').isBinary(), __context.get('httpClientRequestOptions').getContext());\n";
 }
 
 function createErrorCallback(callback) {
