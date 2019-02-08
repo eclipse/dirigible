@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.commons.config.ResourcesCache.Cache;
 import org.eclipse.dirigible.engine.web.processor.WebEngineProcessor;
@@ -73,7 +74,11 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 		} else if (path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
 			return getResourceByPath(path + INDEX_HTML);
 		}
-		return getResourceByPath(path);
+		Response resourceResponse = getResourceByPath(path);
+		if (Configuration.isProductiveIFrameEnabled()) {
+			resourceResponse.getHeaders().add("X-Frame-Options", "Deny");
+		}
+		return resourceResponse;
 	}
 
 	/**
