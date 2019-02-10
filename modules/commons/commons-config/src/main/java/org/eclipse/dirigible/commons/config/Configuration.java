@@ -189,7 +189,7 @@ public class Configuration {
 	 * @return true, if productive iframe is enabled
 	 */
 	public static boolean isProductiveIFrameEnabled() {
-		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_PRODUCTIVE_IFRAME_ENABLED", Boolean.FALSE.toString()));
+		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_PRODUCTIVE_IFRAME_ENABLED", Boolean.TRUE.toString()));
 	}
 
 	/**

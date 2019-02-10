@@ -75,7 +75,7 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 			return getResourceByPath(path + INDEX_HTML);
 		}
 		Response resourceResponse = getResourceByPath(path);
-		if (Configuration.isProductiveIFrameEnabled()) {
+		if (!Configuration.isProductiveIFrameEnabled()) {
 			resourceResponse.getHeaders().add("X-Frame-Options", "Deny");
 		}
 		return resourceResponse;
