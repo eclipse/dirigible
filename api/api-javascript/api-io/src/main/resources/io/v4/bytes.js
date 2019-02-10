@@ -41,15 +41,15 @@ exports.toJavaScriptBytes = function(internalBytes) {
  * Converts a text to a byte array
  */
 exports.textToByteArray = function(text) {
-	var internalString = new java.lang.String(text);
-	var internalBytes = internalString.getBytes();
-	return exports.toJavaScriptBytes(internalBytes);
+	var javaString = new java.lang.String(text);
+	var native = javaString.getBytes();
+	return exports.toJavaScriptBytes(native);
 };
 
 /**
  * Converts a text to a byte array
  */
-exports.byteArrayToText = function(bytes) {
-	var internalBytes = exports.toJavaBytes(bytes);
-	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(internalBytes));
+exports.byteArrayToText = function(data) {
+	var native = exports.toJavaBytes(data);
+	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(native));
 };

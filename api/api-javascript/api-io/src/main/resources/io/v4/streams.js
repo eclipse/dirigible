@@ -33,6 +33,11 @@ exports.InputStream = function() {
 		return data;
 	};
 	
+	this.readBytesNative = function() {
+		var native = org.eclipse.dirigible.api.v3.io.StreamsFacade.readBytes(this.native);
+		return native;
+	};
+	
 	this.readText = function() {
 		var value = org.eclipse.dirigible.api.v3.io.StreamsFacade.readText(this.native);
 		return value;
@@ -62,6 +67,10 @@ exports.OutputStream = function() {
 		org.eclipse.dirigible.api.v3.io.StreamsFacade.writeBytes(this.native, native);
 	};
 	
+	this.writeBytesNative = function(data) {
+		org.eclipse.dirigible.api.v3.io.StreamsFacade.writeBytes(this.native, data);
+	};
+	
 	this.writeText = function(text) {
 		org.eclipse.dirigible.api.v3.io.StreamsFacade.writeText(this.native, text);
 	};
@@ -74,6 +83,11 @@ exports.OutputStream = function() {
 		var native = org.eclipse.dirigible.api.v3.io.StreamsFacade.getBytes(this.native);
 		var data = bytes.toJavaScriptBytes(native);
 		return data;
+	};
+	
+	this.getBytesNative = function() {
+		var native = org.eclipse.dirigible.api.v3.io.StreamsFacade.getBytes(this.native);
+		return native;
 	};
 	
 	this.getText = function() {

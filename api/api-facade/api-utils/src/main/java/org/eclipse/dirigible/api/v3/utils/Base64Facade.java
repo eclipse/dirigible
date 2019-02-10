@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,18 @@ public class Base64Facade {
 		Base64 base64 = new Base64();
 		return base64.encodeAsString(input);
 	}
+	
+	/**
+	 * Base64 encode.
+	 *
+	 * @param input
+	 *            the input
+	 * @return the base64 encoded input
+	 */
+	public static final byte[] encodeNative(byte[] input) {
+		Base64 base64 = new Base64();
+		return base64.encode(input);
+	}
 
 	/**
 	 * Base64 decode.
@@ -50,6 +62,18 @@ public class Base64Facade {
 	 * @return the base64 decoded output
 	 */
 	public static final byte[] decode(String input) {
+		Base64 base64 = new Base64();
+		return base64.decode(input);
+	}
+	
+	/**
+	 * Base64 decode.
+	 *
+	 * @param input
+	 *            the input
+	 * @return the base64 decoded output
+	 */
+	public static final byte[] decodeNative(byte[] input) {
 		Base64 base64 = new Base64();
 		return base64.decode(input);
 	}
