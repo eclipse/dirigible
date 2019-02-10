@@ -415,10 +415,24 @@ GitService.prototype.shareProject = function(wsTree, workspace, project, reposit
 			});
 }
 
+/**
+ * Env Service API delegate
+ */
+var EnvService = function($http, envServiceUrl){
+	this.envServiceUrl = envServiceUrl;
+	this.$http = $http;
+};
+EnvService.prototype.setEnv = function(env) {
+	return this.$http.post(this.envServiceUrl, {
+		"env": env,
+	});
+};
+
 angular.module('workspace.config', [])
 	.constant('WS_SVC_URL','../../../../../services/v3/ide/workspaces')
 	.constant('WS_SVC_MANAGER_URL','../../../../../services/v3/ide/workspace')
 	.constant('GIT_SVC_URL','../../../../../services/v3/ide/git')
+	.constant('ENV_SVC_URL','../../../../../services/v3/js/ide-git/services/env.js');
 	
 angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .factory('httpRequestInterceptor', function () {
@@ -545,8 +559,11 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		}
 	}
 }])
-.factory('gitService', ['$http', 'GIT_SVC_URL', '$treeConfig', function($http, WS_SVC_URL, $treeConfig){
-	return new GitService($http, WS_SVC_URL, $treeConfig);
+.factory('gitService', ['$http', 'GIT_SVC_URL', '$treeConfig', function($http, GIT_SVC_URL, $treeConfig){
+	return new GitService($http, GIT_SVC_URL, $treeConfig);
+}])
+.factory('envService', ['$http', 'ENV_SVC_URL', function($http, ENV_SVC_URL){
+	return new EnvService($http, ENV_SVC_URL);
 }])
 .factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
 	return new WorkspaceService($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
@@ -554,7 +571,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 .factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'gitService', '$messageHub', function($treeConfig, WorkspaceService, GitService, $messageHub){
 	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, GitService, $messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', '$messageHub', function (workspaceService, workspaceTreeAdapter, gitService, $messageHub) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', 'envService', '$messageHub', function (workspaceService, workspaceTreeAdapter, gitService, envService, $messageHub) {
 
 	this.wsTree;
 	this.workspaces;
@@ -620,7 +637,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		this.wsTree.refresh();
 	};
 	
-	$messageHub.on('git.repository.run', function(msg){
+	$messageHub.on('git.repository.run', function(msg) {
+		if (msg.data.env) {
+			envService.setEnv(msg.data.env);
+		}
 		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.username, msg.data.password);
 		if (msg.data.uri) {
 			run();

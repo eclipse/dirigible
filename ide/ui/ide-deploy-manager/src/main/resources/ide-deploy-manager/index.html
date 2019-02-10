@@ -38,9 +38,20 @@
 		<div class="row" ng-hide="queryParamsProvided">
 			<hr>
 			<div class="col-md-6">
+				<h4>Module</h4>
 				<input type="text" class="form-control" placeholder="Repository" ng-model="queryParams.repository">
 				<br>
 				<input type="text" class="form-control" placeholder="URI" ng-model="queryParams.uri">
+			</div>
+		</div>
+		<div class="row" ng-show="envParamsProvided">
+			<hr>
+			<div class="col-md-6">
+				<h4>Environment Variables</h4>
+				<div ng-repeat="next in env">
+					<input type="text" class="form-control" placeholder="{{next.key}}" ng-model="next.value">
+					<br>
+				</div>
 			</div>
 		</div>
 		<hr>

@@ -20,8 +20,13 @@ angular.module('deployer')
 	}, {
 		'id': 2,
 		'name': 'Trial',
+		'host': 'https://trial.ingress.pro.promart.shoot.canary.k8s-hana.ondemand.com',
+		'displayName': 'Trial'
+	}, {
+		'id': 2,
+		'name': 'Trial (Eclipse)',
 		'host': 'http://dirigible.eclipse.org',
-		'displayName': 'Trial (http://dirigible.eclipse.org)'
+		'displayName': 'Trial (Eclipse)'
 	}];
 
 	function setDefaultDirigibleInstnaces() {
@@ -35,7 +40,22 @@ angular.module('deployer')
 	setDefaultDirigibleInstnaces();
 
 	$scope.queryParams = getQueryParams();
+	$scope.env = getEnvParams();
 	$scope.dirigibleInstances = getDirigibleInstances();
+
+	function getEnvParams() {
+		var env = [];
+		$scope.envParamsProvided = Boolean($scope.queryParams.env);
+		if ($scope.envParamsProvided) {
+			var envKeys = $scope.queryParams.env.split(",");
+			for (var i = 0; i < envKeys.length; i ++) {
+				env.push({
+					key: envKeys[i]
+				});
+			}
+		}
+		return env;
+	}
 
 	function getDirigibleInstances() {
 		var dirigibleInstances = JSON.parse(window.localStorage.getItem('DIRIGIBLE.instances'));
@@ -80,6 +100,9 @@ angular.module('deployer')
 		var url = instance.host + '/services/v3/web/ide-git/index.html?repository=' + $scope.queryParams.repository;
 		if ($scope.queryParams.uri) {
 			url += '&uri=' + $scope.queryParams.uri;
+		}
+		if ($scope.env && $scope.env.length > 0) {
+			url += "&env=" + encodeURIComponent(JSON.stringify($scope.env));
 		}
 		return  url;
 	}
