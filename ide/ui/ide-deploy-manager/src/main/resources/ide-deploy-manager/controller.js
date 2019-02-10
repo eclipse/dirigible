@@ -77,6 +77,10 @@ angular.module('deployer')
 	};
 
 	function getDeployUrl(instance) {
-		return instance.host + '/services/v3/web/ide-git/index.html?repository=' + $scope.queryParams.repository + '&uri=' + $scope.queryParams.uri;
+		var url = instance.host + '/services/v3/web/ide-git/index.html?repository=' + $scope.queryParams.repository;
+		if ($scope.queryParams.uri) {
+			url += '&uri=' + $scope.queryParams.uri;
+		}
+		return  url;
 	}
 });
