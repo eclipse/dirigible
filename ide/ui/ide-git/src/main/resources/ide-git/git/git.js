@@ -327,11 +327,12 @@ var GitService = function($http, gitServiceUrl, treeCfg){
 	this.typeMapping = treeCfg['types'];
 	this.$http = $http;
 }
-GitService.prototype.cloneProject = function(wsTree, workspace, repository, branch, username, password){
+GitService.prototype.cloneProject = function(wsTree, workspace, repository, branch, username, password) {
+	var gitBranch = branch ? branch : "master";
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path("clone").build();
 	return this.$http.post(url, {
 			"repository": repository,
-			"branch": "master",
+			"branch": gitBranch,
 			"publish": true,
 			"username": username,
 			"password": btoa(password)})
@@ -605,7 +606,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.okClone = function() {
 		if (this.clone.url) {
-			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, this.username, this.password);
+			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, null, this.username, this.password);
 		}
 	};
 
@@ -641,7 +642,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		if (msg.data.env) {
 			envService.setEnv(msg.data.env);
 		}
-		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.username, msg.data.password);
+		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.branch, msg.data.username, msg.data.password);
 		if (msg.data.uri) {
 			run();
 		}

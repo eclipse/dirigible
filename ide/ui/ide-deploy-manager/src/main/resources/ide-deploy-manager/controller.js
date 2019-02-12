@@ -101,6 +101,9 @@ angular.module('deployer')
 		if ($scope.queryParams.uri) {
 			url += '&uri=' + $scope.queryParams.uri;
 		}
+		if ($scope.queryParams.branch) {
+			url += '&branch=' + $scope.queryParams.branch;
+		}
 		if ($scope.env && $scope.env.length > 0) {
 			url += "&env=" + encodeURIComponent(JSON.stringify($scope.env));
 		}

@@ -95,6 +95,7 @@
 		    metadata.username = getParameterByName("username");
 		    metadata.password = getParameterByName("password");
 		    metadata.uri = getParameterByName("uri");
+		    metadata.branch = getParameterByName("branch");
 		    metadata.env = getParameterByName("env");
 		    metadata.env = metadata.env ? JSON.parse(metadata.env) : metadata.env;
 		    if (metadata.repository) {
