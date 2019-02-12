@@ -704,7 +704,7 @@ DAO.prototype.list = function(settings) {
 			var prop = this.ormstatements.orm.getProperty(filterField);
 			if(prop===undefined || prop.type.toUpperCase()!=='VARCHAR' || settings[prop.name]===undefined)
 				return false;
-			settings[prop.name] = settings[prop.name] + '%%';
+			settings[prop.name] = '%' + settings[prop.name] + '%';
 			return true;
 		}.bind(this));
 	}
