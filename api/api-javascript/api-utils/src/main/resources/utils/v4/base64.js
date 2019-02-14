@@ -22,20 +22,20 @@ var bytes = require("io/v4/bytes");
  * Encode the input (text or byte array) as text
  */
 exports.encode = function(input) {
-	return bytes.byteArrayToText(exports.encodeNative(input));
+	return bytes.byteArrayToText(exports.encodeAsNativeBytes(input));
 };
 
 /**
  * Encode the input (text or byte array) as byte array
  */
-exports.encodeBytes = function(input) {
-	return bytes.toJavaScriptBytes(exports.encodeNative(input));
+exports.encodeAsBytes = function(input) {
+	return bytes.toJavaScriptBytes(exports.encodeAsNativeBytes(input));
 };
 
 /**
  * Encode the input (text or byte array) as java native byte array
  */
-exports.encodeNative = function(input) {
+exports.encodeAsNativeBytes = function(input) {
 	var data = input;
 	var native;
 	if (typeof data === 'string') {
@@ -54,7 +54,7 @@ exports.encodeNative = function(input) {
  * Decode the input (text or byte array) as text
  */
 exports.decode = function(input) {
-	var output = exports.decodeNative(input);
+	var output = exports.decodeAsNativeBytes(input);
 	if (output && output !== null) {
 		var result = bytes.toJavaScriptBytes(output);
 		return result;
@@ -65,7 +65,7 @@ exports.decode = function(input) {
 /**
  * Decode the input (text or byte array) as java native byte array
  */
-exports.decodeNative = function(input) {
+exports.decodeAsNativeBytes = function(input) {
 	var data = input;
 	var native;
 	if (typeof data === 'string') {

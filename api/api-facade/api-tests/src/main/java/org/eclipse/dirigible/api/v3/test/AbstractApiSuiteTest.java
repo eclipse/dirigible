@@ -57,6 +57,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	@Before
 	public void registerModules() {
 
+		// v3
+		
 		TEST_MODULES.add("core/v3/java/call.js");
 		TEST_MODULES.add("core/v3/java/invoke.js");
 		TEST_MODULES.add("core/v3/java/deep.js");
@@ -125,7 +127,17 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("cms/v3/cmis/getSession.js");
 		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
 		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
-
+		
+		// v4
+		TEST_MODULES.add("utils/v4/base64/encode.js");
+		TEST_MODULES.add("utils/v4/base64/decode.js");
+		TEST_MODULES.add("utils/v4/digest/md5.js");
+		TEST_MODULES.add("utils/v4/digest/md5Hex.js");
+		TEST_MODULES.add("utils/v4/digest/sha1.js");
+		TEST_MODULES.add("utils/v4/digest/sha1Hex.js");
+		TEST_MODULES.add("utils/v4/digest/sha256.js");
+		TEST_MODULES.add("utils/v4/digest/sha384.js");
+		TEST_MODULES.add("utils/v4/digest/sha512.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
