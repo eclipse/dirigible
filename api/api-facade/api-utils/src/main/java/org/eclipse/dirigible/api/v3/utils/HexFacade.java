@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,18 @@ public class HexFacade {
 		byte[] bytes = BytesHelper.jsonToBytes(input);
 		return encode(bytes);
 	}
+	
+	/**
+	 * Hex encode.
+	 *
+	 * @param input
+	 *            the input
+	 * @return the hex encoded input
+	 */
+	public static final byte[] encodeNative(byte[] input) {
+		Hex hex = new Hex();
+		return hex.encode(input);
+	}
 
 	/**
 	 * Converts an array of characters representing hexadecimal values into an array of bytes of those same values. The
@@ -57,6 +69,18 @@ public class HexFacade {
 	 */
 	public static final byte[] decode(String input) throws DecoderException {
 		return Hex.decodeHex(input.toCharArray());
+	}
+	
+	/**
+	 * Hex decode.
+	 *
+	 * @param input
+	 *            the input
+	 * @return the hex decoded output
+	 */
+	public static final byte[] decodeNative(byte[] input) throws DecoderException {
+		Hex hex = new Hex();
+		return hex.decode(input);
 	}
 
 }
