@@ -39,6 +39,11 @@
             <artifactId>dirigible-database-api</artifactId>
             <version>3.3.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+        	<groupId>commons-net</groupId>
+        	<artifactId>commons-net</artifactId>
+        	<version>3.6</version>
+        </dependency>
     </dependencies>
 
 </project>
