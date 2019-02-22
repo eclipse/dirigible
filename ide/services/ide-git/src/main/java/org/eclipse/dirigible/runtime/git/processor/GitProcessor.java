@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,7 +85,7 @@ public class GitProcessor {
 	public void pull(String workspace, GitPullModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pullCommand.execute(workspaceApi, projects, model.isPublish());
+		pullCommand.execute(workspaceApi, projects, model.getUsername(), model.getPassword(), model.isPublish());
 	}
 
 	/**

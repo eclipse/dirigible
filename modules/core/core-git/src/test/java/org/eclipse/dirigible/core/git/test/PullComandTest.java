@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ public class PullComandTest extends AbstractGuiceTest {
 			IProject project1 = workspace1.getProject("project1");
 			assertNotNull(project1);
 			assertTrue(project1.exists());
-			pullCommand.execute(workspace1, new IProject[] { project1 }, true);
+			pullCommand.execute(workspace1, new IProject[] { project1 }, null, null, true);
 		}
 	}
 

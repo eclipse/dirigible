@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,6 +176,36 @@ public interface IGitConnector {
 	 *             Git API Exception
 	 */
 	void pull() throws WrongRepositoryStateException, InvalidConfigurationException, DetachedHeadException, InvalidRemoteException, CanceledException,
+			RefNotFoundException, NoHeadException, TransportException, GitAPIException;
+
+	/**
+	 * Fetches from a remote repository and tries to merge into the current
+	 * branch.
+	 *
+	 * @param username
+	 *            for the remote repository
+	 * @param password
+	 *            for the remote repository
+	 * @throws WrongRepositoryStateException
+	 *             Wrong Repository State Exception
+	 * @throws InvalidConfigurationException
+	 *             Invalid Configuration Exception
+	 * @throws DetachedHeadException
+	 *             Detached Head Exception
+	 * @throws InvalidRemoteException
+	 *             Invalid Remote Exception
+	 * @throws CanceledException
+	 *             Canceled Exception
+	 * @throws RefNotFoundException
+	 *             Ref Not Found Exception
+	 * @throws NoHeadException
+	 *             No Head Exception
+	 * @throws TransportException
+	 *             Transport Exception
+	 * @throws GitAPIException
+	 *             Git API Exception
+	 */
+	void pull(String username, String password) throws WrongRepositoryStateException, InvalidConfigurationException, DetachedHeadException, InvalidRemoteException, CanceledException,
 			RefNotFoundException, NoHeadException, TransportException, GitAPIException;
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,7 +152,7 @@ public class PushCommand {
 
 			gitConnector.add(selectedProject.getName());
 			gitConnector.commit(commitMessage, username, email, true);
-			gitConnector.pull();
+			gitConnector.pull(username, password);
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
 				gitConnector.checkout(gitRepositoryBranch);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -245,7 +245,7 @@ public class CloneCommand {
 								clonedProjects); // assume
 					} else {
 						logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
-						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject);
+						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject, username, password);
 					}
 					clonedProjects.add(projectGuid);
 

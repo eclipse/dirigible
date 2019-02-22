@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,10 +72,14 @@ public class PullCommand {
 	 *            the workspace
 	 * @param projects
 	 *            the projects
+	 * @param username
+	 *            the username
+	 * @param password
+	 *            the password
 	 * @param publishAfterPull
 	 *            the publish after pull
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, boolean publishAfterPull) {
+	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, boolean publishAfterPull) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Pull action");
 		}
@@ -85,7 +89,7 @@ public class PullCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start pulling %s project...", selectedProject.getName()));
-				boolean pulled = pullProjectFromGitRepository(workspace, selectedProject);
+				boolean pulled = pullProjectFromGitRepository(workspace, selectedProject, username, password);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
 				pulledProjects.add(selectedProject);
@@ -109,7 +113,7 @@ public class PullCommand {
 	 *            the selected project
 	 * @return true, if successful
 	 */
-	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject) {
+	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject, final String username, final String password) {
 		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
@@ -148,7 +152,7 @@ public class PullCommand {
 
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, "[nobody]",
 					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, null, null, gitRepositoryBranch);
+			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
 			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 
 			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
@@ -182,7 +186,7 @@ public class PullCommand {
 			logger.debug(String.format("Commit changes for the project [%s] finished.", selectedProject.getName()));
 
 			logger.debug(String.format("Staring pull of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
-			gitConnector.pull();
+			gitConnector.pull(username, password);
 			logger.debug(String.format("Pull of the project %s finished.", selectedProject.getName()));
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
