@@ -78,6 +78,15 @@ function FTPClientManager(host, port, userName, password) {
 		}
 	};
 
+	this.appendFile = function(path, fileName, inputStream) {
+		try {
+			checkConnection(this);
+			return this.instance.appendFile(this.getFullPath(path, fileName), inputStream.native);
+		} finally {
+			disconnect(this);
+		}
+	};
+
 	this.deleteFile = function(path, fileName) {
 		try {
 			connect(this);
@@ -220,7 +229,7 @@ function FTPClient(manager) {
 	};
 
 	/**
-	 * Create file from byte array
+	 * Create file from text
 	 * 
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
@@ -230,6 +239,44 @@ function FTPClient(manager) {
 	this.createFileText = function(path, fileName, text) {
 		var inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
 		return this.createFile(path, fileName, inputStream);
+	};
+
+	/**
+	 * Append input stream to file
+	 * 
+	 * @param {path} the path to the file
+	 * @param {fileName} the name of the file
+	 * @param {inputStream} the input stream
+	 * @return {Boolean} true if the file was created successfully
+	 */
+	this.appendFile = function(path, fileName, inputStream) {
+		return this.manager.appendFile(path, fileName, inputStream);
+	};
+
+	/**
+	 * Append byte array to file
+	 * 
+	 * @param {path} the path to the file
+	 * @param {fileName} the name of the file
+	 * @param {bytes} the bytes
+	 * @return {Boolean} true if the file was created successfully
+	 */
+	this.appendFileBinary = function(path, fileName, bytes) {
+		var inputStream = streams.createByteArrayInputStream(bytes);
+		return this.appendFile(path, fileName, inputStream);
+	};
+
+	/**
+	 * Append text to file
+	 * 
+	 * @param {path} the path to the file
+	 * @param {fileName} the name of the file
+	 * @param {text} the text
+	 * @return {Boolean} true if the file was created successfully
+	 */
+	this.appendFileText = function(path, fileName, text) {
+		var inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
+		return this.appendFile(path, fileName, inputStream);
 	};
 
 	this.createFolder = function(path, folderName) {
@@ -422,6 +469,18 @@ function FTPFile(manager, instance, path, name) {
 
 	this.setContentText = function(text) {
 		return this.client.createFileText(this.path, this.name, text);
+	};
+
+	this.appendContent = function(inputStream) {
+		return this.client.appendFile(this.path, this.name, inputStream);
+	};
+
+	this.appendContentBinary = function(bytes) {
+		return this.client.appendFileBinary(this.path, this.name, bytes);
+	};
+
+	this.appendContentText = function(text) {
+		return this.client.appendFileText(this.path, this.name, text);
 	};
 
 	this.delete = function() {
