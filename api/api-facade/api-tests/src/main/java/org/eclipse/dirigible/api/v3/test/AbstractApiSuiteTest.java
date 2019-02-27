@@ -138,6 +138,22 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/digest/sha256.js");
 		TEST_MODULES.add("utils/v4/digest/sha384.js");
 		TEST_MODULES.add("utils/v4/digest/sha512.js");
+		TEST_MODULES.add("utils/v4/hex/encode.js");
+		TEST_MODULES.add("utils/v4/hex/decode.js");
+		TEST_MODULES.add("utils/v4/escape/escapeCsv.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeCsv.js");
+		TEST_MODULES.add("utils/v4/escape/escapeJavascript.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeJavascript.js");
+		TEST_MODULES.add("utils/v4/escape/escapeHtml3.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeHtml3.js");
+		TEST_MODULES.add("utils/v4/escape/escapeHtml4.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeHtml4.js");
+		TEST_MODULES.add("utils/v4/escape/escapeJava.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeJava.js");
+		TEST_MODULES.add("utils/v4/escape/escapeJson.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeJson.js");
+		TEST_MODULES.add("utils/v4/escape/escapeXml.js");
+		TEST_MODULES.add("utils/v4/escape/unescapeXml.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
