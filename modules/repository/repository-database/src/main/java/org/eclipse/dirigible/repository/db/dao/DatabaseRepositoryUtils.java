@@ -22,6 +22,7 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 /**
@@ -200,12 +201,21 @@ public class DatabaseRepositoryUtils {
 		persistenceManagerFiles.tableCheck(connection, DatabaseFileDefinition.class);
 		persistenceManagerFilesContent.tableCheck(connection, DatabaseFileContentDefinition.class);
 		persistenceManagerFilesVersions.tableCheck(connection, DatabaseFileVersionDefinition.class);
-		String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES").where("FILE_PATH LIKE ?").build();
-		persistenceManagerFiles.execute(connection, sql, path + PERCENT);
+		
+		String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES").where("FILE_PATH = ?").build();
+		persistenceManagerFiles.execute(connection, sql, path);
+		sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES").where("FILE_PATH LIKE ?").build();
+		persistenceManagerFiles.execute(connection, sql, path + IRepositoryStructure.SEPARATOR + PERCENT);
+		
+		sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES_CONTENT").where("FILE_PATH = ?").build();
+		persistenceManagerFilesContent.execute(connection, sql, path);
 		sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES_CONTENT").where("FILE_PATH LIKE ?").build();
-		persistenceManagerFilesContent.execute(connection, sql, path + PERCENT);
+		persistenceManagerFilesContent.execute(connection, sql, path + IRepositoryStructure.SEPARATOR + PERCENT);
+		
+		sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES_VERSIONS").where("FILE_PATH = ?").build();
+		persistenceManagerFilesContent.execute(connection, sql, path);
 		sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_FILES_VERSIONS").where("FILE_PATH LIKE ?").build();
-		persistenceManagerFilesContent.execute(connection, sql, path + PERCENT);
+		persistenceManagerFilesContent.execute(connection, sql, path + IRepositoryStructure.SEPARATOR + PERCENT);
 	}
 
 	/**
