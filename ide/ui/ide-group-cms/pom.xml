@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ide-ui-parent</artifactId>
-		<version>3.3.1</version>
+		<version>3.3.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,17 +32,17 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-branding</artifactId>
-		 	<version>3.3.1</version>
+		 	<version>3.3.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-core</artifactId>
-		 	<version>3.3.1</version>
+		 	<version>3.3.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-documents</artifactId>
-		 	<version>3.3.1</version>
+		 	<version>3.3.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
