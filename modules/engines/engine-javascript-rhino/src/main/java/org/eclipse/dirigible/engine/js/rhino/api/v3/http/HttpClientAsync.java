@@ -86,10 +86,8 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
-	 * @throws IOException
-	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
+	 * @param httpResponseCallback
+	 *            the callback
 	 */
 	public void getAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -106,10 +104,10 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
+	 * @param httpResponseCallback
+	 *            the callback
 	 * @throws IOException
 	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
 	 */
 	public void postAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
@@ -126,10 +124,10 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
+	 * @param httpResponseCallback
+	 *            the callback
 	 * @throws IOException
 	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
 	 */
 	public void putAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
 		requestsCounter ++;
@@ -146,10 +144,8 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
-	 * @throws IOException
-	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
+	 * @param httpResponseCallback
+	 *            the callback
 	 */
 	public void deleteAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -166,10 +162,8 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
-	 * @throws IOException
-	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
+	 * @param httpResponseCallback
+	 *            the callback
 	 */
 	public void headAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -186,10 +180,8 @@ public final class HttpClientAsync implements IScriptingFacade {
 	 *            the URL
 	 * @param options
 	 *            the options
-	 * @return the response as JSON
-	 * @throws IOException
-	 *             In case an I/O exception occurs
-	 * @throws InterruptedException 
+	 * @param httpResponseCallback
+	 *            the callback
 	 */
 	public void traceAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
@@ -202,8 +194,8 @@ public final class HttpClientAsync implements IScriptingFacade {
 	/**
 	 * Execute request asynchronously
 	 * 
-	 * @throws InterruptedException
-	 * @throws IOException
+	 * @throws InterruptedException in case an concurrency exception occurs
+	 * @throws IOException in case an I/O exception occurs
 	 */
 	public void execute() throws InterruptedException, IOException {
 		countDownLatch = new CountDownLatch(requestsCounter);
@@ -234,6 +226,9 @@ public final class HttpClientAsync implements IScriptingFacade {
 		}
 	}
 
+	/**
+	 * The callback handler
+	 */
 	public class HttpResponseCallback {
 
 		private final FutureCallback<HttpResponse> callback;
