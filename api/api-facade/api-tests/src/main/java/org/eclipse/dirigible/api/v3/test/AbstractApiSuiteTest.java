@@ -154,6 +154,12 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/escape/unescapeJson.js");
 		TEST_MODULES.add("utils/v4/escape/escapeXml.js");
 		TEST_MODULES.add("utils/v4/escape/unescapeXml.js");
+		
+		TEST_MODULES.add("utils/v4/url/encode.js");
+		TEST_MODULES.add("utils/v4/url/decode.js");
+		TEST_MODULES.add("utils/v4/url/escape.js");
+		TEST_MODULES.add("utils/v4/url/escapePath.js");
+		TEST_MODULES.add("utils/v4/url/escapeForm.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

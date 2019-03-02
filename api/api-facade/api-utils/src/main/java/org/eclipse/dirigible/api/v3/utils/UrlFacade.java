@@ -105,5 +105,29 @@ public class UrlFacade {
 		return UrlEscapers.urlFragmentEscaper().escape(input);
 
 	}
+	
+	/**
+	 * Escape URL path
+	 *
+	 * @param input
+	 *            the input string
+	 * @return escaped input
+	 */
+	public static final String escapePath(String input) {
+		return UrlEscapers.urlPathSegmentEscaper().escape(input);
+
+	}
+	
+	/**
+	 * Escape URL fragments
+	 *
+	 * @param input
+	 *            the input string
+	 * @return escaped input
+	 */
+	public static final String escapeForm(String input) {
+		return UrlEscapers.urlFormParameterEscaper().escape(input);
+
+	}
 
 }
