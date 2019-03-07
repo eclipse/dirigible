@@ -1,24 +1,25 @@
 #if($dataCount)
-var query = require('db/v3/query');
+var query = require("db/v3/query");
 #end
-var daoApi = require('db/v3/dao');
+var producer = require("messaging/v3/producer");
+var daoApi = require("db/v3/dao");
 var dao = daoApi.create({
-	'table': '${dataName}',
-	'properties': [
+	table: "${dataName}",
+	properties: [
 #foreach ($property in $properties)
 #if($foreach.isFirst())
 		{
 #else
  {
 #end
-			'name': '${property.name}',
-			'column': '${property.dataName}',
-			'type': '${property.dataType}',
+			name: "${property.name}",
+			column: "${property.dataName}",
+			type: "${property.dataType}",
 #if($property.dataPrimaryKey)
-			'id': true,
+			id: true,
 #end
 #if($property.dataNotNull)
-			'required': true
+			required: true
 #end
 		}#if($foreach.hasNext),#end
 #end
@@ -27,22 +28,59 @@ var dao = daoApi.create({
 exports.list = function(settings) {
 	return dao.list(settings);
 };
-#if($type != 'REPORT')
+#if($type != "REPORT")
 
 exports.get = function(id) {
 	return dao.find(id);
 };
 
 exports.create = function(entity) {
-	return dao.insert(entity);
+	var id = dao.insert(entity);
+	triggerEvent("Create", {
+		table: "${dataName}",
+		key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+			name: "${property.name}",
+			column: "${property.dataName}",
+			value: id
+#end
+#end
+		}
+	});
+	return id;
 };
 
 exports.update = function(entity) {
-	return dao.update(entity);
+	dao.update(entity);
+	triggerEvent("Update", {
+		table: "${dataName}",
+		key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+			name: "${property.name}",
+			column: "${property.dataName}",
+			value: entity.${property.name}
+#end
+#end
+		}
+	});
 };
 
 exports.delete = function(id) {
 	dao.remove(id);
+	triggerEvent("Delete", {
+		table: "${dataName}",
+		key: {
+#foreach ($property in $properties)
+#if($property.dataPrimaryKey)
+			name: "${property.name}",
+			column: "${property.dataName}",
+			value: id
+#end
+#end
+		}
+	});
 };
 #end
 
@@ -65,3 +103,7 @@ exports.customDataCount = function() {
 	return dao.count();
 #end
 };
+
+function triggerEvent(operation, data) {
+	producer.queue("${projectName}/${perspectiveName}/${name}/" + operation).send(JSON.stringify(data));
+}
