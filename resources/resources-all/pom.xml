@@ -89,11 +89,13 @@
             <artifactId>dirigible-resources-theme-alice</artifactId>
             <version>3.3.2-SNAPSHOT</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-baroness</artifactId>
             <version>3.3.2-SNAPSHOT</version>
         </dependency>
+         -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-default</artifactId>
@@ -104,6 +106,7 @@
             <artifactId>dirigible-resources-theme-florence</artifactId>
             <version>3.3.2-SNAPSHOT</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-simone</artifactId>
@@ -112,6 +115,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-wendy</artifactId>
+            <version>3.3.2-SNAPSHOT</version>
+        </dependency>
+         -->
+         <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-resources-theme-fiori</artifactId>
             <version>3.3.2-SNAPSHOT</version>
         </dependency>
 	</dependencies>

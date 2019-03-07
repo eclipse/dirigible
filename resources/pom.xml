@@ -53,6 +53,7 @@
 		<module>resources-theme-florence</module>
 		<module>resources-theme-simone</module>
 		<module>resources-theme-wendy</module>
+		<module>resources-theme-fiori</module>
 	</modules>
 
 	<profiles>
