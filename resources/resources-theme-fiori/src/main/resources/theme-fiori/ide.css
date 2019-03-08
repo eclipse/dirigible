@@ -97,6 +97,8 @@ nav.navbar {
 
 .navbar-inverse .navbar-brand {
     color: aliceblue;
+    padding: 4px;
+    font-weight: 500 !important;
 }
 
 .navbar-inverse .navbar-brand:hover {
@@ -217,20 +219,24 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
   flex: 1 1 auto;
   max-width: 15%;
   padding: 2px 5px;
-  background: #cddae4;
+  background: #edeff0;
+  border-bottom: 1px solid #dddfe0;
 }
 .value {
   flex: 2 1 auto;
   padding: 2px 5px;
 }
+.striped-container .striped-item {
+  border-bottom: 1px solid #fff0ff;
+}
 .striped-container .striped-item:nth-of-type(odd) {
   background: #efefef;
 }
 .striped-container .striped-item:nth-of-type(odd) .key {
-  background: #bdcad4;
+  background: #edeff0;
 }
 .striped-container .striped-item:nth-of-type(odd) .value {
-  background: #cddae4;
+  background: #ffffff;
 }
 .striped-item:hover .value {
   background: rgba(210, 210, 210, 0.85);
@@ -362,3 +368,82 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .fa-2x {
     font-size: 1.4em !important;
 }
+
+.btn-toolbar-top {
+	width: 100%;
+	height: 1.8em;
+}
+
+.btn-top {
+	border: 0px;
+	background-color: #ffffff;
+	padding: 0.2em;
+	padding-left: 1em;
+	padding-right: 1em;
+	color: #156aaf;
+	font-size: 16px;
+}
+
+.dropdown-top {
+	border: 1px solid #a5acb3;
+	border-radius: 0 !important;
+	background-color: #ffffff;
+	color: #156aaf;
+	font-size: 16px;
+	margin-top: 1px;
+	margin-right: 2px;
+}
+
+.workspace {
+	border-top: 2px solid #edeff0;
+}
+
+.debugger {
+	border-top: 2px solid #edeff0;
+}
+
+.database {
+	border-top: 2px solid #edeff0;
+}
+
+.repository {
+	border-top: 2px solid #edeff0;
+}
+
+.registry {
+	border-top: 2px solid #edeff0;
+}
+
+.lm_header .lm_controls>li {
+	margin-top: 6px;
+}
+
+.lm_header .lm_tab .lm_close_tab {
+	margin-top: 6px;
+}
+
+.console-row {
+	font-family: monospace;
+	background-color: #ffffff;
+}
+
+.console-row-error {
+	color: red;
+}
+
+.console-row-warn {
+	color: darkorange;
+}
+
+.console-row-info {
+	color: red;
+}
+
+.console-row-debug {
+	color: silver;
+}
+
+.console-row-trace {
+	color: darkgray;
+}
+

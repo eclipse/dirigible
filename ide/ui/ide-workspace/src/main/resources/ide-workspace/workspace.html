@@ -48,9 +48,10 @@
 <body border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
 
 	<div>
+	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 			<div class="btn-group">
-			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
+			  <button type="button" class="btn btn-default dropdown-toggle btn-top" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
 			    <i class="fa fa-plus"></i>
 			  </button>
 			  <div class="dropdown-menu">
@@ -66,16 +67,17 @@
 			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
 			<button type="button" id="generateFromModel" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromModel"></button>
 			
-			<button type="button" class="btn btn-default" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
-			<button type="button" class="btn btn-default" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
-			<button type="button" class="btn btn-default" title="Export All" ng-click="workspace.exportWorkspace()"><i class="fa fa-download"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Export All" ng-click="workspace.exportWorkspace()"><i class="fa fa-download"></i></button>
 			
-			<button type="button" class="btn btn-default" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
 			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
+				class="dropdown dropdown-toggle dropdown-top" title="Workspaces"></select>
 			
 		</div>
+	  </div>
 	</div>
 	
 	<div class="workspace"></div>

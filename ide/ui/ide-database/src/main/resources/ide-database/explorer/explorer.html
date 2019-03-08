@@ -43,14 +43,16 @@
 <body border="1px" ng-app="database" ng-controller="DatabaseController">
 
 	<div>
+	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<button type="button" class="btn btn-default" title="Refresh" ng-click="refreshDatabase()"><i class="fa fa-refresh"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshDatabase()"><i class="fa fa-refresh"></i></button>
 		
 			<select ng-model="selectedDatabase" ng-options="o as o for o in databases" ng-change="databaseChanged()"
-				class="dropdown btn btn-default dropdown-toggle" title="Databases"></select>
+				class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Databases"></select>
 			<select ng-model="selectedDatasource" ng-options="o as o for o in datasources" ng-change="datasourceChanged()"
-				class="dropdown btn btn-default dropdown-toggle" title="Datasources"></select>
+				class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Datasources"></select>
 		</div>
+	  </div>
 	</div>
 	
 	<div class="database"></div>

@@ -34,15 +34,17 @@
 <body border="1px" ng-controller="DebuggerController">
 
 	<div>
+	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<button type="button" class="btn btn-default" title="Enable/Disable" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="enable()"><i class="fa fa-bug"></i></button>
-			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Refresh" ng-click="refresh()"><i class="fa fa-refresh"></i></button>
-			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Continue" ng-click="continue()"><i class="fa fa-play"></i></button>
-			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Pause" ng-click="pause()"><i class="fa fa-pause"></i></button>
-			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Step Into" ng-click="stepInto()"><i class="fa fa-arrow-down"></i></button>
-			<button type="button" class="btn btn-default ng-class:{disabled: !debugEnabled};" title="Step Over" ng-click="stepOver()"><i class="fa fa-arrow-right"></i></button>
-			<select ng-model="selectedWorkspace" ng-options="o as o for o in workspaces" class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
+			<button type="button" class="btn btn-default btn-top" title="Enable/Disable" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="enable()"><i class="fa fa-bug"></i></button>
+			<button type="button" class="btn btn-default btn-top ng-class:{disabled: !debugEnabled};" title="Refresh" ng-click="refresh()"><i class="fa fa-refresh"></i></button>
+			<button type="button" class="btn btn-default btn-top ng-class:{disabled: !debugEnabled};" title="Continue" ng-click="continue()"><i class="fa fa-play"></i></button>
+			<button type="button" class="btn btn-default btn-top ng-class:{disabled: !debugEnabled};" title="Pause" ng-click="pause()"><i class="fa fa-pause"></i></button>
+			<button type="button" class="btn btn-default btn-top ng-class:{disabled: !debugEnabled};" title="Step Into" ng-click="stepInto()"><i class="fa fa-arrow-down"></i></button>
+			<button type="button" class="btn btn-default btn-top ng-class:{disabled: !debugEnabled};" title="Step Over" ng-click="stepOver()"><i class="fa fa-arrow-right"></i></button>
+			<select ng-model="selectedWorkspace" ng-options="o as o for o in workspaces" class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Workspaces"></select>
 		</div>
+	  </div>
 	</div>
 	
 	<div class="debugger"></div>

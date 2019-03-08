@@ -15,6 +15,7 @@
 		<title>Eclipse Dirigible Log Console</title>
 		
 		<link rel="stylesheet" href="../../../../services/v3/js/theme/resources.js/bootstrap.min.css">
+		<link rel="stylesheet" href="../../../../services/v3/js/theme/resources.js/ide.css">
 
 	</head>
 	<body style="font-family: monospace; font-size: x-small" onload="connectToLog()">
@@ -23,6 +24,10 @@
 		</div>
 		<script src="../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
 		<script>
+		var clear = function() {
+			$("#console").html('<div id="content"></div>');
+			$("#content").after("<div class='console-row console-row-info'>[" + new Date().toISOString() + "][cleared]...</div>");
+		};
 		var connectToLog = function() {
 			try {
 				var logSocket = new WebSocket(
@@ -31,29 +36,19 @@
 						+ window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
 						+ "/websockets/v3/ide/console");
 			} catch(e) {
-				$("#content").after("<div style='ont-family: monospace; color: red'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
+				$("#content").after("<div class='console-row console-row-error'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				
 			}
 			logSocket.onmessage = function (message) {
 				var record = JSON.parse(message.data);
-				var color = "silver";
-				
-				if (record.level === 'ERROR') color = "red";
-				else if (record.level === 'DEBUG') color = "silver";
-				else if (record.level === 'WARN') color = "darkorange";
-				else if (record.level === 'TRACE') color = "darkgray";
 				
 				var date = new Date(record.timestamp);
 				var id = record.timestamp;
-				$("#content").after("<div id='" + id + "' style='font-family: monospace; color: " + color + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
+				$("#content").after("<div id='" + id + "' class='console-row console-row-" + record.level.toLowerCase() + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
 			};
 			
 			setInterval(clear, 6000000);
-		}
-		var clear = function() {
-			$("#console").html('<div id="content"></div>');
-			$("#content").after("<div style='font-family: monospace; color: gray'>[" + new Date().toISOString() + "][cleared]...</div>");
-		}
+		};
 		</script>
 	</body>
 </html>

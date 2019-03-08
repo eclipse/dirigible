@@ -1,14 +1,14 @@
 body {
-	background-color: #eef3f6;
+	background-color: #ffffff;
 }
 .ace-tm {
-	background-color: #eef3f6;
+	background-color: #ffffff;
 }
 .ace-tm .ace_gutter {
-    background: #afcee9;
+    background: #edeff0;
     color: #333;
 }
 
 .ace-tm .ace_gutter-active-line {
-    background: #88b5dd;
+    background: #e3f0fb;
 }

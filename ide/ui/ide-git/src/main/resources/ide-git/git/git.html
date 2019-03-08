@@ -49,23 +49,25 @@
 <body border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
 
 	<div>
+	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 		
-			<button type="button" class="btn btn-default" title="Clone Project" data-toggle="modal" data-target="#dialogClone"><i class="fa fa-plus"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Clone Project" data-toggle="modal" data-target="#dialogClone"><i class="fa fa-plus"></i></button>
 			
-			<button id="pullAll" type="button" class="btn btn-default" title="Pull All Projects" data-toggle="modal" data-target="#dialogPullAll"><i class="fa fa-download"></i></button>
-			<button id="pushAll" type="button" class="btn btn-default" title="Push All Projects" data-toggle="modal" data-target="#dialogPushAll"><i class="fa fa-upload"></i></button>
+			<button id="pullAll" type="button" class="btn btn-default btn-top" title="Pull All Projects" data-toggle="modal" data-target="#dialogPullAll"><i class="fa fa-download"></i></button>
+			<button id="pushAll" type="button" class="btn btn-default btn-top" title="Push All Projects" data-toggle="modal" data-target="#dialogPushAll"><i class="fa fa-upload"></i></button>
 						
 			<button id="pull" type="button" class="btn btn-default" ng-show="false" title="Pull Project" data-toggle="modal" data-target="#dialogPull"><i class="fa fa-download"></i></button>
 			<button id="push" type="button" class="btn btn-default" ng-show="false" title="Push Project" data-toggle="modal" data-target="#dialogPush"><i class="fa fa-upload"></i></button>
 			<button id="reset" type="button" class="btn btn-default" ng-show="false" title="Reset Project" data-toggle="modal" data-target="#dialogReset"><i class="fa fa-recycle"></i></button>
 			<button id="share" type="button" class="btn btn-default" ng-show="false" title="Share Project" data-toggle="modal" data-target="#dialogShare"><i class="fa fa-share"></i></button>
 			
-			<button type="button" class="btn btn-default" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
 			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
+				class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Workspaces"></select>
 		</div>
+	  </div>
 	</div>
 	
 	<div class="workspace"></div>
