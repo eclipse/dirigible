@@ -75,6 +75,11 @@
             <artifactId>dirigible-core-workspace</artifactId>
             <version>3.3.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-migrations</artifactId>
+            <version>3.3.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
