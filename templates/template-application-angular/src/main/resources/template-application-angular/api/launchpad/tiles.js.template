@@ -45,7 +45,7 @@ tiles = tiles.sort(function(a, b) {
 response.println(JSON.stringify(tiles));
 
 function getRelativePath(pathSegments) {
-	var relativePath = '';
+	var relativePath = '/';
 	for (var i = 0; i < pathSegments; i ++) {
 		relativePath += '../';
 	}
