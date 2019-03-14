@@ -34,7 +34,7 @@ body {
 	vertical-align: top;
 	-webkit-flex: none;
 	flex: none;
-	position: relative;
+	position: fixed;
 	top: 20px;
 }
 .plane {
@@ -51,7 +51,8 @@ body {
 	height: 2em;
 	background: #555;
 	color: #ccc;
-	position: relative;
+	position: fixed;
+	bottom: 0;
 }
 .list-group-item {
   background: none !important;
@@ -332,4 +333,41 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 
 .panel-primary {
     border-color: #bbb;
+}
+
+.btn-top {
+	padding: 0.2em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.dropdown-top {
+	border: 1px solid #a5acb3;
+	border-radius: 0 !important;
+	background-color: #343436;
+}
+
+.console-row {
+	font-family: monospace;
+	background-color: #343436;
+}
+
+.console-row-error {
+	color: red;
+}
+
+.console-row-warn {
+	color: darkorange;
+}
+
+.console-row-info {
+	color: red;
+}
+
+.console-row-debug {
+	color: silver;
+}
+
+.console-row-trace {
+	color: darkgray;
 }

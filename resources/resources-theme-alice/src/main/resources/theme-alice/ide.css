@@ -80,6 +80,7 @@ body {
 	background: transparent;
 	color: #000000;
 	position: fixed;
+	bottom: 0;
 }
 .lm_header .lm_tab {
 	background: transparent;

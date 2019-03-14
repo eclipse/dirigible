@@ -37,7 +37,7 @@ body {
 	vertical-align: top;
 	-webkit-flex: none;
 	flex: none;
-	position: relative;
+	position: fixed;
 	top: 42px;
 }
 .plane {
@@ -54,8 +54,8 @@ body {
 	height: 2em;
 	background: #edeff0;
 	color: #fec600;
-	position: relative;
-	top: calc(15px);
+	position: fixed;
+	bottom: 0;
 }
 .lm_header .lm_tab {
 	background: #edeff0;

@@ -34,7 +34,7 @@ body {
 	vertical-align: top;
 	-webkit-flex: none;
 	flex: none;
-	position: relative;
+	position: fixed;
 	top: 20px;
 }
 .plane {
@@ -51,7 +51,8 @@ body {
 	height: 2em;
 	background: #d41;
 	color: #fff;
-	position: relative;
+	position: fixed;
+	bottom: 0;
 }
 .list-group-item {
   background: none !important;

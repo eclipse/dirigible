@@ -29,7 +29,7 @@ perspectives.sort(function(p, n) {
 response.println(JSON.stringify(perspectives));
 
 function getRelativePath(pathSegments) {
-	var relativePath = '';
+	var relativePath = '/';
 	for (var i = 0; i < pathSegments; i ++) {
 		relativePath += '../';
 	}

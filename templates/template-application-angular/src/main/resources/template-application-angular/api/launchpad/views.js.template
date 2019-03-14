@@ -27,7 +27,7 @@ for (var j = 0; viewExtensions !== null && j < viewExtensions.length; j++) {
 response.println(JSON.stringify(views));
 
 function getRelativePath(pathSegments) {
-	var relativePath = '';
+	var relativePath = '/';
 	for (var i = 0; i < pathSegments; i ++) {
 		relativePath += '../';
 	}
