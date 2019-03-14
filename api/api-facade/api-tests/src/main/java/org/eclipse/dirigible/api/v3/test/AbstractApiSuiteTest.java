@@ -154,12 +154,29 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/escape/unescapeJson.js");
 		TEST_MODULES.add("utils/v4/escape/escapeXml.js");
 		TEST_MODULES.add("utils/v4/escape/unescapeXml.js");
-		
 		TEST_MODULES.add("utils/v4/url/encode.js");
 		TEST_MODULES.add("utils/v4/url/decode.js");
 		TEST_MODULES.add("utils/v4/url/escape.js");
 		TEST_MODULES.add("utils/v4/url/escapePath.js");
 		TEST_MODULES.add("utils/v4/url/escapeForm.js");
+		
+		TEST_MODULES.add("db/v4/database/getDatabaseTypes.js");
+		TEST_MODULES.add("db/v4/database/getDataSources.js");
+		TEST_MODULES.add("db/v4/database/getMetadata.js");
+		TEST_MODULES.add("db/v4/database/getConnection.js");
+		TEST_MODULES.add("db/v4/query/query.js");
+		TEST_MODULES.add("db/v4/update/update.js");
+		TEST_MODULES.add("db/v4/sequence/nextval.js");
+		
+		TEST_MODULES.add("core/v4/configurations/get.js");
+		TEST_MODULES.add("core/v4/console/log.js");
+		TEST_MODULES.add("core/v4/context/get.js");
+		TEST_MODULES.add("core/v4/env/get.js");
+		TEST_MODULES.add("core/v4/env/list.js");
+		TEST_MODULES.add("core/v4/extensions/getExtensions.js");
+		TEST_MODULES.add("core/v4/extensions/getExtensionPoints.js");
+		TEST_MODULES.add("core/v4/globals/get.js");
+		TEST_MODULES.add("core/v4/globals/list.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
