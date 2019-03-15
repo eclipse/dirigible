@@ -11,12 +11,14 @@
 package org.eclipse.dirigible.api.v3.http;
 
 import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,17 @@ public class HttpSessionFacade implements IScriptingFacade {
 	public static final String[] getAttributeNames() {
 		HttpSession session = getSession();
 		return Collections.list(session.getAttributeNames()).toArray(new String[] {});
+	}
+	
+	/**
+	 * Returns the attribute names.
+	 *
+	 * @return the attribute names
+	 */
+	public static final String getAttributeNamesJson() {
+		HttpSession session = getSession();
+		String[] array = Collections.list(session.getAttributeNames()).toArray(new String[] {});
+		return GsonHelper.GSON.toJson(array);
 	}
 
 	/**

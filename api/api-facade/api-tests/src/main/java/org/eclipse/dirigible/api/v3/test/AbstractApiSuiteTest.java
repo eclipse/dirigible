@@ -94,12 +94,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("http/v3/request/getAuthType.js");
 		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
 		TEST_MODULES.add("http/v3/request/getServerName.js");
-		
 		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
-		
 		TEST_MODULES.add("http/v3/client/get.js");
 		TEST_MODULES.add("http/v3/client/get-binary.js");
-		
 		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
 		
 		TEST_MODULES.add("io/v3/streams/copy.js");
@@ -182,36 +179,54 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("indexing/v4/searcher/search.js");
 		TEST_MODULES.add("indexing/v4/searcher/between.js");
 		
+		TEST_MODULES.add("http/v4/request/isValid.js");
+		TEST_MODULES.add("http/v4/request/getMethod.js");
+		TEST_MODULES.add("http/v4/request/getRemoteUser.js");
+		TEST_MODULES.add("http/v4/request/getPathInfo.js");
+		TEST_MODULES.add("http/v4/request/getPathTranslated.js");
+		TEST_MODULES.add("http/v4/request/getHeader.js");
+		TEST_MODULES.add("http/v4/request/isUserInRole.js");
+		TEST_MODULES.add("http/v4/request/getAttribute.js");
+		TEST_MODULES.add("http/v4/request/getAuthType.js");
+		TEST_MODULES.add("http/v4/request/getHeaderNames.js");
+		TEST_MODULES.add("http/v4/request/getServerName.js");
+		TEST_MODULES.add("http/v4/response/getHeaderNames.js");
+		TEST_MODULES.add("http/v4/client/get.js");
+		TEST_MODULES.add("http/v4/client/get-binary.js");
+		TEST_MODULES.add("http/v4/session/getAttributeNames.js");
+		
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
 			throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
-		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
-		HttpServletResponse mockedResponse = Mockito.mock(HttpServletResponse.class);
-		mockRequest(mockedRequest);
-		mockResponse(mockedResponse);
-
-		ThreadContextFacade.setUp();
-		try {
-			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), mockedRequest);
-			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), mockedResponse);
-			extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
-			extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
+		for (String testModule : TEST_MODULES) {
 			try {
-				for (String testModule : TEST_MODULES) {
+				HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+				HttpServletResponse mockedResponse = Mockito.mock(HttpServletResponse.class);
+				mockRequest(mockedRequest);
+				mockResponse(mockedResponse);
+		
+				ThreadContextFacade.setUp();
+				try {
+					ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), mockedRequest);
+					ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), mockedResponse);
+					extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
+					extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
+					
 					Object result = null;
 					
 					result = runTest(executor, repository, testModule);
 					
 					assertNotNull(result);
 					assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
-				} 
+					 
+				} finally {
+					extensionsCoreService.removeExtension("/test_ext1");
+					extensionsCoreService.removeExtensionPoint("/test_extpoint1");
+				}
 			} finally {
-				extensionsCoreService.removeExtension("/test_ext1");
-				extensionsCoreService.removeExtensionPoint("/test_extpoint1");
+				ThreadContextFacade.tearDown();
 			}
-		} finally {
-			ThreadContextFacade.tearDown();
 		}
 	}
 
