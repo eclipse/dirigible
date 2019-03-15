@@ -177,6 +177,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v4/extensions/getExtensionPoints.js");
 		TEST_MODULES.add("core/v4/globals/get.js");
 		TEST_MODULES.add("core/v4/globals/list.js");
+		
+		TEST_MODULES.add("indexing/v4/writer/add.js");
+		TEST_MODULES.add("indexing/v4/searcher/search.js");
+		TEST_MODULES.add("indexing/v4/searcher/between.js");
+		
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
