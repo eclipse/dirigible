@@ -201,6 +201,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("cms/v4/cmis/createFolder.js");
 		TEST_MODULES.add("cms/v4/cmis/createDocument.js");
 		
+		TEST_MODULES.add("io/v4/streams/copy.js");
+		TEST_MODULES.add("io/v4/streams/text.js");
+		TEST_MODULES.add("io/v4/files/createTempFile.js");
+		TEST_MODULES.add("io/v4/files/fileStreams.js");
+		
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
