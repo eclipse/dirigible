@@ -195,6 +195,12 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("http/v4/client/get-binary.js");
 		TEST_MODULES.add("http/v4/session/getAttributeNames.js");
 		
+		TEST_MODULES.add("cms/v4/cmis/getSession.js");
+		TEST_MODULES.add("cms/v4/cmis/getRootFolder.js");
+		TEST_MODULES.add("cms/v4/cmis/getChildren.js");
+		TEST_MODULES.add("cms/v4/cmis/createFolder.js");
+		TEST_MODULES.add("cms/v4/cmis/createDocument.js");
+		
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
