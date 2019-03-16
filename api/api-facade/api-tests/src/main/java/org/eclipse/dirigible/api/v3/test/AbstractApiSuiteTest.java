@@ -206,6 +206,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("io/v4/files/createTempFile.js");
 		TEST_MODULES.add("io/v4/files/fileStreams.js");
 		
+		TEST_MODULES.add("security/v4/user/getName.js");
+		
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
