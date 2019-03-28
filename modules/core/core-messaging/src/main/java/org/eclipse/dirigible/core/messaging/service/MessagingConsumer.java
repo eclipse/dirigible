@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,9 @@
 package org.eclipse.dirigible.core.messaging.service;
 
 import static java.text.MessageFormat.format;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -36,6 +39,9 @@ import org.slf4j.LoggerFactory;
 public class MessagingConsumer implements Runnable, ExceptionListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(MessagingConsumer.class);
+
+	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
+	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
 
 	private String name;
 	private char type;
@@ -132,10 +138,9 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 						}
 						logger.trace(format("Start processing a received message in [{0}] by [{1}] ...", this.name, this.handler));
 						if (message instanceof TextMessage) {
-							TextMessage textMessage = (TextMessage) message;
-							String text = textMessage.getText();
-							String wrapper = generateWrapperOnMessage(text);
-							ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
+							Map<Object, Object> context = createMessagingContext();
+							context.put("message", escapeCodeString(((TextMessage) message).getText()));
+							ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
 						} else {
 							throw new MessagingException(format("Invalid message [{0}] has been received in destination [{1}]", message, this.name));
 						}
@@ -170,39 +175,20 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 */
 	@Override
 	public synchronized void onException(JMSException exception) {
-		String wrapper = generateWrapperOnError(exception.getMessage());
 		try {
-			ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
+			Map<Object, Object> context = createMessagingContext();
+			context.put("error", escapeCodeString(exception.getMessage()));
+			ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
 		} catch (ScriptingException e) {
 			logger.error(e.getMessage(), e);
 		}
 		logger.error(exception.getMessage(), exception);
 	}
 
-	/**
-	 * Generate wrapper on message.
-	 *
-	 * @param message
-	 *            the message
-	 * @return the string
-	 */
-	private String generateWrapperOnMessage(String message) {
-		String wrapper = new StringBuilder().append("var handler = require('").append(escapeCodeString(this.handler))
-				.append("');handler.onMessage('" + escapeCodeString(message) + "');").toString();
-		return wrapper;
-	}
-
-	/**
-	 * Generate wrapper on error.
-	 *
-	 * @param error
-	 *            the error
-	 * @return the string
-	 */
-	private String generateWrapperOnError(String error) {
-		String wrapper = new StringBuilder().append("var handler = require('").append(escapeCodeString(this.handler))
-				.append("');handler.onError('" + escapeCodeString(error) + "');").toString();
-		return wrapper;
+	private Map<Object, Object> createMessagingContext() {
+		Map<Object, Object> context = new HashMap<Object, Object>();
+		context.put("handler", this.handler);
+		return context;
 	}
 
 	/**
