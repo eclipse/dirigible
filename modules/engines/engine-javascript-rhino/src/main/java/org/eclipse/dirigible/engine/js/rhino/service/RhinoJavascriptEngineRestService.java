@@ -89,7 +89,7 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	 */
 	@POST
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeRhinoServicePost(@PathParam("path") String path) {
 		return executeRhinoServiceGet(path);
@@ -104,7 +104,7 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	 */
 	@PUT
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeRhinoServicePut(@PathParam("path") String path) {
 		return executeRhinoServiceGet(path);
@@ -119,7 +119,7 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	 */
 	@DELETE
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeRhinoServiceDelete(@PathParam("path") String path) {
 		return executeRhinoServiceGet(path);
@@ -134,7 +134,7 @@ public class RhinoJavascriptEngineRestService extends AbstractRestService implem
 	 */
 	@HEAD
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript Rhino Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeRhinoServiceHead(@PathParam("path") String path) {
 		return executeRhinoServiceGet(path);
