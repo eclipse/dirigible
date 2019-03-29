@@ -8,5 +8,6 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 var handler = require(__context.get("handler"));
 handler.onError(__context.get("error"));

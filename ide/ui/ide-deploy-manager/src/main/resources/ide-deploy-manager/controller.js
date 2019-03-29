@@ -41,7 +41,11 @@ angular.module('deployer')
 
 	$scope.queryParams = getQueryParams();
 	$scope.env = getEnvParams();
-	$scope.dirigibleInstances = getDirigibleInstances();
+
+	function loadDirigibleInstance() {
+		$scope.dirigibleInstances = getDirigibleInstances();
+	}
+	loadDirigibleInstance();
 
 	function getEnvParams() {
 		var env = [];
@@ -92,9 +96,30 @@ angular.module('deployer')
 		return result;
 	}
 
+	$scope.addInstance = function() {
+		addDirigibleInstance({
+			'id': generateUUID(),
+			'name': $scope.newInstanceName,
+			'host': $scope.newInstanceHost.substring(0, $scope.newInstanceHost.indexOf("/", 8)),
+			'displayName': $scope.newInstanceName
+		});
+		loadDirigibleInstance();
+		toggleModal();
+	};
+
 	$scope.run = function() {
 		window.location.href = getDeployUrl($scope.selectedDirigibleInstance);
 	};
+
+	function generateUUID(){
+		var dt = new Date().getTime();
+		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = (dt + Math.random()*16)%16 | 0;
+			dt = Math.floor(dt/16);
+			return (c === 'x' ? r : r&0x3 | 0x8).toString(16);
+		});
+		return uuid;
+	}
 
 	function getDeployUrl(instance) {
 		var url = instance.host + '/services/v3/web/ide-git/index.html?repository=' + $scope.queryParams.repository;
@@ -108,5 +133,13 @@ angular.module('deployer')
 			url += "&env=" + encodeURIComponent(JSON.stringify($scope.env));
 		}
 		return  url;
+	}
+
+	$scope.openAddInstanceDialog = function() {
+		toggleModal();
+	};
+
+	function toggleModal() {
+		$('#addInstanceModal').modal('toggle');
 	}
 });
