@@ -50,7 +50,7 @@
 	<description>Dirigible Parent</description>
 	<groupId>org.eclipse.dirigible</groupId>
 	<artifactId>dirigible-parent</artifactId>
-	<version>3.3.2</version>
+	<version>3.3.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<inceptionYear>2010</inceptionYear>
