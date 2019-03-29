@@ -42,7 +42,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		if(this.orm.table)
 			loggerName = 'db.dao.'+(this.orm.table.toLowerCase());
 	}
-	this.$log = require('log/logging').getLogger(loggerName);
+	this.$log = require('log/v4/logging').getLogger(loggerName);
 
 	var execQuery = require('db/v4/query');
 	var execUpdate = require('db/v4/update');
