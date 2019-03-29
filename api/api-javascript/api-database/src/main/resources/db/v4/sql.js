@@ -308,7 +308,7 @@ exports.getDialect = function(connection) {
 				};
 				
 				this.set = function(column, value) {
-					this.native.set(column, value]);
+					this.native.set(column, value);
 					if(arguments.length>2){
 						if(Array.isArray(arguments[2]))
 							_parameters = _parameters.concat(arguments[2]);
@@ -873,7 +873,7 @@ exports.getDialect = function(connection) {
 	var dialect = new Dialect();
 	var native;
 	if (connection) {
-		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getNative(connection);
+		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getNative(connection.native);
 	} else {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDefault();
 	}

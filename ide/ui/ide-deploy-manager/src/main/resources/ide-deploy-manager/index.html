@@ -30,9 +30,16 @@
 	<div class="container well" style="width:50%">
 		<div>
 			<div class="form-group">
-			    <select class="form-control" ng-model="selectedDirigibleInstance" ng-options="next as next.displayName for next in dirigibleInstances">
-			    	<option value='' selected disabled>--- Select Dirigible Instance ---</option>
-	  			</select>
+				<div class="row">
+					<div class="col-md-11">
+					    <select class="form-control" ng-model="selectedDirigibleInstance" ng-options="next as next.displayName for next in dirigibleInstances">
+					    	<option value='' selected disabled>--- Select Dirigible Instance ---</option>
+			  			</select>
+					</div>
+					<div class="col-md-1">
+						<button class="btn btn-default" ng-click="openAddInstanceDialog()"><i class="fa fa-plus"></i></button>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row" ng-hide="queryParamsProvided">
@@ -59,6 +66,36 @@
 			<button class="btn btn-primary" ng-click="run()">Run</button>
 		</div>
 	</div>
+
+	<div class="modal fade" id="addInstanceModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="exampleModalLabel">Add Dirigible Instance</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label>Name</label>
+							<input class="form-control" type="text" ng-model="newInstanceName">
+						</div>
+						<div class="form-group">
+							<label>Host</label>
+							<input class="form-control" type="text" ng-model="newInstanceHost">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" ng-click="addInstance()">Add</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	
     <!-- jQuery -->
     <script type="text/javascript" src="../../../../../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
