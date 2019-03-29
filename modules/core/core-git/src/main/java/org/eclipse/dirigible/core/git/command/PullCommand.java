@@ -31,6 +31,7 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
@@ -166,7 +167,11 @@ public class PullCommand {
 			logger.debug(String.format("'Changes' branch for the project [%s]: %s", selectedProject.getName(), changesBranch));
 
 			logger.debug(String.format("Staring checkout of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
-			gitConnector.checkout(lastSHA);
+			try {
+				gitConnector.checkout(lastSHA);
+			} catch (InvalidRefNameException e) {
+				lastSHA = "HEAD";
+			}
 			logger.debug(String.format("Checkout of the project [%s] finished.", selectedProject.getName()));
 
 			gitConnector.createBranch(changesBranch, lastSHA);
@@ -205,7 +210,7 @@ public class PullCommand {
 				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
 
 				logger.debug(String.format("Starting importing projects from the Git directory %s.", tempGitDirectory.getCanonicalPath()));
-				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties);
+				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
 				logger.debug(String.format("Importing projects from the Git directory %s finished.", tempGitDirectory.getCanonicalPath()));
 			} else {
 				String message = String.format(

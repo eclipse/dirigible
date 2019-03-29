@@ -66,7 +66,7 @@ public class PullComandTest extends AbstractGuiceTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());

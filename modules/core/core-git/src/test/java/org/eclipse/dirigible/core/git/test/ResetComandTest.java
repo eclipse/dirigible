@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,7 +66,7 @@ public class ResetComandTest extends AbstractGuiceTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());

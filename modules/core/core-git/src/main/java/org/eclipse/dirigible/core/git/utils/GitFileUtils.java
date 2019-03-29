@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -134,13 +134,22 @@ public class GitFileUtils {
 	 *            the workspace
 	 * @param properties
 	 *            the properties
+	 * @param projectName
+	 *            an optional project name in case of an empty repository
 	 * @return the list
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public List<String> importProject(File gitDirectory, String basePath, String user, String workspace, GitProjectProperties properties)
+	public List<String> importProject(File gitDirectory, String basePath, String user, String workspace, GitProjectProperties properties, String projectName)
 			throws IOException {
 		List<String> importedProjects = new ArrayList<String>(gitDirectory.listFiles().length);
+		if (gitDirectory.listFiles().length == 1) { // only .git folder
+			if (projectName == null) {
+				projectName = gitDirectory.getName();
+			}
+			File implicitProject = new File(gitDirectory, projectName);
+			FileUtils.forceMkdir(implicitProject);
+		}
 		for (File file : gitDirectory.listFiles()) {
 			String project = file.getName();
 			if (file.isDirectory() && !project.equalsIgnoreCase(DOT_GIT)) {

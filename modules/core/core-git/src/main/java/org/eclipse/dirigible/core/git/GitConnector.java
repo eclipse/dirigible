@@ -123,8 +123,10 @@ public class GitConnector implements IGitConnector {
 		repository.getConfig().setString(GIT_BRANCH, name, GIT_MERGE, GIT_REFS_HEADS_MASTER);
 		CreateBranchCommand createBranchCommand = git.branchCreate();
 		createBranchCommand.setName(name);
-		createBranchCommand.setStartPoint(startPoint);
-		createBranchCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
+		if (!startPoint.equals("HEAD")) {
+			createBranchCommand.setStartPoint(startPoint);
+			createBranchCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
+		}
 		createBranchCommand.call();
 	}
 
@@ -137,6 +139,10 @@ public class GitConnector implements IGitConnector {
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 		CheckoutCommand checkoutCommand = git.checkout();
 		checkoutCommand.setName(name);
+		checkoutCommand.setCreateBranch(true);
+		checkoutCommand.setForce(true);
+//		checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
+//		checkoutCommand.setStartPoint(name);
 		return checkoutCommand.call();
 	}
 

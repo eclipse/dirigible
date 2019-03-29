@@ -26,6 +26,7 @@ import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ import org.slf4j.LoggerFactory;
  * Push the changes of a project from the local repository to remote Git repository.
  */
 public class PushCommand {
+
+	private static final String SHOULD_BE_EMPTY_REPOSITORY = "Should be empty repository: {}";
 
 	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
 
@@ -143,20 +146,44 @@ public class PushCommand {
 			String lastSHA = gitProperties.getSHA();
 
 			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + UserFacade.getName();
-			gitConnector.checkout(lastSHA);
-			gitConnector.createBranch(changesBranch, lastSHA);
-			gitConnector.checkout(changesBranch);
+			try {
+				gitConnector.checkout(lastSHA);
+			} catch (InvalidRefNameException e) {
+				lastSHA = "HEAD";
+			}
+			try {
+				gitConnector.createBranch(changesBranch, lastSHA);
+			} catch (GitAPIException e) {
+				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+			}
+			try {
+				gitConnector.checkout(changesBranch);
+			} catch (GitAPIException e) {
+				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+			}
 
 			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
 			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
 
 			gitConnector.add(selectedProject.getName());
 			gitConnector.commit(commitMessage, username, email, true);
-			gitConnector.pull(username, password);
+			try {
+				gitConnector.pull(username, password);
+			} catch (GitAPIException e) {
+				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+			}
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
-				gitConnector.checkout(gitRepositoryBranch);
-				gitConnector.rebase(changesBranch);
+				try {
+					gitConnector.checkout(gitRepositoryBranch);
+				} catch (GitAPIException e) {
+					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+				}
+				try {
+					gitConnector.rebase(changesBranch);
+				} catch (GitAPIException e) {
+					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+				}
 				gitConnector.push(username, password);
 
 				gitFileUtils.deleteRepositoryProject(selectedProject);
@@ -167,7 +194,7 @@ public class PushCommand {
 				String newLastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
 				gitProperties.setSHA(newLastSHA);
 
-				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties);
+				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
 
 				logger.info(String.format("Project [%s] has been pushed to remote repository.", selectedProject.getName()));
 			} else {

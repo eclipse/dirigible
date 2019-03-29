@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,9 @@ public class GitCloneModel extends BaseGitModel {
 
 	@ApiModelProperty(value = "Whether to publish the project(s) after clone", example = "true")
 	private boolean publish;
+	
+	@ApiModelProperty(value = "An optional project name in case of an empty repository", example = "myproject")
+	private String projectName;
 
 	/**
 	 * Gets the repository.
@@ -78,6 +81,24 @@ public class GitCloneModel extends BaseGitModel {
 	 */
 	public void setPublish(boolean publish) {
 		this.publish = publish;
+	}
+	
+	/**
+	 * Getter for the optional project name
+	 * 
+	 * @return the project name if set or null
+	 */
+	public String getProjectName() {
+		return projectName;
+	}
+	
+	/**
+	 * Setter for the optional project name
+	 * 
+	 * @param projectName the project name
+	 */
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 }
