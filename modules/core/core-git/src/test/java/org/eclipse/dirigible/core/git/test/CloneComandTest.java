@@ -28,7 +28,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CloneComandTest.
  */
@@ -75,6 +74,33 @@ public class CloneComandTest extends AbstractGuiceTest {
 			IFile file1 = folder1.getFile("service1.js");
 			assertNotNull(file1);
 			assertTrue(file1.exists());
+			workspace1.delete();
+		}
+	}
+	
+	/**
+	 * Creates the workspace test.
+	 *
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@Test
+	public void createWorkspaceNoGitTest() throws GitConnectorException {
+		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
+		if (gitEnabled != null) {
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
+			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			assertNotNull(workspace1);
+			assertTrue(workspace1.exists());
+			IProject project1 = workspace1.getProject("project1");
+			assertNotNull(project1);
+			assertTrue(project1.exists());
+			IFolder folder1 = project1.getFolder("folder1");
+			assertNotNull(folder1);
+			assertTrue(folder1.exists());
+			IFile file1 = folder1.getFile("service1.js");
+			assertNotNull(file1);
+			assertTrue(file1.exists());
+			workspace1.delete();
 		}
 	}
 

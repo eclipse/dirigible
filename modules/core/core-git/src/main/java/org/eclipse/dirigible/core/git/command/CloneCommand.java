@@ -46,7 +46,9 @@ import org.slf4j.LoggerFactory;
  */
 public class CloneCommand {
 
-	private static final String DOT_GIT = ".git";
+	private static final String REPOSITORY_GIT_EXTENSION = ".git";
+
+	private static final String DOT_GIT = REPOSITORY_GIT_EXTENSION;
 
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 
@@ -91,6 +93,9 @@ public class CloneCommand {
 	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
 			boolean publishAfterClone) throws GitConnectorException {
 		try {
+			if (repositoryUri != null && !repositoryUri.endsWith(REPOSITORY_GIT_EXTENSION)) {
+				repositoryUri += REPOSITORY_GIT_EXTENSION;
+			}
 			File gitDirectory = createGitDirectory(repositoryUri);
 			Set<String> clonedProjects = new HashSet<String>();
 			logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
