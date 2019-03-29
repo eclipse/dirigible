@@ -97,7 +97,11 @@ public class MessagingConsumer implements Runnable, ExceptionListener {
 	 */
 	@Override
 	public void run() {
-		receiveMessage();
+		if (this.handler != null) {
+			while (!this.stopped && !Thread.currentThread().isInterrupted()) {
+				receiveMessage();
+			}
+		}
 	}
 
 	/**
