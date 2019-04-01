@@ -49,6 +49,9 @@ angular.module('preview', [])
 			case 'js':
 				url += '/js';
 				break;
+			case 'xsjs':
+				url += '/xsc';
+				break;
 			case 'md':
 				url += '/wiki';
 				break;
