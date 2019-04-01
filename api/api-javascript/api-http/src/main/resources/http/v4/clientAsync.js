@@ -130,6 +130,21 @@ function HttpAsyncClient() {
 		}
 	};
 
+	this.patchAsync = function(url, config, options) {
+		var newUrl = buildUrl(url, options);
+		var callback = createHttpResponseCallback(
+			this.httpClient,
+			config.success,
+			config.error,
+			config.cancel
+		);
+		if (options) {
+			this.httpClient.patchAsync(newUrl, JSON.stringify(options), callback);
+		} else {
+			this.httpClient.patchAsync(newUrl, JSON.stringify({}), callback);
+		}
+	};
+
 	this.deleteAsync = function(url, config, options) {
 		var newUrl = buildUrl(url, options);
 		var callback = createHttpResponseCallback(

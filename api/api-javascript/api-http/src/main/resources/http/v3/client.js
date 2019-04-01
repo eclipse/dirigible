@@ -34,6 +34,10 @@ exports.put = function(url, options) {
 	return request(url, 'put', options);
 };
 
+exports.patch = function(url, options) {
+	return request(url, 'patch', options);
+};
+
 exports.delete = function(url, options) {
 	url = buildUrl(url, options);
 	return request(url, 'delete', options);

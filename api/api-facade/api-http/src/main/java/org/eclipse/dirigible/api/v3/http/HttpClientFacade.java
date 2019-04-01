@@ -29,6 +29,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -105,6 +106,25 @@ public class HttpClientFacade implements IScriptingFacade {
 		HttpPut httpPut = createPutRequest(url, httpClientRequestOptions);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
 		CloseableHttpResponse response = httpClient.execute(httpPut);
+		return processResponse(response, httpClientRequestOptions.isBinary());
+	}
+
+	/**
+	 * Performs a PATCH request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @return the response as JSON
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public static final String patch(String url, String options) throws IOException {
+		HttpClientRequestOptions httpClientRequestOptions = parseOptions(options);
+		HttpPatch httpPatch = createPatchRequest(url, httpClientRequestOptions);
+		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(httpClientRequestOptions.isSslTrustAllEnabled());
+		CloseableHttpResponse response = httpClient.execute(httpPatch);
 		return processResponse(response, httpClientRequestOptions.isBinary());
 	}
 
@@ -435,6 +455,87 @@ public class HttpClientFacade implements IScriptingFacade {
 		HttpEntity entity = multipartEntityBuilder.build();
 		httpPut.setEntity(entity);
 		return httpPut;
+	}
+
+	/**
+	 * Build HTTP PATCH Request
+	 * 
+	 * @param url
+	 * @param httpClientRequestOptions
+	 * @return
+	 */
+	public static final HttpPatch createPatchRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getData() != null) {
+			return createPatchBinaryRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getText() != null) {
+			return createPatchTextRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getParams() != null) {
+			return createPatchFormRequest(url, httpClientRequestOptions);
+		} else if (httpClientRequestOptions.getFiles() != null) {
+			return createPatchFilesRequest(url, httpClientRequestOptions);
+		}
+		throw new IllegalArgumentException("The element [data] or [text] or [params] or [files] in [options] have to be set for PATCH requests");
+	}
+
+	private static final HttpPatch createPatchBinaryRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPatch httpPatch = new HttpPatch(url);
+		httpPatch.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPatch);
+		HttpEntity entity = EntityBuilder.create().setBinary(httpClientRequestOptions.getData()).setContentType(ContentType.APPLICATION_OCTET_STREAM).build();
+		httpPatch.setEntity(entity);
+		return httpPatch;
+	}
+
+	private static final HttpPatch createPatchTextRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getText() == null) {
+			throw new IllegalArgumentException("The element [text] in [options] cannot be null for POST requests in [text] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPatch httpPatch = new HttpPatch(url);
+		httpPatch.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPatch);
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
+			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
+		}
+		httpPatch.setEntity(entityBuilder.build());
+		return httpPatch;
+	}
+
+	private static final HttpPatch createPatchFormRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [params] in [options] cannot be null for POST requests in [form] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPatch httpPatch = new HttpPatch(url);
+		httpPatch.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPatch);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		for (HttpClientParam httpClientParam : httpClientRequestOptions.getParams()) {
+			params.add(new BasicNameValuePair(httpClientParam.getName(), httpClientParam.getValue()));
+		}
+		HttpEntity entity = new UrlEncodedFormEntity(params);
+		httpPatch.setEntity(entity);
+		return httpPatch;
+	}
+
+	private static final HttpPatch createPatchFilesRequest(String url, HttpClientRequestOptions httpClientRequestOptions) throws IOException {
+		if (httpClientRequestOptions.getParams() == null) {
+			throw new IllegalArgumentException("The element [files] in [options] cannot be null for POST requests in [file] mode");
+		}
+		RequestConfig config = prepareConfig(httpClientRequestOptions);
+		HttpPatch httpPatch = new HttpPatch(url);
+		httpPatch.setConfig(config);
+		prepareHeaders(httpClientRequestOptions, httpPatch);
+		MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+		for (String filePath : httpClientRequestOptions.getFiles()) {
+			File file = new File(filePath);
+			multipartEntityBuilder.addBinaryBody(file.getName(), file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+		}
+		HttpEntity entity = multipartEntityBuilder.build();
+		httpPatch.setEntity(entity);
+		return httpPatch;
 	}
 
 	/**

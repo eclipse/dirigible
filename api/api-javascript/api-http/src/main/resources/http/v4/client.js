@@ -48,6 +48,17 @@ exports.put = function(url, options) {
 	return JSON.parse(result);
 };
 
+exports.patch = function(url, options) {
+	var url = buildUrl(url, options);
+	var result = {};
+	var opts = '{}';
+	if (options) {
+		opts = JSON.stringify(options);
+	}
+	result = org.eclipse.dirigible.api.v3.http.HttpClientFacade.patch(url, opts);
+	return JSON.parse(result);
+};
+
 exports.delete = function(url, options) {
 	var url = buildUrl(url, options);
 	var result = {};

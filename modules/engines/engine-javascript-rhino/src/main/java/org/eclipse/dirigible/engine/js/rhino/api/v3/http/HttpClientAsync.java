@@ -21,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
@@ -134,6 +135,26 @@ public final class HttpClientAsync implements IScriptingFacade {
 		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
 		httpResponseCallback.setOptions(httpClientRequestOptions);
 		HttpPut request = HttpClientFacade.createPutRequest(url, httpClientRequestOptions);
+		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
+	}
+
+	/**
+	 * Performs a Async PATCH request for the specified URL and options
+	 *
+	 * @param url
+	 *            the URL
+	 * @param options
+	 *            the options
+	 * @param httpResponseCallback
+	 *            the callback
+	 * @throws IOException
+	 *             In case an I/O exception occurs
+	 */
+	public void patchAsync(String url, String options, HttpResponseCallback httpResponseCallback) throws IOException {
+		requestsCounter ++;
+		HttpClientRequestOptions httpClientRequestOptions = HttpClientFacade.parseOptions(options);
+		httpResponseCallback.setOptions(httpClientRequestOptions);
+		HttpPatch request = HttpClientFacade.createPatchRequest(url, httpClientRequestOptions);
 		asyncHttpRequests.add(new AsyncHttpRequest(request, httpResponseCallback.getCallback()));
 	}
 
