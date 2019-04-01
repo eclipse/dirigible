@@ -137,13 +137,19 @@ public class GitConnector implements IGitConnector {
 	@Override
 	public Ref checkout(String name)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
-		CheckoutCommand checkoutCommand = git.checkout();
-		checkoutCommand.setName(name);
-		checkoutCommand.setCreateBranch(true);
-		checkoutCommand.setForce(true);
+		try {
+			CheckoutCommand checkoutCommand = git.checkout();
+			checkoutCommand.setName(name);
+			checkoutCommand.setCreateBranch(true);
+			checkoutCommand.setForce(true);
 //		checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
 //		checkoutCommand.setStartPoint(name);
-		return checkoutCommand.call();
+			return checkoutCommand.call();
+		} catch (RefAlreadyExistsException e) {
+			CheckoutCommand checkoutCommand = git.checkout();
+			checkoutCommand.setName(name);
+			return checkoutCommand.call();
+		}
 	}
 
 	/*
