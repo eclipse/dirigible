@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -644,6 +644,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("xml", TEXT_XML); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("json", APPLICATION_JSON); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("js", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("xsjs", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON_TABLE); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON_VIEW); //$NON-NLS-1$
