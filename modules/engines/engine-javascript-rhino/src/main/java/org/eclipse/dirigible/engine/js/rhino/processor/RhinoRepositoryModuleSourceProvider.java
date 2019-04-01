@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,7 +80,7 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 	 * @throws URISyntaxException
 	 *             the URI syntax exception
 	 */
-	private ModuleSource createModule(String module) throws URISyntaxException {
+	protected ModuleSource createModule(String module) throws URISyntaxException {
 		byte[] sourceCode;
 		ModuleSource moduleSource;
 		try {
