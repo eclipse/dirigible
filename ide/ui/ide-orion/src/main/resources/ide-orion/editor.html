@@ -56,7 +56,7 @@
 			}
 			
 		</style>
-		
+	
 		
 		<script src="editorBuild/code_edit/built-codeEdit.js"></script>
 		<script>
@@ -134,12 +134,26 @@
 				}
 				console.error('file parameter is not present in the URL');
 			}
-	
+
 			var orionEditor;
 			window.onload=function(){
 				var codeEdit = new orion.codeEdit();
 				var startup = function() {
-					codeEdit.create({parent: "embeddedEditor"}).then(function(editorViewer) {
+					var statusReporter = function(message, type, isAccessible) {
+						if(!message) {
+							return;
+						}
+						if (message.startsWith('Line')) {
+							messageHub.post({data: message}, 'status.caret');
+						} else if (type === "progress") {
+				 			messageHub.post({data: message}, 'status.message');
+				 		} else if (type === "error") { //$NON-NLS-0$
+				 			messageHub.post({data: message}, 'status.error');
+				 		} else {
+				 			messageHub.post({data: message}, 'status.message');
+				 		}
+					};
+					codeEdit.create({parent: "embeddedEditor", statusReporter}).then(function(editorViewer) {
 						orionEditor = editorViewer.editor;
 						editorViewer.inputManager.setAutoSaveTimeout(-1);
 						editorViewer.editor.addEventListener("InputChanged", function(evt) {
@@ -173,26 +187,29 @@
 				});
 			};
 		</script>
-		
+
 		<script>
 			var messageHub = new FramesMessageHub();
 		
 			function saveContents(text) {
-				console.log('Save called...');
 				if (file) {
 					var xhr = new XMLHttpRequest();
 					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
 					xhr.setRequestHeader('X-Requested-With', 'Fetch');
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
-							console.log('file saved: ' + file);
+							dirty = false;
+							messageHub.post({data: file}, 'editor.file.saved');
+							messageHub.post({data: 'File [' + file + '] saved.'}, 'status.message');
 						}
 					};
+					xhr.onerror = function() {
+						messageHub.post({data: 'Saveing file [' + file + '] failed!'}, 'status.error');
+					};
 					xhr.send(text);
-					dirty = false;
-					messageHub.post({data: file}, 'editor.file.saved');
 				} else {
 					console.error('file parameter is not present in the request');
+					messageHub.post({data: 'Saveing file [' + file + '] failed!'}, 'status.error');
 				}
 			}
 			

@@ -50,9 +50,17 @@ body {
 	width: 100%;
 	height: 2em;
 	background: #555;
-	color: #ccc;
+	color: #daa50d;
 	position: fixed;
 	bottom: 0;
+	padding: 4px 56px 0px 26px;
+}
+.statusbar-message {
+	width: 30%;
+}
+.statusbar-error {
+	color: #ed7474;
+	width: 30%;
 }
 .list-group-item {
   background: none !important;
@@ -353,7 +361,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .console-row-error {
-	color: red;
+	color: #ed7474;
 }
 
 .console-row-warn {
@@ -361,7 +369,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .console-row-info {
-	color: green;
+	color: #74ed74;
 }
 
 .console-row-debug {

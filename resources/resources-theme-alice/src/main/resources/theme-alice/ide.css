@@ -81,6 +81,14 @@ body {
 	color: #000000;
 	position: fixed;
 	bottom: 0;
+	padding: 4px 56px 0px 26px;
+}
+.statusbar-message {
+	width: 30%;
+}
+.statusbar-error {
+	color: red;
+	width: 30%;
 }
 .lm_header .lm_tab {
 	background: transparent;

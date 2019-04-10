@@ -312,14 +312,29 @@ angular.module('ideUiCore', ['ngResource'])
 .directive('statusBar', ['messageHub', function(messageHub){
 	return {
 		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
 		scope: {
-			statusBarTopic: '@'
+			statusBarTopic: '@',
+			message: '@message',
+			line: '@caret',
+			error: '@error'
 		},
 		link: function(scope, el, attrs){
-			messageHub.on(scope.statusBarTopic || 'status.message', function(msg){
+			messageHub.on(scope.statusBarTopic || 'status.message', function(msg) {
 				scope.message = msg.data;
+				scope.$apply();
 			});
-		}
+			messageHub.on('status.caret', function(msg) {
+				scope.caret = msg.data;
+				scope.$apply();
+			});
+			messageHub.on('status.error', function(msg) {
+				scope.error = msg.data;
+				scope.$apply();
+			});
+		},
+		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/statusbar.html'
 	}
 }])
 .directive('viewsLayout', ['viewRegistry', 'Layouts', function(viewRegistry, Layouts){
