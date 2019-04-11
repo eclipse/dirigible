@@ -307,7 +307,7 @@
   box-shadow: inset 0 0 1px #555555;
 }
 .jstree-default .jstree-clicked {
-  background: #7a642c/*#5fa2db*/;
+  background: #1a5d7f;
   border-radius: 2px;
   box-shadow: inset 0 0 1px #666666;
 }
@@ -358,7 +358,7 @@
 .jstree-default > .jstree-striped {
   min-width: 100%;
   display: inline-block;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==") left top repeat;
+  /*background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB/qqA+AAAABlBMVEUAAAAAAAClZ7nPAAAAAnRSTlMNAMM9s3UAAAAXSURBVHjajcEBAQAAAIKg/H/aCQZ70AUBjAATb6YPDgAAAABJRU5ErkJggg==") left top repeat;*/
 }
 .jstree-default > .jstree-wholerow-ul .jstree-hovered,
 .jstree-default > .jstree-wholerow-ul .jstree-clicked {
@@ -375,9 +375,9 @@
   background: #555555;
 }
 .jstree-default .jstree-wholerow-clicked {
-  background: #7a642c;
-  background: -webkit-linear-gradient(top, #7a642c 0%, #7a642c 100%);
-  background: linear-gradient(to bottom, #7a642c 0%, #7a642c 100%);
+  background: #1a5d7f;
+  background: -webkit-linear-gradient(top, #1a5d7f 0%, #1a5d7f 100%);
+  background: linear-gradient(to bottom, #1a5d7f 0%, #1a5d7f 100%);
 }
 .jstree-default .jstree-node {
   min-height: 24px;
@@ -1055,7 +1055,7 @@
     background: #555555;
   }
   .jstree-default-responsive .jstree-wholerow-clicked {
-    background: #7a642c;
+    background: #1a5d7f;
   }
   .jstree-default-responsive .jstree-children .jstree-last > .jstree-wholerow {
     box-shadow: inset 0 -6px 3px -5px #111111;
