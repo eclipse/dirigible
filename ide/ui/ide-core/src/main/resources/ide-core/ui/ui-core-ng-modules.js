@@ -288,7 +288,10 @@ angular.module('ideUiCore', ['ngResource'])
 
 			scope.selectTheme = function(themeName){
 				Theme.changeTheme(themeName);
-				Theme.reload();
+				setTimeout(function(){
+					Theme.reload();
+				}, 2000);
+				
 			};
 			scope.user = User.get();
 		},

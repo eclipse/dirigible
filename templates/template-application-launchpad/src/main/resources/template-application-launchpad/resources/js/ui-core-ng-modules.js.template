@@ -178,7 +178,9 @@ angular.module('ideUiCore', ['ngResource'])
 			scope.selectTheme = function(themeName){
 				Theme.changeTheme(themeName);
 				var themeUrl = Theme.themeUrl(themeName);
-				Theme.reload();
+				setTimeout(function(){
+					Theme.reload();
+				}, 2000);
 			};
 			scope.logout = function() {
 				window.location.href = relativePath + 'logout';
