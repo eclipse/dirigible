@@ -59,13 +59,48 @@
 			<artifactId>dirigible-api-facade-security</artifactId>
 			<version>3.4.0-SNAPSHOT</version>
     	</dependency>
-    	
         <dependency>
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		    <version>${commons.codec}</version>
 		</dependency>
+		<dependency>
+    		<groupId>org.eclipse.dirigible</groupId>
+    		<artifactId>dirigible-commons-xml2json</artifactId>
+    		<version>3.4.0-SNAPSHOT</version>
+    	</dependency>
     	
+    	<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.12.1.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+		    <artifactId>commons-dbcp2</artifactId>
+		    <version>2.2.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.1.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.193</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.14</version>
+		    <scope>test</scope>
+		</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
@@ -84,11 +119,6 @@
             <version>3.4.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-    	<dependency>
-    		<groupId>org.eclipse.dirigible</groupId>
-    		<artifactId>dirigible-commons-xml2json</artifactId>
-    		<version>3.4.0-SNAPSHOT</version>
-    	</dependency>
     </dependencies>
 
 </project>

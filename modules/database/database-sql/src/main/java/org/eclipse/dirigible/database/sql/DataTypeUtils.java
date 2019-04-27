@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,6 +112,20 @@ public class DataTypeUtils {
 	 */
 	public static boolean isDatabaseTypeSupported(Integer type) {
 		return DATABASE_TYPE_TO_DATA_TYPE.containsKey(type);
+	}
+	
+	/**
+	 * Gets the database type.
+	 *
+	 * @param type
+	 *            the type
+	 * @return the database type
+	 */
+	public static DataType getDatabaseType(Integer type) {
+		if (isDatabaseTypeSupported(type)) {
+			return DATABASE_TYPE_TO_DATA_TYPE.get(type);
+		}
+		throw new SqlException(format("Type {0} not supported", type));
 	}
 
 	/**

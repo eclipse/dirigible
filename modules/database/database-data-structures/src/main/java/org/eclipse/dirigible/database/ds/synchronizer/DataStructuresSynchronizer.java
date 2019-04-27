@@ -34,7 +34,6 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -49,6 +48,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
+import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableDropProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.ViewCreateProcessor;
@@ -895,9 +895,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *            the connection
 	 * @param tableModel
 	 *            the table model
+	 * @throws SQLException 
 	 */
-	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) {
-		throw new NotImplementedException("Altering of a non-empty table is not implemented yet.");
+	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+//		throw new NotImplementedException("Altering of a non-empty table is not implemented yet.");
+		TableAlterProcessor.execute(connection, tableModel);
 	}
 
 	/**
