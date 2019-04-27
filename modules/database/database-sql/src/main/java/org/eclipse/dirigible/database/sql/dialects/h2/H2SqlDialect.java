@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.h2;
 
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
@@ -22,7 +23,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The H2 SQL Dialect.
  */
 public class H2SqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, H2LastValueIdentityBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, H2NextValueSequenceBuilder, H2LastValueIdentityBuilder> {
 
 	/*
 	 * (non-Javadoc)

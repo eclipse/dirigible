@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
@@ -35,13 +36,15 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  *            the generic type
  * @param <CREATE>
  *            the generic type
+ * @param <ALTER>
+ *            the generic type
  * @param <DROP>
  *            the generic type
  * @param <NEXT>
  *            the generic type
  */
-public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
-		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST>, ISqlKeywords {
+public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
+		extends ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>, ISqlKeywords {
 
 	/**
 	 * Default implementation returns the direct toString() conversion. It may

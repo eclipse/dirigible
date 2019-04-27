@@ -17,6 +17,7 @@ import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
@@ -29,7 +30,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The PostgreSQL SQL Dialect.
  */
 public class PostgresSqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, PostgresCreateBranchingBuilder, DropBranchingBuilder, PostgresNextValueSequenceBuilder, LastValueIdentityBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, PostgresCreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, PostgresNextValueSequenceBuilder, LastValueIdentityBuilder> {
 
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$

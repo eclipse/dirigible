@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.database.sql.dialects.sybase;
 
 import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
@@ -22,7 +23,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The Sybase SQL Dialect.
  */
 public class SybaseSqlDialect extends
-		DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder, SybaseLastValueIdentityBuilder> {
+		DefaultSqlDialect<SybaseSelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, CreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, SybaseNextValueSequenceBuilder, SybaseLastValueIdentityBuilder> {
 
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "current_date"; //$NON-NLS-1$

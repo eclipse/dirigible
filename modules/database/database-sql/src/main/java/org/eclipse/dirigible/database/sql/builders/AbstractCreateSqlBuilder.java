@@ -36,5 +36,15 @@ public abstract class AbstractCreateSqlBuilder extends AbstractSqlBuilder {
 	protected void generateCreate(StringBuilder sql) {
 		sql.append(KEYWORD_CREATE);
 	}
+	
+	/**
+	 * Generate alter.
+	 *
+	 * @param sql
+	 *            the sql
+	 */
+	protected void generateAlter(StringBuilder sql) {
+		sql.append(KEYWORD_ALTER);
+	}
 
 }

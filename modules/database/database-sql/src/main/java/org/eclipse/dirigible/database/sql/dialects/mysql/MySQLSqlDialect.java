@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
@@ -26,7 +27,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The MySQL SQL Dialect.
  */
 public class MySQLSqlDialect extends
-		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, MySQLCreateBranchingBuilder, MySQLDropBranchingBuilder, MySQLNextValueSequenceBuilder, MySQLLastValueIdentityBuilder> {
+		DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, MySQLCreateBranchingBuilder, AlterBranchingBuilder, MySQLDropBranchingBuilder, MySQLNextValueSequenceBuilder, MySQLLastValueIdentityBuilder> {
 
 	private static final String MYSQL_KEYWORD_IDENTITY = "AUTO_INCREMENT";
 	

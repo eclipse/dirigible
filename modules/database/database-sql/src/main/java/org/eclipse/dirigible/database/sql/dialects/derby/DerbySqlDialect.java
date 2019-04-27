@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.database.sql.dialects.derby;
 
 import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
@@ -20,7 +21,7 @@ import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
  * The Derby SQL Dialect.
  */
 public class DerbySqlDialect extends
-		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder, DerbyLastValueIdentityBuilder> {
+		DefaultSqlDialect<DerbySelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, DerbyCreateBranchingBuilder, AlterBranchingBuilder, DerbyDropBranchingBuilder, DerbyNextValueSequenceBuilder, DerbyLastValueIdentityBuilder> {
 
 	private static final String IDENTITY_ARGUMENT = "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
 

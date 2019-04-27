@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.ExpressionBuilder;
@@ -36,6 +37,8 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  *            the generic type
  * @param <CREATE>
  *            the generic type
+ * @param <ALTER>
+ *            the generic type
  * @param <DROP>
  *            the generic type
  * @param <NEXT>
@@ -43,7 +46,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  * @param <LAST>
  *            the generic type
  */
-public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> {
+public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> {
 
 	/**
 	 * Select.
@@ -86,6 +89,13 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the creates the
 	 */
 	public CREATE create();
+	
+	/**
+	 * Alters the.
+	 *
+	 * @return the alters the
+	 */
+	public ALTER alter();
 
 	/**
 	 * Drop.

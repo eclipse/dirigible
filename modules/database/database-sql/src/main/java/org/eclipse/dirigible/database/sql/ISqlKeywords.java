@@ -102,6 +102,9 @@ public interface ISqlKeywords {
 
 	/** The Constant KEYWORD_CREATE. */
 	public static final String KEYWORD_CREATE = "CREATE"; //$NON-NLS-1$
+	
+	/** The Constant KEYWORD_ALTER. */
+	public static final String KEYWORD_ALTER = "ALTER"; //$NON-NLS-1$
 
 	/** The Constant KEYWORD_TABLE. */
 	public static final String KEYWORD_TABLE = "TABLE"; //$NON-NLS-1$
@@ -117,6 +120,9 @@ public interface ISqlKeywords {
 
 	/** The Constant KEYWORD_KEY. */
 	public static final String KEYWORD_KEY = "KEY"; //$NON-NLS-1$
+	
+	/** The Constant KEYWORD_ADD. */
+	public static final String KEYWORD_ADD = "ADD"; //$NON-NLS-1$
 
 	/** The Constant KEYWORD_DROP. */
 	public static final String KEYWORD_DROP = "DROP"; //$NON-NLS-1$
@@ -177,7 +183,7 @@ public interface ISqlKeywords {
 
 	/** The Constant KEYWORD_IDENTITY. */
 	public static final String KEYWORD_IDENTITY = "IDENTITY"; //$NON-NLS-1$
-
+	
 	/** The Constant FUNCTION_CURRENT_DATE. */
 	public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
 

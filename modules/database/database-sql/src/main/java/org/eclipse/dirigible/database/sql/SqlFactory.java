@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.ExpressionBuilder;
@@ -43,11 +44,11 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
  * @param <NEXT>
  *            the generic type
  */
-public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
-		implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> {
+public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
+		implements ISqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
 
 	/** The dialect. */
-	private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> dialect;
+	private ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect;
 
 	/**
 	 * Gets the default.
@@ -79,9 +80,9 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	 *            the dialect
 	 * @return the native
 	 */
-	public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> getNative(
-			ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST> dialect) {
-		return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, NEXT, LAST>(dialect);
+	public static <SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder> SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> getNative(
+			ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> dialect) {
+		return new SqlFactory<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST>(dialect);
 	}
 
 	/**
@@ -180,6 +181,15 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	@Override
 	public CREATE create() {
 		return this.dialect.create();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#alter()
+	 */
+	@Override
+	public ALTER alter() {
+		return this.dialect.alter();
 	}
 
 	/*
