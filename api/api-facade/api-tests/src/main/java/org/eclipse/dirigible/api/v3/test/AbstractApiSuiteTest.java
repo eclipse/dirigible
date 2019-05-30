@@ -156,6 +156,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/url/escape.js");
 		TEST_MODULES.add("utils/v4/url/escapePath.js");
 		TEST_MODULES.add("utils/v4/url/escapeForm.js");
+		TEST_MODULES.add("utils/v4/jsonpath/jsonpath_tests.js");
 		
 		TEST_MODULES.add("db/v4/database/getDatabaseTypes.js");
 		TEST_MODULES.add("db/v4/database/getDataSources.js");
