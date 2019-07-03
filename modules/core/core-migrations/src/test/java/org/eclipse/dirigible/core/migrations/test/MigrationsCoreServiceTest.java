@@ -12,13 +12,14 @@ package org.eclipse.dirigible.core.migrations.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
+import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
@@ -51,6 +52,14 @@ public class MigrationsCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createMigration() throws MigrationsException {
+		migrationsCoreService.getMigrations().forEach(migration->{
+				try {
+					migrationsCoreService.removeMigration(migration.getLocation());
+				} catch (MigrationsException e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				}
+		});
 		migrationsCoreService.removeMigration("/abc/my.migrations");
 		migrationsCoreService.createMigration("/abc/my.migrations", "test_migration1", 1, 2, 3, "handelr1", "javascript",  "Test");
 		List<MigrationDefinition> list = migrationsCoreService.getMigrations();

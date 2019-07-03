@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.dirigible.core.extensions.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PublisherCoreServiceTest.
  */
@@ -106,6 +106,14 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createPublishLogTest() throws PublisherException {
+		publisherCoreService.getPublishLogs().forEach(log->{
+			try {
+				publisherCoreService.removePublishLog(log.getId());
+			} catch (PublisherException e) {
+				e.printStackTrace();
+				fail(e.getMessage());
+			}
+		});
 		publisherCoreService.createPublishLog("source1", "target1");
 		List<PublishLogDefinition> list = publisherCoreService.getPublishLogs();
 		assertEquals(1, list.size());
