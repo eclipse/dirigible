@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			.synchronizedMap(new HashMap<String, ListenerDefinition>());
 
 	private static final List<String> LISTENERS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> LISTENERS_MODIFIED = Collections.synchronizedList(new ArrayList<String>());
 
 	@Inject
 	private MessagingCoreService messagingCoreService;
@@ -160,7 +161,20 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	private void startListeners() {
 		logger.trace("Start Listeners...");
+		
+		// Stop modified listeners first
+		for (String listenerLocation : LISTENERS_MODIFIED) {
+			if (messagingManager.existsListener(listenerLocation)) {
+				try {
+					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					messagingManager.stopListener(listenerDefinition);
+				} catch (MessagingException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
 
+		// Start all the synchronized listeners (if not started)
 		for (String listenerLocation : LISTENERS_SYNCHRONIZED) {
 			if (!messagingManager.existsListener(listenerLocation)) {
 				try {
@@ -172,6 +186,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			}
 		}
 
+		// Stop all the running listeners that are not available in the last synchronization
 		List<String> runningListeners = messagingManager.getRunningListeners();
 		for (String listenerLocation : runningListeners) {
 			try {
@@ -190,6 +205,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	private void clearCache() {
 		LISTENERS_SYNCHRONIZED.clear();
+		LISTENERS_MODIFIED.clear();
 	}
 
 	private void synchronizePredelivered() throws SynchronizationException {
@@ -214,6 +230,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 							listenerDefinition.getHandler(), listenerDefinition.getDescription());
 					logger.info("Synchronized a modified Listener [{}] from location: {}", listenerDefinition.getName(),
 							listenerDefinition.getLocation());
+					LISTENERS_MODIFIED.add(listenerDefinition.getLocation());
 				}
 			}
 			LISTENERS_SYNCHRONIZED.add(listenerDefinition.getLocation());

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,9 @@ import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,9 @@ public class SchedulerManager {
 
 	@Inject
 	private DataSource dataSource;
+	
+	@Inject
+	private IRepository repository;
 
 	private static BrokerService broker;
 
@@ -115,6 +121,10 @@ public class SchedulerManager {
 	 */
 	public void startListener(ListenerDefinition listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
+			IResource resource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
+			if (!resource.exists()) {
+				logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(), listener.getHandler());
+			}
 			MessagingConsumer consumer = new MessagingConsumer(listener.getName(), listener.getType(), listener.getHandler(), 1000);
 			Thread consumerThread = new Thread(consumer);
 			consumerThread.setDaemon(false);
