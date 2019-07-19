@@ -9,11 +9,11 @@
  *   SAP - initial API and implementation
  */
 exports.getProducer = function() {
-	var producer = require('messaging/v3/producer');
+	var producer = require('messaging/v4/producer');
 	return producer;
 };
 
 exports.getConsumer = function() {
-	var consumer = require('messaging/v3/consumer');
+	var consumer = require('messaging/v4/consumer');
 	return consumer;
 };

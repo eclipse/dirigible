@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var consumer = require('messaging/v3/consumer');
+var consumer = require('messaging/v4/consumer');
 for(var propertyName in consumer) {
 	exports[propertyName] = consumer[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var producer = require('messaging/v3/producer');
+var producer = require('messaging/v4/producer');
 for(var propertyName in producer) {
 	exports[propertyName] = producer[propertyName];
 }

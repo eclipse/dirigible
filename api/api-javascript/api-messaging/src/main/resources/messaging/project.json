@@ -1,1 +1,8 @@
-{"guid":"messaging","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/api-v3-messaging.git"}}
+{
+	"guid": "messaging",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-messaging.git"
+	}
+}
