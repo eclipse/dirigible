@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var digest = require('utils/v3/digest');
+var digest = require('utils/v4/digest');
 for(var propertyName in digest) {
 	exports[propertyName] = digest[propertyName];
 }

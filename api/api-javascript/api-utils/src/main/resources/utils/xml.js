@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var xml = require('utils/v3/xml');
+var xml = require('utils/v4/xml');
 for(var propertyName in xml) {
 	exports[propertyName] = xml[propertyName];
 }

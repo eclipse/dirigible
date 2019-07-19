@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var url = require('utils/v3/url');
+var url = require('utils/v4/url');
 for(var propertyName in url) {
 	exports[propertyName] = url[propertyName];
 }

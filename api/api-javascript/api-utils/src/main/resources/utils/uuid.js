@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var uuid = require('utils/v3/uuid');
+var uuid = require('utils/v4/uuid');
 for(var propertyName in uuid) {
 	exports[propertyName] = uuid[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var hex = require('utils/v3/hex');
+var hex = require('utils/v4/hex');
 for(var propertyName in hex) {
 	exports[propertyName] = hex[propertyName];
 }
