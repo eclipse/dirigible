@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var manager = require('repository/v3/manager');
+var manager = require('repository/v4/manager');
 for(var propertyName in manager) {
 	exports[propertyName] = manager[propertyName];
 }

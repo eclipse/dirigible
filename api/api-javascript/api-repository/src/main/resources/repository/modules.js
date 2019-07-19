@@ -9,6 +9,6 @@
  *   SAP - initial API and implementation
  */
 exports.getManager = function() {
-	var manager = require('repository/v3/manager');
+	var manager = require('repository/v4/manager');
 	return manager;
 };
