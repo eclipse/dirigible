@@ -9,16 +9,16 @@
  *   SAP - initial API and implementation
  */
 exports.getDeployer = function() {
-	var deployer = require('bpm/v3/deployer');
+	var deployer = require('bpm/v4/deployer');
 	return deployer;
 };
 
 exports.getProcess = function() {
-	var process = require('bpm/v3/process');
+	var process = require('bpm/v4/process');
 	return process;
 };
 
 exports.getTasks = function() {
-	var tasks = require('bpm/v3/tasks');
+	var tasks = require('bpm/v4/tasks');
 	return tasks;
 };
