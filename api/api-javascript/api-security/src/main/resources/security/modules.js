@@ -9,6 +9,6 @@
  *   SAP - initial API and implementation
  */
 exports.getUser = function() {
-	var user = require('security/v3/user');
+	var user = require('security/v4/user');
 	return user;
 };

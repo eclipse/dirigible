@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var user = require('security/v3/user');
+var user = require('security/v4/user');
 for(var propertyName in user) {
 	exports[propertyName] = user[propertyName];
 }
