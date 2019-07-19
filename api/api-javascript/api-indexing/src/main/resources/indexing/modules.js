@@ -9,11 +9,11 @@
  *   SAP - initial API and implementation
  */
 exports.getWriter = function() {
-	var writer = require('messaging/v3/writer');
+	var writer = require('messaging/v4/writer');
 	return writer;
 };
 
 exports.getSearcher = function() {
-	var searcher = require('messaging/v3/searcher');
+	var searcher = require('messaging/v4/searcher');
 	return searcher;
 };

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var searcher = require('messaging/v3/searcher');
+var searcher = require('messaging/v4/searcher');
 for(var propertyName in searcher) {
 	exports[propertyName] = searcher[propertyName];
 }

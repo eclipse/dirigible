@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var writer = require('messaging/v3/writer');
+var writer = require('messaging/v4/writer');
 for(var propertyName in writer) {
 	exports[propertyName] = writer[propertyName];
 }
