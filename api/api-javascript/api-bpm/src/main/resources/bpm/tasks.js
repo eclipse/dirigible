@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var tasks = require('bpm/v3/tasks');
+var tasks = require('bpm/v4/tasks');
 for(var propertyName in tasks) {
 	exports[propertyName] = tasks[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var process = require('bpm/v3/process');
+var process = require('bpm/v4/process');
 for(var propertyName in process) {
 	exports[propertyName] = process[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var deployer = require('bpm/v3/deployer');
+var deployer = require('bpm/v4/deployer');
 for(var propertyName in deployer) {
 	exports[propertyName] = deployer[propertyName];
 }
