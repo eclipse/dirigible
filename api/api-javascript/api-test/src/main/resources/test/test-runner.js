@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var testRunner = require('test/v3/test-runner');
+var testRunner = require('test/v4/test-runner');
 for(var propertyName in testRunner) {
 	exports[propertyName] = testRunner[propertyName];
 }

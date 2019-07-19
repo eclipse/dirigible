@@ -1,1 +1,8 @@
-{"guid":"test","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/api-v3-test.git"}}
+{
+	"guid": "test",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-test.git"
+	}
+}
