@@ -1,1 +1,8 @@
-{"guid":"log","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/api-v3-log.git"}}
+{
+	"guid": "log",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-log.git"
+	}
+}

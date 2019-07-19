@@ -8,7 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var log = require('log/v4/logging');
-for(var propertyName in log) {
-	exports[propertyName] = log[propertyName];
-}
+exports.getLogging = function() {
+	var logging = require('log/v4/logging');
+	return logging;
+};
+
