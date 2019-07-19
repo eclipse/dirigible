@@ -9,31 +9,31 @@
  *   SAP - initial API and implementation
  */
 exports.getDatabase = function() {
-	var database = require('db/v3/database');
+	var database = require('db/v4/database');
 	return database;
 };
 
 exports.getQuery = function() {
-	var query = require('db/v3/query');
+	var query = require('db/v4/query');
 	return query;
 };
 
 exports.getUpdate = function() {
-	var update = require('db/v3/update');
+	var update = require('db/v4/update');
 	return update;
 };
 
 exports.getSequence = function() {
-	var sequence = require('db/v3/sequence');
+	var sequence = require('db/v4/sequence');
 	return sequence;
 };
 
 exports.getDao = function() {
-	var dao = require('db/v3/dao');
+	var dao = require('db/v4/dao');
 	return dao;
 };
 
 exports.getSql = function() {
-	var sql = require('db/v3/sql');
+	var sql = require('db/v4/sql');
 	return sql;
 };

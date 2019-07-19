@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var sql = require('db/v3/sql');
+var sql = require('db/v4/sql');
 for(var propertyName in sql) {
 	exports[propertyName] = sql[propertyName];
 }

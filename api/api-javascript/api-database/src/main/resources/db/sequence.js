@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var sequence = require('db/v3/sequence');
+var sequence = require('db/v4/sequence');
 for(var propertyName in sequence) {
 	exports[propertyName] = sequence[propertyName];
 }

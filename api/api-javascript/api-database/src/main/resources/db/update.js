@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var update = require('db/v3/update');
+var update = require('db/v4/update');
 for(var propertyName in update) {
 	exports[propertyName] = update[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var query = require('db/v3/query');
+var query = require('db/v4/query');
 for(var propertyName in query) {
 	exports[propertyName] = query[propertyName];
 }

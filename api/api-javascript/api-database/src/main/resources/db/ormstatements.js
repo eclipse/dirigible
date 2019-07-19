@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  */
 "use strict";
-var ormstatements = require('db/v3/ormstatements');
+var ormstatements = require('db/v4/ormstatements');
 for(var propertyName in ormstatements) {
 	exports[propertyName] = ormstatements[propertyName];
 }

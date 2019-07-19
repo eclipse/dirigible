@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var database = require('db/v3/database');
+var database = require('db/v4/database');
 for(var propertyName in database) {
 	exports[propertyName] = database[propertyName];
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *   SAP - initial API and implementation
  */
 "use strict";
-var statements = require('db/v3/statements');
+var statements = require('db/v4/statements');
 for(var propertyName in statements) {
 	exports[propertyName] = statements[propertyName];
 }
