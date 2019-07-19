@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var response = require('http/v3/response');
+var response = require('http/v4/response');
 for(var propertyName in response) {
 	exports[propertyName] = response[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var client = require('http/v3/client');
+var client = require('http/v4/client');
 for(var propertyName in client) {
 	exports[propertyName] = client[propertyName];
 }

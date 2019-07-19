@@ -9,36 +9,36 @@
  *   SAP - initial API and implementation
  */
 exports.getClient = function() {
-	var client = require('http/v3/client');
+	var client = require('http/v4/client');
 	return client;
 };
 
 exports.getRequest = function() {
-	var request = require('http/v3/request');
+	var request = require('http/v4/request');
 	return request;
 };
 
 exports.getResponse = function() {
-	var response = require('http/v3/response');
+	var response = require('http/v4/response');
 	return response;
 };
 
 exports.getSession = function() {
-	var session = require('http/v3/session');
+	var session = require('http/v4/session');
 	return session;
 };
 
 exports.getUpload = function() {
-	var upload = require('http/v3/upload');
+	var upload = require('http/v4/upload');
 	return upload;
 };
 
 exports.getRest = function() {
-	var rest = require('http/v3/rs');
+	var rest = require('http/v4/rs');
 	return rest;
 };
 
 exports.getRestData = function() {
-	var restData = require('http/v3/rs-data');
+	var restData = require('http/v4/rs-data');
 	return restData;
 };

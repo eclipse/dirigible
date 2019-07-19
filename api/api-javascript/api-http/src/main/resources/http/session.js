@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var session = require('http/v3/session');
+var session = require('http/v4/session');
 for(var propertyName in session) {
 	exports[propertyName] = session[propertyName];
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var restData = require('http/v3/rs-data');
+var restData = require('http/v4/rs-data');
 for(var propertyName in restData) {
 	exports[propertyName] = restData[propertyName];
 }

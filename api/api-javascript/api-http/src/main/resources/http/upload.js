@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var upload = require('http/v3/upload');
+var upload = require('http/v4/upload');
 for(var propertyName in upload) {
 	exports[propertyName] = upload[propertyName];
 }
