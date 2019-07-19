@@ -21,7 +21,7 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>api-v3-messaging</content.repository.name>
+		<content.repository.name>api-messaging</content.repository.name>
 		<content.project.name>messaging</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>

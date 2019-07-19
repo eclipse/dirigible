@@ -21,7 +21,7 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>api-v3-workspace</content.repository.name>
+		<content.repository.name>api-workspace</content.repository.name>
 		<content.project.name>workspace</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>

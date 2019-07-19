@@ -21,7 +21,7 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>api-v3-core</content.repository.name>
+		<content.repository.name>api-core</content.repository.name>
 		<content.project.name>core</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
