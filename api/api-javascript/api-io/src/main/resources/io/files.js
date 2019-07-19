@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var files = require('io/v3/files');
+var files = require('io/v4/files');
 for(var propertyName in files) {
 	exports[propertyName] = files[propertyName];
 }

@@ -1,1 +1,8 @@
-{"guid":"io","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/api-v3-io.git"}}
+{
+	"guid": "io",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-io.git"
+	}
+}

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var streams = require('io/v3/streams');
+var streams = require('io/v4/streams');
 for(var propertyName in streams) {
 	exports[propertyName] = streams[propertyName];
 }

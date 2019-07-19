@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var zip = require('io/v3/zip');
+var zip = require('io/v4/zip');
 for(var propertyName in zip) {
 	exports[propertyName] = zip[propertyName];
 }

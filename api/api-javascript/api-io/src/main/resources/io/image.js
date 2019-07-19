@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var image = require('io/v3/image');
+var image = require('io/v4/image');
 for(var propertyName in image) {
 	exports[propertyName] = image[propertyName];
 }
