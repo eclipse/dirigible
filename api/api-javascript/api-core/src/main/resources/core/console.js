@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var console = require('core/v3/console');
+var console = require('core/v4/console');
 for(var propertyName in console) {
 	exports[propertyName] = console[propertyName];
 }

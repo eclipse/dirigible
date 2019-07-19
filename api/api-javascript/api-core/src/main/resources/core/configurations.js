@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var context = require('core/v3/configurations');
+var context = require('core/v4/configurations');
 for(var propertyName in context) {
 	exports[propertyName] = context[propertyName];
 }

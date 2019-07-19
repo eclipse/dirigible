@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var globals = require('core/v3/globals');
+var globals = require('core/v4/globals');
 for(var propertyName in globals) {
 	exports[propertyName] = globals[propertyName];
 }

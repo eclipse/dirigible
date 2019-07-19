@@ -9,37 +9,37 @@
  *   SAP - initial API and implementation
  */
 exports.getConsole = function() {
-	var console = require('core/v3/console');
+	var console = require('core/v4/console');
 	return console;
 };
 
 exports.getContext = function() {
-	var context = require('core/v3/context');
+	var context = require('core/v4/context');
 	return context;
 };
 
 exports.getEnv = function() {
-	var env = require('core/v3/env');
+	var env = require('core/v4/env');
 	return env;
 };
 
 exports.getExtensions = function() {
-	var extensions = require('core/v3/extensions');
+	var extensions = require('core/v4/extensions');
 	return extensions;
 };
 
 exports.getGlobals = function() {
-	var globals = require('core/v3/globals');
+	var globals = require('core/v4/globals');
 	return globals;
 };
 
 exports.getJava = function() {
-	var java = require('core/v3/java');
+	var java = require('core/v4/java');
 	return java;
 };
 
 exports.getThreads = function() {
-	var threads = require('core/v3/threads');
+	var threads = require('core/v4/threads');
 	return threads;
 };
 

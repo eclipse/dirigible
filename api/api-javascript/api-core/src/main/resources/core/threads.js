@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var threads = require('core/v3/threads');
+var threads = require('core/v4/threads');
 for(var propertyName in threads) {
 	exports[propertyName] = threads[propertyName];
 }

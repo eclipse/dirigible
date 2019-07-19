@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var env = require('core/v3/env');
+var env = require('core/v4/env');
 for(var propertyName in env) {
 	exports[propertyName] = env[propertyName];
 }
