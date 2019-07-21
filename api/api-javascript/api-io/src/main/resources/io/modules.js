@@ -28,7 +28,3 @@ exports.getImage = function() {
 	return image;
 };
 
-exports.getFtp = function() {
-	var ftp = require('io/v4/ftp');
-	return ftp;
-};
