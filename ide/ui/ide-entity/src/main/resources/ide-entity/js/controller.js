@@ -53,6 +53,7 @@ function main(container, outline, toolbar, sidebar, status) {
 			};
 			xhr.send(text);
 			messageHub.post({data: file}, 'editor.file.saved');
+			messageHub.post({data: 'File [' + file + '] saved.'}, 'status.message');
 		} else {
 			console.error('file parameter is not present in the request');
 		}
