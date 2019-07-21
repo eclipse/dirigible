@@ -155,7 +155,7 @@
 					};
 					codeEdit.create({parent: "embeddedEditor", statusReporter}).then(function(editorViewer) {
 						orionEditor = editorViewer.editor;
-						editorViewer.inputManager.setAutoSaveTimeout(-1);
+						editorViewer.inputManager.setAutoSaveTimeout(300000);
 						editorViewer.editor.addEventListener("InputChanged", function(evt) {
 					        if(evt.contentsSaved) {
 					        	var text = editorViewer.editor.getTextView().getText();
