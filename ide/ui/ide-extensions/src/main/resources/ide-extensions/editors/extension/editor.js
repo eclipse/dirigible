@@ -52,6 +52,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 			};
 			xhr.send(text);
 			messageHub.post({data: $scope.file}, 'editor.file.saved');
+			messageHub.post({data: 'File [' + $scope.file + '] saved.'}, 'status.message');
 		} else {
 			console.error('file parameter is not present in the request');
 		}
