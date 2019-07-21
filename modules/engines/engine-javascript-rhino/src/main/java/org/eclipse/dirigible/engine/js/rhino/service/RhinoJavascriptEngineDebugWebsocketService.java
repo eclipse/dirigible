@@ -38,25 +38,25 @@ public class RhinoJavascriptEngineDebugWebsocketService {
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		processor.onOpen(session);
-		logger.info("[ws:console] onOpen: " + session.getId());
+		logger.debug("[ws:console] onOpen: " + session.getId());
 	}
 
 	@OnError
 	public void onError(Session session, Throwable throwable) {
 		processor.onError(session, throwable);
-		logger.info("[ws:console] onError: " + session.getId());
+		logger.error("[ws:console] onError: " + session.getId());
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
 		processor.onMessage(message, session);
-		logger.info("[ws:console] onMessage: " + session.getId());
+		logger.debug("[ws:console] onMessage: " + session.getId());
 	}
 
 	@OnClose
 	public void onClose(Session session) {
 		processor.onClose(session);
-		logger.info("[ws:console] onClose: " + session.getId());
+		logger.debug("[ws:console] onClose: " + session.getId());
 	}
 
 }

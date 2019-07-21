@@ -47,7 +47,7 @@ public class ConsoleWebsocketService {
 	@OnOpen
 	public void onOpen(Session session) {
 		OPEN_SESSIONS.put(session.getId(), session);
-		logger.info("[ws:console] onOpen: " + session.getId());
+		logger.debug("[ws:console] onOpen: " + session.getId());
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ConsoleWebsocketService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable throwable) {
-		logger.info(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));
+		logger.error(String.format("[ws:console] Session %s error %s", session.getId(), throwable.getMessage()));
 		logger.error("[ws:console] " + throwable.getMessage(), throwable);
 	}
 
@@ -87,7 +87,7 @@ public class ConsoleWebsocketService {
 	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
-		logger.info(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));
+		logger.debug(String.format("[ws:console] Session %s closed because of %s", session.getId(), closeReason));
 		OPEN_SESSIONS.remove(session.getId());
 	}
 

@@ -58,7 +58,7 @@ public class TerminalWebsocketService {
 	@OnOpen
 	public void onOpen(Session session) {
 		OPEN_SESSIONS.put(session.getId(), session);
-		logger.trace("[ws:terminal] onOpen: " + session.getId());
+		logger.debug("[ws:terminal] onOpen: " + session.getId());
 		startProcessRunnable(session);
 	}
 
