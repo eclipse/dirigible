@@ -58,7 +58,7 @@ public class PublisherProcessor {
 		}
 		PublishRequestDefinition publishRequestDefinition = publishCoreService.createPublishRequest(workspacePath.toString(), path,
 				IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-		logger.info("Publishing request created [{}]", publishRequestDefinition.getId());
+		logger.debug("Publishing request created [{}]", publishRequestDefinition.getId());
 		// force synchronization ?
 		PublisherSynchronizer.forceSynchronization();
 		return publishRequestDefinition.getId();
