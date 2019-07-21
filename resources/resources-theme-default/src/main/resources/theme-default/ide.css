@@ -60,11 +60,11 @@ body {
 	padding: 4px 56px 0px 26px;
 }
 .statusbar-message {
-	width: 30%;
+	width: 40%;
 }
 .statusbar-error {
 	color: #ed7474;
-	width: 30%;
+	width: 45%;
 }
 .list-group-item {
   background: none !important;

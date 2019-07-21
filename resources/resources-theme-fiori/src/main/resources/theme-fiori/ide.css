@@ -59,11 +59,11 @@ body {
 	padding: 6px 56px 0px 26px;
 }
 .statusbar-message {
-	width: 30%;
+	width: 40%;
 }
 .statusbar-error {
 	color: red;
-	width: 30%;
+	width: 45%;
 }
 .lm_header .lm_tab {
 	background: #edeff0;
