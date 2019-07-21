@@ -19,7 +19,7 @@
             right: 0;
         }
 		</style>
-	
+	    <script src="../../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
     </head>
     <body id="monaco-browser" spellcheck="false">
     
@@ -28,7 +28,8 @@
 		<div  id="embeddedEditor"></div>
 		
 		<script src="monaco-editor/dev/vs/loader.js"></script>
-		<script>			
+		<script>
+		    var messageHub = new FramesMessageHub();
 			function FileIO(){
 				var __URL = URL;
 				this.workspaceApiUrl = '../../../../services/v3/ide/workspaces';
@@ -72,6 +73,8 @@
 							xhr.onload = () => resolve(fileName);
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);
+							messageHub.post({data: fileName}, 'editor.file.saved');
+							messageHub.post({data: 'File [' + fileName + '] saved.'}, 'status.message');
 						} else {
 							reject('file query parameter is not present in the URL');
 						}
