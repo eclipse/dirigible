@@ -23,12 +23,14 @@
 			<div id="content"></div>
 		</div>
 		<script src="../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+		<script src="../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
 		<script>
 		var clear = function() {
 			$("#console").html('<div id="content"></div>');
 			$("#content").after("<div class='console-row console-row-info'>[" + new Date().toISOString() + "][cleared]...</div>");
 		};
 		var connectToLog = function() {
+			var messageHub = new FramesMessageHub();
 			try {
 				var logSocket = new WebSocket(
 					((location.protocol === 'https:') ? "wss://" : "ws://")
@@ -45,6 +47,11 @@
 				var date = new Date(record.timestamp);
 				var id = record.timestamp;
 				$("#content").after("<div id='" + id + "' class='console-row console-row-" + record.level.toLowerCase() + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
+				if (record.level === 'ERROR' || record.level === 'WARN') {
+					messageHub.post({data: record.message}, 'status.error');
+				} else if (record.level === 'INFO') {
+					messageHub.post({data: record.message}, 'status.message');
+				}
 			};
 			
 			setInterval(clear, 6000000);
