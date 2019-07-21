@@ -62,7 +62,8 @@ FLOWABLE.TOOLBAR = {
 				            eventType: 'update-model'
 		                };
 		                FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
-		                
+		                window.messageHub.post({data: modelMetaData.modelId}, 'editor.file.saved');
+			            window.messageHub.post({data: 'File [' + modelMetaData.modelId + '] saved.'}, 'status.message');
 		            })
 		            .error(function (data, status, headers, config) {
 		                if (status === 409) {
