@@ -59,11 +59,19 @@ body {
 	padding: 6px 56px 0px 26px;
 }
 .statusbar-message {
-	width: 40%;
+        width: 40%;
+        flex: 1;  
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 }
 .statusbar-error {
-	color: red;
-	width: 45%;
+        color: red;
+        width: 45%;
+        flex: 1;  
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 }
 .lm_header .lm_tab {
 	background: #edeff0;

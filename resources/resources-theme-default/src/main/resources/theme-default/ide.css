@@ -60,11 +60,19 @@ body {
 	padding: 4px 56px 0px 26px;
 }
 .statusbar-message {
-	width: 40%;
+        width: 40%;
+        flex: 1;  
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 }
 .statusbar-error {
-	color: #ed7474;
-	width: 45%;
+        color: #ed7474;
+        width: 45%;
+        flex: 1;  
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;	
 }
 .list-group-item {
   background: none !important;
