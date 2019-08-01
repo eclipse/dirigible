@@ -142,7 +142,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = 'var(--modeler-entity-color)';
+	style[mxConstants.STYLE_FONTCOLOR] = '#609dd2'; // 'var(--modeler-entity-color)';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -156,10 +156,16 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
 	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
-	style[mxConstants.STYLE_FILLCOLOR] = 'var(--modeler-entity-header-background)';
-	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = 'var(--modeler-entity-background)';
-	style[mxConstants.STYLE_STROKECOLOR] = 'var(--modeler-entity-border)';//'#337ab7';
-	style[mxConstants.STYLE_FONTCOLOR] = 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	
+    style[mxConstants.STYLE_FILLCOLOR] = '#609dd2';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -174,7 +180,7 @@ function configureStylesheet(graph) {
 
 	style = graph.stylesheet.getDefaultEdgeStyle();
 	style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = '#FFFFFF';
-	style[mxConstants.STYLE_STROKECOLOR] = 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
