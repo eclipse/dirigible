@@ -4,7 +4,7 @@ services:
 language: java
 jdk:
   - oraclejdk8
-install: mvn install -f pom.xml -DskipTests=true
+install: mvn install -q -f pom.xml -DskipTests=true
 before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
 script:
