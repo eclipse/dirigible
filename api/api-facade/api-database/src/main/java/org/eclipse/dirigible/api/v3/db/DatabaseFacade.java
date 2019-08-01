@@ -13,6 +13,7 @@ package org.eclipse.dirigible.api.v3.db;
 import static java.text.MessageFormat.format;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -30,6 +31,7 @@ import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.dynamic.DynamicDatabase;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -77,6 +79,21 @@ public class DatabaseFacade implements IScriptingFacade {
 	 */
 	public static final String getDataSources() {
 		return GsonHelper.GSON.toJson(database.getDataSources().keySet());
+	}
+	
+	/**
+	 * Create a data source
+	 * 
+	 * @param name the name of the datasource
+	 * @param driver the driver of the datasource
+	 * @param url the url of the datasource
+	 * @param username the username of the datasource
+	 * @param password the password of the datasource
+	 * @param properties the properties of the datasource
+	 * @throws IOException in case of an error
+	 */
+	public static final void createDataSource(String name, String driver, String url, String username, String password, String properties) throws IOException {
+		DynamicDatabase.createDataSource(name, driver, url, username, password, properties);
 	}
 
 	/**

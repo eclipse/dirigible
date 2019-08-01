@@ -35,6 +35,10 @@ exports.getDataSources = function(databaseType) {
 	return datasources;
 };
 
+exports.createDataSource = function(name, driver, url, username, password, properties) {
+	org.eclipse.dirigible.api.v3.db.DatabaseFacade.createDataSource(name, driver, url, username, password, properties);
+};
+
 exports.getMetadata = function(databaseType, datasourceName) {
 	var metadata;
 	if (databaseType && databaseType) {

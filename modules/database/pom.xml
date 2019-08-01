@@ -24,6 +24,7 @@
 		<module>database-persistence</module>
 		<module>database-sql</module>
 		<module>database-h2</module>
+		<module>database-dynamic</module>
 	</modules>
 
 </project>

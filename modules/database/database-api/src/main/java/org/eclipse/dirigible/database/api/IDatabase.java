@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,8 @@ public interface IDatabase {
 	public static final String DIRIGIBLE_DATABASE_PROVIDER_MANAGED = "managed"; //$NON-NLS-1$
 
 	public static final String DIRIGIBLE_DATABASE_PROVIDER_CUSTOM = "custom"; //$NON-NLS-1$
+	
+	public static final String DIRIGIBLE_DATABASE_PROVIDER_DYNAMIC = "dynamic"; //$NON-NLS-1$
 
 	public static final String DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT = "DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT"; //$NON-NLS-1$
 
