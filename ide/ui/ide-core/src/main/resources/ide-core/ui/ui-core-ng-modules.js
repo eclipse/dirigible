@@ -286,13 +286,19 @@ angular.module('ideUiCore', ['ngResource'])
 
 			getThemes(scope);
 
-			scope.selectTheme = function(themeName){
+			scope.selectTheme = function(themeName) {
 				Theme.changeTheme(themeName);
 				setTimeout(function(){
 					Theme.reload();
-				}, 2000);
-				
+				}, 2000);	
 			};
+			
+			scope.resetTheme = function() {
+				Theme.changeTheme('default');
+				localStorage.clear();
+				Theme.reload();
+			};
+			
 			scope.user = User.get();
 		},
 		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/menu.html'

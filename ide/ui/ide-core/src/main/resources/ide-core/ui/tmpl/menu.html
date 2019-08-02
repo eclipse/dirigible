@@ -34,6 +34,7 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li ng-repeat="next in themes"><a href="#" data-theme="{{next.id}}" class="theme-link" ng-click="selectTheme(next.id)">{{next.name}}</a></li>
+					<li><a href="#" class="theme-link" ng-click="resetTheme()">Reset</a></li>
 				</ul>
 			  </li>
 			  <li class="hidden-xs">
