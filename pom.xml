@@ -142,6 +142,7 @@
 								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>**/src/main/resources/ide-core/ui/**</exclude>
 								<exclude>**/src/main/resources/ide-terminal/js/**</exclude>
+								<exclude>**/src/main/resources/utils/v4/jsonpath.js</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>
