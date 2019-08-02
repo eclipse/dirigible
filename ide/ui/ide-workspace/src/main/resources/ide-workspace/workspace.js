@@ -315,7 +315,7 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 			data.instance.set_icon(data.node, 'fa fa-folder-o');
 	})
 	.on('delete_node.jstree', function (e, data) {
-		this.deleteNode(data.node)
+		this.deleteNode(data.node);
 	}.bind(this))
 	.on('create_node.jstree', function (e, data) {})
 	.on('rename_node.jstree', function (e, data) {
@@ -757,6 +757,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				if(o === "move_node" || o === "copy_node") {
 					if(this.get_node(n).parent === this.get_node(p).id) { return false; }
 				}
+				if (o === 'delete_node') {
+                    if (!confirmRemove(n.text)) {
+                        return false;
+                    }
+                }
 				return true;
 			}
 		},
@@ -1178,3 +1183,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	//$.jstree.defaults.unique.case_sensitive = true;
 
 }]);
+
+function confirmRemove(name) {
+	return  confirm("Do you really want to delete: " + name);//$confirmDialog.dialog('open');
+}
