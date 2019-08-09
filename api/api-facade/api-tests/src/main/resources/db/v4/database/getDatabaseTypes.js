@@ -12,4 +12,4 @@ var database = require('db/v4/database');
 
 console.log(JSON.stringify(database.getDatabaseTypes()));
 
-JSON.stringify(database.getDatabaseTypes()) === '["local"]';
+JSON.stringify(database.getDatabaseTypes()) === '["local","dynamic"]';
