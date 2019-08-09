@@ -80,7 +80,7 @@ public class PullCommand {
 	 * @param publishAfterPull
 	 *            the publish after pull
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, boolean publishAfterPull) {
+	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, final String branch, final boolean publishAfterPull) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Pull action");
 		}
@@ -90,7 +90,7 @@ public class PullCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start pulling %s project...", selectedProject.getName()));
-				boolean pulled = pullProjectFromGitRepository(workspace, selectedProject, username, password);
+				boolean pulled = pullProjectFromGitRepository(workspace, selectedProject, username, password, branch);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
 				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
 				pulledProjects.add(selectedProject);
@@ -114,7 +114,7 @@ public class PullCommand {
 	 *            the selected project
 	 * @return true, if successful
 	 */
-	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject, final String username, final String password) {
+	boolean pullProjectFromGitRepository(final IWorkspace workspace, final IProject selectedProject, final String username, final String password, final String branch) {
 		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
 		GitProjectProperties gitProperties = null;
 		try {
@@ -131,12 +131,14 @@ public class PullCommand {
 		}
 
 		String gitRepositoryURI = gitProperties.getURL();
-		String gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+		String gitRepositoryBranch = branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
 		try {
-			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
-			gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
-			if (gitRepositoryBranch == null) {
-				gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, gitRepositoryBranch);
+			if (branch == null) {
+				gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
+				if (gitRepositoryBranch == null) {
+					gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+				}
 			}
 			logger.debug(String.format("Repository URL for the project [%s]: %s", selectedProject.getName(), gitRepositoryURI));
 			logger.debug(String.format("Branch for the project [%s]: %s", selectedProject.getName(), gitRepositoryBranch));

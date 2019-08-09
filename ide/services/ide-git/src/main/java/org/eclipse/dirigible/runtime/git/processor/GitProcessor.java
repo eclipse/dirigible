@@ -85,7 +85,7 @@ public class GitProcessor {
 	public void pull(String workspace, GitPullModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pullCommand.execute(workspaceApi, projects, model.getUsername(), model.getPassword(), model.isPublish());
+		pullCommand.execute(workspaceApi, projects, model.getUsername(), model.getPassword(), model.getBranch(), model.isPublish());
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class GitProcessor {
 	public void push(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail());
+		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch());
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class GitProcessor {
 	public void reset(String workspace, GitResetModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		resetCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model));
+		resetCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.getBranch());
 	}
 
 	/**

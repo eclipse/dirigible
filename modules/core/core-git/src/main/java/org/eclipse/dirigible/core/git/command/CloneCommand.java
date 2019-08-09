@@ -248,9 +248,9 @@ public class CloneCommand {
 				String projectGuid = dependency.getGuid();
 				if (!clonedProjects.contains(projectGuid)) {
 					IProject alreadyClonedProject = workspace.getProject(projectGuid);
+					String projectRepositoryURI = dependency.getUrl();
+					String projectRepositoryBranch = dependency.getBranch();
 					if (!alreadyClonedProject.exists()) {
-						String projectRepositoryURI = dependency.getUrl();
-						String projectRepositoryBranch = dependency.getBranch();
 						File projectGitDirectory = createGitDirectory(projectRepositoryURI);
 						logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 								projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
@@ -258,7 +258,7 @@ public class CloneCommand {
 								clonedProjects, null); // assume
 					} else {
 						logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
-						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject, username, password);
+						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject, username, password, projectRepositoryBranch);
 					}
 					clonedProjects.add(projectGuid);
 

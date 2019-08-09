@@ -342,29 +342,31 @@ GitService.prototype.cloneProject = function(wsTree, workspace, repository, bran
 				return response.data;
 			});
 }
-GitService.prototype.pullAllProjects = function(wsTree, workspace, username, password){
+GitService.prototype.pullAllProjects = function(wsTree, workspace, username, password, branch){
     var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path("pull").build();
 	return this.$http.post(url, {
 			"publish": true,
 			"username": username,
-			"password": btoa(password)})
+			"password": btoa(password),
+			"branch": branch})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
 			});
 }
-GitService.prototype.pullProject = function(wsTree, workspace, project, username, password){
+GitService.prototype.pullProject = function(wsTree, workspace, project, username, password, branch){
     var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("pull").build();
 	return this.$http.post(url, {
 			"publish": true,
 			"username": username,
-			"password": btoa(password)})
+			"password": btoa(password),
+			"branch": branch})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
 			});
 }
-GitService.prototype.pushAllProjects = function(wsTree, workspace, commitMessage, username, password, email){
+GitService.prototype.pushAllProjects = function(wsTree, workspace, commitMessage, username, password, email, branch){
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path("push").build();
 	return this.$http.post(url, {
 			"commitMessage": commitMessage,
@@ -377,24 +379,26 @@ GitService.prototype.pushAllProjects = function(wsTree, workspace, commitMessage
 				return response.data;
 			});
 }
-GitService.prototype.pushProject = function(wsTree, workspace, project, commitMessage, username, password, email){
+GitService.prototype.pushProject = function(wsTree, workspace, project, commitMessage, username, password, email, branch){
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("push").build();
 	return this.$http.post(url, {
 			"commitMessage": commitMessage,
 			"username": username,
 			"password": btoa(password),
-			"email": email
+			"email": email,
+			"branch": branch
 			})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
 			});
 }
-GitService.prototype.resetProject = function(wsTree, workspace, project, username, password){
+GitService.prototype.resetProject = function(wsTree, workspace, project, username, password, branch){
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("reset").build();
 	return this.$http.post(url, {
 			"username": username,
-			"password": btoa(password)})
+			"password": btoa(password),
+			"branch": branch})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
@@ -409,7 +413,7 @@ GitService.prototype.shareProject = function(wsTree, workspace, project, reposit
 			"commitMessage": commitMessage,
 			"username": username,
 			"password": btoa(password),
-			"email": email
+			"email": email,
 	})
 			.then(function(response){
 				wsTree.refresh();
@@ -607,16 +611,16 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.okClone = function() {
 		if (this.clone.url) {
-			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, null, this.username, this.password, this.projectName);
+			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, this.branch, this.username, this.password, this.projectName);
 		}
 	};
 
 	this.okPullAll = function() {
-		gitService.pullAllProjects(this.wsTree, this.selectedWorkspace, this.username, this.password);
+		gitService.pullAllProjects(this.wsTree, this.selectedWorkspace, this.username, this.password, this.branch);
 	};
 
 	this.okPull = function() {
-		gitService.pullProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password);
+		gitService.pullProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password, this.branch);
 	};
 	
 	this.okPushAll = function() {
@@ -624,11 +628,11 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	};
 
 	this.okPush = function() {
-		gitService.pushProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email);
+		gitService.pushProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch);
 	};
 	
 	this.okReset = function() {
-		gitService.resetProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password);
+		gitService.resetProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password, this.branch);
 	};
 	
 	this.okShare = function() {
@@ -643,7 +647,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		if (msg.data.env) {
 			envService.setEnv(msg.data.env);
 		}
-		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.branch, msg.data.username, msg.data.password, msg.data.projectName);
+		gitService.cloneProject(this.wsTree, this.selectedWorkspace, msg.data.repository, msg.data.branch, msg.data.username, msg.data.password, msg.data.projectName, msg.data.branch);
 		if (msg.data.uri) {
 			run();
 		}

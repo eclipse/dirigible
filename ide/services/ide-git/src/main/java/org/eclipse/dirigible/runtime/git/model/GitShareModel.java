@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,9 +22,6 @@ public class GitShareModel extends BaseGitModel {
 
 	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
 	private String repository;
-
-	@ApiModelProperty(value = "The Git Branch", example = "master", required = true)
-	private String branch;
 
 	@ApiModelProperty(value = "The Commit Message", example = "Initial Commit", required = true)
 	private String commitMessage;
@@ -63,24 +60,6 @@ public class GitShareModel extends BaseGitModel {
 	 */
 	public void setRepository(String repository) {
 		this.repository = repository;
-	}
-
-	/**
-	 * Gets the branch.
-	 *
-	 * @return the branch
-	 */
-	public String getBranch() {
-		return branch;
-	}
-
-	/**
-	 * Sets the branch.
-	 *
-	 * @param branch the new branch
-	 */
-	public void setBranch(String branch) {
-		this.branch = branch;
 	}
 
 	/**

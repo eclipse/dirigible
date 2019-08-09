@@ -74,7 +74,7 @@ public class PushCommand {
 	 *            the email
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
-			final String password, final String email) {
+			final String password, final String email, final String branch) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Push action");
 		}
@@ -82,7 +82,7 @@ public class PushCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start pushing project [%s]...", selectedProject.getName()));
-				pushProjectToGitRepository(workspace, selectedProject, commitMessage, username, password, email);
+				pushProjectToGitRepository(workspace, selectedProject, commitMessage, username, password, email, branch);
 				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
 			} else {
 				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
@@ -108,7 +108,7 @@ public class PushCommand {
 	 *            the email
 	 */
 	private void pushProjectToGitRepository(final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
-			final String username, final String password, final String email) {
+			final String username, final String password, final String email, final String branch) {
 
 		final String errorMessage = String.format("Error occurred while pushing project [%s]. ", selectedProject.getName());
 		GitProjectProperties gitProperties = null;
@@ -122,12 +122,14 @@ public class PushCommand {
 		try {
 			String gitRepositoryURI = gitProperties.getURL();
 
-			String gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+			String gitRepositoryBranch = branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
 			try {
-				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
-				gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
-				if (gitRepositoryBranch == null) {
-					gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, gitRepositoryBranch);
+				if (branch == null) {
+					gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
+					if (gitRepositoryBranch == null) {
+						gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+					}
 				}
 			} catch (IOException e) {
 				logger.error(errorMessage, e);

@@ -27,7 +27,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PushComandTest.
  */
@@ -77,7 +76,7 @@ public class PushComandTest extends AbstractGuiceTest {
 			String password = System.getProperty("dirigibleTestGitPassword");
 			String email = System.getProperty("dirigibleTestGitEmail");
 			if (username != null) {
-				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email);
+				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email, IGitConnector.GIT_MASTER);
 			}
 		}
 	}

@@ -27,7 +27,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PullComandTest.
  */
@@ -73,7 +72,7 @@ public class PullComandTest extends AbstractGuiceTest {
 			IProject project1 = workspace1.getProject("project1");
 			assertNotNull(project1);
 			assertTrue(project1.exists());
-			pullCommand.execute(workspace1, new IProject[] { project1 }, null, null, true);
+			pullCommand.execute(workspace1, new IProject[] { project1 }, null, null, null, true);
 		}
 	}
 

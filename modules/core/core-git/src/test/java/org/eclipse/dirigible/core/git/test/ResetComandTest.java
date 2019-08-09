@@ -27,7 +27,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ResetComandTest.
  */
@@ -76,7 +75,7 @@ public class ResetComandTest extends AbstractGuiceTest {
 			String username = System.getProperty("dirigibleTestGitUsername");
 			String password = System.getProperty("dirigibleTestGitPassword");
 			if (username != null) {
-				resetCommand.execute(workspace1, new IProject[] { project1 }, username, password);
+				resetCommand.execute(workspace1, new IProject[] { project1 }, username, password, IGitConnector.GIT_MASTER);
 			}
 		}
 	}

@@ -64,7 +64,7 @@ public class ResetCommand {
 	 * @param password
 	 *            the password
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password) {
+	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, final String branch) {
 
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Reset action");
@@ -73,7 +73,7 @@ public class ResetCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start reseting project [%s]...", selectedProject.getName()));
-				hardReset(workspace, selectedProject, username, password);
+				hardReset(workspace, selectedProject, username, password, branch);
 				logger.debug(String.format("Reset of the project [%s] finished.", selectedProject.getName()));
 			} else {
 				logger.warn(String.format("Project [%s] is local only. Select a previously cloned project for Reset operation.", selectedProject));
@@ -94,17 +94,22 @@ public class ResetCommand {
 	 * @param password
 	 *            the password
 	 */
-	private void hardReset(final IWorkspace workspace, final IProject project, final String username, final String password) {
+	private void hardReset(final IWorkspace workspace, final IProject project, final String username, final String password, final String branch) {
 		final String errorMessage = String.format("While hard reseting project [%s] error occurred", project.getName());
 		File tempGitDirectory = null;
 		try {
 			GitProjectProperties gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, project);
 			String gitRepositoryURI = gitProperties.getURL();
 
-			String gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+			String gitRepositoryBranch =  branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
 			try {
-				projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, ProjectMetadataManager.BRANCH_MASTER);
-				gitRepositoryBranch = ProjectMetadataManager.getBranch(project);
+				projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, gitRepositoryBranch);
+				if (branch == null) {
+					gitRepositoryBranch = ProjectMetadataManager.getBranch(project);
+					if (gitRepositoryBranch == null) {
+						gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+					}
+				}
 			} catch (IOException e) {
 				logger.error(errorMessage, e);
 			}
