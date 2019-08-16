@@ -43,3 +43,8 @@ exports.getThreads = function() {
 	return threads;
 };
 
+exports.getDestinations = function() {
+	var destinations = require('core/v4/destinations');
+	return destinations;
+};
+

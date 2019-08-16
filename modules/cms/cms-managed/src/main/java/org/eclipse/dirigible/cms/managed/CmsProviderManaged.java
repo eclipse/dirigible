@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.eclipse.dirigible.api.v3.core.DestinationsFacade;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
@@ -45,9 +46,6 @@ public class CmsProviderManaged implements ICmsProvider {
 	/** The Constant DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION. */
 	public static final String DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION = "DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION"; //$NON-NLS-1$
 	
-	/** The Constant DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME. */
-	public static final String DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME = "DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME"; //$NON-NLS-1$
-
 	/** The Constant NAME. */
 	public static final String NAME = "cmis"; //$NON-NLS-1$
 
@@ -114,7 +112,7 @@ public class CmsProviderManaged implements ICmsProvider {
 					secretKey = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY);
 				} else if (DIRIGIBLE_CMS_MANAGED_CONFIGURATION_AUTH_METHOD_DEST.equals(authMethod)) {
 					String destinationName = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION);
-					Map destinationPropeties = initializeFromDestination(destinationName);
+					Map destinationPropeties = DestinationsFacade.initializeFromDestination(destinationName);
 					if (destinationPropeties.get(PARAM_USER) != null) {
 						uniqueName = (String) destinationPropeties.get(PARAM_USER);
 					}
@@ -152,33 +150,6 @@ public class CmsProviderManaged implements ICmsProvider {
 		String message = "Initializing the managed CMIS session failed.";
 		logger.error(message);
 		throw new IllegalStateException(message);
-	}
-
-	private Map initializeFromDestination(String destinationName) throws NamingException, NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		logger.debug(String.format("CMIS Lookup Destination: %s", destinationName));
-		Object connectivityService = lookupConnectivityConfiguration();
-		Method configurationMethod = connectivityService.getClass().getMethod("getConfiguration", String.class);
-		Object destinationConfiguration = configurationMethod.invoke(connectivityService, destinationName);
-		Method propertiesMethod = destinationConfiguration.getClass().getMethod("getAllProperties");
-		Map destinationPropeties = (Map) propertiesMethod.invoke(destinationConfiguration);
-		logger.debug(String.format("CMIS Destination Properties: %s", destinationPropeties.toString()));
-		return destinationPropeties;
-	}
-	
-	/**
-	 * Retrieve the Connectivity Configuration from the target platform
-	 *
-	 * @return the managed connectivity service proxy
-	 * @throws NamingException
-	 */
-	static Object lookupConnectivityConfiguration() throws NamingException {
-		final InitialContext ctx = new InitialContext();
-		String key = Configuration.get(DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME);
-		if (key != null) {
-			return ctx.lookup(key);
-		}
-		return null;
 	}
 
 }
