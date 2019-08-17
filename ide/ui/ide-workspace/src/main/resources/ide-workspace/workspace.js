@@ -416,7 +416,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function(node, oldName, newName){
 				this.messageHub.announceFileCreated(f);
 			}.bind(this))
 			.catch(function(node, err){
-				this.jstree.delete_node(node);
+				//this.jstree.delete_node(node);
 				this.refresh();
 				throw err;
 			}.bind(this, node));
