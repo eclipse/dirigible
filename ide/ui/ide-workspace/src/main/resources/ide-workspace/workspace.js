@@ -173,6 +173,37 @@ WorkspaceService.prototype.createFile = function(name, path, node){
 				throw msg;
 			});	
 };
+WorkspaceService.prototype.uploadFile = function(name, path, node){
+	var isDirectory = node.type === 'folder';
+	var url = new UriBuilder().path((this.workspacesServiceUrl+path).split('/')).path(name).build();
+	if(isDirectory)
+		url+="/";
+	if (!node.data)
+		node.data = '';
+	var req = {
+		method: 'POST',
+		url: url,
+		headers: {
+		   'Content-Type': 'application/octet-stream',
+		   'Content-Transfer-Encoding': 'base64'
+		},
+		data: JSON.stringify(btoa(node.data))
+	};
+	return this.$http(req)
+			.then(function(response){
+				var filePath = response.headers('location');
+				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
+					.then(function(response){ return response.data});
+			}.bind(this))
+			.catch(function(response) {
+				var msg;
+				if(response.data && response.data.error)
+					msg = response.data.error;
+				else 
+					msg = response.data || response.statusText || 'Unspecified server error. HTTP Code ['+response.status+']';
+				throw msg;
+			});	
+};
 WorkspaceService.prototype.remove = function(filepath){
 	var url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(filepath.split('/')).build();
 	return this.$http['delete'](url);
@@ -341,6 +372,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	}.bind(this))
 	.on('jstree.workspace.generate', function (e, data) {		
 		this.generateFile(data, scope);
+	}.bind(this))
+	.on('jstree.workspace.upload', function (e, data) {		
+		this.uploadFileInPlace(data, scope);
 	}.bind(this))
 	.on('jstree.workspace.openWith', function (e, data, editor) {		
 		this.openWith(data, editor);
@@ -553,6 +587,16 @@ WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
 		this.workspaceController.fileName = segments[segments.length-1];
 		scope.$apply();
 		$('#generateFromModel').click();
+	}
+};
+WorkspaceTreeAdapter.prototype.uploadFileInPlace = function(resource, scope){
+	var segments = resource.path.split('/');
+	this.workspaceController.projectName = segments[2];
+	if (resource.type === 'project' || resource.type === 'folder') {	
+		segments = segments.splice(3, segments.length);
+		this.workspaceController.fileName = new UriBuilder().path(segments).build();
+		scope.$apply();
+		$('#uploadFile').click();
 	}
 };
 
@@ -934,6 +978,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 							tree.element.trigger('jstree.workspace.publish', [node.original._file]);
 						}.bind(this)
 					};
+					/*Upload*/
+					ctxmenu.generate = {
+						"separator_before": true,
+						"label": "Upload",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.upload', [node.original._file]);
+						}.bind(this)
+					};
 				}
 				
 				if (this.get_type(node) === "file" && node.original._file.path.endsWith('.model')) {
@@ -1143,6 +1197,27 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		messageHub.send('workbench.editor.save', {data: ""}, true);
 	};
 	
+	this.uploadFile = function(){
+		$('#uploadFile').click();
+	};
+	this.okUploadFile = function() {
+		var f = document.getElementById('uploadFileField').files[0],
+        r = new FileReader();
+        var name = f.name;
+        var path =  '/' + this.selectedWorkspace + '/' + this.projectName + (this.fileName ? '/' + this.fileName : '');
+	
+	    r.onloadend = function(e) {
+	      var data = e.target.result;
+	      var node = {};
+	      node.type = 'file';
+	      node.data = data;
+	      workspaceService.uploadFile(name, path, node);
+	      messageHub.send('workspace.file.uploaded', {data: ""}, true);
+	    };
+	
+	    r.readAsBinaryString(f);
+	};
+	
 	messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
@@ -1180,10 +1255,14 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		exportService.exportProject(this.selectedWorkspace + '/*');
 	}.bind(this), true);
 	
+	messageHub.on('workspace.file.uploaded', function(msg){
+		workspaceTreeAdapter.refresh();
+	}.bind(this), true);
+	
 	//$.jstree.defaults.unique.case_sensitive = true;
 
 }]);
 
 function confirmRemove(name) {
-	return  confirm("Do you really want to delete: " + name);//$confirmDialog.dialog('open');
+	return confirm("Do you really want to delete: " + name);//$confirmDialog.dialog('open');
 }

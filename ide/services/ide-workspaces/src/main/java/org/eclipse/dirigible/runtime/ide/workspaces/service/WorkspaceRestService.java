@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
@@ -399,7 +400,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
-
+		
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
 			sendErrorNotFound(response, error);
@@ -431,6 +432,9 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			return Response.status(Status.BAD_REQUEST).entity(error).build();
 		}
 
+		if (request.getHeader("Content-Transfer-Encoding") != null && "base64".equals(request.getHeader("Content-Transfer-Encoding"))) {
+			content = Base64.decodeBase64(content);
+		}
 		file = processor.createFile(workspace, project, path, content, request.getContentType());
 		return Response.created(processor.getURI(workspace, project, path)).build();
 	}

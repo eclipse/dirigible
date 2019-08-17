@@ -66,6 +66,7 @@
 			<button type="button" id="createProject" ng-show=false data-toggle="modal" data-target="#dialogCreateProject"></button>
 			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
 			<button type="button" id="generateFromModel" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromModel"></button>
+			<button type="button" id="uploadFile" ng-show=false data-toggle="modal" data-target="#dialogUploadFile"></button>
 			
 			<button type="button" class="btn btn-default btn-top" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
 			<button type="button" class="btn btn-default btn-top" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
@@ -206,6 +207,25 @@
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-primary" ng-click="workspace.okGenerateFromModel()" data-toggle="modal" data-target="#dialogGenerateFromModel">Generate</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- Upload File -->
+	<div class="modal fade" id="dialogUploadFile" tabindex="-1" role="dialog" aria-labelledby="dialogUploadFileLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Upload File</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-3 col-form-label">Select File:</label>
+				<div class="col-xs-9">
+					<input id="uploadFileField" class="form-control" type="file" placeholder="file name" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okUploadFile()" data-toggle="modal" data-target="#dialogUploadFile">Upload</button>
 	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>
