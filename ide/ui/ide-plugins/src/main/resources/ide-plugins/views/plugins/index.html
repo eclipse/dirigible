@@ -69,7 +69,7 @@
 		angular.module('plugins', []);
 		angular.module('plugins').controller('PluginsController', function ($scope, $http) {
 		
-		    var pluginsApi = 'http://www.dirigible.io/depots.json';
+		    var pluginsApi = 'https://www.dirigible.io/depots.json';
 		
 		    function loadPlugins() {
 		        $http.get(pluginsApi)
