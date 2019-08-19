@@ -16,6 +16,9 @@
  */
 
 exports.getName = function() {
-	var name = org.eclipse.dirigible.api.v3.security.UserFacade.getName();
-	return name;
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getName();
+};
+
+exports.isInRole = function(role) {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.isInRole(role);
 };
