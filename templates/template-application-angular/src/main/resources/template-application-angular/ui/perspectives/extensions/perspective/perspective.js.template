@@ -11,22 +11,22 @@
 exports.getPerspective = function(relativePath) {
 	return {
 #if($perspectiveName)
-		'name': '${perspectiveName}',
+		name: "${perspectiveName}",
 #elseif($brand)
-		'name': '${brand}',
+		name: "${brand}",
 #else
-		'name': '${projectName}',
+		name: "${projectName}",
 #end
 #if($perspectiveIcon)
-		'image': '${perspectiveIcon}',
+		image: "${perspectiveIcon}",
 #else
-		'image': 'life-ring',
+		image: "life-ring",
 #end
-		'link': relativePath + 'services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+		link: relativePath + "services/v3/web/${projectName}/ui/${perspectiveName}/index.html",
 #if($perspectiveOrder)
-		'order': ${perspectiveOrder},
+		order: ${perspectiveOrder},
 #else
-		'order': 999
+		order: 999
 #end
 	};
 };

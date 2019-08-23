@@ -1,4 +1,4 @@
-var response = require('http/v4/response');
+var response = require("http/v4/response");
 
 // HTTP 200
 exports.sendResponseOk = function(entity) {
@@ -18,22 +18,22 @@ exports.sendResponseNoContent = function() {
 // HTTP 400
 exports.sendResponseBadRequest = function(message) {
 	this.sendResponse(404, {
-		'code': 400,
-		'message': message
+		"code": 400,
+		"message": message
 	});
 };
 
 // HTTP 404
 exports.sendResponseNotFound = function(message) {
 	this.sendResponse(404, {
-		'code': 404,
-		'message': message
+		"code": 404,
+		"message": message
 	});
 };
 
 // Generic
 exports.sendResponse = function(status, body) {
-	response.setContentType('application/json');
+	response.setContentType("application/json");
 	response.setStatus(status);
 	if (body) {
 		response.println(JSON.stringify(body));

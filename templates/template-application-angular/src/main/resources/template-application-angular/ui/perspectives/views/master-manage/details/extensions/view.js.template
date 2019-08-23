@@ -10,11 +10,11 @@
 
 exports.getView = function(relativePath) {
 	return {
-		'id': '{{name}}',
-		'name': '{{menuLabel}}',
-		'label': '{{menuLabel}}',
-		'factory': 'frame',
-		'region': 'center-bottom',
-		'link': relativePath + 'services/v3/web/{{projectName}}/ui/{{perspectiveName}}/views/master/details/{{name}}/index.html'
+		id: "{{name}}",
+		name: "{{menuLabel}}",
+		label: "{{menuLabel}}",
+		factory: "frame",
+		region: "center-bottom",
+		link: relativePath + "services/v3/web/{{projectName}}/ui/{{perspectiveName}}/views/master/details/{{name}}/index.html"
 	};
 };

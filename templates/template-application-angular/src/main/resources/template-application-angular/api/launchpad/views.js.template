@@ -8,15 +8,15 @@
  * SAP - initial API and implementation
  */
 
-var extensions = require('core/v4/extensions');
-var request = require('http/v4/request');
-var response = require('http/v4/response');
+var extensions = require("core/v4/extensions");
+var request = require("http/v4/request");
+var response = require("http/v4/response");
 
-var extensionPoint = request.getParameter('extensionPoint');
+var extensionPoint = request.getParameter("extensionPoint");
 
 var views = [];
 
-var relativePath = getRelativePath(request.getParameter('pathSegments'));
+var relativePath = getRelativePath(request.getParameter("pathSegments"));
 var viewExtensions = extensions.getExtensions(extensionPoint);
 for (var j = 0; viewExtensions !== null && j < viewExtensions.length; j++) {
     var viewExtension = require(viewExtensions[j]);
@@ -27,9 +27,9 @@ for (var j = 0; viewExtensions !== null && j < viewExtensions.length; j++) {
 response.println(JSON.stringify(views));
 
 function getRelativePath(pathSegments) {
-	var relativePath = '/';
+	var relativePath = "/";
 	for (var i = 0; i < pathSegments; i ++) {
-		relativePath += '../';
+		relativePath += "../";
 	}
 	return relativePath;
 }

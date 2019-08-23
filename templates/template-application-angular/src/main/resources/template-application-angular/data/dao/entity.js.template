@@ -3,6 +3,17 @@ var query = require("db/v4/query");
 #end
 var producer = require("messaging/v4/producer");
 var daoApi = require("db/v4/dao");
+#set($isEntityUtilsEnabled = "false")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+#set($isEntityUtilsEnabled = "true")
+#break
+#end
+#end
+#if($isEntityUtilsEnabled == "true")
+var EntityUtils = require("${projectName}/data/utils/EntityUtils");
+#end
+
 var dao = daoApi.create({
 	table: "${dataName}",
 	properties: [
@@ -27,15 +38,52 @@ var dao = daoApi.create({
 });
 
 exports.list = function(settings) {
+#if($isEntityUtilsEnabled == "true")
+	return dao.list(settings).map(function(e) {
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+		EntityUtils.setLocalDate(e, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+		EntityUtils.setBoolean(e, "${property.name}");
+#end
+#end
+		return e;
+	});
+#else
 	return dao.list(settings);
+#end
 };
 #if($type != "REPORT")
 
 exports.get = function(id) {
+#if($isEntityUtilsEnabled == "true")
+	var entity = dao.find(id);
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+	EntityUtils.setLocalDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+	EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+	return entity;
+#else
 	return dao.find(id);
+#end
 };
 
 exports.create = function(entity) {
+#if($isEntityUtilsEnabled == "true")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+	EntityUtils.setLocalDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+	EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+#end
 	var id = dao.insert(entity);
 	triggerEvent("Create", {
 		table: "${dataName}",
@@ -53,6 +101,16 @@ exports.create = function(entity) {
 };
 
 exports.update = function(entity) {
+#if($isEntityUtilsEnabled == "true")
+#foreach ($property in $properties)
+#if($property.dataType == "DATE")
+	EntityUtils.setLocalDate(entity, "${property.name}");
+#end
+#if($property.dataType == "BOOLEAN")
+	EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+#end
 	dao.update(entity);
 	triggerEvent("Update", {
 		table: "${dataName}",

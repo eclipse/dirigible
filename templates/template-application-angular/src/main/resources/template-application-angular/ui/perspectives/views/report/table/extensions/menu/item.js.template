@@ -10,9 +10,9 @@
 
 exports.getMenu = function() {
 	return {
-		'id': '{{name}}',
-		'name': '{{name}}',
-		'link': '#',
-		'order': 800
+		id: "{{name}}",
+		name: "{{name}}",
+		link: "#",
+		order: 800
 	};
 };

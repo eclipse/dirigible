@@ -8,14 +8,14 @@
  * SAP - initial API and implementation
  */
 
-var extensions = require('core/v4/extensions');
-var request = require('http/v4/request');
-var response = require('http/v4/response');
+var extensions = require("core/v4/extensions");
+var request = require("http/v4/request");
+var response = require("http/v4/response");
 
 var tiles = [];
 
-var relativePath = getRelativePath(request.getParameter('pathSegments'));
-var tileExtensions = extensions.getExtensions('launchpad-{{extensionName}}-tiles');
+var relativePath = getRelativePath(request.getParameter("pathSegments"));
+var tileExtensions = extensions.getExtensions("launchpad-{{extensionName}}-tiles");
 for (var i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     var tileExtension = require(tileExtensions[i]);
     var tile = tileExtension.getTile(relativePath);
@@ -28,8 +28,8 @@ for (var i = 0; tileExtensions !== null && i < tileExtensions.length; i++) {
     }
     if (!found) {
     	tiles.push({
-    		'group': tile.group,
-    		'tiles': [tile]
+    		"group": tile.group,
+    		"tiles": [tile]
     	});
     }
 }
@@ -45,9 +45,9 @@ tiles = tiles.sort(function(a, b) {
 response.println(JSON.stringify(tiles));
 
 function getRelativePath(pathSegments) {
-	var relativePath = '/';
+	var relativePath = "/";
 	for (var i = 0; i < pathSegments; i ++) {
-		relativePath += '../';
+		relativePath += "../";
 	}
 	return relativePath;
 }
