@@ -11,6 +11,9 @@
 var java = require('core/v3/java');
 
 exports.getName = function() {
-	var name = java.call('org.eclipse.dirigible.api.v3.security.UserFacade', 'getName', []);
-	return name;
+	return java.call('org.eclipse.dirigible.api.v3.security.UserFacade', 'getName', []);
+};
+
+exports.isInRole = function(role) {
+	return java.call('org.eclipse.dirigible.api.v3.security.UserFacade', 'isInRole', [role]);
 };
