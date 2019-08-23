@@ -215,7 +215,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Returns the type as the tooltip for property cells
 		graph.getTooltip = function(state) {
 			if (this.isHtmlLabel(state.cell)) {
-				return 'Type: '+state.cell.value.type;
+				return 'Type: '+state.cell.value.dataType;
 			} else if (this.model.isEdge(state.cell)) {
 				var source = this.model.getTerminal(state.cell, true);
 				var parent = this.model.getParent(source);
@@ -283,7 +283,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Adds sidebar icon for the entity object
 		var entityObject = new Entity('EntityName');
 		var entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
-		
+				
 		entity.setVertex(true);
 		addSidebarIcon(graph, sidebar, 	entity, 'list-alt', 'Drag this to the diagram to create a new Entity', $scope);
 		

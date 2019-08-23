@@ -13,7 +13,7 @@ function Entity(name) {
 	this.name = name;
 }
 
-Entity.prototype.type = 'PRIMARY'; // the type of the entity - PRIMARY, DEPENDENT, REPORT
+Entity.prototype.entityType = 'PRIMARY'; // the type of the entity - PRIMARY, DEPENDENT, REPORT
 Entity.prototype.dataName = null;
 Entity.prototype.dataQuery = null; // database query in case of a report type of the entity
 Entity.prototype.dataCount = null; // database query for the count of the entities

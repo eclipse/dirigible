@@ -29,7 +29,7 @@ function createModel(graph) {
 				'" dataName="'+_.escape(child.value.dataName)+
 				'" dataCount="'+_.escape(child.value.dataCount)+
 				'" dataQuery="'+_.escape(child.value.dataQuery)+
-				'" type="'+_.escape(child.value.type ? child.value.type : 'primary')+
+				'" type="'+_.escape(child.value.entityType ? child.value.entityType : 'PRIMARY')+
 				'" title="'+_.escape(child.value.title)+
 				'" tooltip="'+_.escape(child.value.tooltip)+
 				'" icon="'+_.escape(child.value.icon)+
@@ -180,7 +180,7 @@ function createModelJson(graph) {
 			entity.dataName = _.escape(child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
 			entity.dataCount = _.escape(child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase());
 			entity.dataQuery = _.escape(child.value.dataQuery);
-			entity.type = _.escape(child.value.type ? child.value.type : "PRIMARY");
+			entity.type = _.escape(child.value.entityType ? child.value.entityType : "PRIMARY");
 			entity.title = _.escape(child.value.title ? child.value.title : child.value.name);
 			entity.tooltip = _.escape(child.value.tooltip ? child.value.tooltip : child.value.name);
 			entity.icon = _.escape(child.value.icon);
