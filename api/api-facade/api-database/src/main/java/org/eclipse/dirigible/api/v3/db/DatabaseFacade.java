@@ -82,6 +82,15 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 	
 	/**
+	 * Gets the default data source.
+	 *
+	 * @return the default data source
+	 */
+	public static final DataSource getDefaultDataSource() {
+		return database.getDataSource();
+	}
+	
+	/**
 	 * Create a data source
 	 * 
 	 * @param name the name of the datasource
