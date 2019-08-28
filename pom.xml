@@ -516,6 +516,7 @@
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.0</jaxws.version>
 		<license-maven-plugin.version>3.0</license-maven-plugin.version>
+		<persistence.api.version>1.0</persistence.api.version>
 
 		<skip.tests>true</skip.tests>
 	</properties>

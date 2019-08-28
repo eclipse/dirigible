@@ -37,7 +37,7 @@
     	<dependency>
 		    <groupId>javax.persistence</groupId>
 		    <artifactId>persistence-api</artifactId>
-		    <version>1.0</version>
+		    <version>${persistence.api.version}</version>
 		</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
