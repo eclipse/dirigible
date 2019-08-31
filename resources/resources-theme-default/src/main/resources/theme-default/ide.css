@@ -329,6 +329,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	filter: grayscale(100%);
 	background-size: cover;
 	border-color: #ba950e;
+	border: 0px;
 }
 .leading {
 	font-size: 38px;
