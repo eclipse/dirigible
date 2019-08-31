@@ -59,7 +59,7 @@
 <div tiles></div>
  
 <br><br><br>
-<p style="font-size: 1.2em">{{description}}</p>
+<p class="container launchpad-description">{{description}}</p>
            
 </div>
            

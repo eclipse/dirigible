@@ -5,7 +5,7 @@ var producer = require("messaging/v4/producer");
 var daoApi = require("db/v4/dao");
 #set($isEntityUtilsEnabled = "false")
 #foreach ($property in $properties)
-#if($property.dataType == "DATE")
+#if($property.dataType == "DATE" || $property.dataType == "BOOLEAN")
 #set($isEntityUtilsEnabled = "true")
 #break
 #end

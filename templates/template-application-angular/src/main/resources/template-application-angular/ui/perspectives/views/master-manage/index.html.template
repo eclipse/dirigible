@@ -41,7 +41,7 @@
 	<div class="shell">
 		<div id="${projectName}-${name}" class="plane plane-inner" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${extensionName}-${perspectiveName}-${name}-view"></div>
 	</div>
-	<!-- div class="statusbar" status-bar>${message}</div -->
+	<!-- div class="statusbar" status-bar></div -->
 	
 	<!-- jQuery -->
 	<script type="text/javascript" src="../../../../../../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>

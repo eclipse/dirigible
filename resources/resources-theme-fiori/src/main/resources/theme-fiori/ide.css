@@ -44,10 +44,10 @@ body {
  	-webkit-flex: 1;
  	flex: 1 1 auto;
     position: absolute;
-	width: calc(100% - 3.8em);
+	width: calc(100% - 3.4em);
 	height: calc(100% - (42px + 2em));
 	left: 3.6em;
-	top: 41px;
+	top: 40px;
 }
 .statusbar {
 	width: 100%;
@@ -80,7 +80,7 @@ body {
 }
 .lm_header .lm_active {
     background: #fefefe;
-    color: #4577b5;
+    color: #0854a0;
 }
 .list-group-item {
   background: none !important;
@@ -139,6 +139,10 @@ nav.navbar .dropdown-menu{
 	background-color:  #354a5e;
 }
 
+.launchpad-description {
+	font-size: 1.2em;
+	font-weight: 300;
+}
 
 .lm_header,
 .lm_header .lm_tab,
@@ -174,7 +178,7 @@ nav.navbar .dropdown-menu{
 }
 
 .lm_content {
-    background: #edeff0;
+    background: #ffffff;
     border: 1px solid #edeff0;
 }
 
@@ -356,23 +360,59 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .panel-heading {
-    background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+    /*background: url(../../web/resources/images/clouds.jpg) no-repeat center center;*/
+   color: #777777;
 }
 .panel > header {
-	background-color: #495a69;
+	background-color: #314455;
 	color: #e1e6ea;
-	background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
+	/*background: url(../../web/resources/images/clouds.jpg) no-repeat center center;*/
 	background-size: cover;
 }
 .leading {
-	font-size: 38px;
-	line-height: 1 !important;
 	font-family: Helvetica Neue, Arial;
+    font-size: 42px;
+    font-weight: 300;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+}
+.panel-primary {
+    border-color: #d8d8d8;
+    border-radius: 4px;
 }
 .panel-primary>.panel-heading {
-    color: #fff;
-    background-color: #316f8f;
+    color: #32363a;
+    background-color: #ffffff;
+    border-color: #d8d8d8;
+    border-radius: 4px;
+    padding: 1em 2em 1em 1em;
 }
+.panel-primary>.panel-heading>.row>.col-xs-3>.fa-4x {
+    width: 2em;
+    height: 2em;
+    border-radius: 4px;
+    background-color: #0f828f;
+    font-size: 1.6em;
+    text-align: center;
+    display: inline-block;
+    padding-top: 0.5em;
+    color: #eeeeee
+}
+.panel-primary>.panel-heading .badge {
+    background-color: #fdf3e6;
+    border: solid 1px #d08014;
+    color: #777777;
+}
+.panel-footer {
+    background-color: #ffffff;
+    border-top: 0px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    color: #32363a;
+}
+
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     line-height: 1;
 }
