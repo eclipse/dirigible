@@ -53,6 +53,11 @@
 					messageHub.post({data: record.message}, 'status.message');
 				}
 			};
+			logSocket.onerror = function (error) {
+				var message = 'Connection problem! Check security roles assignments.';
+				$("#content").after("<div id='0' class='console-row console-row-error'>[" + new Date().toISOString() + "]" + " [ERROR] " + message + "</div>");
+				messageHub.post({data: message}, 'status.error');
+			};
 			
 			setInterval(clear, 6000000);
 		};
