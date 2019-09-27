@@ -979,7 +979,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 						}.bind(this)
 					};
 					/*Upload*/
-					ctxmenu.generate = {
+					ctxmenu.upload = {
 						"separator_before": true,
 						"label": "Upload",
 						"action": function(data){
