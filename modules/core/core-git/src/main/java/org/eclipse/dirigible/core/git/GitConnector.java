@@ -143,7 +143,7 @@ public class GitConnector implements IGitConnector {
 			checkoutCommand.setCreateBranch(true);
 			checkoutCommand.setForce(true);
 //		checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
-//		checkoutCommand.setStartPoint(name);
+			checkoutCommand.setStartPoint(name);
 			return checkoutCommand.call();
 		} catch (RefAlreadyExistsException e) {
 			CheckoutCommand checkoutCommand = git.checkout();

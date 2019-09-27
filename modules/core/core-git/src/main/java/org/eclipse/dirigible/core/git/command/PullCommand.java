@@ -162,7 +162,8 @@ public class PullCommand {
 
 			String lastSHA = gitProperties.getSHA();
 
-			gitProperties.setSHA(gitConnector.getLastSHAForBranch(gitRepositoryBranch));
+			String lastSHAForBranch = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
+			gitProperties.setSHA(lastSHAForBranch);
 
 			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + UserFacade.getName();
 			logger.debug(String.format("Last SHA for the project [%s]: %s", selectedProject.getName(), lastSHA));
@@ -192,7 +193,7 @@ public class PullCommand {
 			gitConnector.commit("", "", "", true); //$NON-NLS-1$
 			logger.debug(String.format("Commit changes for the project [%s] finished.", selectedProject.getName()));
 
-			logger.debug(String.format("Staring pull of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
+			logger.debug(String.format("Starting pull of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
 			gitConnector.pull(username, password);
 			logger.debug(String.format("Pull of the project %s finished.", selectedProject.getName()));
 
