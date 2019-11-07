@@ -56,6 +56,9 @@ public class Configuration {
 			}
 			try {
 				custom.load(in);
+				if (path.endsWith("dirigible.properties")) { // main custom properties
+					addProperties(custom);
+				}
 				add(custom);
 			} finally {
 				in.close();
@@ -74,6 +77,23 @@ public class Configuration {
 	 */
 	public static void add(Properties custom) {
 		getInstance().putAll(custom);
+	}
+	
+	/**
+	 * Load the main custom properties
+	 *
+	 * @param custom
+	 *            the custom
+	 */
+	private static void addProperties(Properties custom) {
+		System.getProperties().putAll(custom);
+		Set<Object> keys = System.getProperties().keySet();
+		for (Object key : keys) {
+			String asEnvVar = System.getenv(key.toString());
+			if (asEnvVar != null) {
+				System.getProperties().put(key, asEnvVar);
+			}
+		}
 	}
 
 	/**
