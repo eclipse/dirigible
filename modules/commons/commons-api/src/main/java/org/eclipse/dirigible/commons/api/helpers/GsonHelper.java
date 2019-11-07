@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.commons.api.helpers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
 /**
@@ -19,9 +20,10 @@ import com.google.gson.JsonParser;
 public class GsonHelper {
 
 	/** The GSON instance. */
-	public static final transient Gson GSON = new Gson();
+	public static final transient Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();;
+	
 
 	/** The GSON Parser instance. */
 	public static final transient JsonParser PARSER = new JsonParser();
-
+	
 }
