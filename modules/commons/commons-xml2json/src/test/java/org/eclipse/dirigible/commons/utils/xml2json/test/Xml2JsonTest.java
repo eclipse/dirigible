@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,9 +35,9 @@ public class Xml2JsonTest {
 			String json = null;
 			InputStream inXml = Xml2JsonTest.class.getResourceAsStream(xmlFile);
 			try {
+				@SuppressWarnings("deprecation")
 				String xml = IOUtils.toString(inXml);
-				Xml2Json xml2json = new Xml2Json();
-				json = xml2json.toJson(xml);
+				json = Xml2Json.toJson(xml);
 				System.out.println(xml);
 				System.out.println(json);
 			} finally {
@@ -47,9 +47,10 @@ public class Xml2JsonTest {
 			}
 			InputStream inJson = Xml2JsonTest.class.getResourceAsStream(jsonFile);
 			try {
+				@SuppressWarnings("deprecation")
 				String jsonExpected = IOUtils.toString(inJson);
-				normalizeLineEndings(jsonExpected);
-				normalizeLineEndings(json);
+				condense(jsonExpected);
+				condense(json);
 				assertEquals(jsonExpected, json);
 			} finally {
 				if (inJson != null) {
@@ -73,9 +74,10 @@ public class Xml2JsonTest {
 			InputStream inJson = Xml2JsonTest.class.getResourceAsStream(jsonFile);
 			String xml = null;
 			try {
+				@SuppressWarnings("deprecation")
 				String json = IOUtils.toString(inJson);
 				Xml2Json xml2json = new Xml2Json();
-				xml = xml2json.toXml(json);
+				xml = Xml2Json.toXml(json);
 				xml = xml2json.prettyPrintXml(xml);
 				System.out.println(json);
 				System.out.println(xml);
@@ -86,9 +88,11 @@ public class Xml2JsonTest {
 			}
 			InputStream inXml = Xml2JsonTest.class.getResourceAsStream(xmlFile);
 			try {
+				@SuppressWarnings("deprecation")
 				String xmlExpected = IOUtils.toString(inXml);
-				xmlExpected = normalizeLineEndings(xmlExpected);
-				xml = normalizeLineEndings(xml);
+				xmlExpected = condense(xmlExpected);
+				xml = condense(xml);
+				xmlExpected = condense(xmlExpected);
 				assertEquals(xmlExpected, xml);
 			} finally {
 				if (inXml != null) {
@@ -107,10 +111,13 @@ public class Xml2JsonTest {
 	 * @param content the content
 	 * @return the string
 	 */
-	private String normalizeLineEndings(String content) {
-		content = content.replace("\r\n", "\n");
-		content = content.replace("\n\r", "\n");
-		content = content.replace("\r", "\n");
+	private String condense(String content) {
+		content = content.replace("\r\n", "");
+		content = content.replace("\n\r", "");
+		content = content.replace("\r", "");
+		content = content.replace("\n", "");
+		content = content.replace("\t", "");
+		content = content.replace(" ", "");
 		return content;
 	}
 
