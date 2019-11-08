@@ -33,7 +33,7 @@
   "deprecated": false,
   "description": "A browser based code editor",
   "devDependencies": {
-    "clean-css": "^3.4.20",
+    "clean-css": "^4.2.1",
     "event-stream": "^3.3.2",
     "gulp": "^3.9.1",
     "gulp-typedoc": "^2.0.0",
