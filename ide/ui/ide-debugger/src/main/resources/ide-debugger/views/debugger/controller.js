@@ -83,8 +83,8 @@ DebuggerService.prototype.listWorkspaces = function() {
 };
 
 angular.module('debugger.config', [])
-	.constant('DEBUGGER_SVC_URL','../../../../../../services/v3/ide/debug/rhino')
-	.constant('WORKSPACES_SVC_URL','../../../../../../services/v3/ide/workspaces');
+	.constant('DEBUGGER_SVC_URL','../../../../../../services/v4/ide/debug/rhino')
+	.constant('WORKSPACES_SVC_URL','../../../../../../services/v4/ide/workspaces');
 
 	
 angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
@@ -199,7 +199,7 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 		$scope.debugEnabled = !$scope.debugEnabled;
 		if ($scope.debugEnabled) {
 			debuggerService.enable().then(function() {
-				var wsUrl = window.location.protocol === 'https:' ? 'wss' : 'ws' + '://' + window.location.host + '/websockets/v3/ide/debug/sessions';
+				var wsUrl = window.location.protocol === 'https:' ? 'wss' : 'ws' + '://' + window.location.host + '/websockets/v4/ide/debug/sessions';
 				var webSocket = new WebSocket(wsUrl);
 				webSocket.onmessage = function(event) {
 					var data = JSON.parse(event.data);

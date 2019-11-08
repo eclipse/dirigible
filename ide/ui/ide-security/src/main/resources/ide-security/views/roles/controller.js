@@ -11,7 +11,7 @@
 angular.module('roles', [])
 .controller('RolesController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../../../services/v3/ops/security/roles').then(function(response) {
+	$http.get('../../../../../../services/v4/ops/security/roles').then(function(response) {
 		$scope.rolesList = response.data;
 	});
 

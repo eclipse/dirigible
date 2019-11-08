@@ -31,7 +31,7 @@ exports.getTile = function(relativePath) {
 #else
 		icon: "life-ring",
  #end
-		location: relativePath + "services/v3/web/${projectName}/ui/${perspectiveName}/index.html",
+		location: relativePath + "services/v4/web/${projectName}/ui/${perspectiveName}/index.html",
 		count: dao.customDataCount(),
 #if($perspectiveOrder)
 		order: "${perspectiveOrder}"

@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var streams = require('io/v3/streams');
-var imageIO = require('io/v3/image');
+var streams = require('io/v4/streams');
+var imageIO = require('io/v4/image');
 var documentLib = require("ide-documents/api/lib/document");
  
  

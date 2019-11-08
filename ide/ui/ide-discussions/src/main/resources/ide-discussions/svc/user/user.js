@@ -8,10 +8,10 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var response = require('http/v3/response');
+var response = require('http/v4/response');
 response.setContentType("application/json");
 response.println(JSON.stringify({
-	"username": require('security/v3/user').getName()
+	"username": require('security/v4/user').getName()
 }, null, 2));
 response.flush();
 response.close();

@@ -38,7 +38,7 @@ angular.module('ideUiCore', ['ngResource'])
   }];
 })
 .factory('Theme', ['$resource', function($resource){
-	var themeswitcher = $resource('../../../../services/v3/js/theme/resources.js?name=:themeName', {themeName: 'default'});
+	var themeswitcher = $resource('../../../../services/v4/js/theme/resources.js?name=:themeName', {themeName: 'default'});
 	return {
 		changeTheme: function(themeName){
 			return themeswitcher.get({'themeName':themeName});
@@ -228,7 +228,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			getBrandingInfo(scope);
 		},
-		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/brandTitle.html'
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/brandTitle.html'
 	};
 }])
 .directive('brandicon', [function() {
@@ -239,7 +239,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			getBrandingInfo(scope);
 		},
-		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/brandIcon.html'
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/brandIcon.html'
 	};
 }])
 .directive('menu', ['$resource', 'Theme', 'User', 'Layouts', 'messageHub', function($resource, Theme, User, Layouts, messageHub){
@@ -301,7 +301,7 @@ angular.module('ideUiCore', ['ngResource'])
 			
 			scope.user = User.get();
 		},
-		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/menu.html'
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -315,7 +315,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			scope.perspectives = Perspectives.query();
 		},
-		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/sidebar.html'
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/sidebar.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){
@@ -343,7 +343,7 @@ angular.module('ideUiCore', ['ngResource'])
 				scope.$apply();
 			});
 		},
-		templateUrl: '../../../../services/v3/web/ide-core/ui/tmpl/statusbar.html'
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/statusbar.html'
 	}
 }])
 .directive('viewsLayout', ['viewRegistry', 'Layouts', function(viewRegistry, Layouts){

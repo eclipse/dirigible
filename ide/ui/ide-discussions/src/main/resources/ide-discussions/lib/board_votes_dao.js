@@ -40,7 +40,7 @@ var BoardVotesORM = {
 	]
 };
 
-var DAO = require('db/v3/dao').DAO;
+var DAO = require('db/v4/dao').DAO;
 var BoardVotesDAO = exports.BoardVotesDAO = function(orm){
 	orm = orm || BoardVotesORM;
 	DAO.call(this, orm, 'BoardVotesDAO');

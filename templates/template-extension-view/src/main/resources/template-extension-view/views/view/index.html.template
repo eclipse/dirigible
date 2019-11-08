@@ -17,22 +17,22 @@
 
     <title>Eclipse Dirigible &trade; | View </title>
 
-    <link rel="shortcut icon" type="image/png" href="/services/v3/web/resources/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
 	
 	<!-- FontAwesome icon set -->
-    <link type="text/css" href="/services/v3/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" href="/services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		
 	<!-- Twitter Bootstrap with Theme Support -->
-	<link type="text/css" rel="stylesheet" href="/services/v3/core/theme/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
 	
 	<!-- jQuery -->
-	<script src="/services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	<script src="/services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
 
 	<!-- AngularJS -->
-	<script src="/services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
-	<script src="/services/v3/web/resources/angular/1.4.7/angular-resource.min.js"></script>
-	<script src="/services/v3/web/resources/angular/1.4.7/angular-animate.min.js"></script>
-	<script src="/services/v3/web/resources/angular/1.4.7/angular-sanitize.min.js"></script>
+	<script src="/services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="/services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+	<script src="/services/v4/web/resources/angular/1.4.7/angular-animate.min.js"></script>
+	<script src="/services/v4/web/resources/angular/1.4.7/angular-sanitize.min.js"></script>
 
 	<script src="controller.js"></script>
 </head>

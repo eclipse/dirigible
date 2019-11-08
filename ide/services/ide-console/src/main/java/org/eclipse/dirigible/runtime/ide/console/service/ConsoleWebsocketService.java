@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * The Console Websocket Service.
  */
 @Singleton
-@ServerEndpoint("/websockets/v3/ide/console")
+@ServerEndpoint("/websockets/v4/ide/console")
 public class ConsoleWebsocketService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConsoleWebsocketService.class);

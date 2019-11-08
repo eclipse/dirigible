@@ -10,8 +10,8 @@
  */
 var folderLib = require("ide-documents/api/lib/folder");
 var requestHandler = require("ide-documents/api/lib/request-handler");
-var request = require("http/v3/request");
-var response = require("http/v3/response");
+var request = require("http/v4/request");
+var response = require("http/v4/response");
 
 requestHandler.handleRequest({
 	handlers : {

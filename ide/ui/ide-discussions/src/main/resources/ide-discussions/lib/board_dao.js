@@ -109,7 +109,7 @@ var visit = function(boardId){
 	var qb;
     try {
     	var visitsField = this.orm.getProperty('visits');    	
-    	qb = require('db/v3/sql').getDialect()
+    	qb = require('db/v4/sql').getDialect()
     		.update()
     		.table(this.orm.table)
     		.set(visitsField.column, visitsField.column+'+1')
@@ -141,7 +141,7 @@ var setTags = function(id, tags, createOnDemand){
 	if(boardTags){
 		for(var i=0; i < boardTags.length; i++){
 			this.$log.info('Removing {} entity relation between {}[{}] entity and TAG_TAG[{}]', tagRefsDAO.orm.table, this.orm.getPrimaryKey().column, id, boardTags[i].id);
-			var qb =  require('db/v3/sql').getDialect()
+			var qb =  require('db/v4/sql').getDialect()
 						.delete()
 						.from(tagRefsDAO.orm.table)
 						.where(tagRefsDAO.orm.getProperty('boardId').column + '=?', [tagRefsDAO.orm.getProperty('boardId')])
@@ -187,7 +187,7 @@ var setTags = function(id, tags, createOnDemand){
  * Factory function for DAO instances for boards based on BoardsORM definition.
  */
 exports.create = function(){
-	var boardDAO = require('db/v3/dao').create(BoardsORM, 'BoardsDAO');
+	var boardDAO = require('db/v4/dao').create(BoardsORM, 'BoardsDAO');
 	boardDAO.visit = visit.bind(boardDAO);
 	boardDAO.setTags = setTags.bind(boardDAO);
 	return boardDAO;

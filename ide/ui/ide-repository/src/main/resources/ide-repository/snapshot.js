@@ -37,7 +37,7 @@ angular
 }])
 .controller('ImportController', ['$scope', '$http', 'FileUploader', '$messageHub', function($scope, $http, FileUploader, $messageHub) {
 	
-	$scope.TRANSPORT_SNAPSHOT_URL = "../../../../services/v3/transport/snapshot";
+	$scope.TRANSPORT_SNAPSHOT_URL = "../../../../services/v4/transport/snapshot";
 
 	// FILE UPLOADER
 	
@@ -99,8 +99,8 @@ angular
 	$messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 	
-		$('a[href="../../../../services/v3/core/theme/ide.css"]').remove();
-		$('<link href="../../../../services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v4/core/theme/ide.css"]').remove();
+		$('<link href="../../../../services/v4/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
 		
 		$('#theme-stylesheet').remove();
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');

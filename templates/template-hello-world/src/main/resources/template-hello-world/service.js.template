@@ -1,6 +1,6 @@
 /* eslint-env node, dirigible */
 
-var response = require('http/v3/response');
+var response = require('http/v4/response');
 
 response.println('Hello World');
 response.flush();

@@ -8,11 +8,11 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var rs = require('http/v3/rs');
-var escape = require('utils/v3/escape');
-var streams = require('io/v3/streams');
-var repositoryManager = require('repository/v3/manager');
-var configurations = require('core/v3/configurations');
+var rs = require('http/v4/rs');
+var escape = require('utils/v4/escape');
+var streams = require('io/v4/streams');
+var repositoryManager = require('repository/v4/manager');
+var configurations = require('core/v4/configurations');
 var themesManager = require('theme/extensions/themes');
 var cacheUtils = require('theme/utils/cache');
 

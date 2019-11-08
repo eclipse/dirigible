@@ -390,8 +390,8 @@ RepositoryTreeAdapter.prototype.inspect = function(resource){
 }
 
 angular.module('repository.config', [])
-	.constant('REPOSITORY_SVC_URL','../../../../services/v3/core/repository')
-	.constant('EXPORT_SVC_URL','../../../../services/v3/transport/snapshot')
+	.constant('REPOSITORY_SVC_URL','../../../../services/v4/core/repository')
+	.constant('EXPORT_SVC_URL','../../../../services/v4/transport/snapshot')
 	
 angular.module('repository', ['repository.config'])
 .factory('httpRequestInterceptor', function () {

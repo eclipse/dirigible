@@ -108,7 +108,7 @@ exports.getDao = function(commentsDao, tagsDao){
 	
 	var boardsDAO = require('ide-discussions/lib/board_dao').create(orm, 'ide-discussions.dao.BoardStatsDAO');
 	
-	var boardStatsDAO = require('db/v3/dao').create(orm, 'ide-discussions.dao.BoardStatsDAO');
+	var boardStatsDAO = require('db/v4/dao').create(orm, 'ide-discussions.dao.BoardStatsDAO');
 	boardStatsDAO.visit = boardsDAO.visit.bind(boardStatsDAO);
 	boardStatsDAO.commentsDao = boardStatsDAO;
 	boardStatsDAO.tagsDao = tagsDao;
@@ -125,11 +125,11 @@ exports.getDao = function(commentsDao, tagsDao){
  * Factory function for Board Stats data service instances.
  */
 exports.create = function(commentsDao, tagsDao){
-	var rsdata = require('http/v3/rs-data');
+	var rsdata = require('http/v4/rs-data');
 	var boardStatsDao = this.getDao(commentsDao, tagsDao);
 	var svc = rsdata.service().dao(boardStatsDao, 'ide-discussions.svc.BoardStatsService');
 	svc.dao().afterFound = function(entity){
-			var userLib = require("security/v3/user");
+			var userLib = require("security/v4/user");
 			var boardVotesDAO = require("ide-discussions/lib/board_votes_dao").create();
 			var requestingUserName = userLib.getName();
 			entity.editable = entity.user === requestingUserName;

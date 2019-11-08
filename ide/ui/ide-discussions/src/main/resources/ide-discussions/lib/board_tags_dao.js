@@ -45,7 +45,7 @@ var BoardTagsORM = {
 		}]	
 };
 
-var DAO = require('db/v3/dao').DAO;
+var DAO = require('db/v4/dao').DAO;
 var BoardTagDAO  = exports.BoardTagDAO = function(orm, boardDao, tagsDao){
 	orm = orm || BoardTagsORM;
 	DAO.call(this, orm, 'BoardTagDAO');
@@ -70,7 +70,7 @@ BoardTagDAO.prototype.listJoins = function(settings, daos){
     
 	var qb;
 	try{
-		qb= require('db/v3/sql').getDialect()
+		qb= require('db/v4/sql').getDialect()
 		.select()
 		.from(daos.targetDao.orm.table)
 		.leftJoin(daos.joinDao.orm.table, daos.joinDao.orm.getProperty('tagId').column+"="+daos.targetDao.orm.getPrimaryKey().column)

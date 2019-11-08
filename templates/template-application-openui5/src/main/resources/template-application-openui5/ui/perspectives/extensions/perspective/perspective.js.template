@@ -22,7 +22,7 @@ exports.getPerspective = function() {
 #else
 		'image': 'life-ring',
 #end
-		'link': '/services/v3/web/${projectName}/ui/${perspectiveName}/index.html',
+		'link': '/services/v4/web/${projectName}/ui/${perspectiveName}/index.html',
 #if($perspectiveOrder)
 		'order': ${perspectiveOrder},
 #else

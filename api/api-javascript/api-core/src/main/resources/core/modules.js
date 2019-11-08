@@ -33,11 +33,6 @@ exports.getGlobals = function() {
 	return globals;
 };
 
-exports.getJava = function() {
-	var java = require('core/v4/java');
-	return java;
-};
-
 exports.getThreads = function() {
 	var threads = require('core/v4/threads');
 	return threads;

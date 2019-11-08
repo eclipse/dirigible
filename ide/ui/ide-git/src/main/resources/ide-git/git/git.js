@@ -435,10 +435,10 @@ EnvService.prototype.setEnv = function(env) {
 };
 
 angular.module('workspace.config', [])
-	.constant('WS_SVC_URL','../../../../../services/v3/ide/workspaces')
-	.constant('WS_SVC_MANAGER_URL','../../../../../services/v3/ide/workspace')
-	.constant('GIT_SVC_URL','../../../../../services/v3/ide/git')
-	.constant('ENV_SVC_URL','../../../../../services/v3/js/ide-git/services/env.js');
+	.constant('WS_SVC_URL','../../../../../services/v4/ide/workspaces')
+	.constant('WS_SVC_MANAGER_URL','../../../../../services/v4/ide/workspace')
+	.constant('GIT_SVC_URL','../../../../../services/v4/ide/git')
+	.constant('ENV_SVC_URL','../../../../../services/v4/js/ide-git/services/env.js');
 	
 angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .factory('httpRequestInterceptor', function () {

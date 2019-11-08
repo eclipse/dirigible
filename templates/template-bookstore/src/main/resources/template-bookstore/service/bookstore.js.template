@@ -1,6 +1,6 @@
-var rs = require('http/v3/rs');
+var rs = require('http/v4/rs');
 var dao = require('{{projectName}}/dao/{{fileName}}');
-var response = require('http/v3/response');
+var response = require('http/v4/response');
 
 // HTTP 200
 var sendResponseOk = function(entity) {
@@ -63,7 +63,7 @@ rs.service()
 		.post(function(ctx, request, response) {
 			var entity = request.getJSON();
 			entity.id = dao.create(entity);
-			response.setHeader('Content-Location', '/services/v3/js/{{projectName}}/service/{{fileName}}.js/' + entity.id);
+			response.setHeader('Content-Location', '/services/v4/js/{{projectName}}/service/{{fileName}}.js/' + entity.id);
 			sendResponseCreated(entity);
 		})
 	.resource('{id}')

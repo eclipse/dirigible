@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,7 @@ import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 /**
  * The HTTP Context Filter.
  */
-@WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*"}, filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
+@WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*"}, filterName = "HttpContextFilter", description = "Set the HTTP Request and Response to the Context for all URIs")
 public class HttpContextFilter implements Filter {
 
 	/*

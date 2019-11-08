@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-@ServerEndpoint("/websockets/v3/ide/debug/sessions")
+@ServerEndpoint("/websockets/v4/ide/debug/sessions")
 public class RhinoJavascriptEngineDebugWebsocketService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RhinoJavascriptEngineDebugWebsocketService.class);

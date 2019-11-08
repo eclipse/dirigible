@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var extensions = require('core/v3/extensions');
-var response = require('http/v3/response');
+var extensions = require('core/v4/extensions');
+var response = require('http/v4/response');
 
 var mainmenu = [];
 var menuExtensions = extensions.getExtensions('ide-terminal-menu');

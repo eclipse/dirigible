@@ -19,11 +19,11 @@
             right: 0;
         }
 		</style>
-	    <script src="../../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
+	    <script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
     </head>
     <body id="monaco-browser" spellcheck="false">
     
-    	<script src="../../../../services/v3/js/theme/resources.js/monaco.js"></script>
+    	<script src="../../../../services/v4/js/theme/resources.js/monaco.js"></script>
         
 		<div  id="embeddedEditor"></div>
 		
@@ -32,7 +32,7 @@
 		    var messageHub = new FramesMessageHub();
 			function FileIO(){
 				var __URL = URL;
-				this.workspaceApiUrl = '../../../../services/v3/ide/workspaces';
+				this.workspaceApiUrl = '../../../../services/v4/ide/workspaces';
 				this.resolveFileName = function() {
 					var url = new __URL(window.location.href);
 					var fileName = url.searchParams.get('file');

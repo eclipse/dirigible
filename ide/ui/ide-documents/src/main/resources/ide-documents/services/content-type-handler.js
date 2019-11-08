@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var extensions = require('core/v3/extensions');
+var extensions = require('core/v4/extensions');
 
 exports.getContentTypeBeforeUpload = function(fileName, contentType) {
 	var extension = getContentTypeExtension();

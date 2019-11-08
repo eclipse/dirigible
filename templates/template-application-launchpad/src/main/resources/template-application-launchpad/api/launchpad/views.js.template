@@ -8,9 +8,9 @@
  * SAP - initial API and implementation
  */
 
-var extensions = require('core/v3/extensions');
-var request = require('http/v3/request');
-var response = require('http/v3/response');
+var extensions = require('core/v4/extensions');
+var request = require('http/v4/request');
+var response = require('http/v4/response');
 
 var extensionPoint = request.getParameter('extensionPoint');
 

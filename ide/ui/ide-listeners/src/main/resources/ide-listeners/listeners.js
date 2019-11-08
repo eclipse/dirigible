@@ -11,7 +11,7 @@
 angular.module('listeners', [])
 .controller('ListenersController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../services/v3/ops/listeners').then(function(response) {
+	$http.get('../../../../services/v4/ops/listeners').then(function(response) {
 		$scope.listenersList = response.data;
 	});
 

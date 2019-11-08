@@ -25,7 +25,7 @@ sap.ui.define([
 			
 			toolPage.setSideExpanded(false);
 
-			oModel.loadData("/services/v3/js/{{projectName}}/api/launchpad/perspectives.js"); // to load data to the model
+			oModel.loadData("/services/v4/js/{{projectName}}/api/launchpad/perspectives.js"); // to load data to the model
 			myView.setModel(oModel);
 			myView.setModel(oEntitiesModel, "entities");
 

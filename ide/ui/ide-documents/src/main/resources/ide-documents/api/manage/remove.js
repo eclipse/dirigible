@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var request = require("http/v3/request");
-var response = require("http/v3/response");
+var request = require("http/v4/request");
+var response = require("http/v4/response");
 var cmisObjectLib = require("ide-documents/api/lib/object");
 var folderLib = require("ide-documents/api/lib/folder");
 var requestHandler = require("ide-documents/api/lib/request-handler");

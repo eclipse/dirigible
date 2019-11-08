@@ -1,4 +1,4 @@
-var rs = require('http/v3/rs');
+var rs = require('http/v4/rs');
 var dao = require('${projectName}/data/dao/${perspectiveName}/${name}');
 var http = require('${projectName}/api/http');
 
@@ -32,7 +32,7 @@ rs.service()
 		.post(function(ctx, request, response) {
 			var entity = request.getJSON();
 			entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = dao.create(entity);
-			response.setHeader('Content-Location', '/services/v3/js/${projectName}/api/${name}.js/' + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+			response.setHeader('Content-Location', '/services/v4/js/${projectName}/api/${name}.js/' + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
 			http.sendResponseCreated(entity);
 		})
 	.resource('{id}')

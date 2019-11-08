@@ -106,7 +106,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	
 	function loadContents(file) {
 		if (file) {
-			return getResource('../../../../../../services/v3/ide/workspaces' + file);
+			return getResource('../../../../../../services/v4/ide/workspaces' + file);
 		}
 		console.error('file parameter is not present in the URL');
 	}
@@ -128,7 +128,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 		console.log('Save called...');
 		if ($scope.file) {
 			var xhr = new XMLHttpRequest();
-			xhr.open('PUT', '../../../../../../services/v3/ide/workspaces' + $scope.file);
+			xhr.open('PUT', '../../../../../../services/v4/ide/workspaces' + $scope.file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {

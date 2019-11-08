@@ -30,9 +30,9 @@
 		<script src="lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script src="lib/ace/ext-language_tools.js" type="text/javascript"></script>
 		
-		<link rel="stylesheet" href="../../../../services/v3/js/theme/resources.js/ace.css">
+		<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ace.css">
 
-		<script src="../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
+		<script src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
 	</head>
 	<body style="height: 100%;">
 		<pre id="editor" class="ace-ambiance ace_editor ace-tm"></pre>
@@ -212,7 +212,7 @@
 			
 			function loadContents() {
 				if (file) {
-					return getResource('../../../../services/v3/ide/workspaces' + file);
+					return getResource('../../../../services/v4/ide/workspaces' + file);
 				}
 				console.error('file parameter is not present in the URL');
 			}
@@ -226,7 +226,7 @@
 				console.log('Save called...');
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
+					xhr.open('PUT', '../../../../services/v4/ide/workspaces' + file);
 					xhr.setRequestHeader('X-Requested-With', 'Fetch');
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {

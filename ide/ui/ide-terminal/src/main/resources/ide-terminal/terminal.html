@@ -13,7 +13,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Eclipse Dirigible Terminal Emulator</title>
-		<script src="../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
+		<script src="../../../../services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
 		<script src="js/jquery.terminal.min.js"></script>
 		<link href="css/jquery.terminal.css" rel="stylesheet" />
 	</head>
@@ -21,7 +21,7 @@
 		<script>
 			window.terminalSocket = null;
 			var connectToTerminal = function() {
-				const TERMINAL_URL = "/websockets/v3/ide/terminal";
+				const TERMINAL_URL = "/websockets/v4/ide/terminal";
 				try {
 					if (window.terminalSocket === null || window.terminalSocket.readyState !== window.terminalSocket.OPEN) {
 						window.terminalSocket = new WebSocket(

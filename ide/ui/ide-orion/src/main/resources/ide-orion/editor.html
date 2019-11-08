@@ -15,9 +15,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Orion Editor</title>
 		
-		<script src="../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
+		<script src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
 		
-	    <link rel="stylesheet" type="text/css" href="../../../../services/v3/js/theme/resources.js/orion.css"/>
+	    <link rel="stylesheet" type="text/css" href="../../../../services/v4/js/theme/resources.js/orion.css"/>
         <style>
 	        body {
 	            overflow: hidden;
@@ -130,7 +130,7 @@
 				
 			function loadContents() {
 				if (file) {
-					return getResource('../../../../services/v3/ide/workspaces' + file);
+					return getResource('../../../../services/v4/ide/workspaces' + file);
 				}
 				console.error('file parameter is not present in the URL');
 			}
@@ -194,7 +194,7 @@
 			function saveContents(text) {
 				if (file) {
 					var xhr = new XMLHttpRequest();
-					xhr.open('PUT', '../../../../services/v3/ide/workspaces' + file);
+					xhr.open('PUT', '../../../../services/v4/ide/workspaces' + file);
 					xhr.setRequestHeader('X-Requested-With', 'Fetch');
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {

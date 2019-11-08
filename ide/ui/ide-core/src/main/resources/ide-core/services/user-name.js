@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var user = require('security/v3/user');
-var response = require('http/v3/response');
+var user = require('security/v4/user');
+var response = require('http/v4/response');
 
 response.setContentType("text/plain");
 response.println(user.getName());

@@ -296,8 +296,8 @@ RegistryTreeAdapter.prototype.inspect = function(resource){
 }
 
 angular.module('registry.config', [])
-	.constant('REGISTRY_SVC_URL','../../../../services/v3/core/registry')
-	.constant('REPOSITORY_SVC_URL','../../../../services/v3/core/repository')
+	.constant('REGISTRY_SVC_URL','../../../../services/v4/core/registry')
+	.constant('REPOSITORY_SVC_URL','../../../../services/v4/core/repository')
 	
 angular.module('registry', ['registry.config'])
 .factory('httpRequestInterceptor', function () {

@@ -26,7 +26,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	
 	function loadContents(file) {
 		if (file) {
-			return getResource('/services/v3/ide/workspaces'+file);
+			return getResource('/services/v4/ide/workspaces'+file);
 		}
 		console.error('file parameter is not present in the URL');
 	}
@@ -43,7 +43,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		console.log('Save called...');
 		if (file) {
 			var xhr = new XMLHttpRequest();
-			xhr.open('PUT', '/services/v3/ide/workspaces'+file);
+			xhr.open('PUT', '/services/v4/ide/workspaces'+file);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: '+file);
@@ -61,7 +61,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		console.log('Save called...');
 		if (file) {
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/services/v3/ide/workspaces'+file);
+			xhr.open('POST', '/services/v4/ide/workspaces'+file);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: '+file);

@@ -16,7 +16,7 @@ messageHub.fireFileOpen = function(fileDescriptor){
 
 angular.module('database', []).controller('DatabaseController', function ($scope, $http) {
 					
-	var databasesSvcUrl = "../../../../../services/v3/ide/databases";
+	var databasesSvcUrl = "../../../../../services/v4/ide/databases";
 	$scope.selectedDatabase;
 	$scope.jstree;
 

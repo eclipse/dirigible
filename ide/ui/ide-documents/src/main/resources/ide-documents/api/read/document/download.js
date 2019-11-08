@@ -8,11 +8,11 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var request = require("http/v3/request");
-var response = require("http/v3/response");
+var request = require("http/v4/request");
+var response = require("http/v4/response");
 var documentLib = require("ide-documents/api/lib/document");
 var requestHandler = require("ide-documents/api/lib/request-handler");
-var streams = require("io/v3/streams");
+var streams = require("io/v4/streams");
 var contentTypeHandler = require("ide-documents/services/content-type-handler");
 
 requestHandler.handleRequest({

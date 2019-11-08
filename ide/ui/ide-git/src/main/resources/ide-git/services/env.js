@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var rs = require('http/v3/rs');
-var configurations = require('core/v3/configurations');
+var rs = require('http/v4/rs');
+var configurations = require('core/v4/configurations');
 
 rs.service()
 	.resource('')

@@ -8,9 +8,9 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var request = require("http/v3/request");
-var response = require("http/v3/response");
-var upload = require('http/v3/upload');
+var request = require("http/v4/request");
+var response = require("http/v4/response");
+var upload = require('http/v4/upload');
 var requestHandler = require("ide-documents/api/lib/request-handler");
 var zipLib = require("ide-documents/api/lib/zip");
 

@@ -1,7 +1,7 @@
 angular.module('page', []);
 angular.module('page').controller('PageController', function ($scope, $http) {
 
-	var api = '/services/v3/js/{{projectName}}/service/{{fileName}}.js';
+	var api = '/services/v4/js/{{projectName}}/service/{{fileName}}.js';
 
 	function load() {
 		$http.get(api)

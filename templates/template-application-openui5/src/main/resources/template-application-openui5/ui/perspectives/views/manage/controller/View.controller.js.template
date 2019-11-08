@@ -4,7 +4,7 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("[[projectName]].controller.[[fileName]]", {
-		sUrl: "/services/v3/js/[[projectName]]/api/[[perspectiveName]]/[[fileName]].js",
+		sUrl: "/services/v4/js/[[projectName]]/api/[[perspectiveName]]/[[fileName]].js",
 		
 		onInit : function(){
 			// instantiate the View

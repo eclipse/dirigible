@@ -10,7 +10,7 @@
  */
 "use strict";
 
-var rsdata = require('http/v3/rs-data');
+var rsdata = require('http/v4/rs-data');
 
 /**
  * Factory function for Comments data service instances.

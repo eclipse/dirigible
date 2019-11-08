@@ -10,9 +10,9 @@
  */
 "use strict";
 
-var user = require('security/v3/user');
+var user = require('security/v4/user');
 
-var rsdata = require('http/v3/rs-data');
+var rsdata = require('http/v4/rs-data');
 
 /**
  * Factory function for Board data service instances.
@@ -23,7 +23,7 @@ console.error('>>>>>>>> create');
 					.dao(require("ide-discussions/lib/board_dao").create().orm);
 	
 	boardSvc.mappings().create().onEntityInsert(function(entity){
-	    entity.user = require("security/v3/user").getName();
+	    entity.user = require("security/v4/user").getName();
 		entity.publishTime = Date.now();
 		entity.visits = 0;
 	   	entity.lastModifiedTime = entity.publishTime;

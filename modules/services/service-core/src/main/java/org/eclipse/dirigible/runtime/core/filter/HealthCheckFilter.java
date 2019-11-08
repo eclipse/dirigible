@@ -27,7 +27,7 @@ import org.eclipse.dirigible.commons.config.HealthStatus;
 /**
  * The HTTP Context Filter.
  */
-@WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*"}, filterName = "HealthCheckFilter", description = "Check the health status of the Dirigible instance")
+@WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*"}, filterName = "HealthCheckFilter", description = "Check the health status of the Dirigible instance")
 public class HealthCheckFilter implements Filter{
 
 	@Override

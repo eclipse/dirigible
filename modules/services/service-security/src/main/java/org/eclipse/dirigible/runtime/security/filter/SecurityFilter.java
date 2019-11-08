@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,25 @@ import org.slf4j.LoggerFactory;
 		"/public/v3/public/*",
 		"/public/v3/web/*",
 		"/public/v3/wiki/*",
-		"/public/v3/command/*"
+		"/public/v3/command/*",
+		
+		"/services/v4/js/*",
+		"/services/v4/rhino/*",
+		"/services/v4/nashorn/*",
+		"/services/v4/v8/*",
+		"/services/v4/public/*",
+		"/services/v4/web/*",
+		"/services/v4/wiki/*",
+		"/services/v4/command/*",
+		
+		"/public/v4/js/*",
+		"/public/v4/rhino/*",
+		"/public/v4/nashorn/*",
+		"/public/v4/v8/*",
+		"/public/v4/public/*",
+		"/public/v4/web/*",
+		"/public/v4/wiki/*",
+		"/public/v4/command/*"
 		
 	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {

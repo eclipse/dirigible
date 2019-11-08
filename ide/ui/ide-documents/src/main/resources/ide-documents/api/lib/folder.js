@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var cmis = require('cms/v3/cmis');
+var cmis = require('cms/v4/cmis');
 var cmisObjectLib = require("ide-documents/api/lib/object");
 
 var cmisSession = cmis.getSession();

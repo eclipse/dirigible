@@ -8,9 +8,9 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var request = require("http/v3/request");
-var response = require("http/v3/response");
-var streams = require('io/v3/streams');
+var request = require("http/v4/request");
+var response = require("http/v4/response");
+var streams = require('io/v4/streams');
 var folderLib = require("ide-documents/api/lib/folder");
 var zipLib = require("ide-documents/api/lib/zip");
 var requestHandler = require("ide-documents/api/lib/request-handler");

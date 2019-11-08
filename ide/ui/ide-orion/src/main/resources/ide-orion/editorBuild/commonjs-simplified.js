@@ -58,7 +58,7 @@ define([
 			var ternServer = infer.cx().parent;
 			var currentFile = argnodes[0].sourceFile.name;
 
-			var content = getModule('../../../../../../../services/v3/web/' + moduleName + '.js');
+			var content = getModule('../../../../../../../services/v4/web/' + moduleName + '.js');
 			console.log('Adding file ' + moduleName + '.js ...');
 			content = "defineModule('" + moduleName + "', () => exports = {}; " + content + " return exports;)";
 			ternServer.addFile('/' + moduleName, content, currentFile);

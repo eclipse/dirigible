@@ -20,7 +20,7 @@ VariablesService.prototype.refresh = function() {
 };
 
 angular.module('variables.config', [])
-	.constant('VARIABLES_SVC_URL','../../../../../../services/v3/ide/debug/rhino/session/variables');
+	.constant('VARIABLES_SVC_URL','../../../../../../services/v4/ide/debug/rhino/session/variables');
 	
 angular.module('variables', ['variables.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {

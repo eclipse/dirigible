@@ -14,16 +14,16 @@
 		<meta charset="utf-8" />
 		<title>Eclipse Dirigible Log Console</title>
 		
-		<link rel="stylesheet" href="../../../../services/v3/js/theme/resources.js/bootstrap.min.css">
-		<link rel="stylesheet" href="../../../../services/v3/js/theme/resources.js/ide.css">
+		<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+		<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css">
 
 	</head>
 	<body style="font-family: monospace; font-size: x-small" onload="connectToLog()">
 		<div id="console">
 			<div id="content"></div>
 		</div>
-		<script src="../../../../services/v3/web/resources/jquery/2.0.3/jquery.min.js"></script>
-		<script src="../../../../services/v3/web/ide-core/ui/message-hub.js"></script>
+		<script src="../../../../services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
+		<script src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
 		<script>
 		var clear = function() {
 			$("#console").html('<div id="content"></div>');
@@ -36,7 +36,7 @@
 					((location.protocol === 'https:') ? "wss://" : "ws://")
 						+ window.location.host
 						+ window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
-						+ "/websockets/v3/ide/console");
+						+ "/websockets/v4/ide/console");
 			} catch(e) {
 				$("#content").after("<div class='console-row console-row-error'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
 				

@@ -8,30 +8,29 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var java = require('core/v3/java');
    
 exports.getCache = function() {
-	var cacheInstnace = java.call("org.eclipse.dirigible.commons.config.ResourcesCache", "getThemeCache", [], true);
+	var native = org.eclipse.dirigible.commons.config.ResourcesCache.getThemeCache();
 	var cache = new Cache();
-	cache.uuid = cacheInstnace.uuid;
+	cache.native = native;
   	return cache;
 };
 
 function Cache() {
 
 	this.getTag = function(tag) {
-		return java.invoke(this.uuid, 'getTag', [tag]);
+		return this.native.getTag(tag);
 	};
 
 	this.setTag = function(id, tag) {
-		return java.invoke(this.uuid, 'setTag', [id, tag]);
+		return this.native.setTag(id, tag);
 	};
 
 	this.generateTag = function() {
-		return java.invoke(this.uuid, 'generateTag', []);
+		return this.native.generateTag();
 	};
 
 	this.clear = function() {
-		return java.invoke(this.uuid, 'clear', []);
+		return this.native.clear();
 	};
 }

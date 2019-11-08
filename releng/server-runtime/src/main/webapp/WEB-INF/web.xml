@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010-2018 SAP and others.
+    Copyright (c) 2010-2019 SAP and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -47,7 +47,9 @@
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/services/v3/*</url-pattern>
+		<url-pattern>/services/v4/*</url-pattern>
 		<url-pattern>/public/v3/*</url-pattern>
+		<url-pattern>/public/v4/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>
@@ -145,6 +147,8 @@
 			<web-resource-name>Themes</web-resource-name>
 			<url-pattern>/services/v3/core/theme/*</url-pattern>
 			<url-pattern>/services/v3/web/resources/*</url-pattern>
+			<url-pattern>/services/v4/core/theme/*</url-pattern>
+			<url-pattern>/services/v4/web/resources/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	
@@ -158,6 +162,13 @@
 	        <url-pattern>/services/v3/v8/*</url-pattern>
 	        <url-pattern>/services/v3/wiki/*</url-pattern>
 	        <url-pattern>/services/v3/command/*</url-pattern>
+	        <url-pattern>/services/v4/web/*</url-pattern>
+	        <url-pattern>/services/v4/js/*</url-pattern>
+	        <url-pattern>/services/v4/nashorn/*</url-pattern>
+	        <url-pattern>/services/v4/rhino/*</url-pattern>
+	        <url-pattern>/services/v4/v8/*</url-pattern>
+	        <url-pattern>/services/v4/wiki/*</url-pattern>
+	        <url-pattern>/services/v4/command/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Everyone</role-name>
@@ -174,6 +185,13 @@
 	        <url-pattern>/public/v3/v8/*</url-pattern>
 	        <url-pattern>/public/v3/wiki/*</url-pattern>
 	        <url-pattern>/public/v3/command/*</url-pattern>
+	        <url-pattern>/public/v4/web/*</url-pattern>
+	        <url-pattern>/public/v4/js/*</url-pattern>
+	        <url-pattern>/public/v4/nashorn/*</url-pattern>
+	        <url-pattern>/public/v4/rhino/*</url-pattern>
+	        <url-pattern>/public/v4/v8/*</url-pattern>
+	        <url-pattern>/public/v4/wiki/*</url-pattern>
+	        <url-pattern>/public/v4/command/*</url-pattern>
 	    </web-resource-collection>
 	</security-constraint>
 
@@ -182,6 +200,8 @@
 	        <web-resource-name>IDE Services</web-resource-name>
 	        <url-pattern>/services/v3/ide/*</url-pattern>
 	        <url-pattern>/websockets/v3/ide/*</url-pattern>
+	        <url-pattern>/services/v4/ide/*</url-pattern>
+	        <url-pattern>/websockets/v4/ide/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Nobody</role-name>
@@ -193,6 +213,8 @@
 	        <web-resource-name>Core Services</web-resource-name>
 	        <url-pattern>/services/v3/core/*</url-pattern>
 	        <url-pattern>/websockets/v3/core/*</url-pattern>
+	        <url-pattern>/services/v4/core/*</url-pattern>
+	        <url-pattern>/websockets/v4/core/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Operator</role-name>
@@ -204,6 +226,8 @@
 	        <web-resource-name>Operations Services</web-resource-name>
 	        <url-pattern>/services/v3/ops/*</url-pattern>
 	        <url-pattern>/websockets/v3/ops/*</url-pattern>
+	        <url-pattern>/services/v4/ops/*</url-pattern>
+	        <url-pattern>/websockets/v4/ops/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Operator</role-name>
@@ -214,6 +238,7 @@
 	    <web-resource-collection>
 	        <web-resource-name>Transport Services</web-resource-name>
 	        <url-pattern>/services/v3/transport/*</url-pattern>
+	        <url-pattern>/services/v4/transport/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Operator</role-name>

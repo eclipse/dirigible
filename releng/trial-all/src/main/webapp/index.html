@@ -18,10 +18,10 @@
     <title>Eclipse Dirigible &trade; | Anonymous Access</title>
     
 	<!-- Twitter Bootstrap with Theme Support -->
-	<link type="text/css" rel="stylesheet" href="services/v3/js/theme/resources.js/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="services/v4/js/theme/resources.js/bootstrap.min.css">
 	
-	<link rel="shortcut icon" type="image/png" href="services/v3/web/resources/images/favicon.png" />
-	<link rel="stylesheet" href="services/v3/web/resources/font-dirigible/font.css">
+	<link rel="shortcut icon" type="image/png" href="services/v4/web/resources/images/favicon.png" />
+	<link rel="stylesheet" href="services/v4/web/resources/font-dirigible/font.css">
 </head>
     <body ng-controller="AnonymousController">
     	<iframe src='https://www.dirigible.io/services/statistics.html?type=trial' style="width:0;height:0;border:0; border:none;"></iframe>
@@ -51,12 +51,12 @@
 		  ga('send', 'pageview');
 		</script>
 
-		<script type="text/javascript" src="services/v3/web/resources/angular/1.4.7/angular.min.js"></script>
+		<script type="text/javascript" src="services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
 		<script>
 			angular.module('anonymous', []);
 			angular.module('anonymous')
 			.controller('AnonymousController', function ($scope, $http) {
-				var api = 'services/v3/anonymous';
+				var api = 'services/v4/anonymous';
 
 				$scope.login = function() {
 					var xhr = new XMLHttpRequest();

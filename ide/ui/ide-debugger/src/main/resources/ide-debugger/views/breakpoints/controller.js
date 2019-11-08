@@ -29,8 +29,8 @@ BreakpointsService.prototype.clearBreakpoint = function(file, row) {
 };
 
 angular.module('breakpoints.config', [])
-	.constant('BREAKPOINTS_SVC_URL','../../../../../../services/v3/ide/debug/rhino/breakpoints')
-	.constant('BREAKPOINT_SVC_URL','../../../../../../services/v3/ide/debug/rhino/breakpoint');
+	.constant('BREAKPOINTS_SVC_URL','../../../../../../services/v4/ide/debug/rhino/breakpoints')
+	.constant('BREAKPOINT_SVC_URL','../../../../../../services/v4/ide/debug/rhino/breakpoint');
 	
 angular.module('breakpoints', ['breakpoints.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .config(['$httpProvider', function($httpProvider) {

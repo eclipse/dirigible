@@ -1,7 +1,7 @@
 #if($dataCount)
-var query = require('db/v3/query');
+var query = require('db/v4/query');
 #end
-var daoApi = require('db/v3/dao');
+var daoApi = require('db/v4/dao');
 var dao = daoApi.create({
 	'table': '${dataName}',
 	'properties': [

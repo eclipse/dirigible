@@ -6,8 +6,8 @@
 ## Branding
 - `DIRIGIBLE_BRANDING_NAME`: (default: 'Eclipse Dirigible')
 - `DIRIGIBLE_BRANDING_BRAND`: (default: 'Eclipse Dirigible')
-- `DIRIGIBLE_BRANDING_ICON`: (default: '../../../../services/v3/web/resources/images/favicon.png')
-- `DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT`: (default: '../../../../services/v3/web/ide/welcome.html')
+- `DIRIGIBLE_BRANDING_ICON`: (default: '../../../../services/v4/web/resources/images/favicon.png')
+- `DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT`: (default: '../../../../services/v4/web/ide/welcome.html')
 
 ## Git
 - `DIRIGIBLE_GIT_ROOT_FOLDER`: (e.g. /User/data)
@@ -88,7 +88,7 @@
 
 #### Core
 
-- `DIRIGIBLE_HOME_URL`: (default: /services/v3/web/ide/index.html)
+- `DIRIGIBLE_HOME_URL`: (default: /services/v4/web/ide/index.html)
 
 ### CMS
 

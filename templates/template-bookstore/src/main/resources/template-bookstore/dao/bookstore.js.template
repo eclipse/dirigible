@@ -1,4 +1,4 @@
-var daoApi = require('db/v3/dao');
+var daoApi = require('db/v4/dao');
 var dao = daoApi.create({
 	'table': '{{fileName}}_BOOKS',
 	'properties': [

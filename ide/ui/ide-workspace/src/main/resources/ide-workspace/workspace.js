@@ -611,12 +611,12 @@ TemplatesService.prototype.listTemplates = function(){
 }
 
 angular.module('workspace.config', [])
-	.constant('WS_SVC_URL','../../../../services/v3/ide/workspaces')
-	.constant('WS_SVC_MANAGER_URL','../../../../services/v3/ide/workspace')
-	.constant('PUBLISH_SVC_URL','../../../../services/v3/ide/publisher/request')
-	.constant('EXPORT_SVC_URL','../../../../services/v3/transport/project')
-	.constant('TEMPLATES_SVC_URL','../../../../services/v3/js/ide-core/services/templates.js')
-	.constant('GENERATION_SVC_URL','../../../../services/v3/ide/generate');
+	.constant('WS_SVC_URL','../../../../services/v4/ide/workspaces')
+	.constant('WS_SVC_MANAGER_URL','../../../../services/v4/ide/workspace')
+	.constant('PUBLISH_SVC_URL','../../../../services/v4/ide/publisher/request')
+	.constant('EXPORT_SVC_URL','../../../../services/v4/transport/project')
+	.constant('TEMPLATES_SVC_URL','../../../../services/v4/js/ide-core/services/templates.js')
+	.constant('GENERATION_SVC_URL','../../../../services/v4/ide/generate');
 	
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 .factory('httpRequestInterceptor', function () {
@@ -778,7 +778,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	specificFileTemplates.push({'name':'view', 'label':'Database View', 'extension':'view', 'data':JSON.stringify(JSON.parse('{"name":"MYVIEW","type":"VIEW","query":"SELECT * FROM MYTABLE","dependencies":[{"name":"MYTABLE","type":"TABLE"}]}'), null, 2)});
 	specificFileTemplates.push({'name':'schema', 'label':'Database Schema Model', 'extension':'dsm', 'data':'<schema><structures></structures><mxGraphModel><root></root></mxGraphModel></schema>'});
 	specificFileTemplates.push({'name':'entity', 'label':'Entity Data Model', 'extension':'edm', 'data':'<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>'});
-	specificFileTemplates.push({'name':'js', 'label':'JavaScript Service', 'extension':'js', 'data':'var response = require("http/v3/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'});
+	specificFileTemplates.push({'name':'js', 'label':'JavaScript Service', 'extension':'js', 'data':'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'});
 	specificFileTemplates.push({'name':'html', 'label':'HTML5 Page', 'extension':'html', 'data':'<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'});
 	specificFileTemplates.push({'name':'job', 'label':'Scheduled Job', 'extension':'job', 'data':JSON.stringify(JSON.parse('{"expression":"0/10 * * * * ?","group":"dirigible-defined","handler":"myproject/myhandler.js","description":"My Job"}'), null, 2)});
 	specificFileTemplates.push({'name':'listener', 'label':'Message Listener', 'extension':'listener', 'data':JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)});
@@ -1221,11 +1221,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	messageHub.on('workbench.theme.changed', function(msg){
 		var themeUrl = msg.data;
 		
-		$('a[href="../../../../services/v3/core/theme/jstree.css"]').remove();
-		$('<link id="theme-stylesheet" href="../../../../services/v3/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v4/core/theme/jstree.css"]').remove();
+		$('<link id="theme-stylesheet" href="../../../../services/v4/core/theme/jstree.css" rel="stylesheet" />').appendTo('head');
 		
-		$('a[href="../../../../services/v3/core/theme/ide.css"]').remove();
-		$('<link href="../../../../services/v3/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
+		$('a[href="../../../../services/v4/core/theme/ide.css"]').remove();
+		$('<link href="../../../../services/v4/core/theme/ide.css" rel="stylesheet" />').appendTo('head');
 		
 		$('#theme-stylesheet').remove();
 		$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');

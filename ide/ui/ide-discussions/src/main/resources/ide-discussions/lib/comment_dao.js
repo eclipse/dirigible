@@ -67,7 +67,7 @@ var CommentsORM = exports.CommentsORM = {
 			type: "VARCHAR",
 			size: 100,
 			dbValue: function(user){
-				return require("security/v3/user").getName();
+				return require("security/v4/user").getName();
 			}
 		}	
 	],
@@ -86,7 +86,7 @@ var CommentsORM = exports.CommentsORM = {
 		}]
 };
 
-var daos = require('db/v3/dao');
+var daos = require('db/v4/dao');
 
 /**
  * Factory function for DAO instances for comments based on CommentsORM definition.

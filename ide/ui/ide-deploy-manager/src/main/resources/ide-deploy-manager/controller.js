@@ -122,7 +122,7 @@ angular.module('deployer')
 	}
 
 	function getDeployUrl(instance) {
-		var url = instance.host + '/services/v3/web/ide-git/index.html?repository=' + $scope.queryParams.repository;
+		var url = instance.host + '/services/v4/web/ide-git/index.html?repository=' + $scope.queryParams.repository;
 		if ($scope.queryParams.uri) {
 			url += '&uri=' + $scope.queryParams.uri;
 		}

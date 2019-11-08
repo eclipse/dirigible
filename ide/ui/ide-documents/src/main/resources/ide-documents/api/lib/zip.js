@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var streams = require('io/v3/streams');
-var zipAPI = require('io/v3/zip');
+var streams = require('io/v4/streams');
+var zipAPI = require('io/v4/zip');
 var folderLib = require("ide-documents/api/lib/folder");
 var documentLib = require("ide-documents/api/lib/document");
 var objectLib = require("ide-documents/api/lib/object");

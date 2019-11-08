@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var cmis = require('cms/v3/cmis');
+var cmis = require('cms/v4/cmis');
 var cmisSession = cmis.getSession();
 
 exports.getObject = function(path){
