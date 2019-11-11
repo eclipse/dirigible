@@ -20,7 +20,7 @@
 	</scm>
 
 	<properties>
-		<content.repository.name>template-v3-application-angular</content.repository.name>
+		<content.repository.name>template-application-angular</content.repository.name>
 		<content.project.name>template-application-angular</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>

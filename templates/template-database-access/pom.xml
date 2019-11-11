@@ -20,7 +20,7 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>template-v3-database-access</content.repository.name>
+		<content.repository.name>template-database-access</content.repository.name>
 		<content.project.name>template-database-access</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
