@@ -9,6 +9,6 @@
  *   SAP - initial API and implementation
  */
 exports.getManager = function() {
-	var manager = require('workspace/v3/manager');
+	var manager = require('workspace/v4/manager');
 	return manager;
 };

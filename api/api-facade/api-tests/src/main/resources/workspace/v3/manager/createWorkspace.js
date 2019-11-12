@@ -8,7 +8,9 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var manager = require('workspace/v4/manager');
-for(var propertyName in manager) {
-	exports[propertyName] = manager[propertyName];
-}
+var manager = require('workspace/v3/manager');
+
+manager.createWorkspace('testworkspace');
+var workspace = manager.getWorkspace('testworkspace');
+
+workspace.exists();

@@ -125,6 +125,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
 		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
 		
+		TEST_MODULES.add("workspace/v3/manager/createWorkspace.js");
+		
 		// v4
 		TEST_MODULES.add("utils/v4/base64/encode.js");
 		TEST_MODULES.add("utils/v4/base64/decode.js");
@@ -208,6 +210,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("io/v4/files/fileStreams.js");
 		
 		TEST_MODULES.add("security/v4/user/getName.js");
+		
+		TEST_MODULES.add("workspace/v4/manager/createWorkspace.js");
 		
 	}
 
