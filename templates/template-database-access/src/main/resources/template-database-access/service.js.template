@@ -1,5 +1,3 @@
-/* eslint-env node, dirigible */
-
 var query = require('db/v4/query');
 var response = require('http/v4/response');
 
