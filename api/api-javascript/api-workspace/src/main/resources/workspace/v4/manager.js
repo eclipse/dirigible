@@ -348,3 +348,4 @@ function File() {
 		return this.native.exists();
 	};
 }
+

@@ -8,8 +8,8 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var response = require("http/response");
-var request = require("http/request");
+var response = require("http/v4/response");
+var request = require("http/v4/request");
 var URI = require("test/lib/URI");
 
 var findInAcceptHeader = function(httpReqHeaderAccept, mime){
