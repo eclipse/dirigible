@@ -100,7 +100,7 @@ function RepositoryInfo() {
 	};
 
 	this.getName = function() {
-		return this.native..getName();
+		return this.native.getName();
 	};
 }
 
@@ -306,9 +306,9 @@ function Document() {
 	};
 
 	this.getContentStream = function() {
-		var contentStreamInstance = this.native.getContentStream();
-		if (contentStreamInstance !== null) {
-			var native = new ContentStream();
+		var native = this.native.getContentStream();
+		if (native !== null) {
+			var contentStream = new ContentStream();
 			contentStream.native = native;
 			return contentStream;
 		}
