@@ -18,6 +18,7 @@
 		<module>cms-api</module>
         <module>cms-internal</module>
 		<module>cms-managed</module>
+		<module>cms-database</module>
 	</modules>
 
 </project>

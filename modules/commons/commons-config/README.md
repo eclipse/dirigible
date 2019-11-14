@@ -45,7 +45,7 @@
 
 ### Database
 
-- `DIRIGIBLE_DATABASE_PROVIDER`: (local : managed : custom)
+- `DIRIGIBLE_DATABASE_PROVIDER`: (local : managed : custom : dynamic)
 - `DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT`: (true : false);
 - `DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT`: (default: 8)
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT`: (default: 500)
@@ -92,7 +92,7 @@
 
 ### CMS
 
-- `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | remote)
+- `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | database)
 - `DIRIGIBLE_CMS_ROLES_ENABLED`: (true | false)
 
 #### CMS Internal
@@ -107,8 +107,12 @@
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_NAME`: (e.g. cmis:dirigible)
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_KEY`: (e.g. cmis:dirigible:key)
 - `DIRIGIBLE_CMS_MANAGED_CONFIGURATION_DESTINATION`: (e.g. CMIS_DESTINATION)
-
 - `DIRIGIBLE_CONNECTIVITY_CONFIGURATION_JNDI_NAME`: (e.g. java:comp/env/connectivity/Configuration)
+
+#### CMS Database
+
+- `DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE`: (local : managed : custom : dynamic)
+- `DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME`: (default : DefaultDB)
 
 ### BPM
 
