@@ -104,9 +104,6 @@ function getFullPathAndName(rootPath, fileFullName){
 	var innerPath = SEPARATOR + splittedFullName.slice(0, -1).join(SEPARATOR);
 	var fullPath = rootPath + innerPath;
 	var name = splittedFullName[splittedFullName.length - 1];
-//	if (fullPath.startsWith('//')) {
-//		fullPath = fullPath.substring(1, fullPath.length);
-//	}
 	return [fullPath, name];
 }
 
@@ -114,19 +111,18 @@ exports.makeZip = function(folderPath, outputStream) {
 	var folder = folderLib.getFolder(folderPath);
 	console.info("Creating zip for folder: " + folderPath);
 
-//	var baos = streams.createByteArrayOutputStream();
 	var zipOutputStream = zipAPI.createZipOutputStream(outputStream);
 	try {
 		traverseFolder(folder, folder.getName(), zipOutputStream);
 	} finally {
 		zipOutputStream.close();
 	}
-//	return baos.getBytes();
 };
 
-
-
 function traverseFolder(folder, path, zipOutputStream) {
+	if (path === 'root') {
+		path = '';
+	}
 	folder.getChildren().forEach(function(child) {
 		console.info("Folder: " + folder.getName() + " Path: " + path + " Child: " + child.getName());
 		var entryPath = path.lenght === 0 ? '' : path + SEPARATOR;
@@ -136,12 +132,10 @@ function traverseFolder(folder, path, zipOutputStream) {
 		if (isFolder(child)) {
 			zipEntry = zipOutputStream.createZipEntry(entryPath + SEPARATOR);
 			console.log("Zip directory entry: " + zipEntry.getName());
-			//zipOutputStream.putNextEntry(zipEntry);
 			traverseFolder(childObject, path + SEPARATOR + child.getName(), zipOutputStream);
 		} else {
 			zipOutputStream.createZipEntry(entryPath);
 			var fileStream = childObject.getContentStream().getStream();
-			console.warn('File Stream: ' + JSON.stringify(fileStream));
 			zipOutputStream.write(fileStream.readBytes());
 		}
 	});
