@@ -42,6 +42,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 	@Override
 	protected void configure() {
 		Configuration.load("/dirigible-database.properties");
+		Configuration.load("/dirigible.properties");
 
 		boolean databaseProviderIsSelected = false;
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER);
