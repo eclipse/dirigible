@@ -32,7 +32,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 public class MailFacade implements IScriptingFacade {
 
 	// Mail properties
-	private static final String MAIL_USERNAME = "mail.username";
+	private static final String MAIL_USER = "mail.user";
 	private static final String MAIL_PASSWORD = "mail.password";
 
 	private static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
@@ -89,7 +89,7 @@ public class MailFacade implements IScriptingFacade {
 	private static Properties getDefaultProperties() {
 		Properties properties = new Properties();
 
-		addValue(properties, MAIL_USERNAME, DIRIGIBLE_MAIL_USERNAME);
+		addValue(properties, MAIL_USER, DIRIGIBLE_MAIL_USERNAME);
 		addValue(properties, MAIL_PASSWORD, DIRIGIBLE_MAIL_PASSWORD);
 		
 		addValue(properties, MAIL_TRANSPORT_PROTOCOL, DIRIGIBLE_MAIL_TRANSPORT_PROTOCOL, DEFAULT_MAIL_TRANSPORT_PROTOCOL);
@@ -151,11 +151,11 @@ public class MailFacade implements IScriptingFacade {
 		}
 
 		private Session getSession(Properties properties) {
-			String username = properties.getProperty(MAIL_USERNAME);
+			String user = properties.getProperty(MAIL_USER);
 			String password = properties.getProperty(MAIL_PASSWORD);
 			Authenticator authenticator = new Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
+					return new PasswordAuthentication(user, password);
 				}
 			};
 			return Session.getInstance(properties, authenticator);
