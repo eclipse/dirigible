@@ -46,8 +46,6 @@ public class MailFacade implements IScriptingFacade {
 	private static final String MAIL_SMTP_HOST = "mail.smtp.host";
 	private static final String MAIL_SMTP_PORT = "mail.smtp.port";
 	private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
-	private static final String MAIL_SMTP_SOCKET_FACTORY_PORT = "mail.smtp.socketFactory.port";
-	private static final String MAIL_SMTP_SOCKET_FACTORY_CLASS = "mail.smtp.socketFactory.class";
 
 	// Dirigible mail properties
 	private static final String DIRIGIBLE_MAIL_USERNAME = "DIRIGIBLE_MAIL_USERNAME";
@@ -64,17 +62,26 @@ public class MailFacade implements IScriptingFacade {
 	private static final String DIRIGIBLE_MAIL_SMTP_HOST = "DIRIGIBLE_MAIL_SMTP_HOST";
 	private static final String DIRIGIBLE_MAIL_SMTP_PORT = "DIRIGIBLE_MAIL_SMTP_PORT";
 	private static final String DIRIGIBLE_MAIL_SMTP_AUTH = "DIRIGIBLE_MAIL_SMTP_AUTH";
-	private static final String DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_PORT = "DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_PORT";
-	private static final String DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_CLASS = "DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_CLASS";
 
 	// Default values
 	private static final String DEFAULT_SUBTYPE = "plain";
 	private static final String DEFAULT_MAIL_TRANSPORT_PROTOCOL = "smtps";
 
+	/**
+	 * Get MailClient with the default configuration options
+	 * 
+	 * @return MailClient instance
+	 */
 	public static MailClient getInstance() {
 		return getInstance(getDefaultProperties());
 	}
 
+	/**
+	 * Get MailClient with custom configuration options
+	 * 
+	 * @param properties mail client configuration options
+	 * @return MailClient instance
+	 */
 	public static MailClient getInstance(Properties properties) {
 		return new MailClient(properties); 
 	}
@@ -93,10 +100,7 @@ public class MailFacade implements IScriptingFacade {
 		
 		addValue(properties, MAIL_SMTP_HOST, DIRIGIBLE_MAIL_SMTP_HOST);
 		addValue(properties, MAIL_SMTP_PORT, DIRIGIBLE_MAIL_SMTP_PORT);
-		addValue(properties, MAIL_SMTP_PORT, DIRIGIBLE_MAIL_SMTP_PORT);
 		addValue(properties, MAIL_SMTP_AUTH, DIRIGIBLE_MAIL_SMTP_AUTH);
-		addValue(properties, MAIL_SMTP_SOCKET_FACTORY_PORT, DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_PORT);
-		addValue(properties, MAIL_SMTP_SOCKET_FACTORY_CLASS, DIRIGIBLE_MAIL_SMTP_SOCKET_FACTORY_CLASS);
 
 		return properties;
 	}
@@ -117,12 +121,15 @@ public class MailFacade implements IScriptingFacade {
 	public static class MailClient {
 		private Properties properties;
 
+		/**
+		 * @param properties mail client configuration options
+		 */
 		public MailClient(Properties properties) {
 			this.properties = properties;
 		}
 
 		/**
-		 * Send an email.
+		 * Send an email
 		 *
 		 * @param from the sender
 		 * @param to the to receiver
