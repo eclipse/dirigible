@@ -333,7 +333,11 @@ public class HttpClientFacade implements IScriptingFacade {
 		httpPost.setConfig(config);
 		prepareHeaders(httpClientRequestOptions, httpPost);
 
-		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(ContentType.create(httpClientRequestOptions.getContentType()));
+		String contentTypeString = httpClientRequestOptions.getContentType();
+		boolean shouldParseContentType = contentTypeString.contains("charset") || contentTypeString.contains(";"); 
+		ContentType contentType = shouldParseContentType ? ContentType.parse(contentTypeString) : ContentType.create(contentTypeString);
+
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(httpClientRequestOptions.getText()).setContentType(contentType);
 		if (httpClientRequestOptions.isCharacterEncodingEnabled()) {
 			entityBuilder.setContentEncoding(httpClientRequestOptions.getCharacterEncoding());
 		}
