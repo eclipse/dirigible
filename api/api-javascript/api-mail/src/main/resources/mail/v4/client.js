@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 exports.getClient = function(options) {
 	var native = null;
 	if (options) {

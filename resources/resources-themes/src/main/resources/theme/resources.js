@@ -84,7 +84,7 @@ function getContent(request, response, path) {
 	var resource = repositoryManager.getResource(PATH_REGISTRY_PUBLIC + '/' + themeModule + '/' + path);
 	if (resource.exists()) {
 		var resourceContent = resource.getContent();
-		var repositoryInputStream = streams.createByteArrayInputStream(JSON.parse(resourceContent));
+		var repositoryInputStream = streams.createByteArrayInputStream(resourceContent);
 		content = repositoryInputStream.readBytes();
 	} else {
 		var inputStream = streams.getResourceAsByteArrayInputStream('/' + themeModule + '/' + path);
