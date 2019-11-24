@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-engine-parent</artifactId>
-		<version>4.0.0</version>
+		<version>4.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,22 +32,22 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
         </dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-core</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
         </dependency>
         
         <dependency>
@@ -65,24 +65,24 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-tests</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         
