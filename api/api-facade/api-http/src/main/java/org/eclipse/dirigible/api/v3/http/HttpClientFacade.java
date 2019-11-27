@@ -202,7 +202,7 @@ public class HttpClientFacade implements IScriptingFacade {
 			httpClientResponse.setProtocol(response.getProtocolVersion().getProtocol());
 			httpClientResponse.setProtocol(response.getProtocolVersion().getProtocol());
 			HttpEntity entity = response.getEntity();
-			if (entity.getContent() != null) {
+			if (entity != null && entity.getContent() != null) {
 				byte[] content = IOUtils.toByteArray(entity.getContent());
 
 				if ((ContentType.getOrDefault(entity).getMimeType().equals(ContentType.TEXT_PLAIN.getMimeType())
