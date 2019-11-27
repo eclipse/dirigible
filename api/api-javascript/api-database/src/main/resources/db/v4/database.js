@@ -41,9 +41,9 @@ exports.createDataSource = function(name, driver, url, username, password, prope
 
 exports.getMetadata = function(databaseType, datasourceName) {
 	var metadata;
-	if (databaseType && databaseType) {
+	if (databaseType && datasourceName) {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata(databaseType, datasourceName);
-	} else if (databaseType && !databaseType) {
+	} else if (databaseType && !datasourceName) {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata(databaseType);
 	} else {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata();
@@ -57,9 +57,9 @@ exports.getMetadata = function(databaseType, datasourceName) {
 
 exports.getProductName = function(databaseType, datasourceName) {
 	var productName;
-	if (databaseType && databaseType) {
+	if (databaseType && datasourceName) {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName(databaseType, datasourceName);
-	} else if (databaseType && !databaseType) {
+	} else if (databaseType && !datasourceName) {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName(databaseType);
 	} else {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName();
@@ -70,9 +70,9 @@ exports.getProductName = function(databaseType, datasourceName) {
 exports.getConnection = function(databaseType, datasourceName) {
 	var connection = new Connection();
 	var native;
-	if (databaseType && databaseType) {
+	if (databaseType && datasourceName) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection(databaseType, datasourceName);
-	} else if (databaseType && !databaseType) {
+	} else if (databaseType && !datasourceName) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection(databaseType);
 	} else {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection();
