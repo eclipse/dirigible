@@ -41,9 +41,9 @@ exports.createDataSource = function(name, driver, url, username, password, prope
 
 exports.getMetadata = function(databaseType, datasourceName) {
 	var metadata;
-	if (databaseType && datasourceName) {
+	if (databaseType && databaseType) {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata(databaseType, datasourceName);
-	} else if (databaseType && !datasourceName) {
+	} else if (databaseType && !databaseType) {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata(databaseType);
 	} else {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata();
@@ -57,9 +57,9 @@ exports.getMetadata = function(databaseType, datasourceName) {
 
 exports.getProductName = function(databaseType, datasourceName) {
 	var productName;
-	if (databaseType && datasourceName) {
+	if (databaseType && databaseType) {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName(databaseType, datasourceName);
-	} else if (databaseType && !datasourceName) {
+	} else if (databaseType && !databaseType) {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName(databaseType);
 	} else {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName();
@@ -70,9 +70,9 @@ exports.getProductName = function(databaseType, datasourceName) {
 exports.getConnection = function(databaseType, datasourceName) {
 	var connection = new Connection();
 	var native;
-	if (databaseType && datasourceName) {
+	if (databaseType && databaseType) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection(databaseType, datasourceName);
-	} else if (databaseType && !datasourceName) {
+	} else if (databaseType && !databaseType) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection(databaseType);
 	} else {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection();
@@ -332,6 +332,47 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.TIMESTAMP);
 		}
 	};
+
+	this.execute = function() {
+    	return this.native.execute();
+    };
+
+    this.addBatch = function() {
+        this.native.addBatch();
+    };
+
+    this.executeBatch = function() {
+        return this.native.executeBatch();
+    };
+
+    this.getMetaData = function() {
+        return this.native.getMetaData();
+    };
+
+    this.getMoreResults = function() {
+        return this.native.getMoreResults();
+    };
+
+    this.getParameterMetaData = function() {
+        return this.native.getParameterMetaData();
+    };
+
+    this.getSQLWarning = function() {
+        return this.native.getWarnings();
+    };
+
+    this.isClosed() = function() {
+        return this.native.isClosed();
+    };
+    this.setDecimal = function(index, value) {
+        this.native.setBigDecimal(index, value);
+    };
+    this.setNClob = function(index, value) {
+        this.native.setNClob(index, value);
+    };
+    this.setNString = function(index, value) {
+        this.native.setNString(index, value);
+    };
 }
 
 function CallableStatement() {
@@ -448,7 +489,8 @@ function CallableStatement() {
 		this.native.setURL(parameter, value);
 	};
 	
-	this.setNull = function(parameter, sqlType, typeName) {
+	this.setNull = function(parameter, sqlTypeStr, typeName) {
+	    var sqlType = PreparedStatement.SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
 			this.native.setNull(parameter, sqlType, typeName);
 		} else {
@@ -555,8 +597,24 @@ function CallableStatement() {
 	};
 	
 	this.execute = function() {
-		this.native.execute();
+		return this.native.execute();
 	};
+
+	this.getMoreResults = function() {
+    	return this.native.getMoreResults();
+    };
+
+    this.getParameterMetaData = function() {
+        return this.native.getParameterMetaData();
+    };
+
+    this.isClosed() = function() {
+        return this.native.isClosed();
+    };
+
+    this.setNClob = function(parameter, value) {
+    	this.native.setNClob(parameter, value);
+    };
 	
 	this.close = function() {
 		this.native.close();
@@ -643,27 +701,39 @@ function ResultSet(internalResultset) {
 		return date;
 	};
 
-	this.isAfterLast = function(identifier) {
+	this.isAfterLast = function() {
 		return this.native.isAfterLast();
 	};
 
-	this.isBeforeFirst = function(identifier) {
+	this.isBeforeFirst = function() {
 		return this.native.isBeforeFirst();
 	};
 
-	this.isClosed = function(identifier) {
+	this.isClosed = function() {
 		return this.native.isClosed();
 	};
 
-	this.isFirst = function(identifier) {
+	this.isFirst = function() {
 		return this.native.isFirst();
 	};
 
-	this.isLast = function(identifier) {
+	this.isLast = function() {
 		return this.native.isLast();
 	};
 
 	this.next = function() {
 		return this.native.next();
 	};
+
+	this.getMetaData = function() {
+	    return this.native.getMetaData();
+	}
+
+	this.getNClob = function(columnIndex){
+	    return this.native.getNClob(columnIndex);
+	}
+
+	this.getNString = function(columnIndex){
+    	return this.native.getNString(columnIndex);
+    }
 }
