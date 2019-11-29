@@ -291,7 +291,7 @@ function PreparedStatement(internalStatement) {
 	};
 
 	this.setLong = function(index, value) {
-		index = parseInt(index, 10); //Rhino things.. 
+		index = parseInt(index, 10);//Rhino things.. 
 		if(value!==null && value!==undefined) {
 			this.native.setLong(index, value);
 		} else {
