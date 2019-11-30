@@ -28,7 +28,7 @@ import org.eclipse.dirigible.commons.config.HealthStatus;
  * The HTTP Context Filter.
  */
 @WebFilter(urlPatterns = {"/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*"}, filterName = "HealthCheckFilter", description = "Check the health status of the Dirigible instance")
-public class HealthCheckFilter implements Filter{
+public class HealthCheckFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -40,7 +40,9 @@ public class HealthCheckFilter implements Filter{
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		if (!httpRequest.getPathInfo().startsWith("/web/resources")) {
+		boolean isResources = httpRequest.getPathInfo().startsWith("/web/resources");
+		boolean isHealthCheck = httpRequest.getPathInfo().startsWith("/healthcheck");
+		if (!isResources && !isHealthCheck) {
 			HealthStatus healthStatus = HealthStatus.getInstance();
 			if (healthStatus.getStatus().equals(HealthStatus.Status.Ready)) {
 				chain.doFilter(request, response);
