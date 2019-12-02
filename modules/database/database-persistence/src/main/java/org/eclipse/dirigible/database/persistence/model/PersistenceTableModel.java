@@ -4,14 +4,15 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * <p>
  * Contributors:
- *   SAP - initial API and implementation
+ * SAP - initial API and implementation
  */
 package org.eclipse.dirigible.database.persistence.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Persistence Table Model transport object.
@@ -24,7 +25,18 @@ public class PersistenceTableModel {
 
 	private String schemaName;
 
-	private List<PersistenceTableColumnModel> columns = new ArrayList<PersistenceTableColumnModel>();
+	private List<PersistenceTableColumnModel> columns = new ArrayList<>();
+
+	private List<PersistenceTableRelationModel> relations = new ArrayList<>();
+
+	public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations) {
+		this.tableName = tableName;
+		this.columns = columns;
+		this.relations = relations;
+	}
+
+	public PersistenceTableModel() {
+	}
 
 	/**
 	 * Gets the class name.
@@ -102,4 +114,37 @@ public class PersistenceTableModel {
 		this.columns = columns;
 	}
 
+	/**
+	 * gets the relations.
+	 *
+	 *            the new columns
+	 */
+	public List<PersistenceTableRelationModel> getRelations() {
+		return relations;
+	}
+
+	/**
+	 * Sets the relations.
+	 *
+	 * @param relations
+	 *            the new columns
+	 */
+	public void setRelations(List<PersistenceTableRelationModel> relations) {
+		this.relations = relations;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PersistenceTableModel that = (PersistenceTableModel) o;
+		return Objects.equals(className, that.className) &&
+				tableName.equals(that.tableName) &&
+				Objects.equals(schemaName, that.schemaName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(className, tableName, schemaName);
+	}
 }
