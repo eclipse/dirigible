@@ -361,7 +361,7 @@ function PreparedStatement(internalStatement) {
         return this.native.getWarnings();
     };
 
-    this.isClosed() = function() {
+    this.isClosed = function() {
         return this.native.isClosed();
     };
     this.setDecimal = function(index, value) {
