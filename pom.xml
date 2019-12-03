@@ -556,7 +556,7 @@
 		<module>releng/server-javascript</module>
 		<module>releng/server-database</module>
 		<module>releng/server-cms</module>
-		<module>releng/embedded-all</module>
+		<!-- <module>releng/embedded-all</module> -->
 	</modules>
 
 </project>
