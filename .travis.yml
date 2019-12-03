@@ -3,7 +3,7 @@ services:
   - docker
 language: java
 jdk:
-  - oraclejdk8
+  - openjdk11
 install: mvn install -q -f pom.xml -DskipTests=true
 before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
