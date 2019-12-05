@@ -50,7 +50,7 @@ public class DefaultEdmTableMappingProvider implements EdmTableBindingProvider {
 
         List<ODataMappingDefinition> mappings = odataCoreService.getMappings();
         for (ODataMappingDefinition mapping : mappings) {
-        	 EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, mapping.getContent());
+        	 EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, new String(mapping.getContent()));
              String fqn = binding.getEdmFullyQualifedName();
              bindings.put(fqn, binding);
         }

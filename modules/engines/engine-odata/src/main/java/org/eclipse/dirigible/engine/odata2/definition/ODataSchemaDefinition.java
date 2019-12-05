@@ -26,8 +26,8 @@ public class ODataSchemaDefinition {
 	@Column(name = "ODATAX_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 
-	@Column(name = "ODATAX_CONTENT", columnDefinition = "VARCHAR", nullable = true, length = 2097152)
-	private String content;
+	@Column(name = "ODATAX_CONTENT", columnDefinition = "BLOB", nullable = true)
+	private byte[] content;
 
 	@Column(name = "ODATAX_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
@@ -59,7 +59,7 @@ public class ODataSchemaDefinition {
 	 *
 	 * @return the content
 	 */
-	public String getContent() {
+	public byte[] getContent() {
 		return content;
 	}
 
@@ -69,7 +69,7 @@ public class ODataSchemaDefinition {
 	 * @param content
 	 *            the new content
 	 */
-	public void setContent(String content) {
+	public void setContent(byte[] content) {
 		this.content = content;
 	}
 

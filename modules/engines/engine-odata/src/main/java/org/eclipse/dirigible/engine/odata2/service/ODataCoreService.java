@@ -41,7 +41,7 @@ public class ODataCoreService implements IODataCoreService {
 
 
 	@Override
-	public ODataSchemaDefinition createSchema(String location, String content) throws ODataException {
+	public ODataSchemaDefinition createSchema(String location, byte[] content) throws ODataException {
 		ODataSchemaDefinition odataSchemaDefinition = new ODataSchemaDefinition();
 		odataSchemaDefinition.setLocation(location);
 		odataSchemaDefinition.setContent(content);
@@ -104,7 +104,7 @@ public class ODataCoreService implements IODataCoreService {
 	}
 
 	@Override
-	public void updateSchema(String location, String content) throws ODataException {
+	public void updateSchema(String location, byte[] content) throws ODataException {
 		try {
 			Connection connection = null;
 			try {
@@ -140,7 +140,7 @@ public class ODataCoreService implements IODataCoreService {
 	}
 
 	@Override
-	public ODataMappingDefinition createMapping(String location, String content) throws ODataException {
+	public ODataMappingDefinition createMapping(String location, byte[] content) throws ODataException {
 		ODataMappingDefinition odataMappingDefinition = new ODataMappingDefinition();
 		odataMappingDefinition.setLocation(location);
 		odataMappingDefinition.setContent(content);
@@ -221,7 +221,7 @@ public class ODataCoreService implements IODataCoreService {
 	}
 
 	@Override
-	public void updateMapping(String location, String content) throws ODataException {
+	public void updateMapping(String location, byte[] content) throws ODataException {
 		try {
 			Connection connection = null;
 			try {
@@ -265,7 +265,7 @@ public class ODataCoreService implements IODataCoreService {
 		
 		List<ODataSchemaDefinition> schemas = getSchemas();
 		for (ODataSchemaDefinition schema : schemas) {
-			builder.append(schema.getContent());
+			builder.append(new String(schema.getContent()));
 			builder.append("\n");
 		}
 		

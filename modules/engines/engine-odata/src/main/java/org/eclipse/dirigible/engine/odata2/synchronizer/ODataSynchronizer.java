@@ -80,7 +80,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataSchemaDefinition schemaDefinition = new ODataSchemaDefinition();
 			schemaDefinition.setLocation(schemaPath);
-			schemaDefinition.setContent(content);
+			schemaDefinition.setContent(content.getBytes());
 			SCHEMAS_PREDELIVERED.put(schemaPath, schemaDefinition);
 		} finally {
 			if (in != null) {
@@ -103,7 +103,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataMappingDefinition mappingDefinition = new ODataMappingDefinition();
 			mappingDefinition.setLocation(mappingPath);
-			mappingDefinition.setContent(content);
+			mappingDefinition.setContent(content.getBytes());
 			MAPPINGS_PREDELIVERED.put(mappingPath, mappingDefinition);
 		} finally {
 			if (in != null) {
@@ -211,14 +211,14 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 		if (resourceName.endsWith(IODataCoreService.FILE_EXTENSION_ODATA_SCHEMA)) {
 			ODataSchemaDefinition schemaDefinition = new ODataSchemaDefinition();
 			schemaDefinition.setLocation(getRegistryPath(resource));
-			schemaDefinition.setContent(new String(resource.getContent()));
+			schemaDefinition.setContent(resource.getContent());
 			synchronizeSchema(schemaDefinition);
 		}
 
 		if (resourceName.endsWith(IODataCoreService.FILE_EXTENSION_ODATA_MAPPING)) {
 			ODataMappingDefinition mappingDefinition = new ODataMappingDefinition();
 			mappingDefinition.setLocation(getRegistryPath(resource));
-			mappingDefinition.setContent(new String(resource.getContent()));
+			mappingDefinition.setContent(resource.getContent());
 			synchronizeMapping(mappingDefinition);
 		}
 	}

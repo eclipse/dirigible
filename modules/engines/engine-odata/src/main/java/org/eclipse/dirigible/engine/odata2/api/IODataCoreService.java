@@ -43,7 +43,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @throws ODataException
 	 *             the Mapping exception
 	 */
-	public ODataSchemaDefinition createSchema(String location, String content) throws ODataException;
+	public ODataSchemaDefinition createSchema(String location, byte[] content) throws ODataException;
 
 	/**
 	 * Gets the schema.
@@ -87,7 +87,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @throws ODataException
 	 *             the Mapping exception
 	 */
-	public void updateSchema(String location, String content) throws ODataException;
+	public void updateSchema(String location, byte[] content) throws ODataException;
 
 	/**
 	 * Gets the schemas.
@@ -111,7 +111,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @throws ODataException
 	 *             the Mapping exception
 	 */
-	public ODataMappingDefinition createMapping(String location, String content) throws ODataException;
+	public ODataMappingDefinition createMapping(String location, byte[] content) throws ODataException;
 
 	/**
 	 * Gets the mapping.
@@ -155,7 +155,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @throws ODataException
 	 *             the Mapping exception
 	 */
-	public void updateMapping(String location, String content) throws ODataException;
+	public void updateMapping(String location, byte[] content) throws ODataException;
 
 	/**
 	 * Gets the Mappings.
