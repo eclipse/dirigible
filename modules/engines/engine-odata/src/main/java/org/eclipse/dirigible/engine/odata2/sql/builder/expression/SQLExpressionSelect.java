@@ -190,7 +190,7 @@ public final class SQLExpressionSelect implements SQLExpression {
             if (context.getDatabaseProduct() == DatabaseProduct.DERBY) {
                 // Derby: FETCH { FIRST | NEXT } [integer-literal] {ROW | ROWS} ONLY
                 selectPredicate = String.format("FETCH FIRST %d ROWS ONLY", top);
-            } else if (context.getDatabaseProduct() == DatabaseProduct.POSTGRE_SQL || context.getDatabaseProduct() == DatabaseProduct.H2) {
+            } else if (context.getDatabaseProduct() == DatabaseProduct.POSTGRE_SQL || context.getDatabaseProduct() == DatabaseProduct.H2 || context.getDatabaseProduct() == DatabaseProduct.HANA) {
                 // PostgreSQL: [LIMIT { number | ALL }] [OFFSET number]
                 selectPredicate = String.format("LIMIT %d", top);
             }

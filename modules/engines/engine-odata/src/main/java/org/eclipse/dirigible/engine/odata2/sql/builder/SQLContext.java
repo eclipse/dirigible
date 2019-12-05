@@ -21,7 +21,7 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 public class SQLContext {
 
     public enum DatabaseProduct {
-        DERBY, SYBASE_ASE, POSTGRE_SQL, H2
+        DERBY, SYBASE_ASE, POSTGRE_SQL, H2, HANA
     }
 
     private final DatabaseProduct databaseProduct;
@@ -44,6 +44,8 @@ public class SQLContext {
             databaseProduct = DatabaseProduct.POSTGRE_SQL;
         } else if (dbProductName.toLowerCase().contains("h2")) {
             databaseProduct = DatabaseProduct.H2;
+        } else if (dbProductName.toLowerCase().contains("hdb")) {
+            databaseProduct = DatabaseProduct.HANA;
         } else
             throw new OData2Exception("Unsupported database " + dbProductName, SERVICE_UNAVAILABLE);
     }
