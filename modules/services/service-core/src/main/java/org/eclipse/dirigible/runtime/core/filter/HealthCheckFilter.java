@@ -42,7 +42,8 @@ public class HealthCheckFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		boolean isResources = httpRequest.getPathInfo().startsWith("/web/resources");
 		boolean isHealthCheck = httpRequest.getPathInfo().startsWith("/healthcheck");
-		if (!isResources && !isHealthCheck) {
+		boolean isOps = httpRequest.getPathInfo().startsWith("/ops");
+		if (!isResources && !isHealthCheck && !isOps) {
 			HealthStatus healthStatus = HealthStatus.getInstance();
 			if (healthStatus.getStatus().equals(HealthStatus.Status.Ready)) {
 				chain.doFilter(request, response);
