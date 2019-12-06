@@ -84,6 +84,21 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
+	 * The constructor from the fields.
+	 *
+	 * @param name
+	 *            the name
+	 * @param type
+	 *            the type
+	 * @param primaryKey
+	 */
+	public PersistenceTableColumnModel(String name, String type, boolean primaryKey) {
+		this.name = name;
+		this.type = type;
+		this.primaryKey = primaryKey;
+	}
+
+	/**
 	 * Getter for the field.
 	 *
 	 * @return the field
