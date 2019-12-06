@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,8 +64,7 @@ public class CustomDatabase implements IDatabase {
 			while (tokens.hasMoreTokens()) {
 				String name = tokens.nextToken();
 				logger.info("Initializing a custom datasource with name: " + name);
-				DataSource dataSource = initializeDataSource(name);
-				DATASOURCES.put(name, dataSource);
+				initializeDataSource(name);
 			}
 		} else {
 			logger.trace("No custom datasources configured");
@@ -92,7 +92,6 @@ public class CustomDatabase implements IDatabase {
 			return dataSource;
 		}
 		dataSource = initializeDataSource(name);
-		DATASOURCES.put(name, dataSource);
 		return dataSource;
 	}
 
@@ -120,7 +119,9 @@ public class CustomDatabase implements IDatabase {
 			if (databaseConnectionProperties != null && !databaseConnectionProperties.isEmpty()) {
 				basicDataSource.setConnectionProperties(databaseConnectionProperties);
 			}
-			return basicDataSource;
+			WrappedDataSource wrappedDataSource = new WrappedDataSource(basicDataSource);
+			DATASOURCES.put(name, wrappedDataSource);
+			return wrappedDataSource;
 		}
 		throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
 	}

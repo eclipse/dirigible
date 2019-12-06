@@ -39,8 +39,12 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractApiSuiteTest.class);
 
 	private static List<String> TEST_MODULES = new ArrayList<String>();
 
@@ -230,13 +234,15 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 					ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), mockedResponse);
 					extensionsCoreService.createExtensionPoint("/test_extpoint1", "test_extpoint1", "Test");
 					extensionsCoreService.createExtension("/test_ext1", "/test_ext_module1", "test_extpoint1", "Test");
+
+					logger.info("API test starting... " + testModule);
 					
 					Object result = null;
-					
 					result = runTest(executor, repository, testModule);
 					
 					assertNotNull(result);
 					assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+					logger.info("API test passed successfully: " + testModule);
 					 
 				} finally {
 					extensionsCoreService.removeExtension("/test_ext1");

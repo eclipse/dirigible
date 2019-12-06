@@ -27,6 +27,7 @@
 		<module>engine-web</module>
 		<module>engine-wiki</module>
 		<module>engine-command</module>
+		<module>engine-odata</module>
 	</modules>
 
 </project>

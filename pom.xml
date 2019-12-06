@@ -487,7 +487,7 @@
 		<project.title>Eclipse Dirigible</project.title>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
 		<maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
@@ -519,6 +519,7 @@
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>5.5.0.201909110433-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
+		<olingo.version>2.0.11</olingo.version>
 
 		<skip.tests>true</skip.tests>
 	</properties>
@@ -556,7 +557,7 @@
 		<module>releng/server-javascript</module>
 		<module>releng/server-database</module>
 		<module>releng/server-cms</module>
-		<module>releng/embedded-all</module>
+		<!-- <module>releng/embedded-all</module> -->
 	</modules>
 
 </project>
