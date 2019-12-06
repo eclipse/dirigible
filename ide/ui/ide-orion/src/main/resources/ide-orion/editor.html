@@ -101,7 +101,7 @@
 					return 'application/json';
 				} else if (fileName.endsWith('.command')) {
 					return 'application/json';
-				} else if (fileName.endsWith('.xsjs')) {
+				} else if (fileName.endsWith('.xsjs') || fileName.endsWith('.xsjslib')) {
 					return 'application/javascript';
 				}
 				return 'plain/text';
