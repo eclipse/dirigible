@@ -68,6 +68,9 @@ public class DatabaseTestHelper {
 			basicDataSource.setUsername(databaseUsername);
 			String databasePassword = databaseProperties.getProperty(database + ".password");
 			basicDataSource.setPassword(databasePassword);
+			String defaultQueryTimeout = databaseProperties.getProperty(database + ".timeout");
+			int databaseTimeout = (defaultQueryTimeout != null) ? Integer.parseInt(defaultQueryTimeout) : 60;
+			basicDataSource.setDefaultQueryTimeout(databaseTimeout);
 			basicDataSource.setDefaultAutoCommit(true);
 			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
 

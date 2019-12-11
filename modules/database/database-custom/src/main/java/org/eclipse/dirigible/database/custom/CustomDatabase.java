@@ -107,6 +107,7 @@ public class CustomDatabase implements IDatabase {
 		String databaseUrl = Configuration.get(name + "_URL");
 		String databaseUsername = Configuration.get(name + "_USERNAME");
 		String databasePassword = Configuration.get(name + "_PASSWORD");
+		int databaseTimeout = Integer.parseInt(Configuration.get(name + "_TIMEOUT", "60"));
 		String databaseConnectionProperties = Configuration.get(name + "_CONNECTION_PROPERTIES");
 		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
 			BasicDataSource basicDataSource = new BasicDataSource();
@@ -116,6 +117,7 @@ public class CustomDatabase implements IDatabase {
 			basicDataSource.setPassword(databasePassword);
 			basicDataSource.setDefaultAutoCommit(true);
 			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
+			basicDataSource.setDefaultQueryTimeout(databaseTimeout);
 			if (databaseConnectionProperties != null && !databaseConnectionProperties.isEmpty()) {
 				basicDataSource.setConnectionProperties(databaseConnectionProperties);
 			}
