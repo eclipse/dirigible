@@ -35,11 +35,11 @@ public class DatabaseMetadata {
 	/** The all tables are selectable. */
 	private boolean allTablesAreSelectable;
 
-	/** The get URL. */
-	private String getURL;
+	/** The URL. */
+	private String url;
 
-	/** The get user name. */
-	private String getUserName;
+	/** The user name. */
+	private String userName;
 
 	/** The is read only. */
 	private boolean isReadOnly;
@@ -218,8 +218,8 @@ public class DatabaseMetadata {
 	/** The is catalog at start. */
 	private boolean isCatalogAtStart;
 
-	/** The get catalog separator. */
-	private String getCatalogSeparator;
+	/** The catalog separator. */
+	private String catalogSeparator;
 
 	/** The supports schemas in data manipulation. */
 	private boolean supportsSchemasInDataManipulation;
@@ -392,23 +392,23 @@ public class DatabaseMetadata {
 	/** The supports get generated keys. */
 	private boolean supportsGetGeneratedKeys;
 
-	/** The get result set holdability. */
-	private int getResultSetHoldability;
+	/** The result set holdability. */
+	private int resultSetHoldability;
 
-	/** The get database major version. */
-	private int getDatabaseMajorVersion;
+	/** The database major version. */
+	private int databaseMajorVersion;
 
-	/** The get database minor version. */
-	private int getDatabaseMinorVersion;
+	/** The database minor version. */
+	private int databaseMinorVersion;
 
-	/** The get JDBC major version. */
-	private int getJDBCMajorVersion;
+	/** The JDBC major version. */
+	private int jdbcMajorVersion;
 
-	/** The get JDBC minor version. */
-	private int getJDBCMinorVersion;
+	/** The JDBC minor version. */
+	private int jdbcMinorVersion;
 
-	/** The get SQL state type. */
-	private int getSQLStateType;
+	/** The SQL state type. */
+	private int sqlStateType;
 
 	/** The locators update copy. */
 	private boolean locatorsUpdateCopy;
@@ -425,8 +425,8 @@ public class DatabaseMetadata {
 	/** The generated key always returned. */
 	private boolean generatedKeyAlwaysReturned;
 
-	/** The get max logical lob size. */
-	private long getMaxLogicalLobSize;
+	/** The max logical lob size. */
+	private long maxLogicalLobSize;
 
 	/** The supports ref cursors. */
 	private boolean supportsRefCursors;
@@ -436,6 +436,18 @@ public class DatabaseMetadata {
 
 	/** The kind. */
 	private String kind = "database";
+
+	/**
+	 * Instantiates a new database metadata.
+	 * 
+	 * @param connection
+	 *            the connection
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public DatabaseMetadata(Connection connection) throws SQLException {
+		this(connection, null, null, null);
+	}
 
 	/**
 	 * Instantiates a new database metadata.
@@ -466,12 +478,12 @@ public class DatabaseMetadata {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.allTablesAreSelectable()");
 		}
 		try {
-			this.getURL = databaseMetaData.getURL();
+			this.url = databaseMetaData.getURL();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getURL()");
 		}
 		try {
-			this.getUserName = databaseMetaData.getUserName();
+			this.userName = databaseMetaData.getUserName();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getUserName()");
 		}
@@ -771,7 +783,7 @@ public class DatabaseMetadata {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.isCatalogAtStart()");
 		}
 		try {
-			this.getCatalogSeparator = databaseMetaData.getCatalogSeparator();
+			this.catalogSeparator = databaseMetaData.getCatalogSeparator();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getCatalogSeparator()");
 		}
@@ -1061,32 +1073,32 @@ public class DatabaseMetadata {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsGetGeneratedKeys()");
 		}
 		try {
-			this.getResultSetHoldability = databaseMetaData.getResultSetHoldability();
+			this.resultSetHoldability = databaseMetaData.getResultSetHoldability();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getResultSetHoldability()");
 		}
 		try {
-			this.getDatabaseMajorVersion = databaseMetaData.getDatabaseMajorVersion();
+			this.databaseMajorVersion = databaseMetaData.getDatabaseMajorVersion();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMajorVersion()");
 		}
 		try {
-			this.getDatabaseMinorVersion = databaseMetaData.getDatabaseMinorVersion();
+			this.databaseMinorVersion = databaseMetaData.getDatabaseMinorVersion();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getDatabaseMinorVersion()");
 		}
 		try {
-			this.getJDBCMajorVersion = databaseMetaData.getJDBCMajorVersion();
+			this.jdbcMajorVersion = databaseMetaData.getJDBCMajorVersion();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMajorVersion()");
 		}
 		try {
-			this.getJDBCMinorVersion = databaseMetaData.getJDBCMinorVersion();
+			this.jdbcMinorVersion = databaseMetaData.getJDBCMinorVersion();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getJDBCMinorVersion()");
 		}
 		try {
-			this.getSQLStateType = databaseMetaData.getSQLStateType();
+			this.sqlStateType = databaseMetaData.getSQLStateType();
 		} catch (Exception e1) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getSQLStateType()");
 		}
@@ -1116,7 +1128,7 @@ public class DatabaseMetadata {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.generatedKeyAlwaysReturned()");
 		}
 		try {
-			this.getMaxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
+			this.maxLogicalLobSize = databaseMetaData.getMaxLogicalLobSize();
 		} catch (Exception e) {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.getMaxLogicalLobSize()");
 		}
@@ -1168,41 +1180,41 @@ public class DatabaseMetadata {
 	}
 
 	/**
-	 * Gets the gets the URL.
+	 * Gets the URL.
 	 *
-	 * @return the gets the URL
+	 * @return the URL
 	 */
-	public String getGetURL() {
-		return getURL;
+	public String getURL() {
+		return url;
 	}
 
 	/**
-	 * Sets the gets the URL.
+	 * Sets the URL.
 	 *
-	 * @param getURL
-	 *            the new gets the URL
+	 * @param url
+	 *            the new URL
 	 */
-	public void setGetURL(String getURL) {
-		this.getURL = getURL;
+	public void setURL(String url) {
+		this.url = url;
 	}
 
 	/**
-	 * Gets the gets the user name.
+	 * Gets the user name.
 	 *
-	 * @return the gets the user name
+	 * @return the user name
 	 */
-	public String getGetUserName() {
-		return getUserName;
+	public String getUserName() {
+		return userName;
 	}
 
 	/**
 	 * Sets the gets the user name.
 	 *
-	 * @param getUserName
+	 * @param userName
 	 *            the new gets the user name
 	 */
-	public void setGetUserName(String getUserName) {
-		this.getUserName = getUserName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**
@@ -2327,22 +2339,22 @@ public class DatabaseMetadata {
 	}
 
 	/**
-	 * Gets the gets the catalog separator.
+	 * Gets the the catalog separator.
 	 *
-	 * @return the gets the catalog separator
+	 * @return the catalog separator
 	 */
-	public String getGetCatalogSeparator() {
-		return getCatalogSeparator;
+	public String getCatalogSeparator() {
+		return catalogSeparator;
 	}
 
 	/**
-	 * Sets the gets the catalog separator.
+	 * Sets the catalog separator.
 	 *
-	 * @param getCatalogSeparator
-	 *            the new gets the catalog separator
+	 * @param catalogSeparator
+	 *            the new catalog separator
 	 */
-	public void setGetCatalogSeparator(String getCatalogSeparator) {
-		this.getCatalogSeparator = getCatalogSeparator;
+	public void setCatalogSeparator(String catalogSeparator) {
+		this.catalogSeparator = catalogSeparator;
 	}
 
 	/**
@@ -3429,117 +3441,117 @@ public class DatabaseMetadata {
 	}
 
 	/**
-	 * Gets the gets the result set holdability.
+	 * Gets the result set holdability.
 	 *
-	 * @return the gets the result set holdability
+	 * @return the result set holdability
 	 */
-	public int getGetResultSetHoldability() {
-		return getResultSetHoldability;
+	public int getResultSetHoldability() {
+		return resultSetHoldability;
 	}
 
 	/**
-	 * Sets the gets the result set holdability.
+	 * Sets the result set holdability.
 	 *
-	 * @param getResultSetHoldability
-	 *            the new gets the result set holdability
+	 * @param resultSetHoldability
+	 *            the new result set holdability
 	 */
-	public void setGetResultSetHoldability(int getResultSetHoldability) {
-		this.getResultSetHoldability = getResultSetHoldability;
+	public void setGetResultSetHoldability(int resultSetHoldability) {
+		this.resultSetHoldability = resultSetHoldability;
 	}
 
 	/**
-	 * Gets the gets the database major version.
+	 * Gets the database major version.
 	 *
-	 * @return the gets the database major version
+	 * @return the database major version
 	 */
-	public int getGetDatabaseMajorVersion() {
-		return getDatabaseMajorVersion;
+	public int getDatabaseMajorVersion() {
+		return databaseMajorVersion;
 	}
 
 	/**
-	 * Sets the gets the database major version.
+	 * Sets the database major version.
 	 *
-	 * @param getDatabaseMajorVersion
-	 *            the new gets the database major version
+	 * @param databaseMajorVersion
+	 *            the new database major version
 	 */
-	public void setGetDatabaseMajorVersion(int getDatabaseMajorVersion) {
-		this.getDatabaseMajorVersion = getDatabaseMajorVersion;
+	public void setGetDatabaseMajorVersion(int databaseMajorVersion) {
+		this.databaseMajorVersion = databaseMajorVersion;
 	}
 
 	/**
-	 * Gets the gets the database minor version.
+	 * Gets the database minor version.
 	 *
-	 * @return the gets the database minor version
+	 * @return the database minor version
 	 */
-	public int getGetDatabaseMinorVersion() {
-		return getDatabaseMinorVersion;
+	public int getDatabaseMinorVersion() {
+		return databaseMinorVersion;
 	}
 
 	/**
-	 * Sets the gets the database minor version.
+	 * Sets the database minor version.
 	 *
-	 * @param getDatabaseMinorVersion
-	 *            the new gets the database minor version
+	 * @param databaseMinorVersion
+	 *            the new database minor version
 	 */
-	public void setGetDatabaseMinorVersion(int getDatabaseMinorVersion) {
-		this.getDatabaseMinorVersion = getDatabaseMinorVersion;
+	public void setGetDatabaseMinorVersion(int databaseMinorVersion) {
+		this.databaseMinorVersion = databaseMinorVersion;
 	}
 
 	/**
-	 * Gets the gets the JDBC major version.
+	 * Gets the JDBC major version.
 	 *
-	 * @return the gets the JDBC major version
+	 * @return the JDBC major version
 	 */
-	public int getGetJDBCMajorVersion() {
-		return getJDBCMajorVersion;
+	public int getJDBCMajorVersion() {
+		return jdbcMajorVersion;
 	}
 
 	/**
-	 * Sets the gets the JDBC major version.
+	 * Sets the JDBC major version.
 	 *
-	 * @param getJDBCMajorVersion
-	 *            the new gets the JDBC major version
+	 * @param jdbcMajorVersion
+	 *            the new JDBC major version
 	 */
-	public void setGetJDBCMajorVersion(int getJDBCMajorVersion) {
-		this.getJDBCMajorVersion = getJDBCMajorVersion;
+	public void setJDBCMajorVersion(int jdbcMajorVersion) {
+		this.jdbcMajorVersion = jdbcMajorVersion;
 	}
 
 	/**
-	 * Gets the gets the JDBC minor version.
+	 * Gets the JDBC minor version.
 	 *
-	 * @return the gets the JDBC minor version
+	 * @return the JDBC minor version
 	 */
-	public int getGetJDBCMinorVersion() {
-		return getJDBCMinorVersion;
+	public int getJDBCMinorVersion() {
+		return jdbcMinorVersion;
 	}
 
 	/**
-	 * Sets the gets the JDBC minor version.
+	 * Sets the JDBC minor version.
 	 *
-	 * @param getJDBCMinorVersion
-	 *            the new gets the JDBC minor version
+	 * @param jdbcMinorVersion
+	 *            the new JDBC minor version
 	 */
-	public void setGetJDBCMinorVersion(int getJDBCMinorVersion) {
-		this.getJDBCMinorVersion = getJDBCMinorVersion;
+	public void setJDBCMinorVersion(int jdbcMinorVersion) {
+		this.jdbcMinorVersion = jdbcMinorVersion;
 	}
 
 	/**
-	 * Gets the gets the SQL state type.
+	 * Gets the SQL state type.
 	 *
-	 * @return the gets the SQL state type
+	 * @return the SQL state type
 	 */
-	public int getGetSQLStateType() {
-		return getSQLStateType;
+	public int getSQLStateType() {
+		return sqlStateType;
 	}
 
 	/**
-	 * Sets the gets the SQL state type.
+	 * Sets the SQL state type.
 	 *
-	 * @param getSQLStateType
-	 *            the new gets the SQL state type
+	 * @param sqlStateType
+	 *            the new SQL state type
 	 */
-	public void setGetSQLStateType(int getSQLStateType) {
-		this.getSQLStateType = getSQLStateType;
+	public void setSQLStateType(int sqlStateType) {
+		this.sqlStateType = sqlStateType;
 	}
 
 	/**
@@ -3638,22 +3650,22 @@ public class DatabaseMetadata {
 	}
 
 	/**
-	 * Gets the gets the max logical lob size.
+	 * Gets the max logical lob size.
 	 *
-	 * @return the gets the max logical lob size
+	 * @return the max logical lob size
 	 */
-	public long getGetMaxLogicalLobSize() {
-		return getMaxLogicalLobSize;
+	public long getMaxLogicalLobSize() {
+		return maxLogicalLobSize;
 	}
 
 	/**
-	 * Sets the gets the max logical lob size.
+	 * Sets the max logical lob size.
 	 *
-	 * @param getMaxLogicalLobSize
-	 *            the new gets the max logical lob size
+	 * @param maxLogicalLobSize
+	 *            the new max logical lob size
 	 */
-	public void setGetMaxLogicalLobSize(long getMaxLogicalLobSize) {
-		this.getMaxLogicalLobSize = getMaxLogicalLobSize;
+	public void setMaxLogicalLobSize(long maxLogicalLobSize) {
+		this.maxLogicalLobSize = maxLogicalLobSize;
 	}
 
 	/**
