@@ -176,4 +176,11 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the database name
 	 */
 	public String getDatabaseName(Connection connection);
+	
+	/**
+	 * Checks if the database is capable to create and use Synonyms.
+	 *
+	 * @return true if the feature is supported , false otherwise
+	 */
+	public boolean isSynonymSupported();
 }

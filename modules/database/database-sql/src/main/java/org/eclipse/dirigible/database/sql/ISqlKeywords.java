@@ -138,6 +138,9 @@ public interface ISqlKeywords {
 
 	/** The Constant KEYWORD_SEQUENCE. */
 	public static final String KEYWORD_SEQUENCE = "SEQUENCE"; //$NON-NLS-1$
+	
+	/** The Constant KEYWORD_SYNONYM. */
+	public static final String KEYWORD_SYNONYM = "SYNONYM"; //$NON-NLS-1$
 
 	/** The Constant KEYWORD_NEXT_VALUE_FOR. */
 	public static final String KEYWORD_NEXT_VALUE_FOR = "NEXT VALUE FOR"; //$NON-NLS-1$
@@ -180,6 +183,12 @@ public interface ISqlKeywords {
 
 	/** The Constant KEYWORD_ONLY. */
 	public static final String KEYWORD_ONLY = "ONLY"; //$NON-NLS-1$
+	
+	/** The Constant KEYWORD_PUBLIC. */
+	public static final String KEYWORD_PUBLIC = "PUBLIC"; //$NON-NLS-1$
+	
+	/** The Constant KEYWORD_FOR. */
+	public static final String KEYWORD_FOR = "FOR"; //$NON-NLS-1$
 
 	/** The Constant KEYWORD_IDENTITY. */
 	public static final String KEYWORD_IDENTITY = "IDENTITY"; //$NON-NLS-1$

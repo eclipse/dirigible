@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.builders;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
@@ -62,6 +63,17 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
 	 */
 	public CreateSequenceBuilder sequence(String sequence) {
 		return new CreateSequenceBuilder(getDialect(), sequence);
+	}
+	
+	/**
+	 * Synonym branch.
+	 *
+	 * @param synonym
+	 *            the synonym
+	 * @return the creates the synonym builder
+	 */
+	public CreateSynonymBuilder synonym(String synonym) {
+		return new CreateSynonymBuilder(getDialect(), synonym);
 	}
 
 	/*

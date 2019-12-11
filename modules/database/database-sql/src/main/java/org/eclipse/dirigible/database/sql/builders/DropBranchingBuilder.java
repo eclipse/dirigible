@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.sql.builders;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
+import org.eclipse.dirigible.database.sql.builders.synonym.DropSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropConstraintBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.DropViewBuilder;
@@ -74,6 +75,17 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
 	 */
 	public DropConstraintBuilder constraint(String constraint) {
 		return new DropConstraintBuilder(getDialect(), constraint);
+	}
+	
+	/**
+	 * Synonym branch.
+	 *
+	 * @param synonym
+	 *            the synonym
+	 * @return the drop synonym builder
+	 */
+	public DropSynonymBuilder synonym(String synonym) {
+		return new DropSynonymBuilder(getDialect(), synonym);
 	}
 
 	/*

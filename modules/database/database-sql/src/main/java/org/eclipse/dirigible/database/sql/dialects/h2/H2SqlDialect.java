@@ -42,5 +42,10 @@ public class H2SqlDialect extends
 	public H2LastValueIdentityBuilder lastval(String... args) {
 		return new H2LastValueIdentityBuilder(this);
 	}
+	
+	@Override
+	public boolean isSynonymSupported() {
+		return false;
+	}
 
 }

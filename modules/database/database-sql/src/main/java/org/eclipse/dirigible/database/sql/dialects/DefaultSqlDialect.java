@@ -290,4 +290,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		}
 	}
 
+	@Override
+	public boolean isSynonymSupported() {
+		return true;
+	}
+
 }
