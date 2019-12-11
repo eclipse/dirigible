@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
+
+		<style>
+			.busy-indicator {
+			  display: inline-block;
+			  position: relative;
+			  width: 64px;
+			  height: 64px;
+			}
+			.busy-indicator div {
+			  animation: busy-indicator 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+			  transform-origin: 32px 32px;
+			}
+			.busy-indicator div:after {
+			  content: " ";
+			  display: block;
+			  position: absolute;
+			  width: 6px;
+			  height: 6px;
+			  border-radius: 50%;
+			  background: #cef;
+			  margin: -3px 0 0 -3px;
+			}
+			.busy-indicator div:nth-child(1) {
+			  animation-delay: -0.036s;
+			}
+			.busy-indicator div:nth-child(1):after {
+			  top: 50px;
+			  left: 50px;
+			}
+			.busy-indicator div:nth-child(2) {
+			  animation-delay: -0.072s;
+			}
+			.busy-indicator div:nth-child(2):after {
+			  top: 54px;
+			  left: 45px;
+			}
+			.busy-indicator div:nth-child(3) {
+			  animation-delay: -0.108s;
+			}
+			.busy-indicator div:nth-child(3):after {
+			  top: 57px;
+			  left: 39px;
+			}
+			.busy-indicator div:nth-child(4) {
+			  animation-delay: -0.144s;
+			}
+			.busy-indicator div:nth-child(4):after {
+			  top: 58px;
+			  left: 32px;
+			}
+			.busy-indicator div:nth-child(5) {
+			  animation-delay: -0.18s;
+			}
+			.busy-indicator div:nth-child(5):after {
+			  top: 57px;
+			  left: 25px;
+			}
+			.busy-indicator div:nth-child(6) {
+			  animation-delay: -0.216s;
+			}
+			.busy-indicator div:nth-child(6):after {
+			  top: 54px;
+			  left: 19px;
+			}
+			.busy-indicator div:nth-child(7) {
+			  animation-delay: -0.252s;
+			}
+			.busy-indicator div:nth-child(7):after {
+			  top: 50px;
+			  left: 14px;
+			}
+			.busy-indicator div:nth-child(8) {
+			  animation-delay: -0.288s;
+			}
+			.busy-indicator div:nth-child(8):after {
+			  top: 45px;
+			  left: 10px;
+			}
+			@keyframes busy-indicator {
+			  0% {
+			    transform: rotate(0deg);
+			  }
+			  100% {
+			    transform: rotate(360deg);
+			  }
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container text-center">
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<h1>Preparing Eclipse Dirigible Instance <span class="badge badge-secondary"><div class="busy-indicator"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></span></h1>
+		</div>
+	</body>
+
+	<script>
+		setInterval(function() {
+			jQuery.ajax({
+				type: "GET",
+				url: "services/v4/healthcheck"
+			})
+			.done(function (healthStatus) {
+				if (healthStatus.status === "Ready") {
+					window.location='home';
+				}
+			});
+
+		}, 1000);
+	</script>
+</html>

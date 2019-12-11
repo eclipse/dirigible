@@ -84,6 +84,12 @@ public class PersistenceTableColumnModel {
 	}
 
 	/**
+	 * Empty constructor
+	 */
+	public PersistenceTableColumnModel() {
+	}
+
+	/**
 	 * The constructor from the fields.
 	 *
 	 * @param name
