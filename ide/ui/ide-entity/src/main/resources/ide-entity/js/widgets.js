@@ -54,7 +54,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			var pstate = graph.getView().getState(parent);
 			
 			if (parent === null || pstate === null) {
-				showAlert('Drop', 'Drop target must be a table', $scope);
+				showAlert('Drop', 'Drop target must be an entity', $scope);
 				return;
 			}
 			
