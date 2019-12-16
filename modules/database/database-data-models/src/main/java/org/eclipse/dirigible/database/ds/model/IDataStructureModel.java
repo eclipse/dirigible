@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,5 +41,8 @@ public interface IDataStructureModel {
 	public static final String TYPE_UPDATE = "UPDATE";
 	/** Type schema */
 	public static final String TYPE_SCHEMA = "SCHEMA";
+	
+	/** Whether or not to use case sensitive syntax for table or view names and column names */
+	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
 }

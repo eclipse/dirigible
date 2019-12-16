@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintCheckModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintUniqueModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -42,11 +44,19 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		logger.info("Processing Create Table: " + tableModel.getName());
-		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableModel.getName());
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+		String tableName = tableModel.getName();
+		if (caseSensitive) {
+			tableName = "\"" + tableName + "\"";
+		}
+		logger.info("Processing Create Table: " + tableName);
+		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
 		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
 		for (DataStructureTableColumnModel columnModel : columns) {
 			String name = columnModel.getName();
+			if (caseSensitive) {
+				name = "\"" + name + "\"";
+			}
 			DataType type = DataType.valueOf(columnModel.getType());
 			String length = columnModel.getLength();
 			boolean isNullable = columnModel.isNullable();
@@ -83,18 +93,30 @@ public class TableCreateProcessor {
 			}
 			if (tableModel.getConstraints().getForeignKeys() != null) {
 				for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
-					createTableBuilder.foreignKey(foreignKey.getName(), foreignKey.getColumns(), foreignKey.getReferencedTable(),
+					String foreignKeyName = foreignKey.getName();
+					if (caseSensitive) {
+						foreignKeyName = "\"" + foreignKeyName + "\"";
+					}
+					createTableBuilder.foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(),
 							foreignKey.getReferencedColumns());
 				}
 			}
 			if (tableModel.getConstraints().getUniqueIndices() != null) {
 				for (DataStructureTableConstraintUniqueModel uniqueIndex : tableModel.getConstraints().getUniqueIndices()) {
-					createTableBuilder.unique(uniqueIndex.getName(), uniqueIndex.getColumns());
+					String uniqueIndexName = uniqueIndex.getName();
+					if (caseSensitive) {
+						uniqueIndexName = "\"" + uniqueIndexName + "\"";
+					}
+					createTableBuilder.unique(uniqueIndexName, uniqueIndex.getColumns());
 				}
 			}
 			if (tableModel.getConstraints().getChecks() != null) {
 				for (DataStructureTableConstraintCheckModel check : tableModel.getConstraints().getChecks()) {
-					createTableBuilder.check(check.getName(), check.getExpression());
+					String checkName = check.getName();
+					if (caseSensitive) {
+						checkName = "\"" + checkName + "\"";
+					}
+					createTableBuilder.check(checkName, check.getExpression());
 				}
 			}
 		}

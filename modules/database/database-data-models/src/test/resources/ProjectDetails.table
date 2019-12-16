@@ -1,0 +1,23 @@
+{
+	"name": "ProjectDetails",
+	"type": "TABLE",
+	"columns":
+		[
+			{
+				"name":"Id",
+				"type":"INTEGER",
+				"length":"0",
+				"nullable":"false",
+				"primaryKey":"true",
+				"defaultValue":""
+			},
+			{
+				"name":"ProjectDetail",
+				"type":"VARCHAR",
+				"length":"20",
+				"nullable":"true",
+				"primaryKey":"false",
+				"defaultValue":""
+			}
+		]
+}

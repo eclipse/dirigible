@@ -27,8 +27,10 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.jdbc.EmbeddedDataSource;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
 import org.junit.Before;
@@ -216,7 +218,7 @@ public class DataStructureTableTest {
 	 * Parses the table.
 	 */
 	@Test
-	public void crdateTable() {
+	public void alterTable() {
 		try {
 			InputStream in = DataStructureTableTest.class.getResourceAsStream("/orders.table");
 			try {
@@ -268,6 +270,54 @@ public class DataStructureTableTest {
 						
 					} finally {
 						connection.createStatement().executeUpdate("DROP TABLE " + table.getName());
+					}
+				} finally {
+					connection.close();
+				}
+				
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Parses the table.
+	 */
+	@Test
+	public void createCaseSensitiveTable() {
+		try {
+			InputStream in = DataStructureTableTest.class.getResourceAsStream("/ProjectDetails.table");
+			try {
+				String tableFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+				DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
+				assertEquals("ProjectDetails", table.getName());
+				
+				Connection connection = getDataSource().getConnection();
+				try {
+					ResultSet rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+					if (rs.next()) {
+						rs.close();
+						fail("Table already exists!");
+					}
+					Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
+					try {
+						TableCreateProcessor.execute(connection, table);
+						rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+						if (!rs.next()) {
+							rs.close();
+							fail("Table has not been materialized!");
+						}
+						
+						
+					} finally {
+						connection.createStatement().executeUpdate("DROP TABLE \"" + table.getName() + "\"");
+						Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false");
 					}
 				} finally {
 					connection.close();
