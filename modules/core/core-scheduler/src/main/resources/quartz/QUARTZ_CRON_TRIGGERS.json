@@ -41,9 +41,11 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_CRON_TRIGGERS_PK",
 			"columns": ["SCHED_NAME","TRIGGER_NAME","TRIGGER_GROUP"]
 		},
 		"foreignKeys":[{
+		        "name": "QUARTZ_CRON_TRIGGERS_FK",
 				"columns": ["SCHED_NAME","TRIGGER_NAME","TRIGGER_GROUP"],
 				"referencedTable": "QUARTZ_TRIGGERS",
 				"referencedColumns": ["SCHED_NAME","TRIGGER_NAME","TRIGGER_GROUP"]

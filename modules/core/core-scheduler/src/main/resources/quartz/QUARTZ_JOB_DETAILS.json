@@ -76,6 +76,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_JOB_DETAILS_PK",
 			"columns": ["SCHED_NAME","JOB_NAME","JOB_GROUP"]
 		}
 	}

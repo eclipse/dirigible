@@ -20,6 +20,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_PAUSED_TRIGGER_GRPS_PK",
 			"columns": ["SCHED_NAME","TRIGGER_GROUP"]
 		}
 	}

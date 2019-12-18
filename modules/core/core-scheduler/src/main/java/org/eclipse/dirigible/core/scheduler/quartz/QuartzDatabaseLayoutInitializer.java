@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,9 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
+import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
@@ -48,6 +51,13 @@ public class QuartzDatabaseLayoutInitializer {
 	public void initialize() throws SQLException, IOException {
 		Connection connection = null;
 		try {
+			Configuration.load("/dirigible-scheduler.properties");
+			Configuration.load("/dirigible.properties");
+			String dataSourceType = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE);
+			String dataSourceName = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
+			if (dataSourceType != null && dataSourceName != null) {
+				datasource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
+			}
 			connection = datasource.getConnection();
 			logger.debug("Starting to create the database layout for Quartz...");
 			@SuppressWarnings("rawtypes")

@@ -27,6 +27,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_CALENDARS_PK",
 			"columns": ["SCHED_NAME","CALENDAR_NAME"]
 		}
 	}

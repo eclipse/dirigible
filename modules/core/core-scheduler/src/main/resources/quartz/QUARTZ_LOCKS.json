@@ -20,6 +20,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_LOCKS_PK",
 			"columns": ["SCHED_NAME","LOCK_NAME"]
 		}
 	}

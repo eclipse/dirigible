@@ -97,6 +97,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_FIRED_TRIGGERS_PK",
 			"columns": ["SCHED_NAME","ENTRY_ID"]
 		}
 	}

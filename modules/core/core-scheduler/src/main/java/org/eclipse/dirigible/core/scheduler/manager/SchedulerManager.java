@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2019 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import static org.quartz.TriggerBuilder.newTrigger;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -45,6 +47,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerManager {
 
+	private static final String QUARTZ_SIMPL_RAM_JOB_STORE = "org.quartz.simpl.RAMJobStore";
+	private static final String PROPERTY_KEY_DATABASE_JOB_STORE = "org.quartz.jobStore.class";
 	private static final String PROPERTY_KEY_DATABASE_DATA_SOURCE = "org.quartz.jobStore.dataSource";
 	private static final String PROPERTY_KEY_DATABASE_DELEGATE = "org.quartz.jobStore.driverDelegateClass";
 
@@ -53,12 +57,17 @@ public class SchedulerManager {
 	private static SchedulerFactory schedulerFactory = null;
 
 	private static Scheduler scheduler = null;
+	
+	public static final String DIRIGIBLE_SCHEDULER_MEMORY_STORE = "DIRIGIBLE_SCHEDULER_MEMORY_STORE";
+	
+	public static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE";
+	public static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME";
 
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DRIVER = "DIRIGIBLE_SCHEDULER_DATABASE_DRIVER";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_URL = "DIRIGIBLE_SCHEDULER_DATABASE_URL";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_USER = "DIRIGIBLE_SCHEDULER_DATABASE_USER";
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD = "DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD";
-	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME";
+	
 	private static final String DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE = "DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE";
 
 	/**
@@ -81,6 +90,7 @@ public class SchedulerManager {
 			synchronized (SchedulerInitializer.class) {
 				if (scheduler == null) {
 					Configuration.load("/dirigible-scheduler.properties");
+					Configuration.load("/dirigible.properties");
 					Properties quartzProperties = new Properties();
 					String quartzConfig = Configuration.get("DIRIGIBLE_SCHEDULER_QUARTZ_PROPERTIES");
 					if ((quartzConfig != null) && "".equals(quartzConfig.trim()) && !quartzConfig.startsWith("classpath")) {
@@ -98,13 +108,13 @@ public class SchedulerManager {
 						try {
 							in = SchedulerManager.class.getResourceAsStream("/quartz.properties");
 							quartzProperties.load(in);
-							setSchedulerConnectionProperties(quartzProperties);
 						} finally {
 							if (in != null) {
 								in.close();
 							}
 						}
 					}
+					setSchedulerConnectionProperties(quartzProperties);
 					schedulerFactory = new StdSchedulerFactory(quartzProperties);
 					scheduler = schedulerFactory.getScheduler();
 					String message = "Scheduler has been created.";
@@ -276,20 +286,46 @@ public class SchedulerManager {
 	}
 
 	private static void setSchedulerConnectionProperties(Properties properties) {
+		
+		String memoryStore = Configuration.get(DIRIGIBLE_SCHEDULER_MEMORY_STORE); 
+		if (memoryStore != null && Boolean.parseBoolean(memoryStore)) {
+			String jobStorePrefix = "org.quartz.jobStore";
+			Iterator iterator = properties.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<String, String> entry = (Entry<String, String>) iterator.next();
+				if (entry.getKey().startsWith(jobStorePrefix)) {
+					iterator.remove();
+				}
+			}
+			setProperty(properties, PROPERTY_KEY_DATABASE_JOB_STORE, QUARTZ_SIMPL_RAM_JOB_STORE);
+			return;
+		}
+		
 		String dataSourceName = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
+		if (dataSourceName != null) {
+			setProperty(properties, PROPERTY_KEY_DATABASE_DATA_SOURCE, dataSourceName);
+		}
+		
 		String driver = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DRIVER);
 		String url = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_URL);
 		String user = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_USER);
 		String password = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD);
 		
+		if (driver != null &&
+				url != null &&
+				user != null &&
+				password != null) {
+			if ("\"\"".contentEquals(password)) password = "";				
+			setProperty(properties, PoolingConnectionProvider.DB_DRIVER, driver);
+			setProperty(properties, PoolingConnectionProvider.DB_URL, url);
+			setProperty(properties, PoolingConnectionProvider.DB_USER, user);
+			setProperty(properties, PoolingConnectionProvider.DB_PASSWORD, password);
+		}
+		
 		String delegate = Configuration.get(DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE);
-
-		setProperty(properties, PROPERTY_KEY_DATABASE_DATA_SOURCE, dataSourceName);
-		setProperty(properties, PoolingConnectionProvider.DB_DRIVER, driver);
-		setProperty(properties, PoolingConnectionProvider.DB_URL, url);
-		setProperty(properties, PoolingConnectionProvider.DB_USER, user);
-		setProperty(properties, PoolingConnectionProvider.DB_PASSWORD, password);
-		setProperty(properties, PROPERTY_KEY_DATABASE_DELEGATE, delegate);
+		if (delegate != null) {
+			setProperty(properties, PROPERTY_KEY_DATABASE_DELEGATE, delegate);
+		}
 	}
 
 	private static void setProperty(Properties properties, String key, String value) {

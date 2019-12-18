@@ -52,6 +52,7 @@
 - `DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT`: (default: 5)
 - `DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES`: (default: {empty})
 - `DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT`: (default: DefaultDB)
+- `DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE`: (default: false)
 
 ### Database Custom
 - `<CUSTOM_NAME>_DRIVER`: (e.g. org.postgresql.Driver)
@@ -77,11 +78,9 @@
 - `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
 
 ### Scheduler
-- `DIRIGIBLE_SCHEDULER_DATABASE_DRIVER`: (default: {empty})
-- `DIRIGIBLE_SCHEDULER_DATABASE_URL`: (default: {empty})
-- `DIRIGIBLE_SCHEDULER_DATABASE_USER`: (default: {empty})
-- `DIRIGIBLE_SCHEDULER_DATABASE_PASSWORD`: (default: {empty})
-- `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: DefaultDB)
+- `DIRIGIBLE_SCHEDULER_MEMORY_STORE`: (default: false)
+- `DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE`: (default: null)
+- `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: null)
 
 
 ### Runtime

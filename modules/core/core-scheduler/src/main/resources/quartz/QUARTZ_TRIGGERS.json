@@ -118,9 +118,11 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_TRIGGERS_PK",
 			"columns": ["SCHED_NAME","TRIGGER_NAME","TRIGGER_GROUP"]
 		},
 		"foreignKeys":[{
+		        "name": "QUARTZ_TRIGGERS_FK",
 				"columns": ["SCHED_NAME","JOB_NAME","JOB_GROUP"],
 				"referencedTable": "QUARTZ_JOB_DETAILS",
 				"referencedColumns": ["SCHED_NAME","JOB_NAME","JOB_GROUP"]

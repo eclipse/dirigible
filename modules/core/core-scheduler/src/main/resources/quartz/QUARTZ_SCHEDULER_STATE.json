@@ -34,6 +34,7 @@
 		],
 	"constraints": {
 		"primaryKey": {
+		    "name": "QUARTZ_SCHEDULER_STATE_PK",
 			"columns": ["SCHED_NAME","INSTANCE_NAME"]
 		}
 	}

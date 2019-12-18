@@ -41,6 +41,11 @@
 		</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-api</artifactId>
+			<version>4.1.0-SNAPSHOT</version>
+    	</dependency>
+		<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-data-models</artifactId>
 			<version>4.1.0-SNAPSHOT</version>
     	</dependency>
