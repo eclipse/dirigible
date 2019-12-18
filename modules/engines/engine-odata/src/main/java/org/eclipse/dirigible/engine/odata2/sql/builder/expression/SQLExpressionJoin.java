@@ -19,6 +19,8 @@ import java.util.List;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
@@ -59,21 +61,25 @@ public final class SQLExpressionJoin implements SQLExpression {
         if (type != ExpressionType.JOIN || isEmpty()) {
             return EMPTY_STRING;
         }
-
+        boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        String csl = "";
+        if (caseSensitive) {
+        	csl = "\"";
+        }
         StringBuilder join = new StringBuilder();
         join.append(joinType.toString());
         join.append(" JOIN ");
-        join.append(getTableName(start));
+        join.append(csl + getTableName(start) + csl);
         join.append(" AS ");
         join.append(query.getSQLTableAlias(start));
         join.append(" ON ");
         join.append(query.getSQLTableAlias(start));
         join.append(".");
-        join.append(getTargetJoinKeyForEntityType(start, target));
+        join.append(csl + getTargetJoinKeyForEntityType(start, target) + csl);
         join.append(" = ");
         join.append(query.getSQLTableAlias(target));
         join.append(".");
-        join.append(query.getSQLJoinTableName(target, start));
+        join.append(csl + query.getSQLJoinTableName(target, start) + csl);
         return join.toString();
     }
 

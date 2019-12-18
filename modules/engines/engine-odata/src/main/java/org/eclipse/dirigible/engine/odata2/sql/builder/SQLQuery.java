@@ -53,6 +53,8 @@ import org.apache.olingo.odata2.api.uri.expression.ExpressionKind;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
@@ -188,17 +190,29 @@ public final class SQLQuery {
     }
 
     public String getSQLTableColumn(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
-        if (p.isSimple())
-            return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p);
-        else
+        if (p.isSimple()) {
+        	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        	if (caseSensitive) {
+        		return "\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p) + "\"";
+        	} else {
+        		return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p);
+        	}
+        } else {
             throw new IllegalArgumentException("Unable to get the table column name of complex property " + p);
+        }
     }
 
     public ColumnInfo getSQLTableColumnInfo(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
         if (p.isSimple()) {
-            ColumnInfo info = tableMappingProvider.getEdmTableBinding((targetEnitityType)).getColumnInfo(p);
-            return new ColumnInfo(getSQLTableAlias(targetEnitityType) + "." + info.getColumnName(), info.getSqlType());
-            //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
+        	ColumnInfo info = tableMappingProvider.getEdmTableBinding((targetEnitityType)).getColumnInfo(p);
+        	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        	if (caseSensitive) {
+	            return new ColumnInfo("\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + info.getColumnName(), info.getSqlType());
+	            //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
+        	} else {
+        		return new ColumnInfo(getSQLTableAlias(targetEnitityType) + "." + info.getColumnName(), info.getSqlType());
+	            //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
+        	}
         } else {
             throw new IllegalArgumentException("Unable to get the table column name of complex property " + p);
         }

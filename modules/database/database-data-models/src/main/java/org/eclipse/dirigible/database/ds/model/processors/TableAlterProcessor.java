@@ -69,8 +69,10 @@ public class TableAlterProcessor {
 		
 		// ADD iteration
 		for (DataStructureTableColumnModel columnModel : tableModel.getColumns()) {
-
 			String name = columnModel.getName();
+			if (caseSensitive) {
+				name = "\"" + name + "\"";
+			}
 			DataType type = DataType.valueOf(columnModel.getType());
 			String length = columnModel.getLength();
 			boolean isNullable = columnModel.isNullable();
@@ -106,9 +108,6 @@ public class TableAlterProcessor {
 				
 				AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
 				
-				if (caseSensitive) {
-					name = "\"" + name + "\"";
-				}
 				alterTableBuilder.add().column(name, type, isPrimaryKey, isNullable, isUnique, args);
 
 				if (!isNullable) {
