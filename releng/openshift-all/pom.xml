@@ -14,122 +14,6 @@
 	<packaging>war</packaging>
 
 	<build>
-		<pluginManagement>
-	      <plugins>
-	        <plugin>
-	          <groupId>org.apache.tomcat.maven</groupId>
-	          <artifactId>tomcat8-maven-plugin</artifactId>
-	          <version>${tomcat.maven.version}</version>
-	          <dependencies>
-	          <dependency>
-	            <groupId>org.apache.tomcat.embed</groupId>
-	            <artifactId>tomcat-embed-core</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-util</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-coyote</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-api</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-jdbc</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-dbcp</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-servlet-api</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-jsp-api</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-jasper</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-jasper-el</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-el-api</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-catalina</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-tribes</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-catalina-ha</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-annotations-api</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat</groupId>
-	            <artifactId>tomcat-juli</artifactId>
-	            <version>${tomcat.version}</version>
-	          </dependency>
-	
-	          <dependency>
-	            <groupId>org.apache.tomcat.embed</groupId>
-	            <artifactId>tomcat-embed-logging-juli</artifactId>
-	            <version>${tomcat.log4j.version}</version>
-	          </dependency>
-	          <dependency>
-	            <groupId>org.apache.tomcat.embed</groupId>
-	            <artifactId>tomcat-embed-logging-log4j</artifactId>
-	            <version>${tomcat.log4j.version}</version>
-	          </dependency>
-
-	          </dependencies>
-	        </plugin>
-	      </plugins>
-	    </pluginManagement>
-
 		<finalName>ROOT</finalName>
 		<plugins>
 			<plugin>
@@ -141,51 +25,7 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat8-maven-plugin</artifactId>
-				<version>${tomcat.maven.version}</version>
-				<executions>
-					<execution>
-						<id>tomcat-run</id>
-						<goals>
-							<goal>exec-war-only</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<path>/</path>
-							<enableNaming>false</enableNaming>
-							<finalName>${project.artifactId}-${project.version}.jar</finalName>
-							<charset>utf-8</charset>
-					 
-							<!-- extra dependencies to add jdbc driver, mail jars, etc. -->
-							<extraDependencies>
-							  <extraDependency>
-							    <groupId>org.apache.derby</groupId>
-							    <artifactId>derby</artifactId>
-							    <version>${derby.version}</version>
-							  </extraDependency>
-							  <extraDependency>
-							    <groupId>javax.mail</groupId>
-							    <artifactId>mail</artifactId>
-							    <version>1.4.7</version>
-							  </extraDependency>
-							  <extraDependency>
-							  	<groupId>javax.websocket</groupId>
-								<artifactId>javax.websocket-api</artifactId>
-								<version>1.1</version>
-							  </extraDependency>
-							  <extraDependency>
-							    <groupId>org.apache.tomcat.embed</groupId>
-							    <artifactId>tomcat-embed-websocket</artifactId>
-							    <version>${tomcat.websocket.version}</version>
-							  </extraDependency>
-							</extraDependencies>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			
 		</plugins>
 		<resources>
 	        <resource>
@@ -358,11 +198,4 @@
 		</dependency>
 	</dependencies>
 
-	<!-- default properties -->
-	<properties>		
-		<tomcat.version>8.5.34</tomcat.version> <!-- 7.0.37, 8.0.46 -->
-		<tomcat.log4j.version>8.5.2</tomcat.log4j.version>
-		<tomcat.websocket.version>8.5.2</tomcat.websocket.version> <!-- 7.0.52, 8.0.46 -->
-		<tomcat.maven.version>3.0-r1756463</tomcat.maven.version>
-	</properties>
 </project>
