@@ -50,11 +50,11 @@ public final class EdmUtils {
      * Properties of Entity in the items but NOT NavigationPaths or '*' terms.
      * Both cases are considered NOT IMPLEMENTED and will yield an exception
      * 
-     * @param selectedItems
-     * @param entityType
-     * @return
-     * @throws EdmException
-     * @throws ODataNotImplementedException
+     * @param selectedItems the selected items
+     * @param entityType the entity type
+     * @return the selected properties
+     * @throws EdmException in case of an edm error
+     * @throws ODataNotImplementedException in case of missing feature
      */
     public static Collection<EdmProperty> getSelectedProperties(List<SelectItem> selectedItems, EdmStructuralType entityType)
             throws EdmException, ODataNotImplementedException {
@@ -96,7 +96,11 @@ public final class EdmUtils {
      * not-selected key properties are returned</li>
      * </ul>
      * 
-     * @throws ODataNotImplementedException
+     * @param selectedItems the selected items
+     * @param type the edm type
+     * @return the list of the selected property names
+     * @throws EdmException in case of an edm error
+     * @throws ODataNotImplementedException in case of a missing feature
      */
     public static Collection<String> getSelectedPropertyNames(List<SelectItem> selectedItems, EdmStructuralType type)
             throws EdmException, ODataNotImplementedException {
@@ -143,8 +147,8 @@ public final class EdmUtils {
      * This method evaluates the expression based on the type instance. Used for
      * adding escape characters where necessary.
      * 
-     * @param value
-     * @param edmSimpleType
+     * @param value the datetime instance
+     * @param edmSimpleType edm type
      * @return the evaluated expression
      */
     public static Object evaluateDateTimeExpressions(Object value, final EdmSimpleType edmSimpleType) {

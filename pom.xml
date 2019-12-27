@@ -91,6 +91,29 @@
 							<debuglevel>lines,vars,source</debuglevel>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.1.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<!-- <configuration>
+							<failOnError>false</failOnError>
+						</configuration> -->
+						<dependencies>
+							<dependency>
+							    <groupId>org.apache.commons</groupId>
+							    <artifactId>commons-lang3</artifactId>
+							    <version>${commons.lang3}</version>
+							</dependency>
+						</dependencies>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -250,7 +273,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.4</version>
+						<version>3.8.1</version>
 						<configuration>
 							<source>${java.version}</source>
 							<target>${java.version}</target>
@@ -261,7 +284,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -274,7 +297,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>3.1.1</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -283,6 +306,16 @@
 								</goals>
 							</execution>
 						</executions>
+						<!-- <configuration>
+							<failOnError>false</failOnError>
+						</configuration> -->
+						<dependencies>
+							<dependency>
+							    <groupId>org.apache.commons</groupId>
+							    <artifactId>commons-lang3</artifactId>
+							    <version>${commons.lang3}</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -421,6 +454,11 @@
 			<version>${jsr250-api.version}</version>
 		</dependency>
 
+        <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons.lang3}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-rs-service-description-swagger</artifactId>
@@ -494,7 +532,8 @@
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
 		<commons.io>2.6</commons.io>
 		<commons.codec>1.10</commons.codec>
-		<cxf.version>3.1.11</cxf.version>
+		<commons.lang3>3.9</commons.lang3>
+		<cxf.version>3.3.4</cxf.version>
 		<gson.version>2.2.4</gson.version>
 		<guice.version>4.2.2</guice.version>
 		<mockito.version>2.23.0</mockito.version>

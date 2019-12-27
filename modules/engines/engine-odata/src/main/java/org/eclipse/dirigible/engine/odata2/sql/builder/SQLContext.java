@@ -51,12 +51,15 @@ public class SQLContext {
     }
 
     /**
-     * @param postgreSql
+     * @param databaseProduct the database product name
      */
     public SQLContext(final DatabaseProduct databaseProduct) {
         this.databaseProduct = databaseProduct;
     }
 
+    /**
+     * @return the database product
+     */
     public DatabaseProduct getDatabaseProduct() {
         return databaseProduct;
     }

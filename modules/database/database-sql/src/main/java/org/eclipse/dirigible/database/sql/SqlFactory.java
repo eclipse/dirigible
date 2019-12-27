@@ -39,9 +39,13 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
  *            the generic type
  * @param <CREATE>
  *            the generic type
+ * @param <ALTER>
+ *            the generic type
  * @param <DROP>
  *            the generic type
  * @param <NEXT>
+ *            the generic type
+ * @param <LAST>
  *            the generic type
  */
 public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
@@ -72,9 +76,13 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	 *            the generic type
 	 * @param <CREATE>
 	 *            the generic type
+	 * @param <ALTER>
+     *            the generic type
 	 * @param <DROP>
 	 *            the generic type
 	 * @param <NEXT>
+	 *            the generic type
+	 * @param <LAST>
 	 *            the generic type
 	 * @param dialect
 	 *            the dialect

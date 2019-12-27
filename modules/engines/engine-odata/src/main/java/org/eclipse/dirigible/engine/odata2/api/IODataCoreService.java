@@ -170,7 +170,7 @@ public interface IODataCoreService extends ICoreService {
 	 * Generates the EDMX Metadata
 	 * 
 	 * @return the metadata
-	 * @throws ODataException 
+	 * @throws ODataException in case of an error
 	 */
 	public InputStream getMetadata() throws ODataException;
 

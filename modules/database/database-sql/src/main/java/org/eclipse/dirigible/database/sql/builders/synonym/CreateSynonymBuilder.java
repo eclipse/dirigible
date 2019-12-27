@@ -41,10 +41,10 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	}
 
 	/**
-	 * Start.
+	 * Source.
 	 *
-	 * @param start
-	 *            the start
+	 * @param source
+	 *            the source
 	 * @return the creates the synonym builder
 	 */
 	public CreateSynonymBuilder forSource(String source) {

@@ -29,7 +29,7 @@
 			
 			<plugin>
 		        <artifactId>maven-javadoc-plugin</artifactId>
-		        <version>3.0.1</version>
+		        <version>3.1.1</version>
 		        <executions>
 		          <execution>
 		            <id>javadoc-jar</id>
@@ -39,9 +39,17 @@
 		            </goals>
 		            <configuration>
 		              <includeDependencySources>false</includeDependencySources>
+		              <failOnError>false</failOnError>
 		            </configuration>
 		          </execution>
 		        </executions>
+		        <dependencies>
+					<dependency>
+					    <groupId>org.apache.commons</groupId>
+					    <artifactId>commons-lang3</artifactId>
+					    <version>${commons.lang3}</version>
+					</dependency>
+				</dependencies>
 		      </plugin>
 
 			<plugin>

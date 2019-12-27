@@ -24,15 +24,27 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
 
 public interface SQLProcessor extends ODataProcessor {
 
+	/**
+     * Getter for the default data source
+     * @return the default data source
+     */
+    DataSource getDataSource();
+
+
+    /**
+     * Getter for the default sql builder
+     * @return the default sql builder
+     */
+    SQLQueryBuilder getSQLQueryBuilder();
+    
     /**
      * This callback method can be used to customize the property value that is
      * being written. The default implementation returns the provided value.
      * Note that this method is dependent on the sequence of the property in the
-     * entity. If this property depends on other properties, consider using
-     * {@link #onCustomizeEntityInstance(EdmEntityType, Object)}
+     * entity. If this property depends on other properties
      * 
      * 
-     * @param entityType
+     * @param entityType edm entity type
      * @param property
      *            EDM property of the model that is currently being filled with
      *            data.
@@ -44,17 +56,20 @@ public interface SQLProcessor extends ODataProcessor {
      *            property is not mapped to DB.
      * @return the customized property value. If you do not customize then just
      *         return the <code>value</code>
-     * @throws ODataException
+     * @throws EdmException in case of an error
      */
-
-    DataSource getDataSource();
-
     Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
             throws EdmException;
+    
 
-
-    SQLQueryBuilder getSQLQueryBuilder();
-
+    /**
+     * 
+     * @param entityType the entity type
+     * @param expandType the expand type
+     * @param expandInstance the expand instance
+     * @return the customized navigation property
+     * @throws EdmException in case of an error
+     */
     Map<String, Object> onCustomizeExpandedNavigatonProperty(EdmStructuralType entityType, EdmStructuralType expandType,
             Map<String, Object> expandInstance) throws EdmException;
 
