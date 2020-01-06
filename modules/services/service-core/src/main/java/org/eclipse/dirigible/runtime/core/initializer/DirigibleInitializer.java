@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,8 +170,8 @@ public class DirigibleInitializer {
 		Swagger2Feature feature = new Swagger2Feature();
 
 		// customize some of the properties
-		feature.setBasePath("/services/v3");
-		feature.setPrettyPrint(true);
+		feature.setBasePath("/services/v4");
+//		feature.setPrettyPrint(true);
 		feature.setDescription("Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
 		try {
 			Version version = new VersionProcessor().getVersion();
@@ -189,7 +189,7 @@ public class DirigibleInitializer {
 		auth.setType("basic");
 		securityDefinitions.put("basicAuth", auth);
 		feature.setSecurityDefinitions(securityDefinitions);
-		feature.setPrettyPrint(true);
+//		feature.setPrettyPrint(true);
 
 		getServices().add(feature);
 	}
