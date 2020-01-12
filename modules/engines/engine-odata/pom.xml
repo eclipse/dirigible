@@ -77,6 +77,12 @@
 			<groupId>org.apache.olingo</groupId>
 			<artifactId>olingo-odata2-core</artifactId>
 			<version>${olingo.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>javax.ws.rs-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -91,12 +97,12 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>3.3.3</version>
+			<version>${cxf.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
 		    <artifactId>jakarta.persistence</artifactId>
-		    <version>2.2.2</version>
+		    <version>${persistence.api.version}</version>
 		</dependency>
 		
 		
@@ -152,9 +158,9 @@
 			<scope>test</scope>
 		</dependency> -->
 		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.1.1</version>
+			<groupId>jakarta.ws.rs</groupId>
+			<artifactId>jakarta.ws.rs-api</artifactId>
+			<version>2.1.5</version>
 			<scope>test</scope>
 		</dependency>
 
