@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,12 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 
 /**
- * The Interface IMappingCoreService.
+ * The Interface IODataCoreService.
  */
 public interface IODataCoreService extends ICoreService {
 	
@@ -27,6 +28,9 @@ public interface IODataCoreService extends ICoreService {
 
 	/** The Constant FILE_EXTENSION_ODATA_MAPPING. */
 	public static final String FILE_EXTENSION_ODATA_MAPPING = ".odatam";
+	
+	/** The Constant FILE_EXTENSION_ODATA. */
+	public static final String FILE_EXTENSION_ODATA = ".odata";
 
 	
 
@@ -183,5 +187,60 @@ public interface IODataCoreService extends ICoreService {
 	 *             the Mapping exception
 	 */
 	void removeMappings(String location) throws ODataException;
+
+	/**
+	 * Parse the *.odata artefact
+	 * 
+	 * @param contentPath the path
+	 * @param data the content
+	 * @return the ODataDefinition object
+	 */
+	ODataDefinition parseOData(String contentPath, String data);
+
+	/**
+	 * Getter for the OData entity
+	 * 
+	 * @param location
+	 * @return
+	 * @throws ODataException
+	 */
+	ODataDefinition getOData(String location) throws ODataException;
+
+	/**
+	 * Update the OData entity
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param hash the hash
+	 * @throws ODataException in case of an error
+	 */
+	void updateOData(String location, String namespace, String hash) throws ODataException;
+
+	/**
+	 * Get all the OData entities
+	 * @return the list of the OData entities
+	 * @throws ODataException in case of an error
+	 */
+	List<ODataDefinition> getODatas() throws ODataException;
+
+	/**
+	 * Whether OData entity exists already or not
+	 * 
+	 * @param location the OData entity location
+	 * @return true if exists and false otherwise
+	 * @throws ODataException in case of an error
+	 */
+	boolean existsOData(String location) throws ODataException;
+
+	/**
+	 * Create the OData entity
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param hash the hash
+	 * @return newly created OData entity
+	 * @throws ODataException in case of an error
+	 */
+	ODataDefinition createOData(String location, String namespace, String hash) throws ODataException;
 
 }

@@ -148,3 +148,7 @@
 ### Theme
 
 - `DIRIGIBLE_THEME_DEFAULT`: (default: ../Default)
+
+### OData
+
+- `DIRIGIBLE_GENERATE_PRETTY_NAMES`: (default: true)

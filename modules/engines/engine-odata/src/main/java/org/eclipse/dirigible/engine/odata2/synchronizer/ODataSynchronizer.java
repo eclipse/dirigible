@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,17 +10,25 @@
  */
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
+import static java.text.MessageFormat.format;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
@@ -28,9 +36,12 @@ import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
+import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataMTransformer;
+import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataXTransformer;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -38,7 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class MappingsSynchronizer.
+ * The OData Synchronizer.
  */
 @Singleton
 public class ODataSynchronizer extends AbstractSynchronizer {
@@ -50,13 +61,29 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 
 	private static final Map<String, ODataMappingDefinition> MAPPINGS_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, ODataMappingDefinition>());
+	
+	private static final Map<String, ODataDefinition> ODATA_PREDELIVERED = Collections
+			.synchronizedMap(new HashMap<String, ODataDefinition>());
 
 	private static final List<String> SCHEMAS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	private static final List<String> MAPPINGS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	
+	private static final List<String> ODATA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	
+	private static final Map<String, ODataDefinition> ODATA_MODELS = new LinkedHashMap<String, ODataDefinition>();
 
 	@Inject
 	private ODataCoreService odataCoreService;
+	
+	@Inject
+	private DataSource dataSource;
+
+	@Inject
+	private OData2ODataMTransformer odata2ODataMTransformer;
+
+	@Inject
+	private OData2ODataXTransformer odata2ODataXTransformer;
 
 	/**
 	 * Force synchronization.
@@ -111,6 +138,31 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			}
 		}
 	}
+	
+	/**
+	 * Register predelivered odata files.
+	 *
+	 * @param contentPath
+	 *            the data path
+	 * @throws Exception 
+	 */
+	public void registerPredeliveredOData(String contentPath) throws Exception {
+		String data = loadResourceContent(contentPath);
+		ODataDefinition model = odataCoreService.parseOData(contentPath, data);
+		ODATA_PREDELIVERED.put(contentPath, model);
+	}
+
+	private String loadResourceContent(String modelPath) throws IOException {
+		InputStream in = ODataSynchronizer.class.getResourceAsStream(modelPath);
+		try {
+			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
+			return content;
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -124,6 +176,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
+				updateOData();
 				cleanup();
 				clearCache();
 			} catch (Exception e) {
@@ -136,6 +189,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	private void clearCache() {
 		SCHEMAS_SYNCHRONIZED.clear();
 		MAPPINGS_SYNCHRONIZED.clear();
+		ODATA_MODELS.clear();
 	}
 
 	private void synchronizePredelivered() throws SynchronizationException {
@@ -147,6 +201,14 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 		// Mappings
 		for (ODataMappingDefinition mappingDefinition : MAPPINGS_PREDELIVERED.values()) {
 			synchronizeMapping(mappingDefinition);
+		}
+		// OData
+		for (ODataDefinition odata : ODATA_PREDELIVERED.values()) {
+			try {
+				synchronizeOData(odata);
+			} catch (Exception e) {
+				logger.error(format("Update odata [{0}] skipped due to an error: {1}", odata, e.getMessage()), e);
+			}
 		}
 		logger.trace("Done synchronizing predelivered OData Schemas and Mappings.");
 	}
@@ -186,6 +248,34 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
+	
+	/**
+	 * Synchronize odata.
+	 *
+	 * @param odataModel
+	 *            the odata model
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void synchronizeOData(ODataDefinition odataModel) throws SynchronizationException {
+		try {
+			if (!odataCoreService.existsOData(odataModel.getLocation())) {
+				odataCoreService.createOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
+				ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
+				logger.info("Synchronized a new OData with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+			} else {
+				ODataDefinition existing = odataCoreService.getOData(odataModel.getLocation());
+				if (!odataModel.equals(existing)) {
+					odataCoreService.updateOData(odataModel.getLocation(), odataModel.getNamespace(), odataModel.getHash());
+					ODATA_MODELS.put(odataModel.getNamespace(), odataModel);
+					logger.info("Synchronized a modified OData file [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+				}
+			}
+			ODATA_SYNCHRONIZED.add(odataModel.getLocation());
+		} catch (ODataException e) {
+			throw new SynchronizationException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -220,6 +310,26 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			mappingDefinition.setLocation(getRegistryPath(resource));
 			mappingDefinition.setContent(resource.getContent());
 			synchronizeMapping(mappingDefinition);
+		}
+		
+		if (resourceName.endsWith(IODataCoreService.FILE_EXTENSION_ODATA)) {
+			String registryPath = getRegistryPath(resource);
+			byte[] content = resource.getContent();
+			String contentAsString;
+			try {
+				contentAsString = IOUtils.toString(new InputStreamReader(new ByteArrayInputStream(content), StandardCharsets.UTF_8));
+			} catch (IOException e) {
+				throw new SynchronizationException(e);
+			}
+			ODataDefinition odataModel;
+			try {
+				odataModel = odataCoreService.parseOData(registryPath, contentAsString);
+			} catch (Exception e) {
+				throw new SynchronizationException(e);
+			}
+			odataModel.setLocation(registryPath);
+			synchronizeOData(odataModel);
+			return;
 		}
 	}
 
@@ -256,10 +366,124 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 					}
 				}
 			}
-		} catch (ODataException e) {
+			
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				
+				List<ODataDefinition> odataModels = odataCoreService.getODatas();
+				for (ODataDefinition odataModel : odataModels) {
+					if (!ODATA_SYNCHRONIZED.contains(odataModel.getLocation())) {
+						odataCoreService.removeOData(odataModel.getLocation());
+						logger.warn("Cleaned up OData file with namespace [{}] from location: {}", odataModel.getNamespace(), odataModel.getLocation());
+					}
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (ODataException | SQLException e) {
 			throw new SynchronizationException(e);
 		}
 
 		logger.trace("Done cleaning up OData Schemas and Mappings.");
 	}
+	
+	
+	private void updateOData() {
+		// Update OData
+		
+		if (ODATA_MODELS.isEmpty()) {
+			logger.trace("No OData to update.");
+			return;
+		}
+
+		List<String> errors = new ArrayList<String>();
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				// topology sort of dependencies
+				List<String> sorted = new ArrayList<String>();
+//				List<String> external = new ArrayList<String>();
+				
+
+				if (sorted.isEmpty()) {
+					// something wrong happened with the sorting - probably cyclic dependencies
+					// we go for the back-up list and try to apply what would succeed
+					sorted.addAll(ODATA_MODELS.keySet());
+				}
+				
+				// drop odata in a reverse order
+				for (int i = sorted.size() - 1; i >= 0; i--) {
+					String dsName = sorted.get(i);
+					ODataDefinition model = ODATA_MODELS.get(dsName);
+					try {
+						// CLEAN UP LOGIC
+						odataCoreService.removeSchema(model.getLocation());
+						odataCoreService.removeMappings(model.getLocation());
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+				
+				// process tables in the proper order
+				for (String dsName : sorted) {
+					ODataDefinition model = ODATA_MODELS.get(dsName);
+					try {
+						// METADATA AND MAPPINGS GENERATION LOGIC
+						String odatax = generateODataX(model);
+						odataCoreService.createSchema(model.getLocation(), odatax.getBytes());
+						
+						String[] odatams = generateODataMs(model);
+						int i=1;
+						for (String odatam : odatams) {
+							odataCoreService.createMapping(model.getLocation() + "#" + i++, odatam.getBytes());
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			logger.error(concatenateListOfStrings(errors, "\n---\n"), e);
+		}
+		
+	}
+	
+	
+
+	private String generateODataX(ODataDefinition model) throws SQLException {
+		return odata2ODataXTransformer.transform(model);
+	}
+	
+	private String[] generateODataMs(ODataDefinition model) throws SQLException {
+		return odata2ODataMTransformer.transform(model);
+	}
+
+	/**
+	 * Concatenate list of strings.
+	 *
+	 * @param list
+	 *            the list
+	 * @param separator
+	 *            the separator
+	 * @return the string
+	 */
+	private static String concatenateListOfStrings(List<String> list, String separator) {
+		StringBuffer buff = new StringBuffer();
+		for (String s : list) {
+			buff.append(s).append(separator);
+		}
+		return buff.toString();
+	}
+	
 }

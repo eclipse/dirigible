@@ -4,30 +4,12 @@
   [
     {
       "name": "Car",
+      "alias": "Cars",
       "table": "CARS",
-      "properties": [
-        {"name": "Id", "column": "CAR_ID"},
-	    {"name": "Model", "column": "CAR_MODEL"},
-	    {"name": "Price", "column": "CAR_PRICE"},
-        {"name": "Currency", "column": "CAR_CURRENCY"},
-        {"name": "ModelYear", "column": "CAR_MODEL_YEAR"},
-        {"name": "Updated", "column": "CAR_UPDATED"},
-        {"name": "ImagePath", "column": "CAR_IMAGE"},
-        {"name": "ManufacturerId", "column": "CAR_MAN_ID"}
-      ],
-      "navigations": [{
-        "entity": "Manufacturer",
-        "property": "ManufacturerId"
-      }]
-    },
     {
       "name": "Manufacturer",
-      "table": "MANUFACTURER",
-      "properties": [
-        {"name": "Id", "column": "MAN_ID"},
-	    {"name": "Name", "column": "MAN_NAME"},
-        {"name": "Updated", "column": "MAN_UPDATED"}
-      ]
+      "alias": "Manufacturers",
+      "table": "MANUFACTURER"
     }
   ]
 }

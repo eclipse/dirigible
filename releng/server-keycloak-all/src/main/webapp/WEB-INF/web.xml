@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010-2019 SAP and others.
+    Copyright (c) 2010-2020 SAP and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -51,6 +51,24 @@
 		<url-pattern>/public/v3/*</url-pattern>
 		<url-pattern>/public/v4/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+        <servlet-name>ODataServlet</servlet-name>
+        <servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.apache.olingo.odata2.core.rest.app.ODataApplication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.apache.olingo.odata2.service.factory</param-name>
+            <param-value>org.eclipse.dirigible.engine.odata2.factory.DirigibleODataServiceFactory</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ODataServlet</servlet-name>
+        <url-pattern>/odata/v2/*</url-pattern>
+    </servlet-mapping>
 
 	<filter>
 		<filter-name>guiceFilter</filter-name>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,11 +20,14 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 
@@ -38,6 +41,9 @@ public class ODataCoreService implements IODataCoreService {
 	
 	@Inject
 	private PersistenceManager<ODataMappingDefinition> odataMappingPersistenceManager;
+	
+	@Inject
+	private PersistenceManager<ODataDefinition> odataPersistenceManager;
 
 
 	@Override
@@ -273,6 +279,119 @@ public class ODataCoreService implements IODataCoreService {
 		builder.append("</edmx:Edmx>\n");
 		
 		return new ByteArrayInputStream(builder.toString().getBytes());
+	}
+
+	@Override
+	public ODataDefinition parseOData(String contentPath, String data) {
+		ODataDefinition odataDefinition = GsonHelper.GSON.fromJson(data, ODataDefinition.class);
+		odataDefinition.setLocation(contentPath);
+		odataDefinition.setHash(DigestUtils.md5Hex(data));
+		odataDefinition.setCreatedBy(UserFacade.getName());
+		odataDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+		return odataDefinition;
+	}
+
+	@Override
+	public boolean existsOData(String location) throws ODataException {
+		return getOData(location) != null;
+	}
+
+	@Override
+	public ODataDefinition createOData(String location, String namespace, String hash) throws ODataException {
+		ODataDefinition odataModel = new ODataDefinition();
+		odataModel.setLocation(location);
+		odataModel.setNamespace(namespace);
+		odataModel.setHash(hash);
+		odataModel.setCreatedBy(UserFacade.getName());
+		odataModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				odataPersistenceManager.insert(connection, odataModel);
+				return odataModel;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+		
+	}
+
+	@Override
+	public ODataDefinition getOData(String location) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return odataPersistenceManager.find(connection, ODataDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public void updateOData(String location, String namespace, String hash) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				ODataDefinition odataModel = getOData(location);
+				odataModel.setNamespace(namespace);
+				odataModel.setHash(hash);
+				odataPersistenceManager.update(connection, odataModel);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}		
+	}
+
+	@Override
+	public List<ODataDefinition> getODatas() throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA").toString();
+				List<ODataDefinition> tableModels = odataPersistenceManager.query(connection, ODataDefinition.class, sql);
+				return tableModels;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	public void removeOData(String location) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				odataPersistenceManager.delete(connection, ODataDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}		
 	}
 
 }
