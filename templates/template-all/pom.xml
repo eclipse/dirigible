@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-template-parent</artifactId>
-		<version>4.2.0</version>
+		<version>4.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -33,67 +33,67 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-hello-world</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-http-client</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-database-access</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-database-table</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-database-view</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-html</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-bookstore</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-job</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-listener</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-extension-view</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-extension-perspective</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-application-launchpad</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-application-angular</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 		<!-- <dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -103,7 +103,7 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-mobile-hello-world</artifactId>
-		 	<version>4.2.0</version>
+		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
