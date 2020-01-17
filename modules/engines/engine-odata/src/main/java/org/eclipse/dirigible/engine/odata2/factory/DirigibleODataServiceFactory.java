@@ -71,7 +71,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 	private class ODataDefaulErrorCallback implements ODataErrorCallback {
 		@Override
 		public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
-			LOG.error(context.getMessage());
+			LOG.error(context.getMessage(), context.getException());
 			return EntityProvider.writeErrorDocument(context);
 		}
 	}
