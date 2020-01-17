@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,15 +22,21 @@ public class PersistenceTableRelationModel {
     private String fkColumnName;
 
     private String pkColumnName;
+    
+    private String fkName;
+    
+    private String pkName;
 
     public PersistenceTableRelationModel() {
     }
 
-    public PersistenceTableRelationModel(String fromTableName, String toTableName, String fkColumnName, String pkColumnName) {
+    public PersistenceTableRelationModel(String fromTableName, String toTableName, String fkColumnName, String pkColumnName, String fkName, String pkName) {
         this.fromTableName = fromTableName;
         this.toTableName = toTableName;
         this.fkColumnName = fkColumnName;
         this.pkColumnName = pkColumnName;
+        this.fkName = fkName;
+        this.pkName = pkName;
     }
 
     /**
@@ -97,6 +103,38 @@ public class PersistenceTableRelationModel {
      */
     public void setPkColumnName(String pkColumnName) {
         this.pkColumnName = pkColumnName;
+    }
+    
+    /**
+     * Gets the name of the foreign key.
+     */
+    public String getFkName() {
+        return fkName;
+    }
+
+    /**
+     * Sets the name of the foreign key.
+     *
+     * @param fkName
+     */
+    public void setFkName(String fkName) {
+        this.fkName = fkName;
+    }
+
+    /**
+     * Gets the name of the primary key.
+     */
+    public String getPkName() {
+        return pkName;
+    }
+
+    /**
+     * Sets the name of the primary key.
+     *
+     * @param pkName
+     */
+    public void setPkName(String pkName) {
+        this.pkName = pkName;
     }
 }
 
