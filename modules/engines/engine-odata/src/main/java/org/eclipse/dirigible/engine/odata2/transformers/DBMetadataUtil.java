@@ -40,6 +40,8 @@ public class DBMetadataUtil {
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
     public static final String JDBC_FK_TABLE_NAME_PROPERTY ="FKTABLE_NAME";
+    public static final String JDBC_FK_NAME_PROPERTY ="FK_NAME";
+    public static final String JDBC_PK_NAME_PROPERTY ="PK_NAME";
     public static final String JDBC_PK_TABLE_NAME_PROPERTY ="PKTABLE_NAME";
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY ="FKCOLUMN_NAME";
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY ="PKCOLUMN_NAME";
@@ -89,7 +91,9 @@ public class DBMetadataUtil {
             PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
                     foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
                     foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY)
+                    foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_NAME_PROPERTY)
             );
             tableMetadata.getRelations().add(relationMetadata);
         }
