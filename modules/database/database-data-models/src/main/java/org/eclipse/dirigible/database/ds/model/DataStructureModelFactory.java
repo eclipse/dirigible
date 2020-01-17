@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,10 +198,10 @@ public class DataStructureModelFactory {
 							// add the foreign key
 							List<DataStructureTableConstraintForeignKeyModel> list = new ArrayList<DataStructureTableConstraintForeignKeyModel>(); 
 							if (table.getConstraints().getForeignKeys() != null ) { 
-								list.addAll(Arrays.asList(table.getConstraints().getForeignKeys()));
+								list.addAll(table.getConstraints().getForeignKeys());
 							}
 							list.add(foreignKey);
-							table.getConstraints().setForeignKeys(list.toArray(new DataStructureTableConstraintForeignKeyModel[]{}));
+							table.getConstraints().getForeignKeys().addAll(list);
 							// add the dependency for the topological sorting later
 							DataStructureDependencyModel dependencyModel = new DataStructureDependencyModel(foreignKey.getReferencedTable(), "TABLE");
 							table.getDependencies().add(dependencyModel);
