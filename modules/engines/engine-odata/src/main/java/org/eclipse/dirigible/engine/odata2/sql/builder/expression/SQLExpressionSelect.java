@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
@@ -205,7 +207,12 @@ public final class SQLExpressionSelect implements SQLExpression {
             String tableAlias = it.next();
             EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(target)) {
-                from.append(query.getSQLTableName(target)).append(" AS ").append(tableAlias);
+            	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+            	if (caseSensitive) {
+            		from.append("\"" + query.getSQLTableName(target) + "\"").append(" AS ").append(tableAlias);
+            	} else {
+            		from.append(query.getSQLTableName(target)).append(" AS ").append(tableAlias);
+            	}
                 if (it.hasNext()) {
                     from.append(", ");
                 }
