@@ -89,6 +89,18 @@
 
 - `DIRIGIBLE_HOME_URL`: (default: /services/v4/web/ide/index.html)
 
+#### Jobs
+
+- `DIRIGIBLE_JOB_EXPRESSION_BPM`: (default: "0/30 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES`: (default: "0/20 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS`: (default: "0/10 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_JOBS`: (default: "0/15 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_MESSAGING`: (default: "0/10 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS`: (default: "0/50 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_ODATA`: (default: "0/25 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_PUBLISHER`: (default: "0/5 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_SECURITY`: (default: "0/10 * * * * ?")
+
 ### CMS
 
 - `DIRIGIBLE_CMS_PROVIDER`: (internal | managed | database)

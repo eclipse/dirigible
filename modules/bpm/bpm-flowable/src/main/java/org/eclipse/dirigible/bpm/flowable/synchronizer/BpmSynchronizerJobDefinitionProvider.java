@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.bpm.flowable.synchronizer;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
@@ -18,6 +19,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
  * The Class BPMSynchronizerJobDefinitionProvider.
  */
 public class BpmSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
+	
+	private static final String DIRIGIBLE_JOB_EXPRESSION_BPM = "DIRIGIBLE_JOB_EXPRESSION_BPM";
+	private static final String BPM_SYNCHRONIZER_JOB = "BPM Synchronizer Job";
+	private static final String DIRIGIBLE_INTERNAL_BPM_SYNCHRONIZER_JOB = "dirigible-internal-bpm-synchronizer-job";
 
 	/*
 	 * (non-Javadoc)
@@ -26,11 +31,12 @@ public class BpmSynchronizerJobDefinitionProvider implements IJobDefinitionProvi
 	@Override
 	public JobDefinition getJobDefinition() {
 		JobDefinition jobDefinition = new JobDefinition();
-		jobDefinition.setName("dirigible-internal-bpm-synchronizer-job");
+		jobDefinition.setName(DIRIGIBLE_INTERNAL_BPM_SYNCHRONIZER_JOB);
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(BpmSynchronizerJob.class.getCanonicalName());
-		jobDefinition.setDescription("BPM Synchronizer Job");
-		jobDefinition.setExpression("0/30 * * * * ?");
+		jobDefinition.setDescription(BPM_SYNCHRONIZER_JOB);
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_BPM, "0/30 * * * * ?");
+		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;
 	}
