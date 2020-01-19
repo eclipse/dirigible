@@ -10,11 +10,13 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-public class ODataNavigation {
+public class ODataAssociationDefinition {
 	
 	private String name;
 	
-	private String association;
+	private ODataAssiciationEndDefinition from;
+	
+	private ODataAssiciationEndDefinition to;
 
 	/**
 	 * @return the name
@@ -31,17 +33,31 @@ public class ODataNavigation {
 	}
 
 	/**
-	 * @return the association
+	 * @return the from
 	 */
-	public String getAssociation() {
-		return association;
+	public ODataAssiciationEndDefinition getFrom() {
+		return from;
 	}
 
 	/**
-	 * @param association the association to set
+	 * @param from the from to set
 	 */
-	public void setAssociation(String association) {
-		this.association = association;
+	public void setFrom(ODataAssiciationEndDefinition from) {
+		this.from = from;
+	}
+
+	/**
+	 * @return the to
+	 */
+	public ODataAssiciationEndDefinition getTo() {
+		return to;
+	}
+
+	/**
+	 * @param to the to to set
+	 */
+	public void setTo(ODataAssiciationEndDefinition to) {
+		this.to = to;
 	}
 
 }

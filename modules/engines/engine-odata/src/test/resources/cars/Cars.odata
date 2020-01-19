@@ -5,8 +5,8 @@
     {
       "name": "Car",
       "alias": "Cars",
-      "table": "CARS",
-    {
+      "table": "CARS"
+    }, {
       "name": "Manufacturer",
       "alias": "Manufacturers",
       "table": "MANUFACTURER"

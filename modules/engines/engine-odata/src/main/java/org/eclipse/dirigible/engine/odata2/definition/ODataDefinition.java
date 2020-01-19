@@ -43,6 +43,8 @@ public class ODataDefinition {
 	private Timestamp createdAt;
 	
 	private List<ODataEntityDefinition> entities = new ArrayList<ODataEntityDefinition>();
+	
+	private List<ODataAssociationDefinition> associations = new ArrayList<ODataAssociationDefinition>();
 
 	
 	/**
@@ -217,6 +219,15 @@ public class ODataDefinition {
 	 */
 	public List<ODataEntityDefinition> getEntities() {
 		return entities;
-	}	
+	}
+	
+	/**
+	 * Gets the associations
+	 * 
+	 * @return the associations
+	 */
+	public List<ODataAssociationDefinition> getAssociations() {
+		return associations;
+	}
 
 }

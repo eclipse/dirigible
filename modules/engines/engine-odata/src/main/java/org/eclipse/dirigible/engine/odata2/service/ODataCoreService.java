@@ -28,6 +28,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactory;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 
@@ -283,12 +284,7 @@ public class ODataCoreService implements IODataCoreService {
 
 	@Override
 	public ODataDefinition parseOData(String contentPath, String data) {
-		ODataDefinition odataDefinition = GsonHelper.GSON.fromJson(data, ODataDefinition.class);
-		odataDefinition.setLocation(contentPath);
-		odataDefinition.setHash(DigestUtils.md5Hex(data));
-		odataDefinition.setCreatedBy(UserFacade.getName());
-		odataDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
-		return odataDefinition;
+		return ODataDefinitionFactory.parseOData(contentPath, data);
 	}
 
 	@Override
