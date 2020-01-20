@@ -19,7 +19,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
@@ -60,10 +59,10 @@ public class OData2ODataXTransformer {
 			});
             
             entity.getNavigations().forEach(relation -> {
-            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+            	ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
 				String fromRole = association.getFrom().getEntity();
 				String toRole = association.getTo().getEntity();
-				buff.append("        <NavigationProperty Name=\"").append(toRole).append("\"")
+				buff.append("        <NavigationProperty Name=\"").append(relation.getName()).append("\"")
 						.append(" Relationship=\"").append(model.getNamespace()).append(".").append(relation.getAssociation()).append("Type\"")
 						.append(" FromRole=\"").append(fromRole).append("Principal").append("\"")
 						.append(" ToRole=\"").append(toRole).append("Dependent").append("\"/>\n"
@@ -72,7 +71,7 @@ public class OData2ODataXTransformer {
             
             // keep associations for later use
             entity.getNavigations().forEach(relation -> {
-            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+            	ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
 				String fromRole = association.getFrom().getEntity();
 				String toRole = association.getTo().getEntity();
 				String fromMultiplicity = association.getFrom().getMultiplicity();
@@ -92,11 +91,11 @@ public class OData2ODataXTransformer {
             
             // keep associations sets for later use
             entity.getNavigations().forEach(relation -> {
-            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+            	ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
 				String fromRole = association.getFrom().getEntity();
 				String toRole = association.getTo().getEntity();
 				String fromSet = entity.getAlias();
-				ODataEntityDefinition toSetEntity = getEntity(model, toRole, relation.getName());
+				ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRole, relation.getName());
 				String toSet = toSetEntity.getAlias();
 				associationsSets.append("        <AssociationSet Name=\"").append(relation.getAssociation()).append("\"")
 						.append(" Association=\"").append(model.getNamespace()).append(".").append(relation.getAssociation()).append("Type\">\n")
@@ -122,21 +121,4 @@ public class OData2ODataXTransformer {
         return buff.toString();
     }
 
-    private ODataEntityDefinition getEntity(ODataDefinition model, String name, String navigation) {
-		for (ODataEntityDefinition entity : model.getEntities()) {
-			if (name.equals(entity.getName())) {
-				return entity;
-			}
-		}
-		throw new IllegalArgumentException(String.format("There is no entity with name: %s, referenced by the navigation: %s", name, navigation));
-	}
-    
-	private ODataAssociationDefinition getAssociation(ODataDefinition model, String name, String navigation) {
-		for (ODataAssociationDefinition association : model.getAssociations()) {
-			if (name.equals(association.getName())) {
-				return association;
-			}
-		}
-		throw new IllegalArgumentException(String.format("There is no association with name: %s, referenced by the navigation: %s", name, navigation));
-	}
 }

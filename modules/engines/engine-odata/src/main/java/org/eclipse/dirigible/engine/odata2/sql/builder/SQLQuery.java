@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -207,7 +207,7 @@ public final class SQLQuery {
         	ColumnInfo info = tableMappingProvider.getEdmTableBinding((targetEnitityType)).getColumnInfo(p);
         	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
         	if (caseSensitive) {
-	            return new ColumnInfo("\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + info.getColumnName(), info.getSqlType());
+	            return new ColumnInfo("\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + info.getColumnName() + "\"", info.getSqlType());
 	            //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
         	} else {
         		return new ColumnInfo(getSQLTableAlias(targetEnitityType) + "." + info.getColumnName(), info.getSqlType());
