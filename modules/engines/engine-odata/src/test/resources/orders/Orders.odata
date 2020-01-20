@@ -17,12 +17,12 @@
   "associations": [{
         "name": "OrderItems",
         "from": {
-        	"entity": "Orders",
+        	"entity": "Order",
         	"property": "Id",
         	"multiplicity": "1"
         },
         "to": {
-        	"entity": "Items",
+        	"entity": "Item",
         	"property": "OrderId",
         	"multiplicity": "*"
         }

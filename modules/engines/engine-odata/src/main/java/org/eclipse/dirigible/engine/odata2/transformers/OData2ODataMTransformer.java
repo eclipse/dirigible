@@ -38,18 +38,15 @@ public class OData2ODataMTransformer {
         List<String> result = new ArrayList<>();
 
         for (ODataEntityDefinition entity : model.getEntities()) {
-        	String entityName = entity.getName().replace(".", "");
-        	String namespace = model.getNamespace();
-        	String tableName = entity.getName().replace(".", "_").toUpperCase();
             StringBuilder buff = new StringBuilder();
             buff.append("{\n")
                     .append("    \"edmType\" : \"").append(entity.getAlias()).append("\",\n")
-                    .append("    \"edmTypeFqn\" : \"").append(namespace).append(".").append(entityName).append("\",\n")
-                    .append("    \"sqlTable\" : \"").append(tableName).append("\",\n");
+                    .append("    \"edmTypeFqn\" : \"").append(model.getNamespace()).append(".").append(entity.getName()).append("Type").append("\",\n")
+                    .append("    \"sqlTable\" : \"").append(entity.getTable()).append("\",\n");
             
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(tableName);
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
             tableMetadata.getColumns().forEach(column -> {
 				String columnValue = isPretty ? DBMetadataUtil.addCorrectFormatting(column.getName()) : column.getName();
 				buff.append("\"").append(columnValue)

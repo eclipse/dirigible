@@ -19,6 +19,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
 import org.slf4j.Logger;
@@ -37,16 +39,17 @@ public class OData2ODataXTransformer {
         buff.append("<Schema Namespace=\"").append(model.getNamespace()).append("\"\n")
                 .append("    xmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n");
 
+        StringBuilder associations = new StringBuilder();
+        StringBuilder entitySets = new StringBuilder();
+        StringBuilder associationsSets = new StringBuilder();
         for (ODataEntityDefinition entity : model.getEntities()) {
-            String tableName = entity.getName().replace(".", "_").toUpperCase();
-            String entityName = entity.getName().replace(".", "");
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(tableName);
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
             PersistenceTableColumnModel idColumn = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().orElse(null);
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
             String nameValue = isPretty ? DBMetadataUtil.addCorrectFormatting(idColumn.getName()) : idColumn.getName();
-			buff.append("    <EntityType Name=\"").append(entityName).append("\">\n")
+			buff.append("    <EntityType Name=\"").append(entity.getName()).append("Type").append("\">\n")
                     .append("        <Key>\n")
                     .append("            <PropertyRef Name=\"").append(nameValue).append("\" />\n")
                     .append("        </Key>\n");
@@ -55,19 +58,85 @@ public class OData2ODataXTransformer {
 				buff.append("        <Property Name=\"").append(columnValue).append("\"")
 						.append(" Nullable=\"").append(column.isNullable()).append("\"").append(" Type=\"").append(column.getType()).append("\"/>\n");
 			});
+            
+            entity.getNavigations().forEach(relation -> {
+            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+				String fromRole = association.getFrom().getEntity();
+				String toRole = association.getTo().getEntity();
+				buff.append("        <NavigationProperty Name=\"").append(toRole).append("\"")
+						.append(" Relationship=\"").append(model.getNamespace()).append(".").append(relation.getAssociation()).append("Type\"")
+						.append(" FromRole=\"").append(fromRole).append("Principal").append("\"")
+						.append(" ToRole=\"").append(toRole).append("Dependent").append("\"/>\n"
+				);
+			});
+            
+            // keep associations for later use
+            entity.getNavigations().forEach(relation -> {
+            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+				String fromRole = association.getFrom().getEntity();
+				String toRole = association.getTo().getEntity();
+				String fromMultiplicity = association.getFrom().getMultiplicity();
+				String toMultiplicity = association.getTo().getMultiplicity();
+				associations.append("    <Association Name=\"").append(relation.getAssociation()).append("Type\">\n")
+						.append("        <End Type=\"").append(model.getNamespace()).append(".").append(fromRole).append("Type\"")
+						.append(" Role=\"").append(fromRole).append("Principal").append("\" Multiplicity=\"").append(fromMultiplicity).append("\"/>\n")
+						.append("        <End Type=\"").append(model.getNamespace()).append(".").append(toRole).append("Type\"")
+						.append(" Role=\"").append(toRole).append("Dependent").append("\" Multiplicity=\"").append(toMultiplicity).append("\"/>\n")
+						.append("    </Association>\n"
+				);
+			});
+            
+            // keep entity sets for later use
+            entitySets.append("        <EntitySet Name=\"").append(entity.getAlias())
+            		.append("\" EntityType=\"").append(model.getNamespace()).append(".").append(entity.getName()).append("Type\" />\n");
+            
+            // keep associations sets for later use
+            entity.getNavigations().forEach(relation -> {
+            	ODataAssociationDefinition association = getAssociation(model, relation.getAssociation(), relation.getName());
+				String fromRole = association.getFrom().getEntity();
+				String toRole = association.getTo().getEntity();
+				String fromSet = entity.getAlias();
+				ODataEntityDefinition toSetEntity = getEntity(model, toRole, relation.getName());
+				String toSet = toSetEntity.getAlias();
+				associationsSets.append("        <AssociationSet Name=\"").append(relation.getAssociation()).append("\"")
+						.append(" Association=\"").append(model.getNamespace()).append(".").append(relation.getAssociation()).append("Type\">\n")
+						.append("            <End Role=\"").append(fromRole).append("Principal").append("\"")
+						.append(" EntitySet=\"").append(fromSet).append("\"/>\n")
+						.append("            <End Role=\"").append(toRole).append("Dependent").append("\"")
+						.append(" EntitySet=\"").append(toSet).append("\"/>\n")
+						.append("        </AssociationSet>\n"
+				);
+			});
 
             buff.append("    </EntityType>\n");
         }
+        
+        buff.append(associations.toString());
 
         buff.append("    <EntityContainer Name=\"").append(FilenameUtils.getBaseName(model.getLocation())).append("EntityContainer\" m:IsDefaultEntityContainer=\"true\">\n");
-        for (ODataEntityDefinition entity : model.getEntities()) {
-        	String entityName = entity.getName().replace(".", "");
-            buff.append("        <EntitySet Name=\"").append(entity.getAlias()).append("\" EntityType=\"").append(model.getNamespace()).append(".").append(entityName).append("\" />\n");
-                
-        }
+        buff.append(entitySets.toString());
+        buff.append(associationsSets.toString());
         buff.append("    </EntityContainer>\n");
 
         buff.append("</Schema>\n");
         return buff.toString();
     }
+
+    private ODataEntityDefinition getEntity(ODataDefinition model, String name, String navigation) {
+		for (ODataEntityDefinition entity : model.getEntities()) {
+			if (name.equals(entity.getName())) {
+				return entity;
+			}
+		}
+		throw new IllegalArgumentException(String.format("There is no entity with name: %s, referenced by the navigation: %s", name, navigation));
+	}
+    
+	private ODataAssociationDefinition getAssociation(ODataDefinition model, String name, String navigation) {
+		for (ODataAssociationDefinition association : model.getAssociations()) {
+			if (name.equals(association.getName())) {
+				return association;
+			}
+		}
+		throw new IllegalArgumentException(String.format("There is no association with name: %s, referenced by the navigation: %s", name, navigation));
+	}
 }

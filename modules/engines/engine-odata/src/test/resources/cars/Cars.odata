@@ -5,7 +5,7 @@
     {
       "name": "Car",
       "alias": "Cars",
-      "table": "CARS"
+      "table": "CAR"
     }, {
       "name": "Manufacturer",
       "alias": "Manufacturers",
