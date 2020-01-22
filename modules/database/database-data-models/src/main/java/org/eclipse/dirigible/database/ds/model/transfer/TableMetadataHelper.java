@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 
 /**
  * Table Metadata Helper
@@ -39,15 +41,15 @@ public class TableMetadataHelper {
 		if (name == null) {
 			throw new SQLException("Error on getting columns of table: null");
 		}
-		ResultSet columns = meta.getColumns(null, null, name, null);
+		ResultSet columns = meta.getColumns(null, null, DatabaseMetadataHelper.normalizeTableName(name), null);
 		if (columns.next()) {
-			return populateColumns(meta.getColumns(null, null, name, null));
+			return populateColumns(meta.getColumns(null, null, DatabaseMetadataHelper.normalizeTableName(name), null));
 		}
 		columns = meta.getColumns(null, null, name.toLowerCase(), null);
 		if (columns.next()) {
-			return populateColumns(meta.getColumns(null, null, name.toLowerCase(), null));
+			return populateColumns(meta.getColumns(null, null, DatabaseMetadataHelper.normalizeTableName(name).toLowerCase(), null));
 		}
-		columns = meta.getColumns(null, null, name.toUpperCase(), null);
+		columns = meta.getColumns(null, null, DatabaseMetadataHelper.normalizeTableName(name).toUpperCase(), null);
 		return populateColumns(columns);
 	}
 	
@@ -80,15 +82,15 @@ public class TableMetadataHelper {
 		if (name == null) {
 			throw new SQLException("Error on getting primary keys of table: null");
 		}
-		ResultSet columns = meta.getPrimaryKeys(null, null, name);
+		ResultSet columns = meta.getPrimaryKeys(null, null, DatabaseMetadataHelper.normalizeTableName(name));
 		if (columns.next()) {
-			return meta.getPrimaryKeys(null, null, name);
+			return meta.getPrimaryKeys(null, null, DatabaseMetadataHelper.normalizeTableName(name));
 		}
-		columns = meta.getPrimaryKeys(null, null, name.toLowerCase());
+		columns = meta.getPrimaryKeys(null, null, DatabaseMetadataHelper.normalizeTableName(name).toLowerCase());
 		if (columns.next()) {
-			return meta.getPrimaryKeys(null, null, name.toLowerCase());
+			return meta.getPrimaryKeys(null, null, DatabaseMetadataHelper.normalizeTableName(name).toLowerCase());
 		}
-		columns = meta.getPrimaryKeys(null, null, name.toUpperCase());
+		columns = meta.getPrimaryKeys(null, null, DatabaseMetadataHelper.normalizeTableName(name).toUpperCase());
 		return columns;
 	}
 

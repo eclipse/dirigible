@@ -86,7 +86,7 @@ public class DBMetadataUtil {
     }
 
     private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, tableMetadata.getTableName());
+        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
         while (foreignKeys.next()) {
             PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
                     foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
@@ -104,7 +104,7 @@ public class DBMetadataUtil {
     }
 
     private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, tableMetadata.getTableName());
+        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
         while (primaryKeys.next()) {
             setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
         }
@@ -119,7 +119,7 @@ public class DBMetadataUtil {
     }
 
     private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, tableMetadata.getTableName(), null);
+        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
         while (columns.next()) {
             tableMetadata.getColumns().add(
                     new PersistenceTableColumnModel(
@@ -132,4 +132,11 @@ public class DBMetadataUtil {
     public static String addCorrectFormatting(String columnName){
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
     }
+    
+    public static String normalizeTableName(String table) {
+		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
+			table = table.substring(1, table.length()-1);
+		}
+		return table;
+	}
 }

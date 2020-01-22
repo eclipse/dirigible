@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public class TableAlterProcessor {
 		
 		Map<String, String> columnDefinitions = new HashMap<String, String>();
 		DatabaseMetaData dmd = connection.getMetaData();
-		ResultSet rsColumns = dmd.getColumns(null, null, tableName, null);
+		ResultSet rsColumns = dmd.getColumns(null, null, DatabaseMetadataHelper.normalizeTableName(tableName), null);
 		while (rsColumns.next()) {
 //			String typeName = nativeDialect.getDataTypeName(DataTypeUtils.getDatabaseType(rsColumns.getInt(5)));
 			String typeName = DataTypeUtils.getDatabaseTypeName(rsColumns.getInt(5));

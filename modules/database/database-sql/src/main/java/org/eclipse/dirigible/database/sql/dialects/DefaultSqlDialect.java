@@ -188,7 +188,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	public boolean exists(Connection connection, String table) throws SQLException {
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, table, ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+		ResultSet resultSet = metadata.getTables(null, null, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		if (resultSet.next()) {
 			return true;
 		}
@@ -203,7 +203,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return false;
 	}
 
-	protected String normalizeTableName(String table) {
+	public static String normalizeTableName(String table) {
 		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
 			table = table.substring(1, table.length()-1);
 		}

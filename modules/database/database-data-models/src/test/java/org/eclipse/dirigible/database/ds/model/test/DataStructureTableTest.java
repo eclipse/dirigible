@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -182,14 +183,14 @@ public class DataStructureTableTest {
 				
 				Connection connection = getDataSource().getConnection();
 				try {
-					ResultSet rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+					ResultSet rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(table.getName()), null);
 					if (rs.next()) {
 						rs.close();
 						fail("Table already exists!");
 					}
 					try {
 						TableCreateProcessor.execute(connection, table);
-						rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+						rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(table.getName()), null);
 						if (!rs.next()) {
 							rs.close();
 							fail("Table has not been materialized!");
@@ -228,14 +229,14 @@ public class DataStructureTableTest {
 				
 				Connection connection = getDataSource().getConnection();
 				try {
-					ResultSet rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+					ResultSet rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(table.getName()), null);
 					if (rs.next()) {
 						rs.close();
 						fail("Table already exists!");
 					}
 					try {
 						TableCreateProcessor.execute(connection, table);
-						rs = connection.getMetaData().getTables(null, null, table.getName(), null);
+						rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(table.getName()), null);
 						if (!rs.next()) {
 							rs.close();
 							fail("Table has not been materialized!");

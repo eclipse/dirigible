@@ -106,7 +106,7 @@ public class PostgresSqlDialect extends
 	public boolean exists(Connection connection, String table) throws SQLException {
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, table.toLowerCase(), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+		ResultSet resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toLowerCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		if (resultSet.next()) {
 			return true;
 		}

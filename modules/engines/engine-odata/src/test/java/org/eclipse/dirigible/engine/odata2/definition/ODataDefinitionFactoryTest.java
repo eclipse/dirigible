@@ -25,7 +25,7 @@ public class ODataDefinitionFactoryTest {
 		ODataDefinition definition = ODataDefinitionFactory.parseOData("/cars/Cars.odata", cars);
 		assertEquals(2, definition.getEntities().size());
 		assertNotNull(definition.getEntities().get(0));
-		assertEquals("CARS", definition.getEntities().get(0).getTable());
+		assertEquals("CAR", definition.getEntities().get(0).getTable());
 	}
 	
 	@Test

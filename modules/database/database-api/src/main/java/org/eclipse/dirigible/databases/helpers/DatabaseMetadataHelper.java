@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -254,9 +254,9 @@ public class DatabaseMetadataHelper {
 		ResultSet rs = null;
 		try {
 			if (sqlDialect.isCatalogForSchema()) {
-				rs = dmd.getTables(schemeName, null, tableName, TABLE_TYPES);
+				rs = dmd.getTables(schemeName, null, normalizeTableName(tableName), TABLE_TYPES);
 			} else {
-				rs = dmd.getTables(catalogName, schemeName, tableName, TABLE_TYPES);
+				rs = dmd.getTables(catalogName, schemeName, normalizeTableName(tableName), TABLE_TYPES);
 			}
 
 			if (rs.next()) {
@@ -350,15 +350,15 @@ public class DatabaseMetadataHelper {
 
 		DatabaseMetaData dmd = connection.getMetaData();
 
-		ResultSet columns = dmd.getColumns(catalogName, schemaName, tableName, null);
+		ResultSet columns = dmd.getColumns(catalogName, schemaName, normalizeTableName(tableName), null);
 		if (columns == null) {
 			throw new SQLException("DatabaseMetaData.getColumns returns null");
 		}
-		ResultSet pks = dmd.getPrimaryKeys(catalogName, schemaName, tableName);
+		ResultSet pks = dmd.getPrimaryKeys(catalogName, schemaName, normalizeTableName(tableName));
 		if (pks == null) {
 			throw new SQLException("DatabaseMetaData.getPrimaryKeys returns null");
 		}
-		ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, tableName, false, false);
+		ResultSet indexes = dmd.getIndexInfo(catalogName, schemaName, normalizeTableName(tableName), false, false);
 		if (indexes == null) {
 			throw new SQLException("DatabaseMetaData.getIndexInfo returns null");
 		}
@@ -475,6 +475,19 @@ public class DatabaseMetadataHelper {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Makes necessary formatting if needed
+	 * 
+	 * @param table the table name
+	 * @return the formatted table name
+	 */
+	public static String normalizeTableName(String table) {
+		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
+			table = table.substring(1, table.length()-1);
+		}
+		return table;
 	}
 
 }
