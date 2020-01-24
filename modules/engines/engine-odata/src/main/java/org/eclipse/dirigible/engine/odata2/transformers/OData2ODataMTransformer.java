@@ -55,6 +55,13 @@ public class OData2ODataMTransformer {
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
+            PersistenceTableColumnModel idColumn = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().orElse(null);
+            
+            if (idColumn == null) {
+            	logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
+            	continue;
+            }
+            
             tableMetadata.getColumns().forEach(column -> {
 				String columnValue = isPretty ? DBMetadataUtil.addCorrectFormatting(column.getName()) : column.getName();
 				buff.append("  \"").append(columnValue)
@@ -78,7 +85,6 @@ public class OData2ODataMTransformer {
 					.append(fromRoleProperty).append("\"\n").append("}\n").append(",\n");
 			});
             
-            PersistenceTableColumnModel idColumn = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().orElse(null);
             buff.append("  \"_pk_\": \"").append(idColumn.getName()).append("\"}\n");
             
             result.add(buff.toString());

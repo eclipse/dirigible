@@ -45,6 +45,11 @@ public class OData2ODataXTransformer {
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
             PersistenceTableColumnModel idColumn = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().orElse(null);
 
+            if (idColumn == null) {
+            	logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
+            	continue;
+            }
+            
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
             String nameValue = isPretty ? DBMetadataUtil.addCorrectFormatting(idColumn.getName()) : idColumn.getName();
