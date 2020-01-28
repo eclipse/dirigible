@@ -49,7 +49,7 @@ public class HealthCheckFilter implements Filter {
 				chain.doFilter(request, response);
 				return;
 			}
-			httpResponse.sendRedirect("../../index-busy.html");
+			httpResponse.sendRedirect("/index-busy.html");
 			return;
 		}
 		chain.doFilter(request, response);
