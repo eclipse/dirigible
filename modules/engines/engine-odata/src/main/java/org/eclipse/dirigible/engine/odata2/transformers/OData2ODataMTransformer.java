@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,9 +56,9 @@ public class OData2ODataMTransformer {
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
-            PersistenceTableColumnModel idColumn = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).findFirst().orElse(null);
+            List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
             
-            if (idColumn == null) {
+            if (idColumns == null || idColumns.isEmpty()) {
             	logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
             	continue;
             }
@@ -85,7 +86,8 @@ public class OData2ODataMTransformer {
 					.append(fromRoleProperty).append("\"\n").append("}\n").append(",\n");
 			});
             
-            buff.append("  \"_pk_\": \"").append(idColumn.getName()).append("\"}\n");
+            String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});
+            buff.append("  \"_pk_\": \"").append(String.join(",", pks)).append("\"}\n");
             
             result.add(buff.toString());
         }

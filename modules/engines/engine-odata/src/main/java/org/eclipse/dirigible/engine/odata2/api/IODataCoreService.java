@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
@@ -187,6 +188,80 @@ public interface IODataCoreService extends ICoreService {
 	 *             the Mapping exception
 	 */
 	void removeMappings(String location) throws ODataException;
+	
+	
+	// Container
+
+	/**
+	 * Creates the container.
+	 *
+	 * @param location
+	 *            the location
+	 * @param content
+	 *            the content
+	 * @return the container definition
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public ODataContainerDefinition createContainer(String location, byte[] content) throws ODataException;
+
+	/**
+	 * Gets the container.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the container
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public ODataContainerDefinition getContainer(String location) throws ODataException;
+
+	/**
+	 * Exists container.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public boolean existsContainer(String location) throws ODataException;
+
+	/**
+	 * Removes the container.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public void removeContainer(String location) throws ODataException;
+
+	/**
+	 * Update container.
+	 *
+	 * @param location
+	 *            the location
+	 * @param content
+	 *            the content
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public void updateContainer(String location, byte[] content) throws ODataException;
+
+	/**
+	 * Gets the containers.
+	 *
+	 * @return the containers
+	 * @throws ODataException
+	 *             the Mapping exception
+	 */
+	public List<ODataContainerDefinition> getContainers() throws ODataException;
+	
+	
+	
+	
+	// Parsers
 
 	/**
 	 * Parse the *.odata artefact

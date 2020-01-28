@@ -20,13 +20,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactory;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
@@ -42,6 +41,9 @@ public class ODataCoreService implements IODataCoreService {
 	
 	@Inject
 	private PersistenceManager<ODataMappingDefinition> odataMappingPersistenceManager;
+	
+	@Inject
+	private PersistenceManager<ODataContainerDefinition> odataContainerPersistenceManager;
 	
 	@Inject
 	private PersistenceManager<ODataDefinition> odataPersistenceManager;
@@ -262,6 +264,107 @@ public class ODataCoreService implements IODataCoreService {
 			throw new ODataException(e);
 		}
 	}
+	
+	
+	@Override
+	public ODataContainerDefinition createContainer(String location, byte[] content) throws ODataException {
+		ODataContainerDefinition odataContainerDefinition = new ODataContainerDefinition();
+		odataContainerDefinition.setLocation(location);
+		odataContainerDefinition.setContent(content);
+		odataContainerDefinition.setCreatedBy(UserFacade.getName());
+		odataContainerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				odataContainerPersistenceManager.insert(connection, odataContainerDefinition);
+				return odataContainerDefinition;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public ODataContainerDefinition getContainer(String location) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return odataContainerPersistenceManager.find(connection, ODataContainerDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public boolean existsContainer(String location) throws ODataException {
+		return getContainer(location) != null;
+	}
+
+	@Override
+	public void removeContainer(String location) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				odataContainerPersistenceManager.delete(connection, ODataContainerDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public void updateContainer(String location, byte[] content) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				ODataContainerDefinition odataContainerDefinition = getContainer(location);
+				odataContainerDefinition.setContent(content);
+				odataContainerPersistenceManager.update(connection, odataContainerDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public List<ODataContainerDefinition> getContainers() throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return odataContainerPersistenceManager.findAll(connection, ODataContainerDefinition.class);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+	
 
 	@Override
 	public InputStream getMetadata() throws ODataException {
@@ -275,6 +378,17 @@ public class ODataCoreService implements IODataCoreService {
 			builder.append(new String(schema.getContent()));
 			builder.append("\n");
 		}
+		
+		builder.append("<Schema Namespace=\"").append("Default").append("\"\n")
+        	.append("    xmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n");
+		builder.append("    <EntityContainer Name=\"").append("Default").append("EntityContainer\" m:IsDefaultEntityContainer=\"true\">\n");
+		List<ODataContainerDefinition> containers = getContainers();
+		for (ODataContainerDefinition container : containers) {
+			builder.append(new String(container.getContent()));
+			builder.append("\n");
+		}
+		builder.append("    </EntityContainer>\n");
+		builder.append("</Schema>\n");
 		
 		builder.append("    </edmx:DataServices>\n");
 		builder.append("</edmx:Edmx>\n");

@@ -422,6 +422,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 					try {
 						// CLEAN UP LOGIC
 						odataCoreService.removeSchema(model.getLocation());
+						odataCoreService.removeContainer(model.getLocation());
 						odataCoreService.removeMappings(model.getLocation());
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -434,8 +435,11 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 					ODataDefinition model = ODATA_MODELS.get(dsName);
 					try {
 						// METADATA AND MAPPINGS GENERATION LOGIC
-						String odatax = generateODataX(model);
+						String[] odataxc = generateODataX(model);
+						String odatax = odataxc[0];
+						String odatac = odataxc[1];
 						odataCoreService.createSchema(model.getLocation(), odatax.getBytes());
+						odataCoreService.createContainer(model.getLocation(), odatac.getBytes());
 						
 						String[] odatams = generateODataMs(model);
 						int i=1;
@@ -461,7 +465,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	
 	
 
-	private String generateODataX(ODataDefinition model) throws SQLException {
+	private String[] generateODataX(ODataDefinition model) throws SQLException {
 		return odata2ODataXTransformer.transform(model);
 	}
 	
