@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,7 +60,14 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				return StaticInjector.getInjector().getInstance(next.getClass()).executeServiceModule(module, executionContext);
 			}
 		}
-		throw new ScriptingException("No Javascript Engine registered");
+		// backup
+		try {
+			return ((IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(
+					Class.forName("org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor")))
+					.executeServiceModule(module, executionContext);
+		} catch (ClassNotFoundException e) {
+			throw new ScriptingException("No Javascript Engine registered. Mozilla Rhino is also not available.");
+		}
 	}
 
 	/*
