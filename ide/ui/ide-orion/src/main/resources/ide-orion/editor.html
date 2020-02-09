@@ -64,7 +64,6 @@
 			function getResource(resourcePath) {
 		        var xhr = new XMLHttpRequest();
 		        xhr.open('GET', resourcePath, false);
-		        xhr.setRequestHeader('Dirigible-Editor', 'Orion');
 		        xhr.send();
 		        if (xhr.status === 200) {
 		        	return xhr.responseText;
@@ -102,7 +101,7 @@
 					return 'application/json';
 				} else if (fileName.endsWith('.command')) {
 					return 'application/json';
-				} else if (fileName.endsWith('.xsjs') || fileName.endsWith('.xsjslib')) {
+				} else if (fileName.endsWith('.xsjs')) {
 					return 'application/javascript';
 				}
 				return 'plain/text';
@@ -196,7 +195,6 @@
 				if (file) {
 					var xhr = new XMLHttpRequest();
 					xhr.open('PUT', '../../../../services/v4/ide/workspaces' + file);
-					xhr.setRequestHeader('Dirigible-Editor', 'Orion');
 					xhr.setRequestHeader('X-Requested-With', 'Fetch');
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState === 4) {
