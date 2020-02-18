@@ -53,21 +53,8 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
-		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT,
-				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
-		for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
-			if (next.getType().equals(javascriptEngineType)) {
-				return StaticInjector.getInjector().getInstance(next.getClass()).executeServiceModule(module, executionContext);
-			}
-		}
-		// backup
-		try {
-			return ((IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(
-					Class.forName("org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor")))
-					.executeServiceModule(module, executionContext);
-		} catch (ClassNotFoundException e) {
-			throw new ScriptingException("No Javascript Engine registered. Mozilla Rhino is also not available.");
-		}
+		IJavascriptEngineExecutor engine = getJavascriptEngine();
+		return engine.executeServiceModule(module, executionContext);
 	}
 
 	/*
@@ -77,14 +64,25 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT,
-				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
-		for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
-			if (next.getType().equals(javascriptEngineType)) {
-				return StaticInjector.getInjector().getInstance(next.getClass()).executeServiceCode(code, executionContext);
-			}
-		}
-		throw new ScriptingException("No Javascript Engine registered");
+		IJavascriptEngineExecutor engine = getJavascriptEngine();
+		return engine.executeServiceCode(code, executionContext);
 	}
 
+	private IJavascriptEngineExecutor getJavascriptEngine() throws ScriptingException {
+
+		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);
+
+		for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
+			if (next.getType().equals(javascriptEngineType)) {
+				return StaticInjector.getInjector().getInstance(next.getClass());
+			}
+		}
+
+		// backup
+		try {
+			return (IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(Class.forName("org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor"));
+		} catch (ClassNotFoundException e) {
+			throw new ScriptingException("No Javascript Engine registered. Mozilla Rhino is also not available.");
+		}
+	}
 }
