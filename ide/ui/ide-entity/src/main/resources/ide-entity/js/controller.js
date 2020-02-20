@@ -468,5 +468,23 @@ function main(container, outline, toolbar, sidebar, status) {
 	var doc = mxUtils.parseXml(contents);
 	var codec = new mxCodec(doc.mxGraphModel);
 	codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
+
+	deserializeFilter(graph);
+}
+
+function deserializeFilter(graph) {
+	var parent = graph.getDefaultParent();
+	var childCount = graph.model.getChildCount(parent);
+
+	// Base64 deserialization of the encoded properties
+	for (var i=0; i<childCount; i++) {
+		var child = graph.model.getChildAt(parent, i);
+		if (!graph.model.isEdge(child)) {
+			child.value.feedUrl = atob(child.value.feedUrl);
+			child.value.feedUsername = atob(child.value.feedUsername);
+			child.value.feedPassword = atob(child.value.feedPassword);
+			child.value.feedSchedule = atob(child.value.feedSchedule);
+		}
+	}
 }
 		

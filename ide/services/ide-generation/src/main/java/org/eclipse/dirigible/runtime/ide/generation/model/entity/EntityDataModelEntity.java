@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,34 +20,29 @@ import java.util.List;
 public class EntityDataModelEntity {
 	
 	private String name;
-	
+
 	private String dataName;
-	
 	private String dataCount;
-	
 	private String dataQuery;
 	
 	private String type;
-	
 	private String title;
-	
 	private String tooltip;
-	
 	private String icon;
-	
 	private String menuKey;
-	
 	private String menuLabel;
-	
 	private String menuIndex;
-	
 	private String layoutType;
-	
 	private String perspectiveName;
-	
 	private String perspectiveIcon;
-	
 	private int perspectiveOrder;
+	
+	private String feedUrl;
+	private String feedUsername;
+	private String feedPassword;
+	private String feedSchedule;
+	private String feedPath;
+
 	
 	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
@@ -290,5 +285,75 @@ public class EntityDataModelEntity {
 	public void setPerspectiveOrder(int perspectiveOrder) {
 		this.perspectiveOrder = perspectiveOrder;
 	}
-	
+
+	/**
+	 * @return the feedUrl
+	 */
+	public String getFeedUrl() {
+		return feedUrl;
+	}
+
+	/**
+	 * @param feedUrl the feedUrl to set
+	 */
+	public void setFeedUrl(String feedUrl) {
+		this.feedUrl = feedUrl;
+	}
+
+	/**
+	 * @return the feedUsername
+	 */
+	public String getFeedUsername() {
+		return feedUsername;
+	}
+
+	/**
+	 * @param feedUsername the feedUsername to set
+	 */
+	public void setFeedUsername(String feedUsername) {
+		this.feedUsername = feedUsername;
+	}
+
+	/**
+	 * @return the feedPassword
+	 */
+	public String getFeedPassword() {
+		return feedPassword;
+	}
+
+	/**
+	 * @param feedPassword the feedPassword to set
+	 */
+	public void setFeedPassword(String feedPassword) {
+		this.feedPassword = feedPassword;
+	}
+
+	/**
+	 * @return the feedSchedule
+	 */
+	public String getFeedSchedule() {
+		return feedSchedule;
+	}
+
+	/**
+	 * @param feedSchedule the feedSchedule to set
+	 */
+	public void setFeedSchedule(String feedSchedule) {
+		this.feedSchedule = feedSchedule;
+	}
+
+	/**
+	 * @return the feedPath
+	 */
+	public String getFeedPath() {
+		return feedPath;
+	}
+
+	/**
+	 * @param feedPath the feedPath to set
+	 */
+	public void setFeedPath(String feedPath) {
+		this.feedPath = feedPath;
+	}
+
 }

@@ -100,6 +100,7 @@
 			    <li class="active"><a data-toggle="pill" href="#generalEntity">General</a></li>
 			    <li><a data-toggle="pill" href="#dataEntity">Data</a></li>
 			    <li><a data-toggle="pill" href="#uiEntity">User Interface</a></li>
+			    <li><a data-toggle="pill" href="#feedEntity">Feed</a></li>
 			</ul>
 	    
 	    	<div class="tab-content">
@@ -219,6 +220,41 @@
   
 				  </div>
 			    </div>
+			    <div id="feedEntity" class="tab-pane fade">
+			  	  <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+						<label class="col-xs-3 col-form-label">Feed URL: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="feed url" ng-model="ctrl.$scope.$parent.cell.value.feedUrl" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Username: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="username" ng-model="ctrl.$scope.$parent.cell.value.feedUsername" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Password: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="password" placeholder="password" ng-model="ctrl.$scope.$parent.cell.value.feedPassword" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Schedule: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="schedule" ng-model="ctrl.$scope.$parent.cell.value.feedSchedule" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Path: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="path" ng-model="ctrl.$scope.$parent.cell.value.feedPath" required="required">
+						</div>
+					</div>
+				  </div>
+			    </div>
 			</div>
 	    
 	        
@@ -241,6 +277,7 @@
 			    <li class="active"><a data-toggle="pill" href="#generalProperty">General</a></li>
 			    <li><a data-toggle="pill" href="#dataProperty">Data</a></li>
 			    <li><a data-toggle="pill" href="#uiProperty">User Interface</a></li>
+			    <li><a data-toggle="pill" href="#feedProperty">Feed</a></li>
 			</ul>
 	    
 	    	<div class="tab-content">
@@ -398,7 +435,18 @@
 					</div>
 				  </div>
 			    </div>
+			    <div id="feedProperty" class="tab-pane fade">
+			      <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+					    <label class="col-xs-3 col-form-label" for="widgetType">Property Name: </label>
+					    <div class="col-xs-3">
+					    	<input class="form-control" type="text" placeholder="property name" ng-model="ctrl.$scope.$parent.cell.value.feedPropertyName" required="required">
+						</div>
+					</div>
+			    </div>
 			</div>
+		</div>
 	    
 	        
 	    </div>

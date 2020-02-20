@@ -26,6 +26,11 @@ Entity.prototype.layoutType = 'MANAGE';
 Entity.prototype.perspectiveName = 'Entities';
 Entity.prototype.perspectiveIcon = 'files-o';
 Entity.prototype.perspectiveOrder = 100;
+Entity.prototype.feedUrl = null;
+Entity.prototype.feedUsername = null;
+Entity.prototype.feedPassword = null;
+Entity.prototype.feedSchedule = null;
+Entity.prototype.feedPath = null;
 
 Entity.prototype.clone = function() {
 	return mxUtils.clone(this);
@@ -62,6 +67,7 @@ Property.prototype.widgetShortLabel = null; // a short label for limited charact
 Property.prototype.widgetFormat = null; // the format for rendering
 Property.prototype.widgetDropDownKey = null; // the key property in drop down case
 Property.prototype.widgetDropDownValue = null; // the value property in drop down case
+Property.prototype.feedPropertyName = null; // the matching property name from the feed
 
 Property.prototype.clone = function() {
 	return mxUtils.clone(this);

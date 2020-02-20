@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -438,6 +438,11 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.put("perspectiveName", entity.getPerspectiveName());
 			model.put("perspectiveIcon", entity.getPerspectiveIcon());
 			model.put("perspectiveOrder", entity.getPerspectiveOrder());
+			model.put("feedUrl", entity.getFeedUrl());
+			model.put("feedUsername", entity.getFeedUsername());
+			model.put("feedPassword", entity.getFeedPassword());
+			model.put("feedSchedule", entity.getFeedSchedule());
+			model.put("feedPath", entity.getFeedPath());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
@@ -471,7 +476,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("widgetFormat", property.getWidgetFormat());
 				propertyModel.put("widgetDropDownKey", property.getWidgetDropDownKey());
 				propertyModel.put("widgetDropDownValue", property.getWidgetDropDownValue());
-				
+
+				propertyModel.put("feedPropertyName", property.getFeedPropertyName());
+
 				propertiesModels.add(propertyModel);
 			}
 			model.put("properties", propertiesModels);
