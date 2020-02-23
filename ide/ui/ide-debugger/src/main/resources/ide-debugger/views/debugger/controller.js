@@ -200,14 +200,15 @@ angular.module('debugger', ['debugger.config', 'ngAnimate', 'ngSanitize', 'ui.bo
 		if ($scope.debugEnabled) {
 			debuggerService.enable().then(function() {
 				var xhr = new XMLHttpRequest();
-			    xhr.open('GET', '../../../../js/ide-core/services/user-name.js', false);
-			    xhr.send();
-			    if (xhr.status === 200) {
-			       	$scope.username = xhr.responseText;
-			    } else {
-			    	console.error("Cannot get User Name");
-			    }
-				var wsUrl = window.location.protocol === 'https:' ? 'wss' : 'ws' + '://' + window.location.host + '/websockets/v4/ide/debug/sessions?' + $scope.username;
+				xhr.open('GET', '../../../../js/ide-core/services/user-name.js', false);
+				xhr.send();
+				if (xhr.status === 200) {
+					$scope.username = xhr.responseText;
+				} else {
+					console.error("Cannot get User Name");
+				}
+				var protocol = 'window.location.protocol === https:' ? 'wss' : 'ws';
+				var wsUrl = protocol + '://' + window.location.host + '/websockets/v4/ide/debug/sessions?' + $scope.username;
 				var webSocket = new WebSocket(wsUrl);
 				webSocket.onmessage = function(event) {
 					var data = JSON.parse(event.data);
