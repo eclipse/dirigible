@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,7 +82,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				List<DebugSessionMetadata> sessions = debugModel.getSessionsMetadata();
 				return Response.ok().entity(sessions).build();
 			}
@@ -128,7 +128,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				DebugSessionModel sessionModel = debugModel.getSessionByExecutionId(executionId);
 				if (sessionModel == null) {
 					throw new IllegalArgumentException("Debug session not known: " + executionId);
@@ -163,7 +163,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugExecutor().stepInto();
 				return Response.ok().build();
 			}
@@ -194,7 +194,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugExecutor().stepOver();
 				return Response.ok().build();
 			}
@@ -225,7 +225,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugExecutor().continueExecution();
 				return Response.ok().build();
 			}
@@ -256,7 +256,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugExecutor().pauseExecution();
 				return Response.ok().build();
 			}
@@ -287,7 +287,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugExecutor().resumeExecution();
 				return Response.ok().build();
 			}
@@ -318,7 +318,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				VariableValuesMetadata variableValuesMetadata = debugModel.getActiveSession().getVariableValuesMetadata();
 				return Response.ok().entity(variableValuesMetadata).build();
 			}
@@ -349,7 +349,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				LinebreakMetadata linebreakMetadata = debugModel.getActiveSession().getCurrentLineBreak();
 				return Response.ok().entity(linebreakMetadata).build();
 			}
@@ -385,7 +385,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getDebugController().setBreakpoint(IRepositoryStructure.SEPARATOR + path, row);
 				return Response.ok().build();
 			}
@@ -418,7 +418,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getDebugController().removeBreakpoint(IRepositoryStructure.SEPARATOR + path, row);
 				return Response.ok().build();
 			}
@@ -449,7 +449,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				debugModel.getActiveSession().getDebugController().removeAllBreakpoints();
 				return Response.ok().build();
 			}
@@ -480,7 +480,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
-			if (debugModel != null) {
+			if (debugModel != null && debugModel.getActiveSession() != null) {
 				BreakpointsMetadata breakpointsMetadata = debugModel.getBreakpointsMetadata();
 				return Response.ok().entity(breakpointsMetadata).build();
 			}
