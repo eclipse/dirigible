@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,8 @@ public class RhinoJavascriptDebugProcessor {
 	private static volatile int DISABLE = 0;
 	
 	public void onOpen(Session session) throws IOException {
-		String userId = UserFacade.getName(session);
+		//String userId = UserFacade.getName(session);
+		String userId = session.getQueryString();
 		List<Session> userSessions = OPEN_USER_SESSIONS.get(userId);
 		if (userSessions == null) {
 			userSessions = new ArrayList<Session>();
