@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var extensions = require("core/v4/template-engine");
-for(var propertyName in extensions) {
-	exports[propertyName] = extensions[propertyName];
+var templateEngine = require("core/v4/template-engine");
+for(var propertyName in templateEngine) {
+	exports[propertyName] = templateEngine[propertyName];
 }
