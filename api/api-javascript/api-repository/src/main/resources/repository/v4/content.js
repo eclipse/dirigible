@@ -8,12 +8,14 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getManager = function() {
-	var manager = require('repository/v4/manager');
-	return manager;
+
+var bytes = require("io/v4/bytes");
+
+exports.getContent = function(path) {
+	var nativeContent = org.eclipse.dirigible.api.v3.repository.ContentFacade.getContent(path);
+	return bytes.toJavaScriptBytes(nativeContent);
 };
 
-exports.getContent = function() {
-	var content = require('repository/v4/content');
-	return content;
+exports.getText = function(path) {
+	return org.eclipse.dirigible.api.v3.repository.ContentFacade.getText(path);
 };
