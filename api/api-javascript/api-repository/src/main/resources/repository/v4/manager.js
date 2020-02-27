@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 var bytes = require("io/v4/bytes");
 
 exports.getResource = function(path) {
