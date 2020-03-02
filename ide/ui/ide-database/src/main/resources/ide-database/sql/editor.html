@@ -53,6 +53,11 @@
 			var sqlPlaceholder = "-- ctrl+x to execute (cmd+x for Mac)\n";
 			var messageHub = new FramesMessageHub();
 			
+			messageHub.subscribe(function(evt) {
+				beforeSaveText = editor.getValue();
+				executeCalled();
+		    }, "database.sql.run");
+			
 		    editor.setOptions({
 		        enableBasicAutocompletion: true,
 		        enableSnippets: true,

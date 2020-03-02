@@ -45,6 +45,7 @@
 	<div>
 	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
+			<button type="button" class="btn btn-default btn-top" title="Run" ng-click="runSQL()"><i class="fa fa-play"></i></button>
 			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshDatabase()"><i class="fa fa-refresh"></i></button>
 		
 			<select ng-model="selectedDatabase" ng-options="o as o for o in databases" ng-change="databaseChanged()"
