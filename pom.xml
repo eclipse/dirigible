@@ -131,7 +131,7 @@
 						<version>${license-maven-plugin.version}</version>
 						<inherited>true</inherited>
 						<configuration>
-							<header>license-header.txt</header>
+							<header>${license.header.lication}</header>
 							<aggregate>true</aggregate>
 							<properties>
 								<inceptionYear>${project.inceptionYear}</inceptionYear>
@@ -560,6 +560,8 @@
 		<jgit.version>5.5.0.201909110433-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
 		<olingo.version>2.0.11</olingo.version>
+
+		<license.header.lication>license-header.txt</license.header.lication>
 
 		<skip.tests>true</skip.tests>
 	</properties>

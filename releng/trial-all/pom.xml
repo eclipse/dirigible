@@ -99,6 +99,11 @@
 		 	<artifactId>dirigible-database-h2</artifactId>
 		 	<version>4.3.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-custom</artifactId>
+			<version>4.3.0-SNAPSHOT</version>
+	   </dependency>
 
 		<!-- Core Services -->
 		<dependency>
@@ -198,4 +203,7 @@
 		</dependency>
 	</dependencies>
 
+	<properties>
+		<license.header.lication>../../license-header.txt</license.header.lication>
+	</properties>
 </project>
