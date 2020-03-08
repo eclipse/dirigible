@@ -591,6 +591,7 @@
 		<module>releng/openshift-all</module>
 		<module>releng/sap-all</module>
 		<module>releng/sap-all-ephemeral</module>
+		<module>releng/sap-cf-all</module>
 		<module>releng/sap-cms</module>
 		<module>releng/server-all</module>
 		<module>releng/server-keycloak-all</module>
