@@ -55,7 +55,12 @@ script:
   - docker build -f releng/server-runtime-keycloak/Dockerfile-base -t $REPO_BASE_RUNTIME_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime-keycloak
   - docker tag $REPO_BASE_RUNTIME_KEYCLOAK:$COMMIT $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
   - docker push $REPO_BASE_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
- 
+
+# Image dirigiblelabs/dirigible-base-platform-sap-cf
+  - docker build -f releng/sap-cf-all/Dockerfile-base -t $REPO_BASE_SAP_CF:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-all
+  - docker tag $REPO_BASE_SAP_CF:$COMMIT $REPO_BASE_SAP_CF:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_SAP_CF:$DIRIGIBLE_VERSION
+
 # Image dirigiblelabs/dirigible-all
   - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-all
   - docker tag $REPO_ALL:$COMMIT $REPO_ALL:$DIRIGIBLE_VERSION
@@ -95,6 +100,11 @@ script:
   - docker build -f releng/server-runtime-keycloak/Dockerfile -t $REPO_RUNTIME_KEYCLOAK:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-runtime-keycloak
   - docker tag $REPO_RUNTIME_KEYCLOAK:$COMMIT $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
   - docker push $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+
+# Image dirigiblelabs/dirigible-sap-cf
+  - docker build -f releng/sap-cf-all/Dockerfile -t $REPO_SAP_CF:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-all
+  - docker tag $REPO_SAP_CF:$COMMIT $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker push $REPO_SAP_CF:$DIRIGIBLE_VERSION
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
@@ -107,6 +117,7 @@ env:
     - REPO_BASE_KEYCLOAK=dirigiblelabs/dirigible-base-platform-keycloak
     - REPO_BASE_RUNTIME=dirigiblelabs/dirigible-base-platform-runtime
     - REPO_BASE_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-base-platform-runtime-keycloak
+    - REPO_BASE_SAP_CF=dirigiblelabs/dirigible-base-platform-sap-cf
     - REPO_ALL=dirigiblelabs/dirigible-all
     - REPO_ANONYMOUS=dirigiblelabs/dirigible-anonymous
     - REPO_ANONYMOUS_RUNTIME=dirigiblelabs/dirigible-runtime-anonymous
@@ -115,5 +126,6 @@ env:
     - REPO_KEYCLOAK=dirigiblelabs/dirigible-keycloak
     - REPO_RUNTIME=dirigiblelabs/dirigible-runtime
     - REPO_RUNTIME_KEYCLOAK=dirigiblelabs/dirigible-runtime-keycloak
+    - REPO_SAP_CF=dirigiblelabs/dirigible-sap-cf
     - secure: "NucLZg3isAoRh1VTQWU1RXmmDggFYBXyTpZDpiPiLQRGRwE2QngKoVk6603ykZUMx3eIXqxB8aYPU2J1O2nnMfsg5MUlnSsR6UT3MIdcw0QQHfsQo8g2gKMzScmpinHXuzfkq567DAeEQNRqcSMsJjqmKAZh+njVMOnuNXceZ92qeVGFdj9IbblixVKPwk2itn+QlwWS1mk6v8JHqefGRnBKnR6Dk/V7Ejivjx50DucAkZLwafXNsOa6LWmKzayiROe2d2px73rRLOLOdNtgWsnZJeuxUHTj1pHIy4zBzGmPag1wFHOEFM7EMlKh6I2UyiEQCEnp66oBd9NyFTae+0dPCV4q21LJ6PZrZqQNe/EN/olTLYWM3ZeznGpKC9OXBjNLuWcXbyiBZ2R5PsqgadlcYDuE5tGhLZHBBfk41NsuxcXcOTivb8spf0rytZsG6cDXkbx6ok9ICASVEse4T+dK0QMsiTnfGW6bdQxWAQL6Zng+MnJ0RHVcBZ6IOrlb3GLbeWWSejX2StKf9kVljt6XrwyQy88IhAoMDOit6pKoRC6VhDBCdlDb0JWnBavwy6Zp1dK9PWKfoHSwI8zxv849JJKfCEGupdAEu/TzLX3O4k+BIUUE9+5vgcFcXDERPHcefYu7XWRbTGRf8uaPTvMHv1VZPgGejnPeunspfQw="
     - secure: "DDiE+Nv/KwpPfth5KKN69JNDXA7TIiQ4kfZjsx2mxaRUAiRj1xKBjvJZa1NJ+wNlgFLAlRQkxPwLY35uRnjEO2xFbw6cGdCTO1jxlccax6vbkV2Ywv8ZvTKWAOkBvCfHsLOiN9b2SH+0H/R/b1B3LrfNqJEJtsPP+xNC0sguwYP0Furvg01lAEpcWpnhkH6vod+8MaR/DN9ia5pi+MaGH14q7L/LRvkLOt3VrX1LJaTDFx4sWBz/GXf94KYp8D92cJrIGTEHpwhSroyNwkCzT3iBaidsZF8P2aNHQQQ3yx7iFZge67EUdEv1nYTPlUcG3vLKYdKe5boQXkY4Lz0h7hPvo0GhZEUsoZUfiiitnrY3yzgN7XM8tBmIISrDxpmalm7quPJle8CnON1jB2oAqDxRgCHJeuJbyE0kxKAMDJad8dMSe3L3GLQ6OJmT+sJ3vCN/EoB3oVgC4CPnN+O20gcDrQHJzMGKEdZqN27r2yWA1z5TYnvn0ROlnagMjkzsAw7qfXta30R3taSz53ySEoBR+d972fYHpP2VENhbnkw6ahSI5w6L1K3kSvWQ9iyWnDYN2lDinp09jnXZVEv4houxv5VUx8AtfgNZXOR+o7+aa+OnXfpZjnOKoZFo4aQpTf3Wpm9wZcTmq///qlgeoNBRDbLaptQizzP4HJFHArg="
