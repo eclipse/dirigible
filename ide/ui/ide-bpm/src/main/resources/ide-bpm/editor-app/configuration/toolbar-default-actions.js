@@ -18,9 +18,16 @@ FLOWABLE.TOOLBAR = {
     	
         saveModel: function (services) {
 
+
+
 			// --- workaround for saving silently starts here
 			var saveSilently = function ($http, model, modelMetaData, editorManager) {
 		
+				var csrfToken = null;
+				$http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).success(function(data, statusCode, headers) {
+					csrfToken = headers()["x-csrf-token"];
+				});
+
 		        var json = model;
 		
 		        var params = {
@@ -35,9 +42,12 @@ FLOWABLE.TOOLBAR = {
 		        $http({    method: 'POST',
 		            data: params,
 		            ignoreErrors: true,
-		            headers: {'Accept': 'application/json',
-		                      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-		                      'X-Requested-With': 'Fetch'},
+		            headers: {
+		            	'Accept': 'application/json',
+		            	'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+		            	'X-Requested-With': 'Fetch',
+		            	'X-CSRF-Token': csrfToken
+		            },
 		            transformRequest: function (obj) {
 		                var str = [];
 		                for (var p in obj) {
@@ -373,7 +383,29 @@ FLOWABLE.TOOLBAR = {
 };
 
 /** Custom controller for the save dialog */
-angular.module('flowableModeler').controller('SaveModelCtrl', [ '$rootScope', '$scope', '$http', '$route', '$location', 'editorManager',
+angular
+.module('flowableModeler')
+.factory('httpRequestInterceptor', function () {
+	var csrfToken = null;
+	return {
+		request: function (config) {
+			config.headers['X-Requested-With'] = 'Fetch';
+			config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
+			return config;
+		},
+		response: function(response) {
+			var token = response.headers()['x-csrf-token'];
+			if (token) {
+				csrfToken = token;
+			}
+			return response;
+		}
+	};
+})
+.config(['$httpProvider', function($httpProvider) {
+	$httpProvider.interceptors.push('httpRequestInterceptor');
+}])
+.controller('SaveModelCtrl', [ '$rootScope', '$scope', '$http', '$route', '$location', 'editorManager',
     function ($rootScope, $scope, $http, $route, $location, editorManager) {
 
 	if (editorManager.getCurrentModelId() != editorManager.getModelId()) {

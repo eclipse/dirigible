@@ -30,6 +30,7 @@
 		<script src="monaco-editor/dev/vs/loader.js"></script>
 		<script>
 		    var messageHub = new FramesMessageHub();
+		    var csrfToken;
 			function FileIO(){
 				var __URL = URL;
 				this.workspaceApiUrl = '../../../../services/v4/ide/workspaces';
@@ -58,7 +59,11 @@
 						const xhr = new XMLHttpRequest();
 						fileName = fileName || this.resolveFileName();
 						xhr.open('GET', this.workspaceApiUrl + fileName);
-						xhr.onload = () => resolve(xhr.responseText);
+						xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+						xhr.onload = () => {
+							resolve(xhr.responseText);
+							csrfToken = xhr.getResponseHeader("x-csrf-token");
+						};
 						xhr.onerror = () => reject(xhr.statusText);
 						xhr.send();
 					});
@@ -70,6 +75,7 @@
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', this.workspaceApiUrl + fileName);
 							xhr.setRequestHeader('X-Requested-With', 'Fetch');
+							xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 							xhr.onload = () => resolve(fileName);
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);

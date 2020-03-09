@@ -66,6 +66,12 @@
 
 			var messageHub = new FramesMessageHub();
 
+			var csrfToken = null;
+
+			$http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).success(function(data, statusCode, headers) {
+				csrfToken = headers()["x-csrf-token"];
+			});
+
 			$scope.database = "local";
 			$scope.datasource = "DefaultDB";
 
@@ -86,7 +92,8 @@
 						data: command.data,
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-							'X-Requested-With': 'Fetch'
+							'X-Requested-With': 'Fetch',
+							'X-CSRF-Token': csrfToken
 						}
 					}).success(function(result) {
 						cleanScope();
@@ -112,7 +119,8 @@
 						data: command.data,
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain',
-							'X-Requested-With': 'Fetch'
+							'X-Requested-With': 'Fetch',
+							'X-CSRF-Token': csrfToken
 						}
 					}).success(function(result) {
 						cleanScope();

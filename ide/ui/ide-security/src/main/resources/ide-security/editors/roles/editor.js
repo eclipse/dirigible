@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,12 +68,15 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	
 	var messageHub = new FramesMessageHub();
 	var contents;
+	var csrfToken;
 	
 	function getResource(resourcePath) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', resourcePath, false);
+        xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
         xhr.send();
         if (xhr.status === 200) {
+        	csrfToken = xhr.getResponseHeader("x-csrf-token");
         	return xhr.responseText;
         }
 	}
@@ -100,6 +103,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '../../../../../../services/v4/ide/workspaces' + $scope.file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
+			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: ' + $scope.file);

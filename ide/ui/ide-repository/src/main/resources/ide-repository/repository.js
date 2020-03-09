@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -395,10 +395,19 @@ angular.module('repository.config', [])
 	
 angular.module('repository', ['repository.config'])
 .factory('httpRequestInterceptor', function () {
+	var csrfToken = null;
 	return {
 		request: function (config) {
 			config.headers['X-Requested-With'] = 'Fetch';
+			config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
 			return config;
+		},
+		response: function(response) {
+			var token = response.headers()['x-csrf-token'];
+			if (token) {
+				csrfToken = token;
+			}
+			return response;
 		}
 	};
 })

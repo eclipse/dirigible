@@ -13,13 +13,16 @@
 // from the onLoad event handler of the document (see below).
 function main(container, outline, toolbar, sidebar, status) {
 	var $scope = $('#ModelerCtrl').scope();
+	var csrfToken;
 
 	// Load model file
 	function getResource(resourcePath) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', resourcePath, false);
+        xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
         xhr.send();
         if (xhr.status === 200) {
+        	csrfToken = xhr.getResponseHeader("x-csrf-token");
         	return xhr.responseText;
         }
 	}
@@ -46,6 +49,7 @@ function main(container, outline, toolbar, sidebar, status) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '../../../../services/v4/ide/workspaces' + file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
+			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: '+file);
@@ -65,6 +69,7 @@ function main(container, outline, toolbar, sidebar, status) {
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '../../../../services/v4/ide/workspaces' + file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
+			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
 					console.log('file saved: '+file);
