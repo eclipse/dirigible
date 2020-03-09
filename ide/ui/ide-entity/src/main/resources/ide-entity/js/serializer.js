@@ -70,6 +70,8 @@ function createModel(graph) {
 					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 					
 					model.push('    <property name="'+_.escape(property.name)+
+						'" isCalculatedProperty="'+_.escape(property.isCalculatedProperty)+
+						'" calculatedPropertyExpression="'+_.escape(property.calculatedPropertyExpression)+
 						'" dataName="'+_.escape(property.dataName)+
 						'" dataType="'+_.escape(property.dataType)+'"');
 					if (property.dataLength !== null) {
@@ -251,6 +253,8 @@ function createModelJson(graph) {
 					
 					// General
 					property.name = _.escape(childProperty.name);
+					property.isCalculatedProperty = _.escape(childProperty.isCalculatedProperty);
+					property.calculatedPropertyExpression = _.escape(childProperty.calculatedPropertyExpression);
 					
 					// Data Properties
 					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());

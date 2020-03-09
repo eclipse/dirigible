@@ -73,29 +73,31 @@
 #if($property.widgetType == "DROPDOWN")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<select class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}"></select>
+							<select #if($property.isCalculatedProperty)readonly#end class="form-control" ng-options="o.${property.widgetDropDownKey} as o.${property.widgetDropDownValue} for o in ${property.name.toLowerCase()}Options" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()"></select>
 						</div>
 #elseif($property.widgetType == "TEXTAREA")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<textarea class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}"></textarea>
+							<textarea #if($property.isCalculatedProperty)readonly#end class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()"></textarea>
 						</div>
 #elseif($property.widgetType == "NUMBER")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<input #if($property.isCalculatedProperty)readonly#end type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #elseif($property.widgetType == "DATE")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
 							<p class="input-group">
-								<input type="text" 
+								<input type="text"
+									#if($property.isCalculatedProperty)readonly#end
 									ng-model="entity.${property.name}"
 									class="form-control"
 									uib-datepicker-popup=""
 									is-open="${property.name.toLowerCase()}CalendarStatus.opened" 
 									datepicker-options="dateOptions"
 									close-text="Close"
+									ng-change="updateCalculatedProperties()
 								>
 								<span class="input-group-btn">
 									<button type="button"
@@ -110,12 +112,12 @@
 #elseif($property.widgetType == "CHECKBOX")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="checkbox" ng-model="entity.${property.name}">
+							<input #if($property.isCalculatedProperty)readonly#end type="checkbox" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #else
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}">
+							<input #if($property.isCalculatedProperty)readonly#end type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #end
 #end

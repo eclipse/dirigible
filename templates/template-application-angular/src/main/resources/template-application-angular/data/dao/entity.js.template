@@ -84,6 +84,11 @@ exports.create = function(entity) {
 #end
 #end
 #end
+#foreach ($property in $properties)
+#if($property.isCalculatedProperty)
+	entity["${property.name}"] = ${property.calculatedPropertyExpression};
+#end
+#end
 	var id = dao.insert(entity);
 	triggerEvent("Create", {
 		table: "${dataName}",
@@ -109,6 +114,11 @@ exports.update = function(entity) {
 #if($property.dataType == "BOOLEAN")
 	EntityUtils.setBoolean(entity, "${property.name}");
 #end
+#end
+#end
+#foreach ($property in $properties)
+#if($property.isCalculatedProperty)
+	entity["${property.name}"] = ${property.calculatedPropertyExpression}
 #end
 #end
 	dao.update(entity);

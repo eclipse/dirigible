@@ -290,6 +290,18 @@
 							<input class="form-control" type="text" placeholder="property name" ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
 						</div>
 					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Calculated: </label>
+						<div class="col-xs-1">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.isCalculatedProperty" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
+					<div class="row" ng-show="ctrl.$scope.$parent.cell.value.isCalculatedProperty">
+						<label class="col-xs-3 col-form-label">&nbsp;</label>
+						<div class="col-xs-9">
+							<textarea class="form-control" type="text" placeholder="calculated property expression" ng-model="ctrl.$scope.$parent.cell.value.calculatedPropertyExpression" cols="50" rows="10"></textarea>
+						</div>
+					</div>
 				  </div>
 			    </div>
 			    <div id="dataProperty" class="tab-pane fade">

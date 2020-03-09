@@ -220,6 +220,15 @@ angular.module('page')
 		});
 	};
 
+	$scope.updateCalculatedProperties = function() {
+		var entity = $scope.entity;
+#foreach ($property in $properties)
+#if($property.isCalculatedProperty)
+		entity["${property.name}"] = ${property.calculatedPropertyExpression};
+#end
+#end
+	};
+
 #foreach ($property in $properties)
 #if($property.widgetType == "DATE")
 	${dollar}scope.${property.name.toLowerCase()}OpenCalendar = function(${dollar}event) {

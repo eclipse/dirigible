@@ -41,6 +41,8 @@ function Property(name) {
 	this.name = name;
 }
 
+Property.prototype.isCalculatedProperty = false;
+Property.prototype.calculatedPropertyExpression = null;
 Property.prototype.dataName = null;
 Property.prototype.dataType = 'VARCHAR';
 Property.prototype.dataLength = '20';
