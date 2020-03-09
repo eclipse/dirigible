@@ -13,6 +13,8 @@ package org.eclipse.dirigible.runtime.ide.generation.model.entity;
 public class EntityDataModelProperty {
 	
 	private String name;
+	private Boolean isCalculatedProperty;
+	private String calculatedPropertyExpression;
 
 	private String dataName;
 	private String dataType;
@@ -57,6 +59,34 @@ public class EntityDataModelProperty {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the isCalculatedProperty
+	 */
+	public Boolean getIsCalculatedProperty() {
+		return isCalculatedProperty;
+	}
+
+	/**
+	 * @param isCalculatedProperty the isCalculatedProperty to set
+	 */
+	public void setIsCalculatedProperty(Boolean isCalculatedProperty) {
+		this.isCalculatedProperty = isCalculatedProperty;
+	}
+
+	/**
+	 * @return the calculatedPropertyExpression
+	 */
+	public String getCalculatedPropertyExpression() {
+		return calculatedPropertyExpression;
+	}
+
+	/**
+	 * @param calculatedPropertyExpression the calculatedPropertyExpression to set
+	 */
+	public void setCalculatedPropertyExpression(String calculatedPropertyExpression) {
+		this.calculatedPropertyExpression = calculatedPropertyExpression;
 	}
 
 	/**

@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -447,7 +448,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
 				propertyModel.put("name", property.getName());
-				
+				propertyModel.put("isCalculatedProperty", property.getIsCalculatedProperty());
+				propertyModel.put("calculatedPropertyExpression", EscapeFacade.unescapeHtml4(property.getCalculatedPropertyExpression()));
+
 				propertyModel.put("dataName", property.getDataName());
 				propertyModel.put("dataPrimaryKey", property.getDataPrimaryKey());
 				propertyModel.put("dataAutoIncrement", property.getDataAutoIncrement());
