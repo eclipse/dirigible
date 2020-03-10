@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ public class UserFacade implements IScriptingFacade {
 
 	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
 	private static final String DIRIGIBLE_ANONYMOUS_USER = "dirigible-anonymous-user";
+	private static final String DIRIGIBLE_JWT_USER = "dirigible-jwt-user";
 
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
@@ -92,6 +93,9 @@ public class UserFacade implements IScriptingFacade {
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
 			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+		} else if (Configuration.isJwtModeEnabled()) {
+			setContextProperty(DIRIGIBLE_JWT_USER, userName);
+			logger.warn(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
@@ -188,6 +192,12 @@ public class UserFacade implements IScriptingFacade {
 				if (userName == null) {
 					userName = setAnonymousUser();
 				}
+			} catch (ContextException e) {
+				logger.error(e.getMessage());
+			}
+		} else if (Configuration.isJwtModeEnabled()) {
+			try {
+				userName = getContextProperty(DIRIGIBLE_JWT_USER);
 			} catch (ContextException e) {
 				logger.error(e.getMessage());
 			}

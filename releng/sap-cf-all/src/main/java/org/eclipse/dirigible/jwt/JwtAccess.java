@@ -8,9 +8,9 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.anonymous;
+package org.eclipse.dirigible.jwt;
 
-public class AnonymousUser {
+public class JwtAccess {
 
 	// Marker class
 }

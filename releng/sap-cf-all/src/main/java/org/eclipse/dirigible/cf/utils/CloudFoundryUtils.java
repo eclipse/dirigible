@@ -12,6 +12,8 @@ package org.eclipse.dirigible.cf.utils;
 
 import java.util.List;
 
+import javax.servlet.ServletRequest;
+
 import org.eclipse.dirigible.api.v3.core.EnvFacade;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv.XsuaaCredentialsEnv;
 import org.eclipse.dirigible.cf.utils.JwtUtils.JwtClaim;
@@ -37,6 +39,21 @@ public class CloudFoundryUtils {
 		return false;
 	}
 
+	public static boolean isInRole(ServletRequest request, String role) {
+		String jwt = JwtUtils.getJwt(request);
+		JwtClaim claim = JwtUtils.getClaim(jwt);
+		List<String> scope = claim.getScope();
+		return scope.contains(getScope(role)) || scope.contains(role);
+	}
+
+	public static String getScope(String role) {
+		return new StringBuilder()
+				.append(getXsuaaEnv().getCredentials().getApplicationName())
+				.append(SCOPE_SEPARATOR)
+				.append(role)
+				.toString();
+	}
+
 	public static XsuaaEnv getXsuaaEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
@@ -53,14 +70,6 @@ public class CloudFoundryUtils {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getHanaDbEnv() != null ? vcapServicesEnv.getHanaDbEnv().get(0) : null;
-	}
-
-	public static String getScope(String role) {
-		return new StringBuilder()
-				.append(getXsuaaEnv().getCredentials().getApplicationName())
-				.append(SCOPE_SEPARATOR)
-				.append(role)
-				.toString();
 	}
 
 	public static class VcapServicesEnv {

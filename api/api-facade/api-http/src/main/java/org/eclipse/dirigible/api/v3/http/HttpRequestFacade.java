@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,16 +14,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.api.v3.http.jwt.IJwtManager;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,8 @@ public class HttpRequestFacade implements IScriptingFacade {
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Request Facade without a valid Request";
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
+
+	private static final ServiceLoader<IJwtManager> JWT_MANAGERS = ServiceLoader.load(IJwtManager.class);
 
 	/**
 	 * Returns the request in the current thread context
@@ -152,6 +157,14 @@ public class HttpRequestFacade implements IScriptingFacade {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			throw new InvalidStateException(NO_VALID_REQUEST);
+		}
+		if (Configuration.isJwtModeEnabled()) {
+			for (IJwtManager next : JWT_MANAGERS) {
+				if (next.isInRole(request, role)) {
+					return true;
+				}
+			}
+			return false;
 		}
 		return request.isUserInRole(role);
 	}

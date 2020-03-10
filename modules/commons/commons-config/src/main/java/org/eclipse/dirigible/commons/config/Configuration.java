@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -203,6 +203,19 @@ public class Configuration {
 		return true;
 	}
 
+	/**
+	 * Checks if is JWT mode enabled.
+	 *
+	 * @return true, if is JWT mode enabled
+	 */
+	public static boolean isJwtModeEnabled() {
+		try {
+			Class.forName("org.eclipse.dirigible.jwt.JwtAccess");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		return true;
+	}
 	/**
 	 * Checks if productive iframe is enabled.
 	 *
