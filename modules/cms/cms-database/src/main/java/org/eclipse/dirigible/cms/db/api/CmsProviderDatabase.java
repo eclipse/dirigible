@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,9 +27,6 @@ import org.slf4j.LoggerFactory;
 
 public class CmsProviderDatabase implements ICmsProvider {
 
-	private static final String DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE";
-	private static final String DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME";
-	
 	private static final Logger logger = LoggerFactory.getLogger(CmsProviderDatabase.class);
 
 	/** The Constant NAME. */

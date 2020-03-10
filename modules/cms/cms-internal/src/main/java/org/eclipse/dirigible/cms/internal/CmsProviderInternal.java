@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,12 +18,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 
 public class CmsProviderInternal implements ICmsProvider {
-
-	/** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER. */
-	public static final String DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER = "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER"; //$NON-NLS-1$
-
-	/** The Constant DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE. */
-	public static final String DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
 
 	private static final String CMS = "cms"; //$NON-NLS-1$
 

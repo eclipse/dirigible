@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.xsuaa;
+package org.eclipse.dirigible.cf.xsuaa;
 
 import java.io.IOException;
 
@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
+import org.eclipse.dirigible.cf.utils.JwtUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
-import org.eclipse.dirigible.jwt.utils.JwtUtils;
-import org.eclipse.dirigible.xsuaa.utils.XsuaaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class XsuaaFilter extends AbstractXsuaaFilter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String jwt = JwtUtils.getJwt(request);
-		if (!XsuaaUtils.isValidJwt(jwt)) {
+		if (!CloudFoundryUtils.isValidJwt(jwt)) {
 			unauthorized(request, response, UNAUTHORIZED_MESSAGE);
 			return;
 		}

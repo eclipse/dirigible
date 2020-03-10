@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.xsuaa;
+package org.eclipse.dirigible.cf.xsuaa;
 
 import java.io.IOException;
 

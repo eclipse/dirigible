@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.jwt.utils;
+package org.eclipse.dirigible.cf.utils;
 
 import java.util.List;
 
