@@ -103,7 +103,7 @@ script:
 
 # Image dirigiblelabs/dirigible-sap-cf
   - docker build -f releng/sap-cf-all/Dockerfile -t $REPO_SAP_CF:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-all
-  - docker tag $REPO_SAP_CF:$COMMIT $REPO_RUNTIME_KEYCLOAK:$DIRIGIBLE_VERSION
+  - docker tag $REPO_SAP_CF:$COMMIT $REPO_SAP_CF:$DIRIGIBLE_VERSION
   - docker push $REPO_SAP_CF:$DIRIGIBLE_VERSION
 env:
   global:
