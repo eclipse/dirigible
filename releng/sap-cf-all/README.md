@@ -12,3 +12,4 @@
     docker build -t dirigible-sap-cf .
     docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf
     docker push dirigiblelabs/dirigible-sap-cf
+    ```
