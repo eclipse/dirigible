@@ -131,6 +131,7 @@ public class RepositoryZipImporter {
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
 					entryName = Paths.get(FilenameUtils.normalize(entryName)).normalize().toString();
+					entryName = entryName.replace('\\', '/');
 					logger.debug("importZip entryName: " + entryName);
 					String outpath = relativeRoot + ((relativeRoot.endsWith(IRepository.SEPARATOR)) ? "" : IRepository.SEPARATOR) + entryName;
 					logger.debug("importZip outpath: " + outpath);
