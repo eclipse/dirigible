@@ -10,6 +10,9 @@
  */
 var env = require('core/v3/env');
 
-var result = env.get('SHELL');
+var obj = JSON.parse(env.list());
+var key = Object.keys(obj)[0];
+
+var result = env.get(key);
 
 result !== undefined && result !== null;
