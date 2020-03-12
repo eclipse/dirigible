@@ -31,8 +31,8 @@ public class RepositoryPath {
 	 *            the path
 	 */
 	public RepositoryPath(String path) {
-		this.path = path;
-		final StringTokenizer tokenizer = new StringTokenizer(path, IRepository.SEPARATOR);
+		this.path = path.replace('\\', '/');
+		final StringTokenizer tokenizer = new StringTokenizer(this.path, IRepository.SEPARATOR);
 		segments = new String[tokenizer.countTokens()];
 		for (int i = 0; i < segments.length; ++i) {
 			segments[i] = tokenizer.nextToken();
