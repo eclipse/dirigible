@@ -60,6 +60,7 @@
 						fileName = fileName || this.resolveFileName();
 						xhr.open('GET', this.workspaceApiUrl + fileName);
 						xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+						xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
 						xhr.onload = () => {
 							resolve(xhr.responseText);
 							csrfToken = xhr.getResponseHeader("x-csrf-token");
@@ -76,6 +77,7 @@
 							xhr.open('PUT', this.workspaceApiUrl + fileName);
 							xhr.setRequestHeader('X-Requested-With', 'Fetch');
 							xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+							xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
 							xhr.onload = () => resolve(fileName);
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);
