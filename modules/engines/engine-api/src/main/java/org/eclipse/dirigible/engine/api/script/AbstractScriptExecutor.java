@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,12 @@
  */
 package org.eclipse.dirigible.engine.api.script;
 
+import java.io.InputStream;
+
 import org.eclipse.dirigible.engine.api.resource.AbstractResourceExecutor;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
 
 /**
@@ -78,6 +82,36 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 
 		}
 		return new ResourcePath(module, "");
+	}
+	
+	/**
+	 * Exists module
+	 * 
+	 * @param root the root path
+	 * @param module the module path
+	 * @return true if module exists
+	 * @throws RepositoryException
+	 */
+	public boolean existsModule(String root, String module) throws RepositoryException {
+		return existsModule(root, module, null);
+	}
+	/**
+	 * Exists module
+	 * 
+	 * @param root the root path
+	 * @param module the module path
+	 * @param extension the extension or null
+	 * @return true if module exists
+	 * @throws RepositoryException
+	 */
+	public boolean existsModule(String root, String module, String extension) throws RepositoryException {
+		if (super.existResource(root, module, extension)) {
+			return true;
+		}
+		
+		String ext = extension != null ? extension : "";
+		InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(IRepository.SEPARATOR + module + ext);
+		return bundled != null;
 	}
 
 }

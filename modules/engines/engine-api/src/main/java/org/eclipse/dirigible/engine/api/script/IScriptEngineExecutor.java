@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,34 @@ public interface IScriptEngineExecutor extends IEngineExecutor {
 	 *             the repository exception
 	 */
 	public Module retrieveModule(String root, String module, String extension) throws RepositoryException;
+	
+	/**
+	 * Exists module.
+	 *
+	 * @param root
+	 *            the root
+	 * @param module
+	 *            the module
+	 * @return the exists
+	 * @throws RepositoryException
+	 *             the repository exception
+	 */
+	public boolean existsModule(String root, String module) throws RepositoryException;
+
+	/**
+	 * Exists module.
+	 *
+	 * @param root
+	 *            the root
+	 * @param module
+	 *            the module
+	 * @param extension
+	 *            the extension
+	 * @return the exists
+	 * @throws RepositoryException
+	 *             the repository exception
+	 */
+	public boolean existsModule(String root, String module, String extension) throws RepositoryException;
 
 	/**
 	 * Execute service module.

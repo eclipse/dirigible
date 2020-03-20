@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,9 +63,7 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 		}
 
 		ModuleSource moduleSource = null;
-		if (!module.endsWith(JS_EXTENSION)) {
-			module += JS_EXTENSION;
-		}
+		
 		moduleSource = createModule(module);
 
 		return moduleSource;
@@ -84,6 +82,14 @@ public class RhinoRepositoryModuleSourceProvider extends ModuleSourceProviderBas
 		byte[] sourceCode;
 		ModuleSource moduleSource;
 		try {
+			if (!module.endsWith(JS_EXTENSION)) {
+				module += JS_EXTENSION;
+			}
+			if (!executor.existsModule(root, module)) {
+				if (module.endsWith(JS_EXTENSION)) {
+					module = module.substring(0, module.length() - 3);
+				}
+			}
 			sourceCode = executor.retrieveModule(root, module).getContent();
 		} catch (RepositoryNotFoundException e) {
 			throw new EcmaError(null, module, 0, 0, e.getMessage());
