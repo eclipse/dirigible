@@ -377,38 +377,38 @@
 			      	<div class="row">
 					    <label class="col-xs-3 col-form-label" for="widgetType">Widget Type: </label>
 					    <div class="col-xs-4">
-						    <select class="col-xs-4" name="d" id="widgetType" ng-model="ctrl.$scope.$parent.cell.value.widgetType">
+						    <select class="form-control col-xs-4" name="d" id="widgetType" ng-model="ctrl.$scope.$parent.cell.value.widgetType">
 						    	<option ng-repeat="option in ctrl.widgetTypes" value="{{option.key}}">{{option.label}}</option>
 						    </select>
 						</div>
 					</div>
 			      	<div class="row">
 						<label class="col-xs-3 col-form-label">Length: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-3">
 							<input class="form-control" type="text" placeholder="20" ng-model="ctrl.$scope.$parent.cell.value.widgetLength" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Label: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<input class="form-control" type="text" placeholder="label" ng-model="ctrl.$scope.$parent.cell.value.widgetLabel" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Short Label: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-3">
 							<input class="form-control" type="text" placeholder="short label" ng-model="ctrl.$scope.$parent.cell.value.widgetShortLabel" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Pattern: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-4">
 							<input class="form-control" type="text" placeholder="pattern" ng-model="ctrl.$scope.$parent.cell.value.widgetPattern" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Format: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-4">
 							<input class="form-control" type="text" placeholder="format" ng-model="ctrl.$scope.$parent.cell.value.widgetPattern" required="required">
 						</div>
 					</div>
@@ -420,13 +420,13 @@
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Section: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<input class="form-control" type="text" placeholder="service" ng-model="ctrl.$scope.$parent.cell.value.widgetSection" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Is Major: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-5">
 							<!-- <input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.widgetIsMajor" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'"> -->
 							<select class="form-control" name="propertyIsMajor" id="entityLayout" ng-model="ctrl.$scope.$parent.cell.value.widgetIsMajor">
 						    	<option ng-repeat="option in ctrl.isMajorTypes" value="{{option.key}}">{{option.label}}</option>
@@ -435,13 +435,13 @@
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Dropdown Key: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<input class="form-control" type="text" placeholder="key property" ng-model="ctrl.$scope.$parent.cell.value.widgetDropDownKey" required="required">
 						</div>
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Dropdown Value: </label>
-						<div class="col-xs-9">
+						<div class="col-xs-6">
 							<input class="form-control" type="text" placeholder="value property" ng-model="ctrl.$scope.$parent.cell.value.widgetDropDownValue" required="required">
 						</div>
 					</div>
@@ -493,7 +493,7 @@
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="relationshipType">Relationship Type: </label>
 					    <div class="col-xs-4">
-						    <select class="col-xs-4" name="d" id="relationshipType" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipType">
+						    <select class="form-control col-xs-4" name="d" id="relationshipType" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipType">
 						    	<option ng-repeat="option in ctrl.relationshipTypes" value="{{option.key}}">{{option.label}}</option>
 						    </select>
 						</div>
@@ -501,7 +501,7 @@
 					<div class="row">
 					    <label class="col-xs-3 col-form-label" for="relationshipCardinality">Relationship Cardinality: </label>
 					    <div class="col-xs-4">
-						    <select class="col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipCardinality">
+						    <select class="form-control col-xs-4" name="d" id="relationshipCardinality" ng-model="ctrl.$scope.$parent.cell.source.value.relationshipCardinality">
 						    	<option ng-repeat="option in ctrl.relationshipCardinalities" value="{{option.key}}">{{option.label}}</option>
 						    </select>
 						</div>
