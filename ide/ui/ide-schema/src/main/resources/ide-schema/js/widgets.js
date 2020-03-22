@@ -116,7 +116,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	
 	var img = document.createElement('i');
 	img.setAttribute('class', 'fa fa-'+image+' fa-2x');
-	img.setAttribute('style', 'color: #111');
+	img.setAttribute('style', 'color: #8ba8c1');
 //	img.color = '#337ab7';
 	img.title = hint;
 	sidebar.appendChild(img);
@@ -150,7 +150,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-	style[mxConstants.STYLE_FONTCOLOR] = '#000000';
+	style[mxConstants.STYLE_FONTCOLOR] = '#7a9bb8';
 	style[mxConstants.STYLE_FONTSIZE] = '11';
 	style[mxConstants.STYLE_FONTSTYLE] = 0;
 	style[mxConstants.STYLE_SPACING_LEFT] = '4';
@@ -163,10 +163,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
-	style[mxConstants.STYLE_GRADIENTCOLOR] = '#555';
-	style[mxConstants.STYLE_FILLCOLOR] = '#555';
+	style[mxConstants.STYLE_GRADIENTCOLOR] = '#8ba8c1';
+	style[mxConstants.STYLE_FILLCOLOR] = '#8ba8c1';
 	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
-	style[mxConstants.STYLE_STROKECOLOR] = '#555';
+	style[mxConstants.STYLE_STROKECOLOR] = '#7a9bb8';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
