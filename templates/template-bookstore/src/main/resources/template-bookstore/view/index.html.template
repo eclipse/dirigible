@@ -17,7 +17,7 @@
 		<h1>Manage Books</h1>
 	</div>
 	<div class="container">
-		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right">New</button>
+		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus" aria-hidden="true"></i></button>
 		<table class="table product-table">
 			<thead>
 				<tr>
