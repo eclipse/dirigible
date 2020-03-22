@@ -43,7 +43,7 @@
 		<div class="sidebar list-group" sidebar active="Workbench"></div>
 		<div id="${perspectiveName}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${extensionName}-${perspectiveName}-view""></div>
 	</div>
-	<div class="statusbar" status-bar>${message}</div>
+	<!-- div class="statusbar" status-bar>${message}</div -->
 	
 	<!-- jQuery -->
 	<script type="text/javascript" src="../../../../../../services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>

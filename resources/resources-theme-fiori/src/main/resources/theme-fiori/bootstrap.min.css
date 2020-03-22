@@ -1055,7 +1055,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .breadcrumb>.active{color:#777}
 .pagination{padding-left:0;margin:14px 0;border-radius:2px}
 .pager li,.pagination>li{display:inline}
-.pagination>li>a,.pagination>li>span{position:relative;float:left;padding:2px;line-height:1.2;text-decoration:none;color:#337ab7;background-color:#fff;border:1px solid #ddd;margin-left:-1px}
+.pagination>li>a,.pagination>li>span{position:relative;float:left;padding:2px;line-height:1.2;text-decoration:none;color:#337ab7;background-color:#fff;border:1px solid #ddd;margin-left:-1px;padding-left: 0.5em;padding-right: 0.5em;}
 .pagination-lg>li:first-child>a,.pagination-lg>li:first-child>span,.pagination-sm>li:first-child>a,.pagination-sm>li:first-child>span{border-bottom-left-radius:2px;border-top-left-radius:2px}
 .pagination-lg>li:last-child>a,.pagination-lg>li:last-child>span,.pagination-sm>li:last-child>a,.pagination-sm>li:last-child>span,.pagination>li:last-child>a,.pagination>li:last-child>span{border-bottom-right-radius:2px;border-top-right-radius:2px}
 .pagination>li:first-child>a,.pagination>li:first-child>span{margin-left:0;border-bottom-left-radius:2px;border-top-left-radius:2px}

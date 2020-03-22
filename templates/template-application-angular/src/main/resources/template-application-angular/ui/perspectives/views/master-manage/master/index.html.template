@@ -17,7 +17,7 @@
 		<h1>Manage ${menuLabel}</h1>
 	</div>
 	<div class="container">
-		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-primary pull-right table-header-button">New</button>
+		<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-outline-primary pull-right table-header-button"><i class="fa fa-plus" aria-hidden="true"></i></button>
 		<table class="table product-table">
 			<thead>
 				<tr>
@@ -129,10 +129,10 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'new'" ng-click="create()">Save</button>
+					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'update'" ng-click="update()">Update</button>
+					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
+					<button type="button" class="btn btn-danger btn-lg" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
