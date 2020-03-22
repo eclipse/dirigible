@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
+exports.getTemplate = function() {
 	var view = {
-			"id":"jobs",
-			"name":"Jobs",
-			"factory":"frame",
-			"region":"center-middle",
-			"label":"Jobs",
-			"link":"../ide-jobs/jobs.html"
+			"name":"access",
+			"label":"Access Constraints",
+			"extension":"access",
+			"data":JSON.stringify(JSON.parse('{"constraints":[{"path":"/myproject/myfolder/myservice.js","method":"GET","roles":["administrator","operator"]}]}'), null, 2)
 	};
 	return view;
-}
+};

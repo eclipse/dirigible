@@ -8,14 +8,15 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
-	var view = {
-			"id":"workspace",
-			"name":"Workspace",
+exports.getEditor = function() {
+	var editor = {
+			"id":"job",
+			"name":"Job",
 			"factory":"frame",
-			"region":"left-top",
-			"label":"Workspace",
-			"link":"../ide-workspace/workspace.html"
+			"region":"center-top",
+			"label":"Job",
+			"link":"../ide-jobs/editor/editor.html",
+			"contentTypes":["application/json+job"]
 	};
-	return view;
+	return editor;
 };

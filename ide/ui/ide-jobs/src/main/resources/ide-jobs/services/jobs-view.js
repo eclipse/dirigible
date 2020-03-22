@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,15 +8,14 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getEditor = function() {
-	var editor = {
-			"id":"edm",
-			"name":"EDM",
+exports.getView = function() {
+	var view = {
+			"id":"jobs",
+			"name":"Jobs",
 			"factory":"frame",
-			"region":"center-top",
-			"label":"Entity Data Modeler",
-			"link":"../ide-entity/modeler.html",
-			"contentTypes":["application/entity-data-model+xml"]
+			"region":"center-middle",
+			"label":"Jobs",
+			"link":"../ide-jobs/view/jobs.html"
 	};
-	return editor;
-}
+	return view;
+};

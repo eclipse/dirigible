@@ -8,14 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
+exports.getTemplate = function() {
 	var view = {
-			"id":"workspace",
-			"name":"Workspace",
-			"factory":"frame",
-			"region":"left-top",
-			"label":"Workspace",
-			"link":"../ide-workspace/workspace.html"
+			"name":"job",
+			"label":"Scheduled Job",
+			"extension":"job",
+			"data":JSON.stringify(JSON.parse('{"expression":"0/10 * * * * ?","group":"dirigible-defined","handler":"myproject/myhandler.js","description":"My Job"}'), null, 2)
 	};
 	return view;
 };

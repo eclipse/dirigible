@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,13 @@
  */
 exports.getEditor = function() {
 	var editor = {
-			"id":"access",
-			"name":"Access",
+			"id":"listener",
+			"name":"Listener",
 			"factory":"frame",
 			"region":"center-top",
-			"label":"Access",
-			"link":"../ide-security/editors/access/editor.html",
-			"contentTypes":["application/json+access"]
+			"label":"Listener",
+			"link":"../ide-listeners/editor/editor.html",
+			"contentTypes":["application/json+listener"]
 	};
 	return editor;
 };

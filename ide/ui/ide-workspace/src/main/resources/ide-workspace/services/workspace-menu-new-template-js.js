@@ -8,14 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
+exports.getTemplate = function() {
 	var view = {
-			"id":"workspace",
-			"name":"Workspace",
-			"factory":"frame",
-			"region":"left-top",
-			"label":"Workspace",
-			"link":"../ide-workspace/workspace.html"
+			"name":"javascript",
+			"label":"Java Script Service",
+			"extension":"js",
+			"data":'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'
 	};
 	return view;
 };

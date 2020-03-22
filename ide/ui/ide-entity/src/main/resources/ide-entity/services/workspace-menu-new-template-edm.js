@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,15 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getEditor = function() {
-	var editor = {
-			"id":"flowable",
-			"name":"Flowable",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Flowable",
-			"link":"../ide-bpm/index.html#/editor",
-			"contentTypes":["application/bpmn+xml"]
+exports.getTemplate = function() {
+	var view = {
+			"name":"edm",
+			"label":"Entity Data Model",
+			"extension":"edm",
+			"data":'<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>'
 	};
-	return editor;
-}
+	return view;
+};

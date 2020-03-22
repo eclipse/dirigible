@@ -8,14 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
+exports.getTemplate = function() {
 	var view = {
-			"id":"workspace",
-			"name":"Workspace",
-			"factory":"frame",
-			"region":"left-top",
-			"label":"Workspace",
-			"link":"../ide-workspace/workspace.html"
+			"name":"listener",
+			"label":"Message Listener",
+			"extension":"listener",
+			"data":JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)
 	};
 	return view;
 };

@@ -8,14 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getView = function() {
+exports.getTemplate = function() {
 	var view = {
-			"id":"workspace",
-			"name":"Workspace",
-			"factory":"frame",
-			"region":"left-top",
-			"label":"Workspace",
-			"link":"../ide-workspace/workspace.html"
+			"name":"roles",
+			"label":"Roles Definitions",
+			"extension":"roles",
+			"data":JSON.stringify(JSON.parse('[{"name":"administrator","description":"Administrator Role"},{"name":"Operator","description":"Operator Role"}]'), null, 2)
 	};
 	return view;
 };
