@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ public class ContextFacade implements IScriptingFacade {
 	 *            the name
 	 * @return the string
 	 */
-	public static final String get(String name) {
+	public static final Object get(String name) {
 		logger.trace("API - ContextFacade.get() -> begin");
 		Object contextValue;
 		try {
@@ -39,9 +39,9 @@ public class ContextFacade implements IScriptingFacade {
 			logger.error(e.getMessage(), e);
 			throw new IllegalStateException(e);
 		}
-		String value = contextValue != null ? contextValue.toString() : null;
+		//String value = contextValue != null ? contextValue.toString() : null;
 		logger.trace("API - ContextFacade.get() -> end");
-		return value;
+		return contextValue;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class ContextFacade implements IScriptingFacade {
 	 * @param value
 	 *            the value
 	 */
-	public static final void set(String name, String value) {
+	public static final void set(String name, Object value) {
 		logger.trace("API - ContextFacade.set() -> begin");
 		try {
 			ThreadContextFacade.set(name, value);
