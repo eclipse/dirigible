@@ -41,6 +41,10 @@
 		    <param-name>jaxrs.features</param-name>
             <param-value>org.apache.cxf.jaxrs.swagger.Swagger2Feature</param-value>
         </init-param>
+        <init-param>
+		    <param-name>service-list-path</param-name>
+            <param-value>/jax-rs</param-value>
+        </init-param>
 		 
 		<load-on-startup>1</load-on-startup>
 	</servlet>
