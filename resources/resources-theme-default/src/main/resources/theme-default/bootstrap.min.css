@@ -340,7 +340,7 @@ hr{margin-top:14px;margin-bottom:14px;border:0;border-top:1px solid #eee}
 .h6,h6{font-size:11px}
 p{margin:0 0 7px}
 .lead{margin-bottom:14px;font-size:13px;font-weight:300;line-height:1.4}
-dt,kbd kbd,label{font-weight:700}
+dt,kbd kbd,label{font-weight:300}
 @media (min-width:768px){.lead{font-size:18px}
 }
 .small,small{font-size:91%}

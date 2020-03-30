@@ -1108,6 +1108,8 @@
 }
 .jstree-default {
   background: #333;
+  font-weight: 300;
+  font-size: 1.25em;
 }
 .jstree-default .jstree-anchor {
   color: #999;
@@ -1121,7 +1123,7 @@
   color: white;
 }
 #jstree-marker.jstree-default {
-  border-left-color: #999;
+  border-left-color: #ccc;
   background: transparent;
 }
 .jstree-default .jstree-anchor > .jstree-icon {

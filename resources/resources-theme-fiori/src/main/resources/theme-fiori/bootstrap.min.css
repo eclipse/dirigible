@@ -339,7 +339,7 @@ hr{margin-top:14px;margin-bottom:14px;border:0;border-top:1px solid #eee}
 .h6,h6{font-size:11px}
 p{margin:0 0 7px}
 .lead{margin-bottom:14px;font-size:13px;font-weight:300;line-height:1.4}
-dt,kbd kbd,label{font-weight:700}
+dt,kbd kbd,label{font-weight:300}
 @media (min-width:768px){.lead{font-size:18px}
 }
 .small,small{font-size:91%}
@@ -630,7 +630,7 @@ pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;border-r
 caption{padding-top:2px;padding-bottom:2px;color:#777}
 .table{width:100%;max-width:100%;margin-bottom:14px}
 .table>tbody>tr>td,.table>tbody>tr>th,.table>tfoot>tr>td,.table>tfoot>tr>th,.table>thead>tr>td,.table>thead>tr>th{padding:6px;line-height:1.2;vertical-align:top;border-top:1px solid #eee}
-.table>thead>tr>th{vertical-align:bottom;border-top: 1px solid #d9d9d9 !important;background-color: #f7f7f7;font-weight: 400;}
+.table>thead>tr>th{vertical-align:bottom;border-top: 1px solid #d9d9d9 !important;background-color: #f7f7f7;font-weight: 300;}
 .table>caption+thead>tr:first-child>td,.table>caption+thead>tr:first-child>th,.table>colgroup+thead>tr:first-child>td,.table>colgroup+thead>tr:first-child>th,.table>thead:first-child>tr:first-child>td,.table>thead:first-child>tr:first-child>th{border-top:0}
 .table>tbody+tbody{border-top:2px solid #ddd}
 .table .table{background-color:#f6f6f6}
@@ -845,7 +845,7 @@ tbody.collapse.in{display:table-row-group}
 .btn-toolbar>.btn,.btn-toolbar>.btn-group,.btn-toolbar>.input-group{margin-left:5px}
 .btn .caret,.btn-group>.btn:first-child{margin-left:0}
 .btn-group .dropdown-toggle:active,.btn-group.open .dropdown-toggle{outline:0}
-.btn-group>.btn+.dropdown-toggle{padding-left:8px;padding-right:8px}
+.btn-group>.btn+.dropdown-toggle{padding-left:8px;padding-right:8px;font-weight: 300}
 .btn-group>.btn-lg+.dropdown-toggle{padding-left:12px;padding-right:12px}
 .btn-group.open .dropdown-toggle{-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
 .btn-group.open .dropdown-toggle.btn-link{-webkit-box-shadow:none;box-shadow:none}
@@ -1029,7 +1029,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .navbar-inverse{background-color:#222;border-color:#080808}
 .navbar-inverse .navbar-brand{color:#337ab7}
 .navbar-inverse .navbar-brand:focus,.navbar-inverse .navbar-brand:hover{color:#1881dc;background-color:transparent}
-.navbar-inverse .navbar-nav>li>a,.navbar-inverse .navbar-text{color:#636364}
+.navbar-inverse .navbar-nav>li>a,.navbar-inverse .navbar-text{color:#636364;font-weight: 300}
 .navbar-inverse .navbar-nav>li>a:focus,.navbar-inverse .navbar-nav>li>a:hover{color:#333;background-color:transparent}
 .navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:focus,.navbar-inverse .navbar-nav>.active>a:hover{color:#fff;background-color:#080808}
 .navbar-inverse .navbar-nav>.disabled>a,.navbar-inverse .navbar-nav>.disabled>a:focus,.navbar-inverse .navbar-nav>.disabled>a:hover{color:#444;background-color:transparent}

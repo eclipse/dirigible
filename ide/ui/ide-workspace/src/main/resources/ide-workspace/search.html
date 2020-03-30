@@ -48,26 +48,24 @@
 <body border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
 
 	<div>
-		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			
-			
-			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				class="dropdown btn btn-default dropdown-toggle" title="Workspaces"></select>
-			
-			
-			<div>
-			    <div class="input-group">
-			      <input type="text" ng-model="workspace.searchTerm" class="form-control" placeholder="Search for..." onkeydown = "if (event.keyCode == 13) document.getElementById('btn-search').click()"/>
-			      <span class="input-group-btn">
-			        <button id="btn-search" type="button" class="btn btn-default" title="Search" ng-click="workspace.search()"><i class="fa fa-search"></i></button>
-			      </span>
-			    </div>
+		<div class="btn-toolbar-top">
+		  <div class="btn-group pull-right form-group row" role="group" aria-label="toolbar">
+		    <div class="col-5">
+			      <select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
+				     class="dropdown dropdown-toggle dropdown-top" title="Workspaces"></select>
+		    </div>
+		    <div class="col-6">
+			      <input type="text" ng-model="workspace.searchTerm" class="form-control search-box" placeholder="Search for..." 
+			          onkeydown = "if (event.keyCode === 13) document.getElementById('btn-search').click()"/>
 			</div>
-				
-			
+		    <div class="col-1">
+			      <button id="btn-search" type="button" class="btn btn-top search-button" title="Search" ng-click="workspace.search()"><i class="fa fa-search"></i></button>
+			</div>
 			
 		</div>
 	</div>
+	</div>
+
 	
 	<div class="search"></div>
 	
