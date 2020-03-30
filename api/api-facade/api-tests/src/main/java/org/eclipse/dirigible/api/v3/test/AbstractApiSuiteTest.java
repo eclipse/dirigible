@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,78 +60,96 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	@Before
 	public void registerModules() {
-
 		// v3
-		
-		TEST_MODULES.add("core/v3/java/call.js");
-		TEST_MODULES.add("core/v3/java/invoke.js");
-		TEST_MODULES.add("core/v3/java/deep.js");
-		TEST_MODULES.add("core/v3/java/null.js");
-		
-		TEST_MODULES.add("core/v3/console/log.js");
+		registerModulesV3();
 
-		TEST_MODULES.add("security/v3/user/getName.js");
-
-		TEST_MODULES.add("core/v3/env/get.js");
-		TEST_MODULES.add("core/v3/env/list.js");
-		TEST_MODULES.add("core/v3/globals/get.js");
-		TEST_MODULES.add("core/v3/globals/list.js");
-		TEST_MODULES.add("core/v3/context/get.js");
-		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
-		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
-
-		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
-		TEST_MODULES.add("db/v3/database/getDataSources.js");
-		TEST_MODULES.add("db/v3/database/getMetadata.js");
-		TEST_MODULES.add("db/v3/database/getConnection.js");
-		TEST_MODULES.add("db/v3/query/query.js");
-		TEST_MODULES.add("db/v3/update/update.js");
-
-		TEST_MODULES.add("http/v3/request/isValid.js");
-		TEST_MODULES.add("http/v3/request/getMethod.js");
-		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
-		TEST_MODULES.add("http/v3/request/getPathInfo.js");
-		TEST_MODULES.add("http/v3/request/getPathTranslated.js");
-		TEST_MODULES.add("http/v3/request/getHeader.js");
-		TEST_MODULES.add("http/v3/request/isUserInRole.js");
-		TEST_MODULES.add("http/v3/request/getAttribute.js");
-		TEST_MODULES.add("http/v3/request/getAuthType.js");
-		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
-		TEST_MODULES.add("http/v3/request/getServerName.js");
-		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
-		TEST_MODULES.add("http/v3/client/get.js");
-		TEST_MODULES.add("http/v3/client/get-binary.js");
-		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
-		
-		TEST_MODULES.add("io/v3/streams/copy.js");
-		TEST_MODULES.add("io/v3/streams/text.js");
-		TEST_MODULES.add("io/v3/files/createTempFile.js");
-		TEST_MODULES.add("io/v3/files/fileStreams.js");
-
-		TEST_MODULES.add("utils/v3/base64/encode.js");
-		TEST_MODULES.add("utils/v3/base64/decode.js");
-		TEST_MODULES.add("utils/v3/hex/encode.js");
-		TEST_MODULES.add("utils/v3/hex/decode.js");
-		TEST_MODULES.add("utils/v3/digest/sha1.js");
-		TEST_MODULES.add("utils/v3/xml/fromJson.js");
-		TEST_MODULES.add("utils/v3/xml/toJson.js");
-		TEST_MODULES.add("utils/v3/uuid/validate.js");
-		TEST_MODULES.add("utils/v3/uuid/alias.js");
-		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
-		TEST_MODULES.add("utils/v3/url/encode.js");
-		TEST_MODULES.add("utils/v3/url/decode.js");
-		
-		TEST_MODULES.add("indexing/v3/writer/add.js");
-		TEST_MODULES.add("indexing/v3/searcher/search.js");
-		TEST_MODULES.add("indexing/v3/searcher/between.js");
-		
-		TEST_MODULES.add("cms/v3/cmis/getSession.js");
-		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
-		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
-		
-		TEST_MODULES.add("workspace/v3/manager/createWorkspace.js");
-		
 		// v4
+		registerModulesV4();
+	}
+
+	protected void registerModulesV4() {
+		registerModulesUtilsV4();
+		registerModulesDbV4();
+		registerModulesCoreV4();
+		registerModulesIndexingV4();
+		registerModulesHttpV4();
+		registerModulesCmsV4();
+		registerModulesIoV4();
+		registerModulesSecurityV4();
+		registerModulesWorkspaceV4();
+	}
+
+	private void registerModulesWorkspaceV4() {
+		TEST_MODULES.add("workspace/v4/manager/createWorkspace.js");
+	}
+
+	private void registerModulesSecurityV4() {
+		TEST_MODULES.add("security/v4/user/getName.js");
+	}
+
+	private void registerModulesIoV4() {
+		TEST_MODULES.add("io/v4/streams/copy.js");
+		TEST_MODULES.add("io/v4/streams/text.js");
+		TEST_MODULES.add("io/v4/files/createTempFile.js");
+		TEST_MODULES.add("io/v4/files/fileStreams.js");
+	}
+
+	private void registerModulesCmsV4() {
+		TEST_MODULES.add("cms/v4/cmis/getSession.js");
+		TEST_MODULES.add("cms/v4/cmis/getRootFolder.js");
+		TEST_MODULES.add("cms/v4/cmis/getChildren.js");
+		TEST_MODULES.add("cms/v4/cmis/createFolder.js");
+		TEST_MODULES.add("cms/v4/cmis/createDocument.js");
+	}
+
+	private void registerModulesHttpV4() {
+		TEST_MODULES.add("http/v4/request/isValid.js");
+		TEST_MODULES.add("http/v4/request/getMethod.js");
+		TEST_MODULES.add("http/v4/request/getRemoteUser.js");
+		TEST_MODULES.add("http/v4/request/getPathInfo.js");
+		TEST_MODULES.add("http/v4/request/getPathTranslated.js");
+		TEST_MODULES.add("http/v4/request/getHeader.js");
+		TEST_MODULES.add("http/v4/request/isUserInRole.js");
+		TEST_MODULES.add("http/v4/request/getAttribute.js");
+		TEST_MODULES.add("http/v4/request/getAuthType.js");
+		TEST_MODULES.add("http/v4/request/getHeaderNames.js");
+		TEST_MODULES.add("http/v4/request/getServerName.js");
+		TEST_MODULES.add("http/v4/response/getHeaderNames.js");
+		TEST_MODULES.add("http/v4/client/get.js");
+		TEST_MODULES.add("http/v4/client/get-binary.js");
+		TEST_MODULES.add("http/v4/session/getAttributeNames.js");
+	}
+
+	private void registerModulesIndexingV4() {
+		TEST_MODULES.add("indexing/v4/writer/add.js");
+		TEST_MODULES.add("indexing/v4/searcher/search.js");
+		TEST_MODULES.add("indexing/v4/searcher/between.js");
+	}
+
+	private void registerModulesCoreV4() {
+		TEST_MODULES.add("core/v4/configurations/get.js");
+		TEST_MODULES.add("core/v4/console/log.js");
+		TEST_MODULES.add("core/v4/context/get.js");
+		TEST_MODULES.add("core/v4/env/get.js");
+		TEST_MODULES.add("core/v4/env/list.js");
+		TEST_MODULES.add("core/v4/extensions/getExtensions.js");
+		TEST_MODULES.add("core/v4/extensions/getExtensionPoints.js");
+		TEST_MODULES.add("core/v4/globals/get.js");
+		TEST_MODULES.add("core/v4/globals/list.js");
+		TEST_MODULES.add("core/v4/destinations/get.js");
+	}
+
+	private void registerModulesDbV4() {
+		TEST_MODULES.add("db/v4/database/getDatabaseTypes.js");
+		TEST_MODULES.add("db/v4/database/getDataSources.js");
+		TEST_MODULES.add("db/v4/database/getMetadata.js");
+		TEST_MODULES.add("db/v4/database/getConnection.js");
+		TEST_MODULES.add("db/v4/query/query.js");
+		TEST_MODULES.add("db/v4/update/update.js");
+		TEST_MODULES.add("db/v4/sequence/nextval.js");
+	}
+
+	private void registerModulesUtilsV4() {
 		TEST_MODULES.add("utils/v4/base64/encode.js");
 		TEST_MODULES.add("utils/v4/base64/decode.js");
 		TEST_MODULES.add("utils/v4/digest/md5.js");
@@ -162,61 +180,102 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/url/escape.js");
 		TEST_MODULES.add("utils/v4/url/escapePath.js");
 		TEST_MODULES.add("utils/v4/url/escapeForm.js");
-		
-		TEST_MODULES.add("db/v4/database/getDatabaseTypes.js");
-		TEST_MODULES.add("db/v4/database/getDataSources.js");
-		TEST_MODULES.add("db/v4/database/getMetadata.js");
-		TEST_MODULES.add("db/v4/database/getConnection.js");
-		TEST_MODULES.add("db/v4/query/query.js");
-		TEST_MODULES.add("db/v4/update/update.js");
-		TEST_MODULES.add("db/v4/sequence/nextval.js");
-		
-		TEST_MODULES.add("core/v4/configurations/get.js");
-		TEST_MODULES.add("core/v4/console/log.js");
-		TEST_MODULES.add("core/v4/context/get.js");
-		TEST_MODULES.add("core/v4/env/get.js");
-		TEST_MODULES.add("core/v4/env/list.js");
-		TEST_MODULES.add("core/v4/extensions/getExtensions.js");
-		TEST_MODULES.add("core/v4/extensions/getExtensionPoints.js");
-		TEST_MODULES.add("core/v4/globals/get.js");
-		TEST_MODULES.add("core/v4/globals/list.js");
-		TEST_MODULES.add("core/v4/destinations/get.js");
-		
-		TEST_MODULES.add("indexing/v4/writer/add.js");
-		TEST_MODULES.add("indexing/v4/searcher/search.js");
-		TEST_MODULES.add("indexing/v4/searcher/between.js");
-		
-		TEST_MODULES.add("http/v4/request/isValid.js");
-		TEST_MODULES.add("http/v4/request/getMethod.js");
-		TEST_MODULES.add("http/v4/request/getRemoteUser.js");
-		TEST_MODULES.add("http/v4/request/getPathInfo.js");
-		TEST_MODULES.add("http/v4/request/getPathTranslated.js");
-		TEST_MODULES.add("http/v4/request/getHeader.js");
-		TEST_MODULES.add("http/v4/request/isUserInRole.js");
-		TEST_MODULES.add("http/v4/request/getAttribute.js");
-		TEST_MODULES.add("http/v4/request/getAuthType.js");
-		TEST_MODULES.add("http/v4/request/getHeaderNames.js");
-		TEST_MODULES.add("http/v4/request/getServerName.js");
-		TEST_MODULES.add("http/v4/response/getHeaderNames.js");
-		TEST_MODULES.add("http/v4/client/get.js");
-		TEST_MODULES.add("http/v4/client/get-binary.js");
-		TEST_MODULES.add("http/v4/session/getAttributeNames.js");
-		
-		TEST_MODULES.add("cms/v4/cmis/getSession.js");
-		TEST_MODULES.add("cms/v4/cmis/getRootFolder.js");
-		TEST_MODULES.add("cms/v4/cmis/getChildren.js");
-		TEST_MODULES.add("cms/v4/cmis/createFolder.js");
-		TEST_MODULES.add("cms/v4/cmis/createDocument.js");
-		
-		TEST_MODULES.add("io/v4/streams/copy.js");
-		TEST_MODULES.add("io/v4/streams/text.js");
-		TEST_MODULES.add("io/v4/files/createTempFile.js");
-		TEST_MODULES.add("io/v4/files/fileStreams.js");
-		
-		TEST_MODULES.add("security/v4/user/getName.js");
-		
-		TEST_MODULES.add("workspace/v4/manager/createWorkspace.js");
-		
+	}
+
+	protected void registerModulesV3() {
+		registerModulesCoreV3();
+		registerModulesSecurityV3();
+		registerModulesDbV3();
+		registerModulesHttpV3();
+		registerModulesIoV3();
+		registerModulesUtilsV3();
+		registerModulesIndexingV3();
+		registerModulesCmsV3();
+		registerModulesWorkspaceV3();
+	}
+
+	private void registerModulesWorkspaceV3() {
+		TEST_MODULES.add("workspace/v3/manager/createWorkspace.js");
+	}
+
+	private void registerModulesCmsV3() {
+		TEST_MODULES.add("cms/v3/cmis/getSession.js");
+		TEST_MODULES.add("cms/v3/cmis/getRootFolder.js");
+		TEST_MODULES.add("cms/v3/cmis/getChildren.js");
+	}
+
+	private void registerModulesIndexingV3() {
+		TEST_MODULES.add("indexing/v3/writer/add.js");
+		TEST_MODULES.add("indexing/v3/searcher/search.js");
+		TEST_MODULES.add("indexing/v3/searcher/between.js");
+	}
+
+	private void registerModulesUtilsV3() {
+		TEST_MODULES.add("utils/v3/base64/encode.js");
+		TEST_MODULES.add("utils/v3/base64/decode.js");
+		TEST_MODULES.add("utils/v3/hex/encode.js");
+		TEST_MODULES.add("utils/v3/hex/decode.js");
+		TEST_MODULES.add("utils/v3/digest/sha1.js");
+		TEST_MODULES.add("utils/v3/xml/fromJson.js");
+		TEST_MODULES.add("utils/v3/xml/toJson.js");
+		TEST_MODULES.add("utils/v3/uuid/validate.js");
+		TEST_MODULES.add("utils/v3/uuid/alias.js");
+		TEST_MODULES.add("utils/v3/uuid/alias-modules.js");
+		TEST_MODULES.add("utils/v3/url/encode.js");
+		TEST_MODULES.add("utils/v3/url/decode.js");
+	}
+
+	private void registerModulesIoV3() {
+		TEST_MODULES.add("io/v3/streams/copy.js");
+		TEST_MODULES.add("io/v3/streams/text.js");
+		TEST_MODULES.add("io/v3/files/createTempFile.js");
+		TEST_MODULES.add("io/v3/files/fileStreams.js");
+	}
+
+	private void registerModulesHttpV3() {
+		TEST_MODULES.add("http/v3/request/isValid.js");
+		TEST_MODULES.add("http/v3/request/getMethod.js");
+		TEST_MODULES.add("http/v3/request/getRemoteUser.js");
+		TEST_MODULES.add("http/v3/request/getPathInfo.js");
+		TEST_MODULES.add("http/v3/request/getPathTranslated.js");
+		TEST_MODULES.add("http/v3/request/getHeader.js");
+		TEST_MODULES.add("http/v3/request/isUserInRole.js");
+		TEST_MODULES.add("http/v3/request/getAttribute.js");
+		TEST_MODULES.add("http/v3/request/getAuthType.js");
+		TEST_MODULES.add("http/v3/request/getHeaderNames.js");
+		TEST_MODULES.add("http/v3/request/getServerName.js");
+		TEST_MODULES.add("http/v3/response/getHeaderNames.js");
+		TEST_MODULES.add("http/v3/client/get.js");
+		TEST_MODULES.add("http/v3/client/get-binary.js");
+		TEST_MODULES.add("http/v3/session/getAttributeNames.js");
+	}
+
+	private void registerModulesDbV3() {
+		TEST_MODULES.add("db/v3/database/getDatabaseTypes.js");
+		TEST_MODULES.add("db/v3/database/getDataSources.js");
+		TEST_MODULES.add("db/v3/database/getMetadata.js");
+		TEST_MODULES.add("db/v3/database/getConnection.js");
+		TEST_MODULES.add("db/v3/query/query.js");
+		TEST_MODULES.add("db/v3/update/update.js");
+	}
+
+	private void registerModulesSecurityV3() {
+		TEST_MODULES.add("security/v3/user/getName.js");
+	}
+
+	private void registerModulesCoreV3() {
+		TEST_MODULES.add("core/v3/java/call.js");
+		TEST_MODULES.add("core/v3/java/invoke.js");
+		TEST_MODULES.add("core/v3/java/deep.js");
+		TEST_MODULES.add("core/v3/java/null.js");
+		TEST_MODULES.add("core/v3/console/log.js");
+		TEST_MODULES.add("core/v3/env/get.js");
+		TEST_MODULES.add("core/v3/env/list.js");
+		TEST_MODULES.add("core/v3/globals/get.js");
+		TEST_MODULES.add("core/v3/globals/list.js");
+		TEST_MODULES.add("core/v3/context/get.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
+		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
