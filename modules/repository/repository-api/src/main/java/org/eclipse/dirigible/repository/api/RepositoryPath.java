@@ -259,4 +259,13 @@ public class RepositoryPath {
 	public static String normalizeName(String name) {
 		return name.replaceAll("[^A-Za-z0-9_]", "_");
 	}
+	
+	/**
+	 * Set the segment of the given index position to the given value, starting with zero.
+	 * @param index the index
+	 * @param value the value
+	 */
+	public void setSegment(int index, String value) {
+		this.segments[index] = value;
+	}
 }

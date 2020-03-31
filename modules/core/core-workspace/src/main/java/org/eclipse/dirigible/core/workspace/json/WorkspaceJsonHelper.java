@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 
 /**
  * The Workspace Json Helper.
@@ -58,6 +59,9 @@ public class WorkspaceJsonHelper {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
+		repositoryPath.setSegment(0, "git");
+		projectPojo.setGit(collection.getRepository().hasCollection(repositoryPath.toString()));
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
 			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));

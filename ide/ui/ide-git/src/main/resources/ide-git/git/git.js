@@ -169,11 +169,18 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, gitService, $messa
 			var _files = f.files.map(this._buildTreeNode.bind(this))
 			children = children.concat(_files);
 		}
+		var icon;
+		if (f.type=='project') {
+			icon = (f.git) ? "fa fa-git-square" : "fa fa-hdd-o";
+		}
+
 		f.label = f.name;
 		return {
 			"text": f.name,
 			"children": children,
 			"type": f.type,
+			"git": f.git,
+			"icon": icon,
 			"_file": f
 		}
 	};

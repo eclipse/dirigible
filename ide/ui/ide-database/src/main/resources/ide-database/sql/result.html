@@ -106,10 +106,10 @@
 								}
 								break;
 							}
-						} else if (result !== null && result.errorMessage !== null) {
+						} else if (result !== null && result.errorMessage !== null && result.errorMessage !== undefined) {
 							$scope.result = result.errorMessage;
 						} else {
-							$scope.result = 'No result';
+							$scope.result = 'Empty result';
 						}
 					});
 				} else {

@@ -102,6 +102,8 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 					          'contextmenu' : {
 									'items' : function(node) {
 										var ctxmenu = {};
+										
+										// Select contents
 										if (node.original.type === 'table'
 											|| node.original.type === 'view') {
 											ctxmenu.contents = {
@@ -110,10 +112,43 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												"action": function(data){
 													var tree = $.jstree.reference(data.reference);
 													var node = tree.get_node(data.reference);
-													var sqlCommand = "SELECT * FROM " + node.original.text;
+													var sqlCommand = "SELECT * FROM \"" + node.original.text + "\"";
 													messageHub.post({data: sqlCommand}, 'database.sql.execute');
 												}.bind(this)
 											};
+											// Drop table
+											if (node.original.type === 'table') {
+												ctxmenu.dropTable = {
+													"separator_before": true,
+													"label": "Drop Table",
+													"action": function(data){
+														var tree = $.jstree.reference(data.reference);
+														var node = tree.get_node(data.reference);
+														if (confirmRemove("TABLE", node.original.text)) {
+															var sqlCommand = "DROP TABLE \"" + node.original.text + "\"";
+															messageHub.post({data: sqlCommand}, 'database.sql.execute');
+															$('.database').jstree(true).refresh();
+														}
+													}.bind(this)
+												};
+											}
+											// Drop view
+											if (node.original.type === 'view') {
+												ctxmenu.dropTable = {
+													"separator_before": true,
+													"label": "Drop View",
+													"action": function(data){
+														var tree = $.jstree.reference(data.reference);
+														var node = tree.get_node(data.reference);
+														if (confirmRemove("VIEW", node.original.text)) {
+															var sqlCommand = "DROP VIEW \"" + node.original.text + "\"";
+															messageHub.post({data: sqlCommand}, 'database.sql.execute');
+															$('.database').jstree(true).refresh();
+														}
+													}.bind(this)
+												};
+											}
+											
 										}
 										return ctxmenu;
 									}
@@ -190,7 +225,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				return build(_table)
 			});
 			icon = 'fa fa-database';
-		} else if(f.kind=='table') {
+		} else if(f.kind=='table' && f.type === 'TABLE') {
 			//children = ['Loading...'];
 			children = [
 				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
@@ -201,6 +236,25 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 //				return build(_column)
 //			});
 			icon = 'fa fa-table';
+		} else if(f.kind=='table' && f.type === 'VIEW') {
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
+				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
+			];
+			
+			icon = 'fa fa-th';
+		} else if(f.kind=='table' && f.type !== 'TABLE' && f.type !== 'VIEW') {
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
+				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
+			];
+			
+//			f.columns.map(function(_column){
+//				return build(_column)
+//			});
+			icon = 'fa fa-lock';
 		} else if(f.kind=='column') {
 			icon = 'fa fa-th-large';
 			name += ' [<i>' + f.type + '</i>';
@@ -211,7 +265,8 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 		return {
 			"text": name,
 			"children": children,
-			"type": f.kind,
+			"type": (f.type)? f.type.toLowerCase() : f.kind,
+			"kind": f.kind,
 			"_file": f,
 			"icon": icon
 		}
@@ -243,4 +298,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	};
 
 });
-	
+
+function confirmRemove(type, name) {
+	return confirm("Do you really want to delete the " + type + ": " + name);
+}
