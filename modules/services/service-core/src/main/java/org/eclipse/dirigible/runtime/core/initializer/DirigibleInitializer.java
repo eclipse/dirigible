@@ -81,6 +81,8 @@ public class DirigibleInitializer {
 		startupScheduler();
 
 		startupMessaging();
+		
+		startupTerminalServer();
 
 		printAllConfigurations();
 
@@ -231,6 +233,19 @@ public class DirigibleInitializer {
 			logger.error("Failed starting Messaging", e);
 		}
 		logger.info("Done starting Message Broker.");
+	}
+	
+	/**
+	 * Startup Terminal Server.
+	 */
+	private void startupTerminalServer() {
+		logger.info("Starting Terminal Server...");
+		try {
+			Class.forName("org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService");
+		} catch (Exception e) {
+			logger.error("Failed starting Terminal Server", e);
+		}
+		logger.info("Done starting Terminal Server.");
 	}
 
 	/**
