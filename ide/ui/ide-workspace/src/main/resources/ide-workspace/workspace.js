@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1301,21 +1301,27 @@ function confirmRemove(name) {
 	return confirm("Do you really want to delete: " + name);//$confirmDialog.dialog('open');
 }
 
+const images = ['png', 'jpg', 'jpeg', 'gif'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'roles', 'constraints', 'table', 'view'];
+
 function getIcon(f) {
 	var icon;
 	if (f.type === 'project' && f.git) {
 		icon = "fa fa-git-square";
 	} else if (f.type === 'file') {
-		if (f.name.endsWith('.js')) {
+		var ext = f.name.substring(f.name.lastIndexOf(".") + 1, f.name.length);
+		if (ext === 'js') {
 			icon = "fa fa-file-code-o";
-		} else if (f.name.endsWith('.html')) {
+		} else if (ext === 'html') {
 			icon = "fa fa-html5";
-		} else if (f.name.endsWith('.css')) {
+		} else if (ext === 'css') {
 			icon = "fa fa-css3";
-		} else if (f.name.endsWith('.txt') || f.name.endsWith('.json')) {
+		} else if (ext === 'txt'|| ext === 'json') {
 			icon = "fa fa-file-text-o";
-		} else if (f.name.endsWith('.png') || f.name.endsWith('.jpg') || f.name.endsWith('.jpeg') || f.name.endsWith('.gif')) {
+		} else if (images.indexOf(ext) !== -1) {
 			icon = "fa fa-file-image-o";
+		} else if (models.indexOf(ext) !== -1) {
+			icon = "fa fa-file-text";
 		} else {
 			icon = "fa fa-file-o";
 		}

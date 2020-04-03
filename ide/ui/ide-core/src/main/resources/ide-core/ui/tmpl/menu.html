@@ -17,10 +17,19 @@
 					<a ng-hide="menuItem.items" href="{{menuItem.link}}" ng-click="menuClick(item)" target="{{menuItem.newTab ? '_blank' : '_self'}}">{{ menuItem.name }}</a>
 					<a ng-show="menuItem.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ menuItem.name }}</a>
 					<ul class="dropdown-menu">
-						<li ng-repeat="item in menuItem.items">
+						<li ng-show="item.items" ng-repeat="item in menuItem.items" class="dropdown-submenu">
 							<a ng-hide="item.items" href="{{item.link}}" ng-click="menuClick(item)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
 							<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
-							<ul class="dropdown-submenu">
+							<ul class="dropdown-menu">
+								<li ng-repeat="subItem in item.items">
+									<a href="{{subItem.link}}" ng-click="menuClick(item, subItem)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
+								</li>
+							</ul>
+						</li>
+						<li ng-hide="item.items" ng-repeat="item in menuItem.items">
+					        <a ng-hide="item.items" href="{{item.link}}" ng-click="menuClick(item)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
+							<a ng-show="item.items" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.name }}</a>
+							<ul class="dropdown-menu">
 								<li ng-repeat="subItem in item.items">
 									<a href="{{subItem.link}}" ng-click="menuClick(item, subItem)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
 								</li>
