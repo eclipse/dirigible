@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ide-ui-parent</artifactId>
-		<version>4.4.0</version>
+		<version>4.5.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,37 +32,37 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-branding</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-core</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-workbench</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-console</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-help</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-database</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-logs</artifactId>
-		 	<version>4.4.0</version>
+		 	<version>4.5.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
