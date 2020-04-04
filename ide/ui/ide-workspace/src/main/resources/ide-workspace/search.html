@@ -45,25 +45,28 @@
 	<script src="../../../../services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 </head>
 
-<body border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
+<body ng-app="workspace" ng-controller="WorkspaceController as workspace">
 
 	<div>
-		<div class="btn-toolbar-top">
-		  <div class="btn-group pull-right form-group row" role="group" aria-label="toolbar">
-		    <div class="col-5">
+		<div class="form-horizontal">
+		  <div class="col-sm-12">
+		    <div class="input-group">
+		      <div class="input-group-addon view-toolbar form-group">
 			      <select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				     class="dropdown dropdown-toggle dropdown-top" title="Workspaces"></select>
+				     class="dropdown dropdown-toggle dropdown-top form-control" title="Workspaces"></select>
+		      </div>
 		    </div>
-		    <div class="col-6">
-			      <input type="text" ng-model="workspace.searchTerm" class="form-control search-box" placeholder="Search for..." 
+		    <div class="input-group">
+		      
+		      <input type="text" ng-model="workspace.searchTerm" class="form-control search-box" placeholder="Search for..." 
 			          onkeydown = "if (event.keyCode === 13) document.getElementById('btn-search').click()"/>
-			</div>
-		    <div class="col-1">
+			          
+			  <div class="input-group-addon view-toolbar" style="padding: 0; margin: 0">
 			      <button id="btn-search" type="button" class="btn btn-top search-button" title="Search" ng-click="workspace.search()"><i class="fa fa-search"></i></button>
-			</div>
-			
+			  </div>
+		    </div>
 		</div>
-	</div>
+	  </div>
 	</div>
 
 	

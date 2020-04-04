@@ -10,10 +10,10 @@
  */
 exports.getTemplate = function() {
 	var view = {
-			"name":"javascript",
-			"label":"Javascript Service",
-			"extension":"js",
-			"data":'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'
+			"name":"database-table",
+			"label":"Database Table",
+			"extension":"table",
+			"data":'{"name":"MYTABLE","type":"TABLE","columns":[{"name":"ID","type":"INTEGER","length":"0","nullable":"false","primaryKey":"true","defaultValue":""}]}'
 	};
 	return view;
 };

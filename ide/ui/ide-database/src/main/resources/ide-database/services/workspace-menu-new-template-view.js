@@ -10,10 +10,10 @@
  */
 exports.getTemplate = function() {
 	var view = {
-			"name":"javascript",
-			"label":"Javascript Service",
-			"extension":"js",
-			"data":'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();'
+			"name":"database-view",
+			"label":"Database View",
+			"extension":"view",
+			"data":'{"name":"MYVIEW","type":"VIEW","query":"SELECT * FROM MYTABLE","dependencies":[{"name":"MYTABLE","type":"TABLE"}]}'
 	};
 	return view;
 };
