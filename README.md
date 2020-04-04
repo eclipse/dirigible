@@ -73,20 +73,6 @@ The build should pass successfully. The produced WAR files under target sub-fold
 
 ### Run
 
-#### Desktop
-
-##### Steps
-
-1. Take the JAR file you have built in the previous step e.g. `dirigible-desktop-all-3.1.4.jar`.
-2. Execute from command line
-
-	java -jar dirigible-desktop-all-3.1.4.jar
-	
-3. Open a web browser and go to:
-
-        http://localhost:8080
-
-
 #### Tomcat
 
 The Tomcat specific WAR files can be deployed on [Tomcat](http://tomcat.apache.org/) web container. In this case the built-in Derby database is used.
