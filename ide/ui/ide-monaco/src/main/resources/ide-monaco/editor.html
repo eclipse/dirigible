@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Language" content="en-us">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Embedded Monaco Editor</title>
-        <link data-name="monaco-editor/dev/vs/editor/editor.main" rel="stylesheet" href="monaco-editor/dev/vs/editor/editor.main.css">
+        <link data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet" href="monaco-editor/min/vs/editor/editor.main.css">
         <style>
         body {
             overflow: hidden;
@@ -27,7 +27,7 @@
         
 		<div  id="embeddedEditor"></div>
 		
-		<script src="monaco-editor/dev/vs/loader.js"></script>
+		<script src="monaco-editor/min/vs/loader.js"></script>
 		<script>
 		    var messageHub = new FramesMessageHub();
 		    var csrfToken;
@@ -50,6 +50,8 @@
 							return 'css';
 						} else if (fileName.endsWith('.json')) {
 							return 'json';
+						} else if (fileName.endsWith('.xml')) {
+							return 'xml';
 						}
 					}
 					return 'text';
@@ -142,7 +144,15 @@
 			};
 			
 			(function init(){
-				require.config({ paths: { 'vs': 'monaco-editor/dev/vs' }});
+				require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
+				var modulesSuggestions = [];
+				const xhr = new XMLHttpRequest();
+				xhr.open('GET', '../../../../services/v4/js/core/api/modules.js');
+				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+				xhr.onload = function(xhr) {
+					modulesSuggestions = JSON.parse(xhr.target.responseText);
+				};
+				xhr.send();
 				require(['vs/editor/editor.main'], function() {
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
@@ -158,7 +168,44 @@
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
+							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {};', 'js:require.js');
+							monaco.languages.registerCompletionItemProvider('javascript', {
+							    provideCompletionItems: function(model, position) {
+							        // find out if we are completing a property in the 'dependencies' object.
+//							        var wordObject = model.getWordUntilPosition(position);
+							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
+							        if (!token.endsWith('require("')) {
+							            return { suggestions: [] };
+							        }
+							        var range = {
+							            startLineNumber: position.lineNumber,
+							            endLineNumber: position.lineNumber,
+							            startColumn: position.column,
+							            endColumn: position.column
+							        };
+							        return {
+										suggestions: modulesSuggestions.map(function(e) {
+											return {
+												label: e.name,
+												kind: monaco.languages.CompletionItemKind.Module,
+												documentation: e.description,
+												detail: e.description,
+												insertText: e.name,
+												range: range
+											}
+										})
+									};
+							    }
+							});
 						});
+					monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+						noSemanticValidation: true,
+						noSyntaxValidation: false
+					});
+					monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+						target: monaco.languages.typescript.ScriptTarget.ES6,
+						allowNonTsExtensions: true
+					});
 					monaco.editor.setTheme(monacoTheme);
 				});	
 			})();
