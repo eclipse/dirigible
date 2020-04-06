@@ -31,6 +31,7 @@
 		<script>
 		    var messageHub = new FramesMessageHub();
 		    var csrfToken;
+		    var dirty = false;
 			function FileIO(){
 				var __URL = URL;
 				this.workspaceApiUrl = '../../../../services/v4/ide/workspaces';
@@ -85,6 +86,7 @@
 							xhr.send(text);
 							messageHub.post({data: fileName}, 'editor.file.saved');
 							messageHub.post({data: 'File [' + fileName + '] saved.'}, 'status.message');
+							dirty = false;
 						} else {
 							reject('file query parameter is not present in the URL');
 						}
@@ -168,6 +170,12 @@
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
+							_editor.onDidChangeModelContent(function(e) {
+								if (e && !dirty) {
+									dirty = true;
+									messageHub.post({data: fileName}, 'editor.file.dirty');
+								}
+							});
 							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {};', 'js:require.js');
 							monaco.languages.registerCompletionItemProvider('javascript', {
 							    provideCompletionItems: function(model, position) {
