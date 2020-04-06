@@ -73,11 +73,21 @@ The build should pass successfully. The produced WAR files under target sub-fold
 
 ### Run
 
-#### Tomcat
+#### Prerequisites
 
-The Tomcat specific WAR files can be deployed on [Tomcat](http://tomcat.apache.org/) web container. In this case the built-in Derby database is used.
+The Java Web Application Archive (WAR) files can be deployed on [Apache Tomcat](http://tomcat.apache.org/) web container. In this case the built-in H2 database is used.
 
-More information about how to deploy on Tomcat can be found [here](http://tomcat.apache.org/tomcat-8.0-doc/appdev/deployment.html).
+More information about how to deploy on Apache Tomcat can be found [here](http://tomcat.apache.org/tomcat-8.0-doc/appdev/deployment.html).
+
+##### macOS
+
+> brew install ttyd
+
+##### Linux
+
+> Linux support is built-in
+
+More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd)
 
 ##### Steps
 
