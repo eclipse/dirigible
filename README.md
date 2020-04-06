@@ -68,7 +68,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install
 
-The build should pass successfully. The produced WAR files under target sub-folder `releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type. There is also an executable JAR file under the `releng/desktop-all/target` folder with name like `dirigible-desktop-all-3.1.4.jar`
+The build should pass successfully. The produced WAR files under target sub-folder `releng` are ready to be deployed. There are separated deployable artifacts (WAR files) depending on the usage type. There is also an executable JAR file under the `releng/desktop-all/target` folder with name like `ROOT.war`
 
 
 ### Run
