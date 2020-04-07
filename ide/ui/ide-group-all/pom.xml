@@ -120,6 +120,11 @@
 		 	<version>4.4.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ide-ui-monaco-extensions</artifactId>
+			<version>4.4.0</version>
+	   </dependency>
+		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-ace</artifactId>
 		 	<version>4.4.0</version>

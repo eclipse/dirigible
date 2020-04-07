@@ -61,6 +61,7 @@
 		<module>ide-schema</module>
 		<module>ide-entity</module>
 		<module>ide-monaco</module>
+		<module>ide-monaco-extensions</module>
 		<module>ide-ace</module>
 		<module>ide-debugger</module>
 		<module>ide-logs</module>

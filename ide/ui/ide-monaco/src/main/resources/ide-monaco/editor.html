@@ -144,17 +144,59 @@
 					}
 				};
 			};
-			
+
+			function loadModuleSuggestions(modulesSuggestions) {
+				var xhrModules = new XMLHttpRequest();
+				xhrModules.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/modules.js');
+				xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
+				xhrModules.onload = function(xhrModules) {
+					var modules = JSON.parse(xhrModules.target.responseText);
+					modules.forEach(e => modulesSuggestions.push(e));
+				};
+				xhrModules.send();
+			}
+
+			function loadSuggestions(moduleName, suggestions) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
+				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+				xhr.onload = function(xhr) {
+					suggestions.push({
+						module: moduleName,
+						suggestions: JSON.parse(xhr.target.responseText)
+					});
+				};
+				xhr.send();
+			}
+
+			function getModuleImports(text) {
+				var moduleImports = text.match(/(var|let)\s[a-zA-Z0-9_-]+\s?=\s?require\(('|")[a-zA-Z0-9_.-//]+('|")\)/gm);
+
+				String.prototype.replaceAll = function(search, replacement) {
+					var target = this;
+					return target.replace(new RegExp(search, 'g'), replacement);
+				};
+				
+				moduleImports = moduleImports.map(function(text) {
+					var split = text.split("=");
+					var keyWord = split[0].replace("var ", "").replace("let ", "").trim();
+					var module = split[1].replace("require(", "").replace(")", "").replaceAll("\"", "").trim();
+					return {
+						keyWord: keyWord,
+						module: module
+					};
+				});
+
+				return moduleImports;
+			}
+
 			(function init(){
 				require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
 				var modulesSuggestions = [];
-				const xhr = new XMLHttpRequest();
-				xhr.open('GET', '../../../../services/v4/js/core/api/modules.js');
-				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-				xhr.onload = function(xhr) {
-					modulesSuggestions = JSON.parse(xhr.target.responseText);
-				};
-				xhr.send();
+				var codeCompletionSuggestions = [];
+
+				loadModuleSuggestions(modulesSuggestions);
+
 				require(['vs/editor/editor.main'], function() {
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
@@ -167,16 +209,37 @@
 						.then((fileText) => {
 							var fileType = fileIO.resolveFileType(fileName);
 							//TODO: var mode = monaco.languages.getLanguages().find(function(oLang){return oLang.extensions.indexOf('.js')>-1}).id
+							var moduleImports = getModuleImports(fileText);
+
+							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
+
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
 							_editor.onDidChangeModelContent(function(e) {
+								var newModuleImports = getModuleImports(_editor.getValue());
 								if (e && !dirty) {
 									dirty = true;
 									messageHub.post({data: fileName}, 'editor.file.dirty');
 								}
+								newModuleImports.forEach(function(module) {
+									if (module.module.split("/").length > 0) {
+										var newModule = moduleImports.filter(e => e.keyWord === module.keyWord && e.module === module.module)[0];
+										var moduleChanged = moduleImports.filter(e => e.keyWord === module.keyWord && e.module !== module.module)[0];
+										var keyWordChanged = moduleImports.filter(e => e.keyWord !== module.keyWord && e.module === module.module)[0];
+										if (!newModule) {
+											loadSuggestions(module.module, codeCompletionSuggestions);
+											moduleImports.push(module);
+										} else if (moduleChanged) {
+											moduleChanged.module = module.module;
+											loadSuggestions(module.module, codeCompletionSuggestions);
+										} else if (keyWordChanged) {
+											keyWordChanged.keyWord = module.keyWord;
+										}
+									}
+								});
 							});
-							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {};', 'js:require.js');
+							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {return new Module();};', 'js:require.js');
 							monaco.languages.registerCompletionItemProvider('javascript', {
 							    provideCompletionItems: function(model, position) {
 							        // find out if we are completing a property in the 'dependencies' object.
@@ -199,6 +262,43 @@
 												documentation: e.description,
 												detail: e.description,
 												insertText: e.name,
+												range: range
+											}
+										})
+									};
+							    }
+							});
+							monaco.languages.registerCompletionItemProvider('javascript', {
+							    provideCompletionItems: function(model, position) {
+							        // find out if we are completing a property in the 'dependencies' object.
+//							        var wordObject = model.getWordUntilPosition(position);
+							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
+
+//									var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + ".", "g")))[0];
+							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
+									var afterDotToken = token.substring(token.indexOf(".") + 1);
+									var moduleName = moduleImport ? moduleImport.module : null;
+
+							        if (!moduleName) {
+							            return { suggestions: [] };
+							        }
+							        var range = {
+							            startLineNumber: position.lineNumber,
+							            endLineNumber: position.lineNumber,
+							            startColumn: position.column,
+							            endColumn: position.column
+							        };
+									var suggestions = codeCompletionSuggestions.filter(e => e.module === moduleName)[0].suggestions;
+							        return {
+										suggestions: suggestions
+										.filter(e => e.name.startsWith(afterDotToken))
+										.map(function(e) {
+											return {
+												label: e.name,
+												kind: monaco.languages.CompletionItemKind.Function,
+												documentation: e.description,
+												// detail: e.description,
+												insertText: e.name.substring(afterDotToken.length),
 												range: range
 											}
 										})
