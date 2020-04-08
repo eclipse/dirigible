@@ -409,3 +409,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
     border: none;
     background-color: #343436;
 }
+
+.preview-button {
+	border-radius: 0;
+}
