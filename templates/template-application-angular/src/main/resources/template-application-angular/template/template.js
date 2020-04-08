@@ -17,7 +17,7 @@ exports.getTemplate = function(parameters) {
 	return {
 		'name': 'Full-stack Application (AngularJS)',
 		'description': 'Full-stack Application with a Database Schema, a set of REST Services and an AngularJS User Interfaces',
-		'model':'true',
+		'extension':'model',
 		'sources': getSources(parameters),
 		'parameters': [{
 			'name': 'extensionName',
