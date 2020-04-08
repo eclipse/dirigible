@@ -10,13 +10,31 @@
 
 exports.getEditor = function() {
 	var editor = {
-			"id":"monaco",
-			"name":"Monaco",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Monaco",
-			"link":"../ide-monaco/editor.html",
-			"contentTypes":["application/javascript","application/json","text/plain","text/html"]
+		"id": "monaco",
+		"name": "Monaco",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Monaco",
+		"link": "../ide-monaco/editor.html",
+		"defaultEditor": true,
+		"contentTypes": [
+			"application/javascript",
+			"application/json",
+			"text/plain",
+			"text/html",
+			"application/json+extension-point",
+			"application/json+extension",
+			"application/json+table",
+			"application/json+view",
+			"application/json+job",
+			"application/json+listener",
+			"application/json+access",
+			"application/json+roles",
+			"application/xml",
+			"application/bpmn+xml",
+			"application/database-schema-model+xml",
+			"application/entity-data-model+xml"
+		]
 	};
 	return editor;
 }

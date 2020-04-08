@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,5 +25,14 @@ for (var i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
     	console.error(error);
     }
 }
+
+editors = editors.sort(function(a, b) {
+	if (a.defaultEditor) {
+		return -1;
+	} else if (b.defaultEditor) {
+		return 1;
+	}
+	return 0;
+});
 
 response.println(JSON.stringify(editors));

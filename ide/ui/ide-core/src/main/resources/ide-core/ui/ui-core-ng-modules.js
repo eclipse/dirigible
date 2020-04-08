@@ -91,7 +91,7 @@ angular.module('ideUiCore', ['ngResource'])
 		});
 	});
 	
-	var defaultEditorId = this.defaultEditorId = "orion";
+	var defaultEditorId = this.defaultEditorId = "monaco";
 	this.$get = [function editorsFactory() {
  		
  		return {

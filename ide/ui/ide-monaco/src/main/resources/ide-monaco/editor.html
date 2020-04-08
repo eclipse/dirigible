@@ -32,6 +32,13 @@
 		    var messageHub = new FramesMessageHub();
 		    var csrfToken;
 		    var dirty = false;
+
+		    /*eslint-disable no-extend-native */
+		    String.prototype.replaceAll = function(search, replacement) {
+				var target = this;
+				return target.replace(new RegExp(search, 'g'), replacement);
+			};
+
 			function FileIO(){
 				var __URL = URL;
 				this.workspaceApiUrl = '../../../../services/v4/ide/workspaces';
@@ -42,19 +49,62 @@
 				};
 				this.resolveFileType = function(fileName) {
 					var fileName = fileName || this.resolveFileName();
-					if(fileName){
-						if (fileName.endsWith('.js')) {
-							return 'javascript';
-						} else if (fileName.endsWith('.html')) {
-							return 'html';
-						} else if (fileName.endsWith('.css')) {
-							return 'css';
-						} else if (fileName.endsWith('.json')) {
-							return 'json';
-						} else if (fileName.endsWith('.xml')) {
-							return 'xml';
+					var mappings = [{
+						extension: ".js",
+						type: "javascript"
+					}, {
+						extension: ".html",
+						type: "html"
+					}, {
+						extension: ".css",
+						type: "css"
+					}, {
+						extension: ".json",
+						type: "json"
+					}, {
+						extension: ".table",
+						type: "json"
+					}, {
+						extension: ".view",
+						type: "json"
+					}, {
+						extension: ".extensionpoint",
+						type: "json"
+					}, {
+						extension: ".extension",
+						type: "json"
+					}, {
+						extension: ".job",
+						type: "json"
+					}, {
+						extension: ".listener",
+						type: "json"
+					}, {
+						extension: ".access",
+						type: "json"
+					}, {
+						extension: ".roles",
+						type: "json"
+					}, {
+						extension: ".command",
+						type: "json"
+					}, {
+						extension: ".xml",
+						type: "xml"
+					}, {
+						extension: ".bpmn",
+						type: "xml"
+					}, {
+						extension: ".xsjs",
+						type: "javascript"
+					}];
+
+					for (var i = 0; i < mappings.length; i ++) {
+						if (fileName.endsWith(mappings[i].extension)) {
+							return mappings[i].type;
 						}
 					}
+
 					return 'text';
 				};				
 				this.loadText = function(fileName){
@@ -172,15 +222,14 @@
 			function getModuleImports(text) {
 				var moduleImports = text.match(/(var|let)\s[a-zA-Z0-9_-]+\s?=\s?require\(('|")[a-zA-Z0-9_.-//]+('|")\)/gm);
 
-				String.prototype.replaceAll = function(search, replacement) {
-					var target = this;
-					return target.replace(new RegExp(search, 'g'), replacement);
-				};
+				if (!moduleImports) {
+					moduleImports = [];
+				}
 				
 				moduleImports = moduleImports.map(function(text) {
 					var split = text.split("=");
 					var keyWord = split[0].replace("var ", "").replace("let ", "").trim();
-					var module = split[1].replace("require(", "").replace(")", "").replaceAll("\"", "").trim();
+					var module = split[1].replace("require(", "").replace(")", "").replaceAll("\"", "").replaceAll("'", "").trim();
 					return {
 						keyWord: keyWord,
 						module: module
@@ -208,7 +257,7 @@
 						})
 						.then((fileText) => {
 							var fileType = fileIO.resolveFileType(fileName);
-							//TODO: var mode = monaco.languages.getLanguages().find(function(oLang){return oLang.extensions.indexOf('.js')>-1}).id
+
 							var moduleImports = getModuleImports(fileText);
 
 							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
@@ -216,6 +265,10 @@
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
+							_editor.onDidChangeCursorPosition(function(e) {
+								var caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
+								messageHub.post({data: caretInfo}, 'status.caret');
+							});
 							_editor.onDidChangeModelContent(function(e) {
 								var newModuleImports = getModuleImports(_editor.getValue());
 								if (e && !dirty) {
