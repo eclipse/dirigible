@@ -58,7 +58,7 @@
 		.controller('DebuggerController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['workspace', 'debugger', 'variables', 'breakpoints', 'editor', 'preview', 'console'],
+				views: ['workspace', 'debugger', 'debug-preview', 'console'],
 				events: {
 					'debugger.editor.open': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label);

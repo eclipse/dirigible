@@ -1,0 +1,2 @@
+org.eclipse.dirigible.engine.js.graalvm.service.GraalVMJavascriptEngineRestService	# GraalVM base Javascript Engine Service
+org.eclipse.dirigible.engine.js.graalvm.service.GraalVMJavascriptEngineDebugRestService	# GraalVM base Javascript Engine Debug Service
