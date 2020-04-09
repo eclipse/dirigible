@@ -37,4 +37,10 @@ public interface GenerationParameters {
 	/** The name of the selected package's path */
 	public static final String PARAMETER_PACKAGE_PATH = "packagePath";
 	
+	/** The name of the selected engine */
+	public static final String PARAMETER_ENGINE = "engine";
+	
+	/** The name of the selected handler */
+	public static final String PARAMETER_HANDLER = "handler";
+	
 }

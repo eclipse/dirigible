@@ -149,6 +149,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			List<IFile> generatedFiles, GenerationTemplateMetadataSource source, byte[] input) throws IOException, ScriptingException {
 		byte[] output = null;
 		String action = source.getAction();
+		parameters.put(GenerationParameters.PARAMETER_ENGINE, source.getEngine());
+		parameters.put(GenerationParameters.PARAMETER_HANDLER, source.getHandler());
 		if (action != null) {
 			if (IGenerationEngine.ACTION_GENERATE.equals(action)) {
 				String sm = null;//MUSTACHE_DEFAULT_START_SYMBOL;
@@ -279,53 +281,58 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	 */
 	public List<IFile> generateModel(IFile model, String workspace, String project, String path,
 			GenerationTemplateModelParameters parameters) throws ScriptingException, IOException {
-		IWorkspace workspaceObject = getWorkspacesCoreService().getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		List<IFile> generatedFiles = new ArrayList<IFile>();
-		addStandardParameters(workspace, project, path, parameters.getParameters());
 		
-		String wrapper = generateWrapper(parameters);
-		Object metadata = ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
-		if (metadata != null) {
-			GenerationTemplateMetadata metadataObject = GsonHelper.GSON.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
-			EntityDataModel entityDataModel = GsonHelper.GSON.fromJson(new String(model.getContent(), StandardCharsets.UTF_8), EntityDataModel.class);
+		if (model.getName().endsWith(".model")) {
+			IWorkspace workspaceObject = getWorkspacesCoreService().getWorkspace(workspace);
+			IProject projectObject = workspaceObject.getProject(project);
+			List<IFile> generatedFiles = new ArrayList<IFile>();
+			addStandardParameters(workspace, project, path, parameters.getParameters());
 			
-			List<Map<String, Object>> models = mapModels(entityDataModel, parameters, workspace, project, path);
-			parameters.getParameters().put("models", models);
-			
-			distributeByLayoutType(models, parameters);
-			
-			for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
-				String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
-				IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
-				if (sourceResource.exists()) {
-					byte[] input = sourceResource.getContent();
-					logger.trace("Generating using template from the Registry: " + sourcePath);
-					generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
-				} else {
-					InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
-					try {
-						if (in != null) {
-							byte[] input = IOUtils.toByteArray(in);
-							logger.trace("Generating using built-in template: " + source.getLocation());
-							generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
-						} else {
-							throw new ScriptingException(
-									format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
-											source.getLocation(), parameters.getTemplate()));
-						} 
-					} finally {
-						if (in != null) {
-							in.close();
+			String wrapper = generateWrapper(parameters);
+			Object metadata = ScriptEngineExecutorsManager.executeServiceCode(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, wrapper, null);
+			if (metadata != null) {
+				GenerationTemplateMetadata metadataObject = GsonHelper.GSON.fromJson(metadata.toString(), GenerationTemplateMetadata.class);
+				
+				EntityDataModel entityDataModel = GsonHelper.GSON.fromJson(new String(model.getContent(), StandardCharsets.UTF_8), EntityDataModel.class);
+				
+				List<Map<String, Object>> models = mapModels(entityDataModel, parameters, workspace, project, path);
+				parameters.getParameters().put("models", models);
+				
+				distributeByLayoutType(models, parameters);
+				
+				for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
+					String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
+					IResource sourceResource = projectObject.getRepository().getResource(sourcePath);
+					if (sourceResource.exists()) {
+						byte[] input = sourceResource.getContent();
+						logger.trace("Generating using template from the Registry: " + sourcePath);
+						generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
+					} else {
+						InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
+						try {
+							if (in != null) {
+								byte[] input = IOUtils.toByteArray(in);
+								logger.trace("Generating using built-in template: " + source.getLocation());
+								generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
+							} else {
+								throw new ScriptingException(
+										format("Invalid source location of [{0}] in template definition file: [{1}] or the resource does not exist",
+												source.getLocation(), parameters.getTemplate()));
+							} 
+						} finally {
+							if (in != null) {
+								in.close();
+							}
 						}
 					}
 				}
+				return generatedFiles;
 			}
-			return generatedFiles;
 			
+			throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
+		} else {
+			return generateFile(workspace, project, path, parameters);
 		}
-		
-		throw new ScriptingException(format("Invalid template definition file: [{0}]", parameters.getTemplate()));
 	}
 
 	private void distributeByLayoutType(List<Map<String, Object>> models, GenerationTemplateModelParameters parameters) {

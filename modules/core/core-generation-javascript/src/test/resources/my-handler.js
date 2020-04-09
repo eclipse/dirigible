@@ -1,0 +1,3 @@
+(function(){
+	return "test testValue";
+})();

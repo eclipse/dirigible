@@ -19,6 +19,7 @@
 		<module>core-generation</module>
 		<module>core-generation-mustache</module>
 		<module>core-generation-velocity</module>
+		<module>core-generation-javascript</module>
         <module>core-git</module>
 		<module>core-indexing</module>
 		<module>core-messaging</module>

@@ -30,6 +30,8 @@ public class GenerationTemplateMetadataSource {
 	private String type;
 	
 	private String engine;
+	
+	private String handler;
 
 	/**
 	 * Gets the location.
@@ -173,6 +175,20 @@ public class GenerationTemplateMetadataSource {
 	 */
 	public void setEngine(String engine) {
 		this.engine = engine;
+	}
+
+	/**
+	 * @return the handler
+	 */
+	public String getHandler() {
+		return handler;
+	}
+
+	/**
+	 * @param handler the handler to set
+	 */
+	public void setHandler(String handler) {
+		this.handler = handler;
 	}
 	
 }
