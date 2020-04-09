@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<!--
+  ~ Copyright (c) 2017 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	
+	<title>Eclipse Dirigible - Preview</title>
+
+	<link href="../../../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	
+	<!-- AngularJS -->
+	<script src="../../../../../../services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script src="../../../../../../services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+	
+	<!-- jQuery -->
+	<script src="../../../../../../services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+	<script src="../../../../../../services/v4/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<script src="../../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+	<script src="controller.js"></script>
+
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/ide.css" />
+	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+	
+</head>
+
+<body ng-app="preview" ng-controller="DebugPreviewController as preview" class="view">
+	<form class="input-group" name="previewForm">
+	  	<span class="input-group-btn">
+			<button class="btn btn-default" type="button" ng-click="preview.refresh()"><i class="fa fa-refresh"></i></button>
+		</span>
+	  	<input type="text" name="preview" class="form-control"
+			ng-model="preview.previewUrl"
+			ng-model-options="{ updateOn: 'blur' }"
+			ng-keyup="cancel($event)"
+			placeholder="Preview ..."
+		>
+	  </form>
+	<div class="fluidMedia">
+	    <iframe ng-src="{{preview.previewUrl}}" frameborder="0" onload="previewLoaded()"> </iframe>
+	</div>
+</body>
+</html>

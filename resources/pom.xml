@@ -45,6 +45,7 @@
 		<module>resources-jstree</module>
 		<module>resources-fonts</module>
 		<module>resources-flowable-libs</module>
+		<module>resources-dev-tools</module>
 		<module>resources-mxgraph</module>
 		<module>resources-jqplot</module>
 		<module>resources-resources</module>

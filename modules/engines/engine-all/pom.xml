@@ -42,10 +42,15 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript-rhino</artifactId>
+            <artifactId>dirigible-engine-javascript-graalvm</artifactId>
             <version>4.4.0</version>
         </dependency>
         <!--
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-rhino</artifactId>
+            <version>4.4.0</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript-nashorn</artifactId>
