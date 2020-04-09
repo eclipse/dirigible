@@ -25,4 +25,8 @@
 		 	<version>4.4.0</version>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<license.header.lication>../../license-header.txt</license.header.lication>
+	</properties>
 </project>

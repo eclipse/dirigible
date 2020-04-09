@@ -146,10 +146,10 @@
 								<exclude>**/logback.xml</exclude>
 								<exclude>**/logback-test.xml</exclude>
 								<exclude>**/src/test/resources/**</exclude>
-								<exclude>**/src/main/resources/resources/angular/**</exclude>
-								<exclude>**/src/main/resources/resources/bootstrap/**</exclude>
 								<exclude>**/src/main/resources/font-awesome-4.7.0/**</exclude>
 								<exclude>**/src/main/resources/font-dirigible/**</exclude>
+								<exclude>**/src/main/resources/resources/angular/**</exclude>
+								<exclude>**/src/main/resources/resources/bootstrap/**</exclude>
 								<exclude>**/src/main/resources/resources/goldenlayout/**</exclude>
 								<exclude>**/src/main/resources/resources/jqplot/**</exclude>
 								<exclude>**/src/main/resources/resources/jquery/**</exclude>
@@ -162,9 +162,10 @@
 								<exclude>**/src/main/resources/ide-swagger/**</exclude>
 								<exclude>**/src/main/resources/ide-database/sql/lib/ace/**</exclude>
 								<exclude>**/src/main/resources/ide-discussions/ui/js/**</exclude>
-								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>**/src/main/resources/ide-core/ui/**</exclude>
 								<exclude>**/src/main/resources/ide-terminal/js/**</exclude>
+								<exclude>**/src/main/resources/dev-tools/**</exclude>
+								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
 								<exclude>**/src/main/resources/utils/v4/jsonpath.js</exclude>
 							</excludes>
 						</configuration>
@@ -339,7 +340,7 @@
 	<repositories>
 		<repository>
 			<id>mvnrepository</id>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>https://repo1.maven.org/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>

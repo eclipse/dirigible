@@ -27,4 +27,7 @@
 		<module>database-dynamic</module>
 	</modules>
 
+	<properties>
+		<license.header.lication>../../license-header.txt</license.header.lication>
+	</properties>
 </project>

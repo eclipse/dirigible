@@ -174,7 +174,7 @@
 		<!-- External API modules -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ext-qunit</artifactId>
+		 	<artifactId>dirigible-ext</artifactId>
 		 	<version>4.4.0</version>
 		</dependency>
 

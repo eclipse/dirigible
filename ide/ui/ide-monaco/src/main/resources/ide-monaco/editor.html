@@ -149,13 +149,19 @@
 					setTimeout(function(){
 						try{
 							var containerEl = document.getElementById('embeddedEditor');
-							if(containerEl.childElementCount > 0){
-								for(var i = 0; i < containerEl.childElementCount; i++)
+							if (containerEl.childElementCount > 0){
+								for (var i = 0; i < containerEl.childElementCount; i++)
 									containerEl.removeChild(containerEl.children.item(i));
 							}
-							var editor = monaco.editor.create(containerEl);
+							var editor = monaco.editor.create(containerEl, {
+								value: "var x = 0;",
+								automaticLayout: true
+							});
 							resolve(editor);
-						} catch (err){
+							window.onresize = function (){
+								editor.layout();
+							};
+						} catch (err) {
 							reject(err);
 						}
 					});
@@ -220,7 +226,7 @@
 			}
 
 			function getModuleImports(text) {
-				var moduleImports = text.match(/(var|let)\s[a-zA-Z0-9_-]+\s?=\s?require\(('|")[a-zA-Z0-9_.-//]+('|")\)/gm);
+				var moduleImports = text.match(/(var|let)\s[a-zA-Z0-9_-]+\s?=\s?require\(('|")[a-zA-Z0-9_.-//-]+('|")\)/gm);
 
 				if (!moduleImports) {
 					moduleImports = [];
@@ -348,9 +354,10 @@
 										.map(function(e) {
 											return {
 												label: e.name,
-												kind: monaco.languages.CompletionItemKind.Function,
-												documentation: e.description,
-												// detail: e.description,
+												kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
+												documentation: {
+													value: e.documentation
+												},
 												insertText: e.name.substring(afterDotToken.length),
 												range: range
 											}
