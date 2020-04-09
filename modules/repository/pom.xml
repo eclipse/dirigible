@@ -25,6 +25,6 @@
 	</modules>
 
 	<properties>
-		<license.header.lication>../../license-header.txt</license.header.lication>
+		<license.header.location>../../license-header.txt</license.header.location>
 	</properties>
 </project>
