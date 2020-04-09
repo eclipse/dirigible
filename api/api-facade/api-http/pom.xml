@@ -58,4 +58,7 @@
 
     </dependencies>
 
+    <properties>
+        <license.header.lication>../../../license-header.txt</license.header.lication>
+    </properties>
 </project>

@@ -32,6 +32,8 @@
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
+
+		<license.header.lication>../../license-header.txt</license.header.lication>
 	</properties>
 
 	<modules>

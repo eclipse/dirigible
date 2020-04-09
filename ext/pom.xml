@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>External Modules</name>
-	<artifactId>dirigible-ext</artifactId>
+	<name>Ext - Parent</name>
+	<artifactId>dirigible-ext-parent</artifactId>
 	<description>External modules packaged with Dirigible</description>
     <packaging>pom</packaging>
 
@@ -32,72 +32,13 @@
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
+
+		<license.header.lication>../license-header.txt</license.header.lication>
 	</properties>
 
 	<modules>
-		<module>ext-v3-qunit</module>
+		<module>ext-all</module>
+		<module>ext-modules</module>
 	</modules>
 
-	<profiles>
-		<profile>
-			<id>content</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<finalName>${project.artifactId}</finalName>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-scm-plugin</artifactId>
-						<version>${maven.scm.plugin.version}</version>
-						<configuration>
-							<goals>checkout</goals>
-							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
-							<server>${content.scm.server}</server>
-						</configuration>
-						<executions>
-							<execution>
-								<id>generated-sources</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>checkout</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven.resource.plugin.version}</version>
-						<executions>
-							<execution>
-								<id>copy-content-resources</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${content.output.directory}</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${content.source.directory}</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-compiler-plugin</artifactId>
-		                <version>${maven.compiler.plugin.version}</version>
-		                <configuration>
-		                    <source>${java.version}</source>
-		                    <target>${java.version}</target>
-		                </configuration>
-		            </plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

@@ -4,13 +4,13 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ext</artifactId>
+		<artifactId>dirigible-ext-modules-parent</artifactId>
 		<version>4.4.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Ext - QUnit</name>
-	<artifactId>dirigible-ext-qunit</artifactId>
+	<name>Ext - Jasmine</name>
+	<artifactId>dirigible-ext-jasmine</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
@@ -20,12 +20,14 @@
 	</scm>
 	
 	<properties>
-		<content.repository.name>ext-v3-qunit</content.repository.name>
-		<content.project.name>qunit</content.project.name>
+		<content.repository.name>ext-jasmine</content.repository.name>
+		<content.project.name>jasmine</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
 		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+
+		<license.header.lication>../../../license-header.txt</license.header.lication>
 	</properties>
 
 </project>

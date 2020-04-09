@@ -109,6 +109,7 @@
 
 	<properties>
 		<j2v8.version>4.6.0</j2v8.version>
+		<license.header.lication>../../../license-header.txt</license.header.lication>
 	</properties>
 
 </project>
