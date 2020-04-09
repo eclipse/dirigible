@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-
 exports.createWorkspace = function(name) {
 	var native = org.eclipse.dirigible.api.v3.workspace.WorkspaceFacade.createWorkspace(name);
 	var workspace = new Workspace();
@@ -334,13 +333,13 @@ function File() {
 	this.getContent = function() {
 		var output = org.eclipse.dirigible.api.v3.workspace.WorkspaceFacade.getContent(this.native);
 		if (output && output !== null) {
-			return JSON.parse(output);
+			output;
 		}
 		return output;
 	};
 	
 	this.setContent = function(input) {
-		var output = org.eclipse.dirigible.api.v3.workspace.WorkspaceFacade.setContent(this.native, JSON.stringify(input));
+		var output = org.eclipse.dirigible.api.v3.workspace.WorkspaceFacade.setContent(this.native, input);
 		return output;
 	};
 
