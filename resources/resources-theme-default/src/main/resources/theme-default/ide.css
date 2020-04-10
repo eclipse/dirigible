@@ -414,6 +414,10 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	border-radius: 0;
 }
 
+.preview-body {
+	padding-top: 20px;
+}
+
 .responsive-container {
     position: relative;
     overflow: hidden;

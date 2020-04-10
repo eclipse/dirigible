@@ -37,9 +37,8 @@
 	
 </head>
 
-<body ng-app="preview" ng-controller="DebugPreviewController as preview" class="view">
-	
-	<form class="input-group" name="previewForm">
+<body ng-app="preview" ng-controller="DebugPreviewController as preview" class="view preview-body">
+	<form class="input-group navbar-fixed-top" name="previewForm">
 	  	<span class="input-group-btn input-group-addon view-toolbar">
 			<button class="btn btn-default preview-button" type="button" ng-click="preview.refresh()">
 			    <i class="fa fa-refresh"></i></button>
@@ -51,8 +50,8 @@
 			placeholder="Preview ...">
     </form>
 
-	<div class="fluidMedia">
-	    <iframe ng-src="{{preview.previewUrl}}" frameborder="0" onload="previewLoaded()"> </iframe>
+	<div class="responsive-container">
+	    <iframe class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0" onload="previewLoaded()"> </iframe>
 	</div>
 </body>
 </html>
