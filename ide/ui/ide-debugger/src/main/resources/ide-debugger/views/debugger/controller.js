@@ -62,7 +62,7 @@ angular.module('debugger', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 	var host =  hostPortIndexOf > 0 ? window.location.host.substring(0, hostPortIndexOf) : window.location.host;
 	var devToolsLocation = "../../../../../../services/v4/web/dev-tools/inspector.html"
 	// TODO: The debug port can be configured
-	var debugPort = 4242;
+	var debugPort = 8081;
 	var debuggerLocation = devToolsLocation + "?" + protocol + "=" + host + ":" + debugPort;
 
 	function refreshDebugger(resourcePath) {

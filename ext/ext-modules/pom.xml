@@ -4,7 +4,7 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-ext-parent</artifactId>
 		<version>4.5.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
@@ -33,7 +33,7 @@
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
 
-		<license.header.lication>../../license-header.txt</license.header.lication>
+		<license.header.lоcation>../../license-header.txt</license.header.lоcation>
 	</properties>
 
 	<modules>

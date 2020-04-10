@@ -27,7 +27,6 @@ exports.parse = function(moduleName) {
         .filter(e => e.type === "FunctionDeclaration")
         .map(function(element) {
             let name = element.id.name;
-            let expression = element.expression
             let functions = element.body.body
                 .filter(e => e.type === "ExpressionStatement")
                 .map(e => extractExpression(e, comments))
@@ -57,11 +56,31 @@ function extractExpression(element, comments, functionDeclarations) {
             let name = left.property.name + "(" + properties.join(", ") + ")"; 
             let documentation = extractDocumentation(comments, element, name);
             documentation = formatDocumentation(documentation, name, true);
-            let returnStatement = right.body.body.filter(e => e.type === "ReturnStatement")[0];
+            let bodyExpressions = right.body.body;
+            let returnStatement = bodyExpressions.filter(e => e.type === "ReturnStatement")[0];
             let returnType = null;
-            if (functionDeclarations && returnStatement && returnStatement.argument.type === "NewExpression") {
-                returnType = returnStatement.argument.callee.name;
-                returnType = functionDeclarations.filter(e => e.name === returnType)[0];
+            if (functionDeclarations && returnStatement) {
+                if (returnStatement.argument.type === "NewExpression") {
+                    returnType = returnStatement.argument.callee.name;
+                    returnType = functionDeclarations.filter(e => e.name === returnType)[0];
+                } else if (returnStatement.argument.type === "Identifier") {
+                    let returnIdentifierName = returnStatement.argument.name;
+                    let returnIdentifierType = bodyExpressions
+                        .filter(e => e.type === "VariableDeclaration")
+                        .map(e => e.declarations[0])
+                        .filter(e => e && e.init && e.init.type === "NewExpression")
+                        .map(function(e) {
+                            return {
+                                name: e.id.name,
+                                type: e.init.callee.name
+                            }
+                        })
+                        .filter(e => e.name === returnIdentifierName)
+                        .map(e => e.type)[0];
+                    if (returnIdentifierType) {
+                        returnType = functionDeclarations.filter(e => e.name === returnIdentifierType)[0]
+                    }
+                }
             }
             return {
                 name: name,

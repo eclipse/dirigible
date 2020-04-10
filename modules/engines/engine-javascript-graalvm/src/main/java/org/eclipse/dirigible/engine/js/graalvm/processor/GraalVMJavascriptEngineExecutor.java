@@ -48,7 +48,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED";
 	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
-	private static final String DEFAULT_DEBUG_PORT = "4242";
+	public static final String DEFAULT_DEBUG_PORT = "8081";
 
 	/*
 	 * (non-Javadoc)

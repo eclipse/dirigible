@@ -4,5 +4,5 @@
 ARG DIRIGIBLE_VERSION=latest
 FROM dirigiblelabs/dirigible-base-platform-anonymous:$DIRIGIBLE_VERSION
 
-EXPOSE 8080
+EXPOSE 8080 8081
 CMD ["catalina.sh", "run"]

@@ -14,28 +14,6 @@
 	<description>External modules packaged with Dirigible</description>
     <packaging>pom</packaging>
 
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
-	
-	<properties>
-		<content.repository.name>dirigiblelabs</content.repository.name>
-		<content.project.name>dirigiblelabs</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
-		<content.scm.server>github</content.scm.server>
-		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
-		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
-
-		<license.header.location>../license-header.txt</license.header.location>
-	</properties>
-
 	<modules>
 		<module>ext-all</module>
 		<module>ext-modules</module>

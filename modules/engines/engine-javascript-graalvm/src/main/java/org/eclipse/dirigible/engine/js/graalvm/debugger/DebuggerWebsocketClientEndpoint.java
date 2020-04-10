@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.runtime.ide.terminal.service;
+package org.eclipse.dirigible.engine.js.graalvm.debugger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,18 +27,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
 /**
- * Proxy Client
+ * Debugger Websocket Proxy Client
  * 
  */
-@ClientEndpoint(subprotocols="tty")
-public class WebsocketClientEndpoint {
+@ClientEndpoint
+public class DebuggerWebsocketClientEndpoint {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WebsocketClientEndpoint.class);
+	private static final Logger logger = LoggerFactory.getLogger(DebuggerWebsocketClientEndpoint.class);
 	
 	private Session session = null;
     private MessageHandler messageHandler;
  
-    public WebsocketClientEndpoint(URI endpointURI) {
+    public DebuggerWebsocketClientEndpoint(URI endpointURI) {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, endpointURI);
@@ -59,7 +59,7 @@ public class WebsocketClientEndpoint {
      */
     @OnOpen
     public void onOpen(Session session) {
-    	logger.info("[ws:terminal-client] connected: " + session.getId());
+    	logger.info("[ws:debugger-client] connected: " + session.getId());
         this.session = session;
     }
  
@@ -73,7 +73,7 @@ public class WebsocketClientEndpoint {
      */
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-    	logger.info("[ws:terminal-client] disconnected: " + session.getId());
+    	logger.info("[ws:debugger-client] disconnected: " + session.getId());
         this.session = null;
     }
  
@@ -89,13 +89,13 @@ public class WebsocketClientEndpoint {
 			try {
 				this.messageHandler.handleMessage(message);
 			} catch (IOException e) {
-				logger.error("[ws:terminal-client] " + e.getMessage(), e);
+				logger.error("[ws:debugger-client] " + e.getMessage(), e);
 			}
         }
     }
  
     /**
-     * register message handler
+     * Register message handler
      * 
      * @param messageHandler the message handler
      */
@@ -113,7 +113,7 @@ public class WebsocketClientEndpoint {
     		try {
 				this.session.getBasicRemote().sendBinary(message);
 			} catch (IOException e) {
-				logger.error("[ws:terminal-client] " + e.getMessage(), e);
+				logger.error("[ws:debugger-client] " + e.getMessage(), e);
 			}
     	}
     }

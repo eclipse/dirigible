@@ -50,7 +50,7 @@ public class XTerminalWebsocketService {
 	private static final Logger logger = LoggerFactory.getLogger(XTerminalWebsocketService.class);
 
 	private static Map<String, Session> OPEN_SESSIONS = new ConcurrentHashMap<String, Session>();
-	private static Map<String, WebsocketClientEndpoint> SESSION_TO_CLIENT = new ConcurrentHashMap<String, WebsocketClientEndpoint>();
+	private static Map<String, XTerminalWebsocketClientEndpoint> SESSION_TO_CLIENT = new ConcurrentHashMap<String, XTerminalWebsocketClientEndpoint>();
 	
 	static {
 		runTTYD();
@@ -135,7 +135,7 @@ public class XTerminalWebsocketService {
 	public void onOpen(Session session) {
 		logger.debug("[ws:terminal] onOpen: " + session.getId());
 		try {
-			WebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
+			XTerminalWebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
 			SESSION_TO_CLIENT.put(session.getId(), clientEndPoint);
 		} catch (URISyntaxException e) {
 			logger.error("[ws:terminal] " + e.getMessage(), e);
@@ -160,7 +160,7 @@ public class XTerminalWebsocketService {
 	public void onMessage(ByteBuffer message, Session session) {
 		logger.trace("[ws:terminal] onMessage: " + new String(message.array()));
 		
-		WebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.get(session.getId());
+		XTerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.get(session.getId());
 		
 		if (clientEndPoint != null) {
 			synchronized(clientEndPoint) {
@@ -196,9 +196,11 @@ public class XTerminalWebsocketService {
 	public void onClose(Session session, CloseReason closeReason) {
 		logger.trace(String.format("[ws:terminal] Session %s closed because of %s", session.getId(), closeReason));
 		OPEN_SESSIONS.remove(session.getId());
-		WebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.remove(session.getId());
+		XTerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.remove(session.getId());
 		try {
-			clientEndPoint.getSession().close();
+			if (clientEndPoint != null) {
+				clientEndPoint.getSession().close();
+			}
 		} catch (IOException e) {
 			logger.error("[ws:terminal] " + e.getMessage(), e);
 		}
@@ -211,13 +213,13 @@ public class XTerminalWebsocketService {
 	 * @param port the port for the client
 	 * @throws URISyntaxException 
 	 */
-	private WebsocketClientEndpoint startClientWebsocket(Session session) throws URISyntaxException {
+	private XTerminalWebsocketClientEndpoint startClientWebsocket(Session session) throws URISyntaxException {
 		
-		final WebsocketClientEndpoint clientEndPoint =
-				new WebsocketClientEndpoint(new URI("ws://localhost:9000/ws"));
+		final XTerminalWebsocketClientEndpoint clientEndPoint =
+				new XTerminalWebsocketClientEndpoint(new URI("ws://localhost:9000/ws"));
 
         // add listener
-        clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
+        clientEndPoint.addMessageHandler(new XTerminalWebsocketClientEndpoint.MessageHandler() {
             public void handleMessage(ByteBuffer message) throws IOException {
             	synchronized(session) {
             		session.getBasicRemote().sendBinary(message);
