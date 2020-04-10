@@ -55,7 +55,7 @@ function extractExpression(element, comments, functionDeclarations) {
             let properties = right.params.map(e => e.name);
             let name = left.property.name + "(" + properties.join(", ") + ")"; 
             let documentation = extractDocumentation(comments, element, name);
-            documentation = formatDocumentation(documentation, name, true);
+            documentation = formatDocumentation(documentation);
             let bodyExpressions = right.body.body;
             let returnStatement = bodyExpressions.filter(e => e.type === "ReturnStatement")[0];
             let returnType = null;
@@ -91,7 +91,7 @@ function extractExpression(element, comments, functionDeclarations) {
         } else if (right.type === "Literal") {
             let name = left.property.name;
             let documentation = extractDocumentation(comments, element, name);
-            documentation = formatDocumentation(documentation, name, false);
+            documentation = formatDocumentation(documentation);
             return {
                 name: name,
                 documentation: documentation,
@@ -113,13 +113,6 @@ function extractDocumentation(comments, element, defaultDocumentation) {
     return documentation ? documentation.value : defaultDocumentation;
 }
 
-function formatDocumentation(documentation, expression, isFunction) {
-    return [
-        "```javascript",
-        (isFunction ? "function " : "") + expression,
-        "```",
-        "",
-        "---",
-        documentation.replaceAll("\\*", "")
-    ].join("\n");
+function formatDocumentation(documentation) {
+    return documentation.replaceAll("\\*", "")
 }
