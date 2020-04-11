@@ -38,12 +38,17 @@
 
 <body ng-app="logs" ng-controller="LogsController as logs" class="view">
 
-	<form class="input-group col-lg-12" name="logsForm">
-		<div class="col-lg-12 position-sticky sticky-top">
-			<select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
-					class="dropdown btn btn-default dropdown-toggle form-control" title="Logs"></select>
+	    <div class="form-horizontal">
+		  <div class="col-sm-12" style="padding: 0">
+		    <div class="input-group logs-dropdown logs-dropdown">
+		      <div class="input-group-addon view-toolbar form-group sticky-top">
+				<select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
+					class="dropdown dropdown-toggle dropdown-top form-control logs-dropdown" title="Logs"></select>
+			  </div>
+			</div>
+		  </div>
 		</div>
 		<pre class="form-control col-lg-12" style="height: 100%;">{{ logContent }}</pre>
-  	</form>
+
 </body>
 </html>

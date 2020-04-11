@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,22 @@
 angular.module('logs', [])
 .controller('LogsController', ['$scope', '$http', function ($scope, $http) {
 
+    const SELECT_LOG_TEXT = "Select log file...";
+
 	$scope.selectedLog = null;
 	$http.get('../../../../services/v4/ops/logs').then(function(response) {
-		$scope.logsList = response.data;
+		$scope.logsList = [SELECT_LOG_TEXT];
+		$scope.logsList.push(...response.data);
+		$scope.selectedLog = SELECT_LOG_TEXT;
 	});
 	
 	$scope.logChanged = function() {
-		if ($scope.selectedLog) {
+		if ($scope.selectedLog && $scope.selectedLog !== SELECT_LOG_TEXT) {
 			$http.get('../../../../services/v4/ops/logs/' + $scope.selectedLog).then(function(response) {
 				$scope.logContent = response.data;
 			});	
+		} else {
+			$scope.logContent = "";
 		}
 	}
 
