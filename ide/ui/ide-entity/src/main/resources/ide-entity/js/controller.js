@@ -85,8 +85,8 @@ function main(container, outline, toolbar, sidebar, status) {
 	function saveModel(graph) {
 		var model = createModel(graph);
 		saveContents(model, file);
-		var modelJson = createModelJson(graph);
-		saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.model');
+		// var modelJson = createModelJson(graph);
+		// saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.model');
 	}
 			
 	messageHub.subscribe(function(graph) {

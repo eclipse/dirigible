@@ -587,7 +587,9 @@ public class WorkspaceProcessor {
 					logger.trace("Workspace On Save Extension: {} triggered...", module);
 					ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
 					logger.trace("Workspace On Save Extension: {} finshed.", module);
-				} catch (ScriptingException e) {
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				} catch (Error e) {
 					logger.error(e.getMessage(), e);
 				}
 			}

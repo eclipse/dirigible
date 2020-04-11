@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-
 /**
  * API v4 Bytes
  * 
@@ -42,7 +41,7 @@ exports.toJavaScriptBytes = function(internalBytes) {
  */
 exports.textToByteArray = function(text) {
 	var javaString = new java.lang.String(text);
-	var native = javaString.getBytes();
+	var native = org.eclipse.dirigible.api.v3.io.BytesFacade.textToByteArray(text);
 	return exports.toJavaScriptBytes(native);
 };
 
