@@ -42,7 +42,7 @@
 
 <body border="1px" ng-app="database" ng-controller="DatabaseController">
 
-	<div>
+	<div class="view-fixed-top">
 	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 			<button type="button" class="btn btn-default btn-top" title="Run" ng-click="runSQL()"><i class="fa fa-play"></i></button>
@@ -55,8 +55,9 @@
 		</div>
 	  </div>
 	</div>
-	
-	<div class="database"></div>
+	<div>
+	    <div class="database"></div>
+        </div>
 
 </body>
 </html>

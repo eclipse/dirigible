@@ -441,6 +441,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .btn-toolbar-top {
 	width: 100%;
 	height: 1.8em;
+	background-color: white;
 }
 
 .btn-top {
@@ -465,8 +466,10 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .workspace {
-	border-top: 2px solid #edeff0;
+	/*border-top: 2px solid #edeff0;*/
 	font-weight: 300;
+	margin-top: 28px;
+    position: relative;
 }
 
 .search {
@@ -550,6 +553,17 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
     margin: 0;
     border: none;
     background-color: #fff;
+}
+
+.view-fixed-top {
+    top: -1px;
+    border-width: 0 0 0px;
+	position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+	background-color: #fff;
+	border-bottom: 2px solid #edeff0;
 }
 
 .preview-button {

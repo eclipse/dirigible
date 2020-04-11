@@ -44,7 +44,7 @@
 
 <body border="1px" ng-app="registry" ng-controller="RegistryController as registry">
 
-	<div>
+	<div class="view-fixed-top">
 	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="registry.refresh()"><i class="fa fa-refresh"></i></button>
@@ -52,7 +52,9 @@
 	  </div>
 	</div>
 	
-	<div class="registry"></div>
+	<div>
+	    <div class="registry"></div>
+        </div>
 
 </body>
 </html>

@@ -410,6 +410,17 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
     background-color: #343436;
 }
 
+.view-fixed-top {
+    top: 0;
+    border-width: 0 0 0px;
+	position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+	background-color: #343436;
+	border-bottom: 2px solid #333;
+}
+
 .preview-button {
 	border-radius: 0;
 }
@@ -438,4 +449,28 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .documents-folder-button {
 	border-radius: 0;
 	margin-top: 0px;
+}
+
+.workspace {
+	font-weight: 300;
+	margin-top: 24px;
+    position: relative;
+}
+
+.database {
+	font-weight: 300;
+	margin-top: 24px;
+    position: relative;
+}
+
+.repository {
+	font-weight: 300;
+	margin-top: 24px;
+    position: relative;
+}
+
+.registry {
+	font-weight: 300;
+	margin-top: 24px;
+    position: relative;
 }
