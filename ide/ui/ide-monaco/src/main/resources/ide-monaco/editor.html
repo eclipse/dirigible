@@ -336,6 +336,8 @@
 //									var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + ".", "g")))[0];
 							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
 									var afterDotToken = token.substring(token.indexOf(".") + 1);
+									var tokenParts = token.split(".");
+									var lastTokenPart = tokenParts.length > 2 ? tokenParts[tokenParts.length - 2] : null;
 									var moduleName = moduleImport ? moduleImport.module : null;
 
 							        if (!moduleName) {
@@ -350,15 +352,28 @@
 									var suggestions = codeCompletionSuggestions.filter(e => e.module === moduleName)[0].suggestions;
 							        return {
 										suggestions: suggestions
-										.filter(e => e.name.startsWith(afterDotToken))
+										.filter(function(e) {
+											if (lastTokenPart) {
+												return lastTokenPart.startsWith(e.parent);
+											}
+											return e.name.startsWith(afterDotToken) && !e.parent;
+										})
 										.map(function(e) {
+											let insertText = null;
+											if (lastTokenPart) {
+												insertText = e.fqn.substring(afterDotToken.length);
+												insertText = insertText.substring(insertText.lastIndexOf(".") + 1);
+											} else {
+												insertText = e.name.substring(afterDotToken.length);
+											}
 											return {
 												label: e.name,
 												kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
 												documentation: {
 													value: e.documentation
 												},
-												insertText: e.name.substring(afterDotToken.length),
+												detail: e.isFunction ? "function " + e.name : e.name,
+												insertText: insertText,
 												range: range
 											}
 										})

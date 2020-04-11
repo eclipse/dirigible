@@ -9,7 +9,7 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1967/badge)](https://bestpractices.coreinfrastructure.org/projects/1967)
 
 
-**Eclipse Dirigible** is an Integrated Development Environment as a Service (IDEaaS) for dynamic applications. It provides both development tools and runtime environment.
+**Eclipse Dirigible** is a High-Productivity Application Platform as a Service (hpaPaaS). It provides an application server consisting of pre-selected execution engines and built-in development tools as WebIDE. It is suitable for rapid development of business applications leveraging also the Low Code / No Code technicques.
 
 <p align="center">
   <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-symbol.png" width="60%" alt="dirigible logo"/>
@@ -32,9 +32,8 @@ The project started as an internal SAP initiative to address the extension and a
 	- [Download](#download)
 	- [Build](#build)
 	- [Run](#run)
-		- [Desktop](#desktop)
-		- [Tomcat](#tomcat)
-		- [CloudFoundry](#cloudfoundry)
+		- [Standalone](#standalone)
+		- [Docker](#docker)
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)
@@ -73,17 +72,19 @@ The build should pass successfully. The produced WAR files under target sub-fold
 
 ### Run
 
-#### Prerequisites
+#### Standalone
+
+##### Prerequisites
 
 The Java Web Application Archive (WAR) files can be deployed on [Apache Tomcat](http://tomcat.apache.org/) web container. In this case the built-in H2 database is used.
 
 More information about how to deploy on Apache Tomcat can be found [here](http://tomcat.apache.org/tomcat-8.0-doc/appdev/deployment.html).
 
-##### macOS
+###### macOS
 
 > brew install ttyd
 
-##### Linux
+###### Linux
 
 > Linux support is built-in
 
@@ -122,11 +123,11 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
         
 2. Start the container
 
-        docker run -p 8888:8080 dirigiblelabs/dirigible-trial <&- &
+        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-trial <&- &
 
 3. Open a web browser and go to:
 
-        http://localhost:8888/
+        http://localhost:8080/
         
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/)
 
