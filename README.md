@@ -123,11 +123,11 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
         
 2. Start the container
 
-        docker run -p 8888:8080 dirigiblelabs/dirigible-trial <&- &
+        docker run -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible-trial <&- &
 
 3. Open a web browser and go to:
 
-        http://localhost:8888/
+        http://localhost:8080/
         
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/org.eclipse.dirigible/org.eclipse.dirigible.parent/releng/docker/)
 
