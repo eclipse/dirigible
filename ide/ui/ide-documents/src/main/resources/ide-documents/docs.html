@@ -49,7 +49,7 @@
                <div class="input-group list-group">
                   <input type="text" class="form-control" placeholder="Search in folder" ng-model="search">
                   <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" ng-click="search = undefined">Clear</button>
+                  <button class="btn btn-default documents-folder-button" type="button" ng-click="search = undefined">Clear</button>
                   </span>
                </div>
                <div class="" ng-show="searchError && search">
@@ -64,9 +64,9 @@
                      </li>
                   </ol>
                   <div class="input-group-btn">
-                     <button class="btn btn-default btn-s" data-toggle="modal" data-target="#newFolderModal" type="button">New Folder</button>
-                     <a href="{{ downloadZipPath }}?path={{ folder.path }}" class="btn btn-default">Download Zip</a>
-                     <button class="btn btn-default" ng-show="!inDeleteSession" ng-disabled="!folder.children.length" ng-click="enterDeleteSession()" type="button">Delete Items</button>
+                     <button class="btn btn-default documents-folder-button" data-toggle="modal" data-target="#newFolderModal" type="button">New Folder</button>
+                     <a href="{{ downloadZipPath }}?path={{ folder.path }}" class="btn btn-default documents-folder-button">Download Zip</a>
+                     <button class="btn btn-default documents-folder-button" ng-show="!inDeleteSession" ng-disabled="!folder.children.length" ng-click="enterDeleteSession()" type="button">Delete Items</button>
                      <button class="btn btn-danger" ng-show="inDeleteSession" ng-click="handleDeleteButton()" type="button">Delete</button>
                      <button class="btn btn-default" ng-show="inDeleteSession" ng-click="exitDeleteSession()" type="button">Cancel</button>
                   </div>
@@ -111,7 +111,7 @@
                </div>
                <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
                or browse your file system
-               <input type="file" nv-file-select="" uploader="uploader" multiple  /><br/>
+               <input type="file" nv-file-select="" uploader="uploader" multiple /><br/>
                <div>
                   <label><input type="checkbox" ng-init="unpackZips=false" ng-model="unpackZips"> Unpack zips in current folder</label>
                   <label><input type="checkbox" ng-init="overwrite=false" ng-model="overwrite"> Overwrite if existing</label>
