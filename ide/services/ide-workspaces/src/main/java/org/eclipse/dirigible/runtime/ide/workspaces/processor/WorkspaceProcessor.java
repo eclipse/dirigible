@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,18 @@ package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -30,12 +35,25 @@ import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
+import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Processing the Workspace Service incoming requests.
  */
 public class WorkspaceProcessor {
+	
+	private static final String EXTENSION_PARAMETER_PATH = "path";
+
+	private static final String EXTENSION_PARAMETER_PROJECT = "project";
+
+	private static final String EXTENSION_PARAMETER_WORKSPACE = "workspace";
+
+	private static final String EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE = "ide-workspace-on-save";
+
+	private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 
 	private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
@@ -299,6 +317,7 @@ public class WorkspaceProcessor {
 		}
 		boolean isBinary = ContentTypeHelper.isBinary(contentType);
 		IFile fileObject = projectObject.createFile(path, content, isBinary, contentType);
+		triggerOnSaveExtensions(workspace, project, path);
 		return fileObject;
 	}
 
@@ -320,6 +339,7 @@ public class WorkspaceProcessor {
 		IProject projectObject = workspaceObject.getProject(project);
 		IFile fileObject = projectObject.getFile(path);
 		fileObject.getInternal().setContent(content);
+		triggerOnSaveExtensions(workspace, project, path);
 		return fileObject;
 	}
 
@@ -546,6 +566,34 @@ public class WorkspaceProcessor {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
 		List<IFile> files = workspaceObject.search(term);
 		return files;
+	}
+	
+	/**
+	 * Triggers the post save file extensions
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project name
+	 * @param path the file path
+	 */
+	private void triggerOnSaveExtensions(String workspace, String project, String path) {
+		try {
+			Map<Object, Object> context = new HashMap<Object, Object>();
+			context.put(EXTENSION_PARAMETER_WORKSPACE, workspace);
+			context.put(EXTENSION_PARAMETER_PROJECT, project);
+			context.put(EXTENSION_PARAMETER_PATH, path);
+			String[] modules = ExtensionsServiceFacade.getExtensions(EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE);
+			for (String module : modules) {
+				try {
+					logger.trace("Workspace On Save Extension: {} triggered...", module);
+					ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
+					logger.trace("Workspace On Save Extension: {} finshed.", module);
+				} catch (ScriptingException e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		} catch (ExtensionsException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 }
