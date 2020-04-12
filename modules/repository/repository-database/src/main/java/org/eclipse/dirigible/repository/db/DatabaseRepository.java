@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.repository.db;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -321,6 +322,16 @@ public class DatabaseRepository implements IRepository {
 	
 	protected void setParameter(String key, String value) {
 		parameters.put(key, value);
+	}
+
+	@Override
+	public boolean isLinkingPathsSupported() {
+		return false;
+	}
+
+	@Override
+	public void linkPath(String repositoryPath, String filePath) throws IOException {
+		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *   SAP - initial API and implementation
  */
 package org.eclipse.dirigible.repository.api;
+
+import java.io.IOException;
 
 /**
  * This interface represents a Repository. It allows for querying, modifying and
@@ -144,5 +146,20 @@ public interface IRepositoryWriter {
 	 *             in case the old versions cannot be cleaned up
 	 */
 	public void cleanupOldVersions() throws RepositoryWriteException;
+	
+	/**
+	 * Whether the Repository supports linking of external paths
+	 * @return
+	 */
+	public boolean isLinkingPathsSupported();
+	
+	/**
+	 * Link external folder or file as an internal Repository artifact
+	 * 
+	 * @param repositoryPath the relative path
+	 * @param filePath the target folder or file
+	 * @throws IOException in case of exception
+	 */
+	public void linkPath(String repositoryPath, String filePath) throws IOException;
 
 }

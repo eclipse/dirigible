@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,4 +149,15 @@ public class ZipRepository extends FileSystemRepository {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public boolean isLinkingPathsSupported() {
+		return false;
+	}
+	
+	@Override
+	public void linkPath(String repositoryPath, String filePath) throws IOException {
+		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
+	}
+	
 }

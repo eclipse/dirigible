@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import static org.apache.commons.io.filefilter.TrueFileFilter.TRUE;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -683,6 +685,23 @@ public abstract class FileSystemRepository implements IRepository {
 	
 	protected void setParameter(String key, String value) {
 		parameters.put(key, value);
+	}
+	
+	@Override
+	public boolean isLinkingPathsSupported() {
+		return true;
+	}
+	
+	/**
+	 * Link external folder or file as an internal Repository artifact
+	 * 
+	 * @param repositoryPath the relative path
+	 * @param filePath the target folder or file
+	 * @throws IOException in case of exception
+	 */
+	public void linkPath(String repositoryPath, String filePath) throws IOException {
+		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
+		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
 	}
 
 }
