@@ -32,49 +32,53 @@
 
 <body ng-controller="ExtensionsController">
 	
-			<div ng-repeat="next in extensionPoints">
-				<hr>
-				<h4>
-					<label>Name:</label> {{next.extensionPoint.name}}
-					<label>Location:</label> {{next.extensionPoint.location}}
-				</h4>
-				<h4>
-					<i>{{next.extensionPoint.description}}</i>
-				</h4>
-				<hr>
-				<!--
-				<td>{{next.extensionPoint.createdBy}}</td>
-				<td>{{next.extensionPoint.createdAt}}</td>
-				-->
-				<td>
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Location</th>
-								<th>Module</th>
-								<th>Description</th>
-								<!--
-								<th>Created By</th>
-								<th>Created At</th>
-								-->
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="extension in next.extensions">
-								<td>{{$index + 1}}</td>
-								<td>{{extension.location}}</td>
-								<td>{{extension.module}}</td>
-								<td>{{extension.description}}</td>
-								<!--
-								<td>{{extension.createdBy}}</td>
-								<td>{{extension.createdAt}}</td>
-								-->
-							</tr>
-						</tbody>
-					</table>
-				</td>
+	<div ng-repeat="next in extensionPoints">
+		<hr>
+		<h4>
+			<div>
+				<label>Name:</label> <span class="extension-name">{{next.extensionPoint.name}}</span>
 			</div>
+			<div>
+				<label>Location:</label> <span>{{next.extensionPoint.location}}</span>
+			</div>
+		</h4>
+		<h4>
+			<i>{{next.extensionPoint.description}}</i>
+		</h4>
+		<hr>
+		<!--
+		<td>{{next.extensionPoint.createdBy}}</td>
+		<td>{{next.extensionPoint.createdAt}}</td>
+		-->
+		<td>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Location</th>
+						<th>Module</th>
+						<th>Description</th>
+						<!--
+						<th>Created By</th>
+						<th>Created At</th>
+						-->
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="extension in next.extensions">
+						<td>{{$index + 1}}</td>
+						<td><div class="tdSingleLine">{{extension.location}}</div></td>
+						<td><div class="tdSingleLine">{{extension.module}}</div></td>
+						<td><div class="tdSingleLine">{{extension.description}}</div></td>
+						<!--
+						<td>{{extension.createdBy}}</td>
+						<td>{{extension.createdAt}}</td>
+						-->
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</div>
 		
 
 	<script type="text/javascript" src="../../../../../../services/v4/web/resources/angular/1.4.7/angular.min.js"></script>

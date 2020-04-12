@@ -37,29 +37,31 @@
 </head>
 
 <body ng-app="listeners" ng-controller="ListenersController as listeners" class="view">
-	<table class="table table-striped" ng-cloak>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Location</th>
-				<th>Handler</th>
-				<th>Description</th>
-				<th width="50px">Type</th>
-				<th width="180px">Created</th>
-				<th width="150px">Creator</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="next in listenersList">
-				<td>{{next.name}}</td>
-				<td>{{next.location}}</td>
-				<td>{{next.handler}}</td>
-				<td>{{next.description}}</td>
-				<td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.type === 'Q'}}"></i><i class="fa fa-mail-reply-all" ng-hide="{{next.type === 'T'}}"></i></td>
-				<td width="180px">{{next.createdAt}}</td>
-				<td width="150px">{{next.createdBy}}</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tableFixHead">
+		<table class="table table-striped" ng-cloak>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Location</th>
+					<th>Handler</th>
+					<th>Description</th>
+					<th width="50px">Type</th>
+					<th width="180px">Created</th>
+					<th width="150px">Creator</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="next in listenersList">
+					<td><div class="tdSingleLine">{{next.name}}</div></td>
+					<td><div class="tdSingleLine">{{next.location}}</div></td>
+					<td><div class="tdSingleLine">{{next.handler}}</div></td>
+					<td><div class="tdSingleLine">{{next.description}}</div></td>
+					<td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.type === 'Q'}}"></i><i class="fa fa-mail-reply-all" ng-hide="{{next.type === 'T'}}"></i></td>
+					<td width="180px"><div class="tdSingleLine">{{next.createdAt}}</div></td>
+					<td width="150px"><div class="tdSingleLine">{{next.createdBy}}</div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

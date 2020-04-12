@@ -47,18 +47,24 @@
 
 <body ng-app="database-table" ng-controller="DatabaseTableController">
 	<h4 ng-show="result">{{result}}</h4>
-	<table class="table table-striped" ng-show="columns">
-		<thead>
-			<tr>
-				<th ng-repeat="column in columns">{{column}}</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="row in rows">
-				<td ng-repeat="cell in row">{{cell}}</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tableFixHead">
+		<table class="table table-striped" ng-show="columns">
+			<thead>
+				<tr>
+					<th ng-repeat="column in columns">{{column}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in rows">
+					<td ng-repeat="cell in row">
+                        <div class="tdSingleLine">
+							{{cell}}
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 	<script>
 		angular.module('database-table', []);

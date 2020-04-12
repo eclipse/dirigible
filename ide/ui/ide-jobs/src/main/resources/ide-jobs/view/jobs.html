@@ -37,30 +37,32 @@
 </head>
 
 <body ng-app="jobs" ng-controller="JobsController as jobs" class="view">
-	<table class="table table-striped" ng-cloak>
-		<thead>
-			<tr>
-				<th width="50px">Enabled</th>
-				<th>Name</th>
-				<th>Expression</th>
-				<th>Handler</th>
-				<th width="50px">Singleton</th>
-				<th width="180px">Created</th>
-				<th width="150px">Creator</th>
-				
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="next in jobsList">
-				<td width="50px"><i class="fa fa-check" ng-show="{{next.enabled}}"></i><i class="fa fa-close" ng-hide="{{next.enabled}}"></i></td>
-				<td>{{next.name}}</td>
-				<td>{{next.expression}}</td>
-				<td>{{next.handler}}</td>
-				<td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.singleton}}"></i><i class="fa fa-mail-reply-all" ng-hide="{{next.singleton}}"></i></td>
-				<td width="180px">{{next.createdAt}}</td>
-				<td width="150px">{{next.createdBy}}</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tableFixHead">
+		<table class="table table-striped" ng-cloak>
+			<thead>
+				<tr>
+					<th width="50px">Enabled</th>
+					<th>Name</th>
+					<th>Expression</th>
+					<th>Handler</th>
+					<th width="50px">Singleton</th>
+					<th width="180px">Created</th>
+					<th width="150px">Creator</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="next in jobsList">
+					<td width="50px"><i class="fa fa-check" ng-show="{{next.enabled}}"></i><i class="fa fa-close" ng-hide="{{next.enabled}}"></i></td>
+					<td><div class="tdSingleLine">{{next.name}}</div></td>
+					<td><div class="tdSingleLine">{{next.expression}}</div></td>
+					<td><div class="tdSingleLine">{{next.handler}}</div></td>
+					<td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.singleton}}"></i><i class="fa fa-mail-reply-all" ng-hide="{{next.singleton}}"></i></td>
+					<td width="180px"><div class="tdSingleLine">{{next.createdAt}}</div></td>
+					<td width="150px"><div class="tdSingleLine">{{next.createdBy}}</div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

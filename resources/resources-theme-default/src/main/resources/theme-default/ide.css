@@ -474,3 +474,32 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	margin-top: 24px;
     position: relative;
 }
+
+.tableFixHead {
+	overflow-y: auto;
+	height: 100%;
+}
+.tableFixHead thead th {
+	position: sticky; top: 0;
+}
+
+table  {
+	border-collapse: collapse;
+	width: 100%;
+}
+th, td {
+	padding: 8px 16px;
+}
+th {
+	background:#222;
+}
+
+.tdSingleLine {
+	white-space: nowrap;
+	overflow: auto;
+}
+
+.extension-name {
+	color: #eee;
+	font-weight: 400;
+}

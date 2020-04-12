@@ -37,34 +37,36 @@
 </head>
 
 <body ng-app="access" ng-controller="AccessController as access" class="view">
-	<table class="table table-striped" ng-cloak>
-		<thead>
-			<tr>
-				<th width="50px">#</th>
-				<th>Location</th>
-				<th>Scope</th>
-				<th>Path</th>
-				<th>Method</th>
-				<th>Role</th>
-				<th>Description</th>
-				<th width="180px">Created</th>
-				<th width="150px">Creator</th>
-				
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="next in accessList">
-				<td width="50px">{{next.id}}</td>
-				<td>{{next.location}}</td>
-				<td>{{next.scope}}</td>
-				<td>{{next.path}}</td>
-				<td>{{next.method}}</td>
-				<td>{{next.role}}</td>
-				<td>{{next.description}}</td>
-				<td width="180px">{{next.createdAt}}</td>
-				<td width="150px">{{next.createdBy}}</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="tableFixHead">
+		<table class="table table-striped" ng-cloak>
+			<thead>
+				<tr>
+					<th width="50px">#</th>
+					<th>Location</th>
+					<th>Scope</th>
+					<th>Path</th>
+					<th>Method</th>
+					<th>Role</th>
+					<th>Description</th>
+					<th width="180px">Created</th>
+					<th width="150px">Creator</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="next in accessList">
+					<td width="50px">{{next.id}}</td>
+					<td><div class="tdSingleLine">{{next.location}}</div></td>
+					<td><div class="tdSingleLine">{{next.scope}}</div></td>
+					<td><div class="tdSingleLine">{{next.path}}</div></td>
+					<td><div class="tdSingleLine">{{next.method}}</div></td>
+					<td><div class="tdSingleLine">{{next.role}}</div></td>
+					<td><div class="tdSingleLine">{{next.description}}</div></td>
+					<td width="180px"><div class="tdSingleLine">{{next.createdAt}}</div></td>
+					<td width="150px"><div class="tdSingleLine">{{next.createdBy}}</div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
