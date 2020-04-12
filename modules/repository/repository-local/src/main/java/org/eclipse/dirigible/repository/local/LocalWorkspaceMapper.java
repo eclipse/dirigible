@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,6 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
  */
 public class LocalWorkspaceMapper {
 
-	private static Map<String, String> prefixMap = Collections.synchronizedMap(new HashMap<String, String>());
-
-	private static Map<String, String> prefixMapEquals = Collections.synchronizedMap(new HashMap<String, String>());
-
-	private static String workspaceRoot = "/";
 
 	/**
 	 * Gets the mapped name.
@@ -52,7 +47,7 @@ public class LocalWorkspaceMapper {
 			}
 		}
 
-		if (workspaceName != null) {
+		if (workspaceName != null && !IRepository.SEPARATOR.contentEquals(File.separator)) {
 			workspaceName = workspaceName.replace(IRepository.SEPARATOR, File.separator);
 		}
 
