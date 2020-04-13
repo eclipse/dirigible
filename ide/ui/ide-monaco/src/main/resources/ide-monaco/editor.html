@@ -382,12 +382,29 @@
 							});
 						});
 					monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-						noSemanticValidation: true,
-						noSyntaxValidation: false
+						noSemanticValidation: false,
+						noSyntaxValidation: false,
+						noSuggestionDiagnostics: false,
+						diagnosticCodesToIgnore: [
+							2304, // Cannot find name 'exports'.(2304)
+							2683, // 'this' implicitly has type 'any' because it does not have a type annotation.(2683)
+							7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
+							7009 // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
+						]
 					});
 					monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
 						target: monaco.languages.typescript.ScriptTarget.ES6,
-						allowNonTsExtensions: true
+						strict: true,
+						strictNullChecks: true,
+						strictPropertyInitialization: true,
+						alwaysStrict: true,
+						allowNonTsExtensions: true,
+						allowUnreachableCode: false,
+						allowUnusedLabels: false,
+						noUnusedParameters: true,
+						noUnusedLocals: true,
+						checkJs: true,
+						noFallthroughCasesInSwitch: true,
 					});
 					monaco.editor.setTheme(monacoTheme);
 				});	
