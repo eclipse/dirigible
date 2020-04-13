@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -302,7 +302,7 @@ public class LocalResource extends LocalEntity implements IResource {
 	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException {
 		try {
 			return getRepository().getRepositoryDao().getResourceVersionsByPath(getPath());
-		} catch (LocalRepositoryException ex) {
+		} catch (LocalRepositoryException | IOException ex) {
 			logger.error(ex.getMessage(), ex);
 		}
 		return null;

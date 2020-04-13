@@ -50,7 +50,8 @@
 	<div class="view-fixed-top">
 	  <div class="btn-toolbar-top">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
-			<div class="btn-group">
+			
+			<!-- <div class="btn-group">
 			  <button type="button" class="btn btn-default dropdown-toggle btn-top" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="New">
 			    <i class="fa fa-plus"></i>
 			  </button>
@@ -60,14 +61,20 @@
 				  <a class="dropdown-item" href="#" ng-click="workspace.createProject()">Project</a>
 				  <div class="dropdown-divider"></div>
 			  </div>
-			</div>
+			</div> -->
 			
 			<button type="button" id="createWorkspace" ng-show=false data-toggle="modal" data-target="#dialogCreateWorkspace"></button>
 			<button type="button" id="createProject" ng-show=false data-toggle="modal" data-target="#dialogCreateProject"></button>
+			<button type="button" id="linkProject" ng-show=false data-toggle="modal" data-target="#dialogLinkProject"></button>
 			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
 			<button type="button" id="generateFromModel" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromModel"></button>
 			<button type="button" id="uploadFile" ng-show=false data-toggle="modal" data-target="#dialogUploadFile"></button>
 			
+
+			<button type="button" class="btn btn-default btn-top" title="Create Workspace" ng-click="workspace.createWorkspace()"><i class="fa fa-clone"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Create Project" ng-click="workspace.createProject()"><i class="fa fa-pencil-square-o"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Link Project" ng-click="workspace.linkProject()"><i class="fa fa-external-link"></i></button>
+
 			<button type="button" class="btn btn-default btn-top" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
 			<button type="button" class="btn btn-default btn-top" title="Publish All" ng-click="workspace.publish()"><i class="fa fa-cloud-upload"></i></button>
 			<button type="button" class="btn btn-default btn-top" title="Export All" ng-click="workspace.exportWorkspace()"><i class="fa fa-download"></i></button>
@@ -119,6 +126,31 @@
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-primary" ng-click="workspace.okCreateProject()" data-toggle="modal" data-target="#dialogCreateProject">Create Project</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+
+	<!-- Link Project -->
+	<div class="modal fade" id="dialogLinkProject" tabindex="-1" role="dialog" aria-labelledby="dialogLinkProjectLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Create Project</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-3 col-form-label">Project Name</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-3 col-form-label">Linked Path</label>
+				<div class="col-xs-9">
+					<input class="form-control" type="text" placeholder="linked path" ng-model="workspace.linkedPath" required="required">
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okLinkProject()" data-toggle="modal" data-target="#dialogLinkProject">Link Project</button>
 	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>

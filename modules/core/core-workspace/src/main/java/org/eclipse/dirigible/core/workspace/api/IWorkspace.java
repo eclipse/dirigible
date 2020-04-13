@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.core.workspace.api;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -125,5 +126,14 @@ public interface IWorkspace extends IFolder {
 	 *            the target file path
 	 */
 	public void moveFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath);
+
+	/**
+	 * Link an external directory as a project
+	 * 
+	 * @param sourceProject the project
+	 * @param targetPath the path to the directory
+	 * @throws IOException in case of IO error
+	 */
+	public void linkProject(String sourceProject, String targetPath) throws IOException;
 
 }

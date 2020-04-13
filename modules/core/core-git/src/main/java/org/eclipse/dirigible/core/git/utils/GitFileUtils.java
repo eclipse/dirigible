@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.cxf.common.util.StringUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -90,10 +91,10 @@ public class GitFileUtils {
 		deleteDirectories(gitDirectory);
 	}
 
-	private static void deleteDirectories(File file) {
-		File tempDirectory = file.getParentFile();
+	private static void deleteDirectories(File file) throws IOException {
+		File tempDirectory = file.getParentFile().getCanonicalFile();
 		if (tempDirectory != null) {
-			File[] listFiles = tempDirectory.listFiles();
+			File[] listFiles = FileSystemUtils.listFiles(tempDirectory);
 			if (listFiles != null) {
 				for (File temp : listFiles) {
 					if (temp != null && temp.isDirectory() && temp.getName().startsWith(TEMP_DIRECTORY_PREFIX)) {
@@ -142,15 +143,16 @@ public class GitFileUtils {
 	 */
 	public List<String> importProject(File gitDirectory, String basePath, String user, String workspace, GitProjectProperties properties, String projectName)
 			throws IOException {
-		List<String> importedProjects = new ArrayList<String>(gitDirectory.listFiles().length);
-		if (gitDirectory.listFiles().length == 1) { // only .git folder
+		File[] listFiles = FileSystemUtils.listFiles(gitDirectory);
+		List<String> importedProjects = new ArrayList<String>(listFiles.length);
+		if (listFiles.length == 1) { // only .git folder
 			if (projectName == null) {
 				projectName = gitDirectory.getName();
 			}
 			File implicitProject = new File(gitDirectory, projectName);
 			FileUtils.forceMkdir(implicitProject);
 		}
-		for (File file : gitDirectory.listFiles()) {
+		for (File file : listFiles) {
 			String project = file.getName();
 			if (file.isDirectory() && !project.equalsIgnoreCase(DOT_GIT)) {
 				importProjectFromGitRepositoryToWorkspace(file, basePath + project);
@@ -173,7 +175,7 @@ public class GitFileUtils {
 	 */
 	private void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
 		if (gitRepositoryFile.isDirectory()) {
-			for (File file : gitRepositoryFile.listFiles()) {
+			for (File file : FileSystemUtils.listFiles(gitRepositoryFile)) {
 				importProjectFromGitRepositoryToWorkspace(file, path + File.separator + file.getName());
 			}
 		}
@@ -257,9 +259,10 @@ public class GitFileUtils {
 	 *            the parent directory
 	 * @param selectedProject
 	 *            the selected project
+	 * @throws IOException 
 	 */
-	public static void deleteProjectFolderFromDirectory(File parentDirectory, String selectedProject) {
-		for (File file : parentDirectory.listFiles()) {
+	public static void deleteProjectFolderFromDirectory(File parentDirectory, String selectedProject) throws IOException {
+		for (File file : FileSystemUtils.listFiles(parentDirectory)) {
 			if (file.getName().equals(selectedProject)) {
 				deleteFiles(file);
 				if (!file.delete()) {
@@ -274,8 +277,9 @@ public class GitFileUtils {
 	 *
 	 * @param directory
 	 *            the directory
+	 * @throws IOException IO error
 	 */
-	public static void deleteDirectory(File directory) {
+	public static void deleteDirectory(File directory) throws IOException {
 		if (directory != null) {
 			deleteFiles(directory);
 			if (!directory.delete()) {
@@ -289,10 +293,11 @@ public class GitFileUtils {
 	 *
 	 * @param directory
 	 *            the directory
+	 * @throws IOException 
 	 */
-	private static void deleteFiles(File directory) {
+	private static void deleteFiles(File directory) throws IOException {
 		if (directory != null) {
-			File[] listFiles = directory.listFiles();
+			File[] listFiles = FileSystemUtils.listFiles(directory);
 			if (listFiles != null) {
 				for (File file : listFiles) {
 					if (file.isDirectory()) {

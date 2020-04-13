@@ -271,6 +271,17 @@ WorkspaceService.prototype.createProject = function(workspace, project, wsTree){
 				return response.data;
 			});
 };
+WorkspaceService.prototype.linkProject = function(workspace, project, path, wsTree){
+	var url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('linkProject').build();
+	return this.$http.post(url, { 
+		source: project,
+		target: path
+	})
+	.then(function(response){
+		wsTree.refresh();
+		return response.data;
+	});
+};
 
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
@@ -1183,6 +1194,15 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 			workspaceService.createProject(this.selectedWorkspace, this.projectName, this.wsTree);
 		}
 	};
+
+	this.linkProject = function(){
+		$('#linkProject').click();
+	};
+	this.okLinkProject = function() {
+		if (this.projectName && this.linkedPath) {
+			workspaceService.linkProject(this.selectedWorkspace, this.projectName, this.linkedPath, this.wsTree);
+		}
+	};
 	
 	this.generateFromTemplate = function(){
 		$('#generateFromTemplate').click();
@@ -1288,6 +1308,10 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	
 	messageHub.on('workspace.create.project', function(msg){
 		$('#createProject').click();
+	}.bind(this), true);
+
+	messageHub.on('workspace.link.project', function(msg){
+		$('#linkProject').click();
 	}.bind(this), true);
 	
 	messageHub.on('workspace.publish.all', function(msg){

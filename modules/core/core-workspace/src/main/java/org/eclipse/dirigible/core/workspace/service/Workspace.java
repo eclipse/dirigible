@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,12 +10,14 @@
  */
 package org.eclipse.dirigible.core.workspace.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
  * The Workspace's Workspace.
@@ -137,6 +139,17 @@ public class Workspace extends Folder implements IWorkspace {
 	public void moveFile(String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
 		ICollection collection = this.createCollection(sourceProject);
 		collection.getResource(sourceFilePath).moveTo(this.getCollection(targetProject).getResource(targetFilePath).getPath());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IWorkspace#linkProject(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void linkProject(String sourceProject, String targetPath) throws IOException {
+		this.getRepository().linkPath(this.getPath() + IRepository.SEPARATOR + sourceProject, targetPath);
+		
 	}
 
 }

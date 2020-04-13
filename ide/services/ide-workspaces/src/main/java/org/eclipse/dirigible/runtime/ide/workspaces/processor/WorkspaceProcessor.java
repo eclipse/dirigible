@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -596,6 +597,11 @@ public class WorkspaceProcessor {
 		} catch (ExtensionsException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	public void linkProject(String workspace, String sourceProject, String targetPath) throws IOException {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		workspaceObject.linkProject(sourceProject, targetPath);
 	}
 
 }

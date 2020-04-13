@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
@@ -492,10 +494,10 @@ public class LocalRepositoryDao {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			File objectFile = new File(workspacePath);
 			if (objectFile.isDirectory()) {
-				File[] children = objectFile.listFiles();
+				File[] children = FileSystemUtils.listFiles(objectFile);
 				if (children != null) {
 					for (File file : children) {
-						localObjects.add(getObjectByPath(file.getCanonicalPath()));
+						localObjects.add(getObjectByPath(file.getAbsolutePath()));
 					}
 				}
 			}
@@ -513,14 +515,15 @@ public class LocalRepositoryDao {
 	 * @return the resource versions by path
 	 * @throws RepositoryVersioningException
 	 *             the repository versioning exception
+	 * @throws IOException IO error
 	 */
-	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException {
+	public List<IResourceVersion> getResourceVersionsByPath(String path) throws RepositoryVersioningException, IOException {
 		List<IResourceVersion> versions = new ArrayList<IResourceVersion>();
 		String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 		String versionsPath = workspacePath.replace(getRepository().getRepositoryPath(), getRepository().getVersionsPath());
 		File versionsDir = new File(versionsPath);
 		if (versionsDir.isDirectory()) {
-			File[] children = versionsDir.listFiles();
+			File[] children = FileSystemUtils.listFiles(versionsDir);
 
 			if (children != null) {
 				for (File file : children) {

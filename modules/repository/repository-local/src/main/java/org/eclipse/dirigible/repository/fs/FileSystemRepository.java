@@ -44,6 +44,7 @@ import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositorySearchException;
+import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.local.LocalCollection;
 import org.eclipse.dirigible.repository.local.LocalRepositoryDao;
@@ -215,15 +216,15 @@ public abstract class FileSystemRepository implements IRepository {
 	private void initializeRepository(String rootFolder) throws IOException {
 		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
-		repositoryPath = new File(repositoryPath).getCanonicalPath();
+		repositoryPath = new File(repositoryPath).getAbsolutePath();
 		this.setParameter(REPOSITORY_ROOT_FOLDER, repositoryPath);
 		versionsPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_VERSIONS; // $NON-NLS-1$
 		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
-		versionsPath = new File(versionsPath).getCanonicalPath();
+		versionsPath = new File(versionsPath).getAbsolutePath();
 		this.setParameter(REPOSITORY_VERSIONS_FOLDER, repositoryPath);
 		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
 		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
-		infoPath = new File(infoPath).getCanonicalPath();
+		infoPath = new File(infoPath).getAbsolutePath();
 		this.setParameter(REPOSITORY_INFO_FOLDER, repositoryPath);
 		FileSystemUtils.createFolder(repositoryPath);
 		FileSystemUtils.createFolder(versionsPath);
@@ -531,17 +532,18 @@ public abstract class FileSystemRepository implements IRepository {
 					new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
 			while (foundFiles.hasNext()) {
 				File foundFile = foundFiles.next();
-				if (foundFile.getCanonicalPath().length() <= rootRepositoryPath.length()) {
+				String foundFilePath = foundFile.getAbsolutePath();
+				if (foundFilePath.length() <= rootRepositoryPath.length()) {
 					throw new RepositorySearchException(String.format("The found file name [%s] is shorter than the repository root file name [%s]",
-							foundFile.getCanonicalPath(), rootRepositoryPath));
+							foundFilePath, rootRepositoryPath));
 				}
-				String repositoryName = foundFile.getCanonicalPath().substring(rootRepositoryPath.length());
+				String repositoryName = foundFilePath.substring(rootRepositoryPath.length());
 				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
 				entities.add(new LocalResource(this, localRepositoryPath));
 			}
 
 			return entities;
-		} catch (RepositoryWriteException | IOException e) {
+		} catch (RepositoryWriteException e) {
 			throw new RepositorySearchException(e);
 		}
 	}
@@ -552,22 +554,18 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
-		try {
-			String rootRepositoryPath = getRepositoryPath();
-			List<IEntity> entities = new ArrayList<IEntity>();
-			Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath),
-					new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
-			while (foundFiles.hasNext()) {
-				File foundFile = foundFiles.next();
-				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
-				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
-				entities.add(new LocalResource(this, localRepositoryPath));
-			}
-
-			return entities;
-		} catch (IOException e) {
-			throw new RepositorySearchException(e);
+		String rootRepositoryPath = getRepositoryPath();
+		List<IEntity> entities = new ArrayList<IEntity>();
+		Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath),
+				new WildcardFileFilter("*" + parameter + "*", (caseInsensitive ? INSENSITIVE : SENSITIVE)), TRUE);
+		while (foundFiles.hasNext()) {
+			File foundFile = foundFiles.next();
+			String repositoryName = foundFile.getAbsolutePath().substring(getRepositoryPath().length());
+			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
+			entities.add(new LocalResource(this, localRepositoryPath));
 		}
+
+		return entities;
 	}
 
 	/*
@@ -595,7 +593,11 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public List<IResourceVersion> getResourceVersions(String path) throws RepositorySearchException {
-		return repositoryDao.getResourceVersionsByPath(path);
+		try {
+			return repositoryDao.getResourceVersionsByPath(path);
+		} catch (RepositoryVersioningException | IOException e) {
+			throw new RepositorySearchException(e);
+		}
 	}
 
 	/*
@@ -648,7 +650,7 @@ public abstract class FileSystemRepository implements IRepository {
 			File toBeDeleted = filesToBeDeleted.next();
 			boolean deleted = toBeDeleted.delete();
 			if (!deleted) {
-				logger.error("Error on deleting the file: " + toBeDeleted.getCanonicalPath());
+				logger.error("Error on deleting the file: " + toBeDeleted.getAbsolutePath());
 			}
 		}
 	}
@@ -659,20 +661,16 @@ public abstract class FileSystemRepository implements IRepository {
 	 */
 	@Override
 	public List<String> getAllResourcePaths() throws RepositoryReadException {
-		try {
-			String rootRepositoryPath = getRepositoryPath();
-			List<String> paths = new ArrayList<String>();
-			Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath), new WildcardFileFilter("*.*", INSENSITIVE), TRUE);
-			while (foundFiles.hasNext()) {
-				File foundFile = foundFiles.next();
-				String repositoryName = foundFile.getCanonicalPath().substring(getRepositoryPath().length());
-				RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
-				paths.add(localRepositoryPath.toString());
-			}
-			return paths;
-		} catch (IOException e) {
-			throw new RepositorySearchException(e);
+		String rootRepositoryPath = getRepositoryPath();
+		List<String> paths = new ArrayList<String>();
+		Iterator<File> foundFiles = FileUtils.iterateFiles(new File(rootRepositoryPath), new WildcardFileFilter("*.*", INSENSITIVE), TRUE);
+		while (foundFiles.hasNext()) {
+			File foundFile = foundFiles.next();
+			String repositoryName = foundFile.getAbsolutePath().substring(getRepositoryPath().length());
+			RepositoryPath localRepositoryPath = new RepositoryPath(repositoryName);
+			paths.add(localRepositoryPath.toString());
 		}
+		return paths;
 	}
 	
 	/* (non-Javadoc)

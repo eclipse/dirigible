@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
@@ -55,6 +56,8 @@ import io.swagger.annotations.Authorization;
 public class WorkspaceManagerService extends AbstractRestService implements IRestService {
 
 	private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
+	
+	private static final String ERROR_INVALID_PROJECT_NAME = "Invalid project name";
 
 	private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
 
@@ -241,6 +244,61 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 	public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		return move(workspace, content, request);
+	}
+	
+	/**
+	 * Link project.
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param content
+	 *            the content
+	 * @param request
+	 *            the request
+	 * @return the response
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
+	 * @throws DecoderException
+	 *             the decoder exception
+	 * @throws IOException
+	 *             IO error
+	 */
+	@POST
+	@Path("{workspace}/linkProject")
+	public Response link(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
+			throws URISyntaxException, DecoderException, IOException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if ((content.getSource() == null) || (content.getTarget() == null)) {
+			sendErrorBadRequest(response, ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
+			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST).build();
+		}
+
+		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
+		if (sourcePath.getSegments().length == 0) {
+			sendErrorBadRequest(response, ERROR_SOURCE_PATH_IS_EMPTY);
+			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_PATH_IS_EMPTY).build();
+		}
+
+		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
+		if (targetPath.getSegments().length == 0) {
+			sendErrorBadRequest(response, ERROR_TARGET_PATH_IS_EMPTY);
+			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_IS_EMPTY).build();
+		}
+
+		String sourceProject = sourcePath.getSegments()[0];
+		String targetProject = targetPath.getPath();
+		if (sourcePath.getSegments().length == 1) {
+			// a project is selected as a source
+			processor.linkProject(workspace, sourceProject, targetProject);
+			return Response.created(processor.getURI(workspace, sourceProject, null)).build();
+		}
+		sendErrorBadRequest(response, ERROR_INVALID_PROJECT_NAME);
+		return Response.status(Status.BAD_REQUEST).entity(ERROR_INVALID_PROJECT_NAME).build();
 	}
 
 	/*

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
@@ -383,5 +384,22 @@ public class FileSystemUtils {
 		}
 		return path.toFile().isDirectory();
 		// return Files.isDirectory(path);
+	}
+	
+	/**
+	 * List files including symbolic links
+	 * 
+	 * @param directory the source directory
+	 * @return the list of files
+	 * @throws IOException IO error
+	 */
+	public static File[] listFiles(File directory) throws IOException {
+		Path link = Paths.get(directory.getAbsolutePath());
+		Path[] paths =  Files.list(link).toArray(size -> new Path[size]);
+		File[] files = new File[paths.length];
+		for (int i=0; i<paths.length; i++) {
+			files[i] = paths[i].toFile();
+		}
+		return files;
 	}
 }

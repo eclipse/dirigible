@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -505,7 +506,7 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String list(String source) throws IOException {
-		return GsonHelper.GSON.toJson(new File(source).listFiles());
+		return GsonHelper.GSON.toJson(FileSystemUtils.listFiles(new File(source)));
 	}
 
 }
