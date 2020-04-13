@@ -78,8 +78,8 @@
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-rhino</artifactId>
-			<version>4.4.0</version>
+			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
+			<version>4.5.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
