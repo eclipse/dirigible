@@ -49,8 +49,9 @@
 			ng-keyup="cancel($event)"
 			placeholder="Preview ...">
     </form>
+	<div class="preview-pre"></div>
 	<div class="responsive-container">
-	    <iframe class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0"> </iframe>
+	    <iframe id="preview-iframe" class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0" iframe-onload="preview.iframeLoadedCallBack()"> </iframe>
 	</div>
 
 </body>

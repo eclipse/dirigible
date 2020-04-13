@@ -176,8 +176,13 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .view {
-	background-color: #999999;
-	color: #f6f6f6;
+	/* background-color: #999999; */
+	color: silver;
+}
+
+.preview-pre {
+	color: silver;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .logo {
@@ -419,6 +424,8 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
     z-index: 1030;
 	background-color: #343436;
 	border-bottom: 2px solid #333;
+	white-space: nowrap;
+	overflow: auto;
 }
 
 .preview-button {
@@ -502,4 +509,10 @@ th {
 .extension-name {
 	color: #eee;
 	font-weight: 400;
+}
+
+.logs-area {
+	height: 100% !important;
+	background-color: #343436;
+	color: silver;
 }

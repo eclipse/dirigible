@@ -12,7 +12,7 @@ angular.module('preview', [])
 .factory('$messageHub', [function(){
 	var messageHub = new FramesMessageHub();	
 	var message = function(evtName, data){
-		messageHub.post({data: data}, 'workspace.' + evtName);
+		messageHub.post({data: data}, evtName);
 	};
 	var on = function(topic, callback){
 		messageHub.subscribe(callback, topic);
@@ -21,6 +21,18 @@ angular.module('preview', [])
 		message: message,
 		on: on
 	};
+}])
+.directive('iframeOnload', [function(){
+	return {
+		scope: {
+			callBack: '&iframeOnload'
+		},
+		link: function(scope, element, attrs){
+			element.on('load', function(){
+				return scope.callBack();
+			})
+		}
+	}
 }])
 .controller('PreviewController', ['$scope', '$messageHub', function ($scope, $messageHub) {
 
@@ -32,6 +44,24 @@ angular.module('preview', [])
 		}
 	};
 
+	this.iframeLoadedCallBack = function() {
+		const element = document.querySelector('.preview-pre');
+		var iframe = document.getElementById('preview-iframe');
+		var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+		if (iframeDocument) {
+			if (iframeDocument.getElementsByTagName("body").length === 1 
+			        && iframeDocument.getElementsByTagName("body")[0].outerText) {
+				iframeDocument.getElementsByTagName("body")[0].style.color = getComputedStyle(element).color;
+				iframeDocument.getElementsByTagName("body")[0].style['font-family'] = getComputedStyle(element)['font-family'];
+			}
+			if (iframeDocument.getElementsByTagName('pre')[0]
+					&& iframeDocument.getElementsByTagName('pre').length === 1) {
+				iframeDocument.getElementsByTagName('pre')[0].style.color = getComputedStyle(element).color;
+				$messageHub.message('status.message', 'Preview ' + this.previewUrl);
+			}
+		}
+    }
+    
 	$messageHub.on('workspace.file.selected', function(msg) {
 		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
 		var url = window.location.protocol + '//' + window.location.host +  window.location.pathname.substr(0, window.location.pathname.indexOf('/web/'));
