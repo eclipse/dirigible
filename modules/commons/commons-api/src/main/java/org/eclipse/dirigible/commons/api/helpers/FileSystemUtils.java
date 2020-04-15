@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -395,12 +396,17 @@ public class FileSystemUtils {
 	 */
 	public static File[] listFiles(File directory) throws IOException {
 		Path link = Paths.get(directory.getAbsolutePath());
-		Path[] paths =  Files.list(link).toArray(size -> new Path[size]);
-		File[] files = new File[paths.length];
-		for (int i=0; i<paths.length; i++) {
-			files[i] = paths[i].toFile();
+		Stream<Path> filesStream = Files.list(link);
+		try {
+			Path[] paths = filesStream.toArray(size -> new Path[size]);
+			File[] files = new File[paths.length];
+			for (int i=0; i<paths.length; i++) {
+				files[i] = paths[i].toFile();
+			}
+			return files;
+		} finally {
+			filesStream.close();
 		}
-		return files;
 	}
 	
 	/**

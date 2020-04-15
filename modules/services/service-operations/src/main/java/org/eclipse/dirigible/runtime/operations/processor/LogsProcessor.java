@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,8 +50,16 @@ public class LogsProcessor {
 	public String get(String file) throws IOException {
 		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
 		Path path = Paths.get(logsFolder, file);
-		String content = new String(IOUtils.toByteArray(new FileInputStream(path.toFile())), StandardCharsets.UTF_8);
-		return content;
+		FileInputStream input = null;
+		try {
+			input = new FileInputStream(path.toFile());
+			String content = new String(IOUtils.toByteArray(input), StandardCharsets.UTF_8);
+			return content;
+		} finally {
+			if (input != null) {
+				input.close();
+			}
+		}
 	}
 
 }

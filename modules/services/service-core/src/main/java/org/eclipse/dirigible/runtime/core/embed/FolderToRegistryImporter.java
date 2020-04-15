@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,16 +36,25 @@ public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	 
 	    @Override
 	    public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-	 
+	    	FileInputStream input = null;
 	        try {
 	            Path targetFile = targetDir.resolve(sourceDir.relativize(file));
 //	            Files.copy(file, targetFile);
-	            byte[] bytes = IOUtils.toByteArray(new FileInputStream(file.toFile()));
+	            input = new FileInputStream(file.toFile());
+				byte[] bytes = IOUtils.toByteArray(input);
 	           // create the provided source code as module in the Dirigible's registry
 				repository.createResource(
 					IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + targetFile.toString(), bytes);
 	        } catch (IOException ex) {
 	            System.err.println(ex);
+	        } finally {
+	        	if (input != null) {
+	        		try {
+						input.close();
+					} catch (IOException e) {
+						// do nothing
+					}
+	        	}
 	        }
 	 
 	        return FileVisitResult.CONTINUE;
