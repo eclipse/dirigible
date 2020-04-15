@@ -698,7 +698,13 @@ public abstract class FileSystemRepository implements IRepository {
 	 * @throws IOException in case of exception
 	 */
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
+		if (!new File(filePath).exists()) {
+			throw new IOException("The source path does not exist: " + filePath);
+		}
 		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
+		if (!Paths.get(workspacePath).getParent().toFile().exists()) {
+			FileSystemUtils.forceCreateDirectory(Paths.get(workspacePath).getParent().toString());
+		}
 		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
 	}
 

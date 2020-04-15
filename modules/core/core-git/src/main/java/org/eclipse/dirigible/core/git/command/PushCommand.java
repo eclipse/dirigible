@@ -22,11 +22,9 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
@@ -41,7 +39,7 @@ public class PushCommand {
 
 	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
 
-	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+//	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
 	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
 
@@ -72,17 +70,19 @@ public class PushCommand {
 	 *            the password
 	 * @param email
 	 *            the email
+	 * @param branch
+	 *            the branch
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
 			final String password, final String email, final String branch) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Push action");
 		}
-
+		String user = UserFacade.getName();
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start pushing project [%s]...", selectedProject.getName()));
-				pushProjectToGitRepository(workspace, selectedProject, commitMessage, username, password, email, branch);
+				pushProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch);
 				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
 			} else {
 				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
@@ -107,66 +107,70 @@ public class PushCommand {
 	 * @param email
 	 *            the email
 	 */
-	private void pushProjectToGitRepository(final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
+	private void pushProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
 			final String username, final String password, final String email, final String branch) {
 
 		final String errorMessage = String.format("Error occurred while pushing project [%s]. ", selectedProject.getName());
-		GitProjectProperties gitProperties = null;
+//		GitProjectProperties gitProperties = null;
+//		try {
+//			gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, selectedProject);
+//		} catch (IOException e) {
+//			logger.error(errorMessage + "Not a git project", e);
+//			return;
+//		}
+//		File tempGitDirectory = null;
 		try {
-			gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, selectedProject);
-		} catch (IOException e) {
-			logger.error(errorMessage + "Not a git project", e);
-			return;
-		}
-		File tempGitDirectory = null;
-		try {
-			String gitRepositoryURI = gitProperties.getURL();
+//			String gitRepositoryURI = gitProperties.getURL();
+//
+//			String gitRepositoryBranch = branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
+//			try {
+//				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, gitRepositoryBranch);
+//				if (branch == null) {
+//					gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
+//					if (gitRepositoryBranch == null) {
+//						gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
+//					}
+//				}
+//			} catch (IOException e) {
+//				logger.error(errorMessage, e);
+//			}
+//
+//			String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
+//			tempGitDirectory = GitFileUtils.createGitDirectory(repositoryName);
+//
+//			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
+//					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
+//			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
+//			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 
-			String gitRepositoryBranch = branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
-			try {
-				projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, gitRepositoryBranch);
-				if (branch == null) {
-					gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
-					if (gitRepositoryBranch == null) {
-						gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
-					}
-				}
-			} catch (IOException e) {
-				logger.error(errorMessage, e);
-			}
+			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
+			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+//			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
 
-			String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+//			String lastSHA = gitProperties.getSHA();
+//
+//			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + UserFacade.getName();
+//			try {
+//				gitConnector.checkout(lastSHA);
+//			} catch (InvalidRefNameException e) {
+//				lastSHA = "HEAD";
+//			}
+//			try {
+//				gitConnector.createBranch(changesBranch, lastSHA);
+//			} catch (GitAPIException e) {
+//				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+//			}
+//			try {
+//				gitConnector.checkout(changesBranch);
+//			} catch (GitAPIException e) {
+//				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+//			}
+//
+//			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
+//			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
 
-			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
-			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
-
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
-
-			String lastSHA = gitProperties.getSHA();
-
-			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + UserFacade.getName();
-			try {
-				gitConnector.checkout(lastSHA);
-			} catch (InvalidRefNameException e) {
-				lastSHA = "HEAD";
-			}
-			try {
-				gitConnector.createBranch(changesBranch, lastSHA);
-			} catch (GitAPIException e) {
-				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
-			}
-			try {
-				gitConnector.checkout(changesBranch);
-			} catch (GitAPIException e) {
-				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
-			}
-
-			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
-			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
-
+			String gitRepositoryBranch = gitConnector.getBranch();
 			gitConnector.add(selectedProject.getName());
 			gitConnector.commit(commitMessage, username, email, true);
 			try {
@@ -176,37 +180,38 @@ public class PushCommand {
 			}
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			if (numberOfConflictingFiles == 0) {
-				try {
-					gitConnector.checkout(gitRepositoryBranch);
-				} catch (GitAPIException e) {
-					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
-				}
-				try {
-					gitConnector.rebase(changesBranch);
-				} catch (GitAPIException e) {
-					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
-				}
+//				try {
+//					gitConnector.checkout(gitRepositoryBranch);
+//				} catch (GitAPIException e) {
+//					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+//				}
+//				try {
+//					gitConnector.rebase(changesBranch);
+//				} catch (GitAPIException e) {
+//					logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
+//				}
+				
 				gitConnector.push(username, password);
 
-				gitFileUtils.deleteRepositoryProject(selectedProject);
-
-				String dirigibleUser = UserFacade.getName();
-				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
-
-				String newLastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
-				gitProperties.setSHA(newLastSHA);
-
-				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
+//				gitFileUtils.deleteRepositoryProject(selectedProject);
+//
+//				String dirigibleUser = UserFacade.getName();
+//				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
+//
+//				String newLastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
+//				gitProperties.setSHA(newLastSHA);
+//
+//				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
 
 				logger.info(String.format("Project [%s] has been pushed to remote repository.", selectedProject.getName()));
 			} else {
-				gitConnector.hardReset();
-				gitConnector.push(username, password);
+//				gitConnector.hardReset();
+//				gitConnector.push(username, password);
 				String statusLineMessage = String.format("Project has %d conflicting file(s).", numberOfConflictingFiles);
 				logger.warn(statusLineMessage);
 				String message = String.format(
-						"Project has %d conflicting file(s). Pushed to remote branch [%s]. Please merge to [%s] and then continue working on project.",
-						numberOfConflictingFiles, changesBranch, gitRepositoryBranch);
+						"Project has %d conflicting file(s). Please merge to [%s] and then continue working on project.",
+						numberOfConflictingFiles, gitRepositoryBranch);
 				logger.warn(message);
 			}
 		} catch (IOException e) {
@@ -227,11 +232,11 @@ public class PushCommand {
 		} catch (GitAPIException e) {
 			logger.error(errorMessage, e);
 		} finally {
-			try {
-				GitFileUtils.deleteDirectory(tempGitDirectory);
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-			}
+//			try {
+//				GitFileUtils.deleteDirectory(tempGitDirectory);
+//			} catch (IOException e) {
+//				logger.error(e.getMessage(), e);
+//			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -44,9 +45,10 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) {
 		for (IProject selectedProject : projects) {
+			String user = UserFacade.getName();
 			try {
 				Set<String> clonedProjects = new HashSet<String>();
-				cloneDependencies(username, password, workspace, clonedProjects, selectedProject.getName());
+				cloneDependencies(user, username, password, workspace, clonedProjects, selectedProject.getName());
 				if (publishAfterClone) {
 					publishProjects(workspace, clonedProjects);
 				}

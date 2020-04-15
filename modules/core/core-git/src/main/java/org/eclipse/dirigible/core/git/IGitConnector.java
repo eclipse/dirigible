@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -248,6 +248,15 @@ public interface IGitConnector {
 	 *             Git API Exception
 	 */
 	Status status() throws NoWorkTreeException, GitAPIException;
+	
+	/**
+	 * Get the current branch of the Git repository.
+	 *
+	 * @return the branch
+	 * @throws IOException
+	 *             IO Exception
+	 */
+	String getBranch() throws IOException;
 
 	/**
 	 * Returns the SHA of the last commit on the specified branch.

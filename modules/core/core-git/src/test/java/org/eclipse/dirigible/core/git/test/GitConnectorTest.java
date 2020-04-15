@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,8 @@ import org.junit.Test;
  */
 public class GitConnectorTest {
 
+	public static final String DIRIGIBLE_TEST_GIT_ENABLED = "DIRIGIBLE_TEST_GIT_ENABLED";
+
 	/**
 	 * Clone repository.
 	 *
@@ -45,7 +47,7 @@ public class GitConnectorTest {
 	 */
 	@Test
 	public void cloneRepository() throws IOException, InvalidRemoteException, TransportException, GitAPIException {
-		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
+		String gitEnabled = System.getProperty(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
 			Path path = Files.createDirectory(Paths.get("target/dirigible/git"));
 			try {

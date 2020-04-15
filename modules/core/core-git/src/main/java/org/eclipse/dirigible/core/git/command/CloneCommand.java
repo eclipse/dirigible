@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
-import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataRepository;
@@ -37,7 +36,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +45,9 @@ import org.slf4j.LoggerFactory;
  */
 public class CloneCommand {
 
-	private static final String REPOSITORY_GIT_EXTENSION = ".git";
-
-	private static final String DOT_GIT = REPOSITORY_GIT_EXTENSION;
+//	private static final String REPOSITORY_GIT_EXTENSION = ".git";
+//
+//	private static final String DOT_GIT = REPOSITORY_GIT_EXTENSION;
 
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 
@@ -88,21 +86,24 @@ public class CloneCommand {
 	 *            the workspace name
 	 * @param publishAfterClone
 	 *            the publish after clone
+	 * @param projectName
+	 *            the workspace name
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
 	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
 			boolean publishAfterClone, String projectName) throws GitConnectorException {
 		try {
-			if (repositoryUri != null && !repositoryUri.endsWith(REPOSITORY_GIT_EXTENSION)) {
-				repositoryUri += REPOSITORY_GIT_EXTENSION;
+			if (repositoryUri != null && !repositoryUri.endsWith(GitFileUtils.DOT_GIT)) {
+				repositoryUri += GitFileUtils.DOT_GIT;
 			}
-			File gitDirectory = createGitDirectory(repositoryUri);
 			Set<String> clonedProjects = new HashSet<String>();
 			logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
 			IWorkspace workspace = workspacesCoreService.getWorkspace(workspaceName);
-			cloneProject(repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects, projectName);
-			logger.debug(String.format("Cloning repository [%s] finished successfully.", repositoryUri));
+			String user = UserFacade.getName();
+			File gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryUri);
+			cloneProject(user, repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects, projectName);
+			logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath()));
 			if (publishAfterClone) {
 				publishProjects(workspace, clonedProjects);
 			}
@@ -112,24 +113,28 @@ public class CloneCommand {
 		}
 	}
 
-	/**
-	 * Creates the git directory.
-	 *
-	 * @param repositoryURI
-	 *            the repository URI
-	 * @return the file
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	protected File createGitDirectory(String repositoryURI) throws IOException {
-		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf("/") + 1, repositoryURI.lastIndexOf(DOT_GIT));
-		File gitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
-		return gitDirectory;
-	}
+//	/**
+//	 * Creates the git directory.
+//	 *
+//	 * @param user the logged in user
+//	 * @param workspace the current workspace
+//	 * @param repositoryURI
+//	 *            the repository URI
+//	 * @return the file
+//	 * @throws IOException
+//	 *             Signals that an I/O exception has occurred.
+//	 */
+//	protected File createGitDirectory(String user, String workspace, String repositoryURI) throws IOException {
+//		String repositoryName = GitFileUtils.generateGitRepositoryName(repositoryURI);
+//		File gitDirectory = GitFileUtils.createGitDirectory(user, workspace, repositoryName);
+//		return gitDirectory;
+//	}
 
 	/**
 	 * Clone project execute several low level Git commands.
 	 *
+	 * @param user
+	 *            logged in user
 	 * @param repositoryURI
 	 *            the repository URI
 	 * @param repositoryBranch
@@ -149,34 +154,32 @@ public class CloneCommand {
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
-	protected void cloneProject(final String repositoryURI, final String repositoryBranch, final String username, final String password,
+	protected void cloneProject(final String user, final String repositoryURI, final String repositoryBranch, final String username, final String password,
 			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects, String optionalProjectName) throws GitConnectorException {
 		try {
-			String user = UserFacade.getName();
-
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getCanonicalPath()));
 			GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryURI, username, password, repositoryBranch);
 			logger.debug(String.format("Cloning repository %s finished.", repositoryURI));
 
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+//			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
 
 			// final String lastSha = jgit.getLastSHAForBranch(MASTER);
-			String lastSha = "";
-			try {
-				lastSha = gitConnector.getLastSHAForBranch(repositoryBranch);
-			} catch (RefNotFoundException e) {
-				logger.debug("Cloning an empty repository");
-			}
+//			String lastSha = "";
+//			try {
+//				lastSha = gitConnector.getLastSHAForBranch(repositoryBranch);
+//			} catch (RefNotFoundException e) {
+//				logger.debug("Cloning an empty repository");
+//			}
 
-			GitProjectProperties gitProperties = new GitProjectProperties(repositoryURI, lastSha);
+//			GitProjectProperties gitProperties = new GitProjectProperties(repositoryURI, lastSha);
 
-			logger.debug(String.format("Git properties for the repository %s: %s", repositoryURI, gitProperties.toString()));
+//			logger.debug(String.format("Git properties for the repository %s: %s", repositoryURI, gitProperties.toString()));
 
 			String workspacePath = String.format(GitProjectProperties.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
 			logger.debug(String.format("Start importing projects for repository directory %s ...", gitDirectory.getCanonicalPath()));
-			List<String> importedProjects = gitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), gitProperties, optionalProjectName);
+			List<String> importedProjects = gitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), optionalProjectName);
 			logger.debug(String.format("Importing projects for repository directory %s finished", gitDirectory.getCanonicalPath()));
 
 			for (String importedProject : importedProjects) {
@@ -191,7 +194,7 @@ public class CloneCommand {
 			logger.debug("Start cloning dependencies ...");
 			for (String projectName : projectNames) {
 				logger.debug(String.format("Start cloning dependencies of the project %s...", projectName));
-				cloneDependencies(username, password, workspace, clonedProjects, projectName);
+				cloneDependencies(user, username, password, workspace, clonedProjects, projectName);
 				logger.debug(String.format("Cloning of dependencies of the project %s finished", projectName));
 			}
 			logger.debug("Cloning of dependencies finished");
@@ -217,17 +220,19 @@ public class CloneCommand {
 			logger.error(e.getMessage(), e);
 			throw new GitConnectorException(e);
 		} finally {
-			try {
-				GitFileUtils.deleteDirectory(gitDirectory);
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-			}
+//			try {
+//				GitFileUtils.deleteDirectory(gitDirectory);
+//			} catch (IOException e) {
+//				logger.error(e.getMessage(), e);
+//			}
 		}
 	}
 
 	/**
 	 * Clone project's dependencies if any along with the main project.
 	 *
+	 * @param user
+	 *            the logged in user
 	 * @param username
 	 *            the username
 	 * @param password
@@ -243,7 +248,7 @@ public class CloneCommand {
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
-	protected void cloneDependencies(final String username, final String password, IWorkspace workspace, Set<String> clonedProjects,
+	protected void cloneDependencies(final String user, final String username, final String password, IWorkspace workspace, Set<String> clonedProjects,
 			String projectName) throws IOException, GitConnectorException {
 		IProject selectedProject = workspace.getProject(projectName);
 		ProjectMetadataDependency[] dependencies = ProjectMetadataManager.getDependencies(selectedProject);
@@ -255,14 +260,14 @@ public class CloneCommand {
 					String projectRepositoryURI = dependency.getUrl();
 					String projectRepositoryBranch = dependency.getBranch();
 					if (!alreadyClonedProject.exists()) {
-						File projectGitDirectory = createGitDirectory(projectRepositoryURI);
+						File projectGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), projectRepositoryURI);
 						logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 								projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
-						cloneProject(projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
+						cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
 								clonedProjects, null); // assume
 					} else {
 						logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
-						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject, username, password, projectRepositoryBranch);
+//						pull.pullProjectFromGitRepository(workspace, alreadyClonedProject, username, password, projectRepositoryBranch);
 					}
 					clonedProjects.add(projectGuid);
 

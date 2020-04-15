@@ -10,11 +10,15 @@
  */
 package org.eclipse.dirigible.core.workspace.json;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 /**
  * The Workspace Json Helper.
@@ -60,8 +64,9 @@ public class WorkspaceJsonHelper {
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
-		repositoryPath.setSegment(0, "git");
-		projectPojo.setGit(collection.getRepository().hasCollection(repositoryPath.toString()));
+		
+		projectPojo.setGit(setGitAware(collection, repositoryPath));
+		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
 			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));
@@ -77,6 +82,25 @@ public class WorkspaceJsonHelper {
 		}
 
 		return projectPojo;
+	}
+
+	/**
+	 * Set the git flag
+	 * 
+	 * @param collection the collection
+	 * @param repositoryPath the path
+	 */
+	protected static boolean setGitAware(ICollection collection, RepositoryPath repositoryPath) {
+		try {
+			if (collection.getRepository() instanceof FileSystemRepository) {
+				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) collection.getRepository(), repositoryPath.toString());
+				String gitDirectory = new File(path).getCanonicalPath();
+				return Paths.get(Paths.get(gitDirectory).getParent().toString(), ".git").toFile().exists();
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+		return false;
 	}
 
 	/**

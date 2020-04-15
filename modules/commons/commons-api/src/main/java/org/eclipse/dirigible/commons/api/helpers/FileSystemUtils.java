@@ -402,4 +402,35 @@ public class FileSystemUtils {
 		}
 		return files;
 	}
+	
+	/**
+	 * Force create directory and all its parents
+	 * 
+	 * @param firstSegment the first segment
+	 * @param segments the rest segments
+	 * @return the resulting path
+	 * @throws IOException IO error
+	 */
+	public static File forceCreateDirectory(String firstSegment, String ...segments) throws IOException {
+		Path dir = Paths.get(firstSegment, segments);
+		if (dir.toFile().exists()) {
+			return dir.toFile();
+		}
+		return Files.createDirectories(dir).toFile();
+	}
+	
+	/**
+	 * Returns the directory by segments
+	 * 
+	 * @param firstSegment the first segment
+	 * @param segments the rest segments
+	 * @return the resulting path
+	 */
+	public static File getDirectory(String firstSegment, String ...segments) {
+		Path dir = Paths.get(firstSegment, segments);
+		if (dir.toFile().exists()) {
+			return dir.toFile();
+		}
+		return null;
+	}
 }

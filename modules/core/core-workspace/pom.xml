@@ -44,7 +44,12 @@
 			<artifactId>dirigible-api-facade-security</artifactId>
 			<version>4.5.0-SNAPSHOT</version>
     	</dependency>
-
+    	<dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-repository-local</artifactId>
+            <version>4.5.0-SNAPSHOT</version>
+        </dependency>
+    	
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
@@ -57,12 +62,6 @@
 			<version>4.5.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
-            <version>4.5.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 	<properties>

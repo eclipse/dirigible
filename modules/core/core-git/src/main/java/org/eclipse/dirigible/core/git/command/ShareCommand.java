@@ -22,7 +22,6 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ShareCommand {
 
-	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
+//	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
 	private static final Logger logger = LoggerFactory.getLogger(ShareCommand.class);
 
@@ -74,7 +73,8 @@ public class ShareCommand {
 	 */
 	public void execute(final IWorkspace workspace, final IProject project, String repositoryUri, String repositoryBranch, final String commitMessage,
 			final String username, final String password, final String email) {
-		shareToGitRepository(workspace, project, commitMessage, username, email, password, repositoryUri, repositoryBranch);
+		String user = UserFacade.getName();
+		shareToGitRepository(user, workspace, project, commitMessage, username, email, password, repositoryUri, repositoryBranch);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ShareCommand {
 	 * @param gitRepositoryBranch
 	 *            the git repository branch
 	 */
-	private void shareToGitRepository(final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
+	private void shareToGitRepository(final String user, final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
 			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) {
 		final String errorMessage = String.format("Error occurred while sharing project [%s]", project.getName());
 		
@@ -107,8 +107,8 @@ public class ShareCommand {
 
 		File tempGitDirectory = null;
 		try {
-			final String repositoryName = gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createGitDirectory(GitFileUtils.TEMP_DIRECTORY_PREFIX + repositoryName);
+			final String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
+			tempGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryName);
 
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
 					branch, tempGitDirectory.getCanonicalPath()));
@@ -122,11 +122,16 @@ public class ShareCommand {
 			gitConnector.commit(commitMessage, username, email, true);
 			gitConnector.push(username, password);
 
-			String lastSHA = gitConnector.getLastSHAForBranch(branch);
-			GitProjectProperties properties = new GitProjectProperties(gitRepositoryURI, lastSHA);
-			String user = UserFacade.getName();
+//			String lastSHA = gitConnector.getLastSHAForBranch(branch);
+//			GitProjectProperties properties = new GitProjectProperties(gitRepositoryURI, lastSHA);
+//			String user = UserFacade.getName();
+			
+			// delete the local project
+			project.delete();
+			// link the already share project
+			gitFileUtils.importProjectFromGitRepositoryToWorkspace(tempGitDirectory, project.getPath());
 
-			gitFileUtils.saveGitPropertiesFile(properties, user, workspace.getName(), project.getName());
+//			gitFileUtils.saveGitPropertiesFile(properties, user, workspace.getName(), project.getName());
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);
@@ -148,11 +153,11 @@ public class ShareCommand {
 		} catch (IOException e) {
 			logger.error(errorMessage, e);
 		} finally {
-			try {
-				GitFileUtils.deleteDirectory(tempGitDirectory);
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-			}
+//			try {
+//				GitFileUtils.deleteDirectory(tempGitDirectory);
+//			} catch (IOException e) {
+//				logger.error(e.getMessage(), e);
+//			}
 		}
 	}
 }

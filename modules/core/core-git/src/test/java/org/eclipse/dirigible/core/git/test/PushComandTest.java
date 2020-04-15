@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2019 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,12 @@ import org.junit.Test;
  */
 public class PushComandTest extends AbstractGuiceTest {
 
+	private static final String DIRIGIBLE_TEST_GIT_EMAIL = "DIRIGIBLE_TEST_GIT_EMAIL";
+	
+	private static final String DIRIGIBLE_TEST_GIT_USERNAME = "DIRIGIBLE_TEST_GIT_USERNAME";
+
+	private static final String DIRIGIBLE_TEST_GIT_PASSWORD = "DIRIGIBLE_TEST_GIT_PASSWORD";
+
 	/** The clone command. */
 	@Inject
 	private CloneCommand cloneCommand;
@@ -63,7 +69,7 @@ public class PushComandTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createWorkspaceTest() throws GitConnectorException {
-		String gitEnabled = System.getProperty("dirigibleTestGitEnabled");
+		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
 			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
@@ -72,9 +78,9 @@ public class PushComandTest extends AbstractGuiceTest {
 			IProject project1 = workspace1.getProject("project1");
 			assertNotNull(project1);
 			assertTrue(project1.exists());
-			String username = System.getProperty("dirigibleTestGitUsername");
-			String password = System.getProperty("dirigibleTestGitPassword");
-			String email = System.getProperty("dirigibleTestGitEmail");
+			String username = System.getProperty(DIRIGIBLE_TEST_GIT_USERNAME);
+			String password = System.getProperty(DIRIGIBLE_TEST_GIT_PASSWORD);
+			String email = System.getProperty(DIRIGIBLE_TEST_GIT_EMAIL);
 			if (username != null) {
 				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email, IGitConnector.GIT_MASTER);
 			}

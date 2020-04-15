@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -37,9 +38,7 @@ public class RepositoryFileUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static File createDirectory(String directory) throws IOException {
-		File file = new File(directory);
-		file.mkdirs();
-		return file;
+		return FileSystemUtils.forceCreateDirectory(directory);
 	}
 
 	/**
