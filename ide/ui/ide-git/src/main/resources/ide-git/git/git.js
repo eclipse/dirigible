@@ -171,8 +171,8 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 			// var _files = f.files.map(this._buildTreeNode.bind(this))
 			// children = children.concat(_files);
 			children = [
-				{text:"local", type: "local", "icon": "fa fa-th-large", children: ['Loading local branches...']},
-				{text:"remote", type: "remote", "icon": "fa fa-sort-amount-desc", children: ['Loading remote branches...']},
+				{text:"local", type: "local", "icon": "fa fa-pencil-square", children: ['Loading local branches...']},
+				{text:"remote", type: "remote", "icon": "fa fa-share-square", children: ['Loading remote branches...']},
 			];
 		}
 		var icon;
@@ -248,8 +248,8 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 			workspaceController.http.get(url)
 				.success(function(data) {
 					data.local.forEach(function(branch) {
-						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + ")";
-						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-th-large"};
+						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-code-fork"};
 						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
 					})
 				});
@@ -267,8 +267,8 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 			workspaceController.http.get(url)
 				.success(function(data) {
 					data.remote.forEach(function(branch) {
-						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + ")";
-						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-th-large"};
+						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-code-fork"};
 						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
 					})
 				});
