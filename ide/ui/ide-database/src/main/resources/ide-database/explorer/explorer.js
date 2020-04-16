@@ -179,7 +179,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 									.success(function(data) {
 										data.columns.forEach(function(column) {
 											var nodeText = column.name + ':' + column.type + "(" + column.size + ")";
-  											var newNode = { state: "open", "text": nodeText, "id": column.name, "icon": "fa fa-th-large"};
+  											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + column.name, "icon": "fa fa-th-large"};
   											var child = $('.database').jstree("create_node", parent, newNode, position, false, false);
 										})
 									});
@@ -197,7 +197,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 									.success(function(data) {
 										data.indices.forEach(function(index) {
 											var nodeText = index.name;
-  											var newNode = { state: "open", "text": nodeText, "id": index.name, "icon": "fa fa-sort-amount-desc"};
+  											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-sort-amount-desc"};
   											var child = $('.database').jstree("create_node", parent, newNode, position, false, false);
 										})
 									});
