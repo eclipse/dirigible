@@ -11,6 +11,12 @@
 package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
@@ -18,6 +24,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RebaseCommand;
@@ -41,9 +48,13 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 /**
@@ -235,5 +246,72 @@ public class GitConnector implements IGitConnector {
 	public String getLastSHAForBranch(String branch)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 		return checkout(branch).getLeaf().getObjectId().getName();
+	}
+	
+	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLocalBranches()
+	 */
+	@Override
+	public List<GitBranch> getLocalBranches() throws GitConnectorException {
+		try {
+			List<GitBranch> result = new ArrayList<GitBranch>();
+			List<Ref> branches = git.branchList().call(); // .setListMode(ListMode.ALL)
+			Collections.sort(branches, new Comparator<Ref>() {
+				  @Override
+				  public int compare(Ref ref1, Ref ref2) {
+				    return ref1.getName().compareTo(ref2.getName());
+				  }
+				});
+			
+			RevWalk walk = new RevWalk(git.getRepository());
+			try {
+				for (Ref branch : branches) {
+					RevCommit commit = walk.parseCommit(branch.getObjectId());
+					GitBranch gitBranch = new GitBranch(branch.getName(), false, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
+					result.add(gitBranch);
+				} 
+			} finally {
+				walk.close();
+			}
+			return result;
+		} catch (GitAPIException | IOException e) {
+			throw new GitConnectorException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#getRemoteBranches()
+	 */
+	@Override
+	public List<GitBranch> getRemoteBranches() throws GitConnectorException {
+		try {
+			List<GitBranch> result = new ArrayList<GitBranch>();
+			Collection<Ref> remotes = Git.lsRemoteRepository()
+			        .setHeads(true)
+			        .setRemote(git.getRepository().getConfig().getString("remote", "origin", "url"))
+			        .call();
+				
+			List<Ref> branches = new ArrayList<Ref>(remotes);
+			
+			RevWalk walk = new RevWalk(git.getRepository());
+			try {
+				for (Ref branch : branches) {
+					RevCommit commit = walk.parseCommit(branch.getObjectId());
+					GitBranch gitBranch = new GitBranch(branch.getName(), true, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
+					result.add(gitBranch);
+				} 
+			} finally {
+				walk.close();
+			}
+			return result;
+		} catch (GitAPIException | IOException e) {
+			throw new GitConnectorException(e);
+		}
 	}
 }

@@ -25,6 +25,8 @@ import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
  */
 public class WorkspaceJsonHelper {
 
+	private static final String DOT_GIT = ".git";
+
 	/**
 	 * Describe workspace.
 	 *
@@ -47,6 +49,29 @@ public class WorkspaceJsonHelper {
 
 		return workspacePojo;
 	}
+	
+	/**
+	 * Describe workspace projects.
+	 *
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
+	 * @return the workspace descriptor
+	 */
+	public static WorkspaceDescriptor describeWorkspaceProjects(ICollection collection, String removePathPrefix, String addPathPrefix) {
+		WorkspaceDescriptor workspacePojo = new WorkspaceDescriptor();
+		workspacePojo.setName(collection.getName());
+		workspacePojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		List<ICollection> collections = collection.getCollections();
+		for (ICollection childCollection : collections) {
+			workspacePojo.getProjects().add(describeProjectOnly(childCollection, removePathPrefix, addPathPrefix));
+		}
+
+		return workspacePojo;
+	}
 
 	/**
 	 * Describe project.
@@ -65,7 +90,7 @@ public class WorkspaceJsonHelper {
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 		
-		projectPojo.setGit(setGitAware(collection, repositoryPath));
+		projectPojo.setGit(getGitAware(collection, repositoryPath));
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -83,6 +108,28 @@ public class WorkspaceJsonHelper {
 
 		return projectPojo;
 	}
+	
+	/**
+	 * Describe project.
+	 *
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
+	 * @return the project descriptor
+	 */
+	public static ProjectDescriptor describeProjectOnly(ICollection collection, String removePathPrefix, String addPathPrefix) {
+		ProjectDescriptor projectPojo = new ProjectDescriptor();
+		projectPojo.setName(collection.getName());
+		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
+		
+		projectPojo.setGit(getGitAware(collection, repositoryPath));
+		
+		return projectPojo;
+	}
 
 	/**
 	 * Set the git flag
@@ -90,12 +137,12 @@ public class WorkspaceJsonHelper {
 	 * @param collection the collection
 	 * @param repositoryPath the path
 	 */
-	protected static boolean setGitAware(ICollection collection, RepositoryPath repositoryPath) {
+	public static boolean getGitAware(ICollection collection, RepositoryPath repositoryPath) {
 		try {
 			if (collection.getRepository() instanceof FileSystemRepository) {
 				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) collection.getRepository(), repositoryPath.toString());
 				String gitDirectory = new File(path).getCanonicalPath();
-				return Paths.get(Paths.get(gitDirectory).getParent().toString(), ".git").toFile().exists();
+				return Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists();
 			}
 		} catch (Exception e) {
 			// do nothing

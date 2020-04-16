@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,15 +39,20 @@ public class GitConnectorFactory {
 	 * @param repositoryDirectory
 	 *            the path to an existing Git Repository
 	 * @return a newly created {@link IGitConnector} object
-	 * @throws IOException
-	 *             IO Exception
+	 * @throws GitConnectorException
+	 *             Git Connector Exception 
 	 */
-	public static IGitConnector getRepository(String repositoryDirectory) throws IOException {
-		RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
-		repositoryBuilder.findGitDir(new File(repositoryDirectory));
-		Repository repository = repositoryBuilder.build();
-		repository.getConfig().setString(GIT_BRANCH, GIT_MASTER, GIT_MERGE, GIT_REFS_HEADS_MASTER);
-		return new GitConnector(repository);
+	public static IGitConnector getConnector(String repositoryDirectory) throws GitConnectorException {
+		try {
+			RepositoryBuilder repositoryBuilder = new RepositoryBuilder();
+			File current = new File(repositoryDirectory);
+			repositoryBuilder.findGitDir(current);
+			Repository repository = repositoryBuilder.build();
+			repository.getConfig().setString(GIT_BRANCH, GIT_MASTER, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+			return new GitConnector(repository);
+		} catch (IOException e) {
+			throw new GitConnectorException(e);
+		}
 	}
 
 	/**
@@ -84,7 +89,7 @@ public class GitConnectorFactory {
 			cloneCommand.setDirectory(new File(repositoryDirectory));
 			cloneCommand.call();
 
-			return getRepository(repositoryDirectory);
+			return getConnector(repositoryDirectory);
 		} catch (Exception e) {
 			throw new TransportException(e.getMessage());
 		}

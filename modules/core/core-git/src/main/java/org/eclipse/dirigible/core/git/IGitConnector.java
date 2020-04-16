@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
@@ -29,6 +30,8 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 
@@ -277,5 +280,21 @@ public interface IGitConnector {
 	 */
 	String getLastSHAForBranch(String branch)
 			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException;
+
+	/**
+	 * List all the local branches info
+	 * 
+	 * @return the list of branches
+	 * @throws GitConnectorException in case of exception
+	 */
+	List<GitBranch> getLocalBranches() throws GitConnectorException;
+
+	/**
+	 * List all the remote branches info
+	 * 
+	 * @return the list of branches
+	 * @throws GitConnectorException in case of exception
+	 */
+	List<GitBranch> getRemoteBranches() throws GitConnectorException;
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,15 @@
  */
 package org.eclipse.dirigible.runtime.git.service;
 
+import static java.text.MessageFormat.format;
+
 import java.util.Arrays;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -24,10 +28,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
+import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
+import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
 import org.eclipse.dirigible.runtime.git.model.GitPullModel;
 import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
@@ -303,6 +312,92 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		model.setProjects(Arrays.asList(project));
 		processor.updateDependencies(workspace, model);
 		return Response.ok().build();
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Get local branches.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@GET
+	@Path("/{project}/branches/local")
+	@Produces("application/json")
+	@ApiOperation("Get Project Local Branches")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Local Branches") })
+	public Response gitProjectLocalBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		GitProjectLocalBranches gitProjectBranches = processor.getLocalBranches(workspace, project);
+		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectBranches)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Get remote branches.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@GET
+	@Path("/{project}/branches/remote")
+	@Produces("application/json")
+	@ApiOperation("Get Project Remote Branches")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Remote Branches") })
+	public Response gitProjectRemoteBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		GitProjectRemoteBranches gitProjectBranches = processor.getRemoteBranches(workspace, project);
+		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectBranches)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Gets the workspace.
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param request
+	 *            the request
+	 * @return the workspace
+	 */
+	@GET
+	@Path("/")
+	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		IWorkspace workspaceObject = processor.getWorkspace(workspace);
+		if (!workspaceObject.exists()) {
+			sendErrorNotFound(response, workspace);
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	/* (non-Javadoc)

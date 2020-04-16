@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
@@ -43,9 +44,9 @@ public class ShareCommand {
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
-	/** The verifier. */
-	@Inject
-	private ProjectPropertiesVerifier verifier;
+//	/** The verifier. */
+//	@Inject
+//	private ProjectPropertiesVerifier verifier;
 
 	/** The git file utils. */
 	@Inject
@@ -115,7 +116,7 @@ public class ShareCommand {
 			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, branch);
 			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
+			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
 
 			GitFileUtils.copyProjectToDirectory(project, tempGitDirectory);
 			gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
@@ -151,6 +152,8 @@ public class ShareCommand {
 		} catch (GitAPIException e) {
 			logger.error(errorMessage, e);
 		} catch (IOException e) {
+			logger.error(errorMessage, e);
+		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
 		} finally {
 //			try {

@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
@@ -157,7 +158,7 @@ public class PullCommand {
 //
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 //
 //			String lastSHA = gitProperties.getSHA();
 //
@@ -247,6 +248,8 @@ public class PullCommand {
 				}
 			}
 		} catch (GitAPIException e) {
+			logger.error(errorMessage, e);
+		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
 		} finally {
 //			try {

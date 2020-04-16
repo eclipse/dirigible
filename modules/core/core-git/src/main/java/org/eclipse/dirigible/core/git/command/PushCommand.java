@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
@@ -37,15 +38,15 @@ public class PushCommand {
 
 	private static final String SHOULD_BE_EMPTY_REPOSITORY = "Should be empty repository: {}";
 
-	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
+//	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
 
 //	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
 	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
 
-	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
+//	/** The project metadata manager. */
+//	@Inject
+//	private ProjectMetadataManager projectMetadataManager;
 
 	/** The verifier. */
 	@Inject
@@ -145,7 +146,7 @@ public class PushCommand {
 
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 //			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
 
 //			String lastSHA = gitProperties.getSHA();
@@ -230,6 +231,8 @@ public class PushCommand {
 				}
 			}
 		} catch (GitAPIException e) {
+			logger.error(errorMessage, e);
+		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
 		} finally {
 //			try {

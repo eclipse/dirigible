@@ -16,6 +16,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
@@ -36,9 +37,9 @@ public class ResetCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
-	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
+//	/** The project metadata manager. */
+//	@Inject
+//	private ProjectMetadataManager projectMetadataManager;
 
 	/** The verifier. */
 	@Inject
@@ -135,7 +136,7 @@ public class ResetCommand {
 			
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(project.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
-			IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 			try {
 				gitConnector.hardReset();
 			} catch (GitAPIException e) {
@@ -145,6 +146,8 @@ public class ResetCommand {
 			String message = String.format("Project [%s] successfully reset.", project.getName());
 			logger.info(message);
 		} catch (IOException e) {
+			logger.error(errorMessage, e);
+		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
 		} finally {
 //			try {

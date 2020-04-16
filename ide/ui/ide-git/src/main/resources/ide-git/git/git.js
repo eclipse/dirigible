@@ -156,18 +156,24 @@ WorkspaceService.prototype.listWorkspaceNames = function(){
 /**
  * Workspace Tree Adapter mediating the workspace service REST api and the jst tree componet working with it
  */
-var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, gitService, $messageHub){
+var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService, $messageHub){
 	this.treeConfig = treeConfig;
 	this.gitService = gitService;
-	this.$messageHub = $messageHub;
 	this.workspaceSvc = workspaceSvc;
+	this.$http = $http;
+	this.$messageHub = $messageHub;
 
 	this._buildTreeNode = function(f){
 		var children = [];
-		if(f.type=='folder' || f.type=='project'){
-			children = f.folders.map(this._buildTreeNode.bind(this));
-			var _files = f.files.map(this._buildTreeNode.bind(this))
-			children = children.concat(_files);
+		// if(f.type=='folder' || f.type=='project'){
+		if(f.type=='project'){
+			// children = f.folders.map(this._buildTreeNode.bind(this));
+			// var _files = f.files.map(this._buildTreeNode.bind(this))
+			// children = children.concat(_files);
+			children = [
+				{text:"local", type: "local", "icon": "fa fa-th-large", children: ['Loading local branches...']},
+				{text:"remote", type: "remote", "icon": "fa fa-sort-amount-desc", children: ['Loading remote branches...']},
+			];
 		}
 		var icon;
 		if (f.type=='project') {
@@ -205,30 +211,74 @@ var WorkspaceTreeAdapter = function(treeConfig, workspaceSvc, gitService, $messa
 	};
 };
 
-WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, workspaceController){
+WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, workspaceController, gitService){
 	this.containerEl = containerEl;
 	this.workspaceName = workspaceName;
+	this.gitService = gitService;
 	
 	var self = this;
 	var jstree = this.containerEl.jstree(this.treeConfig);
 	
 	//subscribe event listeners
 	jstree.on('select_node.jstree', function (e, data) {
+		if (data.type === 'project') {
+			workspaceController.selectedProject = data.name;
+		} else if (data.type === 'local' || data.type === 'remote') {
+			workspaceController.selectedProject = data.node.parent.name;
+		}
+
 		this.clickNode(this.jstree.get_node(data.node));
 	}.bind(this))
 	.on('dblclick.jstree', function (evt) {
 		this.dblClickNode(this.jstree.get_node(evt.target))
 	}.bind(this))
 	.on('open_node.jstree', function(evt, data) {
-		if (data.node.type !== 'project')
-			data.instance.set_icon(data.node, 'fa fa-folder-open-o');
+		if (data.node.children.length === 1 && $('.workspace').jstree().get_node(data.node.children[0]).original === "Loading local branches...") {
+			var parent = $('.workspace').jstree().get_node(data.node);
+			var projectParent = $('.workspace').jstree().get_node(data.node.parent);
+			
+			var url = new UriBuilder().path(workspaceController.gitService.gitServiceUrl.split('/'))
+					.path(workspaceController.selectedWorkspace)
+					.path(projectParent.text)
+					.path("branches").path("local").build();
+
+			$('.workspace').jstree("delete_node", $('.workspace').jstree().get_node(data.node.children[0]));
+			var position = 'last';
+
+			workspaceController.http.get(url)
+				.success(function(data) {
+					data.local.forEach(function(branch) {
+						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + ")";
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-th-large"};
+						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
+					})
+				});
+		} else if (data.node.children.length === 1 && $('.workspace').jstree().get_node(data.node.children[0]).original === "Loading remote branches...") {
+			
+			var parent = $('.workspace').jstree().get_node(data.node);
+			var projectParent = $('.workspace').jstree().get_node(data.node.parent);
+			
+			var url = new UriBuilder().path(workspaceController.gitService.gitServiceUrl.split('/'))
+					.path(workspaceController.selectedWorkspace)
+					.path(projectParent.text)
+					.path("branches").path("remote").build();
+			$('.workspace').jstree("delete_node", $('.workspace').jstree().get_node(data.node.children[0]));
+			var position = 'last';
+			workspaceController.http.get(url)
+				.success(function(data) {
+					data.remote.forEach(function(branch) {
+						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + ")";
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-th-large"};
+						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
+					})
+				});
+		}
 	})
 	.on('close_node.jstree', function(evt, data) {
-		if (data.node.type !== 'project')
-			data.instance.set_icon(data.node, 'fa fa-folder-o');
+		//
 	})
 	.on('delete_node.jstree', function (e, data) {
-		this.deleteNode(data.node)
+		//this.deleteNode(data.node)
 	}.bind(this))
 	.on('jstree.workspace.pull', function (e, data) {
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
@@ -257,7 +307,7 @@ WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 		this.$messageHub.announceFileOpen(node.original._file);
 }
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
-	var type = node.original.type;
+	// var type = node.original.type;
 	this.$messageHub.announceFileSelected(node.original._file);
 };
 WorkspaceTreeAdapter.prototype.raw = function(){
@@ -271,7 +321,7 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 	} else {
 		resourcepath = this.workspaceName;
 	}
-	return this.workspaceSvc.load(resourcepath)
+	return this.gitService.load(resourcepath)
 			.then(function(_data){
 				var data = [];
 				if(_data.type == 'workspace'){
@@ -333,6 +383,13 @@ var GitService = function($http, gitServiceUrl, treeCfg){
 	this.gitServiceUrl = gitServiceUrl;
 	this.typeMapping = treeCfg['types'];
 	this.$http = $http;
+}
+GitService.prototype.load = function(wsResourcePath){
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
+	return this.$http.get(url, {headers: { 'describe': 'application/json'}})
+			.then(function(response){
+				return response.data;
+			});
 }
 GitService.prototype.cloneProject = function(wsTree, workspace, repository, branch, username, password, projectName) {
 	var gitBranch = branch ? branch : "master";
@@ -516,7 +573,14 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 				"icons": true,
 				'variant' : 'small',
 				'stripes' : true
-			}
+			},
+			'check_callback' : function(o, n, p, i, m) {
+									if(m && m.dnd && m.pos !== 'i') { return false; }
+									if(o === "move_node" || o === "copy_node") {
+										if(this.get_node(n).parent === this.get_node(p).id) { return false; }
+									}
+									return true;
+								  }
 		},
 		'plugins': ['state','dnd','sort','types','contextmenu','unique'],
 		"types": {
@@ -597,14 +661,16 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 .factory('workspaceService', ['$http', 'WS_SVC_MANAGER_URL', 'WS_SVC_URL', '$treeConfig', function($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig){
 	return new WorkspaceService($http, WS_SVC_MANAGER_URL, WS_SVC_URL, $treeConfig);
 }])
-.factory('workspaceTreeAdapter', ['$treeConfig', 'workspaceService', 'gitService', '$messageHub', function($treeConfig, WorkspaceService, GitService, $messageHub){
-	return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, GitService, $messageHub);
+.factory('workspaceTreeAdapter', ['$http', '$treeConfig', 'workspaceService', 'gitService', '$messageHub', function($http, $treeConfig, WorkspaceService, GitService, $messageHub){
+	return new WorkspaceTreeAdapter($http, $treeConfig, WorkspaceService, GitService, $messageHub);
 }])
-.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', 'envService', '$messageHub', function (workspaceService, workspaceTreeAdapter, gitService, envService, $messageHub) {
+.controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'gitService', 'envService', '$messageHub', '$http', function (workspaceService, workspaceTreeAdapter, gitService, envService, $messageHub, $http) {
 
 	this.wsTree;
 	this.workspaces;
 	this.selectedWorkspace;
+	this.gitService = gitService;
+	this.http = $http;
 	
 	workspaceService.listWorkspaceNames()
 		.then(function(workspaceNames) {
@@ -626,7 +692,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 			this.wsTree.refresh();
 			return;
 		}
-		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWorkspace, this);
+		this.wsTree = workspaceTreeAdapter.init($('.workspace'), this.selectedWorkspace, this, gitService);
 		if(!workspaceService.typeMapping)
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();

@@ -475,12 +475,12 @@ public class GitFileUtils {
 			if (repository instanceof FileSystemRepository) {
 				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
 				File gitDirectory = new File(path).getCanonicalFile();
-				IGitConnector gitConnector = GitConnectorFactory.getRepository(gitDirectory.getCanonicalPath());
+				IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 				gitConnector.getBranch();
 				return true;
 			}
 			logger.error("Not a file system based repository used with git");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return false;
 		}
