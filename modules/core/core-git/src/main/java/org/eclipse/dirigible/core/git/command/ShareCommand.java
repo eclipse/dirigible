@@ -36,17 +36,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ShareCommand {
 
-//	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(ShareCommand.class);
 
 	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
-
-//	/** The verifier. */
-//	@Inject
-//	private ProjectPropertiesVerifier verifier;
 
 	/** The git file utils. */
 	@Inject
@@ -104,7 +98,7 @@ public class ShareCommand {
 		
 		String branch = gitRepositoryBranch != null ? gitRepositoryBranch : ProjectMetadataManager.BRANCH_MASTER;
 
-		projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, branch);
+		projectMetadataManager.ensureProjectMetadata(workspace, project.getName());
 
 		File tempGitDirectory = null;
 		try {
@@ -122,17 +116,12 @@ public class ShareCommand {
 			gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
 			gitConnector.commit(commitMessage, username, email, true);
 			gitConnector.push(username, password);
-
-//			String lastSHA = gitConnector.getLastSHAForBranch(branch);
-//			GitProjectProperties properties = new GitProjectProperties(gitRepositoryURI, lastSHA);
-//			String user = UserFacade.getName();
 			
 			// delete the local project
 			project.delete();
+			
 			// link the already share project
 			gitFileUtils.importProjectFromGitRepositoryToWorkspace(tempGitDirectory, project.getPath());
-
-//			gitFileUtils.saveGitPropertiesFile(properties, user, workspace.getName(), project.getName());
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);
@@ -155,12 +144,6 @@ public class ShareCommand {
 			logger.error(errorMessage, e);
 		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
-		} finally {
-//			try {
-//				GitFileUtils.deleteDirectory(tempGitDirectory);
-//			} catch (IOException e) {
-//				logger.error(e.getMessage(), e);
-//			}
 		}
 	}
 }

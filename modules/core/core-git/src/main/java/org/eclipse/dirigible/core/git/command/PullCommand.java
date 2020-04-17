@@ -114,84 +114,14 @@ public class PullCommand {
 	 */
 	boolean pullProjectFromGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String username, final String password, final String branch) {
 		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
-//		GitProjectProperties gitProperties = null;
-//		try {
-//			gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, selectedProject);
-//			if (gitProperties != null) {
-//				logger.debug(String.format("Git properties for the project [%s]: %s", selectedProject.getName(), gitProperties.toString()));
-//			} else {
-//				logger.debug(String.format("Git properties file for the project [%s] is null", selectedProject.getName()));
-//				return false;
-//			}
-//		} catch (IOException e) {
-//			logger.error("This is not a git project!", e);
-//			return false;
-//		}
 
-//		String gitRepositoryURI = gitProperties.getURL();
-//		String gitRepositoryBranch = branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
-//		try {
-//			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName(), gitRepositoryURI, gitRepositoryBranch);
-//			if (branch == null) {
-//				gitRepositoryBranch = ProjectMetadataManager.getBranch(selectedProject);
-//				if (gitRepositoryBranch == null) {
-//					gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
-//				}
-//			}
-//			logger.debug(String.format("Repository URL for the project [%s]: %s", selectedProject.getName(), gitRepositoryURI));
-//			logger.debug(String.format("Branch for the project [%s]: %s", selectedProject.getName(), gitRepositoryBranch));
-//		} catch (IOException e) {
-//			logger.error("Error during pull!", e);
-//		}
+		projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName());
 
-//		File tempGitDirectory = null;
 		try {
-//			String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf(SLASH) + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-//			tempGitDirectory = GitFileUtils.createGitDirectory(repositoryName);
-//			logger.debug(
-//					String.format("Temp Git Directory for the project [%s]: %s", selectedProject.getName(), tempGitDirectory.getCanonicalPath()));
-//
-//			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, "[nobody]",
-//					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-//			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
-//			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
-//
+
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
-//
-//			String lastSHA = gitProperties.getSHA();
-//
-//			String lastSHAForBranch = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
-//			gitProperties.setSHA(lastSHAForBranch);
-//
-//			final String changesBranch = CHANGES_BRANCH + System.currentTimeMillis() + "_" + UserFacade.getName();
-//			logger.debug(String.format("Last SHA for the project [%s]: %s", selectedProject.getName(), lastSHA));
-//			logger.debug(String.format("'Changes' branch for the project [%s]: %s", selectedProject.getName(), changesBranch));
-//
-//			logger.debug(String.format("Staring checkout of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
-//			try {
-//				gitConnector.checkout(lastSHA);
-//			} catch (InvalidRefNameException e) {
-//				lastSHA = "HEAD";
-//			}
-//			logger.debug(String.format("Checkout of the project [%s] finished.", selectedProject.getName()));
-//
-//			gitConnector.createBranch(changesBranch, lastSHA);
-//
-//			logger.debug(String.format("Staring checkout of the project [%s] for the branch %s...", selectedProject.getName(), changesBranch));
-//			gitConnector.checkout(changesBranch);
-//			logger.debug(String.format("Checkout of the project [%s] finished.", selectedProject.getName()));
-//
-//			logger.debug(String.format("Clean and copy the sources of the project [%s] in directory %s...", selectedProject.getName(),
-//					tempGitDirectory.getCanonicalPath()));
-//			GitFileUtils.deleteProjectFolderFromDirectory(tempGitDirectory, selectedProject.getName());
-//			GitFileUtils.copyProjectToDirectory(selectedProject, tempGitDirectory);
-//			logger.debug(String.format("Clean and copy the sources of the project [%s] finished.", selectedProject.getName()));
-//
-//			gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
-//			gitConnector.commit("", "", "", true); //$NON-NLS-1$
-//			logger.debug(String.format("Commit changes for the project [%s] finished.", selectedProject.getName()));
 
 			String gitRepositoryBranch = gitConnector.getBranch();
 			logger.debug(String.format("Starting pull of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
@@ -200,28 +130,6 @@ public class PullCommand {
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
 			logger.debug(String.format("Number of conflicting files in the project [%s]: %d.", selectedProject.getName(), numberOfConflictingFiles));
-//			if (numberOfConflictingFiles == 0) {
-//				logger.debug(String.format("No conflicting files in the project [%s]. Staring checkout and rebase...", selectedProject.getName()));
-//				gitConnector.checkout(gitRepositoryBranch);
-//				logger.debug(String.format("Checkout for the project [%s] finished.", selectedProject.getName()));
-//				gitConnector.rebase(changesBranch);
-//				logger.debug(String.format("Rebase for the project [%s] finished.", selectedProject.getName()));
-//
-//				String dirigibleUser = UserFacade.getName();
-//
-//				gitFileUtils.deleteRepositoryProject(selectedProject);
-//
-//				String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
-//
-//				logger.debug(String.format("Starting importing projects from the Git directory %s.", tempGitDirectory.getCanonicalPath()));
-//				gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
-//				logger.debug(String.format("Importing projects from the Git directory %s finished.", tempGitDirectory.getCanonicalPath()));
-//			} else {
-//				String message = String.format(
-//						"Project [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
-//						selectedProject.getName(), numberOfConflictingFiles);
-//				logger.error(message);
-//			}
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
@@ -251,12 +159,6 @@ public class PullCommand {
 			logger.error(errorMessage, e);
 		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
-		} finally {
-//			try {
-//				GitFileUtils.deleteDirectory(tempGitDirectory);
-//			} catch (IOException e) {
-//				logger.error(e.getMessage(), e);
-//			}
 		}
 		return true;
 	}

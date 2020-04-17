@@ -305,6 +305,10 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 		workspaceController.selectedBranch = data.branch;
 		debugger
 		$('#checkout').click();
+	}.bind(this))
+	.on('jstree.workspace.commit', function (e, data) {		
+		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
+		$('#commit').click();
 	}.bind(this));
 	
 	this.jstree = $.jstree.reference(jstree);	
@@ -361,33 +365,39 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 };
 WorkspaceTreeAdapter.prototype.pull = function(resource){
 	return this.gitService.pull(resource.path)
-	.then(function(){
-		return this.$messageHub.announcePublish(resource);
-	}.bind(this));
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.push = function(resource){
 	return this.gitService.push(resource.path)
-	.then(function(){
-		return this.$messageHub.announcePublish(resource);
-	}.bind(this));
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.reset = function(resource){
 	return this.gitService.reset(resource.path)
-	.then(function(){
-		return this.$messageHub.announcePublish(resource);
-	}.bind(this));
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.share = function(resource){
 	return this.gitService.share(resource.path)
-	.then(function(){
-		return this.$messageHub.announcePublish(resource);
-	}.bind(this));
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
 };
 WorkspaceTreeAdapter.prototype.checkout = function(resource){
 	return this.gitService.checkout(resource.path)
-	.then(function(){
-		return this.$messageHub.announcePublish(resource);
-	}.bind(this));
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
+};
+WorkspaceTreeAdapter.prototype.commit = function(resource){
+	return this.gitService.commit(resource.path)
+		.then(function(){
+			return this.$messageHub.announcePublish(resource);
+		}.bind(this));
 };
 
 
@@ -508,6 +518,20 @@ GitService.prototype.checkoutBranch = function(wsTree, workspace, project, branc
 			"username": username,
 			"password": btoa(password)
 	})
+			.then(function(response){
+				wsTree.refresh();
+				return response.data;
+			});
+}
+GitService.prototype.commitProject = function(wsTree, workspace, project, commitMessage, username, password, email, branch){
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("commit").build();
+	return this.$http.post(url, {
+			"commitMessage": commitMessage,
+			"username": username,
+			"password": btoa(password),
+			"email": email,
+			"branch": branch
+			})
 			.then(function(response){
 				wsTree.refresh();
 				return response.data;
@@ -634,6 +658,15 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 				var ctxmenu = {};
 				if (this.get_type(node) === "project") {
 					if (node.original._file.git) {
+						ctxmenu.commit = {
+							"separator_before": false,
+							"label": "Commit",
+							"action": function(data){
+								var tree = $.jstree.reference(data.reference);
+								var node = tree.get_node(data.reference);
+								tree.element.trigger('jstree.workspace.commit', [node.original._file]);
+							}.bind(this)
+						};
 						ctxmenu.pull = {
 							"separator_before": false,
 							"label": "Pull",
@@ -768,6 +801,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 
 	this.okCheckout = function() {
 		gitService.checkoutBranch(this.wsTree, this.selectedWorkspace, this.selectedProject, this.selectedBranch, this.username, this.password);
+	};
+
+	this.okCommit = function() {
+		gitService.commitProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch);
 	};
 	
 	this.refresh = function(){

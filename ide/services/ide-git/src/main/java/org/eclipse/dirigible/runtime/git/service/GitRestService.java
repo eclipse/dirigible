@@ -288,6 +288,31 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		processor.checkout(workspace, model);
 		return Response.ok().build();
 	}
+	
+	/**
+	 * Commit project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
+	@POST
+	@Path("/{project}/commit")
+	@Produces("application/json")
+	@ApiOperation("Commit Git Project into Git Repository")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Committed") })
+	public Response commitProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		model.setProjects(Arrays.asList(project));
+		processor.commit(workspace, model);
+		return Response.ok().build();
+	}
 
 	/**
 	 * Update projects dependencies.

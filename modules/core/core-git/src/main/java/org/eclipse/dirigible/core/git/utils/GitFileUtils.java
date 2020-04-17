@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.common.util.StringUtils;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
@@ -30,7 +31,9 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
+import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
@@ -66,46 +69,14 @@ public class GitFileUtils {
 	private IRepository repository;
 
 	static {
-//		try {
-			// ProxyUtils.setProxySettings();
-			if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
-				GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
-			} else if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER))) {
-				GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + DOT_GIT;
-			} else {
-				GIT_ROOT_FOLDER = DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER;
-			}
-//			deleteGitDirectories();
-//		} catch (IOException e) {
-//			logger.error(e.getMessage(), e);
-//		}
+		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
+			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
+		} else if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER))) {
+			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + DOT_GIT;
+		} else {
+			GIT_ROOT_FOLDER = DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER;
+		}
 	}
-
-//	/**
-//	 * Delete git directories.
-//	 *
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	private static void deleteGitDirectories() throws IOException {
-//		File gitDirectory = createGitDirectory("DeleteDirectory");
-//		deleteDirectories(gitDirectory);
-//	}
-//
-//	private static void deleteDirectories(File file) throws IOException {
-//		File tempDirectory = file.getParentFile().getCanonicalFile();
-//		if (tempDirectory != null) {
-//			File[] listFiles = FileSystemUtils.listFiles(tempDirectory);
-//			if (listFiles != null) {
-//				for (File temp : listFiles) {
-//					if (temp != null && temp.isDirectory() && temp.getName().startsWith(TEMP_DIRECTORY_PREFIX)) {
-//						deleteDirectory(temp);
-//					}
-//				}
-//				deleteDirectory(file);
-//			}
-//		}
-//	}
 
 	/**
 	 * Checks if is valid repository URI.
@@ -206,39 +177,8 @@ public class GitFileUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
-//		if (gitRepositoryFile.isDirectory()) {
-//			for (File file : FileSystemUtils.listFiles(gitRepositoryFile)) {
-//				importProjectFromGitRepositoryToWorkspace(file, path + File.separator + file.getName());
-//			}
-//		}
-//		if (!gitRepositoryFile.isDirectory()) {
-//			repository.createResource(path).setContent(readFile(gitRepositoryFile));
-//		}
 		repository.linkPath(path, gitRepositoryFile.getCanonicalPath());
 	}
-
-//	/**
-//	 * Read file.
-//	 *
-//	 * @param file
-//	 *            the file
-//	 * @return the byte[]
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	public static byte[] readFile(File file) throws IOException {
-//		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		InputStream in = null;
-//		try {
-//			in = new FileInputStream(file);
-//			IOUtils.copy(in, out);
-//		} finally {
-//			if (in != null) {
-//				in.close();
-//			}
-//		}
-//		return out.toByteArray();
-//	}
 
 	/**
 	 * Delete repository project.
@@ -264,111 +204,6 @@ public class GitFileUtils {
 		}
 		throw new IllegalArgumentException("Repository must be file based to use git utilities: " + path);
 	}
-
-//	/**
-//	 * Save git properties file.
-//	 *
-//	 * @param properties
-//	 *            the properties
-//	 * @param user
-//	 *            the user
-//	 * @param workspace
-//	 *            the workspace
-//	 * @param project
-//	 *            the project
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	public void saveGitPropertiesFile(GitProjectProperties properties, String user, String workspace, String project) throws IOException {
-//		String dirigibleGitFolderPath = generateRepositoryGitFolder(user, workspace, project);
-//		if (repository.hasCollection(dirigibleGitFolderPath)) {
-//			ICollection propertiesFolder = repository.getCollection(dirigibleGitFolderPath);
-//
-//			if (propertiesFolder.getResource(GitProjectProperties.PROJECT_GIT_PROPERTY).exists()) {
-//				IResource propertiesFile = propertiesFolder.getResource(GitProjectProperties.PROJECT_GIT_PROPERTY);
-//				propertiesFile.setContent(properties.getContent());
-//			} else {
-//				propertiesFolder.createResource(GitProjectProperties.PROJECT_GIT_PROPERTY, properties.getContent(), false,
-//						ContentTypeHelper.DEFAULT_CONTENT_TYPE);
-//			}
-//		} else {
-//			repository.createCollection(dirigibleGitFolderPath).createResource(GitProjectProperties.PROJECT_GIT_PROPERTY, properties.getContent(),
-//					false, ContentTypeHelper.DEFAULT_CONTENT_TYPE);
-//		}
-//
-//	}
-
-	/**
-	 * Generates the git folder per user, workspace and project
-	 * 
-	 * @param user the logged-n user
-	 * @param workspace the workspace
-	 * @param project the project
-	 * @return generated folder path
-	 */
-	public String generateRepositoryGitFolder(String user, String workspace, String project) {
-		String dirigibleGitFolderPath = String.format(GitProjectProperties.PATTERN_USERS_GIT_REPOSITORY, user, workspace, project);
-		return dirigibleGitFolderPath;
-	}
-
-//	/**
-//	 * Delete project folder from directory.
-//	 *
-//	 * @param parentDirectory
-//	 *            the parent directory
-//	 * @param selectedProject
-//	 *            the selected project
-//	 * @throws IOException 
-//	 */
-//	public static void deleteProjectFolderFromDirectory(File parentDirectory, String selectedProject) throws IOException {
-//		for (File file : FileSystemUtils.listFiles(parentDirectory)) {
-//			if (file.getName().equals(selectedProject)) {
-//				deleteFiles(file);
-//				if (!file.delete()) {
-//					logger.error(String.format("File [%s] deletion failed.", file.getAbsolutePath()));
-//				}
-//			}
-//		}
-//	}
-
-//	/**
-//	 * Delete directory.
-//	 *
-//	 * @param directory
-//	 *            the directory
-//	 * @throws IOException IO error
-//	 */
-//	public static void deleteDirectory(File directory) throws IOException {
-//		if (directory != null) {
-//			deleteFiles(directory);
-//			if (!directory.delete()) {
-//				logger.error(String.format("Directory [%s] deletion failed.", directory.getAbsolutePath()));
-//			}
-//		}
-//	}
-
-//	/**
-//	 * Delete files.
-//	 *
-//	 * @param directory
-//	 *            the directory
-//	 * @throws IOException 
-//	 */
-//	private static void deleteFiles(File directory) throws IOException {
-//		if (directory != null) {
-//			File[] listFiles = FileSystemUtils.listFiles(directory);
-//			if (listFiles != null) {
-//				for (File file : listFiles) {
-//					if (file.isDirectory()) {
-//						deleteDirectory(file);
-//					}
-//					if (!file.delete()) {
-//						file.deleteOnExit();
-//					}
-//				}
-//			}
-//		}
-//	}
 
 	/**
 	 * Copy project to directory.
@@ -422,29 +257,6 @@ public class GitFileUtils {
 		}
 
 	}
-
-//	/**
-//	 * Gets the git properties for project.
-//	 *
-//	 * @param workspace
-//	 *            the workspace
-//	 * @param project
-//	 *            the project
-//	 * @return the git properties for project
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	public GitProjectProperties getGitPropertiesForProject(final IWorkspace workspace, final IProject project) throws IOException {
-//
-//		String workspaceName = workspace.getName();
-//		String projectName = project.getName();
-//		String userName = UserFacade.getName();
-//		IResource resource = repository
-//				.getResource(String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, userName, workspaceName, projectName));
-//		InputStream in = new ByteArrayInputStream(resource.getContent());
-//		GitProjectProperties gitProperties = new GitProjectProperties(in);
-//		return gitProperties;
-//	}
 
 	/**
 	 * Gets the valid project folders.

@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Push the changes of a project from the local repository to remote Git repository.
  */
-public class PushCommand {
+public class CommitCommand {
 
 	private static final String SHOULD_BE_EMPTY_REPOSITORY = "Should be empty repository: {}";
 
@@ -42,11 +42,11 @@ public class PushCommand {
 
 //	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
 
-	private static final Logger logger = LoggerFactory.getLogger(PushCommand.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommitCommand.class);
 
 //	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
+//	@Inject
+//	private ProjectMetadataManager projectMetadataManager;
 
 	/** The verifier. */
 	@Inject
@@ -57,7 +57,7 @@ public class PushCommand {
 	private GitFileUtils gitFileUtils;
 
 	/**
-	 * Execute the Push command.
+	 * Execute the Commit command.
 	 *
 	 * @param workspace
 	 *            the workspace
@@ -77,23 +77,23 @@ public class PushCommand {
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
 			final String password, final String email, final String branch) {
 		if (projects.length == 0) {
-			logger.warn("No project is selected for the Push action");
+			logger.warn("No project is selected for the Commit action");
 		}
 		String user = UserFacade.getName();
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
-				logger.debug(String.format("Start pushing project [%s]...", selectedProject.getName()));
-				pushProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch);
-				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
+				logger.debug(String.format("Start committing project [%s]...", selectedProject.getName()));
+				commitProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch);
+				logger.debug(String.format("Commit of the project [%s] finished.", selectedProject.getName()));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", selectedProject));
 			}
 		}
 
 	}
 
 	/**
-	 * Push project to git repository by executing several low level Git commands.
+	 * Commit project to git repository by executing several low level Git commands.
 	 *
 	 * @param workspace
 	 *            the workspace
@@ -108,40 +108,18 @@ public class PushCommand {
 	 * @param email
 	 *            the email
 	 */
-	private void pushProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
+	private void commitProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
 			final String username, final String password, final String email, final String branch) {
 
-		final String errorMessage = String.format("Error occurred while pushing project [%s]. ", selectedProject.getName());
-		
-		try {
-			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName());
+		final String errorMessage = String.format("Error occurred while committing project [%s]. ", selectedProject.getName());
 
+		try {
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
-			String gitRepositoryBranch = gitConnector.getBranch();
 			gitConnector.add(selectedProject.getName());
 			gitConnector.commit(commitMessage, username, email, true);
-			try {
-				gitConnector.pull(username, password);
-			} catch (GitAPIException e) {
-				logger.debug(SHOULD_BE_EMPTY_REPOSITORY, e.getMessage());
-			}
-			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			if (numberOfConflictingFiles == 0) {
-				
-				gitConnector.push(username, password);
-
-				logger.info(String.format("Project [%s] has been pushed to remote repository.", selectedProject.getName()));
-			} else {
-				String statusLineMessage = String.format("Project has %d conflicting file(s).", numberOfConflictingFiles);
-				logger.warn(statusLineMessage);
-				String message = String.format(
-						"Project has %d conflicting file(s). Please merge to [%s] and then continue working on project.",
-						numberOfConflictingFiles, gitRepositoryBranch);
-				logger.warn(message);
-			}
 		} catch (IOException e) {
 			logger.error(errorMessage, e);
 		} catch (InvalidRemoteException e) {

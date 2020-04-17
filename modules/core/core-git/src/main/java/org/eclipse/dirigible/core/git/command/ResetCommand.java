@@ -38,8 +38,8 @@ public class ResetCommand {
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
 //	/** The project metadata manager. */
-//	@Inject
-//	private ProjectMetadataManager projectMetadataManager;
+	@Inject
+	private ProjectMetadataManager projectMetadataManager;
 
 	/** The verifier. */
 	@Inject
@@ -95,45 +95,11 @@ public class ResetCommand {
 	 */
 	private void hardReset(final String user, final IWorkspace workspace, final IProject project, final String username, final String password, final String branch) {
 		final String errorMessage = String.format("While hard reseting project [%s] error occurred", project.getName());
-//		File tempGitDirectory = null;
+
 		try {
-//			GitProjectProperties gitProperties = gitFileUtils.getGitPropertiesForProject(workspace, project);
-//			String gitRepositoryURI = gitProperties.getURL();
-//
-//			String gitRepositoryBranch =  branch != null ? branch : ProjectMetadataManager.BRANCH_MASTER;
-//			try {
-//				projectMetadataManager.ensureProjectMetadata(workspace, project.getName(), gitRepositoryURI, gitRepositoryBranch);
-//				if (branch == null) {
-//					gitRepositoryBranch = ProjectMetadataManager.getBranch(project);
-//					if (gitRepositoryBranch == null) {
-//						gitRepositoryBranch = ProjectMetadataManager.BRANCH_MASTER;
-//					}
-//				}
-//			} catch (IOException e) {
-//				logger.error(errorMessage, e);
-//			}
-
-//			String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-//			tempGitDirectory = GitFileUtils.createGitDirectory(repositoryName);
-//
-//			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-//					gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-//			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, null, null, gitRepositoryBranch);
-//			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
-//
-//			IGitConnector gitConnector = GitConnectorFactory.getRepository(tempGitDirectory.getCanonicalPath());
-
-//			gitFileUtils.deleteRepositoryProject(project);
-
-//			String dirigibleUser = UserFacade.getName();
-//			String workspacePath = GitProjectProperties.generateWorkspacePath(workspace, dirigibleUser);
-
-//			final String lastSHA = gitConnector.getLastSHAForBranch(gitRepositoryBranch);
-//			gitProperties.setSHA(lastSHA);
-
-//			gitFileUtils.importProject(tempGitDirectory, workspacePath, dirigibleUser, workspace.getName(), gitProperties, null);
 			
-			
+			projectMetadataManager.ensureProjectMetadata(workspace, project.getName());
+
 			String gitDirectoryPath = gitFileUtils.getAbsolutePath(project.getPath());
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
@@ -149,12 +115,6 @@ public class ResetCommand {
 			logger.error(errorMessage, e);
 		} catch (GitConnectorException e) {
 			logger.error(errorMessage, e);
-		} finally {
-//			try {
-//				GitFileUtils.deleteDirectory(tempGitDirectory);
-//			} catch (IOException e) {
-//				logger.error(e.getMessage(), e);
-//			}
 		}
 	}
 

@@ -26,6 +26,7 @@ import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
+import org.eclipse.dirigible.core.git.command.CommitCommand;
 import org.eclipse.dirigible.core.git.command.PullCommand;
 import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
@@ -82,6 +83,9 @@ public class GitProcessor {
 	
 	@Inject
 	private CheckoutCommand checkoutCommand;
+	
+	@Inject
+	private CommitCommand commitCommand;
 
 	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
@@ -156,6 +160,18 @@ public class GitProcessor {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject project = getProject(workspaceApi, model.getProject());
 		checkoutCommand.execute(workspaceApi, project, model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
+	}
+	
+	/**
+	 * Commit.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
+	public void commit(String workspace, GitPushModel model) {
+		IWorkspace workspaceApi = getWorkspace(workspace);
+		IProject[] projects = getProjects(workspaceApi, model.getProjects());
+		commitCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch());
 	}
 
 	/**
