@@ -34,6 +34,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
@@ -260,6 +261,31 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		model.setProject(project);
 		processor.share(workspace, model);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Checkout project.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param model the model
+	 * @return the response
+	 */
+	@POST
+	@Path("/{project}/checkout")
+	@Produces("application/json")
+	@ApiOperation("Checkout Git Project into Git Repository")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Branch is Checked-out") })
+	public Response checkoutBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitCheckoutModel model) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		model.setProject(project);
+		processor.checkout(workspace, model);
 		return Response.ok().build();
 	}
 

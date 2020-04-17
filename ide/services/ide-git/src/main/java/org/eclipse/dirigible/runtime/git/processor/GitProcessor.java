@@ -24,6 +24,7 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.PullCommand;
 import org.eclipse.dirigible.core.git.command.PushCommand;
@@ -40,6 +41,7 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
+import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
@@ -77,6 +79,9 @@ public class GitProcessor {
 
 	@Inject
 	private ShareCommand shareCommand;
+	
+	@Inject
+	private CheckoutCommand checkoutCommand;
 
 	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
@@ -139,6 +144,18 @@ public class GitProcessor {
 		IProject project = getProject(workspaceApi, model.getProject());
 		shareCommand.execute(workspaceApi, project, model.getRepository(), model.getBranch(), model.getCommitMessage(), model.getUsername(),
 				getPassword(model), model.getEmail());
+	}
+	
+	/**
+	 * Checkout.
+	 *
+	 * @param workspace the workspace
+	 * @param model the model
+	 */
+	public void checkout(String workspace, GitCheckoutModel model) {
+		IWorkspace workspaceApi = getWorkspace(workspace);
+		IProject project = getProject(workspaceApi, model.getProject());
+		checkoutCommand.execute(workspaceApi, project, model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
 	}
 
 	/**

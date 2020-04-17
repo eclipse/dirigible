@@ -171,8 +171,8 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 			// var _files = f.files.map(this._buildTreeNode.bind(this))
 			// children = children.concat(_files);
 			children = [
-				{text:"local", type: "local", "icon": "fa fa-pencil-square", children: ['Loading local branches...']},
-				{text:"remote", type: "remote", "icon": "fa fa-share-square", children: ['Loading remote branches...']},
+				{text:"local", type: "local", "icon": "fa fa-arrow-circle-o-down", children: ['Loading local branches...']},
+				{text:"remote", type: "remote", "icon": "fa fa-arrow-circle-o-up", children: ['Loading remote branches...']},
 			];
 		}
 		var icon;
@@ -249,7 +249,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 				.success(function(data) {
 					data.local.forEach(function(branch) {
 						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
-						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-code-fork"};
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, 
+							"type": "branch", "name": branch.name, "current": branch.current, "project": projectParent.text,
+							"icon": branch.current ? "fa fa-arrow-circle-right" : "fa fa-code-fork"};
 						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
 					})
 				});
@@ -268,7 +270,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 				.success(function(data) {
 					data.remote.forEach(function(branch) {
 						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
-						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, "icon": "fa fa-code-fork"};
+						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name,
+							"type": "branch", "name": branch.name, "current": branch.current, "project": projectParent.text,
+							"icon": "fa fa-code-fork"};
 						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
 					})
 				});
@@ -295,6 +299,12 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 	.on('jstree.workspace.share', function (e, data) {		
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
 		$('#share').click();
+	}.bind(this))
+	.on('jstree.workspace.checkout', function (e, data) {		
+		workspaceController.selectedProject = data.project;
+		workspaceController.selectedBranch = data.branch;
+		debugger
+		$('#checkout').click();
 	}.bind(this));
 	
 	this.jstree = $.jstree.reference(jstree);	
@@ -369,6 +379,12 @@ WorkspaceTreeAdapter.prototype.reset = function(resource){
 };
 WorkspaceTreeAdapter.prototype.share = function(resource){
 	return this.gitService.share(resource.path)
+	.then(function(){
+		return this.$messageHub.announcePublish(resource);
+	}.bind(this));
+};
+WorkspaceTreeAdapter.prototype.checkout = function(resource){
+	return this.gitService.checkout(resource.path)
 	.then(function(){
 		return this.$messageHub.announcePublish(resource);
 	}.bind(this));
@@ -478,6 +494,19 @@ GitService.prototype.shareProject = function(wsTree, workspace, project, reposit
 			"username": username,
 			"password": btoa(password),
 			"email": email,
+	})
+			.then(function(response){
+				wsTree.refresh();
+				return response.data;
+			});
+}
+GitService.prototype.checkoutBranch = function(wsTree, workspace, project, branch, username, password){
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("checkout").build();
+	return this.$http.post(url, {
+			"project": project,
+			"branch": branch,
+			"username": username,
+			"password": btoa(password)
 	})
 			.then(function(response){
 				wsTree.refresh();
@@ -603,7 +632,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		"contextmenu": {
 			"items" : function(node) {
 				var ctxmenu = {};
-				if(this.get_type(node) === "project") {
+				if (this.get_type(node) === "project") {
 					if (node.original._file.git) {
 						ctxmenu.pull = {
 							"separator_before": false,
@@ -643,8 +672,17 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 							}.bind(this)
 						};
 					}
-					
-					
+				} else if (node.original.type === "branch" && !node.original.current) {
+					ctxmenu.checkout = {
+							"separator_before": false,
+							"label": "Checkout",
+							"action": function(data){
+								var tree = $.jstree.reference(data.reference);
+								var node = tree.get_node(data.reference);
+								tree.element.trigger('jstree.workspace.checkout', [
+									{"project": node.original.project, "branch": node.original.name}]);
+							}.bind(this)
+						};
 				}
 				
 				return ctxmenu;
@@ -726,6 +764,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.okShare = function() {
 		gitService.shareProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.repository, this.branch, this.commitMessage, this.username, this.password, this.email);
+	};
+
+	this.okCheckout = function() {
+		gitService.checkoutBranch(this.wsTree, this.selectedWorkspace, this.selectedProject, this.selectedBranch, this.username, this.password);
 	};
 	
 	this.refresh = function(){

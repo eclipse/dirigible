@@ -261,25 +261,25 @@ public interface IGitConnector {
 	 */
 	String getBranch() throws IOException;
 
-	/**
-	 * Returns the SHA of the last commit on the specified branch.
-	 *
-	 * @param branch
-	 *            the name of the specified branch
-	 * @return SHA example: "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
-	 * @throws RefAlreadyExistsException
-	 *             Ref Already Exists Exception
-	 * @throws RefNotFoundException
-	 *             Ref Not Found Exception
-	 * @throws InvalidRefNameException
-	 *             Invalid Ref Name Exception
-	 * @throws CheckoutConflictException
-	 *             Checkout Conflict Exception
-	 * @throws GitAPIException
-	 *             Git API Exception
-	 */
-	String getLastSHAForBranch(String branch)
-			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException;
+//	/**
+//	 * Returns the SHA of the last commit on the specified branch.
+//	 *
+//	 * @param branch
+//	 *            the name of the specified branch
+//	 * @return SHA example: "21d5a96070353d01c0f30bc0559ab4de4f5e3ca0"
+//	 * @throws RefAlreadyExistsException
+//	 *             Ref Already Exists Exception
+//	 * @throws RefNotFoundException
+//	 *             Ref Not Found Exception
+//	 * @throws InvalidRefNameException
+//	 *             Invalid Ref Name Exception
+//	 * @throws CheckoutConflictException
+//	 *             Checkout Conflict Exception
+//	 * @throws GitAPIException
+//	 *             Git API Exception
+//	 */
+//	String getLastSHAForBranch(String branch)
+//			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException;
 
 	/**
 	 * List all the local branches info

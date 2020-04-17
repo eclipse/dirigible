@@ -153,8 +153,8 @@ public class GitConnector implements IGitConnector {
 			checkoutCommand.setName(name);
 			checkoutCommand.setCreateBranch(true);
 			checkoutCommand.setForce(true);
-//		checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
-			checkoutCommand.setStartPoint(name);
+			checkoutCommand.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM);
+			checkoutCommand.setStartPoint("origin/" + name);
 			return checkoutCommand.call();
 		} catch (RefAlreadyExistsException e) {
 			CheckoutCommand checkoutCommand = git.checkout();
@@ -238,15 +238,15 @@ public class GitConnector implements IGitConnector {
 		return git.getRepository().getBranch();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLastSHAForBranch(java.lang.String)
-	 */
-	@Override
-	public String getLastSHAForBranch(String branch)
-			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
-		return checkout(branch).getLeaf().getObjectId().getName();
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLastSHAForBranch(java.lang.String)
+//	 */
+//	@Override
+//	public String getLastSHAForBranch(String branch)
+//			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
+//		return checkout(branch).getLeaf().getObjectId().getName();
+//	}
 	
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -262,15 +262,18 @@ public class GitConnector implements IGitConnector {
 			Collections.sort(branches, new Comparator<Ref>() {
 				  @Override
 				  public int compare(Ref ref1, Ref ref2) {
-				    return ref1.getName().compareTo(ref2.getName());
+				    return getShortBranchName(ref1).compareTo(getShortBranchName(ref2));
 				  }
 				});
 			
+			String currentBranch = getBranch();
 			RevWalk walk = new RevWalk(git.getRepository());
 			try {
 				for (Ref branch : branches) {
 					RevCommit commit = walk.parseCommit(branch.getObjectId());
-					GitBranch gitBranch = new GitBranch(branch.getName(), false, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+					String shortLocalBranchName = getShortBranchName(branch);
+					GitBranch gitBranch = new GitBranch(shortLocalBranchName, false, currentBranch.equals(shortLocalBranchName),
+							commit.getId().getName(), commit.getId().abbreviate(7).name(), 
 							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
 					result.add(gitBranch);
 				} 
@@ -282,7 +285,7 @@ public class GitConnector implements IGitConnector {
 			throw new GitConnectorException(e);
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getRemoteBranches()
@@ -302,7 +305,7 @@ public class GitConnector implements IGitConnector {
 			try {
 				for (Ref branch : branches) {
 					RevCommit commit = walk.parseCommit(branch.getObjectId());
-					GitBranch gitBranch = new GitBranch(branch.getName(), true, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+					GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
 							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
 					result.add(gitBranch);
 				} 
@@ -313,5 +316,19 @@ public class GitConnector implements IGitConnector {
 		} catch (GitAPIException | IOException e) {
 			throw new GitConnectorException(e);
 		}
+	}
+	
+	/**
+	 * Returns the short branch name
+	 * 
+	 * @param branch the branch
+	 * @return the short name
+	 */
+	private String getShortBranchName(Ref branch) {
+		String name = branch.getName();
+		if (name != null && name.startsWith("refs/heads/")) {
+			return name.substring(11);
+		}
+		return name;
 	}
 }

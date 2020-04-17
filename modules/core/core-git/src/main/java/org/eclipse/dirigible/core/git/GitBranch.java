@@ -16,6 +16,8 @@ public class GitBranch {
 	
 	private boolean remote;
 	
+	private boolean current;
+	
 	private String commitObjectId;
 	
 	private String commitShortId;
@@ -29,19 +31,21 @@ public class GitBranch {
 	/**
 	 * The constructor
 	 * 
-	 * @param name
-	 * @param remote
-	 * @param commitObjectId
-	 * @param commitShortId
-	 * @param commitDate
-	 * @param commitMessage
-	 * @param commitAuthor
+	 * @param name the name
+	 * @param remote is remote
+	 * @param current is current
+	 * @param commitObjectId the full object id
+	 * @param commitShortId the short object id
+	 * @param commitDate the commit date
+	 * @param commitMessage the message
+	 * @param commitAuthor the author
 	 */
-	public GitBranch(String name, boolean remote, String commitObjectId, String commitShortId, String commitDate,
+	public GitBranch(String name, boolean remote, boolean current, String commitObjectId, String commitShortId, String commitDate,
 			String commitMessage, String commitAuthor) {
 		super();
 		this.name = name;
 		this.remote = remote;
+		this.current = current;
 		this.commitObjectId = commitObjectId;
 		this.commitShortId = commitShortId;
 		this.commitDate = commitDate;
@@ -83,6 +87,24 @@ public class GitBranch {
 	 */
 	public void setRemote(boolean remote) {
 		this.remote = remote;
+	}
+	
+	/**
+	 * Getter for current
+	 * 
+	 * @return the current
+	 */
+	public boolean isCurrent() {
+		return current;
+	}
+
+	/**
+	 * Setter for current
+	 * 
+	 * @param current the current to set
+	 */
+	public void setCurrent(boolean current) {
+		this.current = current;
 	}
 
 	/**
