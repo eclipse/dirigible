@@ -171,8 +171,8 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 			// var _files = f.files.map(this._buildTreeNode.bind(this))
 			// children = children.concat(_files);
 			children = [
-				{text:"local", type: "local", "icon": "fa fa-arrow-circle-o-down", children: ['Loading local branches...']},
-				{text:"remote", type: "remote", "icon": "fa fa-arrow-circle-o-up", children: ['Loading remote branches...']},
+				{text:"local", type: "local", "icon": "fa fa-check-circle-o", children: ['Loading local branches...']},
+				{text:"remote", type: "remote", "icon": "fa fa-circle-o", children: ['Loading remote branches...']},
 			];
 		}
 		var icon;
@@ -251,7 +251,7 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 						var nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
 						var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + branch.name, 
 							"type": "branch", "name": branch.name, "current": branch.current, "project": projectParent.text,
-							"icon": branch.current ? "fa fa-arrow-circle-right" : "fa fa-code-fork"};
+							"icon": branch.current ? "fa fa-caret-right" : "fa fa-code-fork"};
 						var child = $('.workspace').jstree("create_node", parent, newNode, position, false, false);
 					})
 				});
