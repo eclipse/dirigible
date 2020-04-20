@@ -80,9 +80,9 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		// backup
 		try {
-			return (IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(Class.forName("org.eclipse.dirigible.engine.js.rhino.processor.RhinoJavascriptEngineExecutor"));
+			return (IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(Class.forName("org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor"));
 		} catch (ClassNotFoundException e) {
-			throw new ScriptingException("No Javascript Engine registered. Mozilla Rhino is also not available.");
+			throw new ScriptingException("No Javascript Engine registered. The default GraalJS is also not available.");
 		}
 	}
 }
