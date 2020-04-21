@@ -195,6 +195,12 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 	};
 	
 	this.refresh = function(){
+		if (!this.selectedWorkspace || !this.selectedProject) {
+			this.unstagedFiles = [];
+			this.stagedFiles = [];
+			this.scope.$apply();
+			return;
+		}
 		gitService.getUnstagedFiles(this.selectedWorkspace, this.selectedProject)
 			.then(function(files) {
 				this.unstagedFiles = files;
@@ -243,8 +249,12 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
     }
 
     $messageHub.on('git.repository.selected', function(msg) {
-		this.selectedWorkspace = msg.data.workspace;
-        this.selectedProject = msg.data.project;
+		if (msg.data.isGitProject) {
+			this.selectedWorkspace = msg.data.workspace;
+			this.selectedProject = msg.data.project;
+		} else {
+			this.selectedProject = null;
+		}
 		this.refresh();
 	}.bind(this));
 	

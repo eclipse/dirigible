@@ -322,7 +322,7 @@ WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 }
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
 	if (node.original._file && node.original._file.type === "project") {
-		this.$messageHub.announceRepositorySelected(this.workspaceName, node.original._file.name);
+		this.$messageHub.announceRepositorySelected(this.workspaceName, node.original._file.name, node.original._file.git);
 	}
 	//this.$messageHub.announceFileSelected(node.original._file);
 };
@@ -611,8 +611,8 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var announcePull = function(fileDescriptor){
 		this.message('file.pull', fileDescriptor);
 	};
-	var announceRepositorySelected = function(workspace, project){
-		messageHub.post({data: {"workspace": workspace, "project": project}}, 'git.repository.selected');
+	var announceRepositorySelected = function(workspace, project, isGitProject){
+		messageHub.post({data: {"workspace": workspace, "project": project, "isGitProject": isGitProject}}, 'git.repository.selected');
 	};
 	return {
 		message: message,
