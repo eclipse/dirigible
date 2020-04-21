@@ -36,6 +36,7 @@ import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
+import org.eclipse.dirigible.runtime.git.model.GitProjectChangedFiles;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
 import org.eclipse.dirigible.runtime.git.model.GitPullModel;
@@ -382,7 +383,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@Produces("application/json")
 	@ApiOperation("Get Project Local Branches")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Local Branches") })
-	public Response gitProjectLocalBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+	public Response getProjectLocalBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
 			throws GitConnectorException {
 		String user = UserFacade.getName();
@@ -407,7 +408,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@Produces("application/json")
 	@ApiOperation("Get Project Remote Branches")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Remote Branches") })
-	public Response gitProjectRemoteBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+	public Response getProjectRemoteBranches(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
 			throws GitConnectorException {
 		String user = UserFacade.getName();
@@ -449,6 +450,112 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Get unstaged files.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@GET
+	@Path("/{project}/unstaged")
+	@Produces("application/json")
+	@ApiOperation("Get Project Unstaged Files")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Unstaged Files") })
+	public Response getProjectUnstagedFiles(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		GitProjectChangedFiles gitProjectFiles = processor.getUnstagedFiles(workspace, project);
+		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Get staged files.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@GET
+	@Path("/{project}/staged")
+	@Produces("application/json")
+	@ApiOperation("Get Project Staged Files")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Staged Files") })
+	public Response getProjectStagedFiles(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		GitProjectChangedFiles gitProjectFiles = processor.getStagedFiles(workspace, project);
+		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+	
+	/**
+	 * Add file to index.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths to be added
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@POST
+	@Path("/{project}/add")
+	@ApiOperation("Add file to index")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Add file to index") })
+	public Response addFileToIndex(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, String paths)
+			throws GitConnectorException {
+		if (paths == null || "".equals(paths)) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		processor.addFileToIndex(workspace, project, paths);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Remove file from index.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths to be added
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@POST
+	@Path("/{project}/remove")
+	@ApiOperation("Remove file from index.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Remove file from index.") })
+	public Response removeFileFromIndex(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, String paths)
+			throws GitConnectorException {
+		if (paths == null || "".equals(paths)) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		processor.removeFileFromIndex(workspace, project, paths);
+		return Response.ok().build();
 	}
 
 	/* (non-Javadoc)

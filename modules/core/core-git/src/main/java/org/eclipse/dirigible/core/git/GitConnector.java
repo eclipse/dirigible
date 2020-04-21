@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
@@ -48,6 +49,7 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -104,6 +106,22 @@ public class GitConnector implements IGitConnector {
 		addCommand.addFilepattern(filePattern);
 		addCommand.call();
 	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#remove(java.lang.String)
+	 */
+	@Override
+	public void remove(String path) throws IOException, NoFilepatternException, GitAPIException {
+		ResetCommand reset = new Git(repository).reset();
+		reset.setRef(Constants.HEAD);
+		reset.addPath(path);
+		reset.call();
+	}
+	
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -117,6 +135,7 @@ public class GitConnector implements IGitConnector {
 		commitCommand.setMessage(message);
 		commitCommand.setCommitter(name, email);
 		commitCommand.setAuthor(name, email);
+//		commitCommand.setCommitter(name, email);
 		commitCommand.setAll(all);
 		commitCommand.setAllowEmpty(true);
 		commitCommand.call();
@@ -329,4 +348,58 @@ public class GitConnector implements IGitConnector {
 		}
 		return name;
 	}
+
+	@Override
+	public List<GitChangedFile> getUnstagedChanges() throws GitConnectorException {
+		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
+		try {
+			Status status = git.status().call();
+			Set<String> missing = status.getMissing();
+	        for(String miss : missing) {
+	        	GitChangedFile file = new GitChangedFile(miss, GitChangeType.Missing.ordinal());
+	        	list.add(file);
+	        }
+	        Set<String> modified = status.getModified();
+	        for(String modify : modified) {
+	        	GitChangedFile file = new GitChangedFile(modify, GitChangeType.Modified.ordinal());
+	        	list.add(file);
+	        }
+	        Set<String> untracked = status.getUntracked();
+	        for(String untrack : untracked) {
+	        	GitChangedFile file = new GitChangedFile(untrack, GitChangeType.Untracked.ordinal());
+	        	list.add(file);
+	        }
+		} catch (NoWorkTreeException | GitAPIException e) {
+			throw new GitConnectorException(e);
+		}
+		return list;
+	}
+
+	@Override
+	public List<GitChangedFile> getStagedChanges() throws GitConnectorException {
+		List<GitChangedFile> list = new ArrayList<GitChangedFile>();
+		try {
+			Status status = git.status().call();
+			Set<String> added = status.getAdded();
+	        for(String add : added) {
+	        	GitChangedFile file = new GitChangedFile(add, GitChangeType.Added.ordinal());
+	        	list.add(file);
+	        }
+	        Set<String> changed = status.getChanged();
+	        for(String change : changed) {
+	        	GitChangedFile file = new GitChangedFile(change, GitChangeType.Changed.ordinal());
+	        	list.add(file);
+	        }
+	        Set<String> removed = status.getRemoved();
+	        for(String remove : removed) {
+	        	GitChangedFile file = new GitChangedFile(remove, GitChangeType.Removed.ordinal());
+	        	list.add(file);
+	        }
+		} catch (NoWorkTreeException | GitAPIException e) {
+			throw new GitConnectorException(e);
+		}
+		return list;
+	}
+	
+	
 }

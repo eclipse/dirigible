@@ -75,7 +75,7 @@ public class PushCommand {
 	 *            the branch
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
-			final String password, final String email, final String branch) {
+			final String password, final String email, final String branch, boolean add, boolean commit) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Push action");
 		}
@@ -83,7 +83,7 @@ public class PushCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start pushing project [%s]...", selectedProject.getName()));
-				pushProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch);
+				pushProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch, add, commit);
 				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
 			} else {
 				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
@@ -109,7 +109,7 @@ public class PushCommand {
 	 *            the email
 	 */
 	private void pushProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
-			final String username, final String password, final String email, final String branch) {
+			final String username, final String password, final String email, final String branch, boolean add, boolean commit) {
 
 		final String errorMessage = String.format("Error occurred while pushing project [%s]. ", selectedProject.getName());
 		
@@ -121,8 +121,12 @@ public class PushCommand {
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			String gitRepositoryBranch = gitConnector.getBranch();
-			gitConnector.add(selectedProject.getName());
-			gitConnector.commit(commitMessage, username, email, true);
+			if (add) {
+				gitConnector.add(selectedProject.getName());
+			}
+			if (commit) {
+				gitConnector.commit(commitMessage, username, email, true);
+			}
 			try {
 				gitConnector.pull(username, password);
 			} catch (GitAPIException e) {

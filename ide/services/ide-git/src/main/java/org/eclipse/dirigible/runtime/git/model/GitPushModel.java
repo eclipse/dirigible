@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2018 SAP and others.
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,14 @@ public class GitPushModel extends BaseGitProjectModel {
 
 	@ApiModelProperty(value = "The Commit Message", required = true, example = "Updates README.md")
 	private String commitMessage;
+	
+	@ApiModelProperty(value = "Add all unstaged files", required = true, example = "Updates README.md")
+	private boolean autoAdd;
+	
+	@ApiModelProperty(value = "Commit all staged files", required = true, example = "Updates README.md")
+	private boolean autoCommit;
+	
+	
 
 	/**
 	 * Gets the commit message.
@@ -37,5 +45,35 @@ public class GitPushModel extends BaseGitProjectModel {
 	public void setCommitMessage(String commitMessage) {
 		this.commitMessage = commitMessage;
 	}
+
+	/**
+	 * @return the autoAdd
+	 */
+	public boolean isAutoAdd() {
+		return autoAdd;
+	}
+
+	/**
+	 * @param autoAdd the autoAdd to set
+	 */
+	public void setAutoAdd(boolean autoAdd) {
+		this.autoAdd = autoAdd;
+	}
+
+	/**
+	 * @return the autoCommit
+	 */
+	public boolean isAutoCommit() {
+		return autoCommit;
+	}
+
+	/**
+	 * @param autoCommit the autoCommit to set
+	 */
+	public void setAutoCommit(boolean autoCommit) {
+		this.autoCommit = autoCommit;
+	}
+	
+	
 
 }

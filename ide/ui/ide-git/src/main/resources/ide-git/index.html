@@ -68,7 +68,7 @@
 		.controller('GitController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['git', 'console'],
+				views: ['git', 'console', 'staging'],
 				events: {
 					'fileselected': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label);

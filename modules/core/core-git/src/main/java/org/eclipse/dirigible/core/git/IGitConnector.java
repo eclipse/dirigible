@@ -30,8 +30,6 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
 
@@ -70,6 +68,20 @@ public interface IGitConnector {
 	 *             Git API Exception
 	 */
 	void add(String filePattern) throws IOException, NoFilepatternException, GitAPIException;
+	
+	/**
+	 * Remove from the index
+	 * 
+	 * @param path the path to be removed
+	 * @throws IOException
+	 *             IO Exception
+	 * @throws NoFilepatternException
+	 *             No File Pattern Exception
+	 * @throws GitAPIException
+	 *             Git API Exception
+	 */
+	void remove(String path) throws IOException, NoFilepatternException, GitAPIException;
+
 
 	/**
 	 * Adds changes to the staging index. Then makes commit.
@@ -296,5 +308,23 @@ public interface IGitConnector {
 	 * @throws GitConnectorException in case of exception
 	 */
 	List<GitBranch> getRemoteBranches() throws GitConnectorException;
+	
+	
+	/**
+	 * Get the list of the unstaged files
+	 * 
+	 * @return the list
+	 * @throws GitConnectorException in case of exception
+	 */
+	List<GitChangedFile> getUnstagedChanges() throws GitConnectorException;
+
+	/**
+	 * Get the list of the staged files
+	 * 
+	 * @return the list
+	 * @throws GitConnectorException in case of exception
+	 */
+	List<GitChangedFile> getStagedChanges() throws GitConnectorException;
+
 
 }

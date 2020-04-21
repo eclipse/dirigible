@@ -44,6 +44,7 @@ import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
+import org.eclipse.dirigible.runtime.git.model.GitProjectChangedFiles;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
 import org.eclipse.dirigible.runtime.git.model.GitPullModel;
@@ -51,6 +52,8 @@ import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +125,7 @@ public class GitProcessor {
 	public void push(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch());
+		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd(), model.isAutoCommit());
 	}
 
 	/**
@@ -171,7 +174,7 @@ public class GitProcessor {
 	public void commit(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		commitCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch());
+		commitCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd());
 	}
 
 	/**
@@ -245,26 +248,10 @@ public class GitProcessor {
 	 * @return the branches
 	 */
 	public GitProjectLocalBranches getLocalBranches(String workspace, String project) throws GitConnectorException {
-		try {
-			IProject projectCollection = getWorkspace(workspace).getProject(project);
-			if (projectCollection.getRepository() instanceof FileSystemRepository) {
-				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
-				String gitDirectory = new File(path).getCanonicalPath();
-				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
-					GitProjectLocalBranches branches = new GitProjectLocalBranches();
-					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
-					branches.setLocal(gitConnector.getLocalBranches());
-					return branches;
-				} else {
-					throw new GitConnectorException("Not a Git project directory");
-				}
-			} else {
-				throw new GitConnectorException("Not a file based repository used, hence no git support");
-			}
-		} catch (RepositoryWriteException | IOException e) {
-			throw new GitConnectorException(e);
-		}
-		
+		GitProjectLocalBranches branches = new GitProjectLocalBranches();
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		branches.setLocal(gitConnector.getLocalBranches());
+		return branches;
 	}
 	
 	/**
@@ -272,30 +259,14 @@ public class GitProcessor {
 	 *  
 	 * @param workspace the workspace
 	 * @param project the project
-	 * @throws GitConnectorException in case of an error
 	 * @return the branches
+	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectRemoteBranches getRemoteBranches(String workspace, String project) throws GitConnectorException {
-		try {
-			IProject projectCollection = getWorkspace(workspace).getProject(project);
-			if (projectCollection.getRepository() instanceof FileSystemRepository) {
-				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
-				String gitDirectory = new File(path).getCanonicalPath();
-				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
-					GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
-					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
-					branches.setRemote(gitConnector.getRemoteBranches());
-					return branches;
-				} else {
-					throw new GitConnectorException("Not a Git project directory");
-				}
-			} else {
-				throw new GitConnectorException("Not a file based repository used, hence no git support");
-			}
-		} catch (RepositoryWriteException | IOException e) {
-			throw new GitConnectorException(e);
-		}
-		
+		GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		branches.setRemote(gitConnector.getRemoteBranches());
+		return branches;
 	}
 	
 	/**
@@ -321,4 +292,99 @@ public class GitProcessor {
 		return WorkspaceJsonHelper.describeWorkspaceProjects(workspace,
 				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
+
+	/**
+	 * Get the unstaged files for project
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the list of files
+	 * @throws GitConnectorException in case of an error
+	 */
+	public GitProjectChangedFiles getUnstagedFiles(String workspace, String project) throws GitConnectorException {
+		GitProjectChangedFiles gitProjectChangedFiles =new GitProjectChangedFiles();
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitProjectChangedFiles.setFiles(gitConnector.getUnstagedChanges());
+		return gitProjectChangedFiles;
+	}
+
+	/**
+	 * Get the staged files for project
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the list of files
+	 * @throws GitConnectorException in case of an error
+	 */
+	public GitProjectChangedFiles getStagedFiles(String workspace, String project) throws GitConnectorException {
+		GitProjectChangedFiles gitProjectChangedFiles =new GitProjectChangedFiles();
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitProjectChangedFiles.setFiles(gitConnector.getStagedChanges());
+		return gitProjectChangedFiles;
+	}
+	
+	/**
+	 * Add file to index
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths
+	 * @throws GitConnectorException in case of an error
+	 */
+	public void addFileToIndex(String workspace, String project, String paths) throws GitConnectorException {
+		try {
+			IGitConnector gitConnector = getGitConnector(workspace, project);
+			String[] files = paths.split(",");
+			for (String file : files) {
+				gitConnector.add(file);
+			}
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+
+	/**
+	 * Remove file from index
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths
+	 * @throws GitConnectorException in case of an error
+	 */
+	public void removeFileFromIndex(String workspace, String project, String paths) throws GitConnectorException {
+		try {
+			IGitConnector gitConnector = getGitConnector(workspace, project);
+			String[] files = paths.split(",");
+			for (String file : files) {
+				gitConnector.remove(file);
+			}
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+	
+	
+	
+	private IGitConnector getGitConnector(String workspace, String project) throws GitConnectorException {
+		try {
+			IProject projectCollection = getWorkspace(workspace).getProject(project);
+			if (projectCollection.getRepository() instanceof FileSystemRepository) {
+				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
+				String gitDirectory = new File(path).getCanonicalPath();
+				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
+					GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
+					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
+					return gitConnector;
+				} else {
+					throw new GitConnectorException("Not a Git project directory");
+				}
+			} else {
+				throw new GitConnectorException("Not a file based repository used, hence no git support");
+			}
+		} catch (RepositoryWriteException | IOException e) {
+			throw new GitConnectorException(e);
+		}
+	}
+
+
 }

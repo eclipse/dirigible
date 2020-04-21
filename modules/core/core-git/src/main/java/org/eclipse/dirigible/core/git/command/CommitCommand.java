@@ -75,7 +75,7 @@ public class CommitCommand {
 	 *            the branch
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
-			final String password, final String email, final String branch) {
+			final String password, final String email, final String branch, boolean add) {
 		if (projects.length == 0) {
 			logger.warn("No project is selected for the Commit action");
 		}
@@ -83,7 +83,7 @@ public class CommitCommand {
 		for (IProject selectedProject : projects) {
 			if (verifier.verify(workspace, selectedProject)) {
 				logger.debug(String.format("Start committing project [%s]...", selectedProject.getName()));
-				commitProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch);
+				commitProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch, add);
 				logger.debug(String.format("Commit of the project [%s] finished.", selectedProject.getName()));
 			} else {
 				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", selectedProject));
@@ -109,7 +109,7 @@ public class CommitCommand {
 	 *            the email
 	 */
 	private void commitProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
-			final String username, final String password, final String email, final String branch) {
+			final String username, final String password, final String email, final String branch,  boolean add) {
 
 		final String errorMessage = String.format("Error occurred while committing project [%s]. ", selectedProject.getName());
 
@@ -118,7 +118,9 @@ public class CommitCommand {
 			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
-			gitConnector.add(selectedProject.getName());
+			if (add) {
+				gitConnector.add(selectedProject.getName());
+			}
 			gitConnector.commit(commitMessage, username, email, true);
 		} catch (IOException e) {
 			logger.error(errorMessage, e);

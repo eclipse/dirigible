@@ -10,6 +10,10 @@
  */
 package org.eclipse.dirigible.core.git;
 
+/**
+ * The Branch representation POJO
+ *
+ */
 public class GitBranch {
 	
 	private String name;

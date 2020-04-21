@@ -82,7 +82,7 @@ public class PushComandTest extends AbstractGuiceTest {
 			String password = System.getProperty(DIRIGIBLE_TEST_GIT_PASSWORD);
 			String email = System.getProperty(DIRIGIBLE_TEST_GIT_EMAIL);
 			if (username != null) {
-				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email, IGitConnector.GIT_MASTER);
+				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email, IGitConnector.GIT_MASTER, true, true);
 			}
 		}
 	}

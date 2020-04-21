@@ -223,6 +223,7 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 	jstree.on('select_node.jstree', function (e, data) {
 		if (data.type === 'project') {
 			workspaceController.selectedProject = data.name;
+			
 		} else if (data.type === 'local' || data.type === 'remote') {
 			workspaceController.selectedProject = data.node.parent.name;
 		}
@@ -303,7 +304,6 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 	.on('jstree.workspace.checkout', function (e, data) {		
 		workspaceController.selectedProject = data.project;
 		workspaceController.selectedBranch = data.branch;
-		debugger
 		$('#checkout').click();
 	}.bind(this))
 	.on('jstree.workspace.commit', function (e, data) {		
@@ -316,13 +316,15 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 };
 
 WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
-	var type = node.original.type;
-	if(['folder','project'].indexOf(type)<0)
-		this.$messageHub.announceFileOpen(node.original._file);
+	// var type = node.original.type;
+	// if(['folder','project'].indexOf(type)<0)
+	// 	this.$messageHub.announceFileOpen(node.original._file);
 }
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
-	// var type = node.original.type;
-	this.$messageHub.announceFileSelected(node.original._file);
+	if (node.original._file && node.original._file.type === "project") {
+		this.$messageHub.announceRepositorySelected(this.workspaceName, node.original._file.name);
+	}
+	//this.$messageHub.announceFileSelected(node.original._file);
 };
 WorkspaceTreeAdapter.prototype.raw = function(){
 	return this.jstree;
@@ -462,7 +464,9 @@ GitService.prototype.pushAllProjects = function(wsTree, workspace, commitMessage
 			"commitMessage": commitMessage,
 			"username": username,
 			"password": btoa(password),
-			"email": email
+			"email": email,
+			"autoAdd": true,
+			"autoCommit": true
 			})
 			.then(function(response){
 				wsTree.refresh();
@@ -476,7 +480,9 @@ GitService.prototype.pushProject = function(wsTree, workspace, project, commitMe
 			"username": username,
 			"password": btoa(password),
 			"email": email,
-			"branch": branch
+			"branch": branch,
+			"autoAdd": true,
+			"autoCommit": true
 			})
 			.then(function(response){
 				wsTree.refresh();
@@ -605,12 +611,16 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var announcePull = function(fileDescriptor){
 		this.message('file.pull', fileDescriptor);
 	};
+	var announceRepositorySelected = function(workspace, project){
+		messageHub.post({data: {"workspace": workspace, "project": project}}, 'git.repository.selected');
+	};
 	return {
 		message: message,
 		announceFileSelected: announceFileSelected,
 		announceFileCreated: announceFileCreated,
 		announceFileOpen: announceFileOpen,
 		announcePull: announcePull,
+		announceRepositorySelected: announceRepositorySelected,
 		on: function(evt, cb){
 			messageHub.subscribe(cb, evt);
 		}

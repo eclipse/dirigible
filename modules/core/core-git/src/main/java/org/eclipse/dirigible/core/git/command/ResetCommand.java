@@ -33,11 +33,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ResetCommand {
 
-//	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
-//	/** The project metadata manager. */
+	/** The project metadata manager. */
 	@Inject
 	private ProjectMetadataManager projectMetadataManager;
 
