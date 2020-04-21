@@ -144,7 +144,7 @@ public class WorkspaceJsonHelper {
 				String gitDirectory = new File(path).getCanonicalPath();
 				return Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists();
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// do nothing
 		}
 		return false;

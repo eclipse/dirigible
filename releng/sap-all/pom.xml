@@ -143,6 +143,30 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide</artifactId>
 		 	<version>4.5.0-SNAPSHOT</version>
+		 	<exclusions>
+		 		<exclusion>
+		 			<artifactId>dirigible-ide-ui-git</artifactId>
+		 			<groupId>org.eclipse.dirigible</groupId>
+		 		</exclusion>
+			 	<exclusion>
+		 			<artifactId>dirigible-ide-ui-debugger</artifactId>
+		 			<groupId>org.eclipse.dirigible</groupId>
+		 		</exclusion>
+		 		<exclusion>
+		 			<artifactId>dirigible-ide-ui-terminal</artifactId>
+		 			<groupId>org.eclipse.dirigible</groupId>
+		 		</exclusion>
+		 	</exclusions>
+		</dependency>
+		<dependency>
+			<artifactId>dirigible-ide-ui-git</artifactId>
+			<groupId>org.eclipse.dirigible</groupId>
+			<version>4.3.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>dirigible-ide-ui-terminal</artifactId>
+			<groupId>org.eclipse.dirigible</groupId>
+			<version>4.3.0</version>
 		</dependency>
 
 		<!-- Templates Plugins -->
