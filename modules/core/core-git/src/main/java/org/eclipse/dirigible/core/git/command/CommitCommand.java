@@ -121,7 +121,7 @@ public class CommitCommand {
 			if (add) {
 				gitConnector.add(selectedProject.getName());
 			}
-			gitConnector.commit(commitMessage, username, email, true);
+			gitConnector.commit(commitMessage, username, email, add);
 		} catch (IOException e) {
 			logger.error(errorMessage, e);
 		} catch (InvalidRemoteException e) {
