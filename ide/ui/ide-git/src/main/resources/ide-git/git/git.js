@@ -166,7 +166,7 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 	this._buildTreeNode = function(f){
 		var children = [];
 		// if(f.type=='folder' || f.type=='project'){
-		if(f.type=='project'){
+		if(f.type=='project' && f.git){
 			// children = f.folders.map(this._buildTreeNode.bind(this));
 			// var _files = f.files.map(this._buildTreeNode.bind(this))
 			// children = children.concat(_files);
