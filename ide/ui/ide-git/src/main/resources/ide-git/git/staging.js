@@ -263,8 +263,8 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 	types[2] = "&#xf058;"; //"check-circle"//"changed"; // staged
 	types[3] = "&#xf056;"; //"minus-circle-o"//"missing"; // unstaged
 	types[4] = "&#xf05d;"; //"check-circle-o"//"modified"; // unstaged
-	types[5] = "&#xf057;"; //"times-circle"//"removed"; // staged
-	types[6] = "&#xf05c;"; //"question-circle-o"//"untracked"; // unstaged
+	types[5] = "&#xf056;"; //"times-circle"//"removed"; // staged
+	types[6] = "&#xf10c;"; //"question-circle-o"//"untracked"; // unstaged
 	this.typeIcon = function(i) {
 		return types[i];
 	}
