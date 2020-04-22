@@ -47,8 +47,11 @@
 </head>
 
 <body border="1px" ng-app="stagingApp" ng-controller="StagingContoller as staging">   
-            
-	<div style="height: 100%">
+    <div class="view-fixed-top">
+		<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="staging.refresh()"><i class="fa fa-refresh"></i></button>
+		Project: <b> {{staging.selectedProject}} </b>
+    </div>
+	<div class="workspace" style="height: 100%">
 		<div class="row" style="height: 90%">
 			<div class="col-sm-6">
 					<div class="row form"  style="height: 50%">
@@ -87,7 +90,7 @@
 					<textarea rows=10 class="form-control" ng-model="staging.commitMessage">
 					</textarea>
 				</form>
-				<form class="form-inline">
+				<form class="form-inline" style="padding: 1em;">
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Username:</label>
 						<input class="col-sm-6 form-control" type="text" placeholder="" ng-model="staging.username" required="required">
