@@ -58,7 +58,10 @@
 						<div style="height: 2em">
 							<label>Unstaged Files:</label>
 						</div>
-						<select style="height: calc(100% - 2em)" class="dropdown dropdown-toggle dropdown-top form-control" ng-options="item as item.path for item in staging.unstagedFiles track by item.path" multiple ng-model="staging.selectedUnstagedFiles">
+						<select style="height: calc(100% - 2em); font-family: 'FontAwesome'"
+							class="dropdown dropdown-toggle dropdown-top form-control" ng-model="staging.selectedUnstagedFiles" multiple>
+							<option ng-repeat="item in staging.unstagedFiles" id="{{item.path}}" value="{{item.path}}"
+								ng-selected="item.selected === 'selected'" ng-bind-html="item.label"></option>
 						</select>
 					</div>
 					<div>
@@ -72,7 +75,10 @@
 						<div style="height: 2em">
 							<label>Staged Files:</label>
 						</div>
-						<select style="height: calc(100% - 2em)" class="dropdown dropdown-toggle dropdown-top form-control" ng-options="item as item.path for item in staging.stagedFiles track by item.path" multiple ng-model="staging.selectedStagedFiles">
+						<select style="height: calc(100% - 2em); font-family: 'FontAwesome'" 
+							class="dropdown dropdown-toggle dropdown-top form-control" ng-model="staging.selectedStagedFiles" multiple>
+							<option ng-repeat="item in staging.stagedFiles" id="{{item.path}}" value="{{item.path}}"
+								ng-selected="item.selected === 'selected'" ng-bind-html="item.label"></option>
 						</select>
 					</div>
 			</div>

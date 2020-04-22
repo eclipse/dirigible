@@ -94,19 +94,16 @@ GitService.prototype.getStagedFiles = function(workspace, project) {
 }
 GitService.prototype.addFiles = function(workspace, project, files) {
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("add").build();
-	var list = files.map(e => e.path).join(",");
+	var list = files.join(",");
 	return this.$http.post(url, JSON.stringify(list));
 }
 GitService.prototype.removeFiles = function(workspace, project, files) {
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("remove").build();
-	var list = files.map(e => e.path).join(",");
+	var list = files.join(",");
 	return this.$http.post(url, JSON.stringify(list));
 }
 
-
-
 var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
-
 .factory('httpRequestInterceptor', function () {
 	var csrfToken = null;
 	return {
@@ -204,6 +201,7 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		gitService.getUnstagedFiles(this.selectedWorkspace, this.selectedProject)
 			.then(function(files) {
 				this.unstagedFiles = files;
+				this.unstagedFiles.map(e => {e.label = this.typeIcon(e.type) + ' ' + e.path});
 				try {
 					this.scope.$apply();
 				} catch(e) {
@@ -213,6 +211,7 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		gitService.getStagedFiles(this.selectedWorkspace, this.selectedProject)
 			.then(function(files) {
 				this.stagedFiles = files;
+				this.stagedFiles.map(e => {e.label = this.typeIcon(e.type) + ' ' + e.path});
 				try {
 					this.scope.$apply();
 				} catch(e) {
@@ -257,6 +256,18 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		}
 		this.refresh();
 	}.bind(this));
+
+	types = {};
+	types[0] = "&#xf071;"; //"conflicting";
+	types[1] = "&#xf055;"; //"plus-circle";//"added"; // staged
+	types[2] = "&#xf058;"; //"check-circle"//"changed"; // staged
+	types[3] = "&#xf056;"; //"minus-circle-o"//"missing"; // unstaged
+	types[4] = "&#xf05d;"; //"check-circle-o"//"modified"; // unstaged
+	types[5] = "&#xf057;"; //"times-circle"//"removed"; // staged
+	types[6] = "&#xf05c;"; //"question-circle-o"//"untracked"; // unstaged
+	this.typeIcon = function(i) {
+		return types[i];
+	}
 	
 }]);
 
