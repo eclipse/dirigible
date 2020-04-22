@@ -14,15 +14,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.core.workspace.json.WorkspaceGitHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Workspace's Workspace.
  */
 public class Workspace extends Folder implements IWorkspace {
+	
+	private static final Logger logger = LoggerFactory.getLogger(Workspace.class);
 
 	/**
 	 * Instantiates a new workspace.
@@ -74,6 +80,16 @@ public class Workspace extends Folder implements IWorkspace {
 	 */
 	@Override
 	public void deleteProject(String name) {
+		ICollection projectCollection = this.getCollection(name);
+		java.io.File gitFolder = WorkspaceGitHelper.getGitFolderForProject(projectCollection, projectCollection.getPath());
+		if (gitFolder != null
+				&& gitFolder.exists()) {
+			try {
+				org.apache.commons.io.FileUtils.deleteDirectory(gitFolder.getParentFile());
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 		this.removeCollection(name);
 	}
 
