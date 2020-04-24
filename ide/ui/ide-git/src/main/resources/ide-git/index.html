@@ -68,10 +68,12 @@
 		.controller('GitController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['git', 'console', 'staging'],
+				views: ['git', 'editor', 'diff', 'console', 'staging', 'history'],
 				events: {
-					'fileselected': function(msg){
-						Layouts.manager.openEditor(msg.data.path, msg.data.label);
+					'git.staging.file.diff': function(msg) {
+						var project = msg.data.project;
+						var file = msg.data.file;
+						Layouts.manager.openEditor(file + "&project=" + project, "Diff " + file, null, "monaco-diff");
 					}
 				}
 			};

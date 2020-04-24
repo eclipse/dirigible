@@ -11,20 +11,25 @@
 package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RebaseCommand;
@@ -50,11 +55,17 @@ import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 /**
  * The GitConnector utility is used for simplified communication with Git SCM server.
@@ -400,6 +411,74 @@ public class GitConnector implements IGitConnector {
 		}
 		return list;
 	}
-	
-	
+
+	@Override
+	public String getFileContent(String path, String revStr) throws GitConnectorException {
+		RevWalk revWalk = null;
+		TreeWalk treeWalk = null;
+		InputStream in = null;
+		try {
+			ObjectId lastCommitId = repository.resolve(revStr);
+			revWalk = new RevWalk(repository);
+			RevCommit commit = revWalk.parseCommit(lastCommitId);
+			RevTree tree = commit.getTree();
+			treeWalk = new TreeWalk(repository);
+			treeWalk.addTree(tree);
+			treeWalk.setRecursive(true);
+			treeWalk.setFilter(PathFilter.create(path));
+			if (treeWalk.next()) {
+				ObjectId objectId = treeWalk.getObjectId(0);
+				ObjectLoader loader = repository.open(objectId);
+				in = loader.openStream();
+				return IOUtils.toString(in, StandardCharsets.UTF_8);
+			}
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new GitConnectorException(e);
+				}
+			}
+			if (treeWalk != null) {
+				treeWalk.close();
+			}
+			if (revWalk != null) {
+				revWalk.close();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<GitCommitInfo> getHistory(String path) throws GitConnectorException {
+		try {
+			final List<GitCommitInfo> history = new ArrayList<GitCommitInfo>();
+			final SimpleDateFormat dtfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+			
+			LogCommand logCommand = git.log();
+			if (path != null) {
+				logCommand.addPath(path);
+			}
+			Iterable<RevCommit> gitLog = logCommand.call();
+			gitLog.forEach(log -> {
+				PersonIdent personIdentity = log.getAuthorIdent();
+				dtfmt.setTimeZone(personIdentity.getTimeZone());
+
+				GitCommitInfo info = new GitCommitInfo();
+				info.setId(log.getId().getName());
+				info.setAuthor(personIdentity.getName());
+				info.setEmailAddress(personIdentity.getEmailAddress());
+				info.setDateTime(dtfmt.format(personIdentity.getWhen()));
+				info.setMessage(log.getFullMessage());
+				
+				history.add(info);
+			});
+			return history;
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
 }

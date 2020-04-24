@@ -9,13 +9,13 @@
  *   SAP - initial API and implementation
  */
 exports.getView = function () {
-	var view = {
-		"id": "staging",
-		"name": "Staging",
-		"factory": "frame",
-		"region": "center-bottom",
-		"label": "Staging",
-		"link": "../ide-git/git/staging.html"
-	};
-	return view;
+    var view = {
+        "id": "history",
+        "name": "History",
+        "factory": "frame",
+        "region": "center-bottom",
+        "label": "History",
+        "link": "../ide-git/git/history.html"
+    };
+    return view;
 }

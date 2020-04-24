@@ -326,5 +326,20 @@ public interface IGitConnector {
 	 */
 	List<GitChangedFile> getStagedChanges() throws GitConnectorException;
 
+	/**
+	 * Get file content from the HEAD
+	 * @param path
+	 * @param revStr
+	 * @return the content
+	 * @throws GitConnectorException in case of exception
+	 */
+	String getFileContent(String path, String revStr) throws GitConnectorException;
 
+	/**
+	 * Get history
+	 * @param path the file path or null
+	 * @return the history of a file or the whole git repo
+	 * @throws GitConnectorException
+	 */
+	List<GitCommitInfo> getHistory(String path) throws GitConnectorException;
 }

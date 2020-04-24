@@ -61,7 +61,7 @@
 						<select style="height: calc(100% - 2em); font-family: 'FontAwesome', 'Helvetica'"
 							class="dropdown dropdown-toggle dropdown-top form-control" ng-model="staging.selectedUnstagedFiles" multiple>
 							<option ng-repeat="item in staging.unstagedFiles" id="{{item.path}}" value="{{item.path}}"
-								ng-selected="item.selected === 'selected'" ng-bind-html="item.label"></option>
+								ng-selected="item.selected === 'selected'" ng-bind-html="item.label" ng-dblclick="staging.diffClicked(item)"></option>
 						</select>
 					</div>
 					<div>
@@ -78,7 +78,7 @@
 						<select style="height: calc(100% - 2em); font-family: 'FontAwesome', 'Helvetica'" 
 							class="dropdown dropdown-toggle dropdown-top form-control" ng-model="staging.selectedStagedFiles" multiple>
 							<option ng-repeat="item in staging.stagedFiles" id="{{item.path}}" value="{{item.path}}"
-								ng-selected="item.selected === 'selected'" ng-bind-html="item.label"></option>
+								ng-selected="item.selected === 'selected'" ng-bind-html="item.label" ng-dblclick="staging.diffClicked(item)"></option>
 						</select>
 					</div>
 			</div>
@@ -101,7 +101,7 @@
 						<label class="col-sm-2 col-form-label">Username:</label>
 						<input class="col-sm-6 form-control" type="text" placeholder="" ng-model="staging.username" required="required">
 						<label class="col-sm-2 col-form-label">Password:</label>
-						<input class="col-sm-6 form-control" type="text" placeholder="" ng-model="staging.password" required="required">
+						<input class="col-sm-6 form-control" type="password" placeholder="" ng-model="staging.password" required="required">
 					</div>
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Author:</label>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Language" content="en-us">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Diff Monaco Editor</title>
+	<link data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet"
+		href="monaco-editor/min/vs/editor/editor.main.css">
+	<style>
+		body {
+			overflow: hidden;
+			height: 100%
+		}
+
+		#diffEditor {
+			margin: 0;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+	</style>
+	<script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+</head>
+
+<body id="monaco-browser" spellcheck="false">
+
+	<script src="../../../../../services/v4/js/theme/resources.js/monaco.js"></script>
+
+	<div id="diffEditor"></div>
+
+	<script src="monaco-editor/min/vs/loader.js"></script>
+	<script>
+		var messageHub = new FramesMessageHub();
+        var csrfToken;
+        var dirty = false;
+
+        /*eslint-disable no-extend-native */
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+
+        function FileIO() {
+
+            var __URL = URL;
+            this.gitApiUrl = '../../../../../services/v4/ide/git';
+
+            this.resolveProject = function() {
+                var url = new __URL(window.location.href);
+                var project = url.searchParams.get('project');
+                return project;
+            };
+
+            this.resolveFile = function() {
+                var url = new __URL(window.location.href);
+                var file = url.searchParams.get('file');
+                return file;
+            };
+
+            this.resolveFileType = function() {
+                var file = this.resolveFile();
+                var mappings = [{
+                    extension: ".js",
+                    type: "javascript"
+                }, {
+                    extension: ".html",
+                    type: "html"
+                }, {
+                    extension: ".css",
+                    type: "css"
+                }, {
+                    extension: ".json",
+                    type: "json"
+                }, {
+                    extension: ".table",
+                    type: "json"
+                }, {
+                    extension: ".view",
+                    type: "json"
+                }, {
+                    extension: ".extensionpoint",
+                    type: "json"
+                }, {
+                    extension: ".extension",
+                    type: "json"
+                }, {
+                    extension: ".job",
+                    type: "json"
+                }, {
+                    extension: ".listener",
+                    type: "json"
+                }, {
+                    extension: ".access",
+                    type: "json"
+                }, {
+                    extension: ".roles",
+                    type: "json"
+                }, {
+                    extension: ".command",
+                    type: "json"
+                }, {
+                    extension: ".xml",
+                    type: "xml"
+                }, {
+                    extension: ".bpmn",
+                    type: "xml"
+                }, {
+                    extension: ".xsjs",
+                    type: "javascript"
+                }];
+
+                for (var i = 0; i < mappings.length; i ++) {
+                    if (file.endsWith(mappings[i].extension)) {
+                        return mappings[i].type;
+                    }
+                }
+
+                return 'text';
+            };
+    
+            this.loadDiff = function() {
+                return new Promise((resolve, reject) => {
+                    var file = this.resolveFile();
+                    var project = this.resolveProject();
+                    var url = this.gitApiUrl + "/" + project + "/diff?path=" + file;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', url);
+                    xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+                    xhr.onload = () => {
+                        var diff = JSON.parse(xhr.responseText);
+                        resolve({
+                            original: diff.original,
+                            modified: diff.modified
+                        });
+                        csrfToken = xhr.getResponseHeader("x-csrf-token");
+                    };
+                    xhr.onerror = () => reject(xhr.statusText);
+                    xhr.send();
+                });
+            };
+        };
+
+        function createEditorInstance() {
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                    try {
+                        var containerEl = document.getElementById('diffEditor');
+                        if (containerEl.childElementCount > 0){
+                            for (var i = 0; i < containerEl.childElementCount; i++)
+                                containerEl.removeChild(containerEl.children.item(i));
+                        }
+                        var diffEditor = monaco.editor.createDiffEditor(containerEl, {
+                            automaticLayout: true,
+                            readOnly: true
+                        });
+
+                        monaco.editor.createDiffNavigator(diffEditor, {
+                            followsCaret: true,
+                            ignoreCharChanges: true
+                        });
+                        resolve(diffEditor);
+                        window.onresize = function (){
+                            diffEditor.layout();
+                        };
+                    } catch (err) {
+                        reject(err);
+                    }
+                });
+            });
+        };
+
+        (function init() {
+            require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
+            var modulesSuggestions = [];
+            var codeCompletionSuggestions = [];
+
+            require(['vs/editor/editor.main'], function() {
+                var fileIO = new FileIO();
+                var _editor;
+                createEditorInstance()
+                    .then((editor) => {
+                        _editor = editor;
+                        return fileIO.loadDiff();
+                    })
+                    .then((diff) => {
+                        var fileType = fileIO.resolveFileType();
+                        fileType = fileType || 'text';
+                        var originalModel = monaco.editor.createModel(diff.original, fileType);
+                        var modifiedModel = monaco.editor.createModel(diff.modified, fileType);
+                        
+                        _editor.setModel({
+                            original: originalModel,
+                            modified: modifiedModel
+                        });
+                    });
+            })
+        })();
+
+	</script>
+</body>
+
+</html>

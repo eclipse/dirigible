@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
@@ -32,6 +33,7 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
@@ -44,6 +46,7 @@ import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
+import org.eclipse.dirigible.runtime.git.model.GitDiffModel;
 import org.eclipse.dirigible.runtime.git.model.GitProjectChangedFiles;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
@@ -52,8 +55,7 @@ import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.lib.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,6 +205,17 @@ public class GitProcessor {
 	/**
 	 * Gets the project.
 	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the project
+	 */
+	public IProject getProject(String workspace, String project) {
+		return getWorkspace(workspace).getProject(project);
+	}
+
+	/**
+	 * Gets the project.
+	 *
 	 * @param workspaceApi the workspace api
 	 * @param project the project
 	 * @return the project
@@ -302,7 +315,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectChangedFiles getUnstagedFiles(String workspace, String project) throws GitConnectorException {
-		GitProjectChangedFiles gitProjectChangedFiles =new GitProjectChangedFiles();
+		GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitProjectChangedFiles.setFiles(gitConnector.getUnstagedChanges());
 		return gitProjectChangedFiles;
@@ -317,7 +330,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException in case of an error
 	 */
 	public GitProjectChangedFiles getStagedFiles(String workspace, String project) throws GitConnectorException {
-		GitProjectChangedFiles gitProjectChangedFiles =new GitProjectChangedFiles();
+		GitProjectChangedFiles gitProjectChangedFiles = new GitProjectChangedFiles();
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitProjectChangedFiles.setFiles(gitConnector.getStagedChanges());
 		return gitProjectChangedFiles;
@@ -363,8 +376,49 @@ public class GitProcessor {
 		}
 	}
 	
-	
-	
+	/**
+	 * Get file diff
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the diff
+	 * @throws GitConnectorException in case of an error
+	 */
+	public GitDiffModel getFileDiff(String workspace, String project, String path) throws GitConnectorException {
+		try {
+			IGitConnector gitConnector = getGitConnector(workspace, project);
+			String original = gitConnector.getFileContent(path, Constants.HEAD);
+			String filePath = path.substring(path.indexOf("/") + 1);
+			IFile file = getProject(workspace, project).getFile(filePath);
+			String modified = null;
+			if (file.exists()) {
+				modified = new String(file.getContent());
+			}
+			GitDiffModel diffModel = new GitDiffModel(original, modified);
+			return diffModel;
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+
+	/**
+	 * Get file history
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the history
+	 * @throws GitConnectorException in case of an error
+	 */
+	public List<GitCommitInfo> getHistory(String workspace, String project, String path) throws GitConnectorException {
+		try {
+			IGitConnector gitConnector = getGitConnector(workspace, project);
+			List<GitCommitInfo> history = gitConnector.getHistory(path);
+			return history;
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+
 	private IGitConnector getGitConnector(String workspace, String project) throws GitConnectorException {
 		try {
 			IProject projectCollection = getWorkspace(workspace).getProject(project);
@@ -372,7 +426,6 @@ public class GitProcessor {
 				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
 				String gitDirectory = new File(path).getCanonicalPath();
 				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
-					GitProjectRemoteBranches branches = new GitProjectRemoteBranches();
 					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
 					return gitConnector;
 				} else {

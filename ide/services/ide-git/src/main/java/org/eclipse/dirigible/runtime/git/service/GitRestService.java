@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.git.service;
 import static java.text.MessageFormat.format;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -32,10 +34,12 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
+import org.eclipse.dirigible.runtime.git.model.GitDiffModel;
 import org.eclipse.dirigible.runtime.git.model.GitProjectChangedFiles;
 import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
 import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
@@ -558,9 +562,64 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Get file diff.
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the response
+	 * @throws GitConnectorException
+	 */
+	@GET
+	@Path("/{project}/diff")
+	@Produces("application/json")
+	@ApiOperation("Get File Diff")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response getFileDiff(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, @QueryParam("path") String path)
+			throws GitConnectorException {
+		if (path == null || "".equals(path)) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		GitDiffModel diff = processor.getFileDiff(workspace, project, path);
+		return Response.ok().entity(GsonHelper.GSON.toJson(diff)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+
+	/**
+	 * Get file diff.
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param path the path
+	 * @return the response
+	 * @throws GitConnectorException
+	 */
+	@GET
+	@Path("/{project}/history")
+	@Produces("application/json")
+	@ApiOperation("Get History")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response getHistory(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, @QueryParam("path") String path)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		List<GitCommitInfo> history = processor.getHistory(workspace, project, path);
+		return Response.ok().entity(GsonHelper.GSON.toJson(history)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
+
 	@Override
 	public Class<? extends IRestService> getType() {
 		return GitRestService.class;
