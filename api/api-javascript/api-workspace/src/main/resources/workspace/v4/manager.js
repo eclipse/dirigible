@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 exports.createWorkspace = function(name) {
 	var native = org.eclipse.dirigible.api.v3.workspace.WorkspaceFacade.createWorkspace(name);
 	var workspace = new Workspace();

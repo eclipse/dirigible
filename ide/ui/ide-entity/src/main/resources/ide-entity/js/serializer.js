@@ -78,16 +78,16 @@ function createModel(graph) {
 						model.push(' dataLength="'+_.escape(property.dataLength)+'"');
 					}
 					if (property.dataNotNull) {
-						model.push(' dataNullable="false"');
+						model.push(' dataNullable="' + (property.dataNotNull == "true") + '"');
 					}
 					if (property.dataPrimaryKey) {
-						model.push(' dataPrimaryKey="true"');
+						model.push(' dataPrimaryKey="' + (property.dataPrimaryKey == "true") + '"');
 					}
 					if (property.dataAutoIncrement) {
-						model.push(' dataAutoIncrement="true"');
+						model.push(' dataAutoIncrement="' + (property.dataAutoIncrement == "true") + '"');
 					}
 					if (property.dataUnique) {
-						model.push(' dataUnique="true"');
+						model.push(' dataUnique="' + (property.dataUnique == "true") + '"');
 					}
 					if (property.dataDefaultValue !== null) {
 						model.push(' dataDefaultValue="'+_.escape(property.dataDefaultValue)+'"');

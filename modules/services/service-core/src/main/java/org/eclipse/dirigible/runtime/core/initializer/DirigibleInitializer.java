@@ -184,8 +184,8 @@ public class DirigibleInitializer {
 		}
 		feature.setTitle("Eclipse Dirigible - RESTful Services API");
 		feature.setContact("dirigible-dev@eclipse.org");
-		feature.setLicense("Eclipse Public License - v 1.0");
-		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v10.html");
+		feature.setLicense("Eclipse Public License - v 2.0");
+		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v20.html");
 		Map<String, SecuritySchemeDefinition> securityDefinitions = new HashMap<String, SecuritySchemeDefinition>();
 		BasicAuthDefinition auth = new BasicAuthDefinition();
 		auth.setType("basic");

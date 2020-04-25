@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 exports.getSources = function(parameters) {
 	var sources = [];
 	sources = sources.concat(getFeed(parameters));
