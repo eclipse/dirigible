@@ -12,15 +12,15 @@ ones](https://github.com/eclipse/dirigible/issues).
 Please read the [Eclipse Foundation policy on accepting contributions via
 Git](https://wiki.eclipse.org/Development_Resources/Contributing_via_Git).
 
-Your contribution cannot be accepted unless you have an [Eclipse Foundation
-Contributor License Agreement](https://www.eclipse.org/legal/CLA.php) in place.
+Your contribution cannot be accepted unless you have an [Eclipse Contributor 
+Agreement](https://www.eclipse.org/legal/ECA.php) in place.
 
 Here is the checklist for contributions to be _acceptable_:
 
 1. [create an account at Eclipse](https://dev.eclipse.org/site_login/), and
 2. add your GitHub user name in your account settings, and
 3. [log into the projects portal](https://projects.eclipse.org/) and look for
-   ["Eclipse CLA"](https://projects.eclipse.org/user/sign/cla), and
+   ["Eclipse Contributor Agreement"](https://www.eclipse.org/legal/ECA.php), and
 4. ensure that you _sign-off_ your Git commits, and
 5. ensure that you use the _same_ email address as your Eclipse Foundation in
    commits.
@@ -33,8 +33,8 @@ http://travis-ci.org to validate your branches before you even put them into
 pull requests.  All pull requests will be validated by Travis-ci in any case
 and must pass before being merged.
 
-Again, check that your author email in commits is the same as your GitHub account, and make sure that you sign-off every commit (`git commit
--s`).
+Again, check that your author email in commits is the same as your GitHub account, 
+and make sure that you sign-off every commit (`git commit -s`).
 
 Do not make pull requests from your `master` branch, please use topic branches
 instead.
@@ -44,11 +44,12 @@ and style in order to keep the code as readable as possible.
 
 Please provide meaningful commit messages.
 
-Do not forget to mention the related Eclipse Bugzilla issue, if any.
+Do not forget to mention the related issue, if any.
 
 Finally, a contribution is not a good contribution unless it comes with unit
 tests, integration tests and documentation.
 
 ## Coding Style
 
-Please, consider Coding Style for the different languages used in the codebase as described here: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Coding_Style
+Please, consider Coding Style for the different languages used in the codebase as 
+described here: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Coding_Style

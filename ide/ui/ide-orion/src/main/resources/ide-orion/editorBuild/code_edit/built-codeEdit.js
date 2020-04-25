@@ -615,8 +615,8 @@ define("almond", function(){});
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  ******************************************************************************/
@@ -629,8 +629,8 @@ define('orion/nls/messages',["module"],function(module){
  * @license
  * Copyright (c) 2012, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  ******************************************************************************/
@@ -811,8 +811,8 @@ define('orion/nls/root/messages',{//Default message bundle
  * @license
  * Copyright (c) 2012, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -848,8 +848,8 @@ define('orion/i18nUtil',[], function() {
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -938,8 +938,8 @@ define('orion/util',[],function() {
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -1524,8 +1524,8 @@ define('orion/webui/littlelib',["orion/util"], function(util) {
  * @license
  * Copyright (c) 2010,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -1681,8 +1681,8 @@ define('orion/commandsProxy',[
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -1780,8 +1780,8 @@ define('orion/EventTarget',[],function() {
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -2964,8 +2964,8 @@ define('text!orion/webui/checkedmenuitem.html',[],function () { return '<li role
  * @license
  * Copyright (c) 2012, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -3380,8 +3380,8 @@ define('orion/webui/tooltip',['orion/webui/littlelib'], function(lib) {
  * @license
  * Copyright (c) 2014, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -3508,8 +3508,8 @@ define('orion/metrics',[
  * @license
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -3527,8 +3527,8 @@ define('orion/urlModifier',[],function() {
  * @license
  * Copyright (c) 2010,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -4390,8 +4390,8 @@ define('orion/commands',[
  * @license
  * Copyright (c) 2010, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -4590,8 +4590,8 @@ define("orion/keyBinding", ['orion/util'], function(util) { //$NON-NLS-1$ //$NON
  * @license
  * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -4674,8 +4674,8 @@ define('orion/explorers/navigationUtils',[], function() {
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  *******************************************************************************/
@@ -6020,8 +6020,8 @@ define ('orion/bidiFormat',[], function() {
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  *******************************************************************************/
@@ -6213,8 +6213,8 @@ function(util, bidiFormat) { /* BDL */
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -6287,8 +6287,8 @@ define('orion/PageUtil',[],function(){
  * @license
  * Copyright (c) 2009, 2012, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -6731,8 +6731,8 @@ define('text!orion/webui/submenutriggerbutton.html',[],function () { return '<li
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -7137,8 +7137,8 @@ define('text!orion/webui/submenutriggerbutton.html',[],function () { return '<li
  * @license
  * Copyright (c) 2010,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -8877,8 +8877,8 @@ define('orion/commandRegistry',[
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -9329,8 +9329,8 @@ define('orion/keyAssist',[
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  ******************************************************************************/
@@ -9343,8 +9343,8 @@ define('orion/navigate/nls/messages',{
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  ******************************************************************************/
@@ -9512,8 +9512,8 @@ define('orion/navigate/nls/root/messages',{//Default message bundle
  * @license
  * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -10206,8 +10206,8 @@ define('orion/fileClient',[
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -10391,8 +10391,8 @@ define('orion/serviceTracker',[], function() {
  * @license
  * Copyright (c) 2011, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -10696,8 +10696,8 @@ define('orion/contentTypes',["orion/serviceTracker"], function(ServiceTracker) {
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  ******************************************************************************/
@@ -10711,8 +10711,8 @@ define('orion/edit/nls/messages',["module"],function(module){
  * @license
  * Copyright (c) 2012, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors:
@@ -10850,8 +10850,8 @@ define('orion/edit/nls/root/messages',{
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -11498,8 +11498,8 @@ define("orion/URL-shim", function(){});
  * @license
  * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -11579,8 +11579,8 @@ define('orion/fileUtils',['require', 'orion/URL-shim'], function(require) {
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -11650,8 +11650,8 @@ define('orion/objects',[], function() {
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: Anton McConville - IBM Corporation - initial API and implementation
@@ -11812,8 +11812,8 @@ define('orion/widgets/input/DropDownMenu',['orion/objects', 'orion/webui/littlel
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -12037,8 +12037,8 @@ define('orion/URITemplate',[],function(){
  * @license
  * Copyright (c) 2012, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  ******************************************************************************/
@@ -12237,8 +12237,8 @@ define('orion/PageLinks',[
  * @license
  * Copyright (c) 2011,2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -13007,8 +13007,8 @@ define('orion/extensionCommands',["orion/Deferred", "orion/commands", 	'orion/Pa
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -13066,8 +13066,8 @@ define("orion/regex", [], function() { //$NON-NLS-0$
 /*******************************************************************************
  * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -13221,8 +13221,8 @@ define("orion/editor/eventTarget", [], function() {
  * @license
  * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -13886,8 +13886,8 @@ define("orion/editor/textModel", ['orion/editor/eventTarget', 'orion/regex', 'or
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -14416,8 +14416,8 @@ return searchUtils;
  * @license
  * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -14434,8 +14434,8 @@ define('orion/editor/nls/messages',["module"],function(module){
  * @license
  * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -14651,8 +14651,8 @@ define('orion/editor/nls/root/messages',{//Default message bundle
  * @license
  * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -15677,8 +15677,8 @@ define("orion/editor/annotations", ['i18n!orion/editor/nls/messages', 'orion/edi
  * @license
  * Copyright (c) 2011, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -16995,8 +16995,8 @@ define('orion/editorCommands',[
  * @license
  * Copyright (c) 2009, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -17017,8 +17017,8 @@ define('embeddedEditor/helper/memoryFileSysConst',[
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -17241,8 +17241,8 @@ define("orion/encoding-shim", function(){});
  * @license
  * Copyright (c) 2014, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -17398,8 +17398,8 @@ define('embeddedEditor/helper/embeddedFileImpl',[
  * @license
  * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -18955,8 +18955,8 @@ define('orion/pluginregistry',["orion/Deferred", "orion/EventTarget", "orion/url
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -19081,8 +19081,8 @@ define('embeddedEditor/helper/bootstrap',[
  * @license
  * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -19612,7 +19612,7 @@ define("orion/editor/undoStack", [], function() { //$NON-NLS-0$
  * @license
  * Copyright (c) 2014 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html),
+ * the Eclipse Public License v2.0 (http://www.eclipse.org/legal/epl-v20.html),
  * and the Eclipse Distribution License v1.0
  * (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
@@ -19630,8 +19630,8 @@ define('orion/explorers/navigatorRenderer',[], function() {
  * @license
  * Copyright (c) 2010, 2012, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -20233,8 +20233,8 @@ define("orion/editor/projectionTextModel", ['orion/editor/textModel', 'orion/edi
  * @license
  * Copyright (c) 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -20274,8 +20274,8 @@ define('orion/editor/textModelFactory',[
  * @license
  * Copyright (c) 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -20752,8 +20752,8 @@ define('lsp/utils',[
  * @license
  * Copyright (c) 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -20880,8 +20880,8 @@ define ('orion/formatter',[
  * @license
  * Copyright (c) 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -21602,8 +21602,8 @@ define('lsp/ipc',[], function() {
  * @license
  * Copyright (c) 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -21805,8 +21805,8 @@ define('lsp/languageServer',[
  * @license
  * Copyright (c) 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -21901,8 +21901,8 @@ define('lsp/languageServerRegistry',[
  * @license
  * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -22740,8 +22740,8 @@ define('orion/inputManager',[
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -23030,8 +23030,8 @@ define("orion/editor/keyModes", [ //$NON-NLS-0$
  * @license
  * Copyright (c) 2013,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -23269,8 +23269,8 @@ define("orion/editor/textTheme", //$NON-NLS-0$
  * @license
  * Copyright (c) 2013, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -23438,8 +23438,8 @@ define("orion/editor/util", [], function() { //$NON-NLS-0$
  * @license
  * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -31426,8 +31426,8 @@ define("orion/editor/textView", [
  * @license
  * Copyright (c) 2010, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -32434,8 +32434,8 @@ function Tooltip (view, editor) {
  * @license
  * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -34024,8 +34024,8 @@ define("orion/editor/editor", [
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -34751,8 +34751,8 @@ define("orion/editor/find", [ //$NON-NLS-0$
  * @license
  * Copyright (c) 2014 IBM Corporation and others. All rights reserved.
  * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
  * Contributors: 
@@ -34959,8 +34959,8 @@ define('orion/editor/findUI',[
  * @license
  * Copyright (c) 2013, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -36317,8 +36317,8 @@ define("orion/editor/actions", [ //$NON-NLS-0$
  * @license
  * Copyright (c) 2010, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -37602,8 +37602,8 @@ define("orion/editor/rulers", [
  * @license
  * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: 
@@ -37754,8 +37754,8 @@ define("orion/editor/textDND", ['orion/util'], function(util) { //$NON-NLS-1$ //
  * @license
  * Copyright (c) 2013, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -38347,8 +38347,8 @@ define("orion/editor/linkedMode", [
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -38456,8 +38456,8 @@ define("orion/editor/factories", [ //$NON-NLS-0$
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -39769,8 +39769,8 @@ if (typeof define === 'function' && define.amd) {
  * @license
  * Copyright (c) 2014, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -39896,8 +39896,8 @@ define ('orion/hover',[
  * @license
  * Copyright (c) 2011, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -41546,8 +41546,8 @@ define("orion/editor/contentAssist", [
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -41812,8 +41812,8 @@ define("orion/editor/emacs", [ //$NON-NLS-0$
  * @license
  * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -42775,8 +42775,8 @@ define('orion/widgets/settings/EditorSettings',[], function(){
  * @license
  * Copyright (c) 2010, 2014 IBM Corporation and others. All rights reserved.
  * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
  * Contributors: 
@@ -42791,7 +42791,7 @@ define('orion/searchAndReplace/textSearcher',[], function(){
  * @license
  * Copyright (c) 2014 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html),
+ * the Eclipse Public License v2.0 (http://www.eclipse.org/legal/epl-v20.html),
  * and the Eclipse Distribution License v1.0
  * (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
@@ -42806,8 +42806,8 @@ define('orion/globalCommands',[], function() {
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -42960,8 +42960,8 @@ define('orion/edit/dispatcher',[], function() {
  * @license
  * Copyright (c) 2013, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation 
@@ -43028,7 +43028,7 @@ define('orion/edit/editorContext',[
  * @license
  * Copyright (c) 2014 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html),
+ * the Eclipse Public License v2.0 (http://www.eclipse.org/legal/epl-v20.html),
  * and the Eclipse Distribution License v1.0
  * (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
@@ -43043,8 +43043,8 @@ define('examples/editor/textStyler',[], function() {
  * @license
  * Copyright (c) 2010, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -44914,8 +44914,8 @@ define("orion/editor/textStyler", ['orion/editor/annotations', 'orion/editor/eve
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation 
@@ -46302,8 +46302,8 @@ var RegexUtil = {
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation 
@@ -46603,8 +46603,8 @@ define("orion/editor/AsyncStyler", ['i18n!orion/editor/nls/messages', 'orion/edi
  * @license
  * Copyright (c) 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -46798,8 +46798,8 @@ define('orion/highlight',['examples/editor/textStyler', 'orion/editor/textStyler
  * @license
  * Copyright (c) 2013, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -46952,8 +46952,8 @@ define('orion/markOccurrences',[
  * @license
  * Copyright (c) 2010, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors: IBM Corporation - initial API and implementation
@@ -47180,8 +47180,8 @@ define('orion/syntaxchecker',[
  * @license
  * Copyright (c) 2014 Pivotal Software Inc. and others
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: Pivotal Software Inc. - initial API and implementation 
@@ -47282,8 +47282,8 @@ define('orion/liveEditSession',[
  * @license
  * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -47323,8 +47323,8 @@ define('orion/problems',["orion/EventTarget"], function(EventTarget) {
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -47394,8 +47394,8 @@ define ('orion/blamer',[
  * @license
  * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -47836,8 +47836,8 @@ return orion;
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -47992,8 +47992,8 @@ define('orion/differ',[
  * @license
  * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -48121,8 +48121,8 @@ define('orion/webui/contextmenu',[
  * @license
  * Copyright (c) 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:  IBM Corporation - initial API and implementation
@@ -48204,8 +48204,8 @@ define('orion/commonPreferences',[
  * @license
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -48289,8 +48289,8 @@ define('orion/references',[], function() {
  * @license
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  *
  * Contributors:
@@ -48375,8 +48375,8 @@ define('orion/openDeclaration',[], function() {
  * @license
  * Copyright (c) 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -49163,8 +49163,8 @@ define('orion/editorView',[
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
- * available under the terms of the Eclipse Public License v1.0 
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * available under the terms of the Eclipse Public License v2.0 
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
@@ -49289,8 +49289,8 @@ define('embeddedEditor/helper/editorSetup',[
  * @license
  * Copyright (c) 2011, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:
@@ -49693,8 +49693,8 @@ define('orion/serviceregistry',["orion/Deferred", "orion/EventTarget"], function
  * @license
  * Copyright (c) 2013, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0
- * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution
+ * available under the terms of the Eclipse Public License v2.0
+ * (http://www.eclipse.org/legal/epl-v20.html), and the Eclipse Distribution
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html).
  *
  * Contributors:  IBM Corporation - initial API and implementation
@@ -49856,7 +49856,7 @@ define('orion/defaultEditorPreferences',[
  * @license
  * Copyright (c) 2011, 2012 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms of
- * the Eclipse Public License v1.0 (http://www.eclipse.org/legal/epl-v10.html),
+ * the Eclipse Public License v2.0 (http://www.eclipse.org/legal/epl-v20.html),
  * and the Eclipse Distribution License v1.0
  * (http://www.eclipse.org/org/documents/edl-v10.html).
  * 
