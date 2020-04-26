@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -43,6 +44,9 @@ public class TableImporter {
 	private static final String COMMA = ","; //$NON-NLS-1$
 
 	private static final int BATCH_SIZE = 500;
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	private static final DateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd");
 
 	private byte[] content;
 	private String tableName;
@@ -117,7 +121,14 @@ public class TableImporter {
 						insertStatement.setBigDecimal(i + 1, new BigDecimal(record[i]));
 						break;
 					case Types.DATE:
-						insertStatement.setDate(i + 1, new Date(DateFormat.getInstance().parse(record[i]).getTime()));
+						if (record[i] != null) {							
+							try {
+								insertStatement.setDate(i + 1, new Date(DATE_FORMAT.parse(record[i]).getTime()));
+							} catch (ParseException e) {
+								insertStatement.setDate(i + 1, new Date(DATE_FORMAT_1.parse(record[i]).getTime()));
+							}
+						}
+						insertStatement.setDate(i + 1, null);
 						break;
 					case Types.TIME:
 						insertStatement.setTime(i + 1, new Time(DateFormat.getInstance().parse(record[i]).getTime()));
