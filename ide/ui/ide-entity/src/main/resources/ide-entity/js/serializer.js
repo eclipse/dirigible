@@ -15,9 +15,9 @@ function createModel(graph) {
 	var parent = graph.getDefaultParent();
 	var childCount = graph.model.getChildCount(parent);
 
-	for (var i=0; i<childCount; i++) {
+	for (var i = 0; i < childCount; i++) {
 		var child = graph.model.getChildAt(parent, i);
-		
+
 		if (!graph.model.isEdge(child)) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
 			child.value.dataCount = child.value.dataCount ? child.value.dataCount : 'SELECT COUNT(*) FROM ' + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
@@ -25,146 +25,166 @@ function createModel(graph) {
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
-			var entityContent = '  <entity name="'+_.escape(child.value.name)+
-				'" dataName="'+_.escape(child.value.dataName)+
-				'" dataCount="'+_.escape(child.value.dataCount)+
-				'" dataQuery="'+_.escape(child.value.dataQuery)+
-				'" type="'+_.escape(child.value.entityType ? child.value.entityType : 'PRIMARY')+
-				'" title="'+_.escape(child.value.title)+
-				'" tooltip="'+_.escape(child.value.tooltip)+
-				'" icon="'+_.escape(child.value.icon)+
-				'" menuKey="'+_.escape(child.value.menuKey)+
-				'" menuLabel="'+_.escape(child.value.menuLabel)+
-				'" menuIndex="'+_.escape(child.value.menuIndex)+
-				'" layoutType="'+_.escape(child.value.layoutType)+
-				'" perspectiveName="'+_.escape(child.value.perspectiveName)+
-				'" perspectiveIcon="'+_.escape(child.value.perspectiveIcon)+
-				'" perspectiveOrder="'+_.escape(child.value.perspectiveOrder) + '"';
+			var entityContent = '  <entity name="' + _.escape(child.value.name) +
+				'" dataName="' + _.escape(child.value.dataName) +
+				'" dataCount="' + _.escape(child.value.dataCount) +
+				'" dataQuery="' + _.escape(child.value.dataQuery) +
+				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
+				'" title="' + _.escape(child.value.title) +
+				'" tooltip="' + _.escape(child.value.tooltip) +
+				'" icon="' + _.escape(child.value.icon) +
+				'" menuKey="' + _.escape(child.value.menuKey) +
+				'" menuLabel="' + _.escape(child.value.menuLabel) +
+				'" menuIndex="' + _.escape(child.value.menuIndex) +
+				'" layoutType="' + _.escape(child.value.layoutType) +
+				'" perspectiveName="' + _.escape(child.value.perspectiveName) +
+				'" perspectiveIcon="' + _.escape(child.value.perspectiveIcon) +
+				'" perspectiveOrder="' + _.escape(child.value.perspectiveOrder) + '"';
 
-				if (child.value.feedUrl) {
-					child.value.feedUrl = btoa(child.value.feedUrl);
-					entityContent += ' feedUrl="'+ child.value.feedUrl + '"';
-				}
-				if (child.value.feedUsername) {
-					child.value.feedUsername = btoa(child.value.feedUsername);
-					entityContent += ' feedUsername="'+ child.value.feedUsername + '"';
-				}
-				if (child.value.feedPassword) {
-					child.value.feedPassword = btoa(child.value.feedPassword);
-					entityContent += ' feedPassword="'+ child.value.feedPassword + '"';
-				}
-				if (child.value.feedSchedule) {					
-					entityContent += ' feedSchedule="'+ child.value.feedSchedule + '"';
-				}
-				if (child.value.feedPath) {					
-					entityContent += ' feedPath="'+ child.value.feedPath + '"';
-				}
-				entityContent += '>\n';
+			if (child.value.feedUrl) {
+				child.value.feedUrl = btoa(child.value.feedUrl);
+				entityContent += ' feedUrl="' + child.value.feedUrl + '"';
+			}
+			if (child.value.feedUsername) {
+				child.value.feedUsername = btoa(child.value.feedUsername);
+				entityContent += ' feedUsername="' + child.value.feedUsername + '"';
+			}
+			if (child.value.feedPassword) {
+				child.value.feedPassword = btoa(child.value.feedPassword);
+				entityContent += ' feedPassword="' + child.value.feedPassword + '"';
+			}
+			if (child.value.feedSchedule) {
+				entityContent += ' feedSchedule="' + child.value.feedSchedule + '"';
+			}
+			if (child.value.feedPath) {
+				entityContent += ' feedPath="' + child.value.feedPath + '"';
+			}
+			entityContent += '>\n';
 			model.push(entityContent);
-			
+
 			var propertyCount = graph.model.getChildCount(child);
 			if (propertyCount > 0) {
-				for (var j=0; j<propertyCount; j++) {
+				for (var j = 0; j < propertyCount; j++) {
 					var property = graph.model.getChildAt(child, j).value;
-					
+
 					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
-					
-					model.push('    <property name="'+_.escape(property.name)+
-						'" isCalculatedProperty="'+_.escape(property.isCalculatedProperty)+
-						'" calculatedPropertyExpression="'+_.escape(property.calculatedPropertyExpression)+
-						'" dataName="'+_.escape(property.dataName)+
-						'" dataType="'+_.escape(property.dataType)+'"');
+
+					model.push('    <property name="' + _.escape(property.name) +
+						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
+						'" calculatedPropertyExpression="' + _.escape(property.calculatedPropertyExpression) +
+						'" dataName="' + _.escape(property.dataName) +
+						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataLength !== null) {
-						model.push(' dataLength="'+_.escape(property.dataLength)+'"');
+						model.push(' dataLength="' + _.escape(property.dataLength) + '"');
 					}
 					if (property.dataNotNull) {
-						model.push(' dataNullable="' + (property.dataNotNull == "true") + '"');
+						model.push(' dataNullable="' + (property.dataNotNull == "false") + '"');
+					} else {
+						model.push(' dataNullable="true"');
 					}
 					if (property.dataPrimaryKey) {
 						model.push(' dataPrimaryKey="' + (property.dataPrimaryKey == "true") + '"');
+					} else {
+						model.push(' dataPrimaryKey="false"');
 					}
 					if (property.dataAutoIncrement) {
 						model.push(' dataAutoIncrement="' + (property.dataAutoIncrement == "true") + '"');
+					} else {
+						model.push(' dataAutoIncrement="false"');
 					}
 					if (property.dataUnique) {
 						model.push(' dataUnique="' + (property.dataUnique == "true") + '"');
+					} else {
+						model.push(' dataUnique="false"');
 					}
 					if (property.dataDefaultValue !== null) {
-						model.push(' dataDefaultValue="'+_.escape(property.dataDefaultValue)+'"');
+						model.push(' dataDefaultValue="' + _.escape(property.dataDefaultValue) + '"');
 					}
 					if (property.dataPrecision !== null) {
-						model.push(' dataPrecision="'+_.escape(property.dataPrecision)+'"');
+						model.push(' dataPrecision="' + _.escape(property.dataPrecision) + '"');
 					}
 					if (property.dataScale !== null) {
-						model.push(' dataScale="'+_.escape(property.dataScale)+'"');
+						model.push(' dataScale="' + _.escape(property.dataScale) + '"');
 					}
 					if (property.relationshipType !== null) {
-						model.push(' relationshipType="'+_.escape(property.relationshipType ? property.relationshipType : 'ASSOCIATION')+'"');
+						model.push(' relationshipType="' + _.escape(property.relationshipType ? property.relationshipType : 'ASSOCIATION') + '"');
 					}
 					if (property.relationshipCardinality !== null) {
-						model.push(' relationshipCardinality="'+_.escape(property.relationshipCardinality ? property.relationshipCardinality : '1_n')+'"');
+						model.push(' relationshipCardinality="' + _.escape(property.relationshipCardinality ? property.relationshipCardinality : '1_n') + '"');
 					}
 					if (property.relationshipName !== null) {
-						model.push(' relationshipName="'+_.escape(property.relationshipName)+'"');
+						model.push(' relationshipName="' + _.escape(property.relationshipName) + '"');
 					}
 					if (property.widgetType !== null) {
-						model.push(' widgetType="'+_.escape(property.widgetType)+'"');
+						model.push(' widgetType="' + _.escape(property.widgetType) + '"');
 					}
 					if (property.widgetLength !== null) {
-						model.push(' widgetLength="'+_.escape(property.widgetLength)+'"');
+						model.push(' widgetLength="' + _.escape(property.widgetLength) + '"');
 					}
 					if (property.widgetLabel !== null) {
-						model.push(' widgetLabel="'+_.escape(property.widgetLabel)+'"');
+						model.push(' widgetLabel="' + _.escape(property.widgetLabel) + '"');
 					}
 					if (property.widgetShortLabel !== null) {
-						model.push(' widgetShortLabel="'+_.escape(property.widgetShortLabel)+'"');
+						model.push(' widgetShortLabel="' + _.escape(property.widgetShortLabel) + '"');
 					}
 					if (property.widgetPattern !== null) {
-						model.push(' widgetPattern="'+_.escape(property.widgetPattern)+'"');
+						model.push(' widgetPattern="' + _.escape(property.widgetPattern) + '"');
 					}
 					if (property.widgetFormat !== null) {
-						model.push(' widgetFormat="'+_.escape(property.widgetFormat)+'"');
+						model.push(' widgetFormat="' + _.escape(property.widgetFormat) + '"');
 					}
 					if (property.widgetSection !== null) {
-						model.push(' widgetSection="'+_.escape(property.widgetSection)+'"');
+						model.push(' widgetSection="' + _.escape(property.widgetSection) + '"');
 					}
 					if (property.widgetService !== null) {
-						model.push(' widgetService="'+_.escape(property.widgetService)+'"');
+						model.push(' widgetService="' + _.escape(property.widgetService) + '"');
 					}
 					if (property.widgetIsMajor) {
-						model.push(' widgetIsMajor="true"');
+						model.push(' widgetIsMajor="' + (property.widgetIsMajor == "true") + '"');
+					} else {
+						model.push(' widgetIsMajor="false"');
 					}
 					if (property.feedPropertyName !== null) {
-						model.push(' feedPropertyName="'+_.escape(property.feedPropertyName)+'"');
+						model.push(' feedPropertyName="' + _.escape(property.feedPropertyName) + '"');
 					}
-					
+					if (property.widgetDropDownKey !== null) {
+						model.push(' widgetDropDownKey="' + _.escape(property.widgetDropDownKey) + '"');
+					}
+					if (property.widgetDropDownValue !== null) {
+						model.push(' widgetDropDownValue="' + _.escape(property.widgetDropDownValue) + '"');
+					}
+					if (property.relationshipEntityPerspectiveName !== null) {
+						model.push(' relationshipEntityPerspectiveName="' + _.escape(property.relationshipEntityPerspectiveName) + '"');
+					}
+
 					model.push('></property>\n');
 				}
 			}
 			model.push('  </entity>\n');
 		} else {
-			var relationName = child.name ? child.name : child.source.parent.value.name+'_'+ child.target.parent.value.name;
-			model.push('  <relation name="'+_.escape(child.source.parent.value.name)+'_' 
-				+_.escape(child.target.parent.value.name)+'" type="relation" ');
-			model.push('entity="'+_.escape(child.source.parent.value.name)+'" ');
-			model.push('relationName="'+_.escape(relationName)+'" ');
-			model.push('property="'+_.escape(child.source.value.name)+'" '+
-				'referenced="'+_.escape(child.target.parent.value.name)+'" '+
-				'referencedProperty="'+_.escape(child.target.value.name)+'">\n');
+			var relationName = child.name ? child.name : child.source.parent.value.name + '_' + child.target.parent.value.name;
+			model.push('  <relation name="' + _.escape(child.source.parent.value.name) + '_'
+				+ _.escape(child.target.parent.value.name) + '" type="relation" ');
+			model.push('entity="' + _.escape(child.source.parent.value.name) + '" ');
+			model.push('relationName="' + _.escape(relationName) + '" ');
+			model.push('relationshipEntityPerspectiveName="' + _.escape(child.target.parent.value.perspectiveName) + '" ');
+			model.push('property="' + _.escape(child.source.value.name) + '" ' +
+				'referenced="' + _.escape(child.target.parent.value.name) + '" ' +
+				'referencedProperty="' + _.escape(child.target.value.name) + '">\n');
 			model.push('  </relation>\n');
 		}
 	}
 	model.push(' </entities>\n');
-	
+
 	var enc = new mxCodec(mxUtils.createXmlDocument());
 	var node = enc.encode(graph.getModel());
 	var mxGraph = mxUtils.getXml(node);
-	model.push(' '+mxGraph);
+	model.push(' ' + mxGraph);
 	model.push('\n</model>');
 
-	for (var i=0; i<childCount; i++) {
+	for (var i = 0; i < childCount; i++) {
 		var child = graph.model.getChildAt(parent, i);
-		
+
 		if (!graph.model.isEdge(child)) {
 
 			if (child.value.feedUrl) {
@@ -178,7 +198,7 @@ function createModel(graph) {
 			}
 		}
 	}
-				
+
 	return model.join('');
 }
 
@@ -201,7 +221,7 @@ function createModel(graph) {
 // 			child.source.value.widgetDropDownKey = _.escape(child.source.value.widgetDropDownKey ? child.source.value.widgetDropDownKey : child.target.value.name);
 // 			child.source.value.widgetDropDownValue = _.escape(child.source.value.widgetDropDownValue ? child.source.value.widgetDropDownValue : child.target.value.name);
 // 			child.source.value.feedPropertyName = _.escape(child.target.parent.value.feedPropertyName);
-			
+
 // 			if (child.source.value.relationshipType === 'COMPOSITION') {
 // 				var composition = {};
 // 				composition.entityName = _.escape(child.source.parent.value.name);
@@ -240,22 +260,22 @@ function createModel(graph) {
 // 			entity.feedSchedule = child.value.feedSchedule ? _.escape(child.value.feedSchedule) : null;
 // 			entity.feedPath = child.value.feedPath ? _.escape(child.value.feedPath) : null;
 // 			entity.properties = [];
-			
+
 // 			if (compositions[entity.name]) {
 // 				entity.compositions = compositions[entity.name];
 // 			}
-			
+
 // 			var propertyCount = graph.model.getChildCount(child);
 // 			if (propertyCount > 0) {
 // 				for (var j=0; j<propertyCount; j++) {
 // 					var childProperty = graph.model.getChildAt(child, j).value;
 // 					var property = {};
-					
+
 // 					// General
 // 					property.name = _.escape(childProperty.name);
 // 					property.isCalculatedProperty = _.escape(childProperty.isCalculatedProperty);
 // 					property.calculatedPropertyExpression = _.escape(childProperty.calculatedPropertyExpression);
-					
+
 // 					// Data Properties
 // 					property.dataName = _.escape(childProperty.dataName ? childProperty.dataName : JSON.stringify(childProperty.name).replace(/\W/g, '').toUpperCase());
 // 					property.dataType = childProperty.dataType;
@@ -267,14 +287,14 @@ function createModel(graph) {
 // 					property.dataUnique = childProperty.dataUnique ? childProperty.dataUnique : "false";
 // 					property.dataPrecision = childProperty.dataPrecision;
 // 					property.dataScale = childProperty.dataScale;
-					
+
 // 					// Relationship Properties
 // 					property.relationshipType = childProperty.relationshipType;
 // 					property.relationshipCardinality = childProperty.relationshipCardinality;
 // 					property.relationshipName = _.escape(childProperty.relationshipName);
 // 					property.relationshipEntityName = _.escape(childProperty.relationshipEntityName);
 // 					property.relationshipEntityPerspectiveName = _.escape(childProperty.relationshipEntityPerspectiveName);
-					
+
 // 					// Widget Properties
 // 					property.widgetType = childProperty.widgetType;
 // 					property.widgetLength = childProperty.widgetLength;
@@ -290,7 +310,7 @@ function createModel(graph) {
 
 // 					// Feed Properties
 // 					property.feedPropertyName = _.escape(childProperty.feedPropertyName);
-					
+
 // 					entity.properties.push(property);
 // 				}
 // 			}
@@ -298,8 +318,8 @@ function createModel(graph) {
 // 			root.model.entities.push(entity);
 // 		}
 // 	}
-	
+
 // 	var serialized = JSON.stringify(root, null, 4);
-	
+
 // 	return serialized;
 // }

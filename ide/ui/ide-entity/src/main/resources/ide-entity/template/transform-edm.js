@@ -83,6 +83,7 @@ exports.transform = function(workspaceName, projectName, filePath) {
                     if (property.name === relation['-property']) {
                         property.relationshipName = relation['-name'];
                         property.relationshipEntityName = relation['-referenced'];
+                        property.relationshipEntityPerspectiveName = relation['-relationshipEntityPerspectiveName'];
                     }
                 });
             }
