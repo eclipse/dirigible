@@ -9,11 +9,11 @@
  *   SAP - initial API and implementation
  */
 exports.getTemplate = function() {
-	var view = {
+	var template = {
 			"name":"database-view",
 			"label":"Database View",
 			"extension":"view",
 			"data":'{"name":"MYVIEW","type":"VIEW","query":"SELECT * FROM MYTABLE","dependencies":[{"name":"MYTABLE","type":"TABLE"}]}'
 	};
-	return view;
+	return template;
 };
