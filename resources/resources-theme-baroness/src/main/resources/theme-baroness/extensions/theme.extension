@@ -1,5 +1,0 @@
-{
-	"description": "IDE Theme - Baroness",
-	"extensionPoint": "ide-themes",
-	"module": "theme-baroness/extensions/theme.js"
-}
