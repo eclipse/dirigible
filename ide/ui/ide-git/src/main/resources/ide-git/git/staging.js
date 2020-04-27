@@ -97,6 +97,11 @@ GitService.prototype.addFiles = function (workspace, project, files) {
 	var list = files.join(",");
 	return this.$http.post(url, JSON.stringify(list));
 }
+GitService.prototype.revertFiles = function (workspace, project, files) {
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("revert").build();
+	var list = files.join(",");
+	return this.$http.post(url, JSON.stringify(list));
+}
 GitService.prototype.removeFiles = function (workspace, project, files) {
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("remove").build();
 	var list = files.join(",");
@@ -232,10 +237,26 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		}
 
 		this.diffClicked = function (file) {
-			$messageHub.announceFileDiff({
-				project: this.selectedWorkspace + "/" + this.selectedProject,
-				file: file.path
-			});
+			if (file) {
+				$messageHub.announceFileDiff({
+					project: this.selectedWorkspace + "/" + this.selectedProject,
+					file: file.path
+				});
+			} else if (this.selectedUnstagedFiles && this.selectedUnstagedFiles.length > 0) {
+				this.selectedUnstagedFiles.forEach(function(file){
+					$messageHub.announceFileDiff({
+						project: this.selectedWorkspace + "/" + this.selectedProject,
+						file: file
+					});
+				}.bind(this));
+			}
+		}
+
+		this.revertClicked = function () {
+			gitService.revertFiles(this.selectedWorkspace, this.selectedProject, this.selectedUnstagedFiles)
+				.then(function () {
+					this.refresh();
+				}.bind(this));
 		}
 
 		$messageHub.on('git.repository.selected', function (msg) {
@@ -252,9 +273,9 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		types[0] = "&#xf071;"; //"conflicting";
 		types[1] = "&#xf055;"; //"plus-circle";//"added"; // staged
 		types[2] = "&#xf058;"; //"check-circle"//"changed"; // staged
-		types[3] = "&#xf056;"; //"minus-circle-o"//"missing"; // unstaged
+		types[3] = "&#xf05c;"; //"times-circle-o"//"missing"; // unstaged
 		types[4] = "&#xf05d;"; //"check-circle-o"//"modified"; // unstaged
-		types[5] = "&#xf056;"; //"times-circle"//"removed"; // staged
+		types[5] = "&#xf057;"; //"times-circle"//"removed"; // staged
 		types[6] = "&#xf10c;"; //"question-circle-o"//"untracked"; // unstaged
 		this.typeIcon = function (i) {
 			return types[i];

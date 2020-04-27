@@ -337,7 +337,7 @@ public class GitProcessor {
 	}
 	
 	/**
-	 * Add file to index
+	 * Add file(s) to index
 	 * 
 	 * @param workspace the workspace
 	 * @param project the project
@@ -349,7 +349,33 @@ public class GitProcessor {
 			IGitConnector gitConnector = getGitConnector(workspace, project);
 			String[] files = paths.split(",");
 			for (String file : files) {
-				gitConnector.add(file);
+				IProject projectCollection = getWorkspace(workspace).getProject(project);
+				File canonicalFile = WorkspaceDescriptor.getCanonicalFilePerProjectPath(projectCollection.getRepository(), projectCollection.getParent().getPath() + IRepositoryStructure.SEPARATOR + file);
+				if (canonicalFile.exists()) {
+					gitConnector.add(file);
+				} else {
+					gitConnector.addDeleted(file);
+				}
+			}
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+	
+	/**
+	 * Revert file(s) to index
+	 * 
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths
+	 * @throws GitConnectorException in case of an error
+	 */
+	public void revertToHeadRevision(String workspace, String project, String paths) throws GitConnectorException {
+		try {
+			IGitConnector gitConnector = getGitConnector(workspace, project);
+			String[] files = paths.split(",");
+			for (String file : files) {
+				gitConnector.revert(file);
 			}
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
@@ -357,7 +383,7 @@ public class GitProcessor {
 	}
 
 	/**
-	 * Remove file from index
+	 * Remove file(s) from index
 	 * 
 	 * @param workspace the workspace
 	 * @param project the project

@@ -66,9 +66,10 @@
 					</div>
 					<div>
 						<div class="btn-group pull-right" role="group" style="padding: 0.5em;">
-							<button type="button" class="btn btn-default btn-top" ng-click="staging.downClicked()"><i class="fa fa-arrow-down"></i></button>
-							<button type="button" class="btn btn-default btn-top" ng-click="staging.upClicked()"><i class="fa fa-arrow-up"></i></button>
-							<!-- <button type="button" class="btn btn-default btn-top" ng-click="staging.diffClicked()"><i class="fa fa-eye"></i></button> -->
+							<button type="button" class="btn btn-default btn-top" ng-click="staging.downClicked()" title="Add to Index"><i class="fa fa-arrow-down"></i></button>
+							<button type="button" class="btn btn-default btn-top" ng-click="staging.upClicked()" title="Remove from Index"><i class="fa fa-arrow-up"></i></button>
+							<button type="button" class="btn btn-default btn-top" ng-click="staging.diffClicked()" title="View Differences"><i class="fa fa-align-center"></i></button>
+							<button type="button" class="btn btn-default btn-top" ng-click="staging.revertClicked()" title="Revert"><i class="fa fa-undo"></i></button>
 						</div>
 					</div>
 					<div class="row form" style="height: 50%">

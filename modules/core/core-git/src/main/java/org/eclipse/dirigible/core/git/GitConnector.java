@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -36,6 +35,7 @@ import org.eclipse.jgit.api.RebaseCommand;
 import org.eclipse.jgit.api.RebaseCommand.Operation;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
@@ -118,6 +118,17 @@ public class GitConnector implements IGitConnector {
 		addCommand.call();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#addDeleted(java.lang.String)
+	 */
+	@Override
+	public void addDeleted(String filePattern) throws IOException, NoFilepatternException, GitAPIException {
+		RmCommand rmCommand = git.rm();
+		rmCommand.addFilepattern(filePattern);
+		rmCommand.call();
+	}
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -129,6 +140,17 @@ public class GitConnector implements IGitConnector {
 		reset.setRef(Constants.HEAD);
 		reset.addPath(path);
 		reset.call();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.git.IGitConnector#revert(java.lang.String)
+	 */
+	@Override
+	public void revert(String path) throws IOException, NoFilepatternException, GitAPIException {
+		CheckoutCommand checkoutCommand = git.checkout();
+		checkoutCommand.addPath(path);
+		checkoutCommand.call();
 	}
 	
 	

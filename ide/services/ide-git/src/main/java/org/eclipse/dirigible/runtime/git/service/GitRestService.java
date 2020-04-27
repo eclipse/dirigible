@@ -535,6 +535,34 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	}
 	
 	/**
+	 * Revert file to index.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param paths the paths to be added
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@POST
+	@Path("/{project}/revert")
+	@ApiOperation("Revert file to index")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Revert file to index") })
+	public Response revertToHeadRevision(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, String paths)
+			throws GitConnectorException {
+		if (paths == null || "".equals(paths)) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		processor.revertToHeadRevision(workspace, project, paths);
+		return Response.ok().build();
+	}
+	
+	/**
 	 * Remove file from index.
 	 *
 	 * @param workspace the workspace

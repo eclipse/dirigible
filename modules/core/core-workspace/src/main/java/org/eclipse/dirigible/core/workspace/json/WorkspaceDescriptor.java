@@ -10,8 +10,15 @@
  */
 package org.eclipse.dirigible.core.workspace.json;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.fs.FileSystemRepository;
+import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 /**
  * The Workspace Descriptor transport object.
@@ -81,6 +88,24 @@ public class WorkspaceDescriptor {
 	 */
 	public void set(List<ProjectDescriptor> projects) {
 		this.projects = projects;
+	}
+	
+	/**
+	 * Get the git folder
+	 * 
+	 * @param repository the repository
+	 * @param repositoryPath the path
+	 */
+	public static File getCanonicalFilePerProjectPath(IRepository repository, String repositoryPath) {
+		try {
+			if (repository instanceof FileSystemRepository) {
+				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
+				return new File(path).getCanonicalFile();
+			}
+		} catch (Throwable e) {
+			return null;
+		}
+		return null;
 	}
 
 }

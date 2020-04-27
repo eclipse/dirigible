@@ -81,7 +81,7 @@ public class Workspace extends Folder implements IWorkspace {
 	@Override
 	public void deleteProject(String name) {
 		ICollection projectCollection = this.getCollection(name);
-		java.io.File gitFolder = WorkspaceGitHelper.getGitFolderForProject(projectCollection, projectCollection.getPath());
+		java.io.File gitFolder = WorkspaceGitHelper.getGitFolderForProject(projectCollection.getRepository(), projectCollection.getPath());
 		if (gitFolder != null
 				&& gitFolder.exists()) {
 			try {

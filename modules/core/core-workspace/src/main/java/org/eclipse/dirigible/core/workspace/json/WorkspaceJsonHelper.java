@@ -10,15 +10,11 @@
  */
 package org.eclipse.dirigible.core.workspace.json;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
-import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 /**
  * The Workspace Json Helper.
@@ -90,7 +86,7 @@ public class WorkspaceJsonHelper {
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 		
-		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection, repositoryPath.toString()));
+		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString()));
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -126,7 +122,7 @@ public class WorkspaceJsonHelper {
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 		
-		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection, repositoryPath.toString()));
+		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString()));
 		
 		return projectPojo;
 	}

@@ -14,7 +14,7 @@ import java.io.File;
 import java.nio.file.Paths;
 
 import org.eclipse.dirigible.repository.api.ICollection;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
@@ -25,11 +25,11 @@ public class WorkspaceGitHelper {
 	/**
 	 * Get the git flag
 	 * 
-	 * @param collection the collection
+	 * @param repository the repository
 	 * @param repositoryPath the path
 	 */
-	public static boolean getGitAware(ICollection collection, String repositoryPath) {
-		File gitFolder = getGitFolderForProject(collection, repositoryPath);
+	public static boolean getGitAware(IRepository repository, String repositoryPath) {
+		File gitFolder = getGitFolderForProject(repository, repositoryPath);
 		if (gitFolder != null
 				&& gitFolder.exists()) {
 			return true;
@@ -40,13 +40,13 @@ public class WorkspaceGitHelper {
 	/**
 	 * Get the git folder
 	 * 
-	 * @param collection the collection
+	 * @param repository the repository
 	 * @param repositoryPath the path
 	 */
-	public static File getGitFolderForProject(ICollection collection, String repositoryPath) {
+	public static File getGitFolderForProject(IRepository repository, String repositoryPath) {
 		try {
-			if (collection.getRepository() instanceof FileSystemRepository) {
-				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) collection.getRepository(), repositoryPath);
+			if (repository instanceof FileSystemRepository) {
+				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
 				String gitDirectory = new File(path).getCanonicalPath();
 				return Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile();
 			}

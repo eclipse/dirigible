@@ -54,7 +54,7 @@ public interface IGitConnector {
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
 	/**
-	 * Adds content from file(s) to the staging index.
+	 * Adds file(s) to the staging index.
 	 *
 	 * @param filePattern
 	 *            File to add content from. Example: "." includes all files. If
@@ -70,6 +70,22 @@ public interface IGitConnector {
 	void add(String filePattern) throws IOException, NoFilepatternException, GitAPIException;
 	
 	/**
+	 * Adds deleted file(s) to the staging index.
+	 *
+	 * @param filePattern
+	 *            File to add content from. Example: "." includes all files. If
+	 *            "dir/subdir/" is directory then "dir/subdir" all files from
+	 *            the directory recursively
+	 * @throws IOException
+	 *             IO Exception
+	 * @throws NoFilepatternException
+	 *             No File Pattern Exception
+	 * @throws GitAPIException
+	 *             Git API Exception
+	 */
+	void addDeleted(String filePattern) throws IOException, NoFilepatternException, GitAPIException;
+	
+	/**
 	 * Remove from the index
 	 * 
 	 * @param path the path to be removed
@@ -81,6 +97,19 @@ public interface IGitConnector {
 	 *             Git API Exception
 	 */
 	void remove(String path) throws IOException, NoFilepatternException, GitAPIException;
+	
+	/**
+	 * Revert to head revision
+	 * 
+	 * @param path the path to be removed
+	 * @throws IOException
+	 *             IO Exception
+	 * @throws NoFilepatternException
+	 *             No File Pattern Exception
+	 * @throws GitAPIException
+	 *             Git API Exception
+	 */
+	void revert(String path) throws IOException, NoFilepatternException, GitAPIException;
 
 
 	/**
