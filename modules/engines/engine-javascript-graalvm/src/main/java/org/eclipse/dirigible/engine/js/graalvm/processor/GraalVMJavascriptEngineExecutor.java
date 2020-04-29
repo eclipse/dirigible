@@ -50,6 +50,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
 	public static final String DEFAULT_DEBUG_PORT = "8081";
 
+	private GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor#executeServiceModule(java.lang.String,
@@ -102,7 +104,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		Object result = null;
 
-		GraalVMRepositoryModuleSourceProvider sourceProvider = createRepositoryModuleSourceProvider();
 
 		boolean isDebugEnabled = isDebugEnabled();
 
@@ -113,12 +114,13 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		}
 
 		try (Context context = contextBuilder.build()) {
-			String code = (isModule ? sourceProvider.loadSource(moduleOrCode) : moduleOrCode);
+			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(SOURCE_PROVIDER, sourceProvider);
 			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
 			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(CONTEXT, executionContext);
 			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(CONSOLE, ConsoleFacade.getConsole());
             context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+            beforeEval(context);
             if (isDebugEnabled) {
             	code = CODE_DEBUGGER + code;
             }
@@ -134,19 +136,16 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return result;
 	}
 
-	private boolean isDebugEnabled() {
-		return GraalVMJavascriptDebugProcessor.haveUserSession(UserFacade.getName());
+	protected String loadSource(String module) throws IOException, URISyntaxException {
+		return sourceProvider.loadSource(module);
 	}
 
-	/**
-	 * Creates the repository module source provider.
-	 *
-	 * @return the GraalVM repository module source provider
-	 */
-	private GraalVMRepositoryModuleSourceProvider createRepositoryModuleSourceProvider() {
-		GraalVMRepositoryModuleSourceProvider repositoryModuleSourceProvider = null;
-		repositoryModuleSourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-		return repositoryModuleSourceProvider;
+	protected void beforeEval(Context context) throws IOException {
+		
+	}
+
+	private boolean isDebugEnabled() {
+		return GraalVMJavascriptDebugProcessor.haveUserSession(UserFacade.getName());
 	}
 
 	/*
