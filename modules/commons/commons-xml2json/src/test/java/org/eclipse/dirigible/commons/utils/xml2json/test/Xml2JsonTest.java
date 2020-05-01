@@ -49,8 +49,8 @@ public class Xml2JsonTest {
 			try {
 				@SuppressWarnings("deprecation")
 				String jsonExpected = IOUtils.toString(inJson);
-				condense(jsonExpected);
-				condense(json);
+				jsonExpected = condense(jsonExpected);
+				json = condense(json);
 				assertEquals(jsonExpected, json);
 			} finally {
 				if (inJson != null) {

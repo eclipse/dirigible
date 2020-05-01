@@ -122,7 +122,9 @@ public class RepositoryPath {
 		final StringBuilder builder = new StringBuilder();
 		for (String segment : segments) {
 			if (!segment.equals(IRepository.SEPARATOR)) {
-				builder.append(IRepository.SEPARATOR);
+                if(segment.indexOf(':')==-1 ) { // hack for windows paths
+                     builder.append(IRepository.SEPARATOR);
+                }
 			}
 			builder.append(segment);
 		}
