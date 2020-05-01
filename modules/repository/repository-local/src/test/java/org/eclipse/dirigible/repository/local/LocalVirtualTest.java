@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Before;
@@ -91,8 +92,7 @@ public class LocalVirtualTest {
 					assertFalse(resourceB.exists());
 				}
 				repository.removeCollection("/a"); //$NON-NLS-1$
-				Files.deleteIfExists(Paths.get("target/linked/b").toAbsolutePath());
-				Files.deleteIfExists(Paths.get("target/linked").toAbsolutePath());
+				FileUtils.deleteDirectory(Paths.get("target/linked").toFile());
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
