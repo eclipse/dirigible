@@ -117,8 +117,8 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 			}
 		}
 
-		for (String nextLocaation : removeTargetLocations) {
-			targetLocations.remove(nextLocaation);
+		for (String nextLocation : removeTargetLocations) {
+			targetLocations.remove(nextLocation);
 		}
 			
 	}
