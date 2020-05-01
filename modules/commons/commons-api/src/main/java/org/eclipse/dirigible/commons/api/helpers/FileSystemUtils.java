@@ -69,7 +69,8 @@ public class FileSystemUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static byte[] loadFile(String workspacePath) throws FileNotFoundException, IOException {
-		Path path = FileSystems.getDefault().getPath(workspacePath);
+		String normalizedPath = FilenameUtils.normalize(workspacePath);
+		Path path = FileSystems.getDefault().getPath(normalizedPath);
 		// if (Files.exists(path)) {
 		if (path.toFile().exists()) {
 			return Files.readAllBytes(path);
@@ -298,9 +299,10 @@ public class FileSystemUtils {
 	 *            the workspace path
 	 */
 	public static void createFoldersIfNecessary(String workspacePath) {
-		int lastIndexOf = workspacePath.lastIndexOf(File.separator);
+		String normalizedPath = FilenameUtils.normalize(workspacePath);
+		int lastIndexOf = normalizedPath.lastIndexOf(File.separator);
 		if (lastIndexOf > 0) {
-			String directory = workspacePath.substring(0, lastIndexOf);
+			String directory = normalizedPath.substring(0, lastIndexOf);
 			createFolder(directory);
 		}
 	}
@@ -313,11 +315,12 @@ public class FileSystemUtils {
 	 * @return the string
 	 */
 	private static String convertToWorkspacePath(String path) {
+		String normalizedPath = FilenameUtils.normalize(path);
 		String workspacePath = null;
-		if (path.startsWith(SEPARATOR)) {
-			workspacePath = path.substring(SEPARATOR.length());
+		if (normalizedPath.startsWith(SEPARATOR)) {
+			workspacePath = normalizedPath.substring(SEPARATOR.length());
 		} else {
-			workspacePath = path;
+			workspacePath = normalizedPath;
 		}
 		workspacePath = workspacePath.replace(SEPARATOR, File.separator);
 		return workspacePath;
@@ -336,7 +339,8 @@ public class FileSystemUtils {
 		}
 		Path path;
 		try {
-			path = FileSystems.getDefault().getPath(FilenameUtils.normalize(location));
+			String normalizedPath = FilenameUtils.normalize(location);
+			path = FileSystems.getDefault().getPath(normalizedPath);
 			File file = path.toFile();
 			return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
 		} catch (java.nio.file.InvalidPathException | IOException e) {
@@ -379,7 +383,8 @@ public class FileSystemUtils {
 	public static boolean isDirectory(String location) {
 		Path path;
 		try {
-			path = FileSystems.getDefault().getPath(FilenameUtils.normalize(location));
+			String normalizedPath = FilenameUtils.normalize(location);
+			path = FileSystems.getDefault().getPath(normalizedPath);
 		} catch (java.nio.file.InvalidPathException e) {
 			return false;
 		}
