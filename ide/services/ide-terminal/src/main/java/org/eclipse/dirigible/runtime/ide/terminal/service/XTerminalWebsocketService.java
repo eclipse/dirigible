@@ -34,6 +34,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,8 @@ import org.slf4j.LoggerFactory;
 		subprotocols = {"tty"}
 		)
 public class XTerminalWebsocketService {
+
+	private static final String FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE = "Feature 'Terminal' is disabled in this mode.";
 
 	private static final Logger logger = LoggerFactory.getLogger(XTerminalWebsocketService.class);
 
@@ -60,6 +63,10 @@ public class XTerminalWebsocketService {
 
 	public synchronized static void runTTYD() {
 		if (!started) {
+			if (Configuration.isAnonymousModeEnabled()) {
+				logger.warn("[ws:terminal] " + FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);
+				return;
+			}
 			try {
 				String command = "";
 				String os = System.getProperty("os.name").toLowerCase();
@@ -98,8 +105,6 @@ public class XTerminalWebsocketService {
 				
 			} catch (IOException e) {
 				logger.error("[ws:terminal] " + e.getMessage(), e);
-	//		} catch (InterruptedException e) {
-	//			logger.error("[ws:terminal] " + e.getMessage(), e);
 			}
 			started = true;
 		}
@@ -133,6 +138,21 @@ public class XTerminalWebsocketService {
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
+		if (Configuration.isAnonymousModeEnabled()) {
+			try {
+				session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE, true);
+				logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);
+			} catch (IOException e) {
+				logger.error("[ws:terminal] " + e.getMessage(), e);
+			}
+			try {
+				session.close();
+			} catch (IOException e) {
+				logger.error("[ws:terminal] " + e.getMessage(), e);
+			}
+			return;
+		}
+		
 		logger.debug("[ws:terminal] onOpen: " + session.getId());
 		try {
 			XTerminalWebsocketClientEndpoint clientEndPoint = startClientWebsocket(session);
