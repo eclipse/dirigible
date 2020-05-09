@@ -84,7 +84,6 @@ public class SecurityFilter implements Filter {
 
 	private static final String PATH_WEB_RESOURCES = "/web/resources";
 
-	private static final String ROLE_PUBLIC = "Public";
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
@@ -139,7 +138,7 @@ public class SecurityFilter implements Filter {
 					if (principal == null) {
 						// white list check
 						for (AccessDefinition accessDefinition : accessDefinitions) {
-							if (ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole())) {
+							if (ISecurityCoreService.ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole())) {
 								isInRole = true;
 								break;
 							}
@@ -151,7 +150,7 @@ public class SecurityFilter implements Filter {
 						}
 					} else {
 						for (AccessDefinition accessDefinition : accessDefinitions) {
-							if (ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole()) || httpServletRequest.isUserInRole(accessDefinition.getRole())) {
+							if (ISecurityCoreService.ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole()) || httpServletRequest.isUserInRole(accessDefinition.getRole())) {
 								isInRole = true;
 								break;
 							}
