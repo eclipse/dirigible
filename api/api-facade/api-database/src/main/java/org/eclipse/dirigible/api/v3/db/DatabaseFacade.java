@@ -422,6 +422,13 @@ public class DatabaseFacade implements IScriptingFacade {
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
 							}
+						} else if (DataTypeUtils.isNvarchar(dataType)) {
+							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
+								String value = valueElement.getAsJsonPrimitive().getAsString();
+								preparedStatement.setString(i++, value);
+							} else {
+								throw new IllegalArgumentException("Wrong value of the parameter of type VARCHAR");
+							}
 						} else if (DataTypeUtils.isChar(dataType)) {
 							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
 								String value = valueElement.getAsJsonPrimitive().getAsString();

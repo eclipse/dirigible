@@ -39,6 +39,7 @@ public class DataTypeUtils {
 
 	static {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.VARCHAR, DataType.VARCHAR);
+		DATABASE_TYPE_TO_DATA_TYPE.put(Types.NVARCHAR, DataType.NVARCHAR);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.CHAR, DataType.CHAR);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIMESTAMP, DataType.TIMESTAMP);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.TIME, DataType.TIME);
@@ -54,6 +55,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIT, DataType.BIT);
 
 		STRING_TO_DATABASE_TYPE.put("VARCHAR", Types.VARCHAR);
+		STRING_TO_DATABASE_TYPE.put("NVARCHAR", Types.NVARCHAR);
 		STRING_TO_DATABASE_TYPE.put("CHAR", Types.CHAR);
 		STRING_TO_DATABASE_TYPE.put("TIMESTAMP", Types.TIMESTAMP);
 		STRING_TO_DATABASE_TYPE.put("TIME", Types.TIME);
@@ -69,6 +71,7 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("BIT", Types.BIT);
 
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
+		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.NVARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Integer.class, Types.INTEGER);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(int.class, Types.INTEGER);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Long.class, Types.BIGINT);
@@ -85,6 +88,7 @@ public class DataTypeUtils {
 		JAVA_TYPE_TO_DATABASE_TYPE.put(byte[].class, Types.BLOB);
 
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.VARCHAR, String.class);
+		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.NVARCHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.CHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.TIMESTAMP, Timestamp.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.TIME, Time.class);
@@ -345,6 +349,17 @@ public class DataTypeUtils {
 	 */
 	public static boolean isVarchar(String dataType) {
 		return DataType.VARCHAR.toString().equals(dataType);
+	}
+	
+	/**
+	 * Checks if is nvarchar.
+	 *
+	 * @param dataType
+	 *            the data type
+	 * @return true, if is varchar
+	 */
+	public static boolean isNvarchar(String dataType) {
+		return DataType.NVARCHAR.toString().equals(dataType);
 	}
 
 	/**

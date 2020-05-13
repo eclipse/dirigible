@@ -181,11 +181,11 @@ public class PersistenceAnnotationsParser {
 						throw new IllegalArgumentException(format("Generation Type: [{0}] not supported.", generatedValue.strategy().name()));
 					}
 					if (GenerationType.IDENTITY.equals(generatedValue.strategy())) {
-						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isChar(type)
+						if (DataTypeUtils.isBigint(type) || DataTypeUtils.isVarchar(type) || DataTypeUtils.isNvarchar(type) || DataTypeUtils.isChar(type)
 								|| DataTypeUtils.isInteger(type) || DataTypeUtils.isDecimal(type)) {
 							identity = true;
 						} else {
-							throw new IllegalArgumentException("Identity columns must of type CHAR, VARCHAR, INTEGER, BIGINT or DECIMAL");
+							throw new IllegalArgumentException("Identity columns must of type CHAR, VARCHAR, NVARCHAR, INTEGER, BIGINT or DECIMAL");
 						}
 					}
 					generated = generatedValue.strategy().name();

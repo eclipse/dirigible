@@ -241,6 +241,8 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 			preparedStatement.setNull(i, DataTypeUtils.getSqlTypeByDataType(dataType));
 		} else if (DataTypeUtils.isVarchar(dataType)) {
 			preparedStatement.setString(i, (String) value);
+		} else if (DataTypeUtils.isNvarchar(dataType)) {
+			preparedStatement.setString(i, (String) value);
 		} else if (DataTypeUtils.isChar(dataType)) {
 			if (value instanceof String) {
 				preparedStatement.setString(i, (String) value);

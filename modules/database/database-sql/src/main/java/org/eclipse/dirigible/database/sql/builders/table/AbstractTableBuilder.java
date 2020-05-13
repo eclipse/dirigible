@@ -581,7 +581,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnVarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity) {
 		return columnVarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[] {});
 	}
-
+	
 	/**
 	 * Column varchar.
 	 *
@@ -645,6 +645,142 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnVarchar(String name, int length) {
 		return columnVarchar(name, length, false);
 	}
+	
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param isIdentity
+	 *            the is identity
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
+			String... args) {
+		String[] definition = new String[] { OPEN + length + CLOSE };
+		String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+		return this.column(name, DataType.NVARCHAR, isPrimaryKey, isNullable, isUnique, isIdentity, coulmn);
+	}
+
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param isIdentity
+	 *            the is identity
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity,
+			String args) {
+		return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
+	}
+
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param isIdentity
+	 *            the is unique
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, Boolean isIdentity) {
+		return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, isIdentity, new String[] {});
+	}
+	
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
+		return columnNvarchar(name, length, isPrimaryKey, isNullable, isUnique, false);
+	}
+
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey, Boolean isNullable) {
+		return columnNvarchar(name, length, isPrimaryKey, isNullable, false);
+	}
+
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length, Boolean isPrimaryKey) {
+		return columnNvarchar(name, length, isPrimaryKey, true);
+	}
+
+	/**
+	 * Column nvarchar.
+	 *
+	 * @param name
+	 *            the name
+	 * @param length
+	 *            the length
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnNvarchar(String name, int length) {
+		return columnNvarchar(name, length, false);
+	}
+	
 
 	/**
 	 * Column char.

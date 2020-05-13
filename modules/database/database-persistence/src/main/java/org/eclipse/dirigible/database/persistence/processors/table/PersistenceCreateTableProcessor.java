@@ -57,6 +57,10 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
+				case NVARCHAR:
+					createTableBuilder.columnNvarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
+					break;
 				case CHAR:
 					createTableBuilder.columnChar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());

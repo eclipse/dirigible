@@ -67,7 +67,7 @@ public class TableCreateProcessor {
 			String scale = columnModel.getScale();
 			String args = "";
 			if (length != null) {
-				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)) {
+				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR)) {
 					args = ISqlKeywords.OPEN + length + ISqlKeywords.CLOSE;
 				}
 			} else if ((precision != null) && (scale != null)) {
@@ -77,7 +77,7 @@ public class TableCreateProcessor {
 			}
 			if (defaultValue != null) {
 				if ("".equals(defaultValue)) {
-					if ((type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR))) {
+					if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR)) {
 						args += " DEFAULT '" + defaultValue + "' ";
 					}
 				} else {
