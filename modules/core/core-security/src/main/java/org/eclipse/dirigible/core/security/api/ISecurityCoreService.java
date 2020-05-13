@@ -31,6 +31,7 @@ public interface ISecurityCoreService extends ICoreService {
 	
 	public static final String CONSTRAINT_SCOPE_DEFAULT = "HTTP";
 	
+	public static final String ROLE_PUBLIC = "Public";
 
 	// Roles
 

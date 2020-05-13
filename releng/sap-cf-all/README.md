@@ -1,3 +1,6 @@
+## Deployment
+To deploy the SAP Cloud Foundry release, follow the steps at: [dirigiblelabs/deployment-sap-cloud-foundry](https://github.com/dirigiblelabs/deployment-sap-cloud-foundry)
+
 ## Docker build:
 
 1. **dirigible-base-platform-sap-cf**
