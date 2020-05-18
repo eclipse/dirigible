@@ -12,6 +12,7 @@ var folderLib = require("ide-documents/api/lib/folder");
 var requestHandler = require("ide-documents/api/lib/request-handler");
 var request = require("http/v4/request");
 var response = require("http/v4/response");
+var repositoryContent = require("repository/v4/content");
 
 requestHandler.handleRequest({
 	handlers : {
@@ -26,10 +27,31 @@ function handleGet(){
 	}
 	var folder = folderLib.getFolderOrRoot(path);
 	var result = folderLib.readFolder(folder);
+	filterByAccessDefinitions(result);
 	response.setStatus(response.OK);
 	response.print(JSON.stringify(result));
 }
 
 function unescapePath(path){
 	return path.replace(/\\/g, '');
+}
+
+function filterByAccessDefinitions(folder) {
+	let accessDefinitions = JSON.parse(repositoryContent.getText("ide-documents/security/roles.access"));
+	folder.children = folder.children.filter(e => hasAccessPermissions(accessDefinitions.constraints, e.id))
+}
+
+function hasAccessPermissions(constraints, path) {
+	for (let i = 0; i < constraints.length; i ++) {
+		let method = constraints[i].method;
+		if (constraints[i].path.startsWith(path) && (method.toUpperCase() === "READ" || method === "*")) {
+			let roles = constraints[i].roles;
+			for (let j = 0; j < roles.length; j ++) {
+				if (!request.isUserInRole(roles[i])) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 }
