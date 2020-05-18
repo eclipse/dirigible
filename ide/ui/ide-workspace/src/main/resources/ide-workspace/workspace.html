@@ -71,8 +71,7 @@
 			<button type="button" id="uploadFile" ng-show=false data-toggle="modal" data-target="#dialogUploadFile"></button>
 			
 
-			<button type="button" class="btn btn-default btn-top" title="Create Workspace" ng-click="workspace.createWorkspace()"><i class="fa fa-plus"></i></button>
-			<button type="button" class="btn btn-default btn-top" title="Create Project" ng-click="workspace.createProject()"><i class="fa fa-pencil-square-o"></i></button>
+			<button type="button" class="btn btn-default btn-top" title="Create Project" ng-click="workspace.createProject()"><i class="fa fa-plus"></i></button>
 			<button type="button" class="btn btn-default btn-top" title="Link Project" ng-click="workspace.linkProject()"><i class="fa fa-link"></i></button>
 
 			<button type="button" class="btn btn-default btn-top" title="Save All" ng-click="workspace.saveAll()"><i class="fa fa-floppy-o"></i></button>
@@ -81,8 +80,9 @@
 			
 			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
+			<button type="button" class="btn btn-default btn-top" title="Create Workspace" ng-click="workspace.createWorkspace()"><i class="fa fa-clone"></i></button>
 			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				class="dropdown dropdown-toggle dropdown-top" title="Workspaces"></select>
+				class="dropdown dropdown-toggle dropdown-top" style="border: none; border-bottom: 1px solid; margin-top: 2px;" title="Workspaces"></select>
 			
 		</div>
 	  </div>
