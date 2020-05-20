@@ -14,6 +14,10 @@ var request = require("http/v4/request");
 var response = require("http/v4/response");
 var repositoryContent = require("repository/v4/content");
 
+String.prototype.replaceAll = function(find, replace) {
+  return this.replace(new RegExp(find, 'g'), replace);
+};
+
 requestHandler.handleRequest({
 	handlers : {
 		GET: handleGet
@@ -38,13 +42,30 @@ function unescapePath(path){
 
 function filterByAccessDefinitions(folder) {
 	let accessDefinitions = JSON.parse(repositoryContent.getText("ide-documents/security/roles.access"));
-	folder.children = folder.children.filter(e => hasAccessPermissions(accessDefinitions.constraints, e.id))
+	folder.children = folder.children.filter(e => {
+		let path = (folder.path + "/" + e.name).replaceAll("//", "/");
+		if (!path.startsWith("/")) {
+			path = "/" + path;
+		}
+		if (path.endsWith("/")) {
+			path = path.substr(0, path.length - 1);
+		}
+		return hasAccessPermissions(accessDefinitions.constraints, path);
+	});
 }
 
 function hasAccessPermissions(constraints, path) {
 	for (let i = 0; i < constraints.length; i ++) {
 		let method = constraints[i].method;
-		if (constraints[i].path.startsWith(path) && (method.toUpperCase() === "READ" || method === "*")) {
+		let constraintPath = constraints[i].path;
+		constraintPath = constraintPath.replaceAll("//", "/");
+		if (!constraintPath.startsWith("/")) {
+			constraintPath = "/" + constraintPath;
+		}
+		if (constraintPath.endsWith("/")) {
+			constraintPath = constraintPath.substr(0, constraintPath.length - 1);
+		}
+		if (path.length >= constraintPath.length && constraintPath.startsWith(path) && (method.toUpperCase() === "READ" || method === "*")) {
 			let roles = constraints[i].roles;
 			for (let j = 0; j < roles.length; j ++) {
 				if (!request.isUserInRole(roles[i])) {

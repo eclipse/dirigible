@@ -15,13 +15,23 @@ var repositoryManager = require("repository/v4/manager");
 rs.service()
     .resource("")
         .get(function (ctx, request, response) {
-            let accessDefinitions = getAccessDefinitions();
-            response.println(JSON.stringify(accessDefinitions));
+            if (request.isUserInRole("Operator")) {
+                let accessDefinitions = getAccessDefinitions();
+                response.println(JSON.stringify(accessDefinitions));
+            } else {
+                response.setStatus(response.FORBIDDEN);
+                response.println("Access forbidden");
+            }
         })
         .put(function(ctx, request, response) {
-            let accessDefinitions = request.getJSON();
-            updateAccessDefinitions(accessDefinitions);
-            response.println(JSON.stringify(accessDefinitions));
+            if (request.isUserInRole("Operator")) {
+                let accessDefinitions = request.getJSON();
+                updateAccessDefinitions(accessDefinitions);
+                response.println(JSON.stringify(accessDefinitions));
+            } else {
+                response.setStatus(response.FORBIDDEN);
+                response.println("Access forbidden");
+            }
         })
 .execute();
 
