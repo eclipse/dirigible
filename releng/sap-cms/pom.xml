@@ -67,7 +67,12 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-database</artifactId>
+		 	<artifactId>dirigible-repository-local</artifactId>
+		 	<version>5.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-repository-master</artifactId>
 		 	<version>5.0.0-SNAPSHOT</version>
 		</dependency>
 		
@@ -78,8 +83,13 @@
 		 	<version>5.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			 <groupId>org.eclipse.dirigible</groupId>
+			 <artifactId>dirigible-database-h2</artifactId>
+			 <version>5.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-managed</artifactId>
+		 	<artifactId>dirigible-database-custom</artifactId>
 		 	<version>5.0.0-SNAPSHOT</version>
 		</dependency>
 
