@@ -35,8 +35,7 @@ public class DatasourceProvider {
 	public DataSource getDatasource() {
 		if (this.runtimeDataSource == null) {
 			this.runtimeDataSource = this.datasource;
-			Configuration.load("/dirigible-scheduler.properties");
-			Configuration.load("/dirigible.properties");
+			Configuration.loadModuleConfig("/dirigible-scheduler.properties");
 			String dataSourceType = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE);
 			String dataSourceName = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
 			if (dataSourceType != null && dataSourceName != null) {

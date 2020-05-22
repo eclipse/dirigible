@@ -81,7 +81,7 @@ public class DerbyDatabase implements IDatabase {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-database-derby.properties");
+		Configuration.loadModuleConfig("/dirigible-database-derby.properties");
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 

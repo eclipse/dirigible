@@ -58,7 +58,7 @@ public class ManagedDatabase implements IDatabase {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-database-managed.properties");
+		Configuration.loadModuleConfig("/dirigible-database-managed.properties");
 		String managedDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_MANAGED_DATASOURCES);
 		if ((managedDataSourcesList != null) && !"".equals(managedDataSourcesList)) {
 			logger.trace("Managed datasources list: " + managedDataSourcesList);

@@ -72,7 +72,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-repository-master</artifactId>
+		 	<artifactId>dirigible-repository-database</artifactId>
 		 	<version>5.0.0-SNAPSHOT</version>
 		</dependency>
 		
@@ -89,7 +89,7 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-database-custom</artifactId>
+		 	<artifactId>dirigible-database-managed</artifactId>
 		 	<version>5.0.0-SNAPSHOT</version>
 		</dependency>
 

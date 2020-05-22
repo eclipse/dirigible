@@ -51,8 +51,7 @@ public class QuartzDatabaseLayoutInitializer {
 	public void initialize() throws SQLException, IOException {
 		Connection connection = null;
 		try {
-			Configuration.load("/dirigible-scheduler.properties");
-			Configuration.load("/dirigible.properties");
+			Configuration.loadModuleConfig("/dirigible-scheduler.properties");
 			String dataSourceType = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE);
 			String dataSourceName = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
 			if (dataSourceType != null && dataSourceName != null) {

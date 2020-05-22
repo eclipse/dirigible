@@ -39,27 +39,24 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 	protected void configure() {
 		
 		String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
-		
+	
 		if (masterType == null) {
-			// no master repository provider configured - default will not be chosen
-			logger.warn("No master repository provider configured.");
-			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
 			return;
 		}
-		
+
 		if (masterType.equals(FileSystemMasterRepository.TYPE)) {
-			Configuration.load("/dirigible-repository-master-fs.properties");
+			Configuration.loadModuleConfig("/dirigible-repository-master-fs.properties");
 			bind(IMasterRepository.class).toInstance(createFileSystemInstance());
 			logger.info("Bound File System Repository as the Master Repository for this instance.");
 		} else if (masterType.equals(JarMasterRepository.TYPE)) {
-			Configuration.load("/dirigible-repository-master-jar.properties");
+			Configuration.loadModuleConfig("/dirigible-repository-master-jar.properties");
 			bind(IMasterRepository.class).toInstance(createJarInstance());
 			logger.info("Bound Jar Repository as the Master Repository for this instance.");
 		} else if (masterType.equals(ZipMasterRepository.TYPE)) {
-			Configuration.load("/dirigible-repository-master-zip.properties");
+			Configuration.loadModuleConfig("/dirigible-repository-master-zip.properties");
 			bind(IMasterRepository.class).toInstance(createZipInstance());
 			logger.info("Bound Zip Repository as the Master Repository for this instance.");
-		} else {
+		} else if (masterType != null) {
 			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
 			logger.error("Unknown master repository provider configured: " + masterType);
 		}

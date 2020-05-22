@@ -79,7 +79,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 	private static IRepository repository;
 
 	public BpmProviderFlowable() {
-		Configuration.load("/dirigible-bpm.properties");
+		Configuration.loadModuleConfig("/dirigible-bpm.properties");
 	}
 
 	@Override

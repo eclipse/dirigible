@@ -12,6 +12,7 @@ package org.eclipse.dirigible.repository.local.module;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.slf4j.Logger;
@@ -32,14 +33,23 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 	 */
 	@Override
 	protected void configure() {
-		Configuration.load("/dirigible-repository-local.properties");
-		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, IRepository.DIRIGIBLE_REPOSITORY_PROVIDER_LOCAL);
+		Configuration.loadModuleConfig("/dirigible-repository-local.properties");
+		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER);
+
+		if (repositoryProvider == null) {
+			throw new RuntimeException("No repository provider is configured, set the DIRIGIBLE_REPOSITORY_PROVIDER property. See more at: https://www.dirigible.io/help/setup_environment_variables.html");
+		}
 
 		if (LocalRepository.TYPE.equals(repositoryProvider)) {
 			LocalRepository localRepository = createInstance();
 			bind(LocalRepository.class).toInstance(localRepository);
 			bind(IRepository.class).toInstance(localRepository);
 			logger.info("Bound Local Repository as the Repository for this instance.");
+
+			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
+			if (masterType == null) {				
+				bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			}
 		}
 	}
 

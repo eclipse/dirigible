@@ -19,7 +19,7 @@ public class GitModule extends AbstractDirigibleModule {
 
 	@Override
 	protected void configure() {
-		Configuration.load("/dirigible-git.properties");
+		Configuration.loadModuleConfig("/dirigible-git.properties");
 	}
 
 	@Override

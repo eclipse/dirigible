@@ -71,8 +71,8 @@ public class DirigibleInitializer {
 
 		getInjector();
 		
-		Configuration.load("/dirigible-core.properties");
-		Configuration.load("/dirigible.properties");
+		Configuration.loadModuleConfig("/dirigible-core.properties");
+		Configuration.loadModuleConfig("/dirigible.properties");
 
 		loadPredeliveredContent();
 

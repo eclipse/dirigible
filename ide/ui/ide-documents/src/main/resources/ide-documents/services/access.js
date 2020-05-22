@@ -40,7 +40,11 @@ function getAccessDefinitions() {
 }
 
 function updateAccessDefinitions(accessDefinitions) {
-    var path = "/registry/public/ide-documents/security/roles.access";
-    var content = JSON.stringify(accessDefinitions);
-    repositoryManager.createResource(path, content)
+    let path = "/registry/public/ide-documents/security/roles.access";
+    let content = JSON.stringify(accessDefinitions);
+    let resource = repositoryManager.getResource(path);
+    if (resource.exists()) {    	
+    	repositoryManager.deleteResource(path);
+    }
+    repositoryManager.createResource(path, content);
 }

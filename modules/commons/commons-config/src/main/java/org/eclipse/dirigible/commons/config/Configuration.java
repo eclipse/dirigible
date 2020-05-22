@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -24,30 +25,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Configuration Facade class keeps all the configurations in the Dirigible instance
- * It has the default built in properties file - dirigible.properties
- * After the initialization, all the default properties are replaced with the ones coming as:
- * 1. System's properties
- * 2. Environment variables
- * This can be triggered programmatically with update() method
- * It supports also loading of custom properties files from the class loader with load() for the modules
- * and also merge with a provided properties object with add() methods
+ * Configuration Facade class keeps all the configurations in the Dirigible
+ * instance It has the default built in properties file - dirigible.properties
+ * After the initialization, all the default properties are replaced with the
+ * ones coming as: 1. System's properties 2. Environment variables This can be
+ * triggered programmatically with update() method It supports also loading of
+ * custom properties files from the class loader with load() for the modules and
+ * also merge with a provided properties object with add() methods
  */
 public class Configuration {
 
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
-	private static Configuration INSTANCE;
+	private enum ConfigType {
+		RUNTIME, ENVIRONMENT, DEPLOYMENT, MODULE
+	}
 
-	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<String, String>());
+	private static final Map<String, String> RUNTIME_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	private static final Map<String, String> ENVIRONMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
+	private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
 
-	/**
-	 * Loads a custom properties file from the class loader.
-	 *
-	 * @param path
-	 *            the path
-	 */
-	public static void load(String path) {
+	static {
+		loadDeploymentConfig("/dirigible.properties");
+		loadEnvironmentConfig();
+	}
+
+	private static void loadEnvironmentConfig() {
+		addConfigProperties(System.getenv(), ConfigType.ENVIRONMENT);
+		addConfigProperties(System.getProperties(), ConfigType.ENVIRONMENT);
+	}
+
+	private static void loadDeploymentConfig(String path) {
+		load(path, ConfigType.DEPLOYMENT);
+	}
+
+	public static void loadModuleConfig(String path) {
+		load(path, ConfigType.MODULE);
+	}
+
+	private static void load(String path, ConfigType type) {
 		try {
 			Properties custom = new Properties();
 			InputStream in = Configuration.class.getResourceAsStream(path);
@@ -56,10 +73,22 @@ public class Configuration {
 			}
 			try {
 				custom.load(in);
-				if (path.endsWith("dirigible.properties")) { // main custom properties
-					addProperties(custom);
+				switch (type) {
+				case RUNTIME:
+					addConfigProperties(custom, RUNTIME_VARIABLES);
+					break;
+				case ENVIRONMENT:
+					addConfigProperties(custom, ENVIRONMENT_VARIABLES);
+					break;
+				case DEPLOYMENT:
+					addConfigProperties(custom, DEPLOYMENT_VARIABLES);
+					break;
+				case MODULE:
+					addConfigProperties(custom, MODULE_VARIABLES);
+					break;
+				default:
+					break;
 				}
-				add(custom);
 			} finally {
 				in.close();
 			}
@@ -69,38 +98,55 @@ public class Configuration {
 		}
 	}
 
-	/**
-	 * Merge the provided properties object.
-	 *
-	 * @param custom
-	 *            the custom
-	 */
-	public static void add(Properties custom) {
-		getInstance().putAll(custom);
+	private static void addConfigProperties(Map<String, String> properties, ConfigType type) {
+		switch(type) {
+		case RUNTIME:
+			RUNTIME_VARIABLES.putAll(properties);
+			break;
+		case ENVIRONMENT:
+			ENVIRONMENT_VARIABLES.putAll(properties);
+			break;
+		case DEPLOYMENT:
+			DEPLOYMENT_VARIABLES.putAll(properties);
+			break;
+		case MODULE:
+			MODULE_VARIABLES.putAll(properties);
+			break;
+		default:
+			break;
+		
+		}
 	}
-	
-	/**
-	 * Load the main custom properties
-	 *
-	 * @param custom
-	 *            the custom
-	 */
-	private static void addProperties(Properties custom) {
-		System.getProperties().putAll(custom);
-		Set<Object> keys = System.getProperties().keySet();
-		for (Object key : keys) {
-			String asEnvVar = System.getenv(key.toString());
-			if (asEnvVar != null) {
-				System.getProperties().put(key, asEnvVar);
-			}
+
+	private static void addConfigProperties(Properties properties, ConfigType type) {
+		switch(type) {
+		case RUNTIME:
+			addConfigProperties(properties, RUNTIME_VARIABLES);
+			break;
+		case ENVIRONMENT:
+			addConfigProperties(properties, ENVIRONMENT_VARIABLES);
+			break;
+		case DEPLOYMENT:
+			addConfigProperties(properties, DEPLOYMENT_VARIABLES);
+			break;
+		case MODULE:
+			addConfigProperties(properties, MODULE_VARIABLES);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private static void addConfigProperties(Properties properties, Map<String, String> map) {
+		for (String property: properties.stringPropertyNames()) {
+			map.put(property, properties.getProperty(property));
 		}
 	}
 
 	/**
 	 * Getter for the value of the property by its key.
 	 *
-	 * @param key
-	 *            the key
+	 * @param key the key
 	 * @return the string
 	 */
 	public static String get(String key) {
@@ -110,20 +156,20 @@ public class Configuration {
 	/**
 	 * Getter for the value of the property by its key.
 	 *
-	 * @param key
-	 *            the key
-	 * @param defaultValue
-	 *            the default value
+	 * @param key          the key
+	 * @param defaultValue the default value
 	 * @return the string
 	 */
 	public static String get(String key, String defaultValue) {
-		String value;
-		if (getInstance().parameters.containsKey(key)) {
-			value = getInstance().parameters.get(key);
-		} else if (System.getProperties().containsKey(key)) {
-			value = System.getProperty(key);
-		} else {
-			value = System.getenv(key);
+		String value = null;
+		if (RUNTIME_VARIABLES.containsKey(key)) {
+			value = RUNTIME_VARIABLES.get(key);
+		} else if (ENVIRONMENT_VARIABLES.containsKey(key)) {
+			value = ENVIRONMENT_VARIABLES.get(key);
+		} else if (DEPLOYMENT_VARIABLES.containsKey(key)) {
+			value = DEPLOYMENT_VARIABLES.get(key);
+		} else if (MODULE_VARIABLES.containsKey(key)) {
+			value = MODULE_VARIABLES.get(key);
 		}
 		return (value != null) ? value : defaultValue;
 	}
@@ -131,21 +177,20 @@ public class Configuration {
 	/**
 	 * Setter for the property's key and value.
 	 *
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 * @param key   the key
+	 * @param value the value
 	 */
 	public static void set(String key, String value) {
-		getInstance().parameters.put(key, value);
+		RUNTIME_VARIABLES.put(key, value);
 	}
 
 	/**
-	 * Remove property 
+	 * Remove property
+	 * 
 	 * @param key the key
 	 */
 	public static void remove(String key) {
-		getInstance().parameters.remove(key);
+		RUNTIME_VARIABLES.remove(key);
 	}
 
 	/**
@@ -154,25 +199,20 @@ public class Configuration {
 	 * @return the keys
 	 */
 	public static String[] getKeys() {
-		return getInstance().parameters.keySet().toArray(new String[] {});
+		Set<String> keys = new HashSet<String>();
+		keys.addAll(RUNTIME_VARIABLES.keySet());
+		keys.addAll(ENVIRONMENT_VARIABLES.keySet());
+		keys.addAll(DEPLOYMENT_VARIABLES.keySet());
+		keys.addAll(MODULE_VARIABLES.keySet());
+		return keys.toArray(new String[] {});
 	}
 
 	/**
-	 * Update the properties values from the System's properties and from the Environment if any.
+	 * Update the properties values from the System's properties and from the
+	 * Environment if any.
 	 */
 	public static void update() {
-		Set<String> keys = getInstance().parameters.keySet();
-		for (String key : keys) {
-			String asSystemProperty = System.getProperty(key);
-			if (asSystemProperty != null) {
-				getInstance().parameters.put(key, asSystemProperty);
-			} else {
-				String asEnvVar = System.getenv(key);
-				if (asEnvVar != null) {
-					getInstance().parameters.put(key, asEnvVar);
-				}
-			}
-		}
+		loadEnvironmentConfig();
 	}
 
 	/**
@@ -216,6 +256,7 @@ public class Configuration {
 		}
 		return true;
 	}
+
 	/**
 	 * Checks if productive iframe is enabled.
 	 *
@@ -228,57 +269,11 @@ public class Configuration {
 	/**
 	 * Setter as a System's property.
 	 *
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
+	 * @param key   the key
+	 * @param value the value
 	 */
 	public static void setSystemProperty(String key, String value) {
 		System.setProperty(key, value);
 	}
 
-	private static void create() {
-		synchronized (Configuration.class) {
-			INSTANCE = new Configuration();
-			Configuration.update();
-		}
-	}
-
-	private static Configuration getInstance() {
-		if (INSTANCE == null) {
-			create();
-		}
-		return INSTANCE;
-	}
-
-	private Configuration() {
-		init();
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void init() {
-		try {
-			Properties properties = new Properties();
-			InputStream in = Configuration.class.getResourceAsStream("/dirigible.properties");
-			if (in == null) {
-				logger.warn("No default configuration dirigible.properties present in the classpath");
-				return;
-			}
-			try {
-				properties.load(in);
-				this.parameters.putAll((Map) properties);
-			} finally {
-				in.close();
-			}
-			logger.debug("Configuration initialized with dirigible.properties");
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void putAll(Properties properties) {
-		this.parameters.putAll((Map) properties);
-		update();
-	}
 }

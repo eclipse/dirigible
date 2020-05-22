@@ -72,7 +72,7 @@ public class SchedulerManager {
 		synchronized (SchedulerManager.class) {
 			if (broker == null) {
 				broker = new BrokerService();
-				Configuration.load("/dirigible-messaging.properties");
+				Configuration.loadModuleConfig("/dirigible-messaging.properties");
 				if (Boolean.parseBoolean(Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
 					PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
 					broker.setPersistenceAdapter(persistenceAdapter);

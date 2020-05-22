@@ -39,7 +39,7 @@ public class BpmModule extends AbstractDirigibleModule {
 	 */
 	@Override
 	protected void configure() {
-		Configuration.load("/dirigible-bpm.properties");
+		Configuration.loadModuleConfig("/dirigible-bpm.properties");
 
 		String bpmProvider = Configuration.get(IBpmProvider.DIRIGIBLE_BPM_PROVIDER);
 		if (bpmProvider == null) {

@@ -89,8 +89,7 @@ public class SchedulerManager {
 		try {
 			synchronized (SchedulerInitializer.class) {
 				if (scheduler == null) {
-					Configuration.load("/dirigible-scheduler.properties");
-					Configuration.load("/dirigible.properties");
+					Configuration.loadModuleConfig("/dirigible-scheduler.properties");
 					Properties quartzProperties = new Properties();
 					String quartzConfig = Configuration.get("DIRIGIBLE_SCHEDULER_QUARTZ_PROPERTIES");
 					if ((quartzConfig != null) && "".equals(quartzConfig.trim()) && !quartzConfig.startsWith("classpath")) {

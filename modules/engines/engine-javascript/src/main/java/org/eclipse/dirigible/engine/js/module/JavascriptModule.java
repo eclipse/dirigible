@@ -31,7 +31,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 	protected void configure() {
 		ServiceLoader<IJavascriptEngineExecutor> javascriptEngineExecutors = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
-		Configuration.load("/dirigible-js.properties");
+		Configuration.loadModuleConfig("/dirigible-js.properties");
 
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT,
 				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_RHINO);

@@ -30,7 +30,7 @@ public class LogsProcessor {
 	private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
 	
 	public LogsProcessor() {
-		Configuration.load("/dirigible-operations.properties");
+		Configuration.loadModuleConfig("/dirigible-operations.properties");
 	}
 	
 	public String list() throws IOException {

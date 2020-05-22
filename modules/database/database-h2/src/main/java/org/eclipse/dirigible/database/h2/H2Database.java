@@ -81,7 +81,7 @@ public class H2Database implements IDatabase {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-database-h2.properties");
+		Configuration.loadModuleConfig("/dirigible-database-h2.properties");
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 

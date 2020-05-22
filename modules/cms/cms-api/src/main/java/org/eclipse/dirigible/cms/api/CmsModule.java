@@ -39,7 +39,7 @@ public class CmsModule extends AbstractDirigibleModule {
 	 */
 	@Override
 	protected void configure() {
-		Configuration.load("/dirigible-cms.properties");
+		Configuration.loadModuleConfig("/dirigible-cms.properties");
 
 		String cmsProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER,
 				ICmsProvider.DIRIGIBLE_CMS_PROVIDER_INTERNAL);

@@ -69,7 +69,7 @@ public class IndexingCoreService implements IIndexingCoreService {
 	private static int MAX_RESULTS;
 
 	static {
-		Configuration.load("/dirigible-indexing.properties");
+		Configuration.loadModuleConfig("/dirigible-indexing.properties");
 		ROOT_FOLDER = Configuration.get(DIRIGIBLE_INDEXING_ROOT_FOLDER);
 		MAX_RESULTS = Integer.parseInt(Configuration.get(DIRIGIBLE_INDEXING_MAX_RESULTS, "100"));
 	}

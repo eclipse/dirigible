@@ -83,7 +83,7 @@ public class CmsProviderManaged implements ICmsProvider {
 	public Object lookupCmisSession() throws NamingException, NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		final InitialContext ctx = new InitialContext();
-		Configuration.load("/dirigible-cms.properties");
+		Configuration.loadModuleConfig("/dirigible-cms.properties");
 		String key = Configuration.get(DIRIGIBLE_CMS_MANAGED_CONFIGURATION_JNDI_NAME);
 		if (key != null) {
 			Object ecmService = ctx.lookup(key);

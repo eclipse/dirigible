@@ -56,7 +56,7 @@ public class CustomDatabase implements IDatabase {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-database-custom.properties");
+		Configuration.loadModuleConfig("/dirigible-database-custom.properties");
 		String customDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES);
 		if ((customDataSourcesList != null) && !"".equals(customDataSourcesList)) {
 			logger.trace("Custom datasources list: " + customDataSourcesList);

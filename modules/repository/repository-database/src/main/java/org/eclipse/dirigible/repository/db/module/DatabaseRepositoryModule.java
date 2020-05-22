@@ -38,20 +38,26 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 	 */
 	@Override
 	protected void configure() {
-		Configuration.load("/dirigible-repository-database.properties");
-		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER, IRepository.DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE);
-		String dataSourceType = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED);
-		String dataSourceName = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+		Configuration.loadModuleConfig("/dirigible-repository-database.properties");
+		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER);
 
-		
+		if (repositoryProvider == null) {
+			throw new RuntimeException("No repository provider is configured, set the DIRIGIBLE_REPOSITORY_PROVIDER property. See more at: https://www.dirigible.io/help/setup_environment_variables.html");
+		}
+
 		if (DatabaseRepository.TYPE.equals(repositoryProvider)) {
+			String dataSourceType = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED);
+			String dataSourceName = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 			DatabaseRepository databaseRepository = createInstance(dataSourceType, dataSourceName);
 			bind(DatabaseRepository.class).toInstance(databaseRepository);
 			bind(IRepository.class).toInstance(databaseRepository);
 			logger.info("Bound Database Repository as the Repository for this instance.");
 			
 			logger.info("No master repository provider supported in case of a database repository setup.");
-			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
+			if (masterType == null) {				
+				bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			}
 		}
 	}
 

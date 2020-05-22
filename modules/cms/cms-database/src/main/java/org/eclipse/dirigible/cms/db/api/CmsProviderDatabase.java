@@ -40,8 +40,7 @@ public class CmsProviderDatabase implements ICmsProvider {
 	private CmisRepository cmisRepository;
 
 	public CmsProviderDatabase() {
-		Configuration.load("/dirigible.properties");
-		Configuration.load("/dirigible-cms.properties");
+		Configuration.loadModuleConfig("/dirigible-cms.properties");
 		
 		String repositoryProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, ICmsProvider.DIRIGIBLE_CMS_PROVIDER_DATABASE);
 		String dataSourceType = Configuration.get(DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED);

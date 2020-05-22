@@ -84,7 +84,7 @@ public class CmsDatabaseRepository implements IRepository {
 	 */
 	@Override
 	public void initialize() {
-		Configuration.load("/dirigible-repository-database.properties");
+		Configuration.loadModuleConfig("/dirigible-repository-database.properties");
 		logger.trace(this.getClass().getCanonicalName() + " module initialized.");
 	}
 

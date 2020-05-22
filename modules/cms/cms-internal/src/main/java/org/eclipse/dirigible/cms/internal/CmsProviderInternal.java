@@ -30,7 +30,7 @@ public class CmsProviderInternal implements ICmsProvider {
 	private CmisRepository cmisRepository;
 
 	public CmsProviderInternal() {
-		Configuration.load("/dirigible-cms.properties");
+		Configuration.loadModuleConfig("/dirigible-cms.properties");
 
 		String rootFolder = Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE));

@@ -94,7 +94,7 @@ public class RepositorySearcher {
 	public RepositorySearcher(IRepository repository) {
 		this.repository = repository;
 
-		Configuration.load("/dirigible-repository-search.properties");
+		Configuration.loadModuleConfig("/dirigible-repository-search.properties");
 		String rootFolder = Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER);
 		boolean absolute = Boolean.parseBoolean(
 				Configuration.get(RepositorySearcher.DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE));
