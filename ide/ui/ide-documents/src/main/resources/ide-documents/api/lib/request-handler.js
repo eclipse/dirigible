@@ -50,7 +50,7 @@ function printError(httpCode, errCode, errMessage, errContext) {
 }
 
 function defaultOnError(error){
-	console.error(error);		
+	console.error("Documents API error occured: " + error.message);		
 	printError(response.INTERNAL_SERVER_ERROR, 5, error.message);	
 }
 
