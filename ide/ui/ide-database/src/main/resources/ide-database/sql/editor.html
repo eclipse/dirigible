@@ -13,109 +13,134 @@
 	<head>
 		<!-- jQuery -->
 	<script src="../../../../../services/v4/web/resources/jquery/2.0.3/jquery.min.js"></script>
+	<style>
+        body {
+            overflow: hidden;
+            height: 100%
+        }
+        #embeddedEditor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+	</style>
 	
 	<!-- Twitter Bootstrap with Theme Support -->
 	<link rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
 	<script src="../../../../../services/v4/web/resources/bootstrap/3.3.7/bootstrap.min.js"></script>
 	
-		<script src="lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-		<script src="lib/ace/ext-language_tools.js" type="text/javascript"></script>
-		<style type="text/css" media="screen">
-		  body {
-		      overflow: hidden;
-		  }
-
-		  #editor {
-		      margin: 0;
-		      position: absolute;
-		      top: 0;
-		      bottom: 0;
-		      left: 0;
-		      right: 0;
-		  }
-
-		</style>
-		
-	<link rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/ace.css">
-
 	<script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
 		
 	</head>
-	<body style="height: 100%;">
- 		<pre id="editor" class="ace-ambiance"></pre>
+	<body id="monaco-browser" spellcheck="false">
+    
+    	<script src="../../../../../services/v4/js/theme/resources.js/monaco.js"></script>
+        
+		<div  id="embeddedEditor"></div>
 		
-		<script type="text/javascript">
-			
-			var processChangeEvents = true;
-			var editor = ace.edit("editor");
-			var aceRange = ace.require('ace/range').Range;
-			var beforeSaveText = "";
+		<script src="../../ide-monaco/monaco-editor/min/vs/loader.js"></script>
+		<script>
+		    var messageHub = new FramesMessageHub();
 			var sqlPlaceholder = "-- ctrl+x to execute (cmd+x for Mac)\n";
-			var messageHub = new FramesMessageHub();
+		    var csrfToken;
+
+			function createEditorInstance() {
+				return new Promise((resolve, reject) => {
+					setTimeout(function() {
+						try{
+							var containerEl = document.getElementById('embeddedEditor');
+							if (containerEl.childElementCount > 0){
+								for (var i = 0; i < containerEl.childElementCount; i++)
+									containerEl.removeChild(containerEl.children.item(i));
+							}
+							var editor = monaco.editor.create(containerEl, {
+								value: sqlPlaceholder,
+								automaticLayout: true,
+								language: "sql"
+							});
+							resolve(editor);
+							window.onresize = function (){
+								editor.layout();
+							};
+						} catch (err) {
+							reject(err);
+						}
+					});
+				});
+			};
 			
-			messageHub.subscribe(function(evt) {
-				beforeSaveText = editor.getValue();
-				executeCalled();
-		    }, "database.sql.run");
-			
-		    editor.setOptions({
-		        enableBasicAutocompletion: true,
-		        enableSnippets: true,
-		        enableLiveAutocompletion: true
-		    });
+			function createExecuteAction() {
+				return {
+					// An unique identifier of the contributed action.
+					id: 'dirigible-sql-execute',
 
-			//commands
-			editor.commands.addCommand({
-				name: 'execute',
-				bindKey: {
-					win: 'Ctrl-X',
-					mac: 'Command-X'
-				},
-				exec: function(e) {
-					beforeSaveText = e.getSession().getValue();
-					executeCalled();
-				},
-				readOnly: true // false if this command should not apply in readOnly mode
-			});
+					// A label of the action that will be presented to the user.
+					label: 'Execute',
 
-			function setMode(mode) {
-				editor.getSession().setMode("ace/mode/" + mode);
-			}
+					// An optional array of keybindings for the action.
+					keybindings: [
+						monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_X
+					],
 
-			function setText(text, mode, readOnlyStatus, breakpointsenabledStatus, row) {
-				beforeSaveText = text;
-				setTimeout(function() {
-					editor.getSession().setMode("ace/mode/" + mode);
-					editor.getSession().getUndoManager().reset();
-					setReadOnly(readOnlyStatus);
-					editor.gotoLine(row, 0, true);
-					editor.getSession().setValue(text);
-				}, 500);
-			}
+					// Method that will be executed when the action is triggered.
+					// @param editor The editor instance is passed in as a convinience
+					run: function(editor) {
+						let text = editor.getModel().getValue();
+						let sqlCommand = getSQLCommand(text);
+						messageHub.post({data: sqlCommand}, 'database.sql.execute');
+					}
+				};
+			};
 
-			function getText() {
-				return editor.getValue();
-			}
+			(function init(){
+				require.config({ paths: { 'vs': '../../ide-monaco/monaco-editor/min/vs' }});
 
-			function setReadOnly(status) {
-				if (!status) {
-					editor.getSession().clearBreakpoints();
-				}
-				editor.setReadOnly(status);
-			}
+				require(['vs/editor/editor.main'], function() {
+					var _editor;
+					createEditorInstance()
+						.then((editor) => {
+							_editor = editor;
+							var sqlCommand = loadSQLCommand();
+							return sqlPlaceholder + sqlCommand;
+						})
+						.then((fileText) => {
+							var model = monaco.editor.createModel(fileText, 'sql');
+							_editor.setModel(model);
+							_editor.addAction(createExecuteAction());
+							_editor.onDidChangeCursorPosition(function(e) {
+								var caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
+								messageHub.post({data: caretInfo}, 'status.caret');
+							});
+							_editor.onDidChangeModelContent(function(e) {
+								saveSQLCommand(_editor.getValue());
+							});
+						});
+					monaco.editor.setTheme(monacoTheme);
+				});	
+			})();
 
-			function executeCalled() {
-				var sqlCommand = beforeSaveText;
-				var sqlPlaceHolderIndex = beforeSaveText.indexOf(sqlPlaceholder);
+			function getSQLCommand(text) {
+				var sqlCommand = text;
+				var sqlPlaceHolderIndex = text.indexOf(sqlPlaceholder);
 				if (sqlPlaceHolderIndex >= 0) {
-					sqlCommand = beforeSaveText.substring(sqlPlaceholder.length);
+					sqlCommand = text.substring(sqlPlaceholder.length);
 				}
-				messageHub.post({data: sqlCommand}, 'database.sql.execute');
+				return sqlCommand;
 			}
-			
-			setText(sqlPlaceholder, "sql", false, false, 2);
 
-			
+			function saveSQLCommand(text) {
+				var sqlCommand = getSQLCommand(text);
+				localStorage.setItem("DIRIGIBLE.IDE.DATABASE.sqlCommand", sqlCommand);
+			}
+
+			function loadSQLCommand() {
+				var sqlCommand = localStorage.getItem("DIRIGIBLE.IDE.DATABASE.sqlCommand");
+				return sqlCommand ? sqlCommand : "";
+			}
+
 		</script>
-	</body>
+    </body>
 </html>
