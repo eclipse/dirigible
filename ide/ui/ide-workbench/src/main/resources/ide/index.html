@@ -62,6 +62,8 @@
 	<script type="text/javascript" src="../../../../services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 
 	<script type="text/javascript">
+		var dirtyFiles = [];
+
 		angular.module('workbench', ['ngResource', 'ideUiCore'])
 		.config(["messageHubProvider", function(messageHubProvider) {
 			messageHubProvider.evtNamePrefix = 'workbench';
@@ -90,21 +92,23 @@
 						alert(msg.data);
 					},
 					'editor.file.dirty': function(msg){
+						dirtyFiles.push(msg.data);
 						Layouts.manager.setEditorDirty(msg.data, true);
 					},
 					'editor.file.saved': function(msg){
+						dirtyFiles = dirtyFiles.filter(e => e !== msg.data);
 						Layouts.manager.setEditorDirty(msg.data, false);
 					}
 				}
 			};
 					
 		}]);
-	</script>
-	
-	<script language="JavaScript">
+
 	    window.addEventListener('beforeunload', function (e) {
-		  e.preventDefault();
-		  e.returnValue = '';
+			if (dirtyFiles.length > 0) {
+				e.preventDefault();
+				e.returnValue = '';
+			}
 		});
 	</script>
 	
