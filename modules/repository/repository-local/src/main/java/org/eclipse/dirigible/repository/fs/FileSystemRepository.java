@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -708,4 +709,14 @@ public abstract class FileSystemRepository implements IRepository {
 		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
 	}
 
+	@Override
+	public boolean isLinkedPath(String repositoryPath) {
+		try {
+			String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
+			return Files.readSymbolicLink(Paths.get(workspacePath).toAbsolutePath()) != null;			
+		} catch(IOException e) {
+			logger.debug(e.getMessage(), e);
+		}
+		return false;
+	}
 }

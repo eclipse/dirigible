@@ -67,7 +67,7 @@
 			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
 			
 			<select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces" ng-change="workspace.workspaceSelected()"
-				class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Workspaces"></select>
+				class="dropdown btn btn-default dropdown-toggle dropdown-top" style="border-top: none; border-right: none; border-left: none; border-image: initial; border-bottom: 1px solid; margin-top: 2px;" title="Workspaces"></select>
 		</div>
 	  </div>
 	</div>
@@ -195,12 +195,6 @@
 				<label class="col-xs-12 col-form-label">Do you want to Push all the Projects in the Workspace to Git?</label>
 			</div>
 			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Message</label>
-				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
-				</div>
-			</div>
-			<div class="form-group row">
 				<label class="col-xs-3 col-form-label">Username</label>
 				<div class="col-xs-5">
 					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
@@ -233,12 +227,6 @@
 	    <div class="modal-body">
 	        <div class="form-group row">
 				<label class="col-xs-12 col-form-label">Do you want to Push the selected Project to Git?</label>
-			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Message</label>
-				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
-				</div>
 			</div>
 			<div class="form-group row">
 				<label class="col-xs-3 col-form-label">Username</label>
@@ -279,24 +267,6 @@
 	    <div class="modal-body">
 	        <div class="form-group row">
 				<label class="col-xs-12 col-form-label">Do you want to Reset the selected Project from Git?</label>
-			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Message</label>
-				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="Commit message" ng-model="workspace.commitMessage" required="required">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Username</label>
-				<div class="col-xs-5">
-					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Password</label>
-				<div class="col-xs-5">
-					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
-				</div>
 			</div>
 	    </div>
 	    <div class="modal-footer">
@@ -411,12 +381,6 @@
 				<label class="col-xs-3 col-form-label">Username</label>
 				<div class="col-xs-5">
 					<input class="form-control" type="text" placeholder="" ng-model="workspace.username" required="required">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-xs-3 col-form-label">Password</label>
-				<div class="col-xs-5">
-					<input class="form-control" type="password" placeholder="" ng-model="workspace.password" required="required">
 				</div>
 			</div>
 			<div class="form-group row">

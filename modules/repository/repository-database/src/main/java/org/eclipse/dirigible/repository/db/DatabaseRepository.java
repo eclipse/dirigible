@@ -334,4 +334,8 @@ public class DatabaseRepository implements IRepository {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
 
+	@Override
+	public boolean isLinkedPath(String repositoryPath) {
+		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
+	}
 }

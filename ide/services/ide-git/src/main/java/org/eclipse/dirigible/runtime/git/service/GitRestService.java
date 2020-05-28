@@ -435,7 +435,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 */
 	@GET
 	@Path("/")
-	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
+	public Response getGitRepositories(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
@@ -453,9 +453,33 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			sendErrorNotFound(response, workspace);
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
+		return Response.ok().entity(processor.renderGitRepositories(user, workspace)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
-	
+
+	/**
+	 * Get unstaged files.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException the git connector exception
+	 */
+	@GET
+	@Path("/{project}")
+	@Produces("application/json")
+	@ApiOperation("Get Project Files")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Files") })
+	public Response getProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project)
+			throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		IWorkspace workspaceObject = processor.getWorkspace(workspace);
+		return Response.ok().entity(processor.renderWorkspaceProject(workspaceObject, project)).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
 	/**
 	 * Get unstaged files.
 	 *

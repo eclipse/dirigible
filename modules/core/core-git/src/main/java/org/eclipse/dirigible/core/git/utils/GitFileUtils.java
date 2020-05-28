@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.common.util.StringUtils;
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
@@ -31,9 +30,7 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
-import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
@@ -113,7 +110,18 @@ public class GitFileUtils {
 		String repositoryName = generateGitRepositoryName(repositoryURI);
 		return FileSystemUtils.forceCreateDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
 	}
-	
+
+	/**
+	 * Get the directory for git
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @return the directory
+	 */
+	public static File getGitDirectory(String user, String workspace) {
+		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace);
+	}
+
 	/**
 	 * Get the directory for git
 	 * 
@@ -124,6 +132,18 @@ public class GitFileUtils {
 	 */
 	public static File getGitDirectory(String user, String workspace, String repositoryURI) {
 		String repositoryName = generateGitRepositoryName(repositoryURI);
+		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+	}
+
+	/**
+	 * Get the directory for git
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository URI
+	 * @return the directory
+	 */
+	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
 		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
 	}
 

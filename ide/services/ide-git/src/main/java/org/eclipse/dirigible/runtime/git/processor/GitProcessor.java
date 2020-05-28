@@ -33,16 +33,19 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
+import org.eclipse.dirigible.core.workspace.json.WorkspaceGitHelper;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
@@ -293,7 +296,7 @@ public class GitProcessor {
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
 		return workspaceObject.exists();
 	}
-	
+
 	/**
 	 * Render workspace tree.
 	 *
@@ -304,6 +307,32 @@ public class GitProcessor {
 	public WorkspaceDescriptor renderWorkspaceTree(IWorkspace workspace) {
 		return WorkspaceJsonHelper.describeWorkspaceProjects(workspace,
 				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+	}
+
+	public List<ProjectDescriptor> renderGitRepositories(String user, String workspace) {
+		List<ProjectDescriptor> gitRepositories = new ArrayList<ProjectDescriptor>();
+		for (File next : GitFileUtils.getGitDirectory(user, workspace).listFiles()) {
+			if (!next.isFile()) {
+				gitRepositories.add(WorkspaceGitHelper.describeProject(next));
+			}
+		}
+		IWorkspace workspaceObject = getWorkspace(workspace);
+		IRepository repository = workspaceObject.getRepository();
+		for (IProject next : workspaceObject.getProjects()) {
+			if (!repository.isLinkedPath(next.getPath())) {				
+				ProjectDescriptor project = new ProjectDescriptor();
+				project.setGit(false);
+				project.setName(next.getName());
+				project.setPath(next.getPath());
+				gitRepositories.add(project);
+			}
+		}
+		return gitRepositories;
+	}
+
+	public ProjectDescriptor renderWorkspaceProject(IWorkspace workspace, String projectName) {
+		IProject project = workspace.getProject(projectName);
+		return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
 	}
 
 	/**
@@ -449,9 +478,11 @@ public class GitProcessor {
 		try {
 			IProject projectCollection = getWorkspace(workspace).getProject(project);
 			if (projectCollection.getRepository() instanceof FileSystemRepository) {
-				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
-				String gitDirectory = new File(path).getCanonicalPath();
-				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
+//				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
+//				String gitDirectory = new File(path).getCanonicalPath();
+				String gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(UserFacade.getName(), workspace, project).getCanonicalPath();
+//				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
+				if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
 					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
 					return gitConnector;
 				} else {

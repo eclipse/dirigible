@@ -162,4 +162,12 @@ public interface IRepositoryWriter {
 	 */
 	public void linkPath(String repositoryPath, String filePath) throws IOException;
 
+	/**
+	 * Check if Link exists between folder or file and an internal Repository artifact
+	 * 
+	 * @param repositoryPath the relative path
+	 * @return true if link exists
+	 */
+	public boolean isLinkedPath(String repositoryPath);
+
 }
