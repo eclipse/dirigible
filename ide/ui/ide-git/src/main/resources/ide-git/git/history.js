@@ -106,13 +106,18 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 		this.http = $http;
 		this.scope = $scope;
 
+		this.refreshRepository = function () {
+			this.selectedFile = null;
+			this.refresh();
+		}
+
 		this.refresh = function () {
 			if (!this.selectedWorkspace || !this.selectedProject) {
 				this.history = [];
 				this.scope.$apply();
 				return;
 			}
-			gitService.history(this.selectedWorkspace, this.selectedProject)
+			gitService.history(this.selectedWorkspace, this.selectedProject, this.selectedFile)
 				.then(function (response) {
 					this.history = response.data;
 					this.history.map(e => e.shortId = e.id.substring(0, 7));
@@ -128,11 +133,22 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 			if (msg.data.isGitProject) {
 				this.selectedWorkspace = msg.data.workspace;
 				this.selectedProject = msg.data.project;
+				this.selectedFile = null;
 			} else {
 				this.selectedProject = null;
 			}
 			this.refresh();
 		}.bind(this));
 
+		$messageHub.on('git.repository.file.selected', function (msg) {
+			if (msg.data.isGitProject) {
+				this.selectedWorkspace = msg.data.workspace;
+				this.selectedProject = msg.data.project;
+				this.selectedFile = msg.data.file;
+			} else {
+				this.selectedProject = null;
+			}
+			this.refresh();
+		}.bind(this));
 	}]);
 

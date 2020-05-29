@@ -13,7 +13,6 @@ package org.eclipse.dirigible.core.git.command;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -57,16 +56,12 @@ public class CheckoutCommand {
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
-	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
-
 	/**
 	 * Execute a Pull command.
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param project
+	 * @param repositoryName
 	 *            the project
 	 * @param username
 	 *            the username
@@ -77,21 +72,21 @@ public class CheckoutCommand {
 	 * @param publishAfterPull
 	 *            the publish after pull
 	 */
-	public void execute(final IWorkspace workspace, final IProject project, final String username, final String password, 
+	public void execute(final IWorkspace workspace, String repositoryName, final String username, final String password, 
 			final String branch, final boolean publishAfterPull) {
-		String user = UserFacade.getName();
 		boolean atLeastOne = false;
-		if (verifier.verify(workspace, project)) {
-			logger.debug(String.format("Start checkout %s project and %s branch...", project.getName(), branch));
-			boolean checkedout = checkoutProjectFromGitRepository(user, workspace, project, username, password, branch);
+		if (verifier.verify(workspace.getName(), repositoryName)) {
+			logger.debug(String.format("Start checkout %s repository and %s branch...", repositoryName, branch));
+			boolean checkedout = checkoutProjectFromGitRepository(workspace, repositoryName, username, password, branch);
 			atLeastOne = atLeastOne ? atLeastOne : checkedout;
-			logger.debug(String.format("Pull of the Project %s finished.", project.getName()));
+			logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
 		} else {
-			logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", project));
+			logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", repositoryName));
 		}
 
 		if (atLeastOne && publishAfterPull) {
-			publishProjects(workspace, Arrays.asList(project));
+			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+			publishProjects(workspace, projects);
 		}
 
 	}
@@ -101,32 +96,34 @@ public class CheckoutCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param selectedProject
+	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
 	 */
-	boolean checkoutProjectFromGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, 
+	boolean checkoutProjectFromGitRepository(final IWorkspace workspace, String repositoryName, 
 			final String username, final String password, final String branch) {
-		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
+		final String errorMessage = String.format("Error occurred while pulling repository [%s]", repositoryName);
 
-		projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName());
+		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+		for (String projectName : projects) {
+			projectMetadataManager.ensureProjectMetadata(workspace, projectName);
+		}
 
 		try {
-			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
-			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), repositoryName);
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
-			logger.debug(String.format("Starting checkout of the project [%s] and branch %s ...", selectedProject.getName(), branch));
+			logger.debug(String.format("Starting checkout of the repository [%s] and branch %s ...", repositoryName, branch));
 			gitConnector.checkout(branch);
-			logger.debug(String.format("Checkout of the project %s and branch %s finished.", selectedProject.getName(), branch));
+			logger.debug(String.format("Checkout of the repository %s and branch %s finished.", repositoryName, branch));
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			logger.debug(String.format("Number of conflicting files in the project [%s]: %d.", selectedProject.getName(), numberOfConflictingFiles));
+			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
-					"Project [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
-					selectedProject.getName(), numberOfConflictingFiles);
+					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
+					repositoryName, numberOfConflictingFiles);
 				logger.error(message);
 			}
 		} catch (CheckoutConflictException e) {
@@ -163,14 +160,14 @@ public class CheckoutCommand {
 	 * @param pulledProjects
 	 *            the pulled projects
 	 */
-	protected void publishProjects(IWorkspace workspace, List<IProject> pulledProjects) {
+	protected void publishProjects(IWorkspace workspace, List<String> pulledProjects) {
 		if (pulledProjects.size() > 0) {
-			for (IProject pulledProject : pulledProjects) {
+			for (String pulledProject : pulledProjects) {
 				List<IProject> projects = workspace.getProjects();
 				for (IProject project : projects) {
-					if (project.getName().equals(pulledProject.getName())) {
+					if (project.getName().equals(pulledProject)) {
 						try {
-							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject.getName());
+							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject);
 							logger.info(String.format("Project [%s] has been published", project.getName()));
 						} catch (PublisherException e) {
 							logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);

@@ -163,23 +163,29 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 	this.$http = $http;
 	this.$messageHub = $messageHub;
 
-	this.mapWorkingDir = function(rootFolder) {
+	this.mapWorkingDir = function(rootFolder, projectName) {
 		let workingDir = {
 			text: rootFolder.name,
 			type: "folder",
 			icon: "fa fa-folder-o",
+			path: rootFolder.path,
+			projectName: projectName,
+			isGit: true,
 			children: []
 		};
 		for (let i = 0; i < rootFolder.folders.length; i ++) {
 			let folder = rootFolder.folders[i];
-			workingDir.children.push(this.mapWorkingDir(folder));
+			workingDir.children.push(this.mapWorkingDir(folder, projectName));
 		}
 		for (let i = 0; i < rootFolder.files.length; i ++) {
 			let file = rootFolder.files[i];
 			workingDir.children.push({
 				text: file.name,
 				type: "file",
-				icon: "fa fa-file-o"
+				icon: "fa fa-file-o",
+				path: rootFolder.path + "/" + file.name,
+				projectName: projectName,
+				isGit: true,
 			});
 		}
 		return workingDir;
@@ -192,11 +198,12 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 			// children = f.folders.map(this._buildTreeNode.bind(this));
 			// var _files = f.files.map(this._buildTreeNode.bind(this))
 			// children = children.concat(_files);
-			
+
+			let projectName = f.name;
 			let workingDir = [];
 			for (let i = 0; i < f.folders.length; i ++) {
 				let folder = f.folders[i];
-				workingDir.push(this.mapWorkingDir(folder));
+				workingDir.push(this.mapWorkingDir(folder, projectName));
 			}
 
 			for (let i = 0; i < f.files.length; i ++) {
@@ -204,14 +211,17 @@ var WorkspaceTreeAdapter = function($http, treeConfig, workspaceSvc, gitService,
 				workingDir.push({
 					text: file.name,
 					type: "file",
-					icon: "fa fa-file-o"
+					icon: "fa fa-file-o",
+					projectName: projectName,
+					path: f.path + "/" + file.name,
+					isGit: true,
 				});
 			}
 
 			children = [
 				{text:"local", type: "local", "icon": "fa fa-check-circle-o", children: ['Loading local branches...']},
 				{text:"remote", type: "remote", "icon": "fa fa-circle-o", children: ['Loading remote branches...']},
-				{text:"working tree", type: "working-tree", "icon": "fa fa-clone", children: workingDir}
+				{text:"working tree", type: "working-tree", "icon": "fa fa-clone", children: workingDir, projectName: projectName, isGit: true}
 			];
 		}
 		var icon;
@@ -336,6 +346,10 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
 		$('#reset').click();
 	}.bind(this))
+	.on('jstree.workspace.delete', function (e, data) {		
+		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
+		$('#delete').click();
+	}.bind(this))
 	.on('jstree.workspace.share', function (e, data) {		
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
 		$('#share').click();
@@ -361,7 +375,20 @@ WorkspaceTreeAdapter.prototype.dblClickNode = function(node){
 }
 WorkspaceTreeAdapter.prototype.clickNode = function(node){
 	if (node.original._file && node.original._file.type === "project") {
-		this.$messageHub.announceRepositorySelected(this.workspaceName, node.original._file.name, node.original._file.git);
+		let projectName = node.original._file.name;
+		let isGit = node.original._file.git;
+		this.$messageHub.announceRepositorySelected(this.workspaceName, projectName, isGit);
+	} else if (node.original.type === "working-tree") {
+		let projectName = node.original.projectName;
+		let isGit = node.original.isGit;
+		this.$messageHub.announceRepositorySelected(this.workspaceName, projectName, isGit);
+	} else if (node.original.type === "folder" || node.original.type === "file") {
+		let projectName = node.original.projectName;
+		let projectPath = projectName + "/";
+		let path = node.original.path;
+		let fileName = path.substring(path.indexOf(projectPath) + projectPath.length);
+		let isGit = node.original.isGit;
+		this.$messageHub.announceRepositoryFileSelected(this.workspaceName, projectName, isGit, fileName)
 	}
 	//this.$messageHub.announceFileSelected(node.original._file);
 };
@@ -387,7 +414,7 @@ WorkspaceTreeAdapter.prototype.refresh = function(node, keepState){
 				// }
 
 				data = data.map(this._buildTreeNode.bind(this));
-				
+
 				this.jstree.settings.core.data = data;
 				this.jstree.refresh();
 				// if(!this.jstree.settings.core.data || _data.type === 'workspace')
@@ -528,13 +555,17 @@ GitService.prototype.pushProject = function(wsTree, workspace, project, username
 		return response.data;
 	});
 }
-GitService.prototype.resetProject = function(wsTree, workspace, project, username, password, branch){
+GitService.prototype.resetProject = function(wsTree, workspace, project){
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("reset").build();
-	return this.$http.post(url, {
-		"username": username,
-		"password": btoa(password),
-		"branch": branch
-	})
+	return this.$http.post(url, {})
+	.then(function(response){
+		wsTree.refresh();
+		return response.data;
+	});
+}
+GitService.prototype.deleteRepository = function(wsTree, workspace, repositoryName){
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(repositoryName).path("delete").build();
+	return this.$http.delete(url)
 	.then(function(response){
 		wsTree.refresh();
 		return response.data;
@@ -654,6 +685,9 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	var announceRepositorySelected = function(workspace, project, isGitProject){
 		messageHub.post({data: {"workspace": workspace, "project": project, "isGitProject": isGitProject}}, 'git.repository.selected');
 	};
+	var announceRepositoryFileSelected = function(workspace, project, isGitProject, file){
+		messageHub.post({data: {"workspace": workspace, "project": project, "isGitProject": isGitProject, "file": file}}, 'git.repository.file.selected');
+	};
 	return {
 		message: message,
 		announceFileSelected: announceFileSelected,
@@ -661,6 +695,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		announceFileOpen: announceFileOpen,
 		announcePull: announcePull,
 		announceRepositorySelected: announceRepositorySelected,
+		announceRepositoryFileSelected: announceRepositoryFileSelected,
 		on: function(evt, cb){
 			messageHub.subscribe(cb, evt);
 		}
@@ -742,6 +777,15 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 								var tree = $.jstree.reference(data.reference);
 								var node = tree.get_node(data.reference);
 								tree.element.trigger('jstree.workspace.reset', [node.original._file]);
+							}.bind(this)
+						};
+						ctxmenu.delete = {
+							"separator_before": true,
+							"label": "Delete",
+							"action": function(data){
+								var tree = $.jstree.reference(data.reference);
+								var node = tree.get_node(data.reference);
+								tree.element.trigger('jstree.workspace.delete', [node.original._file]);
 							}.bind(this)
 						};
 					} else {
@@ -844,7 +888,11 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	this.okReset = function() {
 		gitService.resetProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password, this.branch);
 	};
-	
+
+	this.okDelete = function() {
+		gitService.deleteRepository(this.wsTree, this.selectedWorkspace, this.selectedProject);
+	};
+
 	this.okShare = function() {
 		gitService.shareProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.repository, this.branch, this.commitMessage, this.username, this.password, this.email);
 	};

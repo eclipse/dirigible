@@ -357,8 +357,8 @@ public interface IGitConnector {
 
 	/**
 	 * Get file content from the HEAD
-	 * @param path
-	 * @param revStr
+	 * @param path the path
+	 * @param revStr the revStr
 	 * @return the content
 	 * @throws GitConnectorException in case of exception
 	 */
@@ -368,7 +368,7 @@ public interface IGitConnector {
 	 * Get history
 	 * @param path the file path or null
 	 * @return the history of a file or the whole git repo
-	 * @throws GitConnectorException
+	 * @throws GitConnectorException in case of exception
 	 */
 	List<GitCommitInfo> getHistory(String path) throws GitConnectorException;
 }

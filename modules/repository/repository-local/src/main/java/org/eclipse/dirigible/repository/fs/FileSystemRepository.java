@@ -711,12 +711,7 @@ public abstract class FileSystemRepository implements IRepository {
 
 	@Override
 	public boolean isLinkedPath(String repositoryPath) {
-		try {
-			String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
-			return Files.readSymbolicLink(Paths.get(workspacePath).toAbsolutePath()) != null;			
-		} catch(IOException e) {
-			logger.debug(e.getMessage(), e);
-		}
-		return false;
+		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
+		return Files.isSymbolicLink(Paths.get(workspacePath).toAbsolutePath());
 	}
 }

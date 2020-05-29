@@ -12,6 +12,7 @@ package org.eclipse.dirigible.core.git.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -52,28 +53,21 @@ public class ResetCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param projects
-	 *            the projects
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param branch
-	 *            the branch
+	 * @param repositories
+	 *            the repositories
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, final String branch) {
-
-		if (projects.length == 0) {
-			logger.warn("No project is selected for the Reset action");
+	public void execute(String workspace, List<String> repositories) {
+		if (repositories.size() == 0) {
+			logger.warn("No repository is selected for the Reset action");
 		}
-		String user = UserFacade.getName();
-		for (IProject selectedProject : projects) {
-			if (verifier.verify(workspace, selectedProject)) {
-				logger.debug(String.format("Start reseting project [%s]...", selectedProject.getName()));
-				hardReset(user, workspace, selectedProject, username, password, branch);
-				logger.debug(String.format("Reset of the project [%s] finished.", selectedProject.getName()));
+
+		for (String repositoryName : repositories) {
+			if (verifier.verify(workspace, repositoryName)) {
+				logger.debug(String.format("Start reseting repository [%s]...", repositoryName));
+				hardReset(workspace, repositoryName);
+				logger.debug(String.format("Reset of the repository [%s] finished.", repositoryName));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously cloned project for Reset operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously cloned repository for Reset operation.", repositoryName));
 			}
 		}
 
@@ -84,22 +78,14 @@ public class ResetCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param project
+	 * @param repositoryName
 	 *            the project
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
 	 */
-	private void hardReset(final String user, final IWorkspace workspace, final IProject project, final String username, final String password, final String branch) {
-		final String errorMessage = String.format("While hard reseting project [%s] error occurred", project.getName());
+	private void hardReset(String workspace, String repositoryName) {
+		String errorMessage = String.format("While hard reseting repository [%s] error occurred", repositoryName);
 
 		try {
-			
-			projectMetadataManager.ensureProjectMetadata(workspace, project.getName());
-
-			String gitDirectoryPath = gitFileUtils.getAbsolutePath(project.getPath());
-			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName).getCanonicalFile();
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 			try {
 				gitConnector.hardReset();
@@ -107,11 +93,9 @@ public class ResetCommand {
 				logger.debug(e.getMessage(), e.getMessage());
 			}
 
-			String message = String.format("Project [%s] successfully reset.", project.getName());
+			String message = String.format("Repository [%s] successfully reset.", repositoryName);
 			logger.info(message);
-		} catch (IOException e) {
-			logger.error(errorMessage, e);
-		} catch (GitConnectorException e) {
+		} catch (IOException | GitConnectorException e) {
 			logger.error(errorMessage, e);
 		}
 	}

@@ -57,16 +57,12 @@ public class PullCommand {
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
-	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
-
 	/**
 	 * Execute a Pull command.
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param projects
+	 * @param repositories
 	 *            the projects
 	 * @param username
 	 *            the username
@@ -77,23 +73,23 @@ public class PullCommand {
 	 * @param publishAfterPull
 	 *            the publish after pull
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String username, final String password, 
+	public void execute(final IWorkspace workspace, List<String> repositories, final String username, final String password, 
 			final String branch, final boolean publishAfterPull) {
-		if (projects.length == 0) {
-			logger.warn("No project is selected for the Pull action");
+		if (repositories.size() == 0) {
+			logger.warn("No repository is selected for the Pull action");
 		}
-		String user = UserFacade.getName();
-		List<IProject> pulledProjects = new ArrayList<IProject>();
+		List<String> pulledProjects = new ArrayList<String>();
 		boolean atLeastOne = false;
-		for (IProject selectedProject : projects) {
-			if (verifier.verify(workspace, selectedProject)) {
-				logger.debug(String.format("Start pulling %s project...", selectedProject.getName()));
-				boolean pulled = pullProjectFromGitRepository(user, workspace, selectedProject, username, password, branch);
+		for (String repositoryName : repositories) {
+			if (verifier.verify(workspace.getName(), repositoryName)) {
+				logger.debug(String.format("Start pulling %s repository...", repositoryName));
+				boolean pulled = pullProjectFromGitRepository(workspace, repositoryName, username, password, branch);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
-				logger.debug(String.format("Pull of the Project %s finished.", selectedProject.getName()));
-				pulledProjects.add(selectedProject);
+				logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+				List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+				pulledProjects.addAll(projects);
 			} else {
-				logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", selectedProject));
+				logger.warn(String.format("Project %s is local only. Select a previously cloned project for Pull operation.", repositoryName));
 			}
 		}
 
@@ -108,33 +104,35 @@ public class PullCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param selectedProject
+	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
 	 */
-	boolean pullProjectFromGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String username, final String password, final String branch) {
-		final String errorMessage = String.format("Error occurred while pulling project [%s]", selectedProject.getName());
+	boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, final String username, final String password, final String branch) {
+		final String errorMessage = String.format("Error occurred while pulling repository [%s]", repositoryName);
 
-		projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName());
+		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+		for (String projectName: projects) {
+			projectMetadataManager.ensureProjectMetadata(workspace, projectName);
+		}
 
 		try {
 
-			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
-			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), repositoryName);
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			String gitRepositoryBranch = gitConnector.getBranch();
-			logger.debug(String.format("Starting pull of the project [%s] for the branch %s...", selectedProject.getName(), gitRepositoryBranch));
+			logger.debug(String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));
 			gitConnector.pull(username, password);
-			logger.debug(String.format("Pull of the project %s finished.", selectedProject.getName()));
+			logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			logger.debug(String.format("Number of conflicting files in the project [%s]: %d.", selectedProject.getName(), numberOfConflictingFiles));
+			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
-					"Project [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
-					selectedProject.getName(), numberOfConflictingFiles);
+					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
+					repositoryName, numberOfConflictingFiles);
 				logger.error(message);
 			}
 		} catch (CheckoutConflictException e) {
@@ -171,14 +169,14 @@ public class PullCommand {
 	 * @param pulledProjects
 	 *            the pulled projects
 	 */
-	protected void publishProjects(IWorkspace workspace, List<IProject> pulledProjects) {
+	protected void publishProjects(IWorkspace workspace, List<String> pulledProjects) {
 		if (pulledProjects.size() > 0) {
-			for (IProject pulledProject : pulledProjects) {
+			for (String pulledProject : pulledProjects) {
 				List<IProject> projects = workspace.getProjects();
 				for (IProject project : projects) {
-					if (project.getName().equals(pulledProject.getName())) {
+					if (project.getName().equals(pulledProject)) {
 						try {
-							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject.getName());
+							publisherCoreService.createPublishRequest(workspace.getName(), pulledProject);
 							logger.info(String.format("Project [%s] has been published", project.getName()));
 						} catch (PublisherException e) {
 							logger.error(String.format("An error occurred while publishing the pulled project [%s]", project.getName()), e);

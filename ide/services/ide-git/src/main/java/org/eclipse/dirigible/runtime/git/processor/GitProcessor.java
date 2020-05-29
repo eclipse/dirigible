@@ -15,11 +15,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
@@ -117,8 +120,7 @@ public class GitProcessor {
 	 */
 	public void pull(String workspace, GitPullModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
-		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pullCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
+		pullCommand.execute(workspaceApi, model.getProjects(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
 	}
 
 	/**
@@ -129,8 +131,7 @@ public class GitProcessor {
 	 */
 	public void push(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
-		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		pushCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd(), model.isAutoCommit());
+		pushCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd(), model.isAutoCommit());
 	}
 
 	/**
@@ -140,9 +141,32 @@ public class GitProcessor {
 	 * @param model the model
 	 */
 	public void reset(String workspace, GitResetModel model) {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		resetCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.getBranch());
+		resetCommand.execute(workspace, model.getProjects());
+	}
+
+	/**
+	 * Reset.
+	 *
+	 * @param workspace the workspace
+	 * @param repositoryName the repositoryName
+	 */
+	public void delete(String workspace, String repositoryName) throws GitConnectorException {
+		try {
+			File gitRepository = getGitRepository(workspace, repositoryName);
+			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repositoryName);
+
+			IWorkspace workspaceApi = getWorkspace(workspace);
+			IProject[] workspaceProjects = getProjects(workspaceApi, projects);
+			for (IProject next : workspaceProjects) {
+				if (next.exists()) {					
+					next.delete();
+				}
+			}
+
+			FileUtils.deleteDirectory(gitRepository);
+		} catch (IOException e) {
+			throw new GitConnectorException("Unable to delete Git repository [" + repositoryName + "]", e);
+		}
 	}
 
 	/**
@@ -166,8 +190,7 @@ public class GitProcessor {
 	 */
 	public void checkout(String workspace, GitCheckoutModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
-		IProject project = getProject(workspaceApi, model.getProject());
-		checkoutCommand.execute(workspaceApi, project, model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
+		checkoutCommand.execute(workspaceApi, model.getProject(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
 	}
 	
 	/**
@@ -178,8 +201,7 @@ public class GitProcessor {
 	 */
 	public void commit(String workspace, GitPushModel model) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
-		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		commitCommand.execute(workspaceApi, projects, model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd());
+		commitCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd());
 	}
 
 	/**
@@ -434,15 +456,16 @@ public class GitProcessor {
 	/**
 	 * Get file diff
 	 * @param workspace the workspace
-	 * @param project the project
+	 * @param repositoryName the project
 	 * @param path the path
 	 * @return the diff
 	 * @throws GitConnectorException in case of an error
 	 */
-	public GitDiffModel getFileDiff(String workspace, String project, String path) throws GitConnectorException {
+	public GitDiffModel getFileDiff(String workspace, String repositoryName, String path) throws GitConnectorException {
 		try {
-			IGitConnector gitConnector = getGitConnector(workspace, project);
+			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
 			String original = gitConnector.getFileContent(path, Constants.HEAD);
+			String project = path.substring(0, path.indexOf("/"));
 			String filePath = path.substring(path.indexOf("/") + 1);
 			IFile file = getProject(workspace, project).getFile(filePath);
 			String modified = null;
@@ -474,14 +497,11 @@ public class GitProcessor {
 		}
 	}
 
-	private IGitConnector getGitConnector(String workspace, String project) throws GitConnectorException {
+	private IGitConnector getGitConnector(String workspace, String repositoryName) throws GitConnectorException {
 		try {
-			IProject projectCollection = getWorkspace(workspace).getProject(project);
-			if (projectCollection.getRepository() instanceof FileSystemRepository) {
-//				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) projectCollection.getRepository(), projectCollection.getPath());
-//				String gitDirectory = new File(path).getCanonicalPath();
-				String gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(UserFacade.getName(), workspace, project).getCanonicalPath();
-//				if (Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile().exists()) {
+			IWorkspace workspaceObject = getWorkspace(workspace);
+			if (workspaceObject.getRepository() instanceof FileSystemRepository) {
+				String gitDirectory = getGitRepository(workspace, repositoryName).getCanonicalPath();
 				if (Paths.get(Paths.get(gitDirectory).toString(), DOT_GIT).toFile().exists()) {
 					IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory);
 					return gitConnector;
@@ -494,6 +514,13 @@ public class GitProcessor {
 		} catch (RepositoryWriteException | IOException e) {
 			throw new GitConnectorException(e);
 		}
+	}
+
+	private File getGitRepository(String workspace, String repositoryName) throws GitConnectorException {
+		if (getWorkspace(workspace).getRepository() instanceof FileSystemRepository) {			
+			return GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+		}
+		throw new GitConnectorException("Not a file based repository used, hence no git support");
 	}
 
 

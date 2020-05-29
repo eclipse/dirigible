@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -241,6 +242,30 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.reset(workspace, model);
+		return Response.ok().build();
+	}
+
+	/**
+	 * Reset project.
+	 *
+	 * @param workspace the workspace
+	 * @param repositoryName the project
+	 * @return the response
+	 * @throws GitConnectorException 
+	 */
+	@DELETE
+	@Path("/{repositoryName}/delete")
+	@Produces("application/json")
+	@ApiOperation("Delete Git Repository")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Reset") })
+	public Response deleteGitRepository(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("repositoryName") String repositoryName) throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		processor.delete(workspace, repositoryName);
 		return Response.ok().build();
 	}
 
@@ -618,18 +643,18 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * Get file diff.
 	 * 
 	 * @param workspace the workspace
-	 * @param project the project
+	 * @param repositoryName the project
 	 * @param path the path
 	 * @return the response
-	 * @throws GitConnectorException
+	 * @throws GitConnectorException in case of exception
 	 */
 	@GET
-	@Path("/{project}/diff")
+	@Path("/{repositoryName}/diff")
 	@Produces("application/json")
 	@ApiOperation("Get File Diff")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
 	public Response getFileDiff(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, @QueryParam("path") String path)
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("repositoryName") String repositoryName, @QueryParam("path") String path)
 			throws GitConnectorException {
 		if (path == null || "".equals(path)) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -639,7 +664,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
-		GitDiffModel diff = processor.getFileDiff(workspace, project, path);
+		GitDiffModel diff = processor.getFileDiff(workspace, repositoryName, path);
 		return Response.ok().entity(GsonHelper.GSON.toJson(diff)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 

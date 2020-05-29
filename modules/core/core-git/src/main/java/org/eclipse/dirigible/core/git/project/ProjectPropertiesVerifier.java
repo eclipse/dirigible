@@ -11,19 +11,13 @@
 package org.eclipse.dirigible.core.git.project;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
-//import org.eclipse.dirigible.core.git.utils.GitProjectProperties;
-import org.eclipse.dirigible.core.workspace.api.IProject;
-import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 /**
  * Verify that the given project is Git aware.
@@ -39,23 +33,16 @@ public class ProjectPropertiesVerifier {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param project
-	 *            the project
+	 * @param repositoryName
+	 *            the repositoryName
 	 * @return true, if successful
 	 */
-	public boolean verify(IWorkspace workspace, IProject project) {
-//		boolean result = false;
-//		String user = UserFacade.getName();
-//		String workspaceName = workspace.getName();
-//		String projectName = project.getName();
-//		String gitFilePath = String.format(GitProjectProperties.GIT_PROPERTY_FILE_LOCATION, user, workspaceName, projectName);
-//		result = repository.hasResource(gitFilePath);
-//		return result;
+	public boolean verify(String workspace, String repositoryName) {
 		try {
 			if (repository instanceof FileSystemRepository) {
-				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, project.getPath());
-				String gitDirectory = new File(path).getCanonicalPath();
-				return Paths.get(Paths.get(gitDirectory).getParent().toString(), ".git").toFile().exists();
+				File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+				String gitDirectory = gitRepository.getCanonicalPath();
+				return Paths.get(Paths.get(gitDirectory).toString(), ".git").toFile().exists();
 			}
 		} catch (Exception e) {
 			// do nothing

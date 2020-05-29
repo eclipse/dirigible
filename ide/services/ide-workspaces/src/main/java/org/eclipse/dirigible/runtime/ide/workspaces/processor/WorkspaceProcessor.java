@@ -10,6 +10,7 @@
  */
 package org.eclipse.dirigible.runtime.ide.workspaces.processor;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,10 +21,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.workspace.api.IFile;
@@ -166,10 +169,24 @@ public class WorkspaceProcessor {
 	 *            the workspace
 	 * @param project
 	 *            the project
+	 * @throws IOException 
 	 */
-	public void deleteProject(String workspace, String project) {
+	public void deleteProject(String workspace, String project) throws IOException {
+		String user = UserFacade.getName();
+		List<String> gitRepositories = FileSystemUtils.getGitRepositories(user, workspace);
+		List<String> gitProjects = new ArrayList<String>();
+		for (String repositoryName : gitRepositories) {
+			gitProjects.addAll(FileSystemUtils.getGitRepositoryProjects(user, workspace, repositoryName));
+		}
+		boolean isGitProject = gitProjects.contains(project);
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.deleteProject(project);
+		IProject workspaceProject = workspaceObject.getProject(project);
+		File projectFile = new File(workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER") + workspaceProject.getPath());
+		if (isGitProject && projectFile.exists() && FileUtils.isSymlink(projectFile)) {
+			FileUtils.forceDelete(projectFile);
+		} else {			
+			workspaceObject.deleteProject(project);
+		}
 	}
 
 	/**

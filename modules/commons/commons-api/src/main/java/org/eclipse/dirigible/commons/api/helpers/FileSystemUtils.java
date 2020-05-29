@@ -20,11 +20,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.cxf.common.util.StringUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +42,22 @@ public class FileSystemUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
 	private static final String SEPARATOR = "/";
+	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+
+	private static String GIT_ROOT_FOLDER;
+	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
+	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$ 
+	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + DOT_GIT; //$NON-NLS-1$
+
+	static {
+		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
+			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
+		} else if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER))) {
+			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + DOT_GIT;
+		} else {
+			GIT_ROOT_FOLDER = DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER;
+		}
+	}
 
 	/**
 	 * Save file.
@@ -443,5 +466,71 @@ public class FileSystemUtils {
 			return dir.toFile();
 		}
 		return null;
+	}
+
+	/**
+	 * Generate the local repository name
+	 * 
+	 * @param repositoryURI the URI odf the repository
+	 * @return the generated local name
+	 */
+	public static String generateGitRepositoryName(String repositoryURI) {
+		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SEPARATOR) + 1, repositoryURI.lastIndexOf(DOT_GIT));
+		return repositoryName;
+	}
+
+	/**
+	 * Get the directory for git
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @return the directory
+	 */
+	public static File getGitDirectory(String user, String workspace) {
+		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace);
+	}
+
+	public static List<String> getGitRepositories(String user, String workspace) {
+		File gitRoot = getGitDirectory(user, workspace);
+		return Arrays.asList(gitRoot.listFiles())
+				.stream()
+				.filter(e -> !e.isFile())
+				.map(e -> e.getName())
+				.collect(Collectors.toList());
+	}
+	/**
+	 * Get the directory for git
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryURI the repository URI
+	 * @return the directory
+	 */
+	public static File getGitDirectory(String user, String workspace, String repositoryURI) {
+		String repositoryName = generateGitRepositoryName(repositoryURI);
+		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+	}
+
+	/**
+	 * Get the directory for git
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository URI
+	 * @return the directory
+	 */
+	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
+		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+	}
+
+	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
+		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		List<String> projects = Arrays.asList(gitRepository.listFiles())
+				.stream()
+				.filter(e -> !e.isFile() && !e.getName().equals(DOT_GIT))
+				.map(e -> e.getName())
+				.collect(Collectors.toList());
+
+		return projects;
 	}
 }

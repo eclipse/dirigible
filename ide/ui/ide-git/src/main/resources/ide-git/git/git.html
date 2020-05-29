@@ -60,6 +60,7 @@
 			<button id="pull" type="button" class="btn btn-default" ng-show="false" title="Pull Project" data-toggle="modal" data-target="#dialogPull"><i class="fa fa-download"></i></button>
 			<button id="push" type="button" class="btn btn-default" ng-show="false" title="Push Project" data-toggle="modal" data-target="#dialogPush"><i class="fa fa-upload"></i></button>
 			<button id="reset" type="button" class="btn btn-default" ng-show="false" title="Reset Project" data-toggle="modal" data-target="#dialogReset"><i class="fa fa-recycle"></i></button>
+			<button id="delete" type="button" class="btn btn-default" ng-show="false" title="Delete Project" data-toggle="modal" data-target="#dialogDelete"><i class="fa fa-times"></i></button>
 			<button id="share" type="button" class="btn btn-default" ng-show="false" title="Share Project" data-toggle="modal" data-target="#dialogShare"><i class="fa fa-share"></i></button>
 			<button id="checkout" type="button" class="btn btn-default" ng-show="false" title="Checkout Branch" data-toggle="modal" data-target="#dialogCheckout"><i class="fa fa-check-circle-o"></i></button>
 			<button id="commit" type="button" class="btn btn-default" ng-show="false" title="Commit Project" data-toggle="modal" data-target="#dialogCommit"><i class="fa fa-arrow-circle-o-down"></i></button>
@@ -274,7 +275,23 @@
 	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>
-	
+
+	<!-- Delete -->
+	<div class="modal fade" id="dialogDelete" tabindex="-1" role="dialog" aria-labelledby="dialogDeleteLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Delete Git Repository</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to Delete the selected Git Repository?</label>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okDelete()" data-toggle="modal" data-target="#dialogDelete">Delete</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+
 	<!-- Share -->
 	<div class="modal fade" id="dialogShare" tabindex="-1" role="dialog" aria-labelledby="dialogShareLabel" aria-hidden="true">
 	    <div class="modal-header">

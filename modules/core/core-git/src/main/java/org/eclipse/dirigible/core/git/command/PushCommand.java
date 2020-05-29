@@ -13,6 +13,7 @@ package org.eclipse.dirigible.core.git.command;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -23,7 +24,6 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -52,16 +52,13 @@ public class PushCommand {
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
-	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
 
 	/**
 	 * Execute the Push command.
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param projects
+	 * @param repositories
 	 *            the projects
 	 * @param commitMessage
 	 *            the commit message
@@ -73,20 +70,23 @@ public class PushCommand {
 	 *            the email
 	 * @param branch
 	 *            the branch
+	 * @param add
+	 *            the add
+	 * @param commit
+	 *            the add
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
+	public void execute(final IWorkspace workspace, List<String> repositories, final String commitMessage, final String username,
 			final String password, final String email, final String branch, boolean add, boolean commit) {
-		if (projects.length == 0) {
-			logger.warn("No project is selected for the Push action");
+		if (repositories.size() == 0) {
+			logger.warn("No repository is selected for the Push action");
 		}
-		String user = UserFacade.getName();
-		for (IProject selectedProject : projects) {
-			if (verifier.verify(workspace, selectedProject)) {
-				logger.debug(String.format("Start pushing project [%s]...", selectedProject.getName()));
-				pushProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch, add, commit);
-				logger.debug(String.format("Push of the project [%s] finished.", selectedProject.getName()));
+		for (String repositoryName : repositories) {
+			if (verifier.verify(workspace.getName(), repositoryName)) {
+				logger.debug(String.format("Start pushing repository [%s]...", repositoryName));
+				pushProjectToGitRepository(workspace, repositoryName, commitMessage, username, password, email, branch, add, commit);
+				logger.debug(String.format("Push of the repository [%s] finished.", repositoryName));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Push operation.", repositoryName));
 			}
 		}
 
@@ -97,7 +97,7 @@ public class PushCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param selectedProject
+	 * @param repositoryName
 	 *            the selected project
 	 * @param commitMessage
 	 *            the commit message
@@ -108,21 +108,25 @@ public class PushCommand {
 	 * @param email
 	 *            the email
 	 */
-	private void pushProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
+	private void pushProjectToGitRepository(final IWorkspace workspace, String repositoryName, final String commitMessage,
 			final String username, final String password, final String email, final String branch, boolean add, boolean commit) {
 
-		final String errorMessage = String.format("Error occurred while pushing project [%s]. ", selectedProject.getName());
+		final String errorMessage = String.format("Error occurred while pushing repository [%s]. ", repositoryName);
 		
 		try {
-			projectMetadataManager.ensureProjectMetadata(workspace, selectedProject.getName());
+			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+			for (String projectName : projects) {				
+				projectMetadataManager.ensureProjectMetadata(workspace, projectName);
+			}
 
-			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
-			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), repositoryName);
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			String gitRepositoryBranch = gitConnector.getBranch();
 			if (add) {
-				gitConnector.add(selectedProject.getName());
+				for (String projectName : projects) {				
+					gitConnector.add(projectName);
+				}
 			}
 			if (commit) {
 				gitConnector.commit(commitMessage, username, email, true);
@@ -137,7 +141,7 @@ public class PushCommand {
 				
 				gitConnector.push(username, password);
 
-				logger.info(String.format("Project [%s] has been pushed to remote repository.", selectedProject.getName()));
+				logger.info(String.format("Repository [%s] has been pushed to remote repository.", repositoryName));
 			} else {
 				String statusLineMessage = String.format("Project has %d conflicting file(s).", numberOfConflictingFiles);
 				logger.warn(statusLineMessage);

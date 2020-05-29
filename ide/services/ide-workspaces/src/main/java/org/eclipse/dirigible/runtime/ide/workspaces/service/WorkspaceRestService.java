@@ -12,6 +12,7 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
 import static java.text.MessageFormat.format;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -292,11 +293,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	 * @param request
 	 *            the request
 	 * @return the response
+	 * @throws IOException in case of exception
 	 */
 	@DELETE
 	@Path("{workspace}/{project}")
 	public Response deleteProject(@PathParam("workspace") String workspace, @PathParam("project") String project,
-			@Context HttpServletRequest request) {
+			@Context HttpServletRequest request) throws IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			sendErrorForbidden(response, NO_LOGGED_IN_USER);

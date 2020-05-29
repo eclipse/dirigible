@@ -13,6 +13,8 @@ package org.eclipse.dirigible.core.git.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.git.GitConnectorException;
@@ -71,7 +73,8 @@ public class PushComandTest extends AbstractGuiceTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
+			String repositoryName = "sample_git_test";
+			cloneCommand.execute("https://github.com/dirigiblelabs/" + repositoryName + ".git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
@@ -82,7 +85,7 @@ public class PushComandTest extends AbstractGuiceTest {
 			String password = System.getProperty(DIRIGIBLE_TEST_GIT_PASSWORD);
 			String email = System.getProperty(DIRIGIBLE_TEST_GIT_EMAIL);
 			if (username != null) {
-				pushCommand.execute(workspace1, new IProject[] { project1 }, "test", username, password, email, IGitConnector.GIT_MASTER, true, true);
+				pushCommand.execute(workspace1, Arrays.asList(repositoryName), "test", username, password, email, IGitConnector.GIT_MASTER, true, true);
 			}
 		}
 	}

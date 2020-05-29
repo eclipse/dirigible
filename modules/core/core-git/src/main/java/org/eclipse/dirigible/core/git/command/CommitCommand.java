@@ -13,6 +13,7 @@ package org.eclipse.dirigible.core.git.command;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,10 +21,8 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
-import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -52,16 +51,12 @@ public class CommitCommand {
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
-	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
-
 	/**
 	 * Execute the Commit command.
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param projects
+	 * @param repositories
 	 *            the projects
 	 * @param commitMessage
 	 *            the commit message
@@ -73,20 +68,21 @@ public class CommitCommand {
 	 *            the email
 	 * @param branch
 	 *            the branch
+	 * @param add
+	 *            the add
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, final String commitMessage, final String username,
+	public void execute(final IWorkspace workspace, List<String> repositories, final String commitMessage, final String username,
 			final String password, final String email, final String branch, boolean add) {
-		if (projects.length == 0) {
-			logger.warn("No project is selected for the Commit action");
+		if (repositories.size() == 0) {
+			logger.warn("No repository is selected for the Commit action");
 		}
-		String user = UserFacade.getName();
-		for (IProject selectedProject : projects) {
-			if (verifier.verify(workspace, selectedProject)) {
-				logger.debug(String.format("Start committing project [%s]...", selectedProject.getName()));
-				commitProjectToGitRepository(user, workspace, selectedProject, commitMessage, username, password, email, branch, add);
-				logger.debug(String.format("Commit of the project [%s] finished.", selectedProject.getName()));
+		for (String repositoryName : repositories) {
+			if (verifier.verify(workspace.getName(), repositoryName)) {
+				logger.debug(String.format("Start committing repository [%s]...", repositoryName));
+				commitProjectToGitRepository(workspace, repositoryName, commitMessage, username, password, email, branch, add);
+				logger.debug(String.format("Commit of the repository [%s] finished.", repositoryName));
 			} else {
-				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", selectedProject));
+				logger.warn(String.format("Project [%s] is local only. Select a previously clonned project for Commit operation.", repositoryName));
 			}
 		}
 
@@ -97,7 +93,7 @@ public class CommitCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param selectedProject
+	 * @param repositoryName
 	 *            the selected project
 	 * @param commitMessage
 	 *            the commit message
@@ -108,18 +104,20 @@ public class CommitCommand {
 	 * @param email
 	 *            the email
 	 */
-	private void commitProjectToGitRepository(final String user, final IWorkspace workspace, final IProject selectedProject, final String commitMessage,
+	private void commitProjectToGitRepository(final IWorkspace workspace, String repositoryName, final String commitMessage,
 			final String username, final String password, final String email, final String branch,  boolean add) {
 
-		final String errorMessage = String.format("Error occurred while committing project [%s]. ", selectedProject.getName());
+		final String errorMessage = String.format("Error occurred while committing repository [%s]. ", repositoryName);
 
 		try {
-			String gitDirectoryPath = gitFileUtils.getAbsolutePath(selectedProject.getPath());
-			File gitDirectory = new File(gitDirectoryPath).getCanonicalFile();
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), repositoryName);
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
 			if (add) {
-				gitConnector.add(selectedProject.getName());
+				List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+				for (String projectName : projects) {
+					gitConnector.add(projectName);
+				}
 			}
 			gitConnector.commit(commitMessage, username, email, add);
 		} catch (IOException e) {
