@@ -179,10 +179,18 @@ public class WorkspaceProcessor {
 			gitProjects.addAll(FileSystemUtils.getGitRepositoryProjects(user, workspace, repositoryName));
 		}
 		boolean isGitProject = gitProjects.contains(project);
+
 		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
 		IProject workspaceProject = workspaceObject.getProject(project);
-		File projectFile = new File(workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER") + workspaceProject.getPath());
-		if (isGitProject && projectFile.exists() && FileUtils.isSymlink(projectFile)) {
+		String repositoryRootFolder = workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
+
+		File projectFile = null;		
+		if (isGitProject && repositoryRootFolder != null && workspaceProject.exists()) {
+			projectFile = new File(repositoryRootFolder + workspaceProject.getPath());
+			isGitProject = projectFile.exists() && FileUtils.isSymlink(projectFile);
+		}
+
+		if (isGitProject) {
 			FileUtils.forceDelete(projectFile);
 		} else {			
 			workspaceObject.deleteProject(project);
