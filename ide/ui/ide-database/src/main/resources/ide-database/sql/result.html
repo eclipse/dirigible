@@ -91,7 +91,7 @@
 
 			messageHub.subscribe(function(command) {
 				var url = "../../../../../services/v4/ide/databases/" + $scope.database + "/" + $scope.datasource;
-				if (command.data.toLowerCase().startsWith('select')) {
+				if (command.data.trim().toLowerCase().startsWith('select')) {
 					$http({
 						method: 'POST',
 						url: url + "/query",

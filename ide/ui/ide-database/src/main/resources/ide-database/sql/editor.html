@@ -44,7 +44,7 @@
 		<script src="../../ide-monaco/monaco-editor/min/vs/loader.js"></script>
 		<script>
 		    var messageHub = new FramesMessageHub();
-			var sqlPlaceholder = "-- ctrl+x to execute (cmd+x for Mac)\n";
+			var sqlPlaceholder = "-- ctrl+x to execute all or selected text only (cmd+x for Mac)\n";
 		    var csrfToken;
 
 			function createEditorInstance() {
@@ -88,7 +88,10 @@
 					// Method that will be executed when the action is triggered.
 					// @param editor The editor instance is passed in as a convinience
 					run: function(editor) {
-						let text = editor.getModel().getValue();
+						let text = editor.getModel().getValueInRange(editor.getSelection());
+						if (text.length === 0) {
+							text = editor.getModel().getValue();
+						}
 						let sqlCommand = getSQLCommand(text);
 						messageHub.post({data: sqlCommand}, 'database.sql.execute');
 					}
