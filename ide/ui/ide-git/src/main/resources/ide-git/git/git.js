@@ -346,6 +346,10 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceName, works
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
 		$('#reset').click();
 	}.bind(this))
+	.on('jstree.workspace.import', function (e, data) {		
+		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
+		$('#import').click();
+	}.bind(this))
 	.on('jstree.workspace.delete', function (e, data) {		
 		workspaceController.selectedProject = (data.type === 'project') ? data.name : null;
 		$('#delete').click();
@@ -557,6 +561,14 @@ GitService.prototype.pushProject = function(wsTree, workspace, project, username
 }
 GitService.prototype.resetProject = function(wsTree, workspace, project){
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("reset").build();
+	return this.$http.post(url, {})
+	.then(function(response){
+		wsTree.refresh();
+		return response.data;
+	});
+}
+GitService.prototype.importProjects = function(wsTree, workspace, repository){
+	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(repository).path("import").build();
 	return this.$http.post(url, {})
 	.then(function(response){
 		wsTree.refresh();
@@ -779,6 +791,15 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 								tree.element.trigger('jstree.workspace.reset', [node.original._file]);
 							}.bind(this)
 						};
+						ctxmenu.import = {
+							"separator_before": true,
+							"label": "Import Project(s)",
+							"action": function(data){
+								var tree = $.jstree.reference(data.reference);
+								var node = tree.get_node(data.reference);
+								tree.element.trigger('jstree.workspace.import', [node.original._file]);
+							}.bind(this)
+						};
 						ctxmenu.delete = {
 							"separator_before": true,
 							"label": "Delete",
@@ -862,7 +883,7 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 			workspaceService.typeMapping = $treeConfig[types];
 		this.wsTree.refresh();
 	};
-	
+
 	this.okClone = function() {
 		if (this.clone.url) {
 			gitService.cloneProject(this.wsTree, this.selectedWorkspace, this.clone.url, this.branch, this.username, this.password, this.projectName);
@@ -887,6 +908,10 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 	
 	this.okReset = function() {
 		gitService.resetProject(this.wsTree, this.selectedWorkspace, this.selectedProject, this.username, this.password, this.branch);
+	};
+
+	this.okImport = function() {
+		gitService.importProjects(this.wsTree, this.selectedWorkspace, this.selectedProject);
 	};
 
 	this.okDelete = function() {

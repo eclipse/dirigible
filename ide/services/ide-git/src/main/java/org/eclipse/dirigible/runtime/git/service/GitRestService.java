@@ -251,7 +251,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param repositoryName the project
 	 * @return the response
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception 
 	 */
 	@DELETE
 	@Path("/{repositoryName}/delete")
@@ -675,7 +675,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param path the path
 	 * @return the response
-	 * @throws GitConnectorException
+	 * @throws GitConnectorException in case of exception
 	 */
 	@GET
 	@Path("/{project}/history")
@@ -693,10 +693,34 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		List<GitCommitInfo> history = processor.getHistory(workspace, project, path);
 		return Response.ok().entity(GsonHelper.GSON.toJson(history)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
+
+	/**
+	 * Push project.
+	 *
+	 * @param workspace the workspace
+	 * @param repository the project
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
+	@POST
+	@Path("/{repository}/import")
+	@Produces("application/json")
+	@ApiOperation("Import Git Repository Project(s)")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Pushed") })
+	public Response importProjects(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Name of the Repository", required = true) @PathParam("repository") String repository) throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+		processor.importProjects(workspace, repository);
+		return Response.ok().build();
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
 	 */
-
 	@Override
 	public Class<? extends IRestService> getType() {
 		return GitRestService.class;

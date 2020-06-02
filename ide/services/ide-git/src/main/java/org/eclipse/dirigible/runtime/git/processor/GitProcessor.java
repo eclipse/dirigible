@@ -15,10 +15,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -149,6 +147,7 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repositoryName
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void delete(String workspace, String repositoryName) throws GitConnectorException {
 		try {
@@ -492,6 +491,22 @@ public class GitProcessor {
 			IGitConnector gitConnector = getGitConnector(workspace, project);
 			List<GitCommitInfo> history = gitConnector.getHistory(path);
 			return history;
+		} catch (Exception e) {
+			throw new GitConnectorException(e);
+		}
+	}
+
+	public void importProjects(String workspace, String repository) throws GitConnectorException {
+		try {
+			File repositoryName = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
+			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repository);
+			IWorkspace workspaceObject = getWorkspace(workspace);
+			for (String project : projects) {
+				if (!workspaceObject.getProject(project).exists()) {
+					String targetPath = repositoryName.getCanonicalFile() + File.separator + project;
+					workspaceObject.linkProject(project, targetPath);
+				}
+			}
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
