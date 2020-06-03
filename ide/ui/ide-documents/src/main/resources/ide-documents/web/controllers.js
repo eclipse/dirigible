@@ -11,6 +11,7 @@
 /*globals angular, $ */
 
 var csrfToken = null;
+var uploader = null;
 
 angular
 .module('app', ['angularFileUpload'])
@@ -25,6 +26,9 @@ angular
 			var token = response.headers()['x-csrf-token'];
 			if (token) {
 				csrfToken = token;
+				if (uploader) {
+					uploader.headers['X-CSRF-Token'] = token;
+				}
 			}
 			return response;
 		}
@@ -198,12 +202,11 @@ angular
 	
 	// FILE UPLOADER
 	
-    var uploader = $scope.uploader = new FileUploader({
+    uploader = $scope.uploader = new FileUploader({
         url: $scope.createDocPath
     });
     
 	uploader.headers['X-Requested-With'] = 'Fetch';
-	uploader.headers['X-CSRF-Token'] = csrfToken;
 
     // UPLOADER FILTERS
 
