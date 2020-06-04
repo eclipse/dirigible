@@ -11,6 +11,7 @@
 var repositoryManager = require("repository/v4/manager");
 var documentsApi = require("ide-documents/api/lib/document");
 var folderApi = require("ide-documents/api/lib/folder");
+var cmisObjectApi = require("ide-documents/api/lib/object");
 var bytes = require("io/v4/bytes");
 var streams = require("io/v4/streams");
 
@@ -42,12 +43,9 @@ function updateAccessDefinitionsInCMS(data) {
         }
     }
 
-    try {
-        // Workaround
-        documentsApi.uploadDocumentOverwrite(folder, document);
-    } catch (e) {
-        documentsApi.uploadDocument(folder, document);
-    }
+    let object = cmisObjectApi.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
+    cmisObjectApi.deleteObject(object);
+    documentsApi.uploadDocument(folder, document);
 }
 
 exports.getAccessDefinitions = function () {
