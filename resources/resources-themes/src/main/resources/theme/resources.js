@@ -95,7 +95,7 @@ function getContent(request, response, path) {
 
 function getCurrentTheme(request, response) {
 	var env = configurations.get(DIRIGIBLE_THEME_DEFAULT);
-	var cookieValue = env === null ? DEFAULT_THEME : env;
+	var cookieValue = env ? env : DEFAULT_THEME;
 	var themeName = request.getParameter(NAME_PARAM);
 	themeName = escape.escapeHtml4(themeName);
 	themeName = escape.escapeJavascript(themeName);
@@ -111,6 +111,14 @@ function getCurrentTheme(request, response) {
 
 	cookieValue = escape.escapeHtml4(cookieValue);
 	cookieValue = escape.escapeJavascript(cookieValue);
+	var themes = themesManager.getThemes();
+	var themeFound = false;
+	themes.forEach(function(e) {
+		if (e.id === cookieValue) {
+			themeFound = true;
+		}
+	})
+	cookieValue = themeFound ? cookieValue : DEFAULT_THEME;
 	return cookieValue;
 }
 

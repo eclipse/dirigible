@@ -32,6 +32,9 @@ exports.uploadDocument = function(folder, document){
 
 exports.uploadDocumentOverwrite = function(folder, document){
 	var timestamp = new Date().getTime();
+	if (document.name === null || document.name === undefined) {
+		document.name = document.getName();
+	}
 	var newName = document.name + "-" + timestamp;
 	var oldName = document.name;
 	

@@ -9,14 +9,13 @@
  *   SAP - initial API and implementation
  */
 var rs = require("http/v4/rs");
-var repositoryContent = require("repository/v4/content");
-var repositoryManager = require("repository/v4/manager");
+var accessUtils = require("ide-documents/security/accessUtils");
 
 rs.service()
     .resource("")
         .get(function (ctx, request, response) {
             if (request.isUserInRole("Operator")) {
-                let accessDefinitions = getAccessDefinitions();
+                let accessDefinitions = accessUtils.getAccessDefinitions();
                 response.println(JSON.stringify(accessDefinitions));
             } else {
                 response.setStatus(response.FORBIDDEN);
@@ -26,7 +25,7 @@ rs.service()
         .put(function(ctx, request, response) {
             if (request.isUserInRole("Operator")) {
                 let accessDefinitions = request.getJSON();
-                updateAccessDefinitions(accessDefinitions);
+                accessUtils.updateAccessDefinitions(accessDefinitions);
                 response.println(JSON.stringify(accessDefinitions));
             } else {
                 response.setStatus(response.FORBIDDEN);
@@ -34,17 +33,3 @@ rs.service()
             }
         })
 .execute();
-
-function getAccessDefinitions() {
-    return JSON.parse(repositoryContent.getText("ide-documents/security/roles.access"));
-}
-
-function updateAccessDefinitions(accessDefinitions) {
-    let path = "/registry/public/ide-documents/security/roles.access";
-    let content = JSON.stringify(accessDefinitions);
-    let resource = repositoryManager.getResource(path);
-    if (resource.exists()) {    	
-    	repositoryManager.deleteResource(path);
-    }
-    repositoryManager.createResource(path, content);
-}
