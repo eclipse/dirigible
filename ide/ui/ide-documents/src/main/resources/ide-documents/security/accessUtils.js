@@ -41,7 +41,13 @@ function updateAccessDefinitionsInCMS(data) {
             return streams.createByteArrayInputStream(contentBytes);
         }
     }
-    documentsApi.uploadDocument(folder, document);
+
+    try {
+        // Workaround
+        documentsApi.uploadDocumentOverwrite(folder, document);
+    } catch (e) {
+        documentsApi.uploadDocument(folder, document);
+    }
 }
 
 exports.getAccessDefinitions = function () {
