@@ -42,17 +42,18 @@ function unescapePath(path){
 
 function filterByAccessDefinitions(folder) {
 	let accessDefinitions = JSON.parse(repositoryContent.getText("ide-documents/security/roles.access"));
-	let adminAccessDefinitions = JSON.parse(repositoryContent.getText("ide-documents/security/role-CMISAdmin.access"));
-	let allConstraints = accessDefinitions.constraints.concat(adminAccessDefinitions.constraints);
 	folder.children = folder.children.filter(e => {
 		let path = (folder.path + "/" + e.name).replaceAll("//", "/");
+		if (path.startsWith("/__internal")) {
+			return false;
+		}
 		if (!path.startsWith("/")) {
 			path = "/" + path;
 		}
 		if (path.endsWith("/")) {
 			path = path.substr(0, path.length - 1);
 		}
-		return hasAccessPermissions(allConstraints, path);
+		return hasAccessPermissions(accessDefinitions.constraints, path);
 	});
 }
 

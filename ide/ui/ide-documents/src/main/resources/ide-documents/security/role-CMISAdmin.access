@@ -1,1 +1,0 @@
-{"constraints":[{"method":"READ","scope":"CMIS","path":"/__internal/","roles":["CMISAdmin"]},{"method":"WRITE","scope":"CMIS","path":"/__internal/","roles":["CMISAdmin"]}]}
