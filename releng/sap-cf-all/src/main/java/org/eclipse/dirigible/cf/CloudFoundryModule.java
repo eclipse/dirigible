@@ -36,7 +36,6 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
 		if (!customPostgreDb && !customHanaDb) {
 			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
-			Configuration.set(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, "internal");
 		}
 	}
 
