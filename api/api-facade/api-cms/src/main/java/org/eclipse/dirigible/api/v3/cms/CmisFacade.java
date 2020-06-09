@@ -13,7 +13,7 @@ package org.eclipse.dirigible.api.v3.cms;
 import java.util.List;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
-import org.eclipse.dirigible.cms.api.CmsModule;
+import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -33,6 +33,7 @@ public class CmisFacade {
 	public static final String VERSIONING_STATE_CHECKEDOUT = "checkedout";
 	
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
+	private static ICmsProvider cmsProvider = StaticInjector.getInjector().getInstance(ICmsProvider.class);
 	
 	/**
 	 * CMIS Session
@@ -40,7 +41,7 @@ public class CmisFacade {
 	 * @return the CMIS session object
 	 */
 	public static final Object getSession() {
-		Object session = CmsModule.getSession();
+		Object session = cmsProvider.getSession();
 		return session;
 	}
 	
