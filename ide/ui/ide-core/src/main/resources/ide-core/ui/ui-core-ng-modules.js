@@ -258,6 +258,18 @@ angular.module('ideUiCore', ['ngResource'])
 			}
 			getBrandingInfo(scope);
 
+			messageHub.on('ide-core.closeEditor', function(msg) {
+				Layouts.manager.closeEditor(msg.fileName);
+			})
+
+			messageHub.on('ide-core.closeAllEditors', function(msg) {
+				Layouts.manager.closeAllEditors();
+			});
+
+			messageHub.on('ide-core.openView', function(msg) {
+				Layouts.manager.openView(msg.viewId);
+			});
+
 			if(!scope.menu && url)
 				loadMenu.call(scope);
 			scope.menuClick = function(item, subItem) {

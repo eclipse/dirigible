@@ -210,6 +210,103 @@
 				};
 			};
 
+			function createSearchAction(){
+				return {
+					// An unique identifier of the contributed action.
+					id: 'dirigible-search',
+
+					// A label of the action that will be presented to the user.
+					label: 'Search',
+
+					// An optional array of keybindings for the action.
+					keybindings: [
+						monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KEY_F
+					],
+
+					// A precondition for this action.
+					precondition: null,
+
+					// A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+					keybindingContext: null,
+
+					contextMenuGroupId: 'fileIO',
+
+					contextMenuOrder: 1.5,
+
+					// Method that will be executed when the action is triggered.
+					// @param editor The editor instance is passed in as a convinience
+					run: function(editor) {
+						messageHub.post({
+							viewId: "search"
+						}, 'ide-core.openView');
+					}
+				};
+			};
+
+			function createCloseAction(){
+				return {
+					// An unique identifier of the contributed action.
+					id: 'dirigible-close',
+
+					// A label of the action that will be presented to the user.
+					label: 'Close',
+
+					// An optional array of keybindings for the action.
+					keybindings: [
+						monaco.KeyMod.Alt  | monaco.KeyCode.KEY_W
+					],
+
+					// A precondition for this action.
+					precondition: null,
+
+					// A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+					keybindingContext: null,
+
+					contextMenuGroupId: 'fileIO',
+
+					contextMenuOrder: 1.5,
+
+					// Method that will be executed when the action is triggered.
+					// @param editor The editor instance is passed in as a convinience
+					run: function(editor) {
+						var fileIO = new FileIO();
+						var fileName = fileIO.resolveFileName();
+						messageHub.post({fileName: fileName}, 'ide-core.closeEditor');
+					}
+				};
+			};
+
+			function createCloseAllAction(){
+				return {
+					// An unique identifier of the contributed action.
+					id: 'dirigible-close-all',
+
+					// A label of the action that will be presented to the user.
+					label: 'Close All',
+
+					// An optional array of keybindings for the action.
+					keybindings: [
+						monaco.KeyMod.Alt | monaco.KeyMod.Shift | monaco.KeyCode.KEY_W
+					],
+
+					// A precondition for this action.
+					precondition: null,
+
+					// A rule to evaluate on top of the precondition in order to dispatch the keybindings.
+					keybindingContext: null,
+
+					contextMenuGroupId: 'fileIO',
+
+					contextMenuOrder: 1.5,
+
+					// Method that will be executed when the action is triggered.
+					// @param editor The editor instance is passed in as a convinience
+					run: function(editor) {
+						messageHub.post('', 'ide-core.closeAllEditors');
+					}
+				};
+			};
+
 			function loadModuleSuggestions(modulesSuggestions) {
 				var xhrModules = new XMLHttpRequest();
 				xhrModules.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/modules.js');
@@ -280,6 +377,9 @@
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
+							_editor.addAction(createSearchAction());
+							_editor.addAction(createCloseAction());
+							_editor.addAction(createCloseAllAction());
 							_editor.onDidChangeCursorPosition(function(e) {
 								var caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
 								messageHub.post({data: caretInfo}, 'status.caret');
