@@ -60,7 +60,7 @@ angular.module('debugger', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 	var protocol = window.location.protocol === "http:" ? "ws" : "wss";
 	var hostPortIndexOf = window.location.host.indexOf(":");
 	var host =  hostPortIndexOf > 0 ? window.location.host.substring(0, hostPortIndexOf) : window.location.host;
-	var devToolsLocation = "../../../../../../services/v4/web/dev-tools/inspector.html"
+	var devToolsLocation = "../../../../../../services/v4/web/dev-tools/js_app.html"
 	// TODO: The debug port can be configured
 	var debugPort = 8081;
 	var debuggerLocation = devToolsLocation + "?" + protocol + "=" + host + ":" + debugPort;

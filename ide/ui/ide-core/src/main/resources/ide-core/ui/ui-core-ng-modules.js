@@ -260,7 +260,11 @@ angular.module('ideUiCore', ['ngResource'])
 
 			messageHub.on('ide-core.closeEditor', function(msg) {
 				Layouts.manager.closeEditor(msg.fileName);
-			})
+			});
+
+			messageHub.on('ide-core.closeOtherEditors', function(msg) {
+				Layouts.manager.closeOtherEditors(msg.fileName);
+			});
 
 			messageHub.on('ide-core.closeAllEditors', function(msg) {
 				Layouts.manager.closeAllEditors();

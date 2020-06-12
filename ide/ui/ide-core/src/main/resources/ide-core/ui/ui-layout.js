@@ -365,10 +365,23 @@ function LayoutController(viewRegistry, messageHub){
 	this.closeEditor = function(editorId) {
 		var editor = this.layout.root.getItemsById(editorId)[0];
 		closeEditor(editor, this.layout.root);
-	}
+	};
+
+	this.closeOtherEditors = function(editorId) {
+		var editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
+			.filter(e => e.id !== "editor" && e.id !== editorId)
+			.map(e => e.id);
+		var editors = [];
+		editorIds.forEach(e => editors.push(this.layout.root.getItemsById(e)[0]))
+		for (var i = 0; i < editors.length; i ++) {
+			closeEditor(editors[i], this.layout.root);
+		}
+	};
 
 	this.closeAllEditors = function() {
-		var editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content.filter(e => e.id !== "editor").map(e => e.id)
+		var editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
+			.filter(e => e.id !== "editor")
+			.map(e => e.id);
 		var editors = [];
 		editorIds.forEach(e => editors.push(this.layout.root.getItemsById(e)[0]))
 		for (var i = 0; i < editors.length; i ++) {
