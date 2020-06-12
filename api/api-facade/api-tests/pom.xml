@@ -115,7 +115,12 @@
             <artifactId>dirigible-api-facade-workspace</artifactId>
             <version>5.0.0-SNAPSHOT</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-repository</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
@@ -164,6 +169,11 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-workspace</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-javascript-repository</artifactId>
             <version>5.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
