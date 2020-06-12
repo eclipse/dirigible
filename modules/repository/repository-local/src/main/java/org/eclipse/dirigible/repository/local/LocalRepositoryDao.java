@@ -12,7 +12,9 @@ package org.eclipse.dirigible.repository.local;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -279,6 +281,8 @@ public class LocalRepositoryDao {
 			}
 			localObject.setName(objectFile.getName());
 			localObject.setPath(workspacePath);
+			localObject.setModifiedAt(new Date(objectFile.lastModified()));
+			localObject.setModifiedBy(Files.getOwner(objectFile.toPath()).getName());
 
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
