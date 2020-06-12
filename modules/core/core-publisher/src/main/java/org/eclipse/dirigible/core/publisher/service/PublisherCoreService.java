@@ -81,6 +81,38 @@ public class PublisherCoreService implements IPublisherCoreService {
 			throw new PublisherException(e);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createPublishRequest(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public PublishRequestDefinition createUnpublishRequest(String workspace, String path, String registry) throws PublisherException {
+		ResourcesCache.clear();
+		PublishRequestDefinition publishRequestDefinition = new PublishRequestDefinition();
+		publishRequestDefinition.setWorkspace(workspace);
+		publishRequestDefinition.setPath(path);
+		publishRequestDefinition.setRegistry(registry);
+		publishRequestDefinition.setCommand(PublishRequestDefinition.COMMAND_UNPUBLISH);
+		publishRequestDefinition.setCreatedBy(UserFacade.getName());
+		publishRequestDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				publishRequestPersistenceManager.insert(connection, publishRequestDefinition);
+				return publishRequestDefinition;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new PublisherException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

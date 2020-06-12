@@ -394,6 +394,9 @@ WorkspaceTreeAdapter.prototype.init = function(containerEl, workspaceController,
 	.on('jstree.workspace.publish', function (e, data) {		
 		this.publish(data);
 	}.bind(this))
+	.on('jstree.workspace.unpublish', function (e, data) {		
+		this.unpublish(data);
+	}.bind(this))
 	.on('jstree.workspace.export', function (e, data) {		
 		this.exportProject(data);
 	}.bind(this))
@@ -597,6 +600,12 @@ WorkspaceTreeAdapter.prototype.publish = function(resource){
 		return this.messageHub.announcePublish(resource);
 	}.bind(this));
 };
+WorkspaceTreeAdapter.prototype.unpublish = function(resource){
+	return this.publishService.unpublish(resource.path)
+	.then(function(){
+		return this.messageHub.announceUnpublish(resource);
+	}.bind(this));
+};
 WorkspaceTreeAdapter.prototype.exportProject = function(resource){
 	if (resource.type === 'project') {
 		return this.exportService.exportProject(resource.path);
@@ -728,6 +737,9 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	var announcePublish = function(fileDescriptor){
 		this.send('file.published', fileDescriptor);
 	};
+	var announceUnpublish = function(fileDescriptor){
+		this.send('file.unpublished', fileDescriptor);
+	};
 	var announceExport = function(fileDescriptor){
 		this.send('project.exported', fileDescriptor);
 	};
@@ -742,6 +754,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		announceFileCopied: announceFileCopied,
 		announceFilePropertiesOpen: announceFilePropertiesOpen,
 		announcePublish: announcePublish,
+		announceUnpublish: announceUnpublish,
 		announceExport: announceExport,
 		on: function(evt, cb){
 			messageHub.subscribe(cb, evt);
@@ -1023,6 +1036,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 							tree.element.trigger('jstree.workspace.publish', [node.original._file]);
 						}.bind(this)
 					};
+					/*Publish*/
+					ctxmenu.unpublish = {
+						"separator_before": false,
+						"label": "Unpublish",
+						"action": function(data){
+							var tree = $.jstree.reference(data.reference);
+							var node = tree.get_node(data.reference);
+							tree.element.trigger('jstree.workspace.unpublish', [node.original._file]);
+						}.bind(this)
+					};
 					/*Upload*/
 					ctxmenu.upload = {
 						"separator_before": true,
@@ -1072,6 +1095,10 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		publish : function(resourcePath){
 			var url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
 			return $http.post(url, {});
+		},
+		unpublish : function(resourcePath){
+			var url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
+			return $http.delete(url, {});
 		}
 	};
 }])
@@ -1246,6 +1273,10 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	
 	this.publish = function(){
 		publishService.publish(this.selectedWorkspace + '/*');
+	};
+
+	this.unpublish = function(){
+		publishService.unpublish(this.selectedWorkspace + '/*');
 	};
 	
 	this.exportWorkspace = function(){

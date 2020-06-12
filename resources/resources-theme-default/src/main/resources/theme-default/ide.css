@@ -371,9 +371,16 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 }
 
 .dropdown-top {
-	border: 1px solid #a5acb3;
+	/*border: 1px solid #a5acb3;*/
 	border-radius: 0 !important;
 	background-color: #343436;
+	
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-image: initial;
+	border-bottom: 1px solid;
+	margin-top: 2px;
 }
 
 .console-row {

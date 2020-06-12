@@ -114,6 +114,45 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 
 		return Response.created(new URI("ide/publisher/" + id)).build();
 	}
+	
+	/**
+	 * Request unpublishing.
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param path
+	 *            the path
+	 * @param request
+	 *            the request
+	 * @return the response
+	 * @throws PublisherException
+	 *             the publisher exception
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
+	 */
+	@DELETE
+	@Path("request/{workspace}/{path:.*}")
+	@ApiOperation("Unpublish Workspace Resources")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
+	public Response requestUnpublishing(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+			@ApiParam(value = "Resource Path") @PathParam("path") String path, @Context HttpServletRequest request)
+			throws PublisherException, URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return Response.status(Status.FORBIDDEN).build();
+		}
+
+		if (!processor.existsWorkspace(user, workspace)) {
+			String error = format("Workspace {0} does not exist.", workspace);
+			sendErrorNotFound(response, error);
+			return Response.status(Status.NOT_FOUND).entity(error).build();
+		}
+
+		long id = processor.requestUnpublishing(user, workspace, path);
+
+		return Response.created(new URI("ide/publisher/" + id)).build();
+	}
 
 	/**
 	 * Gets the request.

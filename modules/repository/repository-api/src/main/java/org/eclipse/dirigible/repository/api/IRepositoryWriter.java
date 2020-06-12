@@ -137,15 +137,6 @@ public interface IRepositoryWriter {
 	 * Calling this method more than once will be a no-op.
 	 */
 	public void dispose();
-
-	/**
-	 * Clean-up the file versions older than a month For full fledged SCM
-	 * system, use external e.g. Git
-	 *
-	 * @throws RepositoryWriteException
-	 *             in case the old versions cannot be cleaned up
-	 */
-	public void cleanupOldVersions() throws RepositoryWriteException;
 	
 	/**
 	 * Whether the Repository supports linking of external paths

@@ -68,24 +68,4 @@ public interface IResource extends IEntity {
 	 */
 	public String getContentType();
 
-	/**
-	 * Retrieve all the kept versions of a given resource.
-	 *
-	 * @return the list of the {@link IResourceVersion} for this {link IResource}
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 */
-	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException;
-
-	/**
-	 * Retrieve a particular version of a given resource.
-	 *
-	 * @param version
-	 *            the exact version
-	 * @return the {@link IResourceVersion} for this {link IResource} for this version
-	 * @throws RepositoryVersioningException
-	 *             the repository versioning exception
-	 */
-	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException;
-
 }

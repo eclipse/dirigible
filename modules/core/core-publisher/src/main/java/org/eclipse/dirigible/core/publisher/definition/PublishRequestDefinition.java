@@ -22,6 +22,10 @@ import javax.persistence.Table;
  */
 @Table(name = "DIRIGIBLE_PUBLISH_REQUESTS")
 public class PublishRequestDefinition {
+	
+	public transient static final String COMMAND_PUBLISH = "P";
+	
+	public transient static final String COMMAND_UNPUBLISH = "U";
 
 	/** The id. */
 	@Id
@@ -48,6 +52,10 @@ public class PublishRequestDefinition {
 	/** The created at. */
 	@Column(name = "PUBREQ_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
+	
+	/** The command. */
+	@Column(name = "PUBREQ_COMMAND", columnDefinition = "CHAR", nullable = true, length = 1)
+	private String command = COMMAND_PUBLISH;
 
 	/**
 	 * Gets the id.
@@ -158,6 +166,25 @@ public class PublishRequestDefinition {
 			return;
 		}
 		this.createdAt = new Timestamp(createdAt.getTime());
+	}
+	
+	/**
+	 * Gets the command.
+	 *
+	 * @return the command
+	 */
+	public String getCommand() {
+		return command;
+	}
+
+	/**
+	 * Sets the command.
+	 *
+	 * @param command
+	 *            the new command
+	 */
+	public void setCommand(String command) {
+		this.command = command;
 	}
 
 }

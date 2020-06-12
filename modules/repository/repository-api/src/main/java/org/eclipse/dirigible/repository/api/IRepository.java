@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  * navigating through collections and resources.
  */
 public interface IRepository
-		extends IRepositoryReader, IRepositoryWriter, IRepositoryImporter, IRepositoryExporter, IRepositorySearch, IRepositoryVersioning {
+		extends IRepositoryReader, IRepositoryWriter, IRepositoryImporter, IRepositoryExporter, IRepositorySearch {
 
 	/** The Constant SEPARATOR. */
 	public static final String SEPARATOR = IRepositoryStructure.SEPARATOR;

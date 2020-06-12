@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.core.publisher.synchronizer;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	private PublisherCoreService publishCoreService;
 
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
+	private List<String> unpublishLocations = new ArrayList<String>();
 
 	private String currentWorkspace = null;
 
@@ -100,7 +102,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 *             the synchronization exception
 	 */
 	private void enumerateResourcesForPublish(List<PublishRequestDefinition> publishRequestDefinitions) throws SynchronizationException {
-		resourceLocations.clear();
+		cleanup();
+		
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
 			currentWorkspace = publishRequestDefinition.getWorkspace();
 			String path = publishRequestDefinition.getPath();
@@ -108,16 +111,25 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 					: IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 			currentRequestTime = (publishRequestDefinition.getCreatedAt().after(currentRequestTime) ? publishRequestDefinition.getCreatedAt()
 					: currentRequestTime);
-
-			String sourceLocation = new RepositoryPath(currentWorkspace, path).toString();
-			ICollection collection = getRepository().getCollection(sourceLocation);
-			if (collection.exists()) {
-				synchronizeCollection(collection);
-			} else {
-				IResource resource = getRepository().getResource(sourceLocation);
-				if (resource.exists()) {
-					synchronizeResource(resource);
+			
+			if (publishRequestDefinition.getCommand().equals(PublishRequestDefinition.COMMAND_PUBLISH)) {
+				// Publish
+				String sourceLocation = new RepositoryPath(currentWorkspace, path).toString();
+				ICollection collection = getRepository().getCollection(sourceLocation);
+				if (collection.exists()) {
+					synchronizeCollection(collection);
+				} else {
+					IResource resource = getRepository().getResource(sourceLocation);
+					if (resource.exists()) {
+						synchronizeResource(resource);
+					}
 				}
+			} else if (publishRequestDefinition.getCommand().equals(PublishRequestDefinition.COMMAND_UNPUBLISH)) {
+				// Unpublish
+				String targetLocation = new RepositoryPath(currentRegistry, path).toString();
+				unpublishLocations.add(targetLocation);
+			} else {
+				logger.error("Publishing error: Unknown command; " + publishRequestDefinition.getCommand());
 			}
 		}
 	}
@@ -144,6 +156,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		logger.trace("Synchronizing published artefacts in Registry...");
 
 		publishResources();
+		
+		unpublishResources();
 
 		logger.trace("Done synchronizing published artefacts in Registry.");
 	}
@@ -159,8 +173,12 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 
 			// pre publish handlers
 
-			// publish
-			publishResource(entry);
+			try {
+				// publish
+				publishResource(entry);
+			} catch (SynchronizationException e) {
+				logger.error("Failed to publish: " + entry.getKey(), e);
+			}
 
 			// post publish handlers
 		}
@@ -177,20 +195,90 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	private void publishResource(Map.Entry<String, String> entry) throws SynchronizationException {
 		String sourceLocation = entry.getKey();
 		String targetLocation = entry.getValue();
-		IResource sourceResource = getRepository().getResource(sourceLocation);
-		IResource targetResource = getRepository().getResource(targetLocation);
-		if (targetResource.exists()) {
-			java.util.Date lastModified = targetResource.getInformation().getModifiedAt();
-			if ((lastModified == null) || (currentRequestTime.getTime() > lastModified.getTime())) {
-				targetResource.setContent(sourceResource.getContent());
+		
+		ICollection sourceCollection = getRepository().getCollection(sourceLocation);
+		if (sourceCollection.exists()) {
+			// publish collection
+			ICollection targetCollection = getRepository().getCollection(targetLocation);
+			sourceCollection.copyTo(targetCollection.getPath());
+			try {
+				publishCoreService.createPublishLog(sourceCollection.getPath(), targetCollection.getPath());
+			} catch (PublisherException e) {
+				throw new SynchronizationException(e);
 			}
 		} else {
-			getRepository().createResource(targetLocation, sourceResource.getContent());
+			// publish a single resource
+			IResource sourceResource = getRepository().getResource(sourceLocation);
+			IResource targetResource = getRepository().getResource(targetLocation);
+			if (targetResource.exists()) {
+				java.util.Date lastModified = targetResource.getInformation().getModifiedAt();
+				if ((lastModified == null) || (currentRequestTime.getTime() > lastModified.getTime())) {
+					targetResource.setContent(sourceResource.getContent());
+				}
+			} else {
+				getRepository().createResource(targetLocation, sourceResource.getContent());
+			}
+			try {
+				publishCoreService.createPublishLog(sourceResource.getPath(), targetResource.getPath());
+			} catch (PublisherException e) {
+				throw new SynchronizationException(e);
+			}
 		}
-		try {
-			publishCoreService.createPublishLog(sourceResource.getPath(), targetResource.getPath());
-		} catch (PublisherException e) {
-			throw new SynchronizationException(e);
+	}
+	
+	/**
+	 * Unpublish resources.
+	 *
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void unpublishResources() throws SynchronizationException {
+		for (String entry : unpublishLocations) {
+
+			// pre unpublish handlers
+
+			try {
+				// unpublish
+				unpublishResource(entry);
+			} catch (SynchronizationException e) {
+				logger.error("Failed to unpublish: " + entry, e);
+			}
+
+			// post unpublish handlers
+		}
+	}
+	
+	/**
+	 * Publish resource.
+	 *
+	 * @param entry
+	 *            the entry
+	 * @throws SynchronizationException
+	 *             the synchronization exception
+	 */
+	private void unpublishResource(String entry) throws SynchronizationException {
+		String targetLocation = entry;
+		
+		ICollection targetCollection = getRepository().getCollection(targetLocation);
+		if (targetCollection.exists()) {
+			// unpublish collection
+			targetCollection.delete();
+			try {
+				publishCoreService.createPublishLog(PublishRequestDefinition.COMMAND_UNPUBLISH, targetCollection.getPath());
+			} catch (PublisherException e) {
+				throw new SynchronizationException(e);
+			}
+		} else {
+			// unpublish a single resource
+			IResource targetResource = getRepository().getResource(targetLocation);
+			if (targetResource.exists()) {
+				targetResource.delete();
+			}
+			try {
+				publishCoreService.createPublishLog(PublishRequestDefinition.COMMAND_UNPUBLISH, targetResource.getPath());
+			} catch (PublisherException e) {
+				throw new SynchronizationException(e);
+			}
 		}
 	}
 
@@ -206,6 +294,19 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 		for (PublishRequestDefinition publishRequestDefinition : publishRequestDefinitions) {
 			publishCoreService.removePublishRequest(publishRequestDefinition.getId());
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeCollection(org.eclipse.dirigible.
+	 * repository.api.IResource)
+	 */
+	@Override
+	protected void synchronizeCollection(ICollection collection) throws SynchronizationException {
+		String sourceLocation = collection.getPath();
+		String path = sourceLocation.substring(currentWorkspace.length());
+		String targetLocation = new RepositoryPath(currentRegistry, path).toString();
+		resourceLocations.put(sourceLocation, targetLocation);
 	}
 
 	/*
@@ -228,5 +329,6 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void cleanup() throws SynchronizationException {
 		resourceLocations.clear();
+		unpublishLocations.clear();
 	}
 }

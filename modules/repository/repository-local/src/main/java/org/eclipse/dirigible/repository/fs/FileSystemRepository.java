@@ -18,13 +18,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -32,20 +28,17 @@ import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositorySearchException;
-import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.local.LocalCollection;
 import org.eclipse.dirigible.repository.local.LocalRepositoryDao;
@@ -65,10 +58,6 @@ public abstract class FileSystemRepository implements IRepository {
 
 	private static final String REPOSITORY_FILE_BASED = "REPOSITORY_FILE_BASED";
 	
-	private static final String REPOSITORY_INFO_FOLDER = "REPOSITORY_INFO_FOLDER";
-
-	private static final String REPOSITORY_VERSIONS_FOLDER = "REPOSITORY_VERSIONS_FOLDER";
-
 	private static final String REPOSITORY_ROOT_FOLDER = "REPOSITORY_ROOT_FOLDER";
 
 	private static final String REPOSITORY_INDEX_FOLDER = "REPOSITORY_INDEX_FOLDER";
@@ -81,15 +70,7 @@ public abstract class FileSystemRepository implements IRepository {
 
 	private static final String PATH_SEGMENT_ROOT = "root";
 
-	private static final String PATH_SEGMENT_VERSIONS = "versions";
-
-	private static final String PATH_SEGMENT_INFO = "info";
-
 	private String repositoryPath = IRepository.SEPARATOR;
-
-	private String versionsPath = IRepository.SEPARATOR;
-
-	private String infoPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDao repositoryDao;
 
@@ -180,24 +161,6 @@ public abstract class FileSystemRepository implements IRepository {
 	}
 
 	/**
-	 * Gets the versions path.
-	 *
-	 * @return the versions path
-	 */
-	public String getVersionsPath() {
-		return versionsPath;
-	}
-
-	/**
-	 * Gets the info path.
-	 *
-	 * @return the info path
-	 */
-	public String getInfoPath() {
-		return infoPath;
-	}
-
-	/**
 	 * Gets the repository root folder.
 	 *
 	 * @return the repository root folder
@@ -218,18 +181,7 @@ public abstract class FileSystemRepository implements IRepository {
 		repositoryPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_ROOT; // $NON-NLS-1$
 		repositoryPath = repositoryPath.replace(IRepository.SEPARATOR, File.separator);
 		repositoryPath = new File(repositoryPath).getAbsolutePath();
-		this.setParameter(REPOSITORY_ROOT_FOLDER, repositoryPath);
-		versionsPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_VERSIONS; // $NON-NLS-1$
-		versionsPath = versionsPath.replace(IRepository.SEPARATOR, File.separator);
-		versionsPath = new File(versionsPath).getAbsolutePath();
-		this.setParameter(REPOSITORY_VERSIONS_FOLDER, repositoryPath);
-		infoPath = rootFolder + IRepository.SEPARATOR + getRepositoryRootFolder() + IRepository.SEPARATOR + PATH_SEGMENT_INFO; // $NON-NLS-1$
-		infoPath = infoPath.replace(IRepository.SEPARATOR, File.separator);
-		infoPath = new File(infoPath).getAbsolutePath();
-		this.setParameter(REPOSITORY_INFO_FOLDER, repositoryPath);
 		FileSystemUtils.createFolder(repositoryPath);
-		FileSystemUtils.createFolder(versionsPath);
-		FileSystemUtils.createFolder(infoPath);
 	}
 
 	/*
@@ -586,74 +538,6 @@ public abstract class FileSystemRepository implements IRepository {
 	@Override
 	public void searchRefresh() throws RepositorySearchException {
 		repositorySearcher.forceReindex();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IRepositoryVersioning#getResourceVersions(java.lang.String)
-	 */
-	@Override
-	public List<IResourceVersion> getResourceVersions(String path) throws RepositorySearchException {
-		try {
-			return repositoryDao.getResourceVersionsByPath(path);
-		} catch (RepositoryVersioningException | IOException e) {
-			throw new RepositorySearchException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IRepositoryVersioning#getResourceVersion(java.lang.String, int)
-	 */
-	@Override
-	public IResourceVersion getResourceVersion(String path, int version) throws RepositorySearchException {
-		List<IResourceVersion> allVersions = getResourceVersions(path);
-		for (IResourceVersion resourceVersion : allVersions) {
-			if (resourceVersion.getVersion() == version) {
-				return resourceVersion;
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IRepositoryWriter#cleanupOldVersions()
-	 */
-	@Override
-	public void cleanupOldVersions() throws RepositoryWriteException {
-		String versionsRoot = getVersionsPath();
-		synchronized (this.getClass()) {
-			GregorianCalendar last = new GregorianCalendar();
-			last.add(Calendar.WEEK_OF_YEAR, -1);
-			thresholdDate = last.getTime();
-			try {
-				cleanOlderFiles(new File(versionsRoot));
-			} catch (IOException e) {
-				throw new RepositoryWriteException(e);
-			}
-		}
-	}
-
-	/** The threshold date. */
-	Date thresholdDate;
-
-	/**
-	 * Clean older files.
-	 *
-	 * @param file
-	 *            the file
-	 * @throws IOException
-	 */
-	private void cleanOlderFiles(File file) throws IOException {
-		Iterator<File> filesToBeDeleted = FileUtils.iterateFiles(file, new AgeFileFilter(thresholdDate), TRUE);
-		while (filesToBeDeleted.hasNext()) {
-			File toBeDeleted = filesToBeDeleted.next();
-			boolean deleted = toBeDeleted.delete();
-			if (!deleted) {
-				logger.error("Error on deleting the file: " + toBeDeleted.getAbsolutePath());
-			}
-		}
 	}
 
 	/*

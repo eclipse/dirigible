@@ -140,24 +140,6 @@ public class File implements IFile {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersions()
-	 */
-	@Override
-	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException {
-		return internal.getResourceVersions();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersion(int)
-	 */
-	@Override
-	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException {
-		return internal.getResourceVersion(version);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.repository.api.IEntity#create()
 	 */
 	@Override

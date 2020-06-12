@@ -208,11 +208,6 @@ public class CmsDatabaseRepository implements IRepository {
 	}
 
 	@Override
-	public void cleanupOldVersions() throws RepositoryWriteException {
-		databaseRepositoryDao.cleanupOldVersions();
-	}
-
-	@Override
 	public void importZip(ZipInputStream zipInputStream, String relativeRoot) throws RepositoryImportException {
 		importZip(zipInputStream, relativeRoot, false);
 	}
@@ -291,16 +286,6 @@ public class CmsDatabaseRepository implements IRepository {
 	@Override
 	public void searchRefresh() throws RepositorySearchException {
 		repositorySearcher.forceReindex();
-	}
-
-	@Override
-	public List<IResourceVersion> getResourceVersions(String path) throws RepositoryVersioningException {
-		return databaseRepositoryDao.getResourceVersionsByPath(path);
-	}
-
-	@Override
-	public IResourceVersion getResourceVersion(String path, int version) throws RepositoryVersioningException {
-		return new CmsDatabaseResourceVersion(this, new RepositoryPath(path), version);
 	}
 
 	@Override

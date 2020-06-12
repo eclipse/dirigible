@@ -63,6 +63,32 @@ public class PublisherProcessor {
 		PublisherSynchronizer.forceSynchronization();
 		return publishRequestDefinition.getId();
 	}
+	
+	/**
+	 * Request unpublishing.
+	 *
+	 * @param user
+	 *            the user
+	 * @param workspace
+	 *            the workspace
+	 * @param path
+	 *            the path
+	 * @return the long
+	 * @throws PublisherException
+	 *             the publisher exception
+	 */
+	public long requestUnpublishing(String user, String workspace, String path) throws PublisherException {
+		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
+		if ("*".equals(path)) {
+			path = "";
+		}
+		PublishRequestDefinition publishRequestDefinition = publishCoreService.createUnpublishRequest(workspacePath.toString(), path,
+				IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+		logger.debug("Unpublishing request created [{}]", publishRequestDefinition.getId());
+		// force synchronization ?
+		PublisherSynchronizer.forceSynchronization();
+		return publishRequestDefinition.getId();
+	}
 
 	/**
 	 * Gets the publishing request.

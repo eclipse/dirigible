@@ -293,29 +293,4 @@ public class DatabaseResource extends DatabaseEntity implements IResource {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersions()
-	 */
-	@Override
-	public List<IResourceVersion> getResourceVersions() throws RepositoryVersioningException {
-		try {
-			return getRepository().getRepositoryDao().getResourceVersionsByPath(getPath());
-		} catch (DatabaseRepositoryException ex) {
-			logger.error(ex.getMessage(), ex);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.repository.api.IResource#getResourceVersion(int)
-	 */
-	@Override
-	public IResourceVersion getResourceVersion(int version) throws RepositoryVersioningException {
-		// return new DBResourceVersion(getRepository(), new RepositoryPath(
-		// getPath()), version);
-		return null;
-	}
-
 }
