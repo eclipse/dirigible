@@ -840,7 +840,7 @@ tbody.collapse.in{display:table-row-group}
 .navbar-right .dropdown-menu-left{left:0;right:auto}
 }
 .btn-group,.btn-group-vertical{position:relative;display:inline-block;vertical-align:middle}
-.btn-group-vertical>.btn,.btn-group>.btn{position:relative;float:left}
+.btn-group-vertical>.btn,.btn-group>.btn{position:relative;}
 .btn-group-vertical>.btn.active,.btn-group-vertical>.btn:active,.btn-group-vertical>.btn:focus,.btn-group-vertical>.btn:hover,.btn-group>.btn.active,.btn-group>.btn:active,.btn-group>.btn:focus,.btn-group>.btn:hover{z-index:2}
 .btn-group .btn+.btn,.btn-group .btn+.btn-group,.btn-group .btn-group+.btn,.btn-group .btn-group+.btn-group{margin-left:-1px}
 .btn-toolbar{margin-left:-5px}
@@ -1363,7 +1363,7 @@ button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance
 .carousel-control .icon-prev:before{content:'\2039'}
 .carousel-control .icon-next:before{content:'\203a'}
 .carousel-indicators{position:absolute;bottom:10px;left:50%;z-index:15;width:60%;margin-left:-30%;padding-left:0;list-style:none;text-align:center}
-.carousel-indicators li{display:inline-block;width:10px;height:10px;margin:1px;text-indent:-999px;border:1px solid #fff;border-radius:10px;cursor:pointer;background-color:#000\9;background-color:transparent}
+.carousel-indicators li{display:inline-block;width:10px;height:10px;margin:1px;text-indent:-999px;border:1px solid #fff;border-radius:10px;cursor:pointer;background-color:#000;background-color:transparent}
 .carousel-indicators .active{margin:0;width:12px;height:12px;background-color:#fff}
 .carousel-caption{position:absolute;left:15%;right:15%;bottom:20px;z-index:10;padding-top:20px;padding-bottom:20px;text-align:center}
 .carousel-caption .btn,.text-hide{text-shadow:none}
