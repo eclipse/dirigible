@@ -332,9 +332,12 @@ public class GitProcessor {
 
 	public List<ProjectDescriptor> renderGitRepositories(String user, String workspace) {
 		List<ProjectDescriptor> gitRepositories = new ArrayList<ProjectDescriptor>();
-		for (File next : GitFileUtils.getGitDirectory(user, workspace).listFiles()) {
-			if (!next.isFile()) {
-				gitRepositories.add(WorkspaceGitHelper.describeProject(next));
+		File gitDirectory = GitFileUtils.getGitDirectory(user, workspace);
+		if (gitDirectory != null) {
+			for (File next : gitDirectory.listFiles()) {
+				if (!next.isFile()) {
+					gitRepositories.add(WorkspaceGitHelper.describeProject(next));
+				}
 			}
 		}
 		IWorkspace workspaceObject = getWorkspace(workspace);

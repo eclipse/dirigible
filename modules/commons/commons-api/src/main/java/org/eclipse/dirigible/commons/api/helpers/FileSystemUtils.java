@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -492,6 +493,9 @@ public class FileSystemUtils {
 
 	public static List<String> getGitRepositories(String user, String workspace) {
 		File gitRoot = getGitDirectory(user, workspace);
+		if (gitRoot == null) {
+			return new ArrayList<String>();
+		}
 		return Arrays.asList(gitRoot.listFiles())
 				.stream()
 				.filter(e -> !e.isFile())
