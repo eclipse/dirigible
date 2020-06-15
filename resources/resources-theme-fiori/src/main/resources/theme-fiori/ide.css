@@ -447,6 +447,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	width: 100%;
 	height: 1.8em;
 	background-color: white;
+	margin-top: 2px;
 }
 
 .btn-top {
@@ -472,7 +473,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 
 .workspace {
 	font-weight: 300;
-	margin-top: 28px;
+	margin-top: 2.4em;
     position: relative;
 }
 
@@ -488,19 +489,19 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 
 .database {
 	font-weight: 300;
-	margin-top: 28px;
+	margin-top: 2.4em;
     position: relative;
 }
 
 .repository {
 	font-weight: 300;
-	margin-top: 28px;
+	margin-top: 2.4em;
     position: relative;
 }
 
 .registry {
 	font-weight: 300;
-	margin-top: 28px;
+	margin-top: 2.4em;
     position: relative;
 }
 
