@@ -9,11 +9,7 @@
  *   SAP - initial API and implementation
  */
 
-/**
- * API v4 Request
- * 
- * Note: This module is supported only with the Mozilla Rhino engine
- */
+var streams = require("io/v4/streams");
 
 exports.isValid = function() {
 	return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isValid();
@@ -245,4 +241,8 @@ exports.getLocalAddress = function() {
 
 exports.getLocalPort = function() {
 	return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getLocalPort();
+};
+
+exports.getInputStream = function() {
+	return streams.createInputStream(org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getInputStream());
 };

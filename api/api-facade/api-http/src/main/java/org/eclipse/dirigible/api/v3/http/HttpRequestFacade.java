@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
@@ -311,6 +312,21 @@ public class HttpRequestFacade implements IScriptingFacade {
 		byte[] bytes = IOUtils.toByteArray(request.getInputStream());
 		String charset = (request.getCharacterEncoding() != null) ? request.getCharacterEncoding() : StandardCharsets.UTF_8.name();
 		return new String(bytes, charset);
+	}
+	
+	/**
+	 * Returns the input stream.
+	 *
+	 * @return the input stream
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public static final ServletInputStream getInputStream() throws IOException {
+		HttpServletRequest request = getRequest();
+		if (request == null) {
+			throw new InvalidStateException(NO_VALID_REQUEST);
+		}
+		return request.getInputStream();
 	}
 
 	/**

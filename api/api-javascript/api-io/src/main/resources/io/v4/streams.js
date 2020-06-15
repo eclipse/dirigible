@@ -9,12 +9,6 @@
  *   SAP - initial API and implementation
  */
 
-/**
- * API v4 Streams
- * 
- * Note: This module is supported only with the Mozilla Rhino engine
- */
-
 var bytes = require('io/v4/bytes');
 
 /**
@@ -141,4 +135,20 @@ exports.createByteArrayOutputStream = function() {
 	return outputStream;
 };
 
+/**
+ * Create an InputStream object by a native InputStream
+ */
+exports.createInputStream = function(native) {
+	var inputStream = new exports.InputStream();
+	inputStream.native = native;
+	return inputStream;
+};
 
+/**
+ * Create an OutputStream object by a native OutputStream
+ */
+exports.createOutputStream = function(native) {
+	var outputStream = new exports.OutputStream();
+	outputStream.native = native;
+	return outputStream;
+};
