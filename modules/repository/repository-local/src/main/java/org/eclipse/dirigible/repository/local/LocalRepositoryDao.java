@@ -282,7 +282,13 @@ public class LocalRepositoryDao {
 			localObject.setName(objectFile.getName());
 			localObject.setPath(workspacePath);
 			localObject.setModifiedAt(new Date(objectFile.lastModified()));
-			localObject.setModifiedBy(Files.getOwner(objectFile.toPath()).getName());
+			String owner;
+			try {
+				owner = Files.getOwner(objectFile.toPath()).getName();
+			} catch (Exception e) {
+				owner = "SYSTEM";
+			}
+			localObject.setModifiedBy(owner);
 
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
