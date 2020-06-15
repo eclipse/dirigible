@@ -54,6 +54,7 @@
 		<module>api-cms</module>
 		<module>api-bpm</module>
 		<module>api-workspace</module>
+		<module>api-net</module>
 	</modules>
 
 	<profiles>
