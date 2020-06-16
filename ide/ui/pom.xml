@@ -53,7 +53,6 @@
 		<module>ide-documents</module>
 		<module>ide-git</module>
 		<module>ide-help</module>
-		<module>ide-orion</module>
 		<module>ide-preview</module>
 		<module>ide-repository</module>
 		<module>ide-swagger</module>
@@ -64,7 +63,6 @@
 		<module>ide-entity</module>
 		<module>ide-monaco</module>
 		<module>ide-monaco-extensions</module>
-		<module>ide-ace</module>
 		<module>ide-debugger</module>
 		<module>ide-logs</module>
 		<module>ide-jobs</module>
