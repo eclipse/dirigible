@@ -487,8 +487,8 @@
 			<version>${jaxb.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.xml.ws</groupId>
-			<artifactId>jaxws-api</artifactId>
+			<groupId>jakarta.xml.ws</groupId>
+			<artifactId>jakarta.xml.ws-api</artifactId>
 			<version>${jaxws.version}</version>
 		</dependency>
 
@@ -558,7 +558,7 @@
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.3.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
-		<jaxws.version>2.3.0</jaxws.version>
+		<jaxws.version>2.3.3</jaxws.version>
 		<license-maven-plugin.version>3.0</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>5.5.0.201909110433-r</jgit.version>

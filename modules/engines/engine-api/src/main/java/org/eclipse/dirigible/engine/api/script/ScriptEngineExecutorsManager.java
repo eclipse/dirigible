@@ -13,7 +13,9 @@ package org.eclipse.dirigible.engine.api.script;
 import static java.text.MessageFormat.format;
 
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 
 /**
@@ -65,6 +67,24 @@ public class ScriptEngineExecutorsManager {
 
 		throw new ScriptingException(
 				format("Script Executor of Type [{0}] does not exist, hence the code [{1}] cannot be processed", engineType, code));
+	}
+	
+	/**
+	 * Returns all the registered engine types
+	 * 
+	 * @return engine types
+	 */
+	public static Set<String> getEngineTypes() {
+		return ScriptEngineExecutorFactory.getEnginesTypes();
+	}
+	
+	/**
+	 * Returns all the registered engine types as JSON
+	 * 
+	 * @return engine types as JSON
+	 */
+	public static String getEngineTypesAsJson() {
+		return GsonHelper.GSON.toJson(getEngineTypes());
 	}
 
 }
