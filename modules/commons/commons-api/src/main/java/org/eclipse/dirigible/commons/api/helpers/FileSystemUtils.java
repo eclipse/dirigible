@@ -476,7 +476,12 @@ public class FileSystemUtils {
 	 * @return the generated local name
 	 */
 	public static String generateGitRepositoryName(String repositoryURI) {
-		String repositoryName = repositoryURI.substring(repositoryURI.lastIndexOf(SEPARATOR) + 1, repositoryURI.lastIndexOf(DOT_GIT));
+		int separatorLastIndexOf = repositoryURI.lastIndexOf(SEPARATOR) + 1;
+		int gitLastIndexOf = repositoryURI.lastIndexOf(DOT_GIT);
+		String repositoryName = repositoryURI;
+		if (separatorLastIndexOf >= 0 && gitLastIndexOf > 0) {
+			repositoryName = repositoryURI.substring(separatorLastIndexOf, gitLastIndexOf);
+		}
 		return repositoryName;
 	}
 
