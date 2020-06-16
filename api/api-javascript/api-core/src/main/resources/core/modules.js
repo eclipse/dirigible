@@ -48,3 +48,8 @@ exports.getDestinations = function() {
 	return destinations;
 };
 
+exports.getEngines = function() {
+	var engines = require('core/v4/engines');
+	return engines;
+};
+
