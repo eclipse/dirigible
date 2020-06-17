@@ -33,6 +33,7 @@ public class LifecycleFacade {
 		boolean isSuccessfulUnpublishRequest = false;
 		try {
 			processor.requestUnpublishing(user, workspace, project);
+			isSuccessfulUnpublishRequest = true;
 		} catch (PublisherException e) {
 			// Do nothing
 		}

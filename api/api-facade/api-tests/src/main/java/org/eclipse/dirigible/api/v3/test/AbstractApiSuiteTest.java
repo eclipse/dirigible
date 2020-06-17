@@ -78,6 +78,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		registerModulesSecurityV4();
 		registerModulesWorkspaceV4();
 		registerModulesRepositoryV4();
+		registerModulesPlatformV4();
+	}
+
+	private void registerModulesPlatformV4() {
+		TEST_MODULES.add("platform/v4/lifecycle/publishProject.js");
 	}
 
 	private void registerModulesWorkspaceV4() {
