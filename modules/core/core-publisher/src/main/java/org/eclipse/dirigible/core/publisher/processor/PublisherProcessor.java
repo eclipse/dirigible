@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.runtime.ide.publisher.processor;
+package org.eclipse.dirigible.core.publisher.processor;
 
 import java.util.List;
 

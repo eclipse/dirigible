@@ -37,7 +37,7 @@ import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
-import org.eclipse.dirigible.runtime.ide.publisher.processor.PublisherProcessor;
+import org.eclipse.dirigible.core.publisher.processor.PublisherProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

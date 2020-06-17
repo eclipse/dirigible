@@ -120,6 +120,11 @@
             <artifactId>dirigible-api-facade-repository</artifactId>
             <version>5.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-platform</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -176,6 +181,12 @@
             <artifactId>dirigible-api-javascript-repository</artifactId>
             <version>5.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-javascript-platform</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
