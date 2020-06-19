@@ -8,12 +8,14 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
+
+var bytes = require("io/v4/bytes");
+
+exports.getContent = function(path) {
+	var nativeContent = org.eclipse.dirigible.api.v3.platform.RegistryFacade.getContent(path);
+	return bytes.toJavaScriptBytes(nativeContent);
+};
+
+exports.getText = function(path) {
+	return org.eclipse.dirigible.api.v3.platform.RegistryFacade.getText(path);
 };

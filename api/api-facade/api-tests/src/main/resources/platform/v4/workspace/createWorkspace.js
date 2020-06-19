@@ -8,12 +8,9 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
-};
+var manager = require('platform/v4/workspace');
+
+manager.createWorkspace('testworkspace');
+var workspace = manager.getWorkspace('testworkspace');
+
+workspace.exists();

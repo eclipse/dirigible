@@ -76,21 +76,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		registerModulesCmsV4();
 		registerModulesIoV4();
 		registerModulesSecurityV4();
-		registerModulesWorkspaceV4();
-		registerModulesRepositoryV4();
 		registerModulesPlatformV4();
 	}
 
 	private void registerModulesPlatformV4() {
 		TEST_MODULES.add("platform/v4/lifecycle/publishProject.js");
-	}
-
-	private void registerModulesWorkspaceV4() {
-		TEST_MODULES.add("workspace/v4/manager/createWorkspace.js");
-	}
-
-	private void registerModulesRepositoryV4() {
-		TEST_MODULES.add("repository/v4/manager/createFile.js");
+		TEST_MODULES.add("platform/v4/repository/createFile.js");
+		TEST_MODULES.add("platform/v4/workspace/createWorkspace.js");
+		TEST_MODULES.add("platform/v4/engines/getTypes.js");
 	}
 
 	private void registerModulesSecurityV4() {
@@ -147,7 +140,6 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v4/globals/get.js");
 		TEST_MODULES.add("core/v4/globals/list.js");
 		TEST_MODULES.add("core/v4/destinations/get.js");
-		TEST_MODULES.add("core/v4/engines/getTypes.js");
 	}
 
 	private void registerModulesDbV4() {
@@ -202,12 +194,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		registerModulesUtilsV3();
 		registerModulesIndexingV3();
 		registerModulesCmsV3();
-		registerModulesWorkspaceV3();
 	}
 
-	private void registerModulesWorkspaceV3() {
-		TEST_MODULES.add("workspace/v3/manager/createWorkspace.js");
-	}
 
 	private void registerModulesCmsV3() {
 		TEST_MODULES.add("cms/v3/cmis/getSession.js");

@@ -8,12 +8,10 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
-};
+var repositoryManager = require("platform/v4/repository");
+
+repositoryManager.createResource("/registry/public/test/file.js", "console.log('Hello World');", "application/json");
+var resource = repositoryManager.getResource("/registry/public/test/file.js");
+var content = resource.getText();
+
+content !== undefined && content !== null;

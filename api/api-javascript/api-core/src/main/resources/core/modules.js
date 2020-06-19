@@ -38,18 +38,8 @@ exports.getThreads = function() {
 	return threads;
 };
 
-exports.getTemplateEngine = function() {
-	var templateEngine = require('core/v4/template-engine');
-	return templateEngine;
-}
-
 exports.getDestinations = function() {
 	var destinations = require('core/v4/destinations');
 	return destinations;
-};
-
-exports.getEngines = function() {
-	var engines = require('core/v4/engines');
-	return engines;
 };
 

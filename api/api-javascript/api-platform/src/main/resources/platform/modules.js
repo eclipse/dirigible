@@ -12,3 +12,28 @@ exports.getLifecycle = function() {
 	var lifecycle = require("platform/v4/lifecycle");
 	return lifecycle;
 };
+
+exports.getRegistry = function() {
+	var registry = require("platform/v4/registry");
+	return registry;
+};
+
+exports.getRepository = function() {
+	var repository = require("platform/v4/repository");
+	return repository;
+};
+
+exports.getWorkspace = function() {
+	var workspace = require("platform/v4/workspace");
+	return workspace;
+};
+
+exports.getEngines = function() {
+	var engines = require("platform/v4/engines");
+	return engines;
+};
+
+exports.getTemplateEngines = function() {
+	var templateEngines = require("platform/v4/template-engines");
+	return templateEngines;
+};

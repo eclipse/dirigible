@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var workspace = require("workspace/v4/manager");
+var workspace = require("platform/v4/workspace");
 var lifecycle = require("platform/v4/lifecycle");
 var bytes = require("io/v4/bytes");
 

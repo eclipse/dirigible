@@ -8,12 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
-};
+var repository = require("platform/v4/repository");
+for (var propertyName in repository) {
+	exports[propertyName] = repository[propertyName];
+}

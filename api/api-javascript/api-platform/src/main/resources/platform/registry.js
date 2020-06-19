@@ -8,12 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
-};
+var registry = require("platform/v4/registry");
+for (var propertyName in registry) {
+	exports[propertyName] = registry[propertyName];
+}

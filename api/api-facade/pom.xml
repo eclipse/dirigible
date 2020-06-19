@@ -26,12 +26,10 @@
 		<module>api-mail</module>
 		<module>api-messaging</module>
 		<module>api-platform</module>
-		<module>api-repository</module>
 		<module>api-indexing</module>
 		<module>api-log</module>
 		<module>api-cms</module>
 		<module>api-bpm</module>
-		<module>api-workspace</module>
 		<module>api-net</module>
 	</modules>
 

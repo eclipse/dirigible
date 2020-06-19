@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var repositoryManager = require("repository/v4/manager");
+var repositoryManager = require("platform/v4/repository");
 var documentsApi = require("ide-documents/api/lib/document");
 var folderApi = require("ide-documents/api/lib/folder");
 var cmisObjectApi = require("ide-documents/api/lib/object");
