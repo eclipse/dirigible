@@ -70,6 +70,8 @@ public abstract class FileSystemRepository implements IRepository {
 
 	private static final String PATH_SEGMENT_ROOT = "root";
 
+	private static final String DIRIGIBLE_LOCAL_ROOT = DIRIGIBLE_LOCAL + IRepository.SEPARATOR + PATH_SEGMENT_ROOT;
+
 	private String repositoryPath = IRepository.SEPARATOR;
 
 	private LocalRepositoryDao repositoryDao;
@@ -143,6 +145,7 @@ public abstract class FileSystemRepository implements IRepository {
 		try {
 			initializeRepository(root);
 			this.repositorySearcher = new RepositorySearcher(this);
+			this.setParameter(REPOSITORY_ROOT_FOLDER, this.repositorySearcher.getRoot() + IRepository.SEPARATOR + DIRIGIBLE_LOCAL_ROOT);
 			this.setParameter(REPOSITORY_INDEX_FOLDER, this.repositorySearcher.getRoot());
 		} catch (IOException e) {
 			throw new LocalRepositoryException();
