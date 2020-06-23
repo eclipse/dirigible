@@ -12,7 +12,7 @@ var folderLib = require("ide-documents/api/lib/folder");
 var requestHandler = require("ide-documents/api/lib/request-handler");
 var request = require("http/v4/request");
 var response = require("http/v4/response");
-var repositoryContent = require("repository/v4/content");
+var repositoryContent = require("platform/v4/registry");
 
 String.prototype.replaceAll = function(find, replace) {
   return this.replace(new RegExp(find, 'g'), replace);
