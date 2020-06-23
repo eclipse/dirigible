@@ -14,7 +14,7 @@ exports.transform = function(workspaceName, projectName, filePath) {
         return null;
     }
 
-    var workspaceManager = require("workspace/v4/manager");
+    var workspaceManager = require("platform/v4/workspace");
     var contents = workspaceManager.getWorkspace(workspaceName)
         .getProject(projectName).getFile(filePath).getContent();
 
@@ -50,7 +50,7 @@ exports.transform = function(workspaceName, projectName, filePath) {
         console.error("Invalid source model: 'model' element is null");
     }
 
-    return JSON.stringify(root);
+    return JSON.stringify(root, null, 4);
 
     function transformEntity(raw) {
         var entity = {};

@@ -44,7 +44,9 @@ function updateAccessDefinitionsInCMS(data) {
     }
 
     let object = cmisObjectApi.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
-    cmisObjectApi.deleteObject(object);
+    if (object) {
+        cmisObjectApi.deleteObject(object);
+    }
     documentsApi.uploadDocument(folder, document);
 }
 

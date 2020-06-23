@@ -124,10 +124,14 @@
 						xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 						xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
 						xhr.onload = () => {
-							resolve(xhr.responseText);
+							if (xhr.status === 200) {
+								resolve(xhr.responseText);
+							} else {
+								reject(xhr.status, xhr.statusText)
+							}
 							csrfToken = xhr.getResponseHeader("x-csrf-token");
 						};
-						xhr.onerror = () => reject(xhr.statusText);
+						xhr.onerror = () => reject(xhr.status, xhr.statusText);
 						xhr.send();
 					});
 				};
@@ -428,10 +432,20 @@
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
 					var _editor;
-					createEditorInstance()
+					var _fileText;
+						fileIO.loadText(fileName)
+						.then((fileText) => {
+							_fileText = fileText;
+							return createEditorInstance();
+						})
+						.catch((statusCode, statusText) => {
+							var fileIO = new FileIO();
+							var fileName = fileIO.resolveFileName();
+							messageHub.post({fileName: fileName}, 'ide-core.closeEditor');
+						})
 						.then((editor) => {
 							_editor = editor;
-							return fileIO.loadText(fileName);
+							return _fileText;
 						})
 						.then((fileText) => {
 							var fileType = fileIO.resolveFileType(fileName);
