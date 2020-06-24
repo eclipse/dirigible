@@ -33,6 +33,12 @@
 		    var csrfToken;
 		    var dirty = false;
 
+			var modulesSuggestions = [];
+			var codeCompletionSuggestions = [];
+			var codeCompletionNestedSuggestions = {};
+			var codeCompletionNestedObjectsSuggestions = [];
+			var _editor;
+
 		    /*eslint-disable no-extend-native */
 		    String.prototype.replaceAll = function(search, replacement) {
 				var target = this;
@@ -388,15 +394,38 @@
 				xhrModules.send();
 			}
 
-			function loadSuggestions(moduleName, suggestions) {
+			function loadSuggestions(moduleName, suggestions, nestedSuggestions) {
+				if (moduleName.split("/").length <= 1) {
+					return
+				}
+
+				for (var i = 0; i < suggestions.length; i ++) {
+					if (suggestions[i].module === moduleName) {
+						return;
+					}
+				}
+
 				var xhr = new XMLHttpRequest();
 				xhr.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
 				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 				xhr.onload = function(xhr) {
-					suggestions.push({
-						module: moduleName,
-						suggestions: JSON.parse(xhr.target.responseText)
-					});
+					if (xhr.target.status === 200) {
+						var loadedSuggestions = JSON.parse(xhr.target.responseText);
+						suggestions.push({
+							module: moduleName,
+							suggestions: loadedSuggestions.filter(e => e.parent === undefined || e.parent === null)
+						});
+						loadedSuggestions
+							.filter(e => e.parent !== undefined && e.parent !== null)
+							.forEach(function(suggestion) {
+								var key = moduleName + "." + suggestion.parent;
+								if (!nestedSuggestions[key]) {
+									nestedSuggestions[key] = [];
+								}
+								nestedSuggestions[key].push(suggestion);
+							});
+						loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
+					}
 				};
 				xhr.send();
 			}
@@ -421,17 +450,44 @@
 				return moduleImports;
 			}
 
+			function loadNestedSuggestions(nestedObjectsSuggestions) {
+				var text = _editor.getValue();
+				var modules = getModuleImports(text);
+
+				var nestedKeys = {};
+				for (var key in codeCompletionNestedSuggestions) {
+					var split = key.split(".");
+					var moduleKey = split[0];
+					var functionKey = split[1];
+					modules.forEach(e => {
+						if (e.module === moduleKey) {
+							nestedKeys[e.keyWord + "." + functionKey] = codeCompletionNestedSuggestions[key];
+						}
+					});
+				}
+
+				for (var keyword in nestedKeys) {
+					var objects = text.match(new RegExp("(var|let)\\s[a-zA-Z0-9_-]+\\s?=\\s?" + keyword, "gm"))
+					objects.map(function(text) {
+						var split = text.split("=");
+						var key = split[0].replace("var ", "").replace("let ", "");
+						return {
+							keyWord: key,
+							suggestions: nestedKeys[keyword]
+						}
+					}).forEach(e => nestedObjectsSuggestions.push(e));
+				}
+			}
+
 			(function init(){
 				require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
-				var modulesSuggestions = [];
-				var codeCompletionSuggestions = [];
 
 				loadModuleSuggestions(modulesSuggestions);
 
 				require(['vs/editor/editor.main'], function() {
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
-					var _editor;
+
 					var _fileText;
 						fileIO.loadText(fileName)
 						.then((fileText) => {
@@ -452,7 +508,7 @@
 
 							var moduleImports = getModuleImports(fileText);
 
-							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
+							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions, codeCompletionNestedSuggestions));
 
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
@@ -494,17 +550,25 @@
 							        // find out if we are completing a property in the 'dependencies' object.
 //							        var wordObject = model.getWordUntilPosition(position);
 							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
-							        if (!token.endsWith('require("')) {
+							        if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0) {
 							            return { suggestions: [] };
 							        }
-							        var range = {
-							            startLineNumber: position.lineNumber,
-							            endLineNumber: position.lineNumber,
-							            startColumn: position.column,
-							            endColumn: position.column
-							        };
+									var wordPosition = model.getWordUntilPosition(position);
+									var word = wordPosition.word;
+									var range = {
+										startLineNumber: position.lineNumber,
+										endLineNumber: position.lineNumber,
+										startColumn: wordPosition.startColumn,
+										endColumn: wordPosition.endColumn
+									};
 							        return {
-										suggestions: modulesSuggestions.map(function(e) {
+										suggestions: modulesSuggestions
+										.filter(function(e) {
+											if (word.length > 0) {
+												return e.name.toLowerCase().indexOf(word.toLowerCase()) >= 0;
+											}
+											return true;
+										}).map(function(e) {
 											return {
 												label: e.name,
 												kind: monaco.languages.CompletionItemKind.Module,
@@ -519,43 +583,50 @@
 							});
 							monaco.languages.registerCompletionItemProvider('javascript', {
 							    provideCompletionItems: function(model, position) {
-							        // find out if we are completing a property in the 'dependencies' object.
-//							        var wordObject = model.getWordUntilPosition(position);
 							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
 
-//									var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + ".", "g")))[0];
 							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
 									var afterDotToken = token.substring(token.indexOf(".") + 1);
 									var tokenParts = token.split(".");
-									var lastTokenPart = tokenParts.length > 2 ? tokenParts[tokenParts.length - 2] : null;
 									var moduleName = moduleImport ? moduleImport.module : null;
-
-							        if (!moduleName) {
+									var nestedObjectKeyword = null;
+									if (!moduleName) {
+										var nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
+										if (nestedKeyword) {
+											nestedObjectKeyword = nestedKeyword.split(".")[0];
+										}
+									}
+							        if (!moduleName && !nestedObjectKeyword) {
 							            return { suggestions: [] };
 							        }
-							        var range = {
-							            startLineNumber: position.lineNumber,
-							            endLineNumber: position.lineNumber,
-							            startColumn: position.column,
-							            endColumn: position.column
-							        };
-									var suggestions = codeCompletionSuggestions.filter(e => e.module === moduleName)[0].suggestions;
+									var wordPosition = model.getWordUntilPosition(position);
+									var word = wordPosition.word;
+									var range = {
+										startLineNumber: position.lineNumber,
+										endLineNumber: position.lineNumber,
+										startColumn: wordPosition.startColumn,
+										endColumn: wordPosition.endColumn
+									};
+									var suggestions = [];
+									var moduleSuggestions = codeCompletionSuggestions.filter(e => e.module === moduleName)[0];
+									if (moduleSuggestions) {
+										suggestions = moduleSuggestions.suggestions;
+									} else if (nestedObjectKeyword) {
+										codeCompletionNestedObjectsSuggestions.forEach(function(e) {
+											if (e.keyWord.trim() === nestedObjectKeyword) {
+												suggestions = e.suggestions;
+											}
+										})
+									}
 							        return {
 										suggestions: suggestions
 										.filter(function(e) {
-											if (lastTokenPart) {
-												return lastTokenPart.startsWith(e.parent);
+											if (word.length > 0) {
+												return e.name.toLowerCase().startsWith(word.toLowerCase());
 											}
-											return e.name.startsWith(afterDotToken) && !e.parent;
+											return true;
 										})
 										.map(function(e) {
-											let insertText = null;
-											if (lastTokenPart) {
-												insertText = e.fqn.substring(afterDotToken.length);
-												insertText = insertText.substring(insertText.lastIndexOf(".") + 1);
-											} else {
-												insertText = e.name.substring(afterDotToken.length);
-											}
 											return {
 												label: e.name,
 												kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
@@ -563,7 +634,7 @@
 													value: e.documentation
 												},
 												detail: e.isFunction ? "function " + e.name : e.name,
-												insertText: insertText,
+												insertText: e.name,
 												range: range
 											}
 										})
@@ -582,7 +653,6 @@
 							7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
 							7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
 							7034  // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
-
 						]
 					});
 					monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
