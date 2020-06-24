@@ -4,5 +4,6 @@
 ARG DIRIGIBLE_VERSION=latest
 FROM dirigiblelabs/dirigible-base-platform-sap-cf:$DIRIGIBLE_VERSION
 
-EXPOSE 8080
-CMD ["catalina.sh", "run"]
+EXPOSE 8080 8081
+
+CMD ["catalina.sh", "jpda", "run"]

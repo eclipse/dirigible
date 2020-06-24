@@ -40,6 +40,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	private static final String ENGINE_JAVA_SCRIPT = "js";
 	private static final String BUILDER_OPTION_INSPECT = "inspect";
+	private static final String BUILDER_OPTION_INSPECT_SECURE = "inspect.Secure";
 	private static final String BUILDER_OPTION_INSPECT_PATH = "inspect.Path";
 	private static final String SOURCE_PROVIDER = "SourceProvider";
 	private static final String CODE_DEBUGGER = "debugger;\n\n";
@@ -110,6 +111,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
 		if (isDebugEnabled) {
 			contextBuilder.option(BUILDER_OPTION_INSPECT, Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, DEFAULT_DEBUG_PORT));
+			contextBuilder.option(BUILDER_OPTION_INSPECT_SECURE, Boolean.FALSE.toString());
 			contextBuilder.option(BUILDER_OPTION_INSPECT_PATH, moduleOrCode);
 		}
 
