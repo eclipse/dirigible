@@ -47,7 +47,7 @@ public class ConsoleWebsocketService {
 	@OnOpen
 	public void onOpen(Session session) {
 		OPEN_SESSIONS.put(session.getId(), session);
-		logger.debug("[ws:console] onOpen: " + session.getId());
+		logger.debug(String.format("[ws:console] Session %s openned.", session.getId()));
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ConsoleWebsocketService {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		logger.trace("[ws:console] onMessage: " + message);
+		logger.debug(String.format("[ws:console] Session %s received message: %s.", session.getId(), message));
 	}
 
 	/**
