@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                
+                    
+    
     
     
     <wb-module deploy-name="ROOT">
-                
+                        
+        
         <wb-resource deploy-path="/WEB-INF/web.xml" source-path="/src/main/webapp/WEB-INF/web.xml"/>
-                                
+                                        
+        
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                
+                                        
+        
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                
+                                        
+        
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                
+                                        
+        
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
@@ -57,16 +63,13 @@
         <dependent-module archiveName="dirigible-api-facade-messaging-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-messaging/dirigible-api-facade-messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-repository-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-repository/dirigible-api-facade-repository">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-api-facade-utils-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-utils/dirigible-api-facade-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-facade-bpm-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-bpm/dirigible-api-facade-bpm">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-facade-workspace-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-workspace/dirigible-api-facade-workspace">
+        <dependent-module archiveName="dirigible-api-facade-net-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-facade-net/dirigible-api-facade-net">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-all-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-all/dirigible-api-javascript-all">
@@ -99,9 +102,6 @@
         <dependent-module archiveName="dirigible-api-javascript-messaging-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-messaging/dirigible-api-javascript-messaging">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-repository-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-repository/dirigible-api-javascript-repository">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dirigible-api-javascript-security-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-security/dirigible-api-javascript-security">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -114,7 +114,7 @@
         <dependent-module archiveName="dirigible-api-javascript-bpm-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-bpm/dirigible-api-javascript-bpm">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dirigible-api-javascript-workspace-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-workspace/dirigible-api-javascript-workspace">
+        <dependent-module archiveName="dirigible-api-javascript-net-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-api-javascript-net/dirigible-api-javascript-net">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-repository-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-repository/dirigible-repository">
@@ -219,6 +219,9 @@
         <dependent-module archiveName="dirigible-core-migrations-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-migrations/dirigible-core-migrations">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-core-websockets-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-core-websockets/dirigible-core-websockets">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-services-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-services/dirigible-services">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -244,6 +247,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-service-operations-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-operations/dirigible-service-operations">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-service-websockets-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-service-websockets/dirigible-service-websockets">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dirigible-engine-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-engine/dirigible-engine">
@@ -519,19 +525,23 @@
         <dependent-module archiveName="dirigible-ext-qunit-5.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ext-qunit/dirigible-ext-qunit">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                
+                                        
+        
         
         
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
-                                
+                                        
+        
         
         
         <property name="context-root" value="ROOT"/>
-                            
+                                    
+    
     
     
     </wb-module>
-            
+                
+
 
 
 </project-modules>

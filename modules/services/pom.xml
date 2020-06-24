@@ -24,6 +24,7 @@
 		<module>service-theme</module>
 		<module>service-transport</module>
 		<module>service-operations</module>
+		<module>service-websockets</module>
 	</modules>
 
 	<properties>
