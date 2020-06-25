@@ -33,6 +33,9 @@
 #if($property.dataScale)
                         "scale": "${property.dataScale}",
 #end
+#if($property.dataDefaultValue)
+                        "defaultValue": "${property.dataDefaultValue}",
+#end
 #if($property.dataNotNull)
 #else
                         "nullable": true,
