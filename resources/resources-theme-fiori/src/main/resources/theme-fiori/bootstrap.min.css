@@ -1441,5 +1441,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 }
 .table-header-button {
 	margin-bottom: 4px !important;
+	background: transparent;
 }
 

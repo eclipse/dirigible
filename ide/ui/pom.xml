@@ -74,6 +74,7 @@
 		<module>ide-registry</module>
 		<module>ide-plugins</module>
 		<module>ide-discussions</module>
+		<module>ide-websockets</module>
 	</modules>
 
 	<profiles>

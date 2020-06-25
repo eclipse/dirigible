@@ -23,6 +23,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.slf4j.Logger;
@@ -51,9 +52,9 @@ public class WebsocketsService {
 	public void onOpen(Session session, @PathParam("endpoint") String endpoint) {
 		logger.debug(String.format("[websocket] Endpoint '%s' openned.", endpoint));
 		Map<Object, Object> context = new HashMap<>();
-    	context.put("METHOD", "onopen");
+    	context.put("method", "onopen");
     	try {
-			handler.processEvent(endpoint, context);
+			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -74,10 +75,10 @@ public class WebsocketsService {
 	public void onMessage(String message, Session session, @PathParam("endpoint") String endpoint) {
 		logger.trace(String.format("[websocket] Endpoint '%s' received message:%s ", endpoint, message));
 		Map<Object, Object> context = new HashMap<>();
-		context.put("MESSAGE", message);
-    	context.put("METHOD", "onmessage");
+		context.put("message", message);
+    	context.put("method", "onmessage");
     	try {
-			handler.processEvent(endpoint, context);
+			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -98,10 +99,10 @@ public class WebsocketsService {
 		logger.error(String.format("[ws:console] Endpoint '%s' error %s", endpoint, throwable.getMessage()));
 		logger.error("[websocket] " + throwable.getMessage(), throwable);
 		Map<Object, Object> context = new HashMap<>();
-		context.put("ERROR", throwable.getMessage());
-    	context.put("METHOD", "onerror");
+		context.put("error", throwable.getMessage());
+    	context.put("method", "onerror");
     	try {
-			handler.processEvent(endpoint, context);
+			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -121,9 +122,9 @@ public class WebsocketsService {
 	public void onClose(Session session, CloseReason closeReason, @PathParam("endpoint") String endpoint) {
 		logger.debug(String.format("[websocket] Endpoint '%s' closed because of %s", endpoint, closeReason));
 		Map<Object, Object> context = new HashMap<>();
-    	context.put("METHOD", "onclose");
+    	context.put("method", "onclose");
     	try {
-			handler.processEvent(endpoint, context);
+			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}

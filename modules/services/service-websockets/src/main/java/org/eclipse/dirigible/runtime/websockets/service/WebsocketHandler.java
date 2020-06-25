@@ -33,7 +33,7 @@ public class WebsocketHandler {
 	 * @param context the context
 	 * @throws WebsocketsException
 	 */
-	public void processEvent(String endpoint, Map<Object, Object> context) throws WebsocketsException {
+	public void processEvent(String endpoint, String wrapper, Map<Object, Object> context) throws WebsocketsException {
 		List<WebsocketDefinition> websocketByEndpointList = websocketsCoreService.getWebsocketByEndpoint(endpoint);
 		if (websocketByEndpointList.size() > 0) {
 			WebsocketDefinition websocketDefinition = websocketByEndpointList.get(0);
@@ -43,7 +43,8 @@ public class WebsocketHandler {
 				if (engine == null) {
 					engine = "javascript";
 				}
-				ScriptEngineExecutorsManager.executeServiceModule(engine, module, context);
+				context.put("handler", module);
+				ScriptEngineExecutorsManager.executeServiceModule(engine, wrapper, context);
 			} catch (ScriptingException e) {
 				throw new WebsocketsException(e);
 			}

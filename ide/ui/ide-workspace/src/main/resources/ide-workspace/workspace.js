@@ -1366,7 +1366,7 @@ function confirmRemove(name) {
 }
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
-const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'roles', 'constraints', 'table', 'view'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
 function getIcon(f) {
 	var icon;

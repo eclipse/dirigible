@@ -58,33 +58,37 @@ public class WebsocketClient {
     	this.session = session;
     	WebsocketsFacade.CLIENTS.add(this);
     	Map<Object, Object> context = new HashMap<>();
-    	context.put("METHOD", "onopen");
-    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, this.handler, context);
+    	context.put("method", "onopen");
+    	context.put("handler", this.handler);
+    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN, context);
     }
 
     @OnMessage
     public void processMessage(String message) throws ScriptingException {
     	Map<Object, Object> context = new HashMap<>();
-    	context.put("MESSAGE", message);
-    	context.put("METHOD", "onmessage");
-    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, this.handler, context);
+    	context.put("message", message);
+    	context.put("method", "onmessage");
+    	context.put("handler", this.handler);
+    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
     }
 
     @OnError
     public void processError(Throwable t) throws ScriptingException {
     	logger.error(t.getMessage(), t);
     	Map<Object, Object> context = new HashMap<>();
-    	context.put("ERROR", t.getMessage());
-    	context.put("METHOD", "onerror");
-    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, this.handler, context);
+    	context.put("error", t.getMessage());
+    	context.put("method", "onerror");
+    	context.put("handler", this.handler);
+    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
     }
     
     @OnClose
     public void onClose(Session session) throws ScriptingException {
     	WebsocketsFacade.CLIENTS.remove(this);
     	Map<Object, Object> context = new HashMap<>();
-    	context.put("METHOD", "onclose");
-    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, this.handler, context);
+    	context.put("method", "onclose");
+    	context.put("handler", this.handler);
+    	ScriptEngineExecutorsManager.executeServiceModule(this.engine, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE, context);
     }
 
 }

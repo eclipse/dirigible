@@ -36,15 +36,15 @@ exports.getClientByHandler = function(handler) {
 };
 
 exports.getMessage = function() {
-	return __context.get('MESSAGE');
+	return __context.get('message');
 };
 
 exports.getError = function() {
-	return __context.get('ERROR');
+	return __context.get('error');
 };
 
 exports.getMethod = function() {
-	return __context.get('METHOD');
+	return __context.get('method');
 };
 
 exports.isOnOpen = function() {

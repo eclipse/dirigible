@@ -3,3 +3,4 @@ org.eclipse.dirigible.runtime.operations.service.JobsService	# Jobs Service
 org.eclipse.dirigible.runtime.operations.service.SecurityService	# Security Service
 org.eclipse.dirigible.runtime.operations.service.ListenersService	# Listeners Service
 org.eclipse.dirigible.runtime.operations.service.DataStructuresService	# Data Structures Service
+org.eclipse.dirigible.runtime.operations.service.WebsocketsService	# Websockets Service

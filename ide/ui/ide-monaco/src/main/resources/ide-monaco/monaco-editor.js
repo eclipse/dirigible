@@ -28,6 +28,7 @@ exports.getEditor = function() {
 			"application/json+view",
 			"application/json+job",
 			"application/json+listener",
+			"application/json+websocket",
 			"application/json+access",
 			"application/json+roles",
 			"application/xml",
