@@ -67,7 +67,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form ng-hide="actionType === 'delete'">
+					<form name="entityForm" ng-hide="actionType === 'delete'">
 #foreach ($property in $properties)
 #if(!$property.dataAutoIncrement)
 #if($property.widgetType == "DROPDOWN")
@@ -78,18 +78,24 @@
 #elseif($property.widgetType == "TEXTAREA")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<textarea #if($property.isCalculatedProperty)readonly#end class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()"></textarea>
+							<textarea #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()"></textarea>
 						</div>
 #elseif($property.widgetType == "NUMBER")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input #if($property.isCalculatedProperty)readonly#end type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
+							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="number" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
+						</div>
+#elseif($property.widgetType == "EMAIL")
+						<div class="form-group">
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="email" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #elseif($property.widgetType == "DATE")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
 							<p class="input-group">
 								<input type="text"
+									#if($property.dataNotNull)required#end 
 									#if($property.isCalculatedProperty)readonly#end
 									ng-model="entity.${property.name}"
 									class="form-control"
@@ -112,25 +118,28 @@
 #elseif($property.widgetType == "CHECKBOX")
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input #if($property.isCalculatedProperty)readonly#end type="checkbox" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
+							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="checkbox" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #else
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
-							<input #if($property.isCalculatedProperty)readonly#end type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
+							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="text" class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #end
 #end
 #end
+						<div class="modal-footer">
+							<input type="submit" value="Save" class="btn btn-primary btn-lg" ng-show="actionType === 'new'" ng-click="create()">
+							<input type="submit" value="Update" class="btn btn-primary btn-lg" ng-show="actionType === 'update'" ng-click="update()">
+							<button type="button" class="btn btn-lg" data-dismiss="modal">Close</button>
+						</div>
 					</form>
 					<div ng-show="actionType === 'delete'">
 						You are going to delete <b>${name}</b> with #foreach ($property in $properties)#if($property.dataPrimaryKey)<b>${property.name} = {{entity.${property.name}}}</b>.#end#end
 
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'new'" ng-click="create()">Save</button>
-					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'update'" ng-click="update()">Update</button>
+				<div class="modal-footer" ng-show="actionType === 'delete'">
 					<button type="button" class="btn btn-primary btn-lg" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
 					<button type="button" class="btn btn-lg" data-dismiss="modal">Close</button>
 				</div>

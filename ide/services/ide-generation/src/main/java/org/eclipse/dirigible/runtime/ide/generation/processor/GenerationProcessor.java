@@ -463,7 +463,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("dataAutoIncrement", property.getDataAutoIncrement());
 				propertyModel.put("dataDefaultValue", property.getDataDefaultValue());
 				propertyModel.put("dataLength", property.getDataLength());
-				propertyModel.put("dataNotNull", property.getDataNotNull());
+				propertyModel.put("dataNullable", property.getDataNullable());
+				propertyModel.put("dataNotNull", property.getDataNullable() == null ? null : !property.getDataNullable());
 				propertyModel.put("dataPrecision", property.getDataPrecision());
 				propertyModel.put("dataScale", property.getDataScale());
 				propertyModel.put("dataType", property.getDataType());

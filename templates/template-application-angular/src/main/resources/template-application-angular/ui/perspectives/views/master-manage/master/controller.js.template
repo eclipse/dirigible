@@ -161,30 +161,33 @@ angular.module('page')
 	};
 
 	$scope.create = function() {
-		${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
-		.success(function(data) {
-			$scope.loadPage($scope.dataPage);
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		});
-			
+		if (${dollar}scope.entityForm.${dollar}valid) {
+			${dollar}http.post(api, JSON.stringify(${dollar}scope.entity))
+			.success(function(data) {
+				$scope.loadPage($scope.dataPage);
+				toggleEntityModal();
+				$messageHub.messageEntityModified();
+			}).error(function(data) {
+				alert(JSON.stringify(data));
+			});
+		}
 	};
 
 	$scope.update = function() {
+		if (${dollar}scope.entityForm.${dollar}valid) {
 #foreach ($property in $properties)
 #if($property.dataPrimaryKey)
-		${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
+			${dollar}http.put(api + '/' + ${dollar}scope.entity.${property.name}, JSON.stringify(${dollar}scope.entity))
 #end
 #end
-		.success(function(data) {
-			$scope.loadPage($scope.dataPage);
-			toggleEntityModal();
-			$messageHub.messageEntityModified();
-		}).error(function(data) {
-			alert(JSON.stringify(data));
-		})
+			.success(function(data) {
+				$scope.loadPage($scope.dataPage);
+				toggleEntityModal();
+				$messageHub.messageEntityModified();
+			}).error(function(data) {
+				alert(JSON.stringify(data));
+			})
+		}
 	};
 
 	$scope.delete = function() {

@@ -53,7 +53,7 @@ public class EntityDataModelSerializationTest {
 		property1.setDataAutoIncrement(true);
 		property1.setDataDefaultValue("");
 		property1.setDataLength("20");
-		property1.setDataNotNull(true);
+		property1.setDataNullable(true);
 		property1.setDataPrecision("");
 		property1.setDataScale("");
 		property1.setDataType("VARCHAR");

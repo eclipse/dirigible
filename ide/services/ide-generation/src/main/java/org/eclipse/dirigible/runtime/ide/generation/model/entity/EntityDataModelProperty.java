@@ -22,7 +22,7 @@ public class EntityDataModelProperty {
 	private String dataDefaultValue;
 	private Boolean dataPrimaryKey;
 	private Boolean dataAutoIncrement;
-	private Boolean dataNotNull;
+	private Boolean dataNullable;
 	private Boolean dataUnique;
 	private String dataPrecision;
 	private String dataScale;
@@ -188,17 +188,17 @@ public class EntityDataModelProperty {
 	}
 
 	/**
-	 * @return the dataNotNull
+	 * @return the dataNullable
 	 */
-	public Boolean getDataNotNull() {
-		return dataNotNull;
+	public Boolean getDataNullable() {
+		return dataNullable;
 	}
 
 	/**
-	 * @param dataNotNull the dataNotNull to set
+	 * @param dataNullable the dataNullable to set
 	 */
-	public void setDataNotNull(Boolean dataNotNull) {
-		this.dataNotNull = dataNotNull;
+	public void setDataNullable(Boolean dataNullable) {
+		this.dataNullable = dataNullable;
 	}
 
 	/**
