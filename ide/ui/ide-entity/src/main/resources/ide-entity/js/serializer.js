@@ -59,6 +59,12 @@ function createModel(graph) {
 			if (child.value.feedPath) {
 				entityContent += ' feedPath="' + child.value.feedPath + '"';
 			}
+			if (child.value.roleRead) {
+				entityContent += ' roleRead="' + child.value.roleRead + '"';
+			}
+			if (child.value.roleWrite) {
+				entityContent += ' roleWrite="' + child.value.roleWrite + '"';
+			}
 			entityContent += '>\n';
 			model.push(entityContent);
 
@@ -146,6 +152,12 @@ function createModel(graph) {
 					}
 					if (property.feedPropertyName !== null) {
 						model.push(' feedPropertyName="' + _.escape(property.feedPropertyName) + '"');
+					}
+					if (property.roleRead !== null) {
+						model.push(' roleRead="' + _.escape(property.roleRead) + '"');
+					}
+					if (property.roleWrite !== null) {
+						model.push(' roleWrite="' + _.escape(property.roleWrite) + '"');
 					}
 					if (property.widgetDropDownKey !== null) {
 						model.push(' widgetDropDownKey="' + _.escape(property.widgetDropDownKey) + '"');

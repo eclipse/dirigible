@@ -31,6 +31,8 @@ Entity.prototype.feedUsername = null;
 Entity.prototype.feedPassword = null;
 Entity.prototype.feedSchedule = null;
 Entity.prototype.feedPath = null;
+Entity.prototype.roleRead = null;
+Entity.prototype.roleWrite = null;
 
 Entity.prototype.clone = function() {
 	return mxUtils.clone(this);
@@ -70,6 +72,8 @@ Property.prototype.widgetFormat = null; // the format for rendering
 Property.prototype.widgetDropDownKey = null; // the key property in drop down case
 Property.prototype.widgetDropDownValue = null; // the value property in drop down case
 Property.prototype.feedPropertyName = null; // the matching property name from the feed
+Property.prototype.roleRead = null; // the matching property name from the read role
+Property.prototype.roleWrite = null; // the matching property name from the write role
 
 Property.prototype.clone = function() {
 	return mxUtils.clone(this);

@@ -43,7 +43,9 @@ public class EntityDataModelEntity {
 	private String feedSchedule;
 	private String feedPath;
 
-	
+	private String roleRead;
+	private String roleWrite;
+
 	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
 	private List<EntityDataModelComposition> compositions = new ArrayList<EntityDataModelComposition>();
@@ -356,4 +358,32 @@ public class EntityDataModelEntity {
 		this.feedPath = feedPath;
 	}
 
+
+	/**
+	 * @return the roleRead
+	 */
+	public String getRoleRead() {
+		return roleRead;
+	}
+
+	/**
+	 * @param roleRead the roleRead to set
+	 */
+	public void setRoleRead(String roleRead) {
+		this.roleRead = roleRead;
+	}
+
+	/**
+	 * @return the roleWrite
+	 */
+	public String getRoleWrite() {
+		return roleWrite;
+	}
+
+	/**
+	 * @param roleWrite the roleWrite to set
+	 */
+	public void setRoleWrite(String roleWrite) {
+		this.roleWrite = roleWrite;
+	}
 }

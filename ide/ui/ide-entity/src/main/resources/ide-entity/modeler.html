@@ -101,6 +101,7 @@
 			    <li><a data-toggle="pill" href="#dataEntity">Data</a></li>
 			    <li><a data-toggle="pill" href="#uiEntity">User Interface</a></li>
 			    <li><a data-toggle="pill" href="#feedEntity">Feed</a></li>
+				<li><a data-toggle="pill" href="#securityEntity">Security</a></li>
 			</ul>
 	    
 	    	<div class="tab-content">
@@ -255,6 +256,23 @@
 					</div>
 				  </div>
 			    </div>
+				<div id="securityEntity" class="tab-pane fade">
+			  	  <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+						<label class="col-xs-3 col-form-label">Read Role: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="read role name" ng-model="ctrl.$scope.$parent.cell.value.roleRead" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Write Role: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="write role name" ng-model="ctrl.$scope.$parent.cell.value.roleWrite" required="required">
+						</div>
+					</div>
+				  </div>
+			    </div>
 			</div>
 	    
 	        
@@ -278,6 +296,7 @@
 			    <li><a data-toggle="pill" href="#dataProperty">Data</a></li>
 			    <li><a data-toggle="pill" href="#uiProperty">User Interface</a></li>
 			    <li><a data-toggle="pill" href="#feedProperty">Feed</a></li>
+				<li><a data-toggle="pill" href="#securityProperty">Security</a></li>
 			</ul>
 	    
 	    	<div class="tab-content">
@@ -451,16 +470,33 @@
 			      <br><br>
 			      <div class="form-group row">
 			      	<div class="row">
-					    <label class="col-xs-3 col-form-label" for="widgetType">Property Name: </label>
+					    <label class="col-xs-3 col-form-label">Property Name: </label>
 					    <div class="col-xs-3">
 					    	<input class="form-control" type="text" placeholder="property name" ng-model="ctrl.$scope.$parent.cell.value.feedPropertyName" required="required">
 						</div>
 					</div>
+			      </div>
 			    </div>
-			</div>
+
+				<div id="securityProperty" class="tab-pane fade">
+			      <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+					    <label class="col-xs-3 col-form-label">Read Role: </label>
+					    <div class="col-xs-3">
+					    	<input class="form-control" type="text" placeholder="read role name" ng-model="ctrl.$scope.$parent.cell.value.roleRead" required="required">
+						</div>
+					</div>
+					<div class="row">
+					    <label class="col-xs-3 col-form-label">Write Role: </label>
+					    <div class="col-xs-3">
+					    	<input class="form-control" type="text" placeholder="write role name" ng-model="ctrl.$scope.$parent.cell.value.roleWrite" required="required">
+						</div>
+					</div>
+			      </div>
+			    </div>
 		</div>
 	    
-	        
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-primary" ng-click="ctrl.okPropertyProperties()" data-toggle="modal" data-target="#dialogPropertyProperties">OK</button>

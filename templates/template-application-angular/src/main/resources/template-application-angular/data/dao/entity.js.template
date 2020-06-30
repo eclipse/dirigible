@@ -13,6 +13,24 @@ var daoApi = require("db/v4/dao");
 #if($isEntityUtilsEnabled == "true")
 var EntityUtils = require("${projectName}/data/utils/EntityUtils");
 #end
+#if($roleRead && $roleRead != "" || $roleWrite && $roleWrite != "") 
+#set($isEntitySecurityEnabled = "true")
+#end
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != ""|| $property.roleWrite && $property.roleWrite != "")
+#set($isEntityPropertySecurityEnabled = "true")
+#break
+#end
+#end
+#if($isEntitySecurityEnabled || $isEntityPropertySecurityEnabled)
+var user = require("security/v4/user");
+
+function ForbiddenError(message) {
+    this.name = "ForbiddenError";
+    this.message = message;
+    this.stack = (new Error()).stack;
+}
+#end
 
 var dao = daoApi.create({
 	table: "${dataName}",
@@ -38,14 +56,35 @@ var dao = daoApi.create({
 });
 
 exports.list = function(settings) {
+#if($roleRead && $roleRead != "") 
+	if (!user.isInRole("${roleRead}")) {
+		throw new ForbiddenError("You do not have the required role to call this function");
+	}
+#end
 #if($isEntityUtilsEnabled == "true")
 	return dao.list(settings).map(function(e) {
 #foreach ($property in $properties)
+#if($property.roleRead)
+		if (!user.isInRole("${property.roleRead}")) {
+			delete e.$property.name;
+		}
+#end
 #if($property.dataType == "DATE")
 		EntityUtils.setLocalDate(e, "${property.name}");
 #end
 #if($property.dataType == "BOOLEAN")
 		EntityUtils.setBoolean(e, "${property.name}");
+#end
+#end
+		return e;
+	});
+#elseif($isEntityPropertySecurityEnabled == "true")
+	return dao.list(settings).map(function(e) {
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+		if (!user.isInRole("${property.roleRead}")) {
+			delete e.$property.name;
+		}
 #end
 #end
 		return e;
@@ -57,14 +96,34 @@ exports.list = function(settings) {
 #if($type != "REPORT")
 
 exports.get = function(id) {
+#if($roleRead && $roleRead != "") 
+	if (!user.isInRole("${roleRead}")) {
+		throw new ForbiddenError("You do not have the required role to call this function");
+	}
+#end
 #if($isEntityUtilsEnabled == "true")
 	var entity = dao.find(id);
 #foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+	if (!user.isInRole("${property.roleRead}")) {
+		delete entity.$property.name;
+	}
+#end
 #if($property.dataType == "DATE")
 	EntityUtils.setLocalDate(entity, "${property.name}");
 #end
 #if($property.dataType == "BOOLEAN")
 	EntityUtils.setBoolean(entity, "${property.name}");
+#end
+#end
+	return entity;
+#elseif($isEntityPropertySecurityEnabled == "true")
+	var entity = dao.find(id);
+#foreach ($property in $properties)
+#if($property.roleRead && $property.roleRead != "")
+	if (!user.isInRole("${property.roleRead}")) {
+		delete entity.$property.name;
+	}
 #end
 #end
 	return entity;
@@ -74,6 +133,11 @@ exports.get = function(id) {
 };
 
 exports.create = function(entity) {
+#if($roleWrite && $roleWrite != "") 
+	if (!user.isInRole("${roleWrite}")) {
+		throw new ForbiddenError("You do not have the required role to call this function");
+	}
+#end
 #if($isEntityUtilsEnabled == "true")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE")
@@ -87,6 +151,15 @@ exports.create = function(entity) {
 #foreach ($property in $properties)
 #if($property.isCalculatedProperty)
 	entity["${property.name}"] = ${property.calculatedPropertyExpression};
+#end
+#end
+#if($isEntityPropertySecurityEnabled == "true")
+#foreach ($property in $properties)
+#if($property.roleWrite && $property.roleWrite != "")
+	if (!user.isInRole("${property.roleWrite}")) {
+		delete entity.$property.name;
+	}
+#end
 #end
 #end
 	var id = dao.insert(entity);
@@ -106,6 +179,22 @@ exports.create = function(entity) {
 };
 
 exports.update = function(entity) {
+#if($roleWrite && $roleWrite != "") 
+	if (!user.isInRole("${roleWrite}")) {
+		throw new ForbiddenError("You do not have the required role to call this function");
+	}
+#end
+#if($isEntityPropertySecurityEnabled == "true")
+	var oldEntity = dao.find(entity.#foreach ($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+#foreach ($property in $properties)
+#if($property.roleWrite && $property.roleWrite != "")
+	if (!user.isInRole("${property.roleWrite}")) {
+		delete entity.$property.name;
+	}
+#end
+#end
+	entity = Object.assign(oldEntity, entity);
+#end
 #if($isEntityUtilsEnabled == "true")
 #foreach ($property in $properties)
 #if($property.dataType == "DATE")
@@ -137,6 +226,11 @@ exports.update = function(entity) {
 };
 
 exports.delete = function(id) {
+#if($roleWrite && $roleWrite != "") 
+	if (!user.isInRole("${roleWrite}")) {
+		throw new ForbiddenError("You do not have the required role to call this function");
+	}
+#end
 	dao.remove(id);
 	triggerEvent("Delete", {
 		table: "${dataName}",

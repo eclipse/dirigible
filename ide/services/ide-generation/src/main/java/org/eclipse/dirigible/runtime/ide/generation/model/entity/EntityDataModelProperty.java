@@ -47,6 +47,9 @@ public class EntityDataModelProperty {
 
 	private String feedPropertyName;
 
+	private String roleRead;
+	private String roleWrite;
+
 	/**
 	 * @return the name
 	 */
@@ -466,5 +469,33 @@ public class EntityDataModelProperty {
 	public void setFeedPropertyName(String feedPropertyName) {
 		this.feedPropertyName = feedPropertyName;
 	}
-	
+
+	/**
+	 * @return the roleRead
+	 */
+	public String getRoleRead() {
+		return roleRead;
+	}
+
+	/**
+	 * @param roleRead the roleRead to set
+	 */
+	public void setRoleRead(String roleRead) {
+		this.roleRead = roleRead;
+	}
+
+	/**
+	 * @return the roleWrite
+	 */
+	public String getRoleWrite() {
+		return roleWrite;
+	}
+
+	/**
+	 * @param roleWrite the roleWrite to set
+	 */
+	public void setRoles(String roleWrite) {
+		this.roleWrite = roleWrite;
+	}
+
 }

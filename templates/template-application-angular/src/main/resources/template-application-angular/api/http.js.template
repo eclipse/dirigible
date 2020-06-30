@@ -23,6 +23,14 @@ exports.sendResponseBadRequest = function(message) {
 	});
 };
 
+// HTTP 403
+exports.sendForbiddenRequest = function(message) {
+	this.sendResponse(403, {
+		"code": 403,
+		"message": message
+	});
+};
+
 // HTTP 404
 exports.sendResponseNotFound = function(message) {
 	this.sendResponse(404, {

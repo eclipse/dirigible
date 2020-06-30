@@ -451,6 +451,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.put("feedPassword", entity.getFeedPassword());
 			model.put("feedSchedule", entity.getFeedSchedule());
 			model.put("feedPath", entity.getFeedPath());
+			model.put("roleRead", entity.getRoleRead());
+			model.put("roleWrite", entity.getRoleWrite());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();
@@ -489,6 +491,9 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				propertyModel.put("widgetDropDownValue", property.getWidgetDropDownValue());
 
 				propertyModel.put("feedPropertyName", property.getFeedPropertyName());
+
+				propertyModel.put("roleRead", property.getRoleRead());
+				propertyModel.put("roleWrite", property.getRoleWrite());
 
 				propertiesModels.add(propertyModel);
 			}
