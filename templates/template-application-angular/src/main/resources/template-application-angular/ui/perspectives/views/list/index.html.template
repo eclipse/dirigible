@@ -36,6 +36,16 @@
 #if($property.widgetIsMajor)
 #if($property.widgetType == "DROPDOWN")
 					<td>{{${property.name.toLowerCase()}OptionValue(next.${property.name})}}</td>
+#elseif($property.widgetType == "EMAIL")
+					<td><a href="mailto:{{next.${property.name}}}">{{next.${property.name}}}</a></td>
+#elseif($property.widgetType == "URL")
+					<td><a href="{{next.${property.name}}}" target="_blank">{{next.${property.name}}}</a></td>
+#elseif($property.widgetType == "TEL")
+					<td><a href="tel:{{next.${property.name}}}">{{next.${property.name}}}</a></td>
+#elseif($property.widgetType == "WEEK")
+					<td>{{next.${property.name} | date:weekFormat}}</td>
+#elseif($property.widgetType == "MONTH")
+					<td>{{next.${property.name} | date:monthFormat}}</td>
 #elseif($property.widgetType == "DATE")
 					<td>{{next.${property.name} | date:dateFormat}}</td>
 #elseif($property.widgetType == "CHECKBOX")

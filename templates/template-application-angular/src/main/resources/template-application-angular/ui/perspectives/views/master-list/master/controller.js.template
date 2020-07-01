@@ -88,7 +88,11 @@ angular.module('page')
 		startingDay: 1
 	};
 	$scope.dateFormats = ['yyyy/MM/dd', 'dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
+	$scope.monthFormats = ['yyyy/MM', 'MMMM-yyyy', 'MM.yyyy', 'MMMM/yyyy'];
+	$scope.weekFormats = ['yyyy/w', 'w-yyyy', 'w.yyyy', 'w/yyyy', "w"];
 	$scope.dateFormat = $scope.dateFormats[0];
+	$scope.monthFormat = $scope.monthFormats[1];
+	$scope.weekFormat = $scope.weekFormats[3];
 
 	$scope.dataPage = 1;
 	$scope.dataCount = 0;

@@ -182,6 +182,10 @@ angular.module('ideUiCore', ['ngResource'])
 					Theme.reload();
 				}, 2000);
 			};
+			scope.resetTheme = function() {
+				localStorage.clear();
+				Theme.reload();
+			};
 			scope.logout = function() {
 				window.location.href = relativePath + 'logout';
 			};

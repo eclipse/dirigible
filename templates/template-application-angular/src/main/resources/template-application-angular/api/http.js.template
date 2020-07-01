@@ -39,6 +39,14 @@ exports.sendResponseNotFound = function(message) {
 	});
 };
 
+// HTTP 500
+exports.sendInternalServerError = function(message) {
+	this.sendResponse(500, {
+		"code": 500,
+		"message": message
+	});
+};
+
 // Generic
 exports.sendResponse = function(status, body) {
 	response.setContentType("application/json");
