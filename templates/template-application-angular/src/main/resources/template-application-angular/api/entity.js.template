@@ -133,7 +133,7 @@ function validateEntity(entity) {
 	var isValid = true;
 #foreach ($property in $properties)
 #if($property.widgetPattern && $property.widgetPattern != "")
-	isValid = isValid && entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) !== null;
+	isValid = isValid && entity.${property.name} && entity.${property.name}.match(/^${property.widgetPattern}${dollar}/) !== null;
 #break
 #end 
 #end

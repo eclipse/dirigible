@@ -43,6 +43,8 @@
 					<td><a href="{{next.${property.name}}}" target="_blank">{{next.${property.name}}}</a></td>
 #elseif($property.widgetType == "TEL")
 					<td><a href="tel:{{next.${property.name}}}">{{next.${property.name}}}</a></td>
+#elseif($property.widgetType == "COLOR")
+					<td><input type="color" value="{{next.${property.name}}}" disabled/></td>
 #elseif($property.widgetType == "WEEK")
 					<td>{{next.${property.name} | date:weekFormat}}</td>
 #elseif($property.widgetType == "MONTH")
@@ -108,6 +110,11 @@
 						<div class="form-group">
 							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
 							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="tel" pattern="\+?[0-9 \-]{9,16}" title="\+?[0-9 \-]{9,16}" #if($property.widgetLength && $property.widgetLength != "")maxlength="${property.widgetLength}"#end class="form-control" placeholder="Enter #if($property.widgetLabel)${property.widgetLabel.toLowerCase()}#else${property.name.toLowerCase()}#end" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
+						</div>
+#elseif($property.widgetType == "COLOR")
+						<div class="form-group">
+							<label>#if($property.widgetLabel)${property.widgetLabel}#else${property.name}#end</label>
+							<input #if($property.dataNotNull)required#end #if($property.isCalculatedProperty)readonly#end type="color" class="form-control" ng-model="entity.${property.name}" ng-change="updateCalculatedProperties()">
 						</div>
 #elseif($property.widgetType == "WEEK")
 						<div class="form-group">

@@ -42,6 +42,8 @@
 					<td><a href="{{next.${property.name}}}" target="_blank">{{next.${property.name}}}</a></td>
 #elseif($property.widgetType == "TEL")
 					<td><a href="tel:{{next.${property.name}}}">{{next.${property.name}}}</a></td>
+#elseif($property.widgetType == "COLOR")
+					<td><input type="color" value="{{next.${property.name}}}" disabled/></td>
 #elseif($property.widgetType == "WEEK")
 					<td>{{next.${property.name} | date:weekFormat}}</td>
 #elseif($property.widgetType == "MONTH")
