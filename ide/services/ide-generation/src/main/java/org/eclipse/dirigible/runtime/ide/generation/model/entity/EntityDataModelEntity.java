@@ -45,6 +45,9 @@ public class EntityDataModelEntity {
 
 	private String roleRead;
 	private String roleWrite;
+	
+	private String projectionReferencedModel;
+	private String projectionReferencedEntity;
 
 	private List<EntityDataModelProperty> properties = new ArrayList<EntityDataModelProperty>();
 	
@@ -386,4 +389,21 @@ public class EntityDataModelEntity {
 	public void setRoleWrite(String roleWrite) {
 		this.roleWrite = roleWrite;
 	}
+
+	public String getProjectionReferencedModel() {
+		return projectionReferencedModel;
+	}
+
+	public void setProjectionReferencedModel(String projectionReferencedModel) {
+		this.projectionReferencedModel = projectionReferencedModel;
+	}
+
+	public String getProjectionReferencedEntity() {
+		return projectionReferencedEntity;
+	}
+
+	public void setProjectionReferencedEntity(String projectionReferencedEntity) {
+		this.projectionReferencedEntity = projectionReferencedEntity;
+	}
+
 }

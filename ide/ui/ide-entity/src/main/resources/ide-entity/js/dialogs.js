@@ -15,3 +15,31 @@ function showAlert(title, message, $scope) {
 	$scope.$apply();
 	$('#alertOpen').click();
 }
+
+function openReferEntity(title, message, $scope, graph) {
+	$scope.$parent.dialogTitle = title;
+	$scope.$parent.okReferEntity = function() {
+
+		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
+			$('#Delete').click();
+			return;
+		}
+
+		var model = graph.getModel();
+		model.beginUpdate();
+		try {
+			$scope.$cell.value.name = $scope.$parent.referencedModel + ":" + $scope.$parent.referencedEntity;
+			$scope.$cell.value.entityType = "PROJECTION";
+			$scope.$cell.value.projectionReferencedModel = $scope.$parent.referencedModel;
+			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
+		} finally {
+			model.endUpdate();
+		}
+		graph.refresh();
+	};
+	$scope.$parent.cancelReferEntity = function() {
+		$('#Delete').click();
+	}
+	$scope.$apply();
+	$('#referEntityOpen').click();
+}

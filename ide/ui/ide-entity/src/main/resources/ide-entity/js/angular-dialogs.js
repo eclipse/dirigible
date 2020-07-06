@@ -92,6 +92,11 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 	ctrl.okEntityProperties = function() {
 		var clone = $scope.$parent.cell.value.clone();
 		$scope.$parent.graph.model.setValue($scope.$parent.cell, clone);
+		if (clone.entityType === 'PROJECTION') {
+			$scope.$parent.graph.getSelectionCell().style = 'projection';
+			$scope.$parent.graph.getSelectionCell().children.forEach(cell => cell.style = 'projectionproperty');
+			$scope.$parent.graph.refresh();
+		}
 	};
 	
 	// Save Property's properties

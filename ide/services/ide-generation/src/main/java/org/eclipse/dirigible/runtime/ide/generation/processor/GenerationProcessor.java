@@ -453,6 +453,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			model.put("feedPath", entity.getFeedPath());
 			model.put("roleRead", entity.getRoleRead());
 			model.put("roleWrite", entity.getRoleWrite());
+			model.put("projectionReferencedModel", entity.getProjectionReferencedModel());
+			model.put("projectionReferencedEntity", entity.getProjectionReferencedEntity());
 			List<Map<String, Object>> propertiesModels = new ArrayList<>();
 			for (EntityDataModelProperty property : entity.getProperties()) {
 				Map<String, Object> propertyModel = new HashMap<String, Object>();

@@ -33,6 +33,8 @@ Entity.prototype.feedSchedule = null;
 Entity.prototype.feedPath = null;
 Entity.prototype.roleRead = null;
 Entity.prototype.roleWrite = null;
+Entity.prototype.projectionReferencedModel = null;
+Entity.prototype.projectionReferencedEntity = null;
 
 Entity.prototype.clone = function() {
 	return mxUtils.clone(this);

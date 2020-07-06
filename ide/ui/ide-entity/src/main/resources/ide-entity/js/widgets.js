@@ -10,6 +10,7 @@
  */
 function addToolbarButton(editor, toolbar, action, label, image, isTransparent) {
 	var button = document.createElement('button');
+	button.id = label;
 	button.title = label;
 	// button.style.fontSize = '10';
 	if (image !== null) {
@@ -58,6 +59,11 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				showAlert('Drop', 'Drop target must be an entity', $scope);
 				return;
 			}
+
+			if (parent.style === "projection") {
+				showAlert('Drop', 'Drop target cannot be an Entity of type Projection', $scope);
+				return;
+			}
 			
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
@@ -75,10 +81,15 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				}
 			}
 			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity'+(entitiesCount+1));
+			createNode('Entity'+(entitiesCount+1), prototype.style === 'projection');
+
+			if (prototype.style === 'projection') {
+				$scope.$cell = graph.getSelectionCell();
+				openReferEntity('Drop', 'Will be creating a Projection Entity', $scope, graph);
+			}
 		}
 		
-		function createNode(name) {
+		function createNode(name, isProjection) {
 			if (name !== null) {
 				var v1 = model.cloneCell(prototype);
 
@@ -92,9 +103,20 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					
 					if (isEntity) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
-						if (!v1.children[0].value.isSQL) {
-							v1.children[0].value.name = name.toLowerCase()+'Id';
+						if (!isProjection) {	
+							if (v1.children && v1.children.length > 0) {
+								if (!v1.children[0].value.isSQL) {
+									v1.children[0].value.name = name.toLowerCase()+'Id';
+								}
+							}
+						} else {
+							if (v1.children && v1.children.length > 0) {
+								if (!v1.children[0].value.isSQL) {
+									v1.children[0].value.name = 'Id';
+								}
+							}
 						}
+						
 						v1.value.type = 'Entity';
 					}
 				} finally {
@@ -151,6 +173,7 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
 	graph.getStylesheet().putDefaultVertexStyle(style);
 
+	// Entity Style
 	style = new Object();
 	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -185,6 +208,48 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+
+	// Projection Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	
+    style[mxConstants.STYLE_FILLCOLOR] = '#b3b3b3';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#999999';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('projection', style);
+
+	// Projection Property
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+	style[mxConstants.STYLE_FONTCOLOR] = '#444444';
+	style[mxConstants.STYLE_FONTSIZE] = '11';
+	style[mxConstants.STYLE_FONTSTYLE] = 0;
+	style[mxConstants.STYLE_SPACING_LEFT] = '4';
+	style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
+	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+	graph.getStylesheet().putCellStyle('projectionproperty', style);
 }
 
 // Function to create the entries in the popupmenu

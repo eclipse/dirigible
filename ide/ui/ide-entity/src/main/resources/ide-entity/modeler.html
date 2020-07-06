@@ -88,6 +88,7 @@
 	<button type="button" id="propertyPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogPropertyProperties"></button>
 	<button type="button" id="connectorPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogConnectorProperties"></button>
 	<button type="button" id="alertOpen" ng-show=false data-toggle="modal" data-target="#dialogAlert"></button>
+	<button type="button" id="referEntityOpen" ng-show=false data-toggle="modal" data-target="#dialogReferEntity"></button>
 	
 	<!-- Entity Properties -->
 	<div class="modal fade" id="dialogEntityProperties" tabindex="-1" role="dialog" aria-labelledby="dialogEntityPropertiesLabel" aria-hidden="true">
@@ -577,6 +578,36 @@
 	    </div>
 	    <div class="modal-footer">
 	      <button class="btn btn-default" data-dismiss="modal">Close</button>
+	    </div>
+	</div>
+
+
+	<!-- Refer Entity Dialog -->
+	<div class="modal fade" id="dialogReferEntity" tabindex="-1" role="dialog" aria-labelledby="dialogReferEntityLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>{{$parent.dialogTitle}}</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+    	      <br><br>
+		      <div class="form-group row">
+		      	<div class="row">
+					<label class="col-xs-3 col-form-label">Model Location: </label>
+					<div class="col-xs-9">
+						<input class="form-control" type="text" placeholder="model location" ng-model="$parent.referencedModel" required="required">
+					</div>
+					<label class="col-xs-3 col-form-label">Entity Name: </label>
+					<div class="col-xs-9">
+						<input class="form-control" type="text" placeholder="entity name" ng-model="$parent.referencedEntity" required="required">
+					</div>
+				</div>
+			  </div>
+		   	    
+	        
+	    </div>
+	    <div class="modal-footer">
+			<button class="btn btn-primary" ng-click="$parent.okReferEntity()" data-toggle="modal" data-target="#dialogReferEntity">Make Reference</button>
+	      	<button class="btn btn-default" ng-click="$parent.cancelReferEntity()" data-dismiss="modal">Cancel</button>
 	    </div>
 	</div>
 	

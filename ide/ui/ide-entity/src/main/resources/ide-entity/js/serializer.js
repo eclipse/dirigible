@@ -65,6 +65,13 @@ function createModel(graph) {
 			if (child.value.roleWrite) {
 				entityContent += ' roleWrite="' + child.value.roleWrite + '"';
 			}
+			if (child.value.projectionReferencedModel) {
+				entityContent += ' projectionReferencedModel="' + child.value.projectionReferencedModel + '"';
+			}
+			if (child.value.projectionReferencedEntity) {
+				entityContent += ' projectionReferencedEntity="' + child.value.projectionReferencedEntity + '"';
+			}
+
 			entityContent += '>\n';
 			model.push(entityContent);
 
