@@ -50,6 +50,12 @@
 		<module>template-extension-view</module>
 		<module>template-extension-perspective</module>
 		<module>template-application-launchpad</module>
+		<module>template-application-schema</module>
+		<module>template-application-dao</module>
+		<module>template-application-data</module>
+		<module>template-application-rest</module>
+		<module>template-application-feed</module>
+		<module>template-application-ui-angular</module>
 		<module>template-application-angular</module>
 		<module>template-application-openui5</module>
 		<module>template-mobile-hello-world</module>

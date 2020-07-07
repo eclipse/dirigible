@@ -1,8 +1,23 @@
 {
-	"guid": "template-application-angular",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/template-v3-application-angular.git"
-	}
+    "guid": "template-application-angular",
+    "dependencies": [
+        {
+            "guid": "template-application-schema",
+            "url": "https://github.com/dirigiblelabs/template-application-schema.git",
+            "type": "git",
+            "branch": "master"
+        },
+        {
+            "guid": "template-application-feed",
+            "url": "https://github.com/dirigiblelabs/template-application-feed.git",
+            "type": "git",
+            "branch": "master"
+        },
+        {
+            "guid": "template-application-ui-angular",
+            "url": "https://github.com/dirigiblelabs/template-application-ui-angular.git",
+            "type": "git",
+            "branch": "master"
+        }
+    ]
 }

@@ -93,6 +93,36 @@
 		 	<version>5.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-schema</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-dao</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-data</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-rest</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-feed</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-ui-angular</artifactId>
+			<version>5.1.0-SNAPSHOT</version>
+	   </dependency>
+		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-template-application-angular</artifactId>
 		 	<version>5.1.0-SNAPSHOT</version>

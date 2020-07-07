@@ -8,78 +8,31 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var apiTemplate = require('template-application-angular/template/api/template');
-var dataTemplate = require('template-application-angular/template/data/template');
-var uiTemplate = require('template-application-angular/template/ui/template');
-var feedTemplate = require('template-application-angular/template/feed/template');
 
-exports.getTemplate = function(parameters) {
-	return {
-		'name': 'Full-stack Application (AngularJS)',
-		'description': 'Full-stack Application with a Database Schema, a set of REST Services and an AngularJS User Interfaces',
-		'extension':'model',
-		'sources': getSources(parameters),
-		'parameters': [{
-			'name': 'extensionName',
-			'label': 'Extension',
-			'placeholder': 'Extension name'
-		}, {
-			'name': 'launchpadName',
-			'label': 'Launchpad',
-			'placeholder': 'Launchpad project name',
-			'ui': {
-				'hide': {
-					'property': 'includeLaunchpad',
-					'value': true
-				}
-			}
-		}, {
-			'name': 'includeLaunchpad',
-			'label': 'Embedded',
-			'type': 'checkbox'
-		}, {
-			'name': 'title',
-			'label': 'Title',
-			'placeholder': 'Launchpad title',
-			'ui': {
-				'hide': {
-					'property': 'includeLaunchpad',
-					'value': false
-				}
-			}
-		}, {
-			'name': 'subTitle',
-			'label': 'Sub-title',
-			'placeholder': 'Launchpad sub-title',
-			'ui': {
-				'hide': {
-					'property': 'includeLaunchpad',
-					'value': false
-				}
-			}
-		}, {
-			'name': 'description',
-			'label': 'Description',
-			'placeholder': 'Launchpad description',
-			'ui': {
-				'hide': {
-					'property': 'includeLaunchpad',
-					'value': false
-				}
-			}
-		}, {
-			'name': 'brand',
-			'label': 'Brand',
-			'placeholder': 'Brand'
-		}]
-	};
+var schemaTemplateManager = require("template-application-schema/template/template");
+var feedTemplateManager = require("template-application-feed/template/template");
+var uiAngularjsTemplateManager = require("template-application-ui-angular/template/template");
+
+exports.getTemplate = function (parameters) {
+	let schemaTemplate = schemaTemplateManager.getTemplate(parameters);
+    let feedTemplate = feedTemplateManager.getTemplate(parameters);
+    let uiAngularjsTemplate = uiAngularjsTemplateManager.getTemplate(parameters);
+
+    let templateSources = [];
+	templateSources = templateSources.concat(schemaTemplate.sources);
+    templateSources = templateSources.concat(feedTemplate.sources);
+    templateSources = templateSources.concat(uiAngularjsTemplate.sources);
+
+    let templateParameters = [];
+	templateParameters = templateParameters.concat(schemaTemplate.parameters);
+    templateParameters = templateParameters.concat(feedTemplate.parameters);
+    templateParameters = templateParameters.concat(uiAngularjsTemplate.parameters);
+
+    return {
+        name: "Full-stack Application (AngularJS)",
+        description: "Full-stack Application with a Database Schema, a set of REST Services and an AngularJS User Interfaces",
+        extension: "model",
+        sources: templateSources,
+        parameters: templateParameters
+    };
 };
-
-function getSources(parameters) {
-	var sources = [];
-	sources = sources.concat(apiTemplate.getSources(parameters));
-	sources = sources.concat(dataTemplate.getSources(parameters));
-	sources = sources.concat(uiTemplate.getSources(parameters));
-	sources = sources.concat(feedTemplate.getSources(parameters));
-	return sources;
-}

@@ -1,0 +1,11 @@
+{
+    "guid": "template-application-feed",
+    "dependencies": [
+        {
+            "guid": "template-application-dao",
+            "url": "https://github.com/dirigiblelabs/template-application-dao.git",
+            "type": "git",
+            "branch": "master"
+        }
+    ]
+}

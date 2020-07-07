@@ -1,0 +1,17 @@
+{
+    "guid": "template-application-data",
+    "dependencies": [
+        {
+            "guid": "template-application-schema",
+            "url": "https://github.com/dirigiblelabs/template-application-schema.git",
+            "type": "git",
+            "branch": "master"
+        },
+        {
+            "guid": "template-application-dao",
+            "url": "https://github.com/dirigiblelabs/template-application-dao.git",
+            "type": "git",
+            "branch": "master"
+        }
+    ]
+}
