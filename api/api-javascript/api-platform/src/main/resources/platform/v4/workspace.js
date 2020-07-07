@@ -243,7 +243,7 @@ function Folder() {
 	};
 	
 	this.createFolder = function(path) {
-		var folder = this.native.createFolder(path);
+		var native = this.native.createFolder(path);
 		var folder = new Folder();
 		folder.native = native;
 		return folder;
@@ -258,14 +258,14 @@ function Folder() {
 	};
 	
 	this.getFolder = function(path) {
-		var folder = this.native.getFolder(path);
+		var native = this.native.getFolder(path);
 		var folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
 	
 	this.getFolders = function(path) {
-		var folders = this.native.getFolders(path);
+		var native = this.native.getFolders(path);
 		var folders = new Folders();
 		folders.native = native;
 		return folders;
@@ -276,7 +276,7 @@ function Folder() {
 	};
 	
 	this.createFile = function(path, input) {
-		var file = this.native.createFile(path, input);
+		var native = this.native.createFile(path, input);
 		var file = new File();
 		file.native = native;
 		return file;
@@ -287,7 +287,7 @@ function Folder() {
 	};
 	
 	this.getFile = function(path) {
-		var file = this.native.getFile(path);
+		var native = this.native.getFile(path);
 		var file = new File();
 		file.native = native;
 		return file;
