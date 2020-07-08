@@ -54,6 +54,10 @@ exports.deleteCollection = function(path) {
 	org.eclipse.dirigible.api.v3.platform.RepositoryFacade.deleteCollection(path);
 };
 
+exports.find = function(path, pattern) {
+	return JSON.parse(org.eclipse.dirigible.api.v3.platform.RepositoryFacade.find(path, pattern));
+};
+
 function Resource() {
 
 	this.getName = function() {

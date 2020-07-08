@@ -356,7 +356,7 @@ public class LocalCollection extends LocalEntity implements ICollection {
 	 * @throws RepositoryReadException
 	 *             the repository read exception
 	 */
-	protected LocalFolder getFolder() throws RepositoryReadException {
+	public LocalFolder getFolder() throws RepositoryReadException {
 		final LocalObject object = getLocalObject();
 		if (object == null) {
 			return null;

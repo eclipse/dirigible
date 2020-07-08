@@ -35,6 +35,7 @@ import java.util.Set;
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -507,6 +508,19 @@ public class FilesFacade {
 	 */
 	public static final String list(String source) throws IOException {
 		return GsonHelper.GSON.toJson(FileSystemUtils.listFiles(new File(source)));
+	}
+	
+	/**
+	 * Find all the files matching the pattern
+	 * 
+	 * @param path the root path
+	 * @param pattern the glob pattern
+	 * @return the list of file names
+	 * @throws IOException in case of an error
+	 * @throws ScriptingException in case of an error
+	 */
+	public static String find(String path, String pattern) throws IOException, ScriptingException {
+			return GsonHelper.GSON.toJson(FileSystemUtils.find(path, pattern));
 	}
 
 }

@@ -232,6 +232,18 @@ public class LocalResource extends LocalEntity implements IResource {
 		}
 		return (LocalFile) object;
 	}
+	
+	/**
+	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If
+	 * there is no such object, then <code>null</code> is returned.
+	 *
+	 * @return the local file
+	 * @throws RepositoryReadException
+	 *             the repository read exception
+	 */
+	protected LocalFile getFile() throws RepositoryReadException {
+		return getDocument();
+	}
 
 	/**
 	 * Returns the {@link LocalFile} object matching this {@link LocalResource}. If

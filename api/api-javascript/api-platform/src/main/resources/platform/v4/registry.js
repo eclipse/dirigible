@@ -19,3 +19,9 @@ exports.getContent = function(path) {
 exports.getText = function(path) {
 	return org.eclipse.dirigible.api.v3.platform.RegistryFacade.getText(path);
 };
+
+exports.find = function(path, pattern) {
+	return JSON.parse(org.eclipse.dirigible.api.v3.platform.RegistryFacade.find(path, pattern));
+};
+
+
