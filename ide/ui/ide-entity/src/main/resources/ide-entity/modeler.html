@@ -167,7 +167,10 @@
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Icon: </label>
 						<div class="col-xs-5">
-							<input class="form-control" type="text" placeholder="icon" ng-model="ctrl.$scope.$parent.cell.value.icon" required="required">
+							<select class="form-control" name="perspectiveIcon" id="perspectiveIcon" ng-model="ctrl.$scope.$parent.cell.value.icon"
+							    style="font-family: 'FontAwesome', 'Helvetica'">
+						    	<option ng-repeat="option in ctrl.icons" id="{{option.name}}" value="{{option.name}}" ng-bind-html="option.icon"></option>
+						    </select>
 						</div>
 					</div>
 					
@@ -209,8 +212,11 @@
 					</div>
 					<div class="row">
 						<label class="col-xs-3 col-form-label">Perspective Icon: </label>
-						<div class="col-xs-6">
-							<input class="form-control" type="text" placeholder="perspective icon" ng-model="ctrl.$scope.$parent.cell.value.perspectiveIcon" required="required">
+						<div class="col-xs-2">
+							<select class="form-control" name="perspectiveIcon" id="perspectiveIcon" ng-model="ctrl.$scope.$parent.cell.value.perspectiveIcon"
+							    style="font-family: 'FontAwesome', 'Helvetica'">
+						    	<option ng-repeat="option in ctrl.icons" id="{{option.name}}" value="{{option.name}}" ng-bind-html="option.icon"></option>
+						    </select>
 						</div>
 					</div>
 					<div class="row">
