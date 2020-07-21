@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-  <name>Releng - SAP - CF - All</name>
-	<artifactId>dirigible-sap-cf-all</artifactId>
+  <name>Releng - SAP - CF - Runtime</name>
+	<artifactId>dirigible-sap-cf-runtime</artifactId>
 	<packaging>war</packaging>
 
 	<build>
@@ -41,7 +41,13 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-sap-cf-base</artifactId>
-		 	<version>5.1.0-SNAPSHOT</version>
+			<version>5.1.0-SNAPSHOT</version> 
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-ide</artifactId>
+				</exclusion>
+			</exclusions> 
 		</dependency>
 	</dependencies>
 
