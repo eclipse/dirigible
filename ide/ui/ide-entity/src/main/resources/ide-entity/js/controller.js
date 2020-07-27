@@ -365,17 +365,17 @@ function main(container, outline, toolbar, sidebar, status) {
 		projection.setVertex(true);
 		addSidebarIcon(graph, sidebar, 	projection, 'external-link', 'Drag this to the diagram to create a reference to an Entity from external', $scope);
 
-		// Adds primary key field into projection entity
-		var keyProperty = property.clone();
+		// // Adds primary key field into projection entity
+		// var keyProperty = property.clone();
 		
-		keyProperty.value.name = 'Id';
-		keyProperty.value.dataType = 'INTEGER';
-		keyProperty.value.dataLength = 0;
-		keyProperty.value.dataPrimaryKey = 'true';
-		keyProperty.value.dataAutoIncrement = 'true';
-		keyProperty.style = 'projectionproperty';
+		// keyProperty.value.name = 'Id';
+		// keyProperty.value.dataType = 'INTEGER';
+		// keyProperty.value.dataLength = 0;
+		// keyProperty.value.dataPrimaryKey = 'true';
+		// keyProperty.value.dataAutoIncrement = 'true';
+		// keyProperty.style = 'projectionproperty';
 		
-		projection.insert(keyProperty);
+		// projection.insert(keyProperty);
 		
 
 		// Creates a new DIV that is used as a toolbar and adds

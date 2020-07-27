@@ -135,4 +135,13 @@ public interface IFolder extends ICollection {
 	 * @return the list of files
 	 */
 	public List<IFile> search(String term);
+	
+	/**
+	 * Find by file name pattern
+	 *
+	 * @param pattern
+	 *            the pattern
+	 * @return the list of files
+	 */
+	public List<IFile> find(String pattern);
 }

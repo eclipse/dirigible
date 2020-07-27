@@ -600,11 +600,26 @@
 		      	<div class="row">
 					<label class="col-xs-3 col-form-label">Model Location: </label>
 					<div class="col-xs-9">
-						<input class="form-control" type="text" placeholder="model location" ng-model="$parent.referencedModel" required="required">
+						<!-- <input class="form-control" type="text" placeholder="model location" ng-model="$parent.referencedModel" required="required"> -->
+
+						<div class="col-xs-4">
+							<select class="form-control col-xs-4" name="d" id="referencedModel" ng-model="$parent.referencedModel" ng-change="ctrl.updateEntities()">
+								<option ng-repeat="option in ctrl.availableModels" value="{{option.path}}">{{option.name}} - [{{option.path}}]</option>
+							</select>
+						</div>
 					</div>
+
+					
+
 					<label class="col-xs-3 col-form-label">Entity Name: </label>
 					<div class="col-xs-9">
-						<input class="form-control" type="text" placeholder="entity name" ng-model="$parent.referencedEntity" required="required">
+						<!-- <input class="form-control" type="text" placeholder="entity name" ng-model="$parent.referencedEntity" required="required"> -->
+
+						<div class="col-xs-4">
+							<select class="form-control col-xs-4" name="d" id="referencedEntity" ng-model="$parent.referencedEntity">
+								<option ng-repeat="option in ctrl.availableEntities" value="{{option.name}}">{{option.name}}</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			  </div>

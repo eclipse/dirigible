@@ -523,6 +523,56 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 			{"name":"tags","icon":"&#xf02c; tags"}
 	];
 
+	ctrl.loadModels = function() {
+		return new Promise((resolve, reject) => {
+						const xhr = new XMLHttpRequest();
+						xhr.open('POST', '../../../../services/v4/ide/workspace-find/');
+						xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+						xhr.setRequestHeader('Dirigible-Editor', 'EntityDataModeler');
+						xhr.onload = () => {
+							if (xhr.status === 200) {
+								resolve(xhr.responseText);
+							} else {
+								reject(xhr.status)
+							}
+							csrfToken = xhr.getResponseHeader("x-csrf-token");
+						};
+						xhr.onerror = () => reject(xhr.status);
+						xhr.send('*.model');
+					});
+				};
+
+	ctrl.loadEntities = function() {
+		return new Promise((resolve, reject) => {
+						const xhr = new XMLHttpRequest();
+						xhr.open('GET', '../../../../services/v4/ide/workspaces' + $scope.$parent.referencedModel);
+						xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+						xhr.setRequestHeader('Dirigible-Editor', 'EntityDataModeler');
+						xhr.onload = () => {
+							if (xhr.status === 200) {
+								resolve(xhr.responseText);
+							} else {
+								reject(xhr.status)
+							}
+							csrfToken = xhr.getResponseHeader("x-csrf-token");
+						};
+						xhr.onerror = () => reject(xhr.status);
+						xhr.send();
+					});
+				};
+
+	ctrl.loadModels().then(
+		result => ctrl.availableModels = JSON.parse(result),
+		error => console.log(error)
+	);
+
+	ctrl.updateEntities = function() {
+		ctrl.loadEntities().then(
+			result => ctrl.availableEntities = $scope.$parent.availableEntities = JSON.parse(result).model.entities,
+			error => console.log(error)
+		);
+	}
+	
 	// Save Entity's properties
 	ctrl.okEntityProperties = function() {
 		var clone = $scope.$parent.cell.value.clone();

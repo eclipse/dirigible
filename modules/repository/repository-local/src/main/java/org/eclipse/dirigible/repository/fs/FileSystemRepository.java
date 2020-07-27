@@ -30,6 +30,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -600,5 +601,32 @@ public abstract class FileSystemRepository implements IRepository {
 	public boolean isLinkedPath(String repositoryPath) {
 		String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
 		return Files.isSymbolicLink(Paths.get(workspacePath).toAbsolutePath());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.repository.api.IRepositorySearch#find(java.lang.String, boolean)
+	 */
+	@Override
+	public List<String> find(String path, String pattern) throws RepositorySearchException {
+		try {
+			ICollection collection = getCollection(path);
+			if (collection.exists() && collection instanceof LocalCollection) {
+				List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
+				int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length();
+				List<String> prepared = new ArrayList<String>();
+				list.forEach(item -> {
+						String truncated = item.substring(repositoryRootLength);
+						if (!IRepository.SEPARATOR.equals(File.separator)) {
+							truncated.replace(File.separator, IRepository.SEPARATOR);
+						}
+						prepared.add(truncated);
+					});
+				return prepared;
+			}
+		} catch (RepositoryReadException | IOException e) {
+			throw new RepositorySearchException(e);
+		}
+		return new ArrayList<String>();
 	}
 }

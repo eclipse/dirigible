@@ -594,6 +594,41 @@ public class WorkspaceProcessor {
 		return files;
 	}
 	
+	// Find
+	
+	/**
+	 * Find files by pattern
+	 *
+	 * @param pattern
+	 *            the pattern
+	 * @return the files list
+	 */
+	public List<IFile> find(String pattern) {
+		List<IFile> allFiles = new ArrayList<IFile>();
+		List<IWorkspace> workspaces = workspacesCoreService.getWorkspaces();
+		for (IWorkspace workspace : workspaces) {
+			IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace.getName());
+			List<IFile> files = workspaceObject.find(pattern);
+			allFiles.addAll(files);
+		}
+		return allFiles;
+	}
+
+	/**
+	 * Find files by pattern within a given workspace
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param pattern
+	 *            the pattern
+	 * @return the files list
+	 */
+	public List<IFile> find(String workspace, String pattern) {
+		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+		List<IFile> files = workspaceObject.find(pattern);
+		return files;
+	}
+	
 	/**
 	 * Triggers the post save file extensions
 	 * 

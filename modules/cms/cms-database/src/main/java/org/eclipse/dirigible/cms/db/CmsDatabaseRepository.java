@@ -323,4 +323,11 @@ public class CmsDatabaseRepository implements IRepository {
 	public boolean isLinkedPath(String repositoryPath) {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}
+	
+	@Override
+	public List<String> find(String path, String pattern) throws RepositorySearchException {
+		List<String> result = new ArrayList<String>();
+		databaseRepositoryDao.searchName(pattern, false).forEach(e -> result.add(e.getPath()));
+		return result;
+	}
 }

@@ -272,6 +272,13 @@ public class DatabaseRepository implements IRepository {
 	public List<IEntity> searchPath(String parameter, boolean caseInsensitive) throws RepositorySearchException {
 		return databaseRepositoryDao.searchPath(parameter, caseInsensitive);
 	}
+	
+	@Override
+	public List<String> find(String path, String pattern) throws RepositorySearchException {
+		List<String> result = new ArrayList<String>();
+		databaseRepositoryDao.searchName(pattern, false).forEach(e -> result.add(e.getPath()));
+		return result;
+	}
 
 	@Override
 	public List<IEntity> searchText(String parameter) throws RepositorySearchException {

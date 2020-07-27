@@ -80,4 +80,17 @@ public interface IRepositorySearch {
 	 */
 	public void searchRefresh() throws RepositorySearchException;
 
+	/**
+	 * Find files by a given pattern
+	 *
+	 * @param path
+	 *            the starting path
+	 * @param pattern
+	 *            the search pattern
+	 * @return a list of {@link IEntity} instances
+	 * @throws RepositorySearchException
+	 *             in case the search fails
+	 */
+	public List<String> find(String path, String pattern) throws RepositorySearchException;
+
 }

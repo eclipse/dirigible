@@ -32,6 +32,35 @@ function openReferEntity(title, message, $scope, graph) {
 			$scope.$cell.value.entityType = "PROJECTION";
 			$scope.$cell.value.projectionReferencedModel = $scope.$parent.referencedModel;
 			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
+
+
+			var propertyObject = new Property('propertyName');
+			var property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+			property.setVertex(true);
+			property.setConnectable(false);
+
+			$scope.$parent.availableEntities.forEach(entity => {
+				if (entity.name === $scope.$parent.referencedEntity) {
+					entity.properties.forEach(projectionProperty => {
+						var newProperty = property.clone();
+
+						for(var attributeName in projectionProperty) {
+							newProperty.value[attributeName] = projectionProperty[attributeName];
+						}
+
+						newProperty.style = 'projectionproperty';
+						
+						$scope.$cell.insert(newProperty);
+					});
+				}
+			});
+
+
+			
+
+			model.setCollapsed($scope.$cell, true);
+
+
 		} finally {
 			model.endUpdate();
 		}

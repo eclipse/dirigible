@@ -444,5 +444,24 @@ public class Folder implements IFolder {
 		}
 		return files;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.workspace.api.IFolder#find(java.lang.String)
+	 */
+	@Override
+	public List<IFile> find(String pattern) {
+		List<String> entities = this.getRepository().find(this.getPath(), pattern);
+		List<IFile> files = new ArrayList<IFile>();
+		for (String entity : entities) {
+			IResource resource = this.getRepository().getResource(entity);
+			if (resource.getPath().startsWith(this.getPath())) {
+				if (resource.exists()) {
+					files.add(new File(resource));
+				}
+			}
+		}
+		return files;
+	}
 
 }
