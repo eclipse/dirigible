@@ -543,6 +543,10 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	color: darkgray;
 }
 
+.search-dropdown {
+	height: 1.7em !important;
+}
+
 .search-box {
 	height: 23px !important;
 	margin-top: 1px !important;
