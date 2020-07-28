@@ -619,7 +619,7 @@ WorkspaceTreeAdapter.prototype.generateFile = function(resource, scope){
 		this.workspaceController.fileName = new UriBuilder().path(segments).path("fileName").build();
 		scope.$apply();
 //		$('#generateFromTemplate').click();
-        this.workspaceController.generateFromTemplate();
+        this.workspaceController.generateFromTemplate(scope);
 	} else {
 		this.workspaceController.fileName = segments[segments.length-1];
 		scope.$apply();
@@ -1153,6 +1153,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 			.then(function(data) {
 				this.templates = data;
 				this.modelTemplates = [];
+				this.genericTemplates = [];
 				this.templateParameters = [];
 				for (var i = 0 ; i < this.templates.length; i++) {
 					this.templateParameters[this.templates[i].id] = this.templates[i].parameters;
@@ -1167,6 +1168,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	this.filterModelTemplates = function(ext) {
 		this.modelTemplates.length = 0;
 		this.templates.forEach(template => {if (template.extension === ext) this.modelTemplates.push(template);});
+	};
+
+	this.filterGenericTemplates = function() {
+		this.genericTemplates.length = 0;
+		this.templates.forEach(template => {if (template.extension === undefined || template.extension === null) this.genericTemplates.push(template);});
 	};
 	
 	this.refreshWorkspaces = function() {
@@ -1231,7 +1237,9 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 		}
 	};
 	
-	this.generateFromTemplate = function(){
+	this.generateFromTemplate = function(scope){
+		this.filterGenericTemplates();
+		scope.$apply();
 		$('#generateFromTemplate').click();
 	};
 	this.okGenerateFromTemplate = function() {
