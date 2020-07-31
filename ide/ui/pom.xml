@@ -75,6 +75,7 @@
 		<module>ide-plugins</module>
 		<module>ide-discussions</module>
 		<module>ide-websockets</module>
+		<module>ide-form-builder</module>
 	</modules>
 
 	<profiles>

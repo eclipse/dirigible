@@ -1,0 +1,91 @@
+<!doctype html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <link type="text/css" rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="../../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link type="image/png" rel="shortcut icon" href="../../../../../services/v4/web/resources/images/favicon.png" />
+	
+	
+    <link type="text/css" rel="stylesheet" href="designer/site.css"/>
+    <link type="text/css" rel="stylesheet" href="dist/angular-form-builder.css"/>
+
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../../services/v4/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
+	<script type="text/javascript" src="../../../../../services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="../../../../../services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+
+	<script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+    
+    <script type="text/javascript" src="dist/angular-form-builder.js"></script>
+    <script type="text/javascript" src="dist/angular-form-builder-components.js"></script>
+    <script type="text/javascript" src="dist/angular-validator.min.js"></script>
+    <script type="text/javascript" src="dist/angular-validator-rules.min.js"></script>
+    <script type="text/javascript" src="designer/designer.js"></script>
+</head>
+<body class="container" ng-controller="DesignerController">
+
+    <ul class="nav nav-pills">
+        <li class="active"><a data-toggle="tab" href="#designer">Designer</a></li>
+        <li><a data-toggle="tab" href="#form">Preview</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div id="designer" class="tab-pane fade in active">
+            <hr/>
+            <div class="col-md-6">
+                <div fb-components></div>
+            </div>
+
+            <div class="col-md-6">
+                <div>
+                    <button type="button" class="btn-primary btn-lg pull-right" ng-click="save()">Save</button>
+                </div>
+                <div class="panel panel-default">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Builder</h3>
+                    </div>
+                    <div fb-builder="default"></div>
+                    <div class="panel-footer">
+                        
+                        <div class="checkbox">
+                            <label><input type="checkbox" ng-model="isShowScope" />
+                                Show scope
+                            </label>
+                        </div>
+                        <pre ng-if="isShowScope" style="white-space: pre-wrap">{{form}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="form" class="tab-pane fade">
+            <hr/>
+            <form class="form-horizontal">
+                <div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
+                <div class="form-group">
+                    <div class="col-md-8 col-md-offset-4">
+                        <input type="submit" ng-click="submit()" class="btn btn-default"/>
+                    </div>
+                </div>
+            </form>
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=false" />
+                    Show scope
+                </label>
+            </div>
+            <pre ng-if="isShowScope" style="white-space: pre-wrap">{{input}}</pre>
+        </div>
+    
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 footer"></div>
+    </div>
+
+</body>
+</html>

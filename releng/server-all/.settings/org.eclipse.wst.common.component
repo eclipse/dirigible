@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                        
+                            
+    
     
     
     
     
     <wb-module deploy-name="ROOT">
-                                
+                                        
+        
         
         
         <wb-resource deploy-path="/WEB-INF/web.xml" source-path="/src/main/webapp/WEB-INF/web.xml"/>
-                                                
+                                                        
+        
         
         
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                
+                                                        
+        
         
         
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                
+                                                        
+        
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                
+                                                        
+        
         
         
         
@@ -408,6 +414,9 @@
         <dependent-module archiveName="dirigible-ide-ui-deploy-manager-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-deploy-manager/dirigible-ide-ui-deploy-manager">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-ide-ui-websockets-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-websockets/dirigible-ide-ui-websockets">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-ide-services-group-all-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-services-group-all/dirigible-ide-services-group-all">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -474,6 +483,24 @@
         <dependent-module archiveName="dirigible-template-application-launchpad-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-launchpad/dirigible-template-application-launchpad">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-schema-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-schema/dirigible-template-application-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-dao-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-dao/dirigible-template-application-dao">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-data-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-data/dirigible-template-application-data">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-rest-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-rest/dirigible-template-application-rest">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-feed-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-feed/dirigible-template-application-feed">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dirigible-template-application-ui-angular-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-ui-angular/dirigible-template-application-ui-angular">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-template-application-angular-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-template-application-angular/dirigible-template-application-angular">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -537,25 +564,29 @@
         <dependent-module archiveName="dirigible-ext-qunit-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ext-qunit/dirigible-ext-qunit">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                                
+                                                        
+        
         
         
         
         
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
-                                                
+                                                        
+        
         
         
         
         
         <property name="context-root" value="ROOT"/>
-                                            
+                                                    
+    
     
     
     
     
     </wb-module>
-                    
+                        
+
 
 
 
