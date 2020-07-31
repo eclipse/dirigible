@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 exports.createWebsocket = function(uri, handler, engine) {
 	engine = !engine ? "javascript" : engine;
 	var session = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.createWebsocket(uri, handler, engine);

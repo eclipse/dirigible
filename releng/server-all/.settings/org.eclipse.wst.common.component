@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                            
+                                
+    
     
     
     
     
     
     <wb-module deploy-name="ROOT">
-                                        
+                                                
+        
         
         
         
         <wb-resource deploy-path="/WEB-INF/web.xml" source-path="/src/main/webapp/WEB-INF/web.xml"/>
-                                                        
+                                                                
+        
         
         
         
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                        
+                                                                
+        
         
         
         
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                        
+                                                                
+        
         
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                        
+                                                                
+        
         
         
         
@@ -417,6 +423,9 @@
         <dependent-module archiveName="dirigible-ide-ui-websockets-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-websockets/dirigible-ide-ui-websockets">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dirigible-ide-ui-form-builder-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-ui-form-builder/dirigible-ide-ui-form-builder">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dirigible-ide-services-group-all-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ide-services-group-all/dirigible-ide-services-group-all">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -564,28 +573,32 @@
         <dependent-module archiveName="dirigible-ext-qunit-5.1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dirigible-ext-qunit/dirigible-ext-qunit">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                                        
+                                                                
+        
         
         
         
         
         
         <property name="java-output-path" value="/dirigible-war-all/target/classes"/>
-                                                        
+                                                                
+        
         
         
         
         
         
         <property name="context-root" value="ROOT"/>
-                                                    
+                                                            
+    
     
     
     
     
     
     </wb-module>
-                        
+                            
+
 
 
 

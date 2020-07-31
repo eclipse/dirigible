@@ -8,6 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 var repositoryManager = require("platform/v4/repository");
 var documentsApi = require("ide-documents/api/lib/document");
 var folderApi = require("ide-documents/api/lib/folder");
