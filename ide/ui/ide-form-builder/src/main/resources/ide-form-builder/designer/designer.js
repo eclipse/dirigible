@@ -12,7 +12,7 @@
   angular.module('app', ['builder', 'builder.components', 'validator.rules']).run([
     '$builder', function($builder) {
       $builder.registerComponent('sampleInput', {
-        group: 'Complex',
+        group: 'Composite',
         label: 'Sample',
         description: 'From html template',
         placeholder: 'placeholder',
@@ -63,8 +63,13 @@
         $scope.file = searchParams.get('file');
         contents = loadContents($scope.file);
         $scope.components = JSON.parse(contents);
+        $scope.defaultValue = {};
+        $scope.data = {};
+        $scope.data["firstName"] = "John";
+        $scope.data["lastName"] = "Smith";
         $.each($scope.components, function(i, item){
             var formObj = $builder.addFormObject('default', item);
+            $scope.defaultValue[formObj.id] =  $scope.data[formObj.model];
         });
       }
 	
@@ -88,7 +93,6 @@
       }
 
       $scope.save = function() {
-debugger
         contents = JSON.stringify($scope.form);
         saveContents(contents);
       };
@@ -100,19 +104,8 @@ debugger
         }
       });
 
-      // textbox = $builder.addFormObject('default', {
-      //   id: 'textbox',
-      //   component: 'textInput',
-      //   label: 'Name',
-      //   description: 'Your name',
-      //   placeholder: 'Your name',
-      //   required: true,
-      //   editable: true
-      // });
-
       $scope.form = $builder.forms['default'];
       $scope.input = [];
-      $scope.defaultValue = {};
       return $scope.submit = function() {
         return $validator.validate($scope, 'default').success(function() {
           return console.log('success');

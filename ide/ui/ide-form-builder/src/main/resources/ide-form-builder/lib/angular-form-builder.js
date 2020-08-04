@@ -41,8 +41,10 @@
         var component;
         copyObjectToScope(formObject, $scope);
         $scope.optionsText = formObject.options.join('\n');
-        $scope.$watch('[label, description, placeholder, required, options, validation]', function() {
+        $scope.$watch('[label, icon, model, description, placeholder, required, options, validation]', function() {
           formObject.label = $scope.label;
+          formObject.icon = $scope.icon;
+          formObject.model = $scope.model;
           formObject.description = $scope.description;
           formObject.placeholder = $scope.placeholder;
           formObject.required = $scope.required;
@@ -77,6 +79,8 @@
            */
           return this.model = {
             label: $scope.label,
+            icon: $scope.icon,
+            model: $scope.model,
             description: $scope.description,
             placeholder: $scope.placeholder,
             required: $scope.required,
@@ -93,6 +97,8 @@
             return;
           }
           $scope.label = this.model.label;
+          $scope.icon = this.model.icon;
+          $scope.model = this.model.model;
           $scope.description = this.model.description;
           $scope.placeholder = this.model.placeholder;
           $scope.required = this.model.required;
@@ -112,12 +118,14 @@
         }
         $scope.activeGroup = group;
         $scope.components = [];
+        $scope.componentsPallette = [];
         _ref = $builder.components;
         _results = [];
         for (name in _ref) {
           component = _ref[name];
           if (component.group === group) {
             _results.push($scope.components.push(component));
+            $scope.componentsPallette.push({"name": component.name, "template": '<div><div class="col-sm-8"><i class="fa fa-' + component.icon + '" aria-hidden="true"></i> <label>' + component.label + '</label></div>'});
           }
         }
         return _results;
@@ -257,6 +265,7 @@
               } else if (isHover) {
                 if (draggable.mode === 'mirror') {
                   $builder.insertFormObject(scope.formName, $(element).find('.empty').index('.fb-form-object-editable'), {
+                    id: Math.random().toString(36).slice(2),
                     component: draggable.object.componentName
                   });
                 }
@@ -428,7 +437,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-pills nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in components\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-pills nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in componentsPallette\"\n        fb-component=\"component\"></div>\n</div>",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
@@ -1003,11 +1012,13 @@
       "default": []
     };
     this.convertComponent = function(name, component) {
-      var result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var result, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       result = {
         name: name,
         group: (_ref = component.group) != null ? _ref : 'Default',
         label: (_ref1 = component.label) != null ? _ref1 : '',
+        icon: (_ref10 = component.icon) != null ? _ref10 : '',
+        model: (_ref11 = component.model) != null ? _ref11 : '',
         description: (_ref2 = component.description) != null ? _ref2 : '',
         placeholder: (_ref3 = component.placeholder) != null ? _ref3 : '',
         editable: (_ref4 = component.editable) != null ? _ref4 : true,
@@ -1030,7 +1041,7 @@
       return result;
     };
     this.convertFormObject = function(name, formObject) {
-      var component, result, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var component, result, _ref, _ref1, _ref2, _ref10, _ref11, _ref3, _ref4, _ref5, _ref6, _ref7;
       if (formObject == null) {
         formObject = {};
       }
@@ -1044,6 +1055,8 @@
         editable: (_ref = formObject.editable) != null ? _ref : component.editable,
         index: (_ref1 = formObject.index) != null ? _ref1 : 0,
         label: (_ref2 = formObject.label) != null ? _ref2 : component.label,
+        icon: (_ref10 = formObject.icon) != null ? _ref10 : component.icon,
+        model: (_ref11 = formObject.model) != null ? _ref11 : component.model,
         description: (_ref3 = formObject.description) != null ? _ref3 : component.description,
         placeholder: (_ref4 = formObject.placeholder) != null ? _ref4 : component.placeholder,
         options: (_ref5 = formObject.options) != null ? _ref5 : component.options,
@@ -1102,6 +1115,7 @@
         @param component: The component object.
             group: {string} The component group.
             label: {string} The label of the input.
+            icon: {string} The icon of the input.
             description: {string} The description of the input.
             placeholder: {string} The placeholder of the input.
             editable: {bool} Is the form object editable?
