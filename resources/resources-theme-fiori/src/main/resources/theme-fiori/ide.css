@@ -466,14 +466,9 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #ffffff;
 	color: #156aaf;
 	font-size: 16px;
+	margin-top: 1px;
+	margin-right: 2px;
 	font-weight: 300;
-
-	border-top: none;
-	border-right: none;
-	border-left: none;
-	border-image: initial;
-	border-bottom: 1px solid;
-	margin-top: 2px;
 }
 
 .workspace {
@@ -541,10 +536,6 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 
 .console-row-trace {
 	color: darkgray;
-}
-
-.search-dropdown {
-	height: 1.7em !important;
 }
 
 .search-box {
@@ -660,4 +651,11 @@ th {
 .extension-name {
 	color: #477ab7;
 	font-weight: 400;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    border: 1px solid #1f4a6f;
+    background: #1f4a6f;
+    font-weight: normal;
+    color: #ffffff;
 }
