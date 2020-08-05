@@ -437,7 +437,7 @@
   ]).directive('fbComponents', function() {
     return {
       restrict: 'A',
-      template: "<ul ng-if=\"groups.length > 1\" class=\"nav nav-pills nav-justified\">\n    <li ng-repeat=\"group in groups\" ng-class=\"{active:activeGroup==group}\">\n        <a href='#' ng-click=\"selectGroup($event, group)\">{{group}}</a>\n    </li>\n</ul>\n<div class='form-horizontal'>\n    <div class='fb-component' ng-repeat=\"component in componentsPallette\"\n        fb-component=\"component\"></div>\n</div>",
+      template: "<div id=\"accordion\">\n<h3 ng-repeat-start=\"group in groups\" ng-click=\"selectGroup($event, group)\">{{group}}</h3><div ng-repeat-end=\"group in groups\" class='form-horizontal'>\n <div class='fb-component' ng-repeat=\"component in componentsPallette\"\n fb-component=\"component\"></div>\n</div>\n",
       controller: 'fbComponentsController'
     };
   }).directive('fbComponent', [
