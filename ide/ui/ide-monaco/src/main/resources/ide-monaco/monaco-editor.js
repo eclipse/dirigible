@@ -34,7 +34,8 @@ exports.getEditor = function() {
 			"application/xml",
 			"application/bpmn+xml",
 			"application/database-schema-model+xml",
-			"application/entity-data-model+xml"
+			"application/entity-data-model+xml",
+			"application/json+form"
 		]
 	};
 	return editor;
