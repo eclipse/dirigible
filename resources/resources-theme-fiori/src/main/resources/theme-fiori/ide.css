@@ -654,8 +654,8 @@ th {
 }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
-    border: 1px solid #1f4a6f;
-    background: #1f4a6f;
+    border: 1px solid #337ab7;
+    background: #337ab7;
     font-weight: normal;
     color: #ffffff;
 }

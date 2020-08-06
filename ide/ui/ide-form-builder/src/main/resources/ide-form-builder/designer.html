@@ -38,11 +38,19 @@
 </head>
 <body class="container" ng-controller="DesignerController">
 
-    <ul class="nav nav-pills">
-        <li class="active"><a data-toggle="tab" href="#designer">Designer</a></li>
-        <li><a data-toggle="tab" href="#form">Preview</a></li>
-        <li><a data-toggle="tab" ng-click="save()">Save</a></li>
-    </ul>
+	<div class="collapse navbar-collapse" id="navbar-collapse">
+		<ul class="nav navbar-nav nav-pills">
+			<li class="active"><a data-toggle="tab" href="#designer">Designer</a></li>
+			<li><a data-toggle="tab" href="#form">Preview</a></li>
+			<li><a data-toggle="tab" href="#data">Data</a></li>
+			<li><a data-toggle="tab" ng-click="save()">Save</a></li>
+			<li><a data-toggle="tab" onclick="document.location.reload()">Reload</a></li>
+		</ul>
+
+		<ul class="nav navbar-nav navbar-right">
+			<li><a class="pull-right">{{file}}</a></li>
+		</ul>
+	</div>
 
     <div class="tab-content">
 
@@ -90,7 +98,88 @@
             </div>
             <pre ng-if="isShowScope" style="white-space: pre-wrap">{{input}}</pre>
         </div>
-    
+
+
+
+
+
+<div id="data" class="tab-pane fade">
+		<form>
+			<div class="container">
+				<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus" aria-hidden="true"></i></button>
+				<table class="table product-table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>URL</th>
+							<th>Primary</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="next in metadata.feeds">
+							<td>{{next.name}}</td>
+							<td>{{next.url}}</td>
+							<td><span class="fa" ng-class="{'fa-square-o': !next.primary , 'fa-check-square-o': next.primary}"></td>
+							<td>
+								<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
+								<i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Feed</h3>
+					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Feed</h3>
+					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Feed</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger" ng-show="error">
+						{{error}}
+					</div>
+					<form ng-hide="actionType === 'delete'">
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
+						</div>
+						<div class="form-group">
+							<label>URL</label>
+							<input type="text" class="form-control" placeholder="Enter URL" ng-model="entity.url">
+						</div>
+						<div class="form-group">
+							<label>Primary</label>
+							<input type="checkbox" class="form-control" placeholder="Enter primary flag" ng-model="entity.primary" ng-true-value="'true'" ng-false-value="'false'">
+						</div>
+					</form>
+					<div ng-show="actionType === 'delete'">
+						You are going to delete <b>Feed</b> with <b>name = {{entity.name}}</b>?
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
+					<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
+					<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
+					<button type="button" class="btn" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
     </div>
 
     <div class="row">

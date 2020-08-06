@@ -62,11 +62,31 @@
         var searchParams = new URLSearchParams(window.location.search);
         $scope.file = searchParams.get('file');
         contents = loadContents($scope.file);
-        $scope.components = JSON.parse(contents);
+        if (!contents || contents === null || contents === "") {
+          contents = '{"metadata":{"feeds":[]},"form":[]}';
+        }
+        var description = JSON.parse(contents);
+        if (!description.form) {
+          description.form = {};
+        }
+        if (!description.metadata) {
+          description.metadata = {};
+        }
+        if (!description.metadata.feeds) {
+          description.metadata.feeds = [];
+        }
+        $scope.components = description.form;
+        $scope.metadata = description.metadata;
         $scope.defaultValue = {};
         $scope.data = {};
-        $scope.data["firstName"] = "John";
-        $scope.data["lastName"] = "Smith";
+        $scope.metadata.feeds.forEach(feed => {
+          var data = getResource(feed.url);
+          if (feed.primary) {
+            $scope.data = JSON.parse(data);
+          } else {
+            $scope[feed.name] = JSON.parse(data);
+          }
+        });
         $.each($scope.components, function(i, item){
             var formObj = $builder.addFormObject('default', item);
             $scope.defaultValue[formObj.id] =  $scope.data[formObj.model];
@@ -93,7 +113,10 @@
       }
 
       $scope.save = function() {
-        contents = JSON.stringify($scope.form);
+        var description = {};
+        description.metadata = $scope.metadata;
+        description.form = $scope.form;
+        contents = JSON.stringify(description);
         saveContents(contents);
       };
 	
@@ -104,6 +127,75 @@
         }
       });
 
+
+
+      // metadata
+      $scope.openNewDialog = function() {
+        $scope.actionType = 'new';
+        $scope.entity = {};
+        $scope.entity.url = "";
+        $scope.entity.primary = false;
+        toggleEntityModal();
+      };
+
+      $scope.openEditDialog = function(entity) {
+        $scope.actionType = 'update';
+        $scope.entity = entity;
+        toggleEntityModal();
+      };
+
+      $scope.openDeleteDialog = function(entity) {
+        $scope.actionType = 'delete';
+        $scope.entity = entity;
+        toggleEntityModal();
+      };
+
+      $scope.close = function() {
+        load();
+        toggleEntityModal();
+      };
+      
+      $scope.create = function() {
+        if (!$scope.metadata) {
+          $scope.metadata = {};
+        }
+        if (!$scope.metadata.feeds) {
+          $scope.metadata.feeds = [];
+        }
+        var exists = $scope.metadata.feeds.filter(function(e) {
+          return e.name === $scope.entity.name;
+        });
+        if (exists.length === 0) {
+          $scope.metadata.feeds.push($scope.entity);
+          toggleEntityModal();
+        } else {
+          $scope.error = "Feed with a name [" + $scope.entity.name + "] already exists!";
+        }
+        
+      };
+
+      $scope.update = function() {
+        // auto-wired
+        toggleEntityModal();
+      };
+
+      $scope.delete = function() {
+        $scope.metadata.feeds = $scope.metadata.feeds.filter(function(e) {
+          return e !== $scope.entity;
+        }); 
+        toggleEntityModal();
+      };
+
+      
+      function toggleEntityModal() {
+        $('#entityModal').modal('toggle');
+        $scope.error = null;
+      }
+
+
+
+
+
       $scope.form = $builder.forms['default'];
       $scope.input = [];
       return $scope.submit = function() {
@@ -113,6 +205,8 @@
           return console.log('error');
         });
       };
+
+      
     }
   ]);
 
