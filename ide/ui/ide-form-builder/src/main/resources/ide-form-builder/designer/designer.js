@@ -198,7 +198,20 @@
 
       $scope.form = $builder.forms['default'];
       $scope.input = [];
-      return $scope.submit = function() {
+
+      $scope.ok = function() {
+        return $validator.validate($scope, 'default').success(function() {
+          return console.log('success');
+        }).error(function() {
+          return console.log('error');
+        });
+      };
+
+      $scope.cancel = function() {
+          return console.log('cancel');
+      };
+
+      return $scope.submit = function(button) {
         return $validator.validate($scope, 'default').success(function() {
           return console.log('success');
         }).error(function() {

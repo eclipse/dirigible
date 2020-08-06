@@ -466,9 +466,14 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #ffffff;
 	color: #156aaf;
 	font-size: 16px;
-	margin-top: 1px;
 	margin-right: 2px;
 	font-weight: 300;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-image: initial;
+	border-bottom: 1px solid;
+	margin-top: 2px;
 }
 
 .workspace {
@@ -536,6 +541,10 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 
 .console-row-trace {
 	color: darkgray;
+}
+
+.search-dropdown {
+	height: 1.7em !important;
 }
 
 .search-box {

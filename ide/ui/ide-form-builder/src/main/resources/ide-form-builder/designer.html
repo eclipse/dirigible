@@ -57,7 +57,7 @@
         <div id="designer" class="tab-pane fade in active">
             <hr/>
             <div class="col-md-3">
-                <div fb-components></div>
+                <div fb-components style="margin-top: -2px;"></div>
             </div>
 
             <div class="col-md-9">
@@ -85,11 +85,6 @@
             <hr/>
             <form class="form-horizontal">
                 <div ng-model="input" fb-form="default" fb-default="defaultValue"></div>
-                <div class="form-group">
-                    <div class="col-md-8 col-md-offset-4">
-                        <input type="submit" ng-click="submit()" class="btn btn-default"/>
-                    </div>
-                </div>
             </form>
             <div class="checkbox">
                 <label><input type="checkbox" ng-model="isShowScope" ng-init="isShowScope=false" />
@@ -103,83 +98,78 @@
 
 
 
-<div id="data" class="tab-pane fade">
-		<form>
-			<div class="container">
-				<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus" aria-hidden="true"></i></button>
-				<table class="table product-table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>URL</th>
-							<th>Primary</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="next in metadata.feeds">
-							<td>{{next.name}}</td>
-							<td>{{next.url}}</td>
-							<td><span class="fa" ng-class="{'fa-square-o': !next.primary , 'fa-check-square-o': next.primary}"></td>
-							<td>
-								<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
-								<i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</form>
-	</div>
+	<div id="data" class="tab-pane fade">
+		<hr/>
+			<form>
+				<div class="container">
+					<button type="button" ng-click="openNewDialog()" class="btn btn-lg btn-outline-primary pull-right table-header-button"><i class="fa fa-plus" aria-hidden="true"></i></button>
+					<table class="table product-table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>URL</th>
+								<th>Primary</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="next in metadata.feeds">
+								<td>{{next.name}}</td>
+								<td>{{next.url}}</td>
+								<td><span class="fa" ng-class="{'fa-square-o': !next.primary , 'fa-check-square-o': next.primary}"></td>
+								<td>
+									<i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
+									<i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)" style="margin-right: 0.5em"></i>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
 
-	<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Feed</h3>
-					<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Feed</h3>
-					<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Feed</h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="alert alert-danger" ng-show="error">
-						{{error}}
+		<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Feed</h3>
+						<h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update Feed</h3>
+						<h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete Feed</h3>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
-					<form ng-hide="actionType === 'delete'">
-						<div class="form-group">
-							<label>Name</label>
-							<input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
+					<div class="modal-body">
+						<div class="alert alert-danger" ng-show="error">
+							{{error}}
 						</div>
-						<div class="form-group">
-							<label>URL</label>
-							<input type="text" class="form-control" placeholder="Enter URL" ng-model="entity.url">
+						<form ng-hide="actionType === 'delete'">
+							<div class="form-group">
+								<label>Name</label>
+								<input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
+							</div>
+							<div class="form-group">
+								<label>URL</label>
+								<input type="text" class="form-control" placeholder="Enter URL" ng-model="entity.url">
+							</div>
+							<div class="form-group">
+								<label>Primary</label>
+								<input type="checkbox" class="form-control" placeholder="Enter primary flag" ng-model="entity.primary" ng-true-value="'true'" ng-false-value="'false'">
+							</div>
+						</form>
+						<div ng-show="actionType === 'delete'">
+							You are going to delete <b>Feed</b> with <b>name = {{entity.name}}</b>?
 						</div>
-						<div class="form-group">
-							<label>Primary</label>
-							<input type="checkbox" class="form-control" placeholder="Enter primary flag" ng-model="entity.primary" ng-true-value="'true'" ng-false-value="'false'">
-						</div>
-					</form>
-					<div ng-show="actionType === 'delete'">
-						You are going to delete <b>Feed</b> with <b>name = {{entity.name}}</b>?
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
-					<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
-					<button type="button" class="btn" data-dismiss="modal">Close</button>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" ng-show="actionType === 'new'" ng-click="create()">Save</button>
+						<button type="button" class="btn btn-primary" ng-show="actionType === 'update'" ng-click="update()">Update</button>
+						<button type="button" class="btn btn-primary" ng-show="actionType === 'delete'" ng-click="delete()">Delete</button>
+						<button type="button" class="btn" data-dismiss="modal">Close</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
-
-
-
-
-
     </div>
 
     <div class="row">
