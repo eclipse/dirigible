@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | Sign in</title>
+    
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css">
+	
+	<link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
+	<link rel="stylesheet" href="/services/v4/web/resources/font-dirigible/font.css">
+</head>
+    <body>
+        <div class="container" style="padding: 5em">
+			<div class="row col-sm-6 col-md-4 col-md-offset-4">
+				<h1 style="font-size: 3.5em; margin-bottom: 0.8em" align="center"><i class="logo-icon icon-dirigible">&#xe801;</i></h1>
+				<h3 class="text-center login-title" style="margin-bottom: 1em">Sign in to Eclipse Dirigible</h3>
+				<div class=" bg-info" style="padding: 2em; border-radius: 5px">
+					<div>
+						<form class="form-signin" name="loginForm" method="POST" action="j_security_check">
+						<input type="text" name="j_username" class="form-control" style="margin-top: 1em; padding: 1em" placeholder="Username" required autofocus>
+						<input type="password" name="j_password" class="form-control" style="margin-top: 1em; padding: 1em" placeholder="Password" required>
+						<button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 1em">Log in</button>
+						<hr>
+						<a href="///www.dirigible.io" target="_blank" class="pull-right need-help">Need help?</a><span class="clearfix"></span>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>
