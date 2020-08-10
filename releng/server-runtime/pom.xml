@@ -11,7 +11,7 @@
 
     <name>Releng - Server - Runtime</name>
 	<artifactId>dirigible-server-runtime</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -34,6 +34,15 @@
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
 					<warName>ROOT</warName>
 				</configuration>
+				<executions>
+					<execution>
+						<id>make-a-war</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<resources>
