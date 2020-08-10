@@ -51,6 +51,7 @@
 		<module>ide-database</module>
 		<module>ide-deploy-manager</module>
 		<module>ide-documents</module>
+		<module>ide-documents-ext-content-type-ms</module>
 		<module>ide-git</module>
 		<module>ide-help</module>
 		<module>ide-preview</module>
