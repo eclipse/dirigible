@@ -92,6 +92,9 @@
             $scope.defaultValue[formObj.id] =  $scope.data[formObj.model];
         });
       }
+      $scope.getData = function(control) {
+        alert(JSON.stringify(control));
+      };
 	
       load();
 

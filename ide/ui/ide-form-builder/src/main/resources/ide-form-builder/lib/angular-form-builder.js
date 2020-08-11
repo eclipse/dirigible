@@ -40,7 +40,7 @@
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        $scope.optionsText = formObject.options.join('\n');
+        // $scope.optionsText = formObject.options.join('\n');
         $scope.$watch('[label, icon, model, description, placeholder, required, options, validation]', function() {
           formObject.label = $scope.label;
           formObject.icon = $scope.icon;
@@ -51,22 +51,22 @@
           formObject.options = $scope.options;
           return formObject.validation = $scope.validation;
         }, true);
-        $scope.$watch('optionsText', function(text) {
-          var x;
-          $scope.options = (function() {
-            var _i, _len, _ref, _results;
-            _ref = text.split('\n');
-            _results = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              x = _ref[_i];
-              if (x.length > 0) {
-                _results.push(x);
-              }
-            }
-            return _results;
-          })();
-          return $scope.inputText = $scope.options[0];
-        });
+        // $scope.$watch('optionsText', function(text) {
+        //   var x;
+        //   $scope.options = (function() {
+        //     var _i, _len, _ref, _results;
+        //     _ref = text.split('\n');
+        //     _results = [];
+        //     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        //       x = _ref[_i];
+        //       if (x.length > 0) {
+        //         _results.push(x);
+        //       }
+        //     }
+        //     return _results;
+        //   })();
+        //   return $scope.inputText = $scope.options[0];
+        // });
         component = $builder.components[formObject.component];
         return $scope.validationOptions = component.validationOptions;
       };
