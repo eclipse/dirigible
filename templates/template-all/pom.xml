@@ -137,5 +137,10 @@
 		 	<artifactId>dirigible-template-mobile-hello-world</artifactId>
 		 	<version>5.1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>template-form-builder-angularjs</artifactId>
+		 	<version>5.1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
