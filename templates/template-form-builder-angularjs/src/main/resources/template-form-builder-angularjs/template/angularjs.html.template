@@ -1,3 +1,45 @@
-<html>
-...test...
+<!doctype html>
+<html ng-app="page">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link type="text/css" rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+	 <link type="text/css" rel="stylesheet" href="../../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	 <link type="image/png" rel="shortcut icon" href="../../../../../services/v4/web/resources/images/favicon.png" />
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../../../../../services/v4/web/resources/angular/1.4.7/angular-sanitize.min.js"></script>
+    <script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+
+    <script type="text/javascript" src="./${controller}"></script>
+
+</head>
+<body class="container" ng-controller="PageController">
+    <div id="form"> 
+#foreach($next in $form)
+#if($next.component == "header")
+        <div class="form-group page-header container col-sm-12">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-8"><h1>${next.label}</h1></div>
+        </div>
+#elseif($next.component == "textInput")
+        <div class="form-group col-sm-12">
+            <label for="${next.id}" class="col-sm-4 control-label text-right">${next.label}</label>
+            <div class="col-sm-8">
+                <input type="text" ng-model="data.${next.model}" id="${next.id}" class="form-control" placeholder="${next.placeholder}"/>
+            </div>
+        </div>
+#elseif($next.component == "textArea")
+        <div class="form-group col-sm-12">
+            <label for="${next.id}" class="col-sm-4 control-label text-right">${next.label}</label>
+            <div class="col-sm-8">
+                <textarea ng-model="${next.model}" id="${next.id}" class="form-control" placeholder="${next.placeholder}"></textarea>
+            </div>
+        </div>
+#end
+#end
+    </div>
+</body>
 </html>

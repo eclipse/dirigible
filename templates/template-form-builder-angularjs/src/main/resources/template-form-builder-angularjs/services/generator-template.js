@@ -20,8 +20,15 @@ exports.getTemplate = function() {
                        "action": "generate",
                        "rename": "{{fileNameBase}}.html",
                        "engine": "javascript",
-                       "handler": "/template-form-builder-angularjs/template/generator.js"
-		                }
+                       "handler": "/template-form-builder-angularjs/template/generatorView.js"
+		            },
+                    {
+                       "location": "/template-form-builder-angularjs/template/angularjs.js.template", 
+                       "action": "generate",
+                       "rename": "{{fileNameBase}}.js",
+                       "engine": "javascript",
+                       "handler": "/template-form-builder-angularjs/template/generatorController.js"
+		            }
                 ]
         };
         return template;

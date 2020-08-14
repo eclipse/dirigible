@@ -82,9 +82,17 @@
         $scope.metadata.feeds.forEach(feed => {
           var data = getResource(feed.url);
           if (feed.primary) {
-            $scope.data = JSON.parse(data);
+            if (data) {
+              $scope.data = JSON.parse(data);
+            } else {
+              console.error("The feed: " + feed.name + " at: " + feed.url + " is not available");
+            }
           } else {
-            $scope[feed.name] = JSON.parse(data);
+            if (data) {
+              $scope[feed.name] = JSON.parse(data);
+            } else {
+              console.error("The feed: " + feed.name + " at: " + feed.url + " is not available");
+            }
           }
         });
         $.each($scope.components, function(i, item){
