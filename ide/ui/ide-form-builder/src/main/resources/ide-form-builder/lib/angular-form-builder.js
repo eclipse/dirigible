@@ -10,6 +10,7 @@
  */
 (function() {
   var copyObjectToScope;
+  var $ = jQuery;
 
   copyObjectToScope = function(object, scope) {
 
@@ -40,7 +41,11 @@
          */
         var component;
         copyObjectToScope(formObject, $scope);
-        // $scope.optionsText = formObject.options.join('\n');
+
+        if (Array.isArray(formObject.options)) {
+          $scope.optionsText = formObject.options.join('\n');
+        }
+        
         $scope.$watch('[label, icon, model, description, placeholder, required, options, validation]', function() {
           formObject.label = $scope.label;
           formObject.icon = $scope.icon;
@@ -51,22 +56,27 @@
           formObject.options = $scope.options;
           return formObject.validation = $scope.validation;
         }, true);
-        // $scope.$watch('optionsText', function(text) {
-        //   var x;
-        //   $scope.options = (function() {
-        //     var _i, _len, _ref, _results;
-        //     _ref = text.split('\n');
-        //     _results = [];
-        //     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        //       x = _ref[_i];
-        //       if (x.length > 0) {
-        //         _results.push(x);
-        //       }
-        //     }
-        //     return _results;
-        //   })();
-        //   return $scope.inputText = $scope.options[0];
-        // });
+        $scope.$watch('optionsText', function(text) {
+          var x;
+          if (text && text.indexOf('\n') > 0) {
+            $scope.options = (function() {
+              var _i, _len, _ref, _results;
+              _ref = text.split('\n');
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                x = _ref[_i];
+                if (x.length > 0) {
+                  _results.push(x);
+                }
+              }
+              return _results;
+            })();
+          }
+          if (Array.isArray(formObject.options)) {
+            return $scope.inputText = $scope.options[0];
+          }
+          return $scope.inputText = $scope.options;
+        });
         component = $builder.components[formObject.component];
         return $scope.validationOptions = component.validationOptions;
       };
@@ -187,6 +197,7 @@
 }).call(this);
 
 (function() {
+  var $ = jQuery;
   angular.module('builder.directive', ['builder.provider', 'builder.controller', 'builder.drag', 'validator']).directive('fbBuilder', [
     '$injector', function($injector) {
       var $builder, $drag;
@@ -336,6 +347,7 @@
             popover.html = $(popover.html).addClass(popover.id);
             popover.view = $compile(popover.html)(scope);
             $(element).addClass(popover.id);
+            $.noConflict();
             return $(element).popover({
               html: true,
               title: scope.$component.label,
@@ -565,6 +577,7 @@
 }).call(this);
 
 (function() {
+  var $ = jQuery;
   angular.module('builder.drag', []).provider('$drag', function() {
     var $injector, $rootScope, delay;
     $injector = null;
@@ -993,6 +1006,7 @@
  */
 
 (function() {
+  var $ = jQuery;
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   angular.module('builder.provider', []).provider('$builder', function() {
