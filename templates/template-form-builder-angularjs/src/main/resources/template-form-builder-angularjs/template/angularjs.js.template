@@ -38,4 +38,13 @@ angular.module('page')
 #end
 #end
 
+#foreach($next in $form)
+#if($next.component == "button")
+        ${dollar}scope.${next.model} = function(event)
+#foreach($line in $next.options)
+        ${line}
+#end
+#end
+#end
+
 });
