@@ -76,6 +76,15 @@
         if (!description.metadata.feeds) {
           description.metadata.feeds = [];
         }
+        if (!description.metadata.styles) {
+          description.metadata.styles = [];
+        }
+        if (!description.metadata.scripts) {
+          description.metadata.scripts = [];
+        }
+        if (!description.metadata.handlers) {
+          description.metadata.handlers = [];
+        }
         $scope.components = description.form;
         $scope.metadata = description.metadata;
         $scope.defaultValue = {};
@@ -107,7 +116,7 @@
 	
       load();
 
-      function saveContents(text) {
+      function saveContents(text, publish) {
         console.log('Save called...');
         if ($scope.file) {
           var xhr = new XMLHttpRequest();
@@ -115,6 +124,9 @@
           xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
               console.log('file saved: ' + $scope.file);
+              if (publish) {
+                setTimeout(function(){ publishFile(); }, 800);
+              }
             }
           };
           xhr.send(text);
@@ -124,17 +136,43 @@
         }
       }
 
-      $scope.save = function() {
+      function prepareContents() {
         var description = {};
         description.metadata = $scope.metadata;
         description.form = $scope.form;
-        contents = JSON.stringify(description);
-        saveContents(contents);
+        return JSON.stringify(description);
+      }
+
+      function publishFile() {
+        console.log('Publish called...');
+        if ($scope.file) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '../../../../../../services/v4/ide/publisher/request' + $scope.file.substring(0,$scope.file.lastIndexOf('/')));
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+              console.log('publish request sent for file: ' + $scope.file);
+              messageHub.post({data: $scope.file}, 'workspace.file.published');
+            }
+          };
+          xhr.send("{}");
+        } else {
+          console.error('file parameter is not present in the request');
+        }
+      }
+
+      $scope.save = function() {
+        contents = prepareContents();
+        saveContents(contents, false);
+      };
+
+      $scope.saveAndPublish = function() {
+        contents = prepareContents();
+        saveContents(contents, true);
       };
 	
       $scope.$watch(function() {
-        var components = JSON.stringify($scope.components);
-        if (contents !== components) {
+        var current = prepareContents();
+        if (contents !== current) {
           messageHub.post({data: $scope.file}, 'editor.file.dirty');
         }
       });
