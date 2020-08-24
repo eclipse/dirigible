@@ -53,6 +53,7 @@
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
 		<module>resources-jquery-ui</module>
+		<module>resources-requirejs</module>
 	</modules>
 
 	<profiles>
