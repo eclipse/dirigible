@@ -39,6 +39,7 @@
   ]).controller('DesignerController', [
     '$scope', '$builder', '$validator', function($scope, $builder, $validator) {
 
+      var $ = jQuery;
       var messageHub = new FramesMessageHub();
       var contents;
       
@@ -141,32 +142,34 @@
 
 
       // metadata
-      $scope.openNewDialog = function() {
+
+      // Feeds
+      $scope.openNewFeedDialog = function() {
         $scope.actionType = 'new';
-        $scope.entity = {};
-        $scope.entity.url = "";
-        $scope.entity.primary = false;
-        toggleEntityModal();
+        $scope.feed = {};
+        $scope.feed.url = "";
+        $scope.feed.primary = false;
+        toggleFeedModal();
       };
 
-      $scope.openEditDialog = function(entity) {
+      $scope.openEditFeedDialog = function(entity) {
         $scope.actionType = 'update';
-        $scope.entity = entity;
-        toggleEntityModal();
+        $scope.feed = entity;
+        toggleFeedModal();
       };
 
-      $scope.openDeleteDialog = function(entity) {
+      $scope.openDeleteFeedDialog = function(entity) {
         $scope.actionType = 'delete';
-        $scope.entity = entity;
-        toggleEntityModal();
+        $scope.feed = entity;
+        toggleFeedModal();
       };
 
-      $scope.close = function() {
+      $scope.closeFeed = function() {
         load();
-        toggleEntityModal();
+        toggleFeedModal();
       };
       
-      $scope.create = function() {
+      $scope.createFeed = function() {
         if (!$scope.metadata) {
           $scope.metadata = {};
         }
@@ -174,34 +177,227 @@
           $scope.metadata.feeds = [];
         }
         var exists = $scope.metadata.feeds.filter(function(e) {
-          return e.name === $scope.entity.name;
+          return e.name === $scope.feed.name;
         });
         if (exists.length === 0) {
-          $scope.metadata.feeds.push($scope.entity);
-          toggleEntityModal();
+          $scope.metadata.feeds.push($scope.feed);
+          toggleFeedModal();
         } else {
-          $scope.error = "Feed with a name [" + $scope.entity.name + "] already exists!";
+          $scope.error = "Feed with a name [" + $scope.feed.name + "] already exists!";
         }
         
       };
 
-      $scope.update = function() {
+      $scope.updateFeed = function() {
         // auto-wired
-        toggleEntityModal();
+        toggleFeedModal();
       };
 
-      $scope.delete = function() {
+      $scope.deleteFeed = function() {
         $scope.metadata.feeds = $scope.metadata.feeds.filter(function(e) {
-          return e !== $scope.entity;
+          return e !== $scope.feed;
         }); 
-        toggleEntityModal();
+        toggleFeedModal();
       };
 
       
-      function toggleEntityModal() {
-        $('#entityModal').modal('toggle');
+      function toggleFeedModal() {
+        $('#feedModal').modal('toggle');
         $scope.error = null;
       }
+      // -- Feeds
+
+
+      // Styles
+      $scope.openNewStyleDialog = function() {
+        $scope.actionType = 'new';
+        $scope.style = {};
+        $scope.style.url = "";
+        toggleStyleModal();
+      };
+
+      $scope.openEditStyleDialog = function(entity) {
+        $scope.actionType = 'update';
+        $scope.style = entity;
+        toggleStyleModal();
+      };
+
+      $scope.openDeleteStyleDialog = function(entity) {
+        $scope.actionType = 'delete';
+        $scope.style = entity;
+        toggleStyleModal();
+      };
+
+      $scope.closeStyle = function() {
+        load();
+        toggleStyleModal();
+      };
+      
+      $scope.createStyle = function() {
+        if (!$scope.metadata) {
+          $scope.metadata = {};
+        }
+        if (!$scope.metadata.styles) {
+          $scope.metadata.styles = [];
+        }
+        var exists = $scope.metadata.styles.filter(function(e) {
+          return e.name === $scope.styles.name;
+        });
+        if (exists.length === 0) {
+          $scope.metadata.styles.push($scope.style);
+          toggleStyleModal();
+        } else {
+          $scope.error = "Style with a name [" + $scope.style.name + "] already exists!";
+        }
+        
+      };
+
+      $scope.updateStyle = function() {
+        // auto-wired
+        toggleStyleModal();
+      };
+
+      $scope.deleteStyle = function() {
+        $scope.metadata.styles = $scope.metadata.styles.filter(function(e) {
+          return e !== $scope.styles;
+        }); 
+        toggleStyleModal();
+      };
+
+      
+      function toggleStyleModal() {
+        $('#styleModal').modal('toggle');
+        $scope.error = null;
+      }
+      // -- Styles
+
+
+      // Scripts
+      $scope.openNewScriptDialog = function() {
+        $scope.actionType = 'new';
+        $scope.script = {};
+        $scope.script.url = "";
+        toggleScriptModal();
+      };
+
+      $scope.openEditScriptDialog = function(entity) {
+        $scope.actionType = 'update';
+        $scope.script = entity;
+        toggleScriptModal();
+      };
+
+      $scope.openDeleteScriptDialog = function(entity) {
+        $scope.actionType = 'delete';
+        $scope.script = entity;
+        toggleScriptModal();
+      };
+
+      $scope.close = function() {
+        load();
+        toggleScriptModal();
+      };
+      
+      $scope.createScript = function() {
+        if (!$scope.metadata) {
+          $scope.metadata = {};
+        }
+        if (!$scope.metadata.scripts) {
+          $scope.metadata.scripts = [];
+        }
+        var exists = $scope.metadata.scripts.filter(function(e) {
+          return e.name === $scope.script.name;
+        });
+        if (exists.length === 0) {
+          $scope.metadata.scripts.push($scope.script);
+          toggleScriptModal();
+        } else {
+          $scope.error = "Script with a name [" + $scope.script.name + "] already exists!";
+        }
+        
+      };
+
+      $scope.updateScript = function() {
+        // auto-wired
+        toggleScriptModal();
+      };
+
+      $scope.deleteScript = function() {
+        $scope.metadata.scripts = $scope.metadata.scripts.filter(function(e) {
+          return e !== $scope.script;
+        }); 
+        toggleScriptModal();
+      };
+
+      
+      function toggleScriptModal() {
+        $('#scriptModal').modal('toggle');
+        $scope.error = null;
+      }
+      // -- Scripts
+
+
+      // Handlers
+      $scope.openNewHandlerDialog = function() {
+        $scope.actionType = 'new';
+        $scope.handler = {};
+        $scope.handler.url = "";
+        toggleHandlerModal();
+      };
+
+      $scope.openEditHandlerDialog = function(entity) {
+        $scope.actionType = 'update';
+        $scope.handler = entity;
+        toggleHandlerModal();
+      };
+
+      $scope.openDeleteHandlerDialog = function(entity) {
+        $scope.actionType = 'delete';
+        $scope.handler = entity;
+        toggleHandlerModal();
+      };
+
+      $scope.close = function() {
+        load();
+        toggleHandlerModal();
+      };
+      
+      $scope.createHandler = function() {
+        if (!$scope.metadata) {
+          $scope.metadata = {};
+        }
+        if (!$scope.metadata.handlers) {
+          $scope.metadata.handlers = [];
+        }
+        var exists = $scope.metadata.handlers.filter(function(e) {
+          return e.name === $scope.handler.name;
+        });
+        if (exists.length === 0) {
+          $scope.metadata.handlers.push($scope.handler);
+          toggleHandlerModal();
+        } else {
+          $scope.error = "Handler with a name [" + $scope.handler.name + "] already exists!";
+        }
+        
+      };
+
+      $scope.updateHandler = function() {
+        // auto-wired
+        toggleHandlerModal();
+      };
+
+      $scope.deleteHandler = function() {
+        $scope.metadata.handlers = $scope.metadata.handlers.filter(function(e) {
+          return e !== $scope.handler;
+        }); 
+        toggleHandlerModal();
+      };
+
+      
+      function toggleHandlerModal() {
+        $('#handlerModal').modal('toggle');
+        $scope.error = null;
+      }
+      // -- Handlers
 
 
 
@@ -209,18 +405,6 @@
 
       $scope.form = $builder.forms['default'];
       $scope.input = [];
-
-      $scope.ok = function() {
-        return $validator.validate($scope, 'default').success(function() {
-          return console.log('success');
-        }).error(function() {
-          return console.log('error');
-        });
-      };
-
-      $scope.cancel = function() {
-          return console.log('cancel');
-      };
 
       return $scope.submit = function(button) {
         return $validator.validate($scope, 'default').success(function() {
