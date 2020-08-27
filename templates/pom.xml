@@ -60,6 +60,7 @@
 		<module>template-application-openui5</module>
 		<module>template-mobile-hello-world</module>
 		<module>template-form-builder-angularjs</module>
+		<module>template-application-odata</module>
 	</modules>
 
 	<profiles>

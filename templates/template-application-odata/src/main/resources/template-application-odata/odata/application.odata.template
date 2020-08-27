@@ -1,0 +1,18 @@
+{
+    "namespace": "${odataNamespace}",
+    "entities": [
+#foreach ($model in $models)
+#if($model.type != "REPORT")
+#if($foreach.isFirst())
+            {
+#else
+ {
+#end
+                "name": "${model.name}",
+                "alias": "${model.name}",
+                "table": "${model.dataName}"
+}#if($foreach.hasNext),#end
+#end
+#end
+]
+}
