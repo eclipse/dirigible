@@ -18,6 +18,12 @@
             "url": "https://github.com/dirigiblelabs/template-application-ui-angular.git",
             "type": "git",
             "branch": "master"
+        },
+        {
+            "guid": "template-application-odata",
+            "url": "https://github.com/dirigiblelabs/template-application-odata.git",
+            "type": "git",
+            "branch": "master"
         }
     ]
 }
