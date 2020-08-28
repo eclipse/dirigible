@@ -26,7 +26,7 @@ exports.getTemplate = function (parameters) {
     templateParameters = templateParameters.concat(restTemplate.parameters);
 
     return {
-        name: "Application - UI (Angular)",
+        name: "Application - UI (AngularJS)",
         description: "Application with UI, REST APIs and DAOs",
         extension: "model",
         sources: templateSources,
