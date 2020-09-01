@@ -62,9 +62,9 @@ script:
   - docker push $REPO_BASE_SAP_CF:$DIRIGIBLE_VERSION
 
 # Image dirigiblelabs/dirigible-base-platform-sap-cf-runtime
-- docker build -f releng/sap-cf-runtime/Dockerfile-base -t $REPO_BASE_SAP_CF_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-runtime
-- docker tag $REPO_BASE_SAP_CF_RUNTIME:$COMMIT $REPO_BASE_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
-- docker push $REPO_BASE_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
+  - docker build -f releng/sap-cf-runtime/Dockerfile-base -t $REPO_BASE_SAP_CF_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-runtime
+  - docker tag $REPO_BASE_SAP_CF_RUNTIME:$COMMIT $REPO_BASE_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
+  - docker push $REPO_BASE_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
 
 # Image dirigiblelabs/dirigible-all
   - docker build -f releng/server-all/Dockerfile -t $REPO_ALL:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/server-all
@@ -111,12 +111,12 @@ script:
   - docker tag $REPO_SAP_CF:$COMMIT $REPO_SAP_CF:$DIRIGIBLE_VERSION
   - docker push $REPO_SAP_CF:$DIRIGIBLE_VERSION
 
-  # Image dirigiblelabs/dirigible-sap-cf-runtime
-- docker build -f releng/sap-cf-runtime/Dockerfile -t $REPO_SAP_CF_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-runtime
-- docker tag $REPO_SAP_CF_RUNTIME:$COMMIT $REPO_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
-- docker push $REPO_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
+# Image dirigiblelabs/dirigible-sap-cf-runtime
+  - docker build -f releng/sap-cf-runtime/Dockerfile -t $REPO_SAP_CF_RUNTIME:$COMMIT --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION releng/sap-cf-runtime
+  - docker tag $REPO_SAP_CF_RUNTIME:$COMMIT $REPO_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
+  - docker push $REPO_SAP_CF_RUNTIME:$DIRIGIBLE_VERSION
 
-  env:
+env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
     - REPO=dirigiblelabs/dirigible-tomcat
