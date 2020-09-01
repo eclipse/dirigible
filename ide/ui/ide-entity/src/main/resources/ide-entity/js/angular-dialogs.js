@@ -600,6 +600,12 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 		connector.name = $scope.$parent.cell.source.value.relationshipName;
 		$scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 	};
+
+	main(document.getElementById('graphContainer'),
+			document.getElementById('outlineContainer'),
+		 	document.getElementById('toolbarContainer'),
+			document.getElementById('sidebarContainer'),
+			document.getElementById('statusContainer'));
   
   
 });
