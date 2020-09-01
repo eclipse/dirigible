@@ -51,5 +51,10 @@ angular.module('ui.schema.modeler').controller('ModelerCtrl', function ($uibModa
 		$scope.$parent.graph.model.setValue($scope.$parent.cell, clone);
 	};
 	
+	main(document.getElementById('graphContainer'),
+			document.getElementById('outlineContainer'),
+		 	document.getElementById('toolbarContainer'),
+			document.getElementById('sidebarContainer'),
+			document.getElementById('statusContainer'));
 
 });

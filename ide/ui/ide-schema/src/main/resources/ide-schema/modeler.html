@@ -46,17 +46,7 @@
 </style>
 
 <!-- Page passes the container for the graph to the program -->
-<body
-	onload="main(document.getElementById('graphContainer'),
-			document.getElementById('outlineContainer'),
-		 	document.getElementById('toolbarContainer'),
-			document.getElementById('sidebarContainer'),
-			document.getElementById('statusContainer'));"
-			
-	id="ModelerCtrl"
-	ng-controller="ModelerCtrl as ctrl"
-	
-	>
+<body id="ModelerCtrl" ng-controller="ModelerCtrl as ctrl">
 
 	<!-- Creates a container for the splash screen -->
 	<div id="splash"
