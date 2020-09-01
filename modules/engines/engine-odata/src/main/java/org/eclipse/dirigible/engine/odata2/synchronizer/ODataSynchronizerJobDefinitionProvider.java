@@ -35,7 +35,7 @@ public class ODataSynchronizerJobDefinitionProvider implements IJobDefinitionPro
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(ODataSynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription(O_DATA_SYNCHRONIZER_JOB);
-		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_ODATA, "0/25 * * * * ?");
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_ODATA, "0/45 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;
