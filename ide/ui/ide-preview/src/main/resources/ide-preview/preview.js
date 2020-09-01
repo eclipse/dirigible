@@ -66,55 +66,60 @@ angular.module('preview', [])
 		var resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
 		var url = window.location.protocol + '//' + window.location.host +  window.location.pathname.substr(0, window.location.pathname.indexOf('/web/'));
 		var type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
-		switch(type) {
-			case 'rhino':
-				url += '/rhino';
-				break;
-			case 'nashorn':
-				url += '/nashorn';
-				break;
-			case 'v8':
-				url += '/v8';
-				break;
-			case 'graalvm':
-				url += '/graalvm';
-				break;
-			case 'js':
-				url += '/js';
-				break;
-			case 'xsjs':
-				url += '/xsc';
-				break;
-			case 'md':
-				url += '/wiki';
-				break;
-			case 'command':
-				url += '/command';
-				break;
-			case 'edm':
-			case 'dsm':
-			case 'bpmn':
-			case 'job':
-			case 'listener':
-			case 'extensionpoint':
-			case 'extension':
-			case 'table':
-			case 'view':
-			case 'access':
-			case 'roles':
-			case 'sh':
-			case 'form':
-				return;
-			default:
-				url += '/web';
+		var isOData = resourcePath.endsWith(".odata");
+		if (isOData) {
+			url = window.location.protocol + '//' + window.location.host + "/odata/v2/";
+		} else {
+			switch(type) {
+				case 'rhino':
+					url += '/rhino';
+					break;
+				case 'nashorn':
+					url += '/nashorn';
+					break;
+				case 'v8':
+					url += '/v8';
+					break;
+				case 'graalvm':
+					url += '/graalvm';
+					break;
+				case 'js':
+					url += '/js';
+					break;
+				case 'xsjs':
+					url += '/xsc';
+					break;
+				case 'md':
+					url += '/wiki';
+					break;
+				case 'command':
+					url += '/command';
+					break;
+				case 'edm':
+				case 'dsm':
+				case 'bpmn':
+				case 'job':
+				case 'listener':
+				case 'extensionpoint':
+				case 'extension':
+				case 'table':
+				case 'view':
+				case 'access':
+				case 'roles':
+				case 'sh':
+				case 'form':
+					return;
+				default:
+					url += '/web';
+			}
+			url += resourcePath;
 		}
-		url += resourcePath;
 		this.previewUrl = url;
 		$scope.$apply();
 	}.bind(this));
 	
 	$messageHub.on('workspace.file.published', function(msg) {
-		setTimeout(function(){ this.refresh(); }, 1000);
+		this.refresh();
 		$scope.$apply();
 	}.bind(this));
 
