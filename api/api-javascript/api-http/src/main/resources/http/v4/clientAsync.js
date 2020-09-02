@@ -83,7 +83,7 @@ function buildUrl(url, options) {
 
 function HttpAsyncClient() {
 	
-	this.httpClient = new org.eclipse.dirigible.engine.js.rhino.api.v3.http.HttpClientAsync();
+	this.httpClient = new org.eclipse.dirigible.api.v3.http.HttpClientAsyncFacade();
 
 	this.getAsync = function(url, config, options) {
 		var newUrl = buildUrl(url, options);
