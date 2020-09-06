@@ -9,6 +9,8 @@
  *   SAP - initial API and implementation
  */
 
+var bytes = require("io/v4/bytes");
+
 exports.createWorkspace = function(name) {
 	var native = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.createWorkspace(name);
 	var workspace = new Workspace();
@@ -338,10 +340,20 @@ function File() {
 		}
 		return output;
 	};
-	
+
+	this.getText = function() {
+		var bytesOutput = this.getContent();
+		return bytes.byteArrayToText(bytesOutput);
+	};
+
 	this.setContent = function(input) {
 		var output = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.setContent(this.native, input);
 		return output;
+	};
+
+	this.setText = function(input) {
+		var bytesInput = bytes.textToByteArray(input);
+		return this.setContent(bytesInput);
 	};
 
 	this.exists = function() {
