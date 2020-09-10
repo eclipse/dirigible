@@ -516,10 +516,18 @@ function deserializeFilter(graph) {
 	for (var i=0; i<childCount; i++) {
 		var child = graph.model.getChildAt(parent, i);
 		if (!graph.model.isEdge(child)) {
-			child.value.feedUrl = atob(child.value.feedUrl);
-			child.value.feedUsername = atob(child.value.feedUsername);
-			child.value.feedPassword = atob(child.value.feedPassword);
-			child.value.feedSchedule = atob(child.value.feedSchedule);
+			if (child.value.feedUrl && child.value.feedUrl !== "") {
+				child.value.feedUrl = atob(child.value.feedUrl);
+			}
+			if (child.value.feedUsername && child.value.feedUsername !== "") {
+				child.value.feedUsername = atob(child.value.feedUsername);
+			}
+			if (child.value.feedPassword && child.value.feedPassword !== "") {
+				child.value.feedPassword = atob(child.value.feedPassword);
+			}
+			if (child.value.feedSchedule && child.value.feedSchedule !== "") {
+				child.value.feedSchedule = atob(child.value.feedSchedule);
+			}
 		}
 	}
 }
