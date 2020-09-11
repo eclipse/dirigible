@@ -15,21 +15,36 @@ var uiAngularjsTemplateManager = require("template-application-ui-angular/templa
 var odataTemplateManager = require("template-application-odata/template/template");
 
 exports.getTemplate = function (parameters) {
-	let schemaTemplate = schemaTemplateManager.getTemplate(parameters);
+    let schemaTemplate = schemaTemplateManager.getTemplate(parameters);
     let feedTemplate = feedTemplateManager.getTemplate(parameters);
     let uiAngularjsTemplate = uiAngularjsTemplateManager.getTemplate(parameters);
     let odataTemplate = odataTemplateManager.getTemplate(parameters);
 
     let templateSources = [];
-	templateSources = templateSources.concat(schemaTemplate.sources);
+    templateSources = templateSources.concat(schemaTemplate.sources);
     templateSources = templateSources.concat(feedTemplate.sources);
     templateSources = templateSources.concat(uiAngularjsTemplate.sources);
     templateSources = templateSources.concat(odataTemplate.sources);
 
     let templateParameters = [];
-	templateParameters = templateParameters.concat(schemaTemplate.parameters);
+    templateParameters = templateParameters.concat(schemaTemplate.parameters);
     templateParameters = templateParameters.concat(feedTemplate.parameters);
     templateParameters = templateParameters.concat(uiAngularjsTemplate.parameters);
+    templateParameters.push({
+        name: "generateOData",
+        label: "OData",
+        type: "checkbox"
+    });
+    odataTemplate.parameters.forEach(e => {
+        if (e.name === "odataNamespace") {
+            e.ui = {
+                hide: {
+                    property: "generateOData",
+                    value: false
+                }
+            };
+        }
+    });
     templateParameters = templateParameters.concat(odataTemplate.parameters);
 
     return {

@@ -42,6 +42,11 @@ function getTemplateParameters() {
             placeholder: "Extension name"
         },
         {
+            name: "includeLaunchpad",
+            label: "Embedded",
+            type: "checkbox"
+        },
+        {
             name: "launchpadName",
             label: "Launchpad",
             placeholder: "Launchpad project name",
@@ -51,11 +56,6 @@ function getTemplateParameters() {
                     value: true
                 }
             }
-        },
-        {
-            name: "includeLaunchpad",
-            label: "Embedded",
-            type: "checkbox"
         },
         {
             name: "title",

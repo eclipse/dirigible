@@ -12,6 +12,7 @@
 #end
 #end
 #end
+#if($odataNamespace)
 {
     "namespace": "${odataNamespace}",
     "entities": [
@@ -21,12 +22,14 @@
             "name": "${model.name}",
             "alias": "${model.name}",
             "table": "${model.dataName}",
+#set ($navigationsCount = 0)
 #set ($haveNavigations = false)
 #foreach ($relationModel in $models)
 #if($relationModel.type != "REPORT" && $relationModel.name != $model.name)
 #foreach ($relationProperty in $relationModel.properties)
 #if($relationProperty.relationshipEntityName == $model.name)
 #set ($haveNavigations = true)
+#set ($navigationsCount = $navigationsCount + 1)
 #end
 #end
 #end
@@ -40,8 +43,9 @@
                 {
                     "name": "${relationModel.name}",
                     "association": "${model.name}${relationModel.name}"
-#if($foreach.hasNext)
+#if($navigationsCount > 1)
                 },
+#set ($navigationsCount = $navigationsCount - 1)
 #else
                 }
 #end
@@ -95,6 +99,12 @@
 #end    
 #end
 #end
-#end
     ]
+#end
 }
+#else
+{
+    "namespace": "",
+    "entities": []
+}
+#end
