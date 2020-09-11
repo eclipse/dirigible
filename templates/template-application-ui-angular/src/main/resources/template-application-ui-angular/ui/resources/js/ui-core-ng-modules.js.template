@@ -224,6 +224,11 @@ angular.module('ideUiCore', ['ngResource'])
 		},
 		link: function(scope, el, attrs){
 			scope.tiles= Tiles.query({'pathSegments': pathSegments});
+
+			scope.setActiveView = function(activeView) {
+				localStorage.setItem('DIRIGIBLE.application.{{projectName}}.activePerspective', activeView.group);
+				localStorage.setItem('DIRIGIBLE.application.{{projectName}}.focusView', activeView.name);
+			};
 		},
 		templateUrl: relativePath + 'services/v4/web/{{projectName}}/ui/resources/templates/tiles.html'
 	}

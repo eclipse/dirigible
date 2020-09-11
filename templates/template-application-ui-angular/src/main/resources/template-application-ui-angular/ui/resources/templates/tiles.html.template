@@ -16,7 +16,7 @@
 							</div>
 						</div>
 					</div>
-					<a href="{{next.location}}">
+					<a href="{{next.location}}" ng-click="setActiveView(next)">
 						<div class="panel-footer">
 							<span class="pull-left">Open {{next.name}}</span>
 							<span class="pull-right"><i class="fa fa-chevron-right"></i></span>

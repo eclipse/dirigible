@@ -265,7 +265,20 @@ function LayoutController(viewRegistry, messageHub){
 				content: [this.layoutViews.call(this, views)]
 			};
 		}
-		
+
+		let focusView = localStorage.getItem("DIRIGIBLE.application.{{projectName}}.focusView");
+		if (this.config.content[0] && this.config.content[0].content[0] && this.config.content[0].content[0].content[0] && this.config.content[0].content[0].content[0].content) {
+			let activeItemIndex = 0;
+			for (let i = 0; i < this.config.content[0].content[0].content[0].content.length; i ++) {
+				let contentView = this.config.content[0].content[0].content[0].content[i];
+				if (contentView.id === focusView) {
+					activeItemIndex = i;
+					break;
+				}
+			}
+			this.config.content[0].content[0].content[0].activeItemIndex = activeItemIndex;
+		}
+
 		this.layout = new GoldenLayout(this.config, containerEl);
 		
 		Object.keys(this.viewRegistry.factories()).forEach(function(factoryname){
