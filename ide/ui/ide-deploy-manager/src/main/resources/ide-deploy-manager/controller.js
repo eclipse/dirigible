@@ -20,7 +20,7 @@ angular.module('deployer')
 	}, {
 		'id': 2,
 		'name': 'Trial',
-		'host': 'https://trial.ingress.pro.promart.shoot.canary.k8s-hana.ondemand.com',
+		'host': 'http://trial.dirigible.io',
 		'displayName': 'Trial'
 	}, {
 		'id': 2,
