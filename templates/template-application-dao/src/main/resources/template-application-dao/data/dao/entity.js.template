@@ -162,6 +162,13 @@ exports.create = function(entity) {
 #end
 #end
 #end
+#foreach ($property in $properties)
+#if($property.dataDefaultValue)
+	if (!entity.${property.name}) {
+		entity.${property.name} = "${property.dataDefaultValue}";
+	}
+#end
+#end
 	var id = dao.insert(entity);
 	triggerEvent("Create", {
 		table: "${dataName}",

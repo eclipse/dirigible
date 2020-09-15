@@ -13,6 +13,7 @@ exports.getView = function(relativePath) {
 		id: "{{name}}",
 		name: "{{menuLabel}}",
 		label: "{{menuLabel}}",
+		order: {{menuIndex}},
 		factory: "frame",
 		// region: "center-bottom",
 		link: relativePath + "services/v4/web/{{projectName}}/ui/{{perspectiveName}}/views/{{name}}/index.html"
