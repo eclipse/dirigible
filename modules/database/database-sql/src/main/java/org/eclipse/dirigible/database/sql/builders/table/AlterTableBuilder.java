@@ -29,7 +29,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 
 	private String action = null;
 	
-	private List<String[]> foreignKeys = new ArrayList<String[]>();
+	private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
 
 	/**
 	 * Instantiates a new creates the table builder.
@@ -67,7 +67,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 	 * 
 	 * @return the foreignKeys
 	 */
-	public List<String[]> getForeignKeys() {
+	public List<CreateTableForeignKeyBuilder> getForeignKeys() {
 		return foreignKeys;
 	}
 	
@@ -76,13 +76,21 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 	 * 
 	 * @param name the name of the foreign key
 	 * @param columns the local columns
-	 * @param referenceTable the reference table
-	 * @param referenceColumns the referenced columns
+	 * @param referencedTable the reference table
+	 * @param referencedColumns the referenced columns
 	 * @return the AlterTableBuilder object
 	 */
-	public AlterTableBuilder foreignKey(String name, String columns, String referenceTable, String referenceColumns) {
-		logger.trace("foreignKey: " + name + ", columns: " + columns + ", referenceTable: " + referenceTable + ", referenceColumns: " + referenceColumns);
-		String[] foreignKey = new String[] { name,  columns, referenceTable, referenceColumns};
+	public AlterTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
+		logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
+				+ ", referencedColumns: " + Arrays.toString(referencedColumns));
+		CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
+		for (String column : columns) {
+			foreignKey.column(column);
+		}
+		foreignKey.referencedTable(referencedTable);
+		for (String column : referencedColumns) {
+			foreignKey.referencedColumn(column);
+		}
 		this.foreignKeys.add(foreignKey);
 		return this;
 	}
@@ -133,18 +141,37 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 		return generated;
 	}
 
-	private void generateForeignKeys(StringBuilder sql) {
-		if (this.foreignKeys.isEmpty()) {
-			throw new IllegalArgumentException("Foreign keys array is empty while trying to alter a table foreign keys - " + this.getTable());
+	/**
+	 * Generate foreign keys.
+	 *
+	 * @param sql
+	 *            the sql
+	 */
+	protected void generateForeignKeys(StringBuilder sql) {
+		for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
+			generateForeignKey(sql, foreignKey);
 		}
-		StringBuilder snippet = new StringBuilder();
-		snippet.append(SPACE).append(KEYWORD_CONSTRAINT)
-			.append(SPACE).append(this.foreignKeys.get(0))
-			.append(SPACE).append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY)
-			.append(SPACE).append("(" + this.foreignKeys.get(1) + ")")
-			.append(SPACE).append(KEYWORD_REFERENCES)
-			.append(SPACE).append(this.foreignKeys.get(2)).append("(" + this.foreignKeys.get(3) + ")");
-		sql.append(snippet.toString());
+	}
+
+	/**
+	 * Generate foreign key.
+	 *
+	 * @param sql
+	 *            the sql
+	 * @param foreignKey
+	 *            the foreign key
+	 */
+	protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
+		if (foreignKey != null) {
+			sql.append(SPACE);
+			if (foreignKey.getName() != null) {
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKey.getName()).append(SPACE);
+			}
+			sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
+					.append(traverseColumnNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
+					.append(foreignKey.getReferencedTable()).append(OPEN).append(traverseColumnNames(foreignKey.getReferencedColumns()))
+					.append(CLOSE);
+		}
 	}
 	
 	private void generateForeignKeyNames(StringBuilder sql) {

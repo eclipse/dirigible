@@ -51,6 +51,8 @@ import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableDropProcessor;
+import org.eclipse.dirigible.database.ds.model.processors.TableForeignKeysCreateProcessor;
+import org.eclipse.dirigible.database.ds.model.processors.TableForeignKeysDropProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.ViewCreateProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.ViewDropProcessor;
 import org.eclipse.dirigible.database.ds.model.transfer.TableDataReader;
@@ -789,6 +791,22 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					try {
 						if (model instanceof DataStructureTableModel) {
 							if (SqlFactory.getNative(connection).exists(connection, model.getName())) {
+								executeTableForeignKeysDrop(connection, (DataStructureTableModel) model);
+							}
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+				
+				// drop tables in a reverse order
+				for (int i = sorted.size() - 1; i >= 0; i--) {
+					String dsName = sorted.get(i);
+					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
+					try {
+						if (model instanceof DataStructureTableModel) {
+							if (SqlFactory.getNative(connection).exists(connection, model.getName())) {
 								if (SqlFactory.getNative(connection).count(connection, model.getName()) == 0) {
 									executeTableDrop(connection, (DataStructureTableModel) model);
 								} else {
@@ -816,6 +834,19 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 							if (model instanceof DataStructureTableModel && SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
 								executeTableAlter(connection, (DataStructureTableModel) model);
 							}
+						}
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+						errors.add(e.getMessage());
+					}
+				}
+				
+				// process tables foreign keys
+				for (String dsName : sorted) {
+					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
+					try {
+						if (model instanceof DataStructureTableModel) {
+							executeTableForeignKeysCreate(connection, (DataStructureTableModel) model);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
@@ -885,7 +916,21 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 *             the SQL exception
 	 */
 	private void executeTableCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		TableCreateProcessor.execute(connection, tableModel);
+		TableCreateProcessor.execute(connection, tableModel, true);
+	}
+	
+	/**
+	 * Execute table foreign keys create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableForeignKeysCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableForeignKeysCreateProcessor.execute(connection, tableModel);
 	}
 
 	/**
@@ -914,6 +959,20 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 */
 	public void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
 		TableDropProcessor.execute(connection, tableModel);
+	}
+	
+	/**
+	 * Execute table foreign keys drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	private void executeTableForeignKeysDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableForeignKeysDropProcessor.execute(connection, tableModel);
 	}
 
 	/**

@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class TableCreateProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(TableCreateProcessor.class);
-
+	
 	/**
 	 * Execute the corresponding statement.
 	 *
@@ -44,6 +44,17 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		execute(connection, tableModel, false);
+	}
+
+	/**
+	 * Execute the corresponding statement.
+	 *
+	 * @param connection the connection
+	 * @param tableModel the table model
+	 * @throws SQLException the SQL exception
+	 */
+	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {
 		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
 		if (caseSensitive) {
@@ -91,14 +102,16 @@ public class TableCreateProcessor {
 			if (tableModel.getConstraints().getPrimaryKey() != null) {
 				createTableBuilder.primaryKey(tableModel.getConstraints().getPrimaryKey().getColumns());
 			}
-			if (tableModel.getConstraints().getForeignKeys() != null) {
-				for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
-					String foreignKeyName = foreignKey.getName();
-					if (caseSensitive) {
-						foreignKeyName = "\"" + foreignKeyName + "\"";
+			if (!skipForeignKeys) {
+				if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
+					for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
+						String foreignKeyName = foreignKey.getName();
+						if (caseSensitive) {
+							foreignKeyName = "\"" + foreignKeyName + "\"";
+						}
+						createTableBuilder.foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(),
+								foreignKey.getReferencedColumns());
 					}
-					createTableBuilder.foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(),
-							foreignKey.getReferencedColumns());
 				}
 			}
 			if (tableModel.getConstraints().getUniqueIndices() != null) {
@@ -122,9 +135,9 @@ public class TableCreateProcessor {
 		}
 
 		final String sql = createTableBuilder.build();
+		logger.info(sql);
 		PreparedStatement statement = connection.prepareStatement(sql);
 		try {
-			logger.info(sql);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(sql);

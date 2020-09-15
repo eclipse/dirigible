@@ -44,9 +44,9 @@ public class ViewDropProcessor {
 		logger.info("Processing Drop View: " + viewName);
 		if (SqlFactory.getNative(connection).exists(connection, viewName)) {
 			String sql = SqlFactory.getNative(connection).drop().view(viewName).build();
+			logger.info(sql);
 			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
-				logger.info(sql);
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				logger.error(sql);

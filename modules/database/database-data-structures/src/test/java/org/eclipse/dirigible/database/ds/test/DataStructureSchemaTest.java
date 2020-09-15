@@ -79,17 +79,19 @@ public class DataStructureSchemaTest extends AbstractGuiceTest {
 					}
 
 					for (DataStructureTableModel table : schema.getTables()) {
-						if ("TABLE2".equals(table.getName())) {
-							dataStructuresSynchronizer.executeTableUpdate(connection, table);
-							break;
-						}
+//						if ("TABLE2".equals(table.getName())) {
+//							dataStructuresSynchronizer.executeTableUpdate(connection, table);
+//							break;
+//						}
+						dataStructuresSynchronizer.executeTableUpdate(connection, table);
 					}
 
 					for (DataStructureTableModel table : schema.getTables()) {
-						if ("TABLE1".equals(table.getName())) {
-							dataStructuresSynchronizer.executeTableUpdate(connection, table);
-							break;
-						}
+//						if ("TABLE1".equals(table.getName())) {
+//							dataStructuresSynchronizer.executeTableUpdate(connection, table);
+//							break;
+//						}
+						dataStructuresSynchronizer.executeTableForeignKeysCreate(connection, table);
 					}
 
 					boolean exists = persistenceManager.tableExists(connection, Table1.class);

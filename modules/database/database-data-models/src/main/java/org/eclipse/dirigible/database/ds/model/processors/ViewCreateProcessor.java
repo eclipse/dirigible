@@ -44,9 +44,9 @@ public class ViewCreateProcessor {
 		logger.info("Processing Create View: " + viewName);
 		if (!SqlFactory.getNative(connection).exists(connection, viewName)) {
 			String sql = SqlFactory.getNative(connection).create().view(viewName).asSelect(viewModel.getQuery()).build();
+			logger.info(sql);
 			PreparedStatement statement = connection.prepareStatement(sql);
 			try {
-				logger.info(sql);
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				logger.error(sql);

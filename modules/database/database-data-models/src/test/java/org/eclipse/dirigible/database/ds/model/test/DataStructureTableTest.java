@@ -33,6 +33,7 @@ import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
+import org.eclipse.dirigible.database.ds.model.processors.TableForeignKeysCreateProcessor;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -329,6 +330,134 @@ public class DataStructureTableTest {
 					in.close();
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Create the tables with constraints.
+	 * @throws IOException 
+	 */
+	@Test
+	public void createTableWithConstraints() throws IOException {
+		DataStructureTableModel addresses = parseTableDefinition("/addresses.table", "ADDRESSES");
+		DataStructureTableModel persons = parseTableDefinition("/persons.table", "PERSONS");
+			
+		try {
+			Connection connection = getDataSource().getConnection();
+			try {
+				ResultSet rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(addresses.getName()), null);
+				if (rs.next()) {
+					rs.close();
+					fail("Table 'ADDRESSES' already exists!");
+				}
+				rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(persons.getName()), null);
+				if (rs.next()) {
+					rs.close();
+					fail("Table 'PERSONS' already exists!");
+				}
+				try {
+					TableCreateProcessor.execute(connection, addresses);
+					TableCreateProcessor.execute(connection, persons);
+					
+					rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(addresses.getName()), null);
+					if (!rs.next()) {
+						rs.close();
+						fail("Table addresses has not been materialized!");
+					}
+					
+					rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(persons.getName()), null);
+					if (!rs.next()) {
+						rs.close();
+						fail("Table persons has not been materialized!");
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				} finally {
+					connection.createStatement().executeUpdate("DROP TABLE " + persons.getName());
+					connection.createStatement().executeUpdate("DROP TABLE " + addresses.getName());
+				}
+			} finally {
+				connection.close();
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	private DataStructureTableModel parseTableDefinition(String definition, String name) throws IOException {
+		InputStream in = null;
+		try {
+			in = DataStructureTableTest.class.getResourceAsStream(definition);
+			String tableFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+			DataStructureTableModel table = DataStructureModelFactory.parseTable(tableFile);
+			assertEquals(name, table.getName());
+			return table;
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+	}
+	
+	/**
+	 * Create the tables with constraints.
+	 * @throws IOException 
+	 */
+	@Test
+	public void createTableWithConstraintsReverseOrder() throws IOException {
+		DataStructureTableModel addresses = parseTableDefinition("/addresses.table", "ADDRESSES");
+		DataStructureTableModel persons = parseTableDefinition("/persons.table", "PERSONS");
+			
+		try {
+			Connection connection = getDataSource().getConnection();
+			try {
+				ResultSet rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(addresses.getName()), null);
+				if (rs.next()) {
+					rs.close();
+					fail("Table 'ADDRESSES' already exists!");
+				}
+				rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(persons.getName()), null);
+				if (rs.next()) {
+					rs.close();
+					fail("Table 'PERSONS' already exists!");
+				}
+				try {
+					TableCreateProcessor.execute(connection, persons, true);
+					TableCreateProcessor.execute(connection, addresses);
+					TableForeignKeysCreateProcessor.execute(connection, persons);
+					
+					rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(addresses.getName()), null);
+					if (!rs.next()) {
+						rs.close();
+						fail("Table addresses has not been materialized!");
+					}
+					
+					rs = connection.getMetaData().getTables(null, null, DatabaseMetadataHelper.normalizeTableName(persons.getName()), null);
+					if (!rs.next()) {
+						rs.close();
+						fail("Table persons has not been materialized!");
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				} finally {
+					connection.createStatement().executeUpdate("DROP TABLE " + persons.getName());
+					connection.createStatement().executeUpdate("DROP TABLE " + addresses.getName());
+				}
+			} finally {
+				connection.close();
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

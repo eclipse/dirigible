@@ -143,9 +143,9 @@ public class TableAlterProcessor {
 	private static void executeAlterBuilder(Connection connection, AlterTableBuilder alterTableBuilder)
 			throws SQLException {
 		final String sql = alterTableBuilder.build();
+		logger.info(sql);
 		PreparedStatement statement = connection.prepareStatement(sql);
 		try {
-			logger.info(sql);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(sql);

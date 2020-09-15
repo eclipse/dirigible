@@ -74,7 +74,7 @@ public class TableDropProcessor {
 				}
 			}
 			
-			if (tableModel.getConstraints().getForeignKeys() != null) {
+			if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
 				for (DataStructureTableConstraintForeignKeyModel foreignKeyModel : tableModel.getConstraints().getForeignKeys()) {
 					sql = SqlFactory.getNative(connection).drop().constraint(foreignKeyModel.getName()).fromTable(tableName).build();
 					executeUpdate(connection, sql);
@@ -88,9 +88,9 @@ public class TableDropProcessor {
 
 	private static void executeUpdate(Connection connection, String sql) throws SQLException {
 		PreparedStatement statement;
+		logger.info(sql);
 		statement = connection.prepareStatement(sql);
 		try {
-			logger.info(sql);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(sql);
