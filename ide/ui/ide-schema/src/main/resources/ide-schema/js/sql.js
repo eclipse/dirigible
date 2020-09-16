@@ -48,8 +48,8 @@ function createSql(graph) {
 							sql.push(' UNIQUE');
 						}
 
-						if (column.defaultValue != null && column.notNull !== '') {
-							sql.push(' DEFAULT '+column.defaultValue);
+						if (column.defaultValue != null && column.defaultValue !== '') {
+							sql.push(" DEFAULT '"+column.defaultValue+"'");
 						}
 						
 						sql.push(',');
