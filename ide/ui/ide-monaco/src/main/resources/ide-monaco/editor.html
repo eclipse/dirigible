@@ -471,14 +471,27 @@
 
 				for (var keyword in nestedKeys) {
 					var objects = text.match(new RegExp("(var|let)\\s[a-zA-Z0-9_-]+\\s?=\\s?" + keyword, "gm"))
-					objects.map(function(text) {
-						var split = text.split("=");
-						var key = split[0].replace("var ", "").replace("let ", "");
-						return {
-							keyWord: key,
-							suggestions: nestedKeys[keyword]
-						}
-					}).forEach(e => nestedObjectsSuggestions.push(e));
+					if (objects) {
+						objects.map(function(text) {
+							var split = text.split("=");
+							var key = split[0].replace("var ", "").replace("let ", "").trim();
+							return {
+								keyWord: key,
+								suggestions: nestedKeys[keyword]
+							}
+						}).forEach(e => {
+							let found = false;
+							for (let i = 0; i < nestedObjectsSuggestions.length; i ++) {
+								if (e.keyWord === nestedObjectsSuggestions[i].keyWord) {
+									found = true;
+									break;
+								}
+							}
+							if (!found) {
+								nestedObjectsSuggestions.push(e);
+							}
+						});
+					}
 				}
 			}
 
@@ -525,6 +538,7 @@
 								messageHub.post({data: caretInfo}, 'status.caret');
 							});
 							_editor.onDidChangeModelContent(function(e) {
+								loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
 								var newModuleImports = getModuleImports(_editor.getValue());
 								if (e && !dirty) {
 									dirty = true;
