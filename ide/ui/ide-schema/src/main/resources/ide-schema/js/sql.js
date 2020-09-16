@@ -32,24 +32,23 @@ function createSql(graph) {
 							sql.push('('+column.columnLength+')');
 						}
 
-						
-						if (column.notNull) {
+						if (column.notNull && column.notNull === 'true') {
 							sql.push(' NOT NULL');
 						}
-												
-						if (column.primaryKey) {
+											
+						if (column.primaryKey && column.primaryKey === 'true') {
 							sql.push(' PRIMARY KEY');
 						}
 						
-						if (column.autoIncrement) {
+						if (column.autoIncrement && column.autoIncrement === 'true') {
 							sql.push(' AUTOINCREMENT');
 						}
 						
-						if (column.unique) {
+						if (column.unique && column.unique === 'true') {
 							sql.push(' UNIQUE');
 						}
 
-						if (column.defaultValue != null) {
+						if (column.defaultValue != null && column.notNull !== '') {
 							sql.push(' DEFAULT '+column.defaultValue);
 						}
 						
