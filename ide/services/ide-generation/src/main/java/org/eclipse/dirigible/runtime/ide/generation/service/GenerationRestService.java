@@ -101,9 +101,10 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 		}
 
 		if (!processor.existsProject(workspace, project)) {
-			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			processor.createProject(workspace, project);
+//			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
+//			sendErrorNotFound(response, error);
+//			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
 		IFile file = processor.getFile(workspace, project, path);
