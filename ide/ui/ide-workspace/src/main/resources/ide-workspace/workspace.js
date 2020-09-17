@@ -1364,6 +1364,10 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 	messageHub.on('workspace.file.uploaded', function(msg){
 		workspaceTreeAdapter.refresh();
 	}.bind(this), true);
+
+	messageHub.on('workspace.refresh', function(msg){
+		workspaceTreeAdapter.refresh();
+	}.bind(this), true);
 	
 	//$.jstree.defaults.unique.case_sensitive = true;
 
