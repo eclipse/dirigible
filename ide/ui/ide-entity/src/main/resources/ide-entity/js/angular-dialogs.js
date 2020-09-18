@@ -69,7 +69,8 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 	ctrl.relationshipTypes = [
 		{"key":"ASSOCIATION","label":"Association"},
 		{"key":"AGGREGATION","label":"Aggregation"},
-		{"key":"COMPOSITION","label":"Composition"}
+		{"key":"COMPOSITION","label":"Composition"},
+		{"key":"EXTENSION","label":"Extension"}
 	];
 	
 	ctrl.relationshipCardinalities = [

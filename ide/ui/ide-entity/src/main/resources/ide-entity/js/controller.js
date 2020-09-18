@@ -15,7 +15,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	let ICON_ENTITY = 'list-alt';//'list-alt';
 	let ICON_PROPERTY = 'bars';//'align-justify';
-	let ICON_PROJECTION = 'clone';//'external-link';
+	let ICON_PROJECTION = 'sign-in';//'external-link';
 	let ICON_EXTENSION = 'puzzle-piece';//'puzzle-piece';
 
 	var $scope = $('#ModelerCtrl').scope();
