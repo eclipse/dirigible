@@ -90,8 +90,8 @@
 				$scope.workspaces = response;
 			});
 
-			$scope.openTemplate = function(index) {
-				$scope.generateFromTemplate($scope.templates[index]);
+			$scope.openTemplate = function(id) {
+				$scope.generateFromTemplate($scope.templates.find(t => t.id === id));
 			};
 
 			$scope.currentPage = 0;
@@ -148,7 +148,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading"><h4><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{template.name}}</h4></div>
 					<div class="panel-body">{{template.description}}</div>
-					<a href="#" ng-click="openTemplate($index)">
+					<a href="#" ng-click="openTemplate(template.id)">
 						<div class="panel-footer">
 							<hr style="margin-top:2; margin-bottom:2;"/>
 							<span class="pull-left ng-binding"><label>{{template.id}}</label></span>
