@@ -582,6 +582,11 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 			$scope.$parent.graph.getSelectionCell().children.forEach(cell => cell.style = 'projectionproperty');
 			$scope.$parent.graph.refresh();
 		}
+		if (clone.entityType === 'EXTENSION') {
+			$scope.$parent.graph.getSelectionCell().style = 'extension';
+			$scope.$parent.graph.getSelectionCell().children.forEach(cell => cell.style = 'extensionproperty');
+			$scope.$parent.graph.refresh();
+		}
 	};
 	
 	// Save Property's properties

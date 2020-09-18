@@ -70,26 +70,31 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 
 			var columnCount = graph.model.getChildCount(parent)+1;
 			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
-			createNode('property'+columnCount);
+			createNode('property'+columnCount, parent.style === 'projection', parent.style === 'extension');
 		} else {
 			var entitiesCount = 0;
 			var childCount = graph.model.getChildCount(parent);
-			
+
 			for (var i=0; i<childCount; i++) {
 				if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
 					entitiesCount++;
 				}
 			}
 			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity'+(entitiesCount+1), prototype.style === 'projection');
+			createNode('Entity'+(entitiesCount+1), prototype.style === 'projection', prototype.style === 'extension');
 
 			if (prototype.style === 'projection') {
 				$scope.$cell = graph.getSelectionCell();
 				openReferEntity('Drop', 'Will be creating a Projection Entity', $scope, graph);
 			}
+
+			if (prototype.style === 'extension') {
+				$scope.$cell = graph.getSelectionCell();
+				$scope.$cell.value.entityType = "EXTENSION";
+			}
 		}
 		
-		function createNode(name, isProjection) {
+		function createNode(name, isProjection, isExtension) {
 			if (name !== null) {
 				var v1 = model.cloneCell(prototype);
 
@@ -98,9 +103,18 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					v1.value.name = name;
 					v1.geometry.x = pt.x;
 					v1.geometry.y = pt.y;
+
+					if (isEntity && isExtension) {
+						v1.style = 'extension';
+						v1.value.entityType = "EXTENSION";
+					}
+					if (!isEntity && isExtension) {
+						v1.style = 'extensionproperty';
+					}
+					
 					
 					graph.addCell(v1, parent);
-					
+		
 					if (isEntity) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
 						if (!isProjection) {	
@@ -131,11 +145,11 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	
 	var img = document.createElement('i');
 	img.setAttribute('class', 'fa fa-'+image+' fa-2x');
-	//img.setAttribute('style', 'color: #337ab7');
+	img.setAttribute('style', 'margin-bottom: 0.4em');
 	//img.color = '#337ab7';
 	img.title = hint;
 	sidebar.appendChild(img);
-	  					
+
 	// Creates the image which is used as the drag icon (preview)
 	var dragImage = img.cloneNode(true);
 	var ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
@@ -237,6 +251,34 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_SHADOW] = 1;
 	graph.getStylesheet().putCellStyle('projection', style);
 
+	// Extension Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	
+    style[mxConstants.STYLE_FILLCOLOR] = '#a5cd98';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#b5dd88';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('extension', style);
+
 	// Projection Property
 	style = new Object();
 	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
@@ -250,6 +292,20 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
 	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
 	graph.getStylesheet().putCellStyle('projectionproperty', style);
+
+	// Extension Property
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+	style[mxConstants.STYLE_FONTCOLOR] = '#78b464';
+	style[mxConstants.STYLE_FONTSIZE] = '11';
+	style[mxConstants.STYLE_FONTSTYLE] = 0;
+	style[mxConstants.STYLE_SPACING_LEFT] = '4';
+	style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
+	style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+	graph.getStylesheet().putCellStyle('extensionproperty', style);
 }
 
 // Function to create the entries in the popupmenu

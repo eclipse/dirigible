@@ -41,7 +41,6 @@ function createModel(graph) {
 				'" perspectiveIcon="' + _.escape(child.value.perspectiveIcon) +
 				'" perspectiveOrder="' + _.escape(child.value.perspectiveOrder) + '"';
 
-			debugger
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = btoa(child.value.feedUrl);
 				entityContent += ' feedUrl="' + child.value.feedUrl + '"';
