@@ -66,7 +66,7 @@ public class OData2ODataXTransformer {
             tableMetadata.getColumns().forEach(column -> {
 				String columnValue = DBMetadataUtil.getColumnToProperty(column.getName(), entityProperties, isPretty);
 				buff.append("        <Property Name=\"").append(columnValue).append("\"")
-						.append(" Nullable=\"").append(column.isNullable()).append("\"").append(" Type=\"").append(column.getType()).append("\"/>\n");
+						.append(" Nullable=\"").append(DBMetadataUtil.isNullable(column, entityProperties)).append("\"").append(" Type=\"").append(DBMetadataUtil.getType(column, entityProperties)).append("\"/>\n");
 			});
             
             entity.getNavigations().forEach(relation -> {

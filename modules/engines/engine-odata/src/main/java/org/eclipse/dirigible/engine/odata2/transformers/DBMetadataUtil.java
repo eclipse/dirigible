@@ -139,6 +139,26 @@ public class DBMetadataUtil {
 		return prityPrint ? addCorrectFormatting(columnName) : columnName;
     }
 
+    public static boolean isNullable(PersistenceTableColumnModel column, List<ODataProperty> properties) {
+    	String columnName = column.getName();
+    	for (ODataProperty next : properties) {
+    		if (next.getColumn().equals(columnName)) {
+    			return next.isNullable();
+    		}
+    	}
+		return column.isNullable();
+    }
+
+    public static String getType(PersistenceTableColumnModel column, List<ODataProperty> properties) {
+    	String columnName = column.getName();
+    	for (ODataProperty next : properties) {
+    		if (next.getColumn().equals(columnName) && next.getType() != null) {
+    			return next.getType();
+    		}
+    	}
+		return column.getType();
+    }
+
     public static String addCorrectFormatting(String columnName){
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
     }
