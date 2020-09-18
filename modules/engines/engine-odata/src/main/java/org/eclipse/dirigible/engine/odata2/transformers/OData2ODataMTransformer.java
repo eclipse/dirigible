@@ -26,6 +26,7 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,8 +64,9 @@ public class OData2ODataMTransformer {
             	continue;
             }
             
+            List<ODataProperty> entityProperties = entity.getProperties();
             tableMetadata.getColumns().forEach(column -> {
-				String columnValue = isPretty ? DBMetadataUtil.addCorrectFormatting(column.getName()) : column.getName();
+				String columnValue = DBMetadataUtil.getColumnToProperty(column.getName(), entityProperties, isPretty);
 				buff.append("  \"").append(columnValue)
 						.append("\": \"").append(column.getName()).append("\",\n");
 			});

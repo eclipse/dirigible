@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,16 +55,16 @@ public class OData2ODataXTransformer {
             
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
             
-            
+            List<ODataProperty> entityProperties = entity.getProperties();
             
 			buff.append("    <EntityType Name=\"").append(entity.getName()).append("Type").append("\">\n").append("        <Key>\n");
 			idColumns.forEach(column -> {
-				String nameValue = isPretty ? DBMetadataUtil.addCorrectFormatting(column.getName()) : column.getName();
+				String nameValue = DBMetadataUtil.getColumnToProperty(column.getName(), entityProperties, isPretty);
 				buff.append("            <PropertyRef Name=\"").append(nameValue).append("\" />\n");
 			});                    
             buff.append("        </Key>\n");
             tableMetadata.getColumns().forEach(column -> {
-				String columnValue = isPretty ? DBMetadataUtil.addCorrectFormatting(column.getName()) : column.getName();
+				String columnValue = DBMetadataUtil.getColumnToProperty(column.getName(), entityProperties, isPretty);
 				buff.append("        <Property Name=\"").append(columnValue).append("\"")
 						.append(" Nullable=\"").append(column.isNullable()).append("\"").append(" Type=\"").append(column.getType()).append("\"/>\n");
 			});

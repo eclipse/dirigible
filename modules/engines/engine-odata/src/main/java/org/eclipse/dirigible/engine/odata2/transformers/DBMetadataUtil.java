@@ -27,6 +27,7 @@ import com.google.common.base.CaseFormat;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 
 @Singleton
@@ -127,6 +128,15 @@ public class DBMetadataUtil {
                             columns.getString(JDBC_COLUMN_TYPE),
                             false));
         }
+    }
+
+    public static String getColumnToProperty(String columnName, List<ODataProperty> properties, boolean prityPrint) {
+    	for (ODataProperty next : properties) {
+    		if (next.getColumn().equals(columnName)) {
+    			return next.getName();
+    		}
+    	}
+		return prityPrint ? addCorrectFormatting(columnName) : columnName;
     }
 
     public static String addCorrectFormatting(String columnName){
