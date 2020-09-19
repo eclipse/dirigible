@@ -21,6 +21,7 @@ rs.service()
 			var entities = dao.list(queryOptions);
 			http.sendResponseOk(entities);
 		})
+		.produces(["application/json"])
 		.catch(function(ctx, error) {
             if (error.name === "ForbiddenError") {
                 http.sendForbiddenRequest(error.message);
@@ -53,6 +54,7 @@ rs.service()
 				http.sendResponseNotFound("${name} not found");
 			}
 		})
+		.produces(["application/json"])
 		.catch(function(ctx, error) {
             if (error.name === "ForbiddenError") {
                 http.sendForbiddenRequest(error.message);
@@ -72,6 +74,7 @@ rs.service()
 			response.setHeader("Content-Location", "/services/v4/js/${projectName}/api/${name}.js/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
 			http.sendResponseCreated(entity);
 		})
+		.produces(["application/json"])
 		.catch(function(ctx, error) {
             if (error.name === "ForbiddenError") {
                 http.sendForbiddenRequest(error.message);
@@ -91,6 +94,7 @@ rs.service()
 			dao.update(entity);
 			http.sendResponseOk(entity);
 		})
+		.produces(["application/json"])
 		.catch(function(ctx, error) {
             if (error.name === "ForbiddenError") {
                 http.sendForbiddenRequest(error.message);
