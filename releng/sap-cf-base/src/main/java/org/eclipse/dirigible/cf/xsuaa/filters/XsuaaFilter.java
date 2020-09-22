@@ -42,7 +42,8 @@ import org.slf4j.LoggerFactory;
 		"/websockets/v3/*",
 		"/services/v4/*",
 		"/public/v4/*",
-		"/websockets/v4/*"
+		"/websockets/v4/*",
+		"/odata/v4/*"
 }, filterName = "XSUAA Security Filter", description = "Check all URIs for the permissions")
 public class XsuaaFilter extends AbstractXsuaaFilter {
 

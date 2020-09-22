@@ -77,7 +77,9 @@ import org.slf4j.LoggerFactory;
 		"/public/v4/public/*",
 		"/public/v4/web/*",
 		"/public/v4/wiki/*",
-		"/public/v4/command/*"
+		"/public/v4/command/*",
+		
+		"/odata/v2/*"
 		
 	}, filterName = "SecurityFilter", description = "Check all the URIs for access permissions")
 public class SecurityFilter implements Filter {

@@ -212,7 +212,8 @@
 			<url-pattern>/services/v4/v8/*</url-pattern>
 			<url-pattern>/services/v4/graalvm/*</url-pattern>
 	        <url-pattern>/services/v4/wiki/*</url-pattern>
-	        <url-pattern>/services/v4/command/*</url-pattern>
+			<url-pattern>/services/v4/command/*</url-pattern>
+			<url-pattern>/odata/v2/*</url-pattern>
 	    </web-resource-collection>
 	    <auth-constraint>
 	        <role-name>Everyone</role-name>
