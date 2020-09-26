@@ -102,12 +102,21 @@ public class ShareCommand {
 		File tempGitDirectory = null;
 		try {
 			final String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
-			tempGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryName);
+			tempGitDirectory = GitFileUtils.getGitDirectory(user, workspace.getName(), repositoryName);
+			boolean isExistingGitRepository = tempGitDirectory != null;
+			if (!isExistingGitRepository) {
+				tempGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryName);
+			}
 
-			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-					branch, tempGitDirectory.getCanonicalPath()));
-			GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, branch);
-			logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
+			if (!isExistingGitRepository) {
+				logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
+						branch, tempGitDirectory.getCanonicalPath()));
+				GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, branch);
+				logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
+			} else {
+				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
+						branch, tempGitDirectory.getCanonicalPath()));
+			}
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
 
