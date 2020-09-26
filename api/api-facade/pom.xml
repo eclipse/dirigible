@@ -32,6 +32,7 @@
 		<module>api-cms</module>
 		<module>api-bpm</module>
 		<module>api-net</module>
+		<module>api-kafka</module>
 	</modules>
 
 	<properties>
