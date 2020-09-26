@@ -21,7 +21,6 @@ import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
-import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -121,7 +120,8 @@ public class ShareCommand {
 			project.delete();
 			
 			// link the already share project
-			gitFileUtils.importProjectFromGitRepositoryToWorkspace(tempGitDirectory, project.getPath());
+			File projectGitDirectory = new File(tempGitDirectory, project.getName());
+			gitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, project.getPath());
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);
