@@ -218,7 +218,7 @@ public class XTerminalWebsocketService {
 		OPEN_SESSIONS.remove(session.getId());
 		XTerminalWebsocketClientEndpoint clientEndPoint = SESSION_TO_CLIENT.remove(session.getId());
 		try {
-			if (clientEndPoint != null) {
+			if (clientEndPoint != null && clientEndPoint.getSession() != null) {
 				clientEndPoint.getSession().close();
 			}
 		} catch (IOException e) {
