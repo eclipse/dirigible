@@ -125,6 +125,38 @@ public class OData2Utils {
                 writeProperties);
         return response;
     }
+    
+    public static <T> ODataResponse writeEntryProperty(ODataContext context, EdmProperty edmProperty, UriInfo uriInfo, OData2ResultSetEntity data,
+            final String contentType) throws ODataException, EntityProviderException {
+        if (data == null) {
+            ODataErrorContext errorContext = new ODataErrorContext();
+            errorContext.setContentType(contentType);
+            errorContext.setHttpStatus(HttpStatusCodes.NOT_FOUND);
+            errorContext.setErrorCode(HttpStatusCodes.NOT_FOUND.toString());
+            errorContext.setLocale(Locale.ENGLISH);
+            errorContext.setMessage("No content");
+            return EntityProvider.writeErrorDocument(errorContext);
+        }
+ 
+        final ODataResponse response = EntityProvider.writeProperty(contentType, edmProperty, data.getEntitiyPropertiesData().entrySet().iterator().next().getValue());
+        return response;
+    }
+    
+    public static <T> ODataResponse writeEntryPropertyValue(ODataContext context, EdmProperty edmProperty, UriInfo uriInfo, OData2ResultSetEntity data,
+            final String contentType) throws ODataException, EntityProviderException {
+        if (data == null) {
+            ODataErrorContext errorContext = new ODataErrorContext();
+            errorContext.setContentType(contentType);
+            errorContext.setHttpStatus(HttpStatusCodes.NOT_FOUND);
+            errorContext.setErrorCode(HttpStatusCodes.NOT_FOUND.toString());
+            errorContext.setLocale(Locale.ENGLISH);
+            errorContext.setMessage("No content");
+            return EntityProvider.writeErrorDocument(errorContext);
+        }
+ 
+        final ODataResponse response = EntityProvider.writePropertyValue(edmProperty, data.getEntitiyPropertiesData().entrySet().iterator().next().getValue());
+        return response;
+    }
 
     public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<OData2ResultSetEntity> feedEntities,
             final String contentType, Integer count, String nextLink) throws ODataException, EntityProviderException {

@@ -350,12 +350,84 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     @Override
     public ODataResponse readEntitySimplePropertyValue(final GetSimplePropertyUriInfo uriInfo, final String contentType)
             throws ODataException {
-        throw new ODataNotImplementedException();
+    	final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
+        final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
+
+        SQLQuery query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+        OData2ResultSetEntity resultEntity = null;
+        Collection<EdmProperty> properties = uriInfo.getPropertyPath();
+        Connection connection = null;
+        try {
+            connection = getDataSource().getConnection();
+            ResultSet resultSet = null;
+            PreparedStatement statement = null;
+            try {
+                statement = createStatement(query, connection);
+                try {
+                    resultSet = statement.executeQuery();
+                    query.setOffset(resultSet);
+
+                    while (query.next(resultSet)) {
+
+                        if (resultEntity == null) {//TODO remove the duplication here with the readEntitySet
+                            Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
+                            resultEntity = new OData2ResultSetEntity(data);
+                        }
+                    }
+                } finally {
+                    OData2Utils.closeConsumeException(resultSet);
+                }
+            } finally {
+                OData2Utils.closeConsumeException(statement);
+            }
+        } catch (Exception e) {
+            LOG.error("Unable to serve request", e);
+            throw new ODataException(e);
+        } finally {
+            OData2Utils.closeConsumeException(connection);
+        }
+        return OData2Utils.writeEntryPropertyValue(getContext(), uriInfo.getPropertyPath().iterator().next(), (UriInfo) uriInfo, resultEntity, contentType);
     }
 
     @Override
     public ODataResponse readEntitySimpleProperty(final GetSimplePropertyUriInfo uriInfo, final String contentType) throws ODataException {
-        throw new ODataNotImplementedException();
+    	final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
+        final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
+
+        SQLQuery query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+        OData2ResultSetEntity resultEntity = null;
+        Collection<EdmProperty> properties = uriInfo.getPropertyPath();
+        Connection connection = null;
+        try {
+            connection = getDataSource().getConnection();
+            ResultSet resultSet = null;
+            PreparedStatement statement = null;
+            try {
+                statement = createStatement(query, connection);
+                try {
+                    resultSet = statement.executeQuery();
+                    query.setOffset(resultSet);
+
+                    while (query.next(resultSet)) {
+
+                        if (resultEntity == null) {//TODO remove the duplication here with the readEntitySet
+                            Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
+                            resultEntity = new OData2ResultSetEntity(data);
+                        }
+                    }
+                } finally {
+                    OData2Utils.closeConsumeException(resultSet);
+                }
+            } finally {
+                OData2Utils.closeConsumeException(statement);
+            }
+        } catch (Exception e) {
+            LOG.error("Unable to serve request", e);
+            throw new ODataException(e);
+        } finally {
+            OData2Utils.closeConsumeException(connection);
+        }
+        return OData2Utils.writeEntryProperty(getContext(), uriInfo.getPropertyPath().iterator().next(), (UriInfo) uriInfo, resultEntity, contentType);
     }
 
     @Override

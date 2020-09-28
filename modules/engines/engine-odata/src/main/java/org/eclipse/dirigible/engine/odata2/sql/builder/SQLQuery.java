@@ -182,7 +182,7 @@ public final class SQLQuery {
     public String getSQLJoinTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         if (tableMappingProvider.getEdmTableBinding(from).hasJoinColumnTo(to))
             return tableMappingProvider.getEdmTableBinding(from).getJoinColumnTo(to);
-        throw new IllegalArgumentException("No join coumn definition found from type " + from + " to type " + to);
+        throw new IllegalArgumentException("No join column definition found from type " + from + " to type " + to);
     }
 
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {
