@@ -68,6 +68,7 @@
 		<module>template-openui5-list</module>
 		<module>template-openui5-master-detail</module>
 		<module>template-openui5-table</module>
+		<module>template-websocket</module>
 	</modules>
 
 	<profiles>

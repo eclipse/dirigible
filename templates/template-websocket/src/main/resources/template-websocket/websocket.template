@@ -1,0 +1,5 @@
+{
+    "handler":"{{projectName}}/{{fileName}}-service-handler.js",
+    "endpoint":"{{fileName}}",
+    "description":"{{fileName}} Websocket"
+}
