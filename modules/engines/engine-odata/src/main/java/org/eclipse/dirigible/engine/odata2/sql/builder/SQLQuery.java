@@ -13,11 +13,13 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.FROM;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.INTO;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.JOIN;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.ORDERBY;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_COLUMN_LIST;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_PREFIX;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_SUFFIX;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.VALUES;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.WHERE;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
@@ -44,6 +46,7 @@ import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.edm.EdmType;
+import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
@@ -53,12 +56,15 @@ import org.apache.olingo.odata2.api.uri.expression.ExpressionKind;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
+import org.apache.olingo.odata2.core.edm.EdmDateTime;
+import org.apache.olingo.odata2.core.edm.EdmTime;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionInsert;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionJoin;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionOrderBy;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
@@ -79,6 +85,7 @@ public final class SQLQuery {
     private final EdmTableBindingProvider tableMappingProvider;
     private SQLExpressionWhere whereExpression;
     private SQLExpressionSelect selectExpression;
+    private SQLExpressionInsert insertExpression;
     private final List<SQLExpressionJoin> joinExpressions = new ArrayList<SQLExpressionJoin>();
     private SQLExpressionOrderBy orderByExpressions;
     private boolean serversidePaging;
@@ -173,6 +180,10 @@ public final class SQLQuery {
     public SQLExpressionSelect getSelectExpression() {
         return selectExpression;
     }
+    
+    public SQLExpressionInsert getInsertExpression() {
+        return insertExpression;
+    }
 
     public String getSQLTableName(final EdmStructuralType target) {
         EdmTableBinding mapping = tableMappingProvider.getEdmTableBinding(target);
@@ -196,6 +207,19 @@ public final class SQLQuery {
         		return "\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p) + "\"";
         	} else {
         		return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p);
+        	}
+        } else {
+            throw new IllegalArgumentException("Unable to get the table column name of complex property " + p);
+        }
+    }
+    
+    public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
+        if (p.isSimple()) {
+        	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
+        	if (caseSensitive) {
+        		return tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p) + "\"";
+        	} else {
+        		return tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p);
         	}
         } else {
             throw new IllegalArgumentException("Unable to get the table column name of complex property " + p);
@@ -331,27 +355,50 @@ public final class SQLQuery {
         }
     }
 
-    public void setParamsOnStatement(final PreparedStatement sqlQuery) throws SQLException {
+    public void setParamsOnStatement(final PreparedStatement preparedStatement) throws SQLException {
         for (int i = 0; i < getParams().size(); i++) {
             Param param = getParams().get(i);
             if (param.isTemporalType()) {
                 TemporalType type = param.getTemporalType();
                 switch (type) {
                 case DATE:
-                    sqlQuery.setDate(i + 1, asSQLDate((Calendar) param.getValue()));
+                    preparedStatement.setDate(i + 1, asSQLDate((Calendar) param.getValue()));
                     break;
                 case TIMESTAMP:
-                    sqlQuery.setTimestamp(i + 1, asTimeStamp((Calendar) param.getValue()));
+                    preparedStatement.setTimestamp(i + 1, asTimeStamp((Calendar) param.getValue()));
                     break;
                 case TIME:
-                    sqlQuery.setTime(i + 1, asTime((Calendar) param.getValue()));
+                    preparedStatement.setTime(i + 1, asTime((Calendar) param.getValue()));
                 }
 
             } else {
                 Object value = convertToSqlType(param);
-                sqlQuery.setObject(i + 1, value);
+                preparedStatement.setObject(i + 1, value);
             }
         }
+    }
+    
+    public void setValuesOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
+    	List<String> propertyNames = getInsertExpression().getTarget().getPropertyNames();
+    	Map<String, Object> values = getInsertExpression().getValues();
+    	int i = 0;
+    	for (String propertyName : propertyNames) {
+    		if (values.containsKey(propertyName)) {
+    			i++;
+    			Object value = values.get(propertyName);
+				EdmTyped edmTyped = getInsertExpression().getTarget().getProperty(propertyName);
+				if (edmTyped != null) {
+					EdmType type = edmTyped.getType();
+					if (type instanceof EdmTime) {
+						preparedStatement.setTime(i, asTime((Calendar) value));
+					} else if (type instanceof EdmDateTime) {
+						preparedStatement.setDate(i, asSQLDate((Calendar) value));
+					} else {
+						preparedStatement.setObject(i, value);
+					}
+				}
+    		}
+    	}
     }
 
     private Object convertToSqlType(final Param parameter) {
@@ -512,6 +559,29 @@ public final class SQLQuery {
             }
         }
 
+    }
+    
+    public SQLExpressionInsert insert() {
+        insertExpression = new SQLExpressionInsert(this);
+        return insertExpression;
+    }
+
+	public SQLExpressionInsert values(Map<String, Object> values) throws ODataException {
+		insertExpression.values(values);
+		return insertExpression;
+	}
+	
+	public String buildInsert(final SQLContext context) throws EdmException, ODataException {
+        StringBuilder builder = new StringBuilder();
+        if (insertExpression == null)
+            throw new IllegalStateException("Please initialize the insert clause!");
+        builder.append("INSERT ");
+        builder.append(" INTO ");
+        builder.append(insertExpression.evaluate(context, INTO));
+        builder.append(" VALUES ");
+        builder.append(insertExpression.evaluate(context, VALUES));
+        
+        return normalizedString(context, builder);
     }
 
 }

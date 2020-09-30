@@ -17,12 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmSimpleType;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.EdmTyped;
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
@@ -263,5 +266,15 @@ public class SQLQueryBuilder {
             effectiveSkip = null;
         }
         return effectiveSkip;
+    }
+    
+    public SQLQuery buildInsertEntityQuery(final UriInfo uri, ODataEntry entry) throws ODataException {
+        EdmEntityType target = uri.getTargetEntitySet().getEntityType();
+        SQLQuery q = new SQLQuery(tableMapping);
+        Map<String, Object> values = entry.getProperties();
+        
+        q.insert().into(target).values(values);
+        
+        return q;
     }
 }
