@@ -203,7 +203,8 @@ public final class SQLExpressionSelect implements SQLExpression {
 
     private String buildFrom(final SQLContext context) throws EdmException {
         StringBuilder from = new StringBuilder();
-        for (Iterator<String> it = query.getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
+        Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
+        while (it.hasNext()) {
             String tableAlias = it.next();
             EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(target)) {
@@ -236,7 +237,8 @@ public final class SQLExpressionSelect implements SQLExpression {
         else {
 
             StringBuilder select = new StringBuilder();
-            for (Iterator<Integer> i = columnMapping.keySet().iterator(); i.hasNext();) {
+            Iterator<Integer> i = columnMapping.keySet().iterator();
+            while (i.hasNext()) {
                 Integer column = i.next();
                 EdmStructuralType type = getTargetType(column);
                 String propertyName = getPropertyName(column);
@@ -253,7 +255,8 @@ public final class SQLExpressionSelect implements SQLExpression {
                         EdmStructuralType st = (EdmStructuralType) p.getType();
 
                         query.join(st, type);
-                        for (Iterator<String> prit = st.getPropertyNames().iterator(); prit.hasNext();) {
+                        Iterator<String> prit = st.getPropertyNames().iterator();
+                        while (prit.hasNext()) {
                             EdmProperty stProp = (EdmProperty) st.getProperty(prit.next());
                             select.append(tableColumnForSelect(st, stProp));
                             if (prit.hasNext()) {

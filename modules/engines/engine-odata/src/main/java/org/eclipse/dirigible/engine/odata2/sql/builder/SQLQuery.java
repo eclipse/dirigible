@@ -21,6 +21,7 @@ import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpr
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_SUFFIX;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.VALUES;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.WHERE;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.KEYS;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 import java.sql.Date;
@@ -64,6 +65,7 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionDelete;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionInsert;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionJoin;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionOrderBy;
@@ -86,6 +88,7 @@ public final class SQLQuery {
     private SQLExpressionWhere whereExpression;
     private SQLExpressionSelect selectExpression;
     private SQLExpressionInsert insertExpression;
+    private SQLExpressionDelete deleteExpression;
     private final List<SQLExpressionJoin> joinExpressions = new ArrayList<SQLExpressionJoin>();
     private SQLExpressionOrderBy orderByExpressions;
     private boolean serversidePaging;
@@ -183,6 +186,10 @@ public final class SQLQuery {
     
     public SQLExpressionInsert getInsertExpression() {
         return insertExpression;
+    }
+    
+    public SQLExpressionDelete getDeleteExpression() {
+        return deleteExpression;
     }
 
     public String getSQLTableName(final EdmStructuralType target) {
@@ -400,6 +407,14 @@ public final class SQLQuery {
     		}
     	}
     }
+    
+    public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
+    	Map<String, Object> keys = getDeleteExpression().getKeys();
+    	int i = 0;
+    	for (Map.Entry<String, Object> key : keys.entrySet()) {
+    		preparedStatement.setObject(++i, key.getValue());
+    	}
+    }
 
     private Object convertToSqlType(final Param parameter) {
         Object actualValue = parameter.getValue();
@@ -583,5 +598,28 @@ public final class SQLQuery {
         
         return normalizedString(context, builder);
     }
+	
+	public SQLExpressionDelete delete() {
+        deleteExpression = new SQLExpressionDelete(this);
+        return deleteExpression;
+    }
+	
+	public SQLExpressionDelete keys(Map<String, Object> keys) throws ODataException {
+		deleteExpression.keys(keys);
+		return deleteExpression;
+	}
+
+	public String buildDelete(SQLContext context) throws ODataException {
+		StringBuilder builder = new StringBuilder();
+        if (deleteExpression == null)
+            throw new IllegalStateException("Please initialize the delete clause!");
+        builder.append("DELETE ");
+        builder.append(" FROM ");
+        builder.append(deleteExpression.evaluate(context, FROM));
+        builder.append(" WHERE ");
+        builder.append(deleteExpression.evaluate(context, KEYS));
+        
+        return normalizedString(context, builder);
+	}
 
 }

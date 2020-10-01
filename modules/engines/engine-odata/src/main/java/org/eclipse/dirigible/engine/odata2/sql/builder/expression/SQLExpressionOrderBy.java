@@ -75,7 +75,8 @@ public final class SQLExpressionOrderBy implements SQLExpression {
             String orderByField = null;
             String orderByDirection = null;
 
-            for (Iterator<OrderExpression> it = orderBys.iterator(); it.hasNext();) {
+            Iterator<OrderExpression> it = orderBys.iterator();
+            while (it.hasNext()) {
                 OrderExpression orderBy = it.next();
                 try {
                     EdmProperty prop = ((EdmProperty) ((PropertyExpression) orderBy.getExpression()).getEdmProperty());

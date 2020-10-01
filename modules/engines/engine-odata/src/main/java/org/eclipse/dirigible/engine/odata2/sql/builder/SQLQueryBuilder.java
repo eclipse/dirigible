@@ -277,4 +277,13 @@ public class SQLQueryBuilder {
         
         return q;
     }
+    
+    public SQLQuery buildDeleteEntityQuery(final UriInfo uri, Map<String, Object> keys) throws ODataException {
+        EdmEntityType target = uri.getStartEntitySet().getEntityType();
+        SQLQuery q = new SQLQuery(tableMapping);
+        
+        q.delete().from(target).keys(keys);
+        
+        return q;
+    }
 }

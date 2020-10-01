@@ -105,7 +105,8 @@ public final class SQLExpressionInsert implements SQLExpression {
 
     private String buildInto(final SQLContext context) throws EdmException {
         StringBuilder into = new StringBuilder();
-        for (Iterator<String> it = query.getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
+        Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
+        while (it.hasNext()) {
             String tableAlias = it.next();
             EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
             if (isInsertTarget(target)) {
@@ -134,7 +135,8 @@ public final class SQLExpressionInsert implements SQLExpression {
     private String buildColumnList(final SQLContext context) throws EdmException {
         
         StringBuilder insert = new StringBuilder();
-        for (Iterator<Integer> i = columnMapping.keySet().iterator(); i.hasNext();) {
+        Iterator<Integer> i = columnMapping.keySet().iterator();
+        while (i.hasNext()) {
             Integer column = i.next();
             EdmStructuralType type = getTargetType(column);
             String propertyName = getPropertyName(column);
@@ -164,7 +166,8 @@ public final class SQLExpressionInsert implements SQLExpression {
     private String buildValues(final SQLContext context) throws EdmException {
     	StringBuilder insert = new StringBuilder();
     	insert.append(" (");
-        for (Iterator<Integer> i = columnMapping.keySet().iterator(); i.hasNext();) {
+    	Iterator<Integer> i = columnMapping.keySet().iterator();
+        while (i.hasNext()) {
             Integer column = i.next();
             EdmStructuralType type = getTargetType(column);
             String propertyName = getPropertyName(column);
