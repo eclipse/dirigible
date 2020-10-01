@@ -47,6 +47,9 @@ var dao = daoApi.create({
 #if($property.dataPrimaryKey)
 			id: true,
 #end
+#if($property.dataAutoIncrement)
+			autoIncrement: true,
+#end
 #if($property.dataNotNull)
 			required: true
 #end
