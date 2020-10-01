@@ -227,8 +227,10 @@ DAO.prototype.insert = function(_entity){
 	    try {
 	        var parametericStatement = this.ormstatements.insert.apply(this.ormstatements);
 
-	        var id = this.generateId();
-	        dbEntity[this.orm.getPrimaryKey().name] = id;
+			if (this.orm.isAutoIncrementPrimaryKey()) {
+				var id = this.generateId();
+				dbEntity[this.orm.getPrimaryKey().name] = id;
+			}
 
 			var updatedRecordCount = this.execute(parametericStatement, dbEntity);
 

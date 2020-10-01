@@ -71,6 +71,18 @@ ORM.prototype.getPrimaryKey = function(){
 	return this.idProperty;
 };
 
+ORM.prototype.isAutoIncrementPrimaryKey = function(){
+	if(!this.autoIncrementPrimaryKeyProperty){
+		if(!this.properties || !this.properties.length)
+			throw new Error('Invalid orm configuration - no properties are defined');
+		var autoIncrementPrimaryKeyProperty = this.properties.filter(function(property){
+			return property.id && property.autoIncrement;
+		});
+		this.autoIncrementPrimaryKeyProperty = autoIncrementPrimaryKeyProperty.length > 0;
+	}
+	return this.autoIncrementPrimaryKeyProperty;
+};
+
 ORM.prototype.getProperty = function(name){
 	if(name === undefined)
 		throw new Error('Illegal argument: name['+name+']');
