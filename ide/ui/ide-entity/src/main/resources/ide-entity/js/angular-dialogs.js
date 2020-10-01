@@ -75,7 +75,8 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 	
 	ctrl.relationshipCardinalities = [
 		{"key":"1_1","label":"one-to-one"},
-		{"key":"1_n","label":"one-to-many"}
+		{"key":"1_n","label":"one-to-many"},
+		{"key":"n_1","label":"many-to-one"},
 	];
 	
 	ctrl.entityTypes = [

@@ -15,7 +15,7 @@
 #foreach ($model in $models)
 #if($model.type != "REPORT")
 #foreach ($property in $model.properties)
-#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "1_1")
+#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "n_1")
 #set ($associationsCount = $associationsCount + 1)
 #end
 #end
@@ -61,7 +61,7 @@
 #end
 #end
 #foreach ($property in $model.properties)
-#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "1_1")
+#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "n_1")
 #set ($haveNavigations = true)
 #set ($navigationsCount = $navigationsCount + 1)
 #end
@@ -69,7 +69,7 @@
 #if ($haveNavigations)
             "navigations": [
 #foreach ($property in $model.properties)
-#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "1_1")
+#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "n_1")
                 {
                     "name": "${property.relationshipEntityName}",
                     "association": "${model.name}${property.relationshipEntityName}"
@@ -117,7 +117,7 @@
 #foreach ($model in $models)
 #if($model.type != "REPORT")
 #foreach ($property in $model.properties)
-#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "1_1")
+#if($property.relationshipType == "ASSOCIATION" && $property.relationshipCardinality == "n_1")
         {
             "name": "${model.name}${property.relationshipEntityName}",
             "from": {
