@@ -75,8 +75,12 @@ ORM.prototype.isAutoIncrementPrimaryKey = function(){
 	if(!this.autoIncrementPrimaryKeyProperty){
 		if(!this.properties || !this.properties.length)
 			throw new Error('Invalid orm configuration - no properties are defined');
+		var isAutoIncrementOldVersion = false;
 		var autoIncrementPrimaryKeyProperty = this.properties.filter(function(property){
-			return property.id && property.autoIncrement;
+			if (property.id && (property.autoIncrement === undefined || property.autoIncrement === null)) {
+				isAutoIncrementOldVersion = true;
+			}
+			return property.id && (property.autoIncrement || isAutoIncrementOldVersion);
 		});
 		this.autoIncrementPrimaryKeyProperty = autoIncrementPrimaryKeyProperty.length > 0;
 	}
