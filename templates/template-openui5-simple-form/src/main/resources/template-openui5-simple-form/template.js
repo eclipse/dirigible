@@ -55,6 +55,7 @@ exports.getTemplate = function () {
                 action: "copy"
             }
         ],
-        parameters: []
+        parameters: [],
+        order: 40
     };
 };

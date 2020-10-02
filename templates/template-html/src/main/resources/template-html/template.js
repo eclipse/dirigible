@@ -19,6 +19,7 @@ exports.getTemplate = function() {
 			"start" : "[[",
 			"end" : "]]"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 30
 	};
 };

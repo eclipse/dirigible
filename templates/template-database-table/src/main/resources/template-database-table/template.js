@@ -20,6 +20,7 @@ exports.getTemplate = function() {
 		"parameters": [{
 			"name": "tableName",
 			"label": "Table Name"
-		}]
+		}],
+		"order": 10
 	};
 };

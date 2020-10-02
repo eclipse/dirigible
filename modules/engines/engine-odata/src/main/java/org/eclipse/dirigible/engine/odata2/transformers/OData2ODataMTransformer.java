@@ -84,8 +84,10 @@ public class OData2ODataMTransformer {
     			String fromRoleProperty = association.getFrom().getProperty();
     			ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRole, relation.getName());
     			String dependentEntity = toSetEntity.getName();
-				buff.append("  \"_ref_").append(dependentEntity).append("Type").append("\": {\"joinColumn\": \"")
+				if (!buff.toString().contains("_ref_" + dependentEntity + "Type")) {
+					buff.append("  \"_ref_").append(dependentEntity).append("Type").append("\": {\"joinColumn\": \"")
 					.append(fromRoleProperty).append("\"\n").append("}\n").append(",\n");
+				}
 			});
             
             String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});
