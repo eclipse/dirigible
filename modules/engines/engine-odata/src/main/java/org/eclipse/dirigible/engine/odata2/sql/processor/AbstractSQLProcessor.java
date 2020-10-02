@@ -39,6 +39,7 @@ import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataBadRequestException;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.exception.ODataNotFoundException;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
@@ -56,6 +57,7 @@ import org.apache.olingo.odata2.api.uri.info.GetEntityUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetMediaResourceUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetSimplePropertyUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
+import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
@@ -524,7 +526,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	@Override
 	public ODataResponse createEntity(final PostUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final String contentType) throws ODataException {
-		
+
 		final EdmEntitySet entitySet = uriInfo.getTargetEntitySet();
 
 		ODataEntry entry = parseEntry(entitySet, content, requestContentType, false);
@@ -554,13 +556,13 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		} finally {
 			OData2Utils.closeConsumeException(connection);
 		}
-		
+
 		ODataContext context = getContext();
-	    EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties
-	        .serviceRoot(context.getPathInfo().getServiceRoot())
-	        .expandSelectTree(entry.getExpandSelectTree())
-	        .build();
-		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(), writeProperties);
+		EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties
+				.serviceRoot(context.getPathInfo().getServiceRoot()).expandSelectTree(entry.getExpandSelectTree())
+				.build();
+		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(),
+				writeProperties);
 		return response;
 	}
 
@@ -576,11 +578,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		}
 		return entryValues;
 	}
-	
+
 	@Override
-	  public ODataResponse deleteEntity(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
-		
-		SQLQuery query = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()));
+	public ODataResponse deleteEntity(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
+
+		SQLQuery query = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo,
+				mapKeys(uriInfo.getKeyPredicates()));
 
 		Connection connection = null;
 		try {
@@ -605,21 +608,21 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		} finally {
 			OData2Utils.closeConsumeException(connection);
 		}
-		
-	    return ODataResponse.newBuilder().build();
-	  }
-	
+
+		return ODataResponse.newBuilder().build();
+	}
+
 	private static Map<String, Object> mapKeys(final List<KeyPredicate> keys) throws EdmException {
-    Map<String, Object> keyMap = new HashMap<String, Object>();
-    for (final KeyPredicate key : keys) {
-      final EdmProperty property = key.getProperty();
-      final EdmSimpleType type = (EdmSimpleType) property.getType();
-      keyMap.put(property.getName(), type.valueOfString(key.getLiteral(), EdmLiteralKind.DEFAULT, property.getFacets(),
-          type.getDefaultType()));
-    }
-    return keyMap;
-  }
-	
+		Map<String, Object> keyMap = new HashMap<String, Object>();
+		for (final KeyPredicate key : keys) {
+			final EdmProperty property = key.getProperty();
+			final EdmSimpleType type = (EdmSimpleType) property.getType();
+			keyMap.put(property.getName(), type.valueOfString(key.getLiteral(), EdmLiteralKind.DEFAULT,
+					property.getFacets(), type.getDefaultType()));
+		}
+		return keyMap;
+	}
+
 	protected PreparedStatement createDeleteStatement(SQLQuery query, final Connection connection)
 			throws SQLException, EdmException, ODataException {
 		String sql = query.buildDelete(createSQLContext(connection));
@@ -629,6 +632,103 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		statement = connection.prepareStatement(sql);
 
 		query.setKeysOnStatement(statement);
+		return statement;
+	}
+
+	@Override
+	public ODataResponse updateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
+			final String requestContentType, final boolean merge, final String contentType) throws ODataException {
+
+		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
+		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
+
+		SQLQuery query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+		OData2ResultSetEntity resultEntity = null;
+		Collection<EdmProperty> properties = targetEntityType.getKeyProperties();
+		Connection connection = null;
+		try {
+			connection = getDataSource().getConnection();
+			ResultSet resultSet = null;
+			PreparedStatement statement = null;
+			try {
+				statement = createSelectStatement(query, connection);
+				try {
+					resultSet = statement.executeQuery();
+					query.setOffset(resultSet);
+
+					while (query.next(resultSet)) {
+
+						if (resultEntity == null) {
+							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
+							resultEntity = new OData2ResultSetEntity(data);
+						}
+
+					}
+
+					if (resultEntity == null) {
+						throw new ODataNotFoundException(ODataNotFoundException.ENTITY);
+					}
+
+				} finally {
+					OData2Utils.closeConsumeException(resultSet);
+				}
+			} finally {
+				OData2Utils.closeConsumeException(statement);
+			}
+		} catch (Exception e) {
+			LOG.error("Unable to serve request", e);
+			throw new ODataException(e);
+		} finally {
+			OData2Utils.closeConsumeException(connection);
+		}
+
+		ODataEntry entry = parseEntry(targetEntitySet, content, requestContentType, false);
+
+		query = this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
+				mapKeys(uriInfo.getKeyPredicates()));
+
+		try {
+			connection = getDataSource().getConnection();
+			ResultSet resultSet = null;
+			PreparedStatement statement = null;
+			try {
+				statement = createUpdateStatement(query, connection);
+				try {
+
+					statement.executeUpdate();
+
+				} finally {
+					OData2Utils.closeConsumeException(resultSet);
+				}
+			} finally {
+				OData2Utils.closeConsumeException(statement);
+			}
+		} catch (Exception e) {
+			LOG.error("Unable to serve request", e);
+			throw new ODataException(e);
+		} finally {
+			OData2Utils.closeConsumeException(connection);
+		}
+
+		ODataContext context = getContext();
+		EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties
+				.serviceRoot(context.getPathInfo().getServiceRoot()).expandSelectTree(entry.getExpandSelectTree())
+				.build();
+		final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry.getProperties(),
+				writeProperties);
+		return response;
+
+	}
+
+	protected PreparedStatement createUpdateStatement(SQLQuery query, final Connection connection)
+			throws SQLException, EdmException, ODataException {
+		String sql = query.buildUpdate(createSQLContext(connection));
+		LOG.info(sql);
+		PreparedStatement statement;
+
+		statement = connection.prepareStatement(sql);
+
+		query.setValuesAndKeysOnStatement(statement);
 		return statement;
 	}
 

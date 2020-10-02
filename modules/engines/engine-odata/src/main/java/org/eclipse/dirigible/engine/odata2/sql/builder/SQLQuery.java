@@ -15,13 +15,14 @@ import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERV
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.FROM;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.INTO;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.JOIN;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.KEYS;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.ORDERBY;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_COLUMN_LIST;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_PREFIX;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_SUFFIX;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.TABLE;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.VALUES;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.WHERE;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.KEYS;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 import java.sql.Date;
@@ -71,6 +72,7 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionJ
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionOrderBy;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUpdate;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere.Param;
@@ -89,6 +91,7 @@ public final class SQLQuery {
     private SQLExpressionSelect selectExpression;
     private SQLExpressionInsert insertExpression;
     private SQLExpressionDelete deleteExpression;
+    private SQLExpressionUpdate updateExpression;
     private final List<SQLExpressionJoin> joinExpressions = new ArrayList<SQLExpressionJoin>();
     private SQLExpressionOrderBy orderByExpressions;
     private boolean serversidePaging;
@@ -190,6 +193,10 @@ public final class SQLQuery {
     
     public SQLExpressionDelete getDeleteExpression() {
         return deleteExpression;
+    }
+    
+    public SQLExpressionUpdate getUpdateExpression() {
+        return updateExpression;
     }
 
     public String getSQLTableName(final EdmStructuralType target) {
@@ -415,6 +422,34 @@ public final class SQLQuery {
     		preparedStatement.setObject(++i, key.getValue());
     	}
     }
+    
+    public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
+    	List<String> propertyNames = getUpdateExpression().getTarget().getPropertyNames();
+    	Map<String, Object> values = getUpdateExpression().getValues();
+    	Map<String, Object> keys = getUpdateExpression().getKeys();
+    	int i = 0;
+    	for (String propertyName : propertyNames) {
+    		if (values.containsKey(propertyName) && (!keys.containsKey(propertyName))) {
+    			i++;
+    			Object value = values.get(propertyName);
+				EdmTyped edmTyped = getUpdateExpression().getTarget().getProperty(propertyName);
+				if (edmTyped != null) {
+					EdmType type = edmTyped.getType();
+					if (type instanceof EdmTime) {
+						preparedStatement.setTime(i, asTime((Calendar) value));
+					} else if (type instanceof EdmDateTime) {
+						preparedStatement.setDate(i, asSQLDate((Calendar) value));
+					} else {
+						preparedStatement.setObject(i, value);
+					}
+				}
+    		}
+    	}
+    	
+    	for (Map.Entry<String, Object> key : keys.entrySet()) {
+    		preparedStatement.setObject(++i, key.getValue());
+    	}
+    }
 
     private Object convertToSqlType(final Param parameter) {
         Object actualValue = parameter.getValue();
@@ -618,6 +653,26 @@ public final class SQLQuery {
         builder.append(deleteExpression.evaluate(context, FROM));
         builder.append(" WHERE ");
         builder.append(deleteExpression.evaluate(context, KEYS));
+        
+        return normalizedString(context, builder);
+	}
+
+	public SQLExpressionUpdate update() {
+		updateExpression = new SQLExpressionUpdate(this);
+        return updateExpression;
+	}
+	
+	public SQLExpressionUpdate with(Map<String, Object> values, Map<String, Object> keys) throws ODataException {
+		updateExpression.with(values, keys);
+		return updateExpression;
+	}
+	
+	public String buildUpdate(SQLContext context) throws ODataException {
+		StringBuilder builder = new StringBuilder();
+        if (updateExpression == null)
+            throw new IllegalStateException("Please initialize the delete clause!");
+        builder.append("UPDATE ");
+        builder.append(updateExpression.evaluate(context, TABLE));
         
         return normalizedString(context, builder);
 	}

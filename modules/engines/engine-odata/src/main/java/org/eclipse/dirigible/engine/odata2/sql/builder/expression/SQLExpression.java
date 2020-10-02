@@ -17,7 +17,7 @@ public interface SQLExpression {
     final String EMPTY_STRING = "";
 
     public static enum ExpressionType {
-        SELECT_PREFIX, SELECT_COLUMN_LIST, FROM, JOIN, WHERE, ORDERBY, SELECT_SUFFIX, INTO, VALUES, KEYS
+        SELECT_PREFIX, SELECT_COLUMN_LIST, FROM, JOIN, WHERE, ORDERBY, SELECT_SUFFIX, INTO, VALUES, KEYS, TABLE
     }
 
     String evaluate(SQLContext context, ExpressionType type) throws EdmException;

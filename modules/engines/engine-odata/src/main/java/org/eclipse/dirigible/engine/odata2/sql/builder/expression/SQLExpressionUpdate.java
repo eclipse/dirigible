@@ -31,7 +31,7 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery.EdmTarget;
 
-public final class SQLExpressionInsert implements SQLExpression {
+public final class SQLExpressionUpdate implements SQLExpression {
 
 	private final SQLQuery query;
 
@@ -39,12 +39,14 @@ public final class SQLExpressionInsert implements SQLExpression {
 
 	private Map<String, Object> values;
 
+	private Map<String, Object> keys;
+
 	private EdmStructuralType target;
 
 	private int atColumn = 0;
 
 	@SuppressWarnings("unchecked")
-	public SQLExpressionInsert(final SQLQuery parent) {
+	public SQLExpressionUpdate(final SQLQuery parent) {
 		this.query = parent;
 		this.columnMapping = new TreeMap<>();
 	}
@@ -52,10 +54,8 @@ public final class SQLExpressionInsert implements SQLExpression {
 	@Override
 	public String evaluate(final SQLContext context, final ExpressionType type) throws EdmException {
 		switch (type) {
-		case INTO:
-			return buildInto(context);
-		case VALUES:
-			return buildValues(context);
+		case TABLE:
+			return buildTable(context);
 
 		default:
 			throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type,
@@ -73,7 +73,7 @@ public final class SQLExpressionInsert implements SQLExpression {
 	}
 
 	@SuppressWarnings("unchecked")
-	public SQLQuery into(final EdmStructuralType target) throws ODataException {
+	public SQLQuery table(final EdmStructuralType target) throws ODataException {
 		query.grantTableAliasForStructuralTypeInQuery(target);
 		this.target = target;
 
@@ -85,9 +85,10 @@ public final class SQLExpressionInsert implements SQLExpression {
 	}
 
 	@SuppressWarnings("unchecked")
-	public SQLQuery values(final Map<String, Object> values) throws ODataException {
+	public SQLQuery with(final Map<String, Object> values, final Map<String, Object> keys) throws ODataException {
 
 		this.values = values;
+		this.keys = keys;
 
 		return query;
 	}
@@ -104,13 +105,13 @@ public final class SQLExpressionInsert implements SQLExpression {
 		return columnMapping.get(columnIndex).getEdmTargetType();
 	}
 
-	private String buildInto(final SQLContext context) throws EdmException {
+	private String buildTable(final SQLContext context) throws EdmException {
 		StringBuilder into = new StringBuilder();
 		Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
 		while (it.hasNext()) {
 			String tableAlias = it.next();
 			EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
-			if (isInsertTarget(target)) {
+			if (isUpdateTarget(target)) {
 				boolean caseSensitive = Boolean.parseBoolean(
 						Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 				if (caseSensitive) {
@@ -122,19 +123,19 @@ public final class SQLExpressionInsert implements SQLExpression {
 			}
 		}
 
-		into.append(" (").append(buildColumnList(context)).append(") ");
+		into.append(" SET ").append(buildColumnList(context)).append(" WHERE ").append(buildKeys(context));
 
 		return into.toString();
 	}
 
-	private boolean isInsertTarget(final EdmStructuralType target) {
+	private boolean isUpdateTarget(final EdmStructuralType target) {
 		// always select the entity target
-		return fqn(query.getInsertExpression().getTarget()).equals(fqn(target)) ? true : false;
+		return fqn(query.getUpdateExpression().getTarget()).equals(fqn(target)) ? true : false;
 	}
 
 	private String buildColumnList(final SQLContext context) throws EdmException {
 
-		StringBuilder insert = new StringBuilder();
+		StringBuilder update = new StringBuilder();
 		Iterator<Integer> i = columnMapping.keySet().iterator();
 		while (i.hasNext()) {
 			Integer column = i.next();
@@ -146,56 +147,47 @@ public final class SQLExpressionInsert implements SQLExpression {
 						+ " to a EDM property! The current type of propery " + propertyName + " is " + p,
 						HttpStatusCodes.INTERNAL_SERVER_ERROR);
 			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
-				if (values.containsKey(p.getName())) {
+				if (values.containsKey(p.getName()) && !keys.containsKey(p.getName())) {
 					EdmProperty prop = (EdmProperty) p;
-					insert.append(tableColumnForInsert(type, prop));
-					
+					update.append(tableColumnForUpdate(type, prop) + " = ?");
 					if (i.hasNext()) {
-						insert.append(", ");
+						update.append(", ");
 					}
 				}
+				
 			} else {
 				throw new IllegalStateException("Unable to handle property " + p);
 			}
+			
 		}
-		return insert.toString();
+		return update.toString();
 
 	}
 
-	private Object tableColumnForInsert(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
+	private Object tableColumnForUpdate(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
 		return query.getSQLTableColumnNoAlias(type, prop);
-	}
-
-	private String buildValues(final SQLContext context) throws EdmException {
-		StringBuilder insert = new StringBuilder();
-		insert.append(" (");
-		Iterator<Integer> i = columnMapping.keySet().iterator();
-		while (i.hasNext()) {
-			Integer column = i.next();
-			EdmStructuralType type = getTargetType(column);
-			String propertyName = getPropertyName(column);
-			EdmTyped p = type.getProperty(propertyName);
-			if (!(p instanceof EdmProperty))
-				throw new OData2Exception("You must map the column " + column
-						+ " to a EDM property! The current type of propery " + propertyName + " is " + p,
-						HttpStatusCodes.INTERNAL_SERVER_ERROR);
-			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
-				if (values.containsKey(p.getName())) {
-					insert.append("?");
-					if (i.hasNext()) {
-						insert.append(", ");
-					}
-				}
-			} else {
-				throw new IllegalStateException("Unable to handle property " + p);
-			}
-		}
-		insert.append(" )");
-		return insert.toString();
 	}
 
 	public Map<String, Object> getValues() {
 		return values;
+	}
+
+	public Map<String, Object> getKeys() {
+		return keys;
+	}
+
+	private String buildKeys(final SQLContext context) throws EdmException {
+		StringBuilder updateQuery = new StringBuilder();
+		Iterator<Map.Entry<String, Object>> i = keys.entrySet().iterator();
+		while (i.hasNext()) {
+			Map.Entry<String, Object> key = i.next();
+			updateQuery.append(" " + key.getKey() + " = ? ");
+
+			if (i.hasNext()) {
+				updateQuery.append(", ");
+			}
+		}
+		return updateQuery.toString();
 	}
 
 }
