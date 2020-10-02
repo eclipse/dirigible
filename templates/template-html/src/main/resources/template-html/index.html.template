@@ -96,17 +96,17 @@
 
         $scope.explore = 'customers';
 
-        $http.get('http://services.odata.org/V4/Northwind/Northwind.svc/Customers')
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Customers')
         .success(function(data) {
         	$scope.customers = data.value;
         });
 
-        $http.get('http://services.odata.org/V4/Northwind/Northwind.svc/Employees')
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Employees')
         .success(function(data) {
         	$scope.employees = data.value;
         });
 
-        $http.get('http://services.odata.org/V4/Northwind/Northwind.svc/Products')
+        $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Products')
         .success(function(data) {
         	$scope.products = data.value;
         });

@@ -17,6 +17,7 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "{{fileName}}.js"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 20
 	};
 };

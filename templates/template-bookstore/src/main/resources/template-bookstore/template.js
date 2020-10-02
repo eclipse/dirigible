@@ -11,7 +11,7 @@
 exports.getTemplate = function() {
 	return {
 		"name": "Bookstore Application",
-		"description": "Bookstore Application Sample with a Table, a REST Service and an AngularJS User Interface",
+		"description": "Bookstore Application Sample with Table, REST Service and UI (AngularJS)",
 		"sources": [
 		{
 			"location": "/template-bookstore/data/bookstore.table.template", 
@@ -40,6 +40,7 @@ exports.getTemplate = function() {
 			"action": "generate",
 			"rename": "view/{{fileName}}.js"
 		}],
-		"parameters": []
+		"parameters": [],
+		"order": 50
 	};
 };
