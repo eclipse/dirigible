@@ -1548,8 +1548,8 @@ lm.config.defaultConfig = {
 	},
 	labels: {
 		close: 'close',
-		maximise: 'maximise',
-		minimise: 'minimise',
+		maximise: 'maximize',
+		minimise: 'minimize',
 		popout: 'open in new window',
 		popin: 'pop in',
 		tabDropdown: 'additional tabs'
