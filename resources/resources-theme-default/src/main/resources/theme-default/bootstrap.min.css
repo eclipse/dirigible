@@ -840,7 +840,7 @@ tbody.collapse.in{display:table-row-group}
 .navbar-right .dropdown-menu-left{left:0;right:auto}
 }
 .btn-group,.btn-group-vertical{position:relative;display:inline-block;vertical-align:middle}
-.btn-group-vertical>.btn,.btn-group>.btn{position:relative;}
+.btn-group-vertical>.btn,.btn-group>.btn{position:relative;float:left}
 .btn-group-vertical>.btn.active,.btn-group-vertical>.btn:active,.btn-group-vertical>.btn:focus,.btn-group-vertical>.btn:hover,.btn-group>.btn.active,.btn-group>.btn:active,.btn-group>.btn:focus,.btn-group>.btn:hover{z-index:2}
 .btn-group .btn+.btn,.btn-group .btn+.btn-group,.btn-group .btn-group+.btn,.btn-group .btn-group+.btn-group{margin-left:-1px}
 .btn-toolbar{margin-left:-5px}
