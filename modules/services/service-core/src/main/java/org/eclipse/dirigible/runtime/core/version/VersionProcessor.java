@@ -28,6 +28,7 @@ public class VersionProcessor {
 		properties.load(VersionProcessor.class.getResourceAsStream("/dirigible.properties"));
 		version.setProductName(properties.getProperty("DIRIGIBLE_PRODUCT_NAME"));
 		version.setProductVersion(properties.getProperty("DIRIGIBLE_PRODUCT_VERSION"));
+		version.setProductCommitId(properties.getProperty("DIRIGIBLE_PRODUCT_COMMIT_ID"));
 		version.setProductType(properties.getProperty("DIRIGIBLE_PRODUCT_TYPE"));
 		version.setInstanceName(properties.getProperty("DIRIGIBLE_INSTANCE_NAME"));
 		version.setRepositoryProvider(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER));
