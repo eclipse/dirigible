@@ -9,6 +9,7 @@
  *   SAP - initial API and implementation
  */
 /*globals angular, $ */
+var uploader = null;
 angular
 .module('import', ['angularFileUpload'])
 .factory('httpRequestInterceptor', function () {
@@ -23,6 +24,7 @@ angular
 			var token = response.headers()['x-csrf-token'];
 			if (token) {
 				csrfToken = token;
+				uploader.headers['X-CSRF-Token'] = csrfToken;
 			}
 			return response;
 		}
@@ -61,11 +63,9 @@ angular
 
 	// FILE UPLOADER
 	
-    var uploader = $scope.uploader = new FileUploader({
+	$scope.uploader = uploader = new FileUploader({
         url: $scope.TRANSPORT_PROJECT_URL
     });
-    
-    uploader.headers['X-Requested-With'] = 'Fetch';
 
     // UPLOADER FILTERS
 
