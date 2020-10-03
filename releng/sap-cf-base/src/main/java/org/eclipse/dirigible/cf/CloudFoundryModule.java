@@ -31,6 +31,12 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	private static final String DATABASE_HANA_DRIVER = "com.sap.db.jdbc.Driver";
 
 	@Override
+	public int getPriority() {
+		// Set to higher priority, as this module will set database related configuration properties 
+		return HIGH_PRIORITY;
+	}
+
+	@Override
 	protected void configure() {
 		boolean customPostgreDb = bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());

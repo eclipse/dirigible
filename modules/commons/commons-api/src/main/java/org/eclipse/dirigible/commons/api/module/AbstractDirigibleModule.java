@@ -17,6 +17,10 @@ import com.google.inject.AbstractModule;
  */
 public abstract class AbstractDirigibleModule extends AbstractModule {
 
+	protected int HIGH_PRIORITY = 10;
+	protected int DEFAULT_PRIORITY = 30;
+	protected int LOW_PRIORITY = 100;
+
 	/**
 	 * Gets the name.
 	 *
@@ -24,4 +28,11 @@ public abstract class AbstractDirigibleModule extends AbstractModule {
 	 */
 	public abstract String getName();
 
+	/**
+	 * Gets the priority
+	 * @return the priority
+	 */
+	public int getPriority() {
+		return DEFAULT_PRIORITY;
+	}
 }

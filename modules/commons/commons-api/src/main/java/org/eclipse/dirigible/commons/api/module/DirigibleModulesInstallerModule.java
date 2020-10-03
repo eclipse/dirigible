@@ -13,8 +13,11 @@ package org.eclipse.dirigible.commons.api.module;
 import static java.text.MessageFormat.format;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.ServiceLoader;
+import java.util.ServiceLoader.Provider;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +41,19 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 	protected void configure() {
 		logger.debug("Initializing Dirigible Modules...");
 		ServiceLoader<AbstractDirigibleModule> dirigibleModules = ServiceLoader.load(AbstractDirigibleModule.class);
-		for (AbstractDirigibleModule next : dirigibleModules) {
+
+		List<Provider<AbstractDirigibleModule>> sortedDirigibleModules = dirigibleModules.stream().sorted((provider1, provider2) -> {
+			AbstractDirigibleModule module1 = provider1.get();
+			AbstractDirigibleModule module2 = provider2.get();
+			int priorityDiff = module1.getPriority() - module2.getPriority();
+			if (priorityDiff == 0) {
+				priorityDiff = module1.getName().compareTo(module2.getName());
+			}
+			return priorityDiff;
+		}).collect(Collectors.toList());
+
+		for (Provider<AbstractDirigibleModule> nextProvider : sortedDirigibleModules) {
+			AbstractDirigibleModule next = nextProvider.get();
 			logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));
 			try {
 				install(next);
