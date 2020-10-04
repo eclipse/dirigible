@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-engine-parent</artifactId>
-		<version>5.3.0</version>
+		<version>5.4.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -33,17 +33,17 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-api</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript-graalvm</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <!--
         <dependency>
@@ -65,32 +65,32 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-job</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-listener</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-web</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-wiki</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-command</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-odata</artifactId>
-            <version>5.3.0</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
