@@ -12,6 +12,7 @@ package org.eclipse.dirigible.cf;
 
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.PostgreDbEnv;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
@@ -40,7 +41,8 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	protected void configure() {
 		boolean customPostgreDb = bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
-		if (!customPostgreDb && !customHanaDb) {
+		boolean customHanaSchema = bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
+		if (!customPostgreDb && !customHanaDb && !customHanaSchema) {
 			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
 		}
 	}
@@ -73,6 +75,25 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		String driver = DATABASE_HANA_DRIVER;
 
 		setDatabaseProperties(name, url, driver);
+
+		String maxConnectionsCount = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, "32");
+		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, maxConnectionsCount);
+		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
+		return true;
+	}
+
+	private boolean bindHanaSchema(HanaSchemaEnv env) {
+		if (env == null) {
+			return false;
+		}
+
+		String name = DATABASE_HANA;
+		String url = env.getCredentials().getUrl();
+		String username = env.getCredentials().getUsername();
+		String password = env.getCredentials().getPassword();
+		String driver = DATABASE_HANA_DRIVER;
+
+		setDatabaseProperties(name, url, driver, username, password);
 
 		String maxConnectionsCount = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, "32");
 		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, maxConnectionsCount);

@@ -72,6 +72,12 @@ public class CloudFoundryUtils {
 		return vcapServicesEnv.getHanaDbEnv() != null ? vcapServicesEnv.getHanaDbEnv().get(0) : null;
 	}
 
+	public static HanaSchemaEnv getHanaSchemaEnv() {
+		String envJson = EnvFacade.get(VCAP_SERVICES);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		return vcapServicesEnv.getHanaSchemaEnv() != null ? vcapServicesEnv.getHanaSchemaEnv().get(0) : null;
+	}
+
 	public static class VcapServicesEnv {
 
 		private List<XsuaaEnv> xsuaa;
@@ -81,6 +87,9 @@ public class CloudFoundryUtils {
 
 		@SerializedName("hana-db")
 		private List<HanaDbEnv> hanaDbEnv;
+
+		@SerializedName("hana")
+		private List<HanaSchemaEnv> hanaSchemaEnv;
 
 		public List<XsuaaEnv> getXsuaa() {
 			return xsuaa;
@@ -104,6 +113,14 @@ public class CloudFoundryUtils {
 
 		public void setHanaDbEnv(List<HanaDbEnv> hanaDbEnv) {
 			this.hanaDbEnv = hanaDbEnv;
+		}
+
+		public List<HanaSchemaEnv> getHanaSchemaEnv() {
+			return hanaSchemaEnv;
+		}
+
+		public void setHanaSchemaEnv(List<HanaSchemaEnv> hanaSchemaEnv) {
+			this.hanaSchemaEnv = hanaSchemaEnv;
 		}
 	}
 
@@ -312,6 +329,53 @@ public class CloudFoundryUtils {
 
 			public void setUrl(String url) {
 				this.url = url;
+			}
+		}
+	}
+
+	public static class HanaSchemaEnv {
+
+		private HanaSchemaCredentialsEnv credentials;
+
+		public HanaSchemaCredentialsEnv getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(HanaSchemaCredentialsEnv credentials) {
+			this.credentials = credentials;
+		}
+
+		public static class HanaSchemaCredentialsEnv {
+
+			private String url;
+
+			@SerializedName("user")
+			private String username;
+
+			private String password;
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getUsername() {
+				return username;
+			}
+
+			public void setUsername(String username) {
+				this.username = username;
+			}
+
+			public String getPassword() {
+				return password;
+			}
+
+			public void setPassword(String password) {
+				this.password = password;
 			}
 		}
 	}
