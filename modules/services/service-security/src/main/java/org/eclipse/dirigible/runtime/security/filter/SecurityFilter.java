@@ -26,6 +26,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -137,7 +138,7 @@ public class SecurityFilter implements Filter {
 				List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_HTTP, path, method);
 				if (!accessDefinitions.isEmpty()) {
 					
-					if (principal == null) {
+					if (principal == null && !Configuration.isJwtModeEnabled()) {
 						// white list check
 						for (AccessDefinition accessDefinition : accessDefinitions) {
 							if (ISecurityCoreService.ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole())) {
@@ -152,7 +153,7 @@ public class SecurityFilter implements Filter {
 						}
 					} else {
 						for (AccessDefinition accessDefinition : accessDefinitions) {
-							if (ISecurityCoreService.ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole()) || httpServletRequest.isUserInRole(accessDefinition.getRole())) {
+							if (ISecurityCoreService.ROLE_PUBLIC.equalsIgnoreCase(accessDefinition.getRole()) || HttpRequestFacade.isUserInRole(accessDefinition.getRole())) {
 								isInRole = true;
 								break;
 							}
@@ -163,7 +164,7 @@ public class SecurityFilter implements Filter {
 						}
 					}
 				} else {
-					if (!Configuration.isAnonymousModeEnabled() && principal == null) {
+					if (!Configuration.isAnonymousModeEnabled() && principal == null && !Configuration.isJwtModeEnabled()) {
 						forbidden(path, "No logged in user and no white list constraints", httpServletResponse);
 						return;
 					}
