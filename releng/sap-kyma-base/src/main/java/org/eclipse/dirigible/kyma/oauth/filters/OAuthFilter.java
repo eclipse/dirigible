@@ -64,13 +64,15 @@ public class OAuthFilter extends AbstractOAuthFilter {
 				authenticate(request, response);
 				return;
 			}
-			if (!JwtUtils.isValidJwt(jwt)) {
+			if (JwtUtils.isValidJwt(jwt)) {
 				if (JwtUtils.isExpiredJwt(jwt)) {
 					authenticate(request, response);
 					return;
 				}
+			} else {
 				unauthorized(request, response, UNAUTHORIZED_MESSAGE);
 				return;
+				
 			}
 		}
 
