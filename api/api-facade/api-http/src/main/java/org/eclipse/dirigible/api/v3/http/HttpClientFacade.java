@@ -194,7 +194,7 @@ public class HttpClientFacade implements IScriptingFacade {
 		}
 	}
 
-	private static String processResponse(CloseableHttpResponse response, boolean binary) throws IOException {
+	public static HttpClientResponse processHttpClientResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		try {
 			HttpClientResponse httpClientResponse = new HttpClientResponse();
 			httpClientResponse.setStatusCode(response.getStatusLine().getStatusCode());
@@ -224,10 +224,15 @@ public class HttpClientFacade implements IScriptingFacade {
 				httpClientResponse.getHeaders().add(new HttpClientHeader(header.getName(), header.getValue()));
 			}
 			EntityUtils.consume(entity);
-			return GsonHelper.GSON.toJson(httpClientResponse);
+			return httpClientResponse;
 		} finally {
 			response.close();
 		}
+	}
+
+	private static String processResponse(CloseableHttpResponse response, boolean binary) throws IOException {
+		HttpClientResponse httpClientResponse = processHttpClientResponse(response, binary);
+		return GsonHelper.GSON.toJson(httpClientResponse);
 	}
 
 	/**

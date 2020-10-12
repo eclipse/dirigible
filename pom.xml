@@ -611,6 +611,9 @@
 		<module>releng/sap-cf-all</module>
 		<module>releng/sap-cf-base</module>
 		<module>releng/sap-cf-runtime</module>
+		<module>releng/sap-kyma-all</module>
+		<module>releng/sap-kyma-base</module>
+		<module>releng/sap-kyma-runtime</module>
 		<module>releng/sap-cms</module>
 		<module>releng/sap-runtime-ephemeral</module>
 		<module>releng/server-all</module>

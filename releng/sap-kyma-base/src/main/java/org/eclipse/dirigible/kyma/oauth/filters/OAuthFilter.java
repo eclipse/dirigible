@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.cf.xsuaa.filters;
+package org.eclipse.dirigible.kyma.oauth.filters;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
-import org.eclipse.dirigible.cf.utils.JwtUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
@@ -32,7 +30,7 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.kyma.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,13 +43,14 @@ import org.slf4j.LoggerFactory;
 		"/websockets/v4/*",
 		"/odata/v2/*"
 }, filterName = "XSUAA Security Filter", description = "Check all URIs for the permissions")
-public class XsuaaFilter extends AbstractXsuaaFilter {
+public class OAuthFilter extends AbstractOAuthFilter {
 
-	private static final Logger logger = LoggerFactory.getLogger(XsuaaFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(OAuthFilter.class);
 
 	private static final String PUBLIC = "public";
 	private static final String SERVICES_V3_PUBLIC = "/services/v3/public";
 	private static final String SERVICES_V4_PUBLIC = "/services/v4/public";
+	private static final String SERVICES_V4_OAUTH = "/services/v4/oauth";
 
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
@@ -59,9 +58,17 @@ public class XsuaaFilter extends AbstractXsuaaFilter {
 	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String jwt = null;
-		if (!isPublicEnabledAccess(request)) {			
+		if (!isPublicEnabledAccess(request) && !isOAuth(request)) {			
 			jwt = JwtUtils.getJwt(request);
-			if (!CloudFoundryUtils.isValidJwt(jwt)) {
+			if (jwt == null) {
+				authenticate(request, response);
+				return;
+			}
+			if (!JwtUtils.isValidJwt(jwt)) {
+				if (JwtUtils.isExpiredJwt(jwt)) {
+					authenticate(request, response);
+					return;
+				}
 				unauthorized(request, response, UNAUTHORIZED_MESSAGE);
 				return;
 			}
@@ -99,6 +106,12 @@ public class XsuaaFilter extends AbstractXsuaaFilter {
 			}
 		}
 		return false;
+	}
+
+	private boolean isOAuth(ServletRequest servletRequest) {
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		String requestURI = request.getRequestURI();
+		return requestURI.startsWith(SERVICES_V4_OAUTH);
 	}
 
 	@Override
