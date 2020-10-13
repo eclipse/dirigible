@@ -60,20 +60,25 @@ public class OAuthFilter extends AbstractOAuthFilter {
 		String jwt = null;
 		if (!isPublicEnabledAccess(request) && !isOAuth(request)) {			
 			jwt = JwtUtils.getJwt(request);
-			if (jwt == null) {
+
+			if (jwt == null || (jwt != null && jwt.equals(""))) {
 				authenticate(request, response);
 				return;
 			}
-			if (JwtUtils.isValidJwt(jwt)) {
+
+			if (!JwtUtils.isValidJwt(jwt)) {
 				if (JwtUtils.isExpiredJwt(jwt)) {
 					authenticate(request, response);
 					return;
+				}  else {
+					unauthorized(request, response, UNAUTHORIZED_MESSAGE);
+					return;	
 				}
-			} else {
-				unauthorized(request, response, UNAUTHORIZED_MESSAGE);
+			} else if (JwtUtils.isExpiredJwt(jwt)) {
+				authenticate(request, response);
 				return;
-				
 			}
+
 		}
 
 		try {
