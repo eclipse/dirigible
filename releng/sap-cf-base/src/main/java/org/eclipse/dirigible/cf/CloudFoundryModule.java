@@ -79,6 +79,21 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		String maxConnectionsCount = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, "32");
 		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, maxConnectionsCount);
 		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
+
+		// CMS properties
+		String cmsDatabaseDatasourceName = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME);
+		if (cmsDatabaseDatasourceName == null || cmsDatabaseDatasourceName.equals("")) {
+			cmsDatabaseDatasourceName = name;
+		}
+
+		String cmsDatabaseDatasourceType = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE);
+		if (cmsDatabaseDatasourceType == null || cmsDatabaseDatasourceType.equals("")) {
+			cmsDatabaseDatasourceType = "custom";
+		}
+
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, "database");
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME, cmsDatabaseDatasourceName);
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE, cmsDatabaseDatasourceType);
 		return true;
 	}
 
@@ -98,6 +113,21 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		String maxConnectionsCount = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, "32");
 		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, maxConnectionsCount);
 		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
+
+		// CMS properties
+		String cmsDatabaseDatasourceName = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME);
+		if (cmsDatabaseDatasourceName == null || cmsDatabaseDatasourceName.equals("")) {
+			cmsDatabaseDatasourceName = name;
+		}
+
+		String cmsDatabaseDatasourceType = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE);
+		if (cmsDatabaseDatasourceType == null || cmsDatabaseDatasourceType.equals("")) {
+			cmsDatabaseDatasourceType = "custom";
+		}
+
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, "database");
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME, cmsDatabaseDatasourceName);
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE, cmsDatabaseDatasourceType);
 		return true;
 	}
 
@@ -117,16 +147,6 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 			datasourceNameDefault = name;
 		}
 
-		String cmsDatabaseDatasourceName = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME);
-		if (cmsDatabaseDatasourceName == null || cmsDatabaseDatasourceName.equals("")) {
-			cmsDatabaseDatasourceName = name;
-		}
-
-		String cmsDatabaseDatasourceType = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE);
-		if (cmsDatabaseDatasourceType == null || cmsDatabaseDatasourceType.equals("")) {
-			cmsDatabaseDatasourceType = "custom";
-		}
-
 		// Database properties
 		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "custom");
 		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES, customDatasources);
@@ -139,11 +159,6 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		if (password != null) {
 			Configuration.set(name + "_PASSWORD", password);
 		}
-
-		// CMS properties
-		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, "database");
-		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME, cmsDatabaseDatasourceName);
-		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE, cmsDatabaseDatasourceType);
 	}
 
 	@Override
