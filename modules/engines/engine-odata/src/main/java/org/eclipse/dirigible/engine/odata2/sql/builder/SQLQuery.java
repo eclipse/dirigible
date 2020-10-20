@@ -387,11 +387,39 @@ public final class SQLQuery {
 
             } else {
                 Object value = convertToSqlType(param);
-                preparedStatement.setObject(i + 1, value);
+                boolean successfullySet = setInteger(preparedStatement, i, value);
+                if (!successfullySet) {
+                	successfullySet = setLong(preparedStatement, i, value);
+                }
+                if (!successfullySet) {
+                	setObject(preparedStatement, i, value);
+                }
             }
         }
     }
-    
+
+	private boolean setInteger(final PreparedStatement preparedStatement, int i, Object value) throws SQLException {
+		try {
+			preparedStatement.setInt(i + 1, Integer.valueOf(value.toString()));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean setLong(final PreparedStatement preparedStatement, int i, Object value) throws SQLException {
+		try {
+			preparedStatement.setLong(i + 1, Long.valueOf(value.toString()));
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
+
+	private void setObject(final PreparedStatement preparedStatement, int i, Object value) throws SQLException {
+		preparedStatement.setObject(i + 1, value);
+	}
+
     public void setValuesOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
     	List<String> propertyNames = getInsertExpression().getTarget().getPropertyNames();
     	Map<String, Object> values = getInsertExpression().getValues();

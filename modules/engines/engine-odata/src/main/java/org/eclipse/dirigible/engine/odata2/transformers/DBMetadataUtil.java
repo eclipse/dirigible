@@ -24,6 +24,8 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import com.google.common.base.CaseFormat;
+
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
@@ -56,9 +58,10 @@ public class DBMetadataUtil {
         sqlToOdataEdmColumnTypes.put("TINYINT", "Edm.Byte");
         sqlToOdataEdmColumnTypes.put("SMALLINT", "Edm.Int16");
         sqlToOdataEdmColumnTypes.put("INTEGER", "Edm.Int32");
+        sqlToOdataEdmColumnTypes.put("INT4", "Edm.Int32");
         sqlToOdataEdmColumnTypes.put("BIGINT", "Edm.Int64");
         sqlToOdataEdmColumnTypes.put("SMALLDECIMAL", "Edm.Decimal");
-        sqlToOdataEdmColumnTypes.put("Decimal", "Edm.Decimal");
+        sqlToOdataEdmColumnTypes.put("DECIMAL", "Edm.Decimal");
         sqlToOdataEdmColumnTypes.put("REAL", "Edm.Single");
         sqlToOdataEdmColumnTypes.put("FLOAT", "Edm.Single");
         sqlToOdataEdmColumnTypes.put("DOUBLE", "Edm.Double");
@@ -88,6 +91,10 @@ public class DBMetadataUtil {
 
     private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
+        if (!foreignKeys.first() && !isCaseSensitive()) {
+        	// Fallback for PostgreSQL
+        	foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+        }
         while (foreignKeys.next()) {
             PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
                     foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
@@ -101,11 +108,15 @@ public class DBMetadataUtil {
     }
 
     private void convertSqlTypesToOdataEdmTypes(List<PersistenceTableColumnModel> columnsMetadata) {
-        columnsMetadata.forEach(column -> column.setType(sqlToOdataEdmColumnTypes.get(column.getType())));
+        columnsMetadata.forEach(column -> column.setType(sqlToOdataEdmColumnTypes.get(column.getType().toUpperCase())));
     }
 
     private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
+        if (!primaryKeys.first() && !isCaseSensitive()) {
+        	// Fallback for PostgreSQL
+        	primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+        }
         while (primaryKeys.next()) {
             setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
         }
@@ -120,7 +131,11 @@ public class DBMetadataUtil {
     }
 
     private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+    	ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+    	if (!columns.first() && !isCaseSensitive()) {
+    		// Fallback for PostgreSQL
+    		columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+    	}
         while (columns.next()) {
             tableMetadata.getColumns().add(
                     new PersistenceTableColumnModel(
@@ -152,8 +167,10 @@ public class DBMetadataUtil {
     public static String getType(PersistenceTableColumnModel column, List<ODataProperty> properties) {
     	String columnName = column.getName();
     	for (ODataProperty next : properties) {
-    		if (next.getColumn().equals(columnName) && next.getType() != null) {
-    			return next.getType();
+    		if (next.getType() != null) {
+    			if (next.getColumn().equals(columnName) || !isCaseSensitive() && next.getColumn().equalsIgnoreCase(columnName)) {
+    				return next.getType();
+    			}
     		}
     	}
 		return column.getType();
@@ -168,5 +185,9 @@ public class DBMetadataUtil {
 			table = table.substring(1, table.length()-1);
 		}
 		return table;
+	}
+
+    private static boolean isCaseSensitive() {
+		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE"));
 	}
 }
