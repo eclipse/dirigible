@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class TableImporter {
 
 	public TableImporter(DataSource dataSource, byte[] content, String tableName) {
 		this.content = content;
-		this.tableName = tableName;
+		this.tableName = DataStructuresUtils.getCaseSensitiveTableName(tableName);
 		this.dataSource = dataSource;
 	}
 

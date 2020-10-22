@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +141,7 @@ public class TableExporter {
 	}
 
 	public void setTableName(String tableName) {
-		this.tableName = tableName;
+		this.tableName = DataStructuresUtils.getCaseSensitiveTableName(tableName);
 	}
 
 	public String getTableType() {

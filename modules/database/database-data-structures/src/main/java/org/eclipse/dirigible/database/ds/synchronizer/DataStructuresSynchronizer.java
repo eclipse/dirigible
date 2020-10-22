@@ -34,6 +34,7 @@ import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -1147,14 +1148,14 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		String tableName = model.getName();
 		String primaryKey = getPrimaryKey(tableName);
 		byte[] content = model.getContent().getBytes();
-		updateRowsDataInTable(tableName, primaryKey, content);
+		updateRowsDataInTable(DataStructuresUtils.getCaseSensitiveTableName(tableName), primaryKey, content);
 	}
 
 	private void deleteAllDataFromTable(String tableName) throws Exception {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-			String sql = SqlFactory.getNative(connection).delete().from(tableName).build();
+			String sql = SqlFactory.getNative(connection).delete().from(DataStructuresUtils.getCaseSensitiveTableName(tableName)).build();
 			PreparedStatement deleteStatement = connection.prepareStatement(sql);
 			deleteStatement.execute();
 		} finally {
