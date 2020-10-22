@@ -19,6 +19,7 @@ import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 
 public class CloudFoundryModule extends AbstractDirigibleModule {
 
@@ -62,6 +63,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 
 		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
 		Configuration.set(SchedulerManager.DIRIGIBLE_SCHEDULER_MEMORY_STORE, "true");
+		Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
 		return true;
 	}
 
