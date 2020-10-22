@@ -210,7 +210,7 @@ public final class SQLExpressionSelect implements SQLExpression {
             if (isSelectTarget(target)) {
             	boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
             	if (caseSensitive) {
-            		from.append("\"" + query.getSQLTableName(target) + "\"").append(" AS ").append(tableAlias);
+            		from.append("\"" + query.getSQLTableName(target) + "\"").append(" AS ").append("\"" + tableAlias + "\"");
             	} else {
             		from.append(query.getSQLTableName(target)).append(" AS ").append(tableAlias);
             	}
