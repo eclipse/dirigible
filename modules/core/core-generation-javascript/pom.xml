@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-core-parent</artifactId>
-		<version>5.4.0-SNAPSHOT</version>
+		<version>5.4.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,24 +32,24 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-generation</artifactId>
-			<version>5.4.0-SNAPSHOT</version>
+			<version>5.4.0</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>5.4.0-SNAPSHOT</version>
+			<version>5.4.0</version>
     	</dependency>
     	
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
-			<version>5.4.0-SNAPSHOT</version>
+			<version>5.4.0</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>5.4.0-SNAPSHOT</version>
+			<version>5.4.0</version>
 			<scope>test</scope>
     	</dependency>
 
