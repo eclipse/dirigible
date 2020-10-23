@@ -71,13 +71,13 @@ public final class SQLExpressionJoin implements SQLExpression {
         join.append(" JOIN ");
         join.append(csl + getTableName(start) + csl);
         join.append(" AS ");
-        join.append(query.getSQLTableAlias(start));
+        join.append(csl + query.getSQLTableAlias(start) + csl);
         join.append(" ON ");
-        join.append(query.getSQLTableAlias(start));
+        join.append(csl + query.getSQLTableAlias(start) + csl);
         join.append(".");
         join.append(csl + getTargetJoinKeyForEntityType(start, target) + csl);
         join.append(" = ");
-        join.append(query.getSQLTableAlias(target));
+        join.append(csl + query.getSQLTableAlias(target) + csl);
         join.append(".");
         join.append(csl + query.getSQLJoinTableName(target, start) + csl);
         return join.toString();

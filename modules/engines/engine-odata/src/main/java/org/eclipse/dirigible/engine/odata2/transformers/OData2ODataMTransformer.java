@@ -81,7 +81,10 @@ public class OData2ODataMTransformer {
             entity.getNavigations().forEach(relation -> {
             	ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
     			String toRole = association.getTo().getEntity();
-    			String fromRoleProperty = association.getFrom().getProperty();
+    			String fromRoleProperty = association.getFrom().getColumn();
+    			if (fromRoleProperty == null) {
+    				fromRoleProperty = association.getFrom().getProperty();
+    			}
     			ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRole, relation.getName());
     			String dependentEntity = toSetEntity.getName();
 				if (!buff.toString().contains("_ref_" + dependentEntity + "Type")) {
