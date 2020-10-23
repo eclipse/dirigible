@@ -13,9 +13,11 @@ package org.eclipse.dirigible.engine.odata2.definition;
 public class ODataAssiciationEndDefinition {
 
 	private String entity;
-	
+
 	private String property;
-	
+
+	private String column;
+
 	private String multiplicity;
 
 	/**
@@ -44,6 +46,20 @@ public class ODataAssiciationEndDefinition {
 	 */
 	public void setProperty(String property) {
 		this.property = property;
+	}
+
+	/**
+	 * @return the column
+	 */
+	public String getColumn() {
+		return column;
+	}
+
+	/**
+	 * @param column the column to set
+	 */
+	public void setColumn(String column) {
+		this.column = column;
 	}
 
 	/**
