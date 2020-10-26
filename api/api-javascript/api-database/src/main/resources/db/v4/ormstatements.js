@@ -13,6 +13,17 @@
 var ORMStatements = function(orm, dialect){
 	this.$log = require('log/v4/logging').getLogger('db.dao.ormstatements');
 	this.orm = orm;
+	this.orm.tableName = this.orm.table;
+	this.orm.properties.forEach(function(property) {
+		property.columnName = property.column;
+	});
+	let isCaseSensitive = require("core/v4/configurations").get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
+	if (isCaseSensitive) {
+		this.orm.table = "\"" + this.orm.table + "\"";
+		this.orm.properties.forEach(function(property) {
+			property.column = "\"" + property.column + "\"" ;
+		});
+	};
 	this.dialect = dialect || require('db/v4/sql').getDialect();
 };
 ORMStatements.prototype.constructor = ORMStatements;

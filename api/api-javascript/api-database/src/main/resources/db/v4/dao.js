@@ -149,7 +149,7 @@ DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
     }
     for(var i=0; i<properties.length; i++){
     	var prop = properties[i];
-    	entity[prop.name] = resultSetEntry[prop.column];
+    	entity[prop.name] = resultSetEntry[prop.columnName];
     	if(prop.value){
     		entity[prop.name] = prop.value(entity[prop.name]);
     	}
@@ -864,7 +864,8 @@ exports.create = exports.dao = function(oDefinition, logCtxName, dataSourceName,
 			globals.set(databaseType + "_" + dataSourceName, productName);
 		}
 		
-		if (productName === "PostgreSQL") {
+		let isCaseSensitive = require("core/v4/configurations").get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
+		if (!isCaseSensitive && productName === "PostgreSQL") {
 			orm["properties"].map(function(property) {
 				property.column = property.column.toLowerCase();
 			});	
