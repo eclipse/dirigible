@@ -15,13 +15,6 @@
 
 	<dependencies>
 
-		<!-- OAuth0 -->
-		<dependency>
-		    <groupId>com.auth0</groupId>
-		    <artifactId>java-jwt</artifactId>
-		    <version>3.11.0</version>
-		</dependency>
-
 		<!-- Platform -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -46,6 +39,13 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
+		 	<version>5.5.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Security -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-security</artifactId>
 		 	<version>5.5.0-SNAPSHOT</version>
 		</dependency>
 	

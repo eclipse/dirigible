@@ -8,11 +8,17 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.api.v3.http.jwt;
+package org.eclipse.dirigible.oauth;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface IJwtManager {
+import org.eclipse.dirigible.api.v3.http.access.IAccessManager;
+import org.eclipse.dirigible.oauth.utils.JwtUtils;
 
-	public boolean isInRole(HttpServletRequest request, String role);
+public class OAuthAccessManager implements IAccessManager {
+
+	@Override
+	public boolean isInRole(HttpServletRequest request, String role) {
+		return JwtUtils.isInRole(request, role);
+	}
 }

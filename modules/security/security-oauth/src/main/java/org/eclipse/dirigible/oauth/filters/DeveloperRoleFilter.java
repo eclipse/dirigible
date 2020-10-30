@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth.filters;
+package org.eclipse.dirigible.oauth.filters;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-import org.eclipse.dirigible.kyma.utils.JwtUtils;
+import org.eclipse.dirigible.oauth.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

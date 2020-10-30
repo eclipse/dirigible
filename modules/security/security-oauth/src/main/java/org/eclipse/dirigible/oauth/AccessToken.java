@@ -8,11 +8,11 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth;
+package org.eclipse.dirigible.oauth;
 
 import com.google.gson.annotations.SerializedName;
 
-public class XsuaaToken {
+public class AccessToken {
 
 	@SerializedName("access_token")
 	private String accessToken;

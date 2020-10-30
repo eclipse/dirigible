@@ -8,18 +8,11 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth;
+package org.eclipse.dirigible.api.v3.http.access;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.eclipse.dirigible.api.v3.http.jwt.IJwtManager;
-import org.eclipse.dirigible.kyma.utils.JwtUtils;
-import org.eclipse.dirigible.kyma.utils.KymaUtils;
+public interface IAccessManager {
 
-public class KymaJwtManager implements IJwtManager {
-
-	@Override
-	public boolean isInRole(HttpServletRequest request, String role) {
-		return JwtUtils.isInRole(request, role);
-	}
+	public boolean isInRole(HttpServletRequest request, String role);
 }

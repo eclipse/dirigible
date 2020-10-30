@@ -8,7 +8,10 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth.filters;
+package org.eclipse.dirigible.oauth.filters;
+
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 
@@ -20,12 +23,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
-import org.eclipse.dirigible.kyma.utils.KymaUtils;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.oauth.utils.OAuthUtils;
 import org.slf4j.Logger;
 
 public abstract class AbstractOAuthFilter implements Filter {
+
+	private static final String SLASH = "/";
 
 	protected abstract Logger getLogger();
 
@@ -43,25 +46,26 @@ public abstract class AbstractOAuthFilter implements Filter {
 	 * 
 	 */
 	protected void authenticate(ServletRequest request, ServletResponse response) throws IOException {
-		String redirectUrl = KymaUtils.getAuthenticationUrl();
-		((HttpServletResponse) response).sendRedirect(redirectUrl);
+		String authenticationUrl = OAuthUtils.getAuthenticationUrl();
+		((HttpServletResponse) response).sendRedirect(authenticationUrl);
 	}
 
 	/**
 	 * Unauthorized.
 	 *
 	 */
+	@SuppressWarnings("deprecation")
 	protected void unauthorized(ServletRequest request, ServletResponse response, String message) throws IOException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-		String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
+		String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : SLASH;
 		String error = String.format("Unauthorized access is forbidden: %s", path, message);
 
 		getLogger().warn(error);
 
-		error = EscapeFacade.escapeHtml4(error);
-		error = EscapeFacade.escapeJavascript(error);
+		error = escapeHtml4(error);
+		error = escapeEcmaScript(error);
 		httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, error);
 	}
 
@@ -69,17 +73,18 @@ public abstract class AbstractOAuthFilter implements Filter {
 	 * Forbidden.
 	 *
 	 */
+	@SuppressWarnings("deprecation")
 	protected void forbidden(ServletRequest request, ServletResponse response, String message) throws IOException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-		String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : IRepositoryStructure.SEPARATOR;
+		String path = httpServletRequest.getPathInfo() != null ? httpServletRequest.getPathInfo() : SLASH;
 		String error = String.format("Requested URI [%s] is forbidden: %s", path, message);
 
 		getLogger().warn(error);
 
-		error = EscapeFacade.escapeHtml4(error);
-		error = EscapeFacade.escapeJavascript(error);
+		error = escapeHtml4(error);
+		error = escapeEcmaScript(error);
 		httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, error);
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth.filters;
+package org.eclipse.dirigible.oauth.filters;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +30,7 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
-import org.eclipse.dirigible.kyma.utils.JwtUtils;
+import org.eclipse.dirigible.oauth.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +78,6 @@ public class OAuthFilter extends AbstractOAuthFilter {
 				authenticate(request, response);
 				return;
 			}
-
 		}
 
 		try {

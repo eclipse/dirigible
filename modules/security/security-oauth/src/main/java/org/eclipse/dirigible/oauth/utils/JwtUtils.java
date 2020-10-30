@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.utils;
+package org.eclipse.dirigible.oauth.utils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -41,15 +41,17 @@ public class JwtUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
+
 	private static final Set<String> VERIFIED_TOKENS_CACHE = new HashSet<String>();
 
+	private static final String AUTHORIZATION_HEADER = "Authorization";
+	private static final String AUTHORIZATION_HEADER_VALUE_BEARER = "Bearer ";
 	private static final String JWT_COOKIE_NAME = "jwt-cookie";
 	private static final Base64 BASE64 = new Base64(true);
 	private static final String JWT_SPLIT_TOKEN = "\\.";
 	private static final int JWT_HEADER = 0;
 	private static final int JWT_BODY = 1;
 	private static final int JWT_SIGNATURE = 2;
-	private static final String OAUTH_TOKEN = "/oauth/token";
 
 	private static final String SCOPE_SEPARATOR = ".";
 
@@ -62,20 +64,46 @@ public class JwtUtils {
 
 	public static String getScope(String role) {
 		return new StringBuilder()
-				.append(KymaUtils.getXsAppName())
+				.append(OAuthUtils.getOAuthApplicationName())
 				.append(SCOPE_SEPARATOR)
 				.append(role)
 				.toString();
 	}
 
 	public static String getJwt(ServletRequest request) {
-		Cookie[] cookies = ((HttpServletRequest) request).getCookies();
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		String jwt = getJwtFromCookie(httpServletRequest);
+		if (jwt == null) {
+			jwt = getJwtFromHeader(httpServletRequest);
+		}
+		return jwt;
+	}
+
+	private static String getJwtFromCookie(HttpServletRequest httpServletRequest) {
+		String jwt = null;
+		Cookie[] cookies = httpServletRequest.getCookies();
 		for (int i = 0; cookies != null && i < cookies.length; i ++) {
 			if (cookies[i].getName().equals(JWT_COOKIE_NAME)) {
-				return cookies[i].getValue();
+				jwt = cookies[i].getValue();
+				break;
 			}
 		}
-		return null;
+		return jwt;
+	}
+
+	private static String getJwtFromHeader(HttpServletRequest httpServletRequest) {
+		String jwt = null;
+		String authorizationHeader = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
+		if (authorizationHeader != null) {	
+			// Expected format Authorization header value: Bearer eyJhbGciOiJS...
+			if (authorizationHeader.startsWith(AUTHORIZATION_HEADER_VALUE_BEARER)) {
+				String tokenValue = authorizationHeader.replace(AUTHORIZATION_HEADER_VALUE_BEARER, "");
+				if (isValidJwt(tokenValue)) {
+					jwt = tokenValue;
+				}
+			}
+		}
+		return jwt;
 	}
 
 	public static void setJwt(ServletResponse response, String jwt) {
@@ -442,14 +470,14 @@ public class JwtUtils {
 
 		if (!VERIFIED_TOKENS_CACHE.contains(token)) {
 			try {
-				String verificationKey = KymaUtils.getVerificationKey();
+				String verificationKey = OAuthUtils.getOAuthVerificationKey();
 				RSAPublicKey publicKey = getPublicKeyFromString(verificationKey);
 				Algorithm algorithm = Algorithm.RSA256(publicKey, null);
 				JWTVerifier verifier = JWT.require(algorithm)
 						.acceptLeeway(1) // 1 sec for nbf and iat
 						.acceptExpiresAt(5) // 5 secs for exp
-						.withAudience(KymaUtils.getOAuthClientId())
-						.withIssuer(KymaUtils.getOAuthUrl() + OAUTH_TOKEN)
+						.withAudience(OAuthUtils.getOAuthClientId())
+						.withIssuer(OAuthUtils.getOAuthTokenUrl())
 						.build();
 				verifier.verify(token);
 				VERIFIED_TOKENS_CACHE.add(token);
@@ -461,19 +489,6 @@ public class JwtUtils {
 		}
 
 		return isValid;
-	}
-
-	private static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
-		String publicKeyPEM = key;
-		publicKeyPEM = publicKeyPEM.replace("\n", "");
-		publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "");
-		publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-
-		byte[] encoded = BASE64.decode(publicKeyPEM);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
-
-		return pubKey;
 	}
 
 	public static boolean isExpiredJwt(String token) {
@@ -488,5 +503,18 @@ public class JwtUtils {
 		}
 
 		return isExpired;
+	}
+
+	private static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
+		String publicKeyPEM = key;
+		publicKeyPEM = publicKeyPEM.replace("\n", "");
+		publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "");
+		publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
+
+		byte[] encoded = BASE64.decode(publicKeyPEM);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		RSAPublicKey pubKey = (RSAPublicKey) kf.generatePublic(new X509EncodedKeySpec(encoded));
+
+		return pubKey;
 	}
 }

@@ -20,7 +20,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.api.v3.http.jwt.IJwtManager;
+import org.eclipse.dirigible.api.v3.http.access.IAccessManager;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
@@ -42,7 +42,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpRequestFacade.class);
 
-	private static final ServiceLoader<IJwtManager> JWT_MANAGERS = ServiceLoader.load(IJwtManager.class);
+	private static final ServiceLoader<IAccessManager> ACCESS_MANAGERS = ServiceLoader.load(IAccessManager.class);
 
 	/**
 	 * Returns the request in the current thread context
@@ -160,7 +160,7 @@ public class HttpRequestFacade implements IScriptingFacade {
 			throw new InvalidStateException(NO_VALID_REQUEST);
 		}
 		if (Configuration.isJwtModeEnabled()) {
-			for (IJwtManager next : JWT_MANAGERS) {
+			for (IAccessManager next : ACCESS_MANAGERS) {
 				if (next.isInRole(request, role)) {
 					return true;
 				}

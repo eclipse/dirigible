@@ -8,7 +8,7 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.kyma.oauth;
+package org.eclipse.dirigible.oauth;
 
 
 import java.io.IOException;
@@ -32,8 +32,8 @@ import org.eclipse.dirigible.api.v3.http.client.HttpClientResponse;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.kyma.utils.JwtUtils;
-import org.eclipse.dirigible.kyma.utils.KymaUtils;
+import org.eclipse.dirigible.oauth.utils.JwtUtils;
+import org.eclipse.dirigible.oauth.utils.OAuthUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +54,20 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	@Context
 	private HttpServletResponse response;
 
+	public static final String DIRIGIBLE_OAUTH_APPLICATION_HOST = "DIRIGIBLE_OAUTH_APPLICATION_HOST";
+
+	public static final String DIRIGIBLE_OAUTH_APPLICATION_NAME = "DIRIGIBLE_OAUTH_APPLICATION_NAME";
+
+	public static final String DIRIGIBLE_OAUTH_VERIFICATION_KEY = "DIRIGIBLE_OAUTH_VERIFICATION_KEY";
+
+	public static final String DIRIGIBLE_OAUTH_CLIENT_SECRET = "DIRIGIBLE_OAUTH_CLIENT_SECRET";
+
+	public static final String DIRIGIBLE_OAUTH_CLIENT_ID = "DIRIGIBLE_OAUTH_CLIENT_ID";
+
+	public static final String DIRIGIBLE_OAUTH_AUTHORIZE_URL = "DIRIGIBLE_OAUTH_AUTHORIZE_URL";
+
+	public static final String DIRIGIBLE_OAUTH_TOKEN_URL = "DIRIGIBLE_OAUTH_TOKEN_URL";
+
 	/**
 	 * Clone repository.
 	 *
@@ -64,23 +78,24 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	@GET
 	@Path("/callback")
 	public void callback(@QueryParam("code") String code) throws ClientProtocolException, IOException{
-		XsuaaToken xsuaaToken = getXsuaaToken(code);
-		JwtUtils.setJwt(response, xsuaaToken.getAccessToken());
+		AccessToken accessToken = getAccessToken(code);
+		JwtUtils.setJwt(response, accessToken.getAccessToken());
 		response.sendRedirect("/");
 	}
 
-	private XsuaaToken getXsuaaToken(String code) throws IOException, ClientProtocolException {
-		String tokenUrl = KymaUtils.getOAuthTokenUrl(code);
+	private AccessToken getAccessToken(String code) throws IOException, ClientProtocolException {
+		String tokenUrl = OAuthUtils.getTokenUrl(code);
+		String authorizationHeader = OAuthUtils.getOAuthAuthorizationHeader();
 
 		HttpClientRequestOptions options = new HttpClientRequestOptions();
-		options.getHeaders().add(new HttpClientHeader(AUTHORIZATION_HEADER, KymaUtils.getOAuthAuthorizationHeader()));
+		options.getHeaders().add(new HttpClientHeader(AUTHORIZATION_HEADER, authorizationHeader));
 
 		HttpGet httpGet = HttpClientFacade.createGetRequest(tokenUrl, options);
 		CloseableHttpClient httpClient = HttpClientProxyUtils.getHttpClient(false);
 		CloseableHttpResponse httpClientResponse = httpClient.execute(httpGet);
 		HttpClientResponse clientResponse = HttpClientFacade.processHttpClientResponse(httpClientResponse, false);
 
-		return GsonHelper.GSON.fromJson(clientResponse.getText(), XsuaaToken.class);
+		return GsonHelper.GSON.fromJson(clientResponse.getText(), AccessToken.class);
 	}
 
 	/* (non-Javadoc)
