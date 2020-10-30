@@ -16,15 +16,14 @@ import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -38,15 +37,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class JwtUtils {
 
-
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-
-
-	private static final Set<String> VERIFIED_TOKENS_CACHE = new HashSet<String>();
 
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTHORIZATION_HEADER_VALUE_BEARER = "Bearer ";
 	private static final String JWT_COOKIE_NAME = "jwt-cookie";
+	private static final String JWT_SESSION_NAME = "jwt-session";
 	private static final Base64 BASE64 = new Base64(true);
 	private static final String JWT_SPLIT_TOKEN = "\\.";
 	private static final int JWT_HEADER = 0;
@@ -98,7 +94,7 @@ public class JwtUtils {
 			// Expected format Authorization header value: Bearer eyJhbGciOiJS...
 			if (authorizationHeader.startsWith(AUTHORIZATION_HEADER_VALUE_BEARER)) {
 				String tokenValue = authorizationHeader.replace(AUTHORIZATION_HEADER_VALUE_BEARER, "");
-				if (isValidJwt(tokenValue)) {
+				if (isValidJwt(httpServletRequest, tokenValue)) {
 					jwt = tokenValue;
 				}
 			}
@@ -465,10 +461,11 @@ public class JwtUtils {
 		return null;
 	}
 
-	public static boolean isValidJwt(String token) {
+	public static boolean isValidJwt(ServletRequest request, String token) {
 		boolean isValid = true;
 
-		if (!VERIFIED_TOKENS_CACHE.contains(token)) {
+		String sessionToken = getSessionToken(request);
+		if (sessionToken == null || !sessionToken.equals(token)) {
 			try {
 				String verificationKey = OAuthUtils.getOAuthVerificationKey();
 				RSAPublicKey publicKey = getPublicKeyFromString(verificationKey);
@@ -480,10 +477,10 @@ public class JwtUtils {
 						.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer())
 						.build();
 				verifier.verify(token);
-				VERIFIED_TOKENS_CACHE.add(token);
+				setSessionToken(request, token);
 			} catch (Exception e) {
 				isValid = false;
-				VERIFIED_TOKENS_CACHE.remove(token);
+				removeSessionToken(request);
 				logger.error(e.getMessage(), e);
 			}
 		}
@@ -491,7 +488,7 @@ public class JwtUtils {
 		return isValid;
 	}
 
-	public static boolean isExpiredJwt(String token) {
+	public static boolean isExpiredJwt(ServletRequest request, String token) {
 		JwtClaim claim = getClaim(token);
 
 		long currentTime = new Date().getTime();
@@ -499,10 +496,33 @@ public class JwtUtils {
 		boolean isExpired = currentTime >= expirantionTime;
 
 		if (isExpired) {
-			VERIFIED_TOKENS_CACHE.remove(token);
+			removeSessionToken(request);
 		}
 
 		return isExpired;
+	}
+
+	private static String getSessionToken(ServletRequest request) {
+		String value = null;
+		HttpSession session = ((HttpServletRequest) request).getSession();
+		if (session != null) {
+			value = (String) session.getAttribute(JWT_SESSION_NAME);
+		}
+		return value;
+	}
+
+	private static void setSessionToken(ServletRequest request, String value) {
+		HttpSession session = ((HttpServletRequest) request).getSession();
+		if (session != null) {
+			session.setAttribute(JWT_SESSION_NAME, value);
+		}
+	}
+
+	private static void removeSessionToken(ServletRequest request) {
+		HttpSession session = ((HttpServletRequest) request).getSession();
+		if (session != null) {
+			session.removeAttribute(JWT_SESSION_NAME);
+		}
 	}
 
 	private static RSAPublicKey getPublicKeyFromString(String key) throws IOException, GeneralSecurityException {
