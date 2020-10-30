@@ -12,46 +12,34 @@ package org.eclipse.dirigible.cf.utils;
 
 import java.util.List;
 
-import javax.servlet.ServletRequest;
-
 import org.eclipse.dirigible.api.v3.core.EnvFacade;
-import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv.XsuaaCredentialsEnv;
-import org.eclipse.dirigible.cf.utils.JwtUtils.JwtClaim;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 import com.google.gson.annotations.SerializedName;
 
 public class CloudFoundryUtils {
 
+	private static final String HTTPS = "https://";
 	private static final String VCAP_SERVICES = "VCAP_SERVICES";
-	private static final String SCOPE_SEPARATOR = ".";
+	private static final String VCAP_APPLICATION = "VCAP_APPLICATION";
 
-	public static boolean isValidJwt(String jwt) {
-		XsuaaEnv xsuaaEnv = getXsuaaEnv();
-		if (xsuaaEnv != null) {
-			XsuaaCredentialsEnv credentials = xsuaaEnv.getCredentials();
-			if (credentials != null) {
-				String clientId = credentials.getClientId();
-				JwtClaim claim = JwtUtils.getClaim(jwt);
-				return clientId != null && claim != null && (claim.getClientId().equals(clientId) || claim.getAudience().contains(clientId));
-			}
+	public static String getApplicationHost() {
+		String applicationHost = null;
+		VcapApplicationEnv vcapApplicationEnv = getApplicationEnv();
+		if (vcapApplicationEnv.getApplicationUris() != null && vcapApplicationEnv.getApplicationUris().size() > 0) {
+			applicationHost = vcapApplicationEnv.getApplicationUris().get(0);
+		} else if (vcapApplicationEnv.getUris() != null && vcapApplicationEnv.getUris().size() > 0) {
+			applicationHost = vcapApplicationEnv.getUris().get(0);
 		}
-		return false;
+		if (applicationHost != null && !applicationHost.startsWith(HTTPS)) {
+			applicationHost = HTTPS + applicationHost;
+		}
+		return applicationHost;
 	}
 
-	public static boolean isInRole(ServletRequest request, String role) {
-		String jwt = JwtUtils.getJwt(request);
-		JwtClaim claim = JwtUtils.getClaim(jwt);
-		List<String> scope = claim.getScope();
-		return scope.contains(getScope(role)) || scope.contains(role);
-	}
-
-	public static String getScope(String role) {
-		return new StringBuilder()
-				.append(getXsuaaEnv().getCredentials().getApplicationName())
-				.append(SCOPE_SEPARATOR)
-				.append(role)
-				.toString();
+	public static VcapApplicationEnv getApplicationEnv() {
+		String envJson = EnvFacade.get(VCAP_APPLICATION);
+		return GsonHelper.GSON.fromJson(envJson, VcapApplicationEnv.class);
 	}
 
 	public static XsuaaEnv getXsuaaEnv() {
@@ -76,6 +64,73 @@ public class CloudFoundryUtils {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
 		return vcapServicesEnv.getHanaSchemaEnv() != null ? vcapServicesEnv.getHanaSchemaEnv().get(0) : null;
+	}
+
+	public static class VcapApplicationEnv {
+
+		private String name;
+
+		private List<String> uris;
+
+		@SerializedName("application_name")
+		private String applicationName;
+
+		@SerializedName("application_uris")
+		private List<String> applicationUris;
+
+		@SerializedName("organization_id")
+		private String organizationId;
+
+		@SerializedName("organization_name")
+		private String organizationName;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public List<String> getUris() {
+			return uris;
+		}
+
+		public void setUris(List<String> uris) {
+			this.uris = uris;
+		}
+
+		public String getApplicationName() {
+			return applicationName;
+		}
+
+		public void setApplicationName(String applicationName) {
+			this.applicationName = applicationName;
+		}
+
+		public List<String> getApplicationUris() {
+			return applicationUris;
+		}
+
+		public void setApplicationUris(List<String> applicationUris) {
+			this.applicationUris = applicationUris;
+		}
+
+		public String getOrganizationId() {
+			return organizationId;
+		}
+
+		public void setOrganizationId(String organizationId) {
+			this.organizationId = organizationId;
+		}
+
+		public String getOrganizationName() {
+			return organizationName;
+		}
+
+		public void setOrganizationName(String organizationName) {
+			this.organizationName = organizationName;
+		}
 	}
 
 	public static class VcapServicesEnv {
@@ -200,8 +255,14 @@ public class CloudFoundryUtils {
 
 			private String url;
 
+			@SerializedName("verificationkey")
+			private String verificationKey;
+
 			@SerializedName("xsappname")
 			private String applicationName;
+
+			@SerializedName("identityzone")
+			private String identityZone;
 
 			/**
 			 * @return the clientId
@@ -246,6 +307,20 @@ public class CloudFoundryUtils {
 			}
 
 			/**
+			 * @return the verificationKey
+			 */
+			public String getVerificationKey() {
+				return verificationKey;
+			}
+
+			/**
+			 * @param verificationKey the verificationKey to set
+			 */
+			public void setVerificationKey(String verificationKey) {
+				this.verificationKey = verificationKey;
+			}
+
+			/**
 			 * @return the applicationName
 			 */
 			public String getApplicationName() {
@@ -259,6 +334,19 @@ public class CloudFoundryUtils {
 				this.applicationName = applicationName;
 			}
 
+			/**
+			 * @return the identityZone
+			 */
+			public String getIdentityZone() {
+				return identityZone;
+			}
+
+			/**
+			 * @param identityZone the identityZone to set
+			 */
+			public void setIdentityZone(String identityZone) {
+				this.identityZone = identityZone;
+			}
 		}
 	}
 

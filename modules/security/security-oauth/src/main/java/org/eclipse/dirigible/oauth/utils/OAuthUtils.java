@@ -10,9 +10,17 @@
  */
 package org.eclipse.dirigible.oauth.utils;
 
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_APPLICATION_HOST;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_APPLICATION_NAME;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_AUTHORIZE_URL;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_CLIENT_ID;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_CLIENT_SECRET;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_ISSUER;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_TOKEN_URL;
+import static org.eclipse.dirigible.oauth.OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY;
+
 import java.util.Base64;
 
-import static org.eclipse.dirigible.oauth.OAuthService.*;
 import org.eclipse.dirigible.commons.config.Configuration;
 
 public class OAuthUtils {
@@ -80,6 +88,10 @@ public class OAuthUtils {
 		return Configuration.get(DIRIGIBLE_OAUTH_APPLICATION_NAME, "");
 	}
 
+	public static String getOAuthIssuer() {
+		return Configuration.get(DIRIGIBLE_OAUTH_ISSUER, "");
+	}
+
 	private static String getRedirectUri() {
 		return getOAuthApplicationHost() + OAUTH_CALLBACK_PATH;
 	};
@@ -87,4 +99,5 @@ public class OAuthUtils {
 	private static String encodeBase64(String value) {
 		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
+
 }

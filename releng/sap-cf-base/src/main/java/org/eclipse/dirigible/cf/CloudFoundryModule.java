@@ -10,42 +10,87 @@
  */
 package org.eclipse.dirigible.cf;
 
+import java.text.MessageFormat;
+
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.PostgreDbEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv.XsuaaCredentialsEnv;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
+import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
+import org.eclipse.dirigible.oauth.OAuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CloudFoundryModule extends AbstractDirigibleModule {
 
-	private static final String DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE = "DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE";
+	private static final Logger logger = LoggerFactory.getLogger(CloudFoundryModule.class);
 
 	private static final String MODULE_NAME = "Cloud Foundry Module";
+
+	private static final String ERROR_MESSAGE_NO_XSUAA = "No XSUAA service instance is bound";
+
+	private static final String DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE = "DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE";
 
 	private static final String DATABASE_POSTGRE = "POSTGRE";
 	private static final String DATABASE_HANA = "HANA";
 	private static final String DATABASE_POSTGRE_DRIVER = "org.postgresql.Driver";
 	private static final String DATABASE_HANA_DRIVER = "com.sap.db.jdbc.Driver";
 
+	private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
+	private static final String OAUTH_TOKEN = "/oauth/token";
+	private static final String ISSUER_PATTERN = "http://{0}.localhost:8080/uaa/oauth/token";
+
 	@Override
 	public int getPriority() {
-		// Set to higher priority, as this module will set database related configuration properties 
+		// Set to higher priority, as this module will set security, database, etc. related configuration properties 
 		return HIGH_PRIORITY;
 	}
 
 	@Override
 	protected void configure() {
+		configureOAuth();
 		boolean customPostgreDb = bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
 		boolean customHanaSchema = bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
 		if (!customPostgreDb && !customHanaDb && !customHanaSchema) {
 			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
 		}
+	}
+
+	private void configureOAuth() {
+		XsuaaEnv xsuaaEnv = CloudFoundryUtils.getXsuaaEnv();
+		if (xsuaaEnv == null || xsuaaEnv.getCredentials() == null) {
+			logger.error(ERROR_MESSAGE_NO_XSUAA);
+			throw new InvalidStateException(ERROR_MESSAGE_NO_XSUAA);
+		}
+		XsuaaCredentialsEnv xsuaaCredentials = xsuaaEnv.getCredentials();
+		
+		String url = xsuaaCredentials.getUrl();
+		String authorizeUrl = url + OAUTH_AUTHORIZE;
+		String tokenUrl = url + OAUTH_TOKEN;
+		String clientId = xsuaaCredentials.getClientId();
+		String clientSecret = xsuaaCredentials.getClientSecret();
+		String verificationKey = xsuaaCredentials.getVerificationKey();
+		String applicationName = xsuaaCredentials.getApplicationName();
+		String applicationHost = CloudFoundryUtils.getApplicationHost();
+		String issuer = MessageFormat.format(ISSUER_PATTERN, xsuaaCredentials.getIdentityZone());
+		
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_AUTHORIZE_URL, authorizeUrl);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_TOKEN_URL, tokenUrl);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_CLIENT_ID, clientId);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_CLIENT_SECRET, clientSecret);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY, verificationKey);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_NAME, applicationName);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_HOST, applicationHost);
+		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_ISSUER, issuer);
 	}
 
 	private boolean bindPostgreDb(PostgreDbEnv env) {

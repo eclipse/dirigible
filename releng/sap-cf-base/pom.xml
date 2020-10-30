@@ -41,6 +41,13 @@
 		 	<artifactId>dirigible-commons-config</artifactId>
 		 	<version>5.5.0-SNAPSHOT</version>
 		</dependency>
+
+		<!-- Security -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-security</artifactId>
+		 	<version>5.5.0-SNAPSHOT</version>
+		</dependency>
 	
 		<!-- API -->
 		<dependency>

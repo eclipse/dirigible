@@ -477,7 +477,7 @@ public class JwtUtils {
 						.acceptLeeway(1) // 1 sec for nbf and iat
 						.acceptExpiresAt(5) // 5 secs for exp
 						.withAudience(OAuthUtils.getOAuthClientId())
-						.withIssuer(OAuthUtils.getOAuthTokenUrl())
+						.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer())
 						.build();
 				verifier.verify(token);
 				VERIFIED_TOKENS_CACHE.add(token);
