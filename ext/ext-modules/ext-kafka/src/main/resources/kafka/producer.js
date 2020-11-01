@@ -8,4 +8,22 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-/** Producer API for Kafka
+
+/** Producer API for Kafka */
+
+exports.topic = function(destination, configuration) {
+	var topic = new Topic();
+	topic.destination = destination;
+    topic.configuration = configuration;
+	return topic;
+};
+
+exports.close = function(configuration) {
+	org.eclipse.dirigible.api.kafka.KafkaFacade.closeProducer(configuration);
+};
+
+function Topic() {
+	this.send = function(key, value) {
+        org.eclipse.dirigible.api.kafka.KafkaFacade.send(this.destination, key, value, this.configuration);
+	};
+};

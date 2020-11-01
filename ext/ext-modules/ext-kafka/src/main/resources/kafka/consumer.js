@@ -8,4 +8,22 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
 /** Consumer API for Kafka */
+
+exports.topic = function(destination, configuration) {
+	var topic = new Topic();
+	topic.destination = destination;
+    topic.configuration = configuration;
+	return topic;
+};
+
+function Topic() {
+	this.startListening = function(handler, timeout) {
+        org.eclipse.dirigible.api.kafka.KafkaFacade.startListening(this.destination, handler, timeout, this.configuration);
+	};
+
+    this.stopListening = function(handler, timeout) {
+        org.eclipse.dirigible.api.kafka.KafkaFacade.stopListening(this.destination, this.configuration);
+	};
+};
