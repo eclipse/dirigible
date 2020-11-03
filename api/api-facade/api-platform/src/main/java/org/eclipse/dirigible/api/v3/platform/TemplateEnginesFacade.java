@@ -15,17 +15,18 @@ import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
+import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
-import org.eclipse.dirigible.core.generation.mustache.MustacheGenerationEngine;
-import org.eclipse.dirigible.core.generation.velocity.VelocityGenerationEngine;
 
 public class TemplateEnginesFacade implements IScriptingFacade {
 
-	private static final IGenerationEngine ENGINE_MUSTACHE = new MustacheGenerationEngine();
-	private static final IGenerationEngine ENGINE_VELOCITY = new VelocityGenerationEngine();
+	private static final IGenerationEngine ENGINE_MUSTACHE = GenerationEnginesManager.getGenerationEngine("mustache");
+	private static final IGenerationEngine ENGINE_VELOCITY = GenerationEnginesManager.getGenerationEngine("velocity");
+	private static final IGenerationEngine ENGINE_JAVASCRIPT = GenerationEnginesManager.getGenerationEngine("javascript");
 
 	private static final TemplateEngine TEMPLATE_ENGINE_MUSTACHE = new TemplateEngine(ENGINE_MUSTACHE);
 	private static final TemplateEngine TEMPLATE_ENGINE_VELOCITY = new TemplateEngine(ENGINE_VELOCITY);
+	private static final TemplateEngine TEMPLATE_ENGINE_JAVASCRIPT = new TemplateEngine(ENGINE_JAVASCRIPT);
 
 	public static TemplateEngine getDefaultEngine() {
 		return TEMPLATE_ENGINE_VELOCITY;
@@ -37,6 +38,10 @@ public class TemplateEnginesFacade implements IScriptingFacade {
 
 	public static TemplateEngine getVelocityEngine() {
 		return TEMPLATE_ENGINE_VELOCITY;
+	}
+	
+	public static TemplateEngine getJavascriptEngine() {
+		return TEMPLATE_ENGINE_JAVASCRIPT;
 	}
 
 	public static class TemplateEngine {

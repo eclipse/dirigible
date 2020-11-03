@@ -29,6 +29,7 @@ import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
 import org.eclipse.dirigible.core.generation.api.GenerationException;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.core.workspace.api.IFile;
@@ -60,7 +61,6 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GenerationProcessor.class);
 	
-	private static final ServiceLoader<IGenerationEngine> GENERATION_ENGINES = ServiceLoader.load(IGenerationEngine.class);
 
 	/**
 	 * Generate file.
@@ -241,7 +241,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	 */
 	public byte[] generateContent(Map<String, Object> parameters, String location,
 			byte[] input, String sm, String em, String engine) throws IOException {
-		for (IGenerationEngine next : GENERATION_ENGINES) {
+		List<IGenerationEngine> generationEngines = GenerationEnginesManager.getGenerationEngines();
+		for (IGenerationEngine next : generationEngines) {
 			if (next.getName().equals(engine)) {
 				return next.generate(parameters, location, input, sm, em);
 			}
@@ -259,7 +260,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private String generateName(Map<String, Object> parameters, String location, String input) throws IOException {
-		for (IGenerationEngine next : GENERATION_ENGINES) {
+		List<IGenerationEngine> generationEngines = GenerationEnginesManager.getGenerationEngines();
+		for (IGenerationEngine next : generationEngines) {
 			if (next.getName().equals(IGenerationEngine.GENERATION_ENGINE_DEFAULT)) {
 				return new String(next.generate(parameters, location, input.getBytes()));
 			}

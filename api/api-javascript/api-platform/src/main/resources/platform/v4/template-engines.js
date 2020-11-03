@@ -34,6 +34,11 @@ exports.getVelocityEngine = function() {
 	return new TemplateEngine(engine, "velocity");
 };
 
+exports.getJavascriptEngine = function() {
+	var engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getJavascriptEngine();
+	return new TemplateEngine(engine, "javascript");
+};
+
 exports.generate = function(template, parameters) {
 	return exports.getDefaultEngine().generate(template, parameters);
 };
@@ -50,11 +55,12 @@ exports.generateFromFile = function(location, parameters) {
 };
 
 function TemplateEngine(engine, type) {
+	this.engine = engine;
 	this.sm = type === "mustache" ? "{{" : null;
 	this.em = type === "mustache" ? "}}" : null;
 
 	this.generate = function(template, parameters) {
-		return engine.generate(template, JSON.stringify(parameters), this.sm, this.em);
+		return this.engine.generate(template, JSON.stringify(parameters), this.sm, this.em);
 	};
 
 	this.setSm = function(sm) {
