@@ -15,6 +15,26 @@ angular.module('about', [])
 		$scope.version = response.data;
 	});
 
+	setInterval(function() {
+				
+				$http({
+		            method: 'GET',
+		            url: '../../../../../services/v4/healthcheck'
+		        }).success(function(healthStatus){
+					var jobs = [];
+					for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+						var job = new Object();
+						job.name = key;
+						job.status = value;
+						jobs.push(job);
+					}
+		        	$scope.jobs = jobs;
+		        }).error(function(e){
+		            console.error("Error retreiving the health status", e);
+		        });
+
+			}, 10000);
+
 
 }]).config(function($sceProvider) {
     $sceProvider.enabled(false);

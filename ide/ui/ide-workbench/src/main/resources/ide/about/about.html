@@ -89,6 +89,23 @@
 					</tbody>
 				</table>
 			</div>
+			<div class="form-group">
+				<table class="table table-striped" ng-cloak>
+					<thead>
+						<tr>
+							<th>Synchronizer</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="job in jobs">
+						<td>{{job.name}}</td>
+						<td class="{{job.status}}">{{job.status}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
 		</form>
 	</div>
 </body>
