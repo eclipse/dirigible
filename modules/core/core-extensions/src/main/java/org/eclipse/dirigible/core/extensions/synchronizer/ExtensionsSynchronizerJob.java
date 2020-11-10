@@ -30,4 +30,13 @@ public class ExtensionsSynchronizerJob extends AbstractSynchronizerJob {
 		return extensionsSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return ExtensionsSynchronizerJobDefinitionProvider.EXTENSIONS_SYNCHRONIZER_JOB;
+	}
+
 }

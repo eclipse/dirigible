@@ -30,4 +30,13 @@ public class ODataSynchronizerJob extends AbstractSynchronizerJob {
 		return extensionsSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return ODataSynchronizerJobDefinitionProvider.ODATA_SYNCHRONIZER_JOB;
+	}
+
 }

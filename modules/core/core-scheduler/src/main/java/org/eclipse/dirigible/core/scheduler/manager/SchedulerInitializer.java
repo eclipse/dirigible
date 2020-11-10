@@ -18,8 +18,8 @@ import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.commons.config.HealthStatus;
-import org.eclipse.dirigible.commons.config.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.config.health.HealthStatus;
+import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.quartz.QuartzDatabaseLayoutInitializer;
@@ -79,21 +79,21 @@ public class SchedulerInitializer {
 		logger.trace("Initializing the Internal Jobs...");
 		ServiceLoader<IJobDefinitionProvider> jobDefinitionProviders = ServiceLoader.load(IJobDefinitionProvider.class);
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
-			HealthStatus.getInstance().getJobs().setStatus(next.getJobDefinition().getName(), JobStatus.Running);
+			HealthStatus.getInstance().getJobs().setStatus(next.getJobDefinition().getDescription(), JobStatus.Running);
 		}
 		for (IJobDefinitionProvider next : jobDefinitionProviders) {
 			JobDefinition jobDefinition = next.getJobDefinition();
-			logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getName(), jobDefinition.getGroup()));
+			logger.trace(format("Initializing the Internal Job [{0}] in group [{1}]...", jobDefinition.getDescription(), jobDefinition.getGroup()));
 			try {
-				JobDefinition found = schedulerCoreService.getJob(jobDefinition.getName());
+				JobDefinition found = schedulerCoreService.getJob(jobDefinition.getDescription());
 				if (found == null) {
 					schedulerCoreService.createJob(jobDefinition);
 					scheduleJob(jobDefinition);
 				}
 			} catch (Throwable e) {
-				logger.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()), e);
+				logger.error(format("Failed installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()), e);
 			}
-			logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getName(), jobDefinition.getGroup()));
+			logger.trace(format("Done installing Internal Job [{0}] in group [{1}].", jobDefinition.getDescription(), jobDefinition.getGroup()));
 		}
 		logger.trace("Done initializing the Internal Jobs.");
 

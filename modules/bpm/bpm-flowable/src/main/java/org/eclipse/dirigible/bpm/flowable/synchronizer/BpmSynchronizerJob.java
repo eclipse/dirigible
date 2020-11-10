@@ -30,4 +30,13 @@ public class BpmSynchronizerJob extends AbstractSynchronizerJob {
 		return bpmSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return BpmSynchronizerJobDefinitionProvider.BPM_SYNCHRONIZER_JOB;
+	}
+
 }

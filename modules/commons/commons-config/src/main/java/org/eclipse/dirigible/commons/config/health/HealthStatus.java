@@ -8,19 +8,30 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-package org.eclipse.dirigible.commons.config;
+package org.eclipse.dirigible.commons.config.health;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.config.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.config.timeout.TimeLimited;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HealthStatus {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HealthStatus.class);
 
 	private static final HealthStatus INSTANCE = new HealthStatus();
+	
+	private long started = System.currentTimeMillis();
 
 	public static HealthStatus getInstance() {
+		if ((System.currentTimeMillis() - INSTANCE.started) > TimeLimited.getTimeoutInMillis()) {
+			INSTANCE.status = Status.Ready;
+			logger.warn("Health status is not ready! Inspect the synchronizers logs for errors.");
+		}
 		return INSTANCE;
 	}
 

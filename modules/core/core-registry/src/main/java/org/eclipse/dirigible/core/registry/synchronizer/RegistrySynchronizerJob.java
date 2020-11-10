@@ -23,4 +23,9 @@ public class RegistrySynchronizerJob extends AbstractSynchronizerJob {
 		return synchronizer;
 	}
 
+	@Override
+	public String getName() {
+		return RegistrySynchronizerJobDefinitionProvider.REGISTRY_SYNCHRONIZER_JOB;
+	}
+
 }

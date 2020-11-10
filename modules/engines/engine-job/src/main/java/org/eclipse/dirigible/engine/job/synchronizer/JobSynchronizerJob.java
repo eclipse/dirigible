@@ -30,4 +30,13 @@ public class JobSynchronizerJob extends AbstractSynchronizerJob {
 		return jobSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return JobSynchronizerJobDefinitionProvider.JOB_SYNCHRONIZER_JOB;
+	}
+
 }

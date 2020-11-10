@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class DataStructuresSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES = "DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES";
-	private static final String DATA_STRUCTURES_SYNCHRONIZER_JOB = "Data Structures Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_DATA_STRUCTURES_SYNCHRONIZER_JOB = "dirigible-internal-data-structures-synchronizer-job";
+	
+	static final String DATA_STRUCTURES_SYNCHRONIZER_JOB = "Data Structures Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)

@@ -31,4 +31,13 @@ public class MigrationsSynchronizerJob extends AbstractSynchronizerJob {
 		return migrationsSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return MigrationsSynchronizerJobDefinitionProvider.MIGRATIONS_SYNCHRONIZER_JOB;
+	}
+
 }

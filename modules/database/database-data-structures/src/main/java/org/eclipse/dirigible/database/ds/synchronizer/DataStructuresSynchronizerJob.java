@@ -30,4 +30,13 @@ public class DataStructuresSynchronizerJob extends AbstractSynchronizerJob {
 		return dataStructureSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return DataStructuresSynchronizerJobDefinitionProvider.DATA_STRUCTURES_SYNCHRONIZER_JOB;
+	}
+
 }

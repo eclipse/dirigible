@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class WebsocketsSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_WEBSOCKETS = "DIRIGIBLE_JOB_EXPRESSION_WEBSOCKETS";
-	private static final String WEBSOCKETS_SYNCHRONIZER_JOB = "Websockets Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_WEBSOCKETS_SYNCHRONIZER_JOB = "dirigible-internal-websockets-synchronizer-job";
+	
+	static final String WEBSOCKETS_SYNCHRONIZER_JOB = "Websockets Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)

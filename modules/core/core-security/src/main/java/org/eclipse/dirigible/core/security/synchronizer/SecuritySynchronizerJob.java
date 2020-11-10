@@ -31,4 +31,9 @@ public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
 		return extensionsSynchronizer;
 	}
 
+	@Override
+	public String getName() {
+		return SecuritySynchronizerJobDefinitionProvider.SECURITY_ROLES_AND_ACCESS_SYNCHRONIZER_JOB;
+	}
+
 }

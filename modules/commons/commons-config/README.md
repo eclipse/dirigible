@@ -100,6 +100,8 @@
 - `DIRIGIBLE_JOB_EXPRESSION_ODATA`: (default: "0/25 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_PUBLISHER`: (default: "0/5 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_SECURITY`: (default: "0/10 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_REGISTRY` : (default: "0/12 * * * * ?")
+- `DIRIGIBLE_JOB_DEFAULT_TIMEOUT`: (default: 3 minutes)
 
 ### CMS
 

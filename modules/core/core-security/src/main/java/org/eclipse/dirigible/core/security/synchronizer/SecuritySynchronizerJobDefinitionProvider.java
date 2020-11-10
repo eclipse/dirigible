@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class SecuritySynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_SECURITY = "DIRIGIBLE_JOB_EXPRESSION_SECURITY";
-	private static final String SECURITY_ROLES_AND_ACCESS_SYNCHRONIZER_JOB = "Security Roles and Access Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_SECURITY_SYNCHRONIZER_JOB = "dirigible-internal-security-synchronizer-job";
+	
+	static final String SECURITY_ROLES_AND_ACCESS_SYNCHRONIZER_JOB = "Security Roles and Access Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)

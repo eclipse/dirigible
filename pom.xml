@@ -119,19 +119,6 @@
 							</dependency>
 						</dependencies>
 					</plugin>
-					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<version>4.0.2</version>
-						<executions>
-							<execution>
-								<id>get-the-git-infos</id>
-								<goals>
-									<goal>revision</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -346,6 +333,19 @@
 								<phase>verify</phase>
 								<goals>
 									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>pl.project13.maven</groupId>
+						<artifactId>git-commit-id-plugin</artifactId>
+						<version>4.0.2</version>
+						<executions>
+							<execution>
+								<id>get-the-git-infos</id>
+								<goals>
+									<goal>revision</goal>
 								</goals>
 							</execution>
 						</executions>

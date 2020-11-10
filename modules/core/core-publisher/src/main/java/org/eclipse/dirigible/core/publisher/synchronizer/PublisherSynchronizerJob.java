@@ -31,4 +31,13 @@ public class PublisherSynchronizerJob extends AbstractSynchronizerJob {
 		return extensionsSynchronizer;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getName()
+	 */
+	@Override
+	public String getName() {
+		return PublisherSynchronizerJobDefinitionProvider.PUBLISHER_SYNCHRONIZER_JOB;
+	}
+
 }

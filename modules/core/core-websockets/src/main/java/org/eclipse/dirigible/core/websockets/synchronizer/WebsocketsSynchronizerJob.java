@@ -30,4 +30,9 @@ public class WebsocketsSynchronizerJob extends AbstractSynchronizerJob {
 		return websocketsSynchronizer;
 	}
 
+	@Override
+	public String getName() {
+		return WebsocketsSynchronizerJobDefinitionProvider.WEBSOCKETS_SYNCHRONIZER_JOB;
+	}
+
 }

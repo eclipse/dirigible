@@ -1,10 +1,14 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en" ng-app="busy" ng-controller="BusyController as busy">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
+		
+		<!-- Twitter Bootstrap with Theme Support -->
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
-		<script src="services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>
+	
+		<!-- FontAwesome icon set -->
+    	<link type="text/css" href="../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 		<style>
 			.busy-indicator {
@@ -91,32 +95,98 @@
 			    transform: rotate(360deg);
 			  }
 			}
+			
+			.Running:before {
+			    font-family: 'FontAwesome';
+			    font-size:1.3em;
+			    color: yellow;
+			    content: '\f054';  /* the chevron right icon */
+			    padding-right: 4px; /* plus 4px spacing */
+			}
+			
+			.Succeeded:before {
+			    font-family: 'FontAwesome';
+			    font-size:1.3em;
+			    color: green;
+			    content: '\f00c';  /* the check icon */
+			    padding-right: 4px; /* plus 4px spacing */
+			}
+			
+			.Failed:before {
+			    font-family: 'FontAwesome';
+			    font-size:1.3em;
+			    color: red;
+			    content: '\f00d';  /* the times icon */
+			    padding-right: 4px; /* plus 4px spacing */
+			}
+			
 		</style>
+		
+		
+		<!-- jQuery -->
+		<script src="services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>
+		
+		<!-- Twitter Bootstrap with Theme Support -->
+		<script type="text/javascript" src="services/v4/web/resources/bootstrap/3.3.7/bootstrap.min.js" async></script>
+		
+		<!-- AngularJS -->
+		<script type="text/javascript" src="services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+		<script type="text/javascript" src="services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
+		
 	</head>
 
 	<body>
 		<div class="container text-center">
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<h1>Preparing Eclipse Dirigible Instance <span class="badge badge-secondary"><div class="busy-indicator"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></span></h1>
+			<br><br><br><br><br>
+			<h1>Preparing Eclipse Dirigible Instance <span class="badge badge-secondary"><div class="busy-indicator">
+			<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></span></h1>
+			
+			<table class="table table-striped">
+			    <thead>
+			        <tr>
+			            <th>Synchronizer</th>
+						<th>Status</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <tr ng-repeat="job in jobs">
+					   <td>{{job.name}}</td>
+					   <td class="{{job.status}}">{{job.status}}</td>
+					</tr>
+			    </tbody>
+			</table>
+
 		</div>
 	</body>
 
 	<script>
-		setInterval(function() {
-			jQuery.ajax({
-				type: "GET",
-				url: "services/v4/healthcheck"
-			})
-			.done(function (healthStatus) {
-				if (healthStatus.status === "Ready") {
-					window.location='home';
-				}
-			});
+		
+		angular.module('busy', ['ngResource'])
+			.controller('BusyController', ['$scope', '$http', function ($scope, $http) {
+			
+			setInterval(function() {
+				
+				$http({
+		            method: 'GET',
+		            url: 'services/v4/healthcheck'
+		        }).success(function(healthStatus){
+		        	if (healthStatus.status === "Ready") {
+						window.location='home';
+					}
+					var jobs = [];
+					for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+						var job = new Object();
+						job.name = key;
+						job.status = value;
+						jobs.push(job);
+					}
+		        	$scope.jobs = jobs;
+		        }).error(function(e){
+		            console.error("Error retreiving the health status", e);
+		        });
 
-		}, 1000);
+			}, 1000);
+					
+		}]);
 	</script>
 </html>

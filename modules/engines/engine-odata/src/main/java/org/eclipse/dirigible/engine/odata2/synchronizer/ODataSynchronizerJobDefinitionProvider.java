@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class ODataSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_ODATA = "DIRIGIBLE_JOB_EXPRESSION_ODATA";
-	private static final String O_DATA_SYNCHRONIZER_JOB = "OData Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_ODATA_SYNCHRONIZER_JOB = "dirigible-internal-odata-synchronizer-job";
+	
+	static final String ODATA_SYNCHRONIZER_JOB = "OData Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)
@@ -34,7 +36,7 @@ public class ODataSynchronizerJobDefinitionProvider implements IJobDefinitionPro
 		jobDefinition.setName(DIRIGIBLE_INTERNAL_ODATA_SYNCHRONIZER_JOB);
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(ODataSynchronizerJob.class.getCanonicalName());
-		jobDefinition.setDescription(O_DATA_SYNCHRONIZER_JOB);
+		jobDefinition.setDescription(ODATA_SYNCHRONIZER_JOB);
 		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_ODATA, "0/45 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);

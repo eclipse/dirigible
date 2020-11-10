@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class MigrationsSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS = "DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS";
-	private static final String MIGRATIONS_SYNCHRONIZER_JOB = "Migrations Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_MIGRATIONS_SYNCHRONIZER_JOB = "dirigible-internal-migrations-synchronizer-job";
+	
+	static final String MIGRATIONS_SYNCHRONIZER_JOB = "Migrations Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)

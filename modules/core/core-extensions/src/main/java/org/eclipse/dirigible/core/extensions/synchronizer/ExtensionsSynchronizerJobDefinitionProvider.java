@@ -21,8 +21,10 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 public class ExtensionsSynchronizerJobDefinitionProvider implements IJobDefinitionProvider {
 
 	private static final String DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS = "DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS";
-	private static final String EXTENSIONS_SYNCHRONIZER_JOB = "Extensions Synchronizer Job";
+	
 	private static final String DIRIGIBLE_INTERNAL_EXTENSIONS_SYNCHRONIZER_JOB = "dirigible-internal-extensions-synchronizer-job";
+	
+	static final String EXTENSIONS_SYNCHRONIZER_JOB = "Extensions Synchronizer Job";
 
 	/*
 	 * (non-Javadoc)
