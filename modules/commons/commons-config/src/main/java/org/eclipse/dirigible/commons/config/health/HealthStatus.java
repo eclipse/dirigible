@@ -28,12 +28,11 @@ public class HealthStatus {
 	private long started = System.currentTimeMillis();
 
 	public static HealthStatus getInstance() {
-		HealthStatus healthStatus = getInstance();
-		if (!healthStatus.status.equals(Status.Ready) && (System.currentTimeMillis() - healthStatus.started) > TimeLimited.getTimeoutInMillis()) {
-			healthStatus.status = Status.Ready;
+		if (!INSTANCE.status.equals(Status.Ready) && (System.currentTimeMillis() - INSTANCE.started) > TimeLimited.getTimeoutInMillis()) {
+			INSTANCE.status = Status.Ready;
 			logger.warn("Health status: one or more synchronizers still in progress...");
 		}
-		return healthStatus;
+		return INSTANCE;
 	}
 
 	private static void setCurrentStatus() {
