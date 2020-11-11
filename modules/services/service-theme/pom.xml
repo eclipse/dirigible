@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>5.5.0-SNAPSHOT</version>
+		<version>5.5.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,22 +32,22 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
     </dependencies>
 

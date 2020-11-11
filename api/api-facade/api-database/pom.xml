@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-api-facade-parent</artifactId>
-		<version>5.5.0-SNAPSHOT</version>
+		<version>5.5.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,22 +32,22 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-persistence</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-dynamic</artifactId>
-            <version>5.5.0-SNAPSHOT</version>
+            <version>5.5.0</version>
         </dependency>
     </dependencies>
 
