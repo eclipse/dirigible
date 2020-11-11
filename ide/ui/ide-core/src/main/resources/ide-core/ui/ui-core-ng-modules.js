@@ -286,6 +286,8 @@ angular.module('ideUiCore', ['ngResource'])
 				} else if(item.event === 'openView'){
 					// open view
 					Layouts.manager.openView(item.name.toLowerCase());
+				} else if(item.name === 'Reset'){
+					scope.resetViews();
 				} else {
 					if (item.event === 'open') {
 						window.open(item.data, '_blank');
@@ -311,10 +313,14 @@ angular.module('ideUiCore', ['ngResource'])
 			
 			scope.resetTheme = function() {
 				Theme.changeTheme('default');
-				localStorage.clear();
+				scope.resetViews();
 				Theme.reload();
 			};
 			
+			scope.resetViews = function() {
+				localStorage.clear();
+			};
+
 			scope.user = User.get();
 		},
 		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/menu.html'

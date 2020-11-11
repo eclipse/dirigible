@@ -28,6 +28,11 @@ exports.getMenu = function() {
 					"link":"#",
 					"order":"820",
 					"items":[]
+				},
+				{
+					"name":"Reset",
+					"link":"",
+					"order":"830"
 				}
 			]
 		};
