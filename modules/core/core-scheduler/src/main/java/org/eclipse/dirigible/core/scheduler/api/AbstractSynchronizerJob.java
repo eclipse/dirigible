@@ -55,7 +55,7 @@ public abstract class AbstractSynchronizerJob implements Job {
 	        }
 	      }, TimeLimited.getTimeout(), TimeUnit.MINUTES);
 	    } catch (TimeoutException e) {
-	    	logger.error("Synchronizer [{}] gort timeout during execution at: {}", getName(), new Date(System.currentTimeMillis()));
+	    	logger.error("Synchronizer [{}] got timeout during execution at: {}", getName(), new Date(System.currentTimeMillis()));
 	    	logger.error(e.getMessage(), e);
 	    	HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Failed);
 	    } catch(Exception e) {
