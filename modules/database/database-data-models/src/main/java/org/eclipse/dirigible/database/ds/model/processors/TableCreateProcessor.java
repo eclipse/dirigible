@@ -100,7 +100,17 @@ public class TableCreateProcessor {
 		}
 		if (tableModel.getConstraints() != null) {
 			if (tableModel.getConstraints().getPrimaryKey() != null) {
-				createTableBuilder.primaryKey(tableModel.getConstraints().getPrimaryKey().getColumns());
+				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumns().length];
+				int i = 0;
+				for (String column : tableModel.getConstraints().getPrimaryKey().getColumns()) {
+					if (caseSensitive) {
+						primaryKeyColumns[i++] = "\"" + column + "\"";
+					} else {
+						primaryKeyColumns[i++] = column;
+					}
+				}
+				
+				createTableBuilder.primaryKey(primaryKeyColumns);
 			}
 			if (!skipForeignKeys) {
 				if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
@@ -109,8 +119,31 @@ public class TableCreateProcessor {
 						if (caseSensitive) {
 							foreignKeyName = "\"" + foreignKeyName + "\"";
 						}
-						createTableBuilder.foreignKey(foreignKeyName, foreignKey.getColumns(), foreignKey.getReferencedTable(),
-								foreignKey.getReferencedColumns());
+						String[] foreignKeyColumns = new String[foreignKey.getColumns().length];
+						int i = 0;
+						for (String column : foreignKey.getColumns()) {
+							if (caseSensitive) {
+								foreignKeyColumns[i++] = "\"" + column + "\"";
+							} else {
+								foreignKeyColumns[i++] = column;
+							}
+						}
+						String foreignKeyReferencedTable = foreignKey.getReferencedTable();
+						if (caseSensitive) {
+							foreignKeyReferencedTable = "\"" + foreignKeyReferencedTable + "\"";
+						}
+						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumns().length];
+						i = 0;
+						for (String column : foreignKey.getReferencedColumns()) {
+							if (caseSensitive) {
+								foreignKeyReferencedColumns[i++] = "\"" + column + "\"";
+							} else {
+								foreignKeyReferencedColumns[i++] = column;
+							}
+						}
+						
+						createTableBuilder.foreignKey(foreignKeyName, foreignKeyColumns, foreignKeyReferencedTable,
+								foreignKeyReferencedColumns);
 					}
 				}
 			}
@@ -120,7 +153,17 @@ public class TableCreateProcessor {
 					if (caseSensitive) {
 						uniqueIndexName = "\"" + uniqueIndexName + "\"";
 					}
-					createTableBuilder.unique(uniqueIndexName, uniqueIndex.getColumns());
+					String[] uniqueIndexColumns = new String[uniqueIndex.getColumns().length];
+					int i = 0;
+					for (String column : uniqueIndex.getColumns()) {
+						if (caseSensitive) {
+							uniqueIndexColumns[i++] = "\"" + column + "\"";
+						} else {
+							uniqueIndexColumns[i++] = column;
+						}
+					}
+					
+					createTableBuilder.unique(uniqueIndexName, uniqueIndexColumns);
 				}
 			}
 			if (tableModel.getConstraints().getChecks() != null) {
