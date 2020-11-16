@@ -32,6 +32,9 @@
 	Generate Javadoc:
 		mvn javadoc:javadoc
 		
+	Reuse tool check
+		python3 -m reuse lint
+		
 	Upload to Maven Central:
 		mvn javadoc:jar
 		mvn deploy -P release -DskipTests
