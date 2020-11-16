@@ -9,7 +9,7 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-  <name>Releng - SAP - CF - Runtime</name>
+  	<name>Releng - SAP - CF - Runtime</name>
 	<artifactId>dirigible-sap-cf-runtime</artifactId>
 	<packaging>jar</packaging>
 
@@ -19,10 +19,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<inherited>true</inherited>
+				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<debug>true</debug>
+					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
 			</plugin>
 

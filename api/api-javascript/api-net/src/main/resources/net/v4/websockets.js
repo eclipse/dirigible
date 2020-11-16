@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010-2020 SAP and others.
+ * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * Contributors:
- *   SAP - initial API and implementation
+ * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
  */
-
 exports.createWebsocket = function(uri, handler, engine) {
 	engine = !engine ? "javascript" : engine;
 	var session = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.createWebsocket(uri, handler, engine);

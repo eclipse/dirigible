@@ -85,10 +85,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.4</version>
+						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
 							<debuglevel>lines,vars,source</debuglevel>
 						</configuration>
@@ -191,6 +191,17 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -205,10 +216,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.4</version>
+						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
 							<debuglevel>lines,vars,source</debuglevel>
 						</configuration>
@@ -279,10 +290,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.8.1</version>
+						<version>${maven.compiler.plugin.version}</version>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
 							<debug>true</debug>
 							<debuglevel>lines,vars,source</debuglevel>
 						</configuration>
@@ -548,7 +559,9 @@
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
-		<maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+		<maven.compiler.source>11</maven.compiler.source>
+    	<maven.compiler.target>11</maven.compiler.target>
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
 		<commons.io>2.6</commons.io>
 		<commons.codec>1.10</commons.codec>
@@ -574,7 +587,7 @@
 		<flowable.version>6.3.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
-		<license-maven-plugin.version>3.0</license-maven-plugin.version>
+		<license-maven-plugin.version>4.0.rc2</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>5.5.0.201909110433-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
