@@ -6,8 +6,8 @@
 	<persistence-unit name="test"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>org.dirigible.engine.odata2.sql.test.data.TestRootTable</class>
-		<class>org.dirigible.engine.odata2.sql.test.data.TestChildTable</class>
+		<class>org.eclipse.dirigible.engine.odata2.sql.test.data.TestRootTable</class>
+		<class>org.eclipse.dirigible.engine.odata2.sql.test.data.TestChildTable</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.apache.derby.jdbc.EmbeddedDriver" />

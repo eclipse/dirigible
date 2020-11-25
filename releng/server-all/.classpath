@@ -14,7 +14,6 @@
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.3.0/jaxb-api-2.3.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/ws/jaxws-api/2.3.0/jaxws-api-2.3.0.jar" sourcepath="M2_REPO/javax/xml/ws/jaxws-api/2.3.0/jaxws-api-2.3.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/xml/soap/javax.xml.soap-api/1.4.0/javax.xml.soap-api-1.4.0.jar" sourcepath="M2_REPO/javax/xml/soap/javax.xml.soap-api/1.4.0/javax.xml.soap-api-1.4.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" sourcepath="M2_REPO/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar" sourcepath="M2_REPO/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3-sources.jar"/>
@@ -22,31 +21,11 @@
 	<classpathentry kind="src" path="/dirigible-commons-config"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/inject/guice/3.0/guice-3.0.jar" sourcepath="M2_REPO/com/google/inject/guice/3.0/guice-3.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/inject/extensions/guice-servlet/3.0/guice-servlet-3.0.jar" sourcepath="M2_REPO/com/google/inject/extensions/guice-servlet/3.0/guice-servlet-3.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/inject/extensions/guice-persist/3.0/guice-persist-3.0.jar" sourcepath="M2_REPO/com/google/inject/extensions/guice-persist/3.0/guice-persist-3.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-rt-frontend-jaxrs/3.1.11/cxf-rt-frontend-jaxrs-3.1.11.jar" sourcepath="M2_REPO/org/apache/cxf/cxf-rt-frontend-jaxrs/3.1.11/cxf-rt-frontend-jaxrs-3.1.11-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-core/3.1.11/cxf-core-3.1.11.jar" sourcepath="M2_REPO/org/apache/cxf/cxf-core/3.1.11/cxf-core-3.1.11-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/codehaus/woodstox/woodstox-core-asl/4.4.1/woodstox-core-asl-4.4.1.jar" sourcepath="M2_REPO/org/codehaus/woodstox/woodstox-core-asl/4.4.1/woodstox-core-asl-4.4.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4.jar" sourcepath="M2_REPO/org/codehaus/woodstox/stax2-api/3.1.4/stax2-api-3.1.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/ws/xmlschema/xmlschema-core/2.2.1/xmlschema-core-2.2.1.jar" sourcepath="M2_REPO/org/apache/ws/xmlschema/xmlschema-core/2.2.1/xmlschema-core-2.2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-rt-transports-http/3.1.11/cxf-rt-transports-http-3.1.11.jar" sourcepath="M2_REPO/org/apache/cxf/cxf-rt-transports-http/3.1.11/cxf-rt-transports-http-3.1.11-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar" sourcepath="M2_REPO/com/google/code/gson/gson/2.2.4/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.5/commons-io-2.5.jar" sourcepath="M2_REPO/commons-io/commons-io/2.5/commons-io-2.5-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/cxf/cxf-rt-rs-service-description-swagger/3.1.11/cxf-rt-rs-service-description-swagger-3.1.11.jar" sourcepath="M2_REPO/org/apache/cxf/cxf-rt-rs-service-description-swagger/3.1.11/cxf-rt-rs-service-description-swagger-3.1.11-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/swagger/swagger-jaxrs/1.5.12/swagger-jaxrs-1.5.12.jar" sourcepath="M2_REPO/io/swagger/swagger-jaxrs/1.5.12/swagger-jaxrs-1.5.12-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.8.4/jackson-databind-2.8.4.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.8.4/jackson-databind-2.8.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.8.4/jackson-core-2.8.4.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.8.4/jackson-core-2.8.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/swagger/swagger-core/1.5.12/swagger-core-1.5.12.jar" sourcepath="M2_REPO/io/swagger/swagger-core/1.5.12/swagger-core-1.5.12-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar" sourcepath="M2_REPO/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.8.4/jackson-annotations-2.8.4.jar" sourcepath="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.8.4/jackson-annotations-2.8.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.8.4/jackson-dataformat-yaml-2.8.4.jar" sourcepath="M2_REPO/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.8.4/jackson-dataformat-yaml-2.8.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/yaml/snakeyaml/1.15/snakeyaml-1.15.jar" sourcepath="M2_REPO/org/yaml/snakeyaml/1.15/snakeyaml-1.15-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/swagger/swagger-models/1.5.12/swagger-models-1.5.12.jar" sourcepath="M2_REPO/io/swagger/swagger-models/1.5.12/swagger-models-1.5.12-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/io/swagger/swagger-annotations/1.5.12/swagger-annotations-1.5.12.jar" sourcepath="M2_REPO/io/swagger/swagger-annotations/1.5.12/swagger-annotations-1.5.12-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/18.0/guava-18.0.jar" sourcepath="M2_REPO/com/google/guava/guava/18.0/guava-18.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/reflections/reflections/0.9.10/reflections-0.9.10.jar" sourcepath="M2_REPO/org/reflections/reflections/0.9.10/reflections-0.9.10-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA.jar" sourcepath="M2_REPO/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/annotations/2.0.1/annotations-2.0.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar" sourcepath="M2_REPO/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar" sourcepath="M2_REPO/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0-sources.jar"/>
 	<classpathentry kind="src" path="/dirigible-api"/>
@@ -81,11 +60,9 @@
 	<classpathentry kind="src" path="/dirigible-api-facade-io"/>
 	<classpathentry kind="src" path="/dirigible-api-facade-log"/>
 	<classpathentry kind="src" path="/dirigible-api-facade-messaging"/>
-	<classpathentry kind="src" path="/dirigible-api-facade-repository"/>
 	<classpathentry kind="src" path="/dirigible-service-repository"/>
 	<classpathentry kind="src" path="/dirigible-api-facade-utils"/>
 	<classpathentry kind="src" path="/dirigible-api-facade-bpm"/>
-	<classpathentry kind="src" path="/dirigible-api-facade-workspace"/>
 	<classpathentry kind="src" path="/dirigible-core-workspace"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-all"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-cms"/>
@@ -96,12 +73,10 @@
 	<classpathentry kind="src" path="/dirigible-api-javascript-io"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-log"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-messaging"/>
-	<classpathentry kind="src" path="/dirigible-api-javascript-repository"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-security"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-test"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-utils"/>
 	<classpathentry kind="src" path="/dirigible-api-javascript-bpm"/>
-	<classpathentry kind="src" path="/dirigible-api-javascript-workspace"/>
 	<classpathentry kind="src" path="/dirigible-repository"/>
 	<classpathentry kind="src" path="/dirigible-repository-search"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-core/7.0.1/lucene-core-7.0.1.jar" sourcepath="M2_REPO/org/apache/lucene/lucene-core/7.0.1/lucene-core-7.0.1-sources.jar"/>
@@ -121,8 +96,6 @@
 	<classpathentry kind="src" path="/dirigible-core"/>
 	<classpathentry kind="src" path="/dirigible-core-git"/>
 	<classpathentry kind="src" path="/dirigible-core-publisher"/>
-	<classpathentry kind="var" path="M2_REPO/org/eclipse/jgit/org.eclipse.jgit/4.8.0.201706111038-r/org.eclipse.jgit-4.8.0.201706111038-r.jar" sourcepath="M2_REPO/org/eclipse/jgit/org.eclipse.jgit/4.8.0.201706111038-r/org.eclipse.jgit-4.8.0.201706111038-r-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar" sourcepath="M2_REPO/com/jcraft/jsch/0.1.54/jsch-0.1.54-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/googlecode/javaewah/JavaEWAH/1.1.6/JavaEWAH-1.1.6.jar" sourcepath="M2_REPO/com/googlecode/javaewah/JavaEWAH/1.1.6/JavaEWAH-1.1.6-sources.jar"/>
 	<classpathentry kind="src" path="/dirigible-core-indexing"/>
 	<classpathentry kind="src" path="/dirigible-commons-test"/>
@@ -158,10 +131,7 @@
 	<classpathentry kind="src" path="/dirigible-service-transport"/>
 	<classpathentry kind="src" path="/dirigible-service-operations"/>
 	<classpathentry kind="src" path="/dirigible-engine"/>
-	<classpathentry kind="src" path="/dirigible-engine-javascript-nashorn"/>
-	<classpathentry kind="src" path="/dirigible-engine-javascript-rhino"/>
 	<classpathentry kind="var" path="M2_REPO/org/mozilla/rhino/1.7.10/rhino-1.7.10.jar" sourcepath="M2_REPO/org/mozilla/rhino/1.7.10/rhino-1.7.10-sources.jar"/>
-	<classpathentry kind="src" path="/dirigible-engine-javascript-v8"/>
 	<classpathentry kind="var" path="M2_REPO/com/eclipsesource/j2v8/j2v8_macosx_x86_64/4.6.0/j2v8_macosx_x86_64-4.6.0.jar" sourcepath="M2_REPO/com/eclipsesource/j2v8/j2v8_macosx_x86_64/4.6.0/j2v8_macosx_x86_64-4.6.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/eclipsesource/j2v8/j2v8_win32_x86_64/4.6.0/j2v8_win32_x86_64-4.6.0.jar" sourcepath="M2_REPO/com/eclipsesource/j2v8/j2v8_win32_x86_64/4.6.0/j2v8_win32_x86_64-4.6.0-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/eclipsesource/j2v8/j2v8_linux_x86_64/4.6.0/j2v8_linux_x86_64-4.6.0.jar" sourcepath="M2_REPO/com/eclipsesource/j2v8/j2v8_linux_x86_64/4.6.0/j2v8_linux_x86_64-4.6.0-sources.jar"/>
@@ -220,7 +190,6 @@
 	<classpathentry kind="src" path="/dirigible-ide-ui-workbench"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-terminal"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-console"/>
-	<classpathentry kind="src" path="/dirigible-ide-ui-orion"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-swagger"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-workspace"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-preview"/>
@@ -233,7 +202,6 @@
 	<classpathentry kind="src" path="/dirigible-ide-ui-schema"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-entity"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-monaco"/>
-	<classpathentry kind="src" path="/dirigible-ide-ui-ace"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-debugger"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-logs"/>
 	<classpathentry kind="src" path="/dirigible-ide-ui-jobs"/>
@@ -255,9 +223,7 @@
 	<classpathentry kind="src" path="/dirigible-ide-service-terminal"/>
 	<classpathentry kind="src" path="/dirigible-ide-service-bpm"/>
 	<classpathentry kind="var" path="M2_REPO/org/flowable/flowable-json-converter/6.3.0/flowable-json-converter-6.3.0.jar" sourcepath="M2_REPO/org/flowable/flowable-json-converter/6.3.0/flowable-json-converter-6.3.0-sources.jar"/>
-	<classpathentry kind="src" path="/dirigible-ide-service-generation-mustache"/>
 	<classpathentry kind="var" path="M2_REPO/com/github/spullara/mustache/java/compiler/0.9.5/compiler-0.9.5.jar" sourcepath="M2_REPO/com/github/spullara/mustache/java/compiler/0.9.5/compiler-0.9.5-sources.jar"/>
-	<classpathentry kind="src" path="/dirigible-ide-service-generation-velocity"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/velocity/velocity/1.7/velocity-1.7.jar" sourcepath="M2_REPO/org/apache/velocity/velocity/1.7/velocity-1.7-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar" sourcepath="M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4-sources.jar"/>
@@ -288,12 +254,7 @@
 	<classpathentry kind="src" path="/dirigible-resources-jqplot"/>
 	<classpathentry kind="src" path="/dirigible-resources-resources"/>
 	<classpathentry kind="src" path="/dirigible-resources-themes"/>
-	<classpathentry kind="src" path="/dirigible-resources-theme-alice"/>
-	<classpathentry kind="src" path="/dirigible-resources-theme-baroness"/>
 	<classpathentry kind="src" path="/dirigible-resources-theme-default"/>
-	<classpathentry kind="src" path="/dirigible-resources-theme-florence"/>
-	<classpathentry kind="src" path="/dirigible-resources-theme-simone"/>
-	<classpathentry kind="src" path="/dirigible-resources-theme-wendy"/>
 	<classpathentry kind="src" path="/dirigible-ext-qunit"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/jetty-servlets/9.4.12.v20180830/jetty-servlets-9.4.12.v20180830.jar" sourcepath="M2_REPO/org/eclipse/jetty/jetty-servlets/9.4.12.v20180830/jetty-servlets-9.4.12.v20180830-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/jetty-continuation/9.4.12.v20180830/jetty-continuation-9.4.12.v20180830.jar" sourcepath="M2_REPO/org/eclipse/jetty/jetty-continuation/9.4.12.v20180830/jetty-continuation-9.4.12.v20180830-sources.jar"/>
@@ -308,19 +269,19 @@
 	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
+			<attribute name="test" value="true"/>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
