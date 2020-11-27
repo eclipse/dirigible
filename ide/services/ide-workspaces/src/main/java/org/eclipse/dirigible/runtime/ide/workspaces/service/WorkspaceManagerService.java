@@ -25,7 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -108,25 +107,21 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			sendErrorBadRequest(response, ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
 		}
 
 		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
 		if (sourcePath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_SOURCE_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
 		}
 
 		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
 		if (targetPath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_TARGET_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
 		}
 
 		String sourceProject = sourcePath.getSegments()[0];
@@ -142,8 +137,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 			targetFilePath = IRepository.SEPARATOR;
 		}
 		if (!processor.existsFolder(workspace, targetProject, targetFilePath)) {
-			sendErrorBadRequest(response, ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER).build();
+			return createErrorResponseBadRequest(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
 		}
 
 		String sourceFilePath = sourcePath.constructPathFrom(1);
@@ -180,25 +174,21 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			sendErrorBadRequest(response, ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
 		}
 
 		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
 		if (sourcePath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_SOURCE_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
 		}
 
 		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
 		if (targetPath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_TARGET_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
 		}
 
 		String sourceProject = sourcePath.getSegments()[0];
@@ -216,8 +206,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 		} else if (processor.existsFolder(workspace, sourceProject, sourceFilePath)) {
 			processor.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
 		} else {
-			sendErrorNotFound(response, ERROR_PATH_DOES_NOT_EXISTS);
-			return Response.status(Status.NOT_FOUND).entity(ERROR_PATH_DOES_NOT_EXISTS).build();
+			return createErrorResponseNotFound(ERROR_PATH_DOES_NOT_EXISTS);
 		}
 
 		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
@@ -270,25 +259,21 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 			throws URISyntaxException, DecoderException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			sendErrorBadRequest(response, ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
 		}
 
 		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
 		if (sourcePath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_SOURCE_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_SOURCE_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
 		}
 
 		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
 		if (targetPath.getSegments().length == 0) {
-			sendErrorBadRequest(response, ERROR_TARGET_PATH_IS_EMPTY);
-			return Response.status(Status.BAD_REQUEST).entity(ERROR_TARGET_PATH_IS_EMPTY).build();
+			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
 		}
 
 		String sourceProject = sourcePath.getSegments()[0];
@@ -298,8 +283,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 			processor.linkProject(workspace, sourceProject, targetProject);
 			return Response.created(processor.getURI(workspace, sourceProject, null)).build();
 		}
-		sendErrorBadRequest(response, ERROR_INVALID_PROJECT_NAME);
-		return Response.status(Status.BAD_REQUEST).entity(ERROR_INVALID_PROJECT_NAME).build();
+		return createErrorResponseBadRequest(ERROR_INVALID_PROJECT_NAME);
 	}
 
 	/*

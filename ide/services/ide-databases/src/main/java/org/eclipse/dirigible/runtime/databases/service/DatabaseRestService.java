@@ -31,7 +31,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -80,8 +79,7 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	public Response listDatabaseTypes() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		List<String> databaseTypes = processor.getDatabaseTypes();
@@ -104,15 +102,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	public Response listDataSources(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		Set<String> list = processor.getDataSources(type);
 		if (list == null) {
 			String error = format("Database Type {0} not known.", type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		return Response.ok().entity(list).build();
 
@@ -139,15 +135,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name) throws SQLException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return Response.ok().entity(metadata).build();
@@ -181,15 +175,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 			@ApiParam(value = "Table Name", required = true) @PathParam("table") String table) throws SQLException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		DataSource dataSource = processor.getDataSource(type, name);
 		if (dataSource == null) {
 			String error = format("DataSource {0} of Type {1} not known.", name, type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		String metadata = DatabaseMetadataHelper.getTableMetadataAsJson(dataSource, schema, table);
 		return Response.ok().entity(metadata).build();
@@ -218,14 +210,12 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		String accept = request.getHeader("Accept");
@@ -259,14 +249,12 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		String accept = request.getHeader("Accept");
@@ -300,14 +288,12 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsDatabase(type, name)) {
 			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		String accept = request.getHeader("Accept");

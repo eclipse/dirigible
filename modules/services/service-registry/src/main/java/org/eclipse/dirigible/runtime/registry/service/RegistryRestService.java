@@ -21,7 +21,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -68,16 +67,14 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 	public Response getRegistryResource(@PathParam("path") String path) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
 			ICollection collection = processor.getCollection(path);
 			if (!collection.exists()) {
-				sendErrorNotFound(response, path);
-				return Response.status(Status.NOT_FOUND).build();
+				return createErrorResponseNotFound(path);
 			}
 			return Response.ok().entity(processor.renderRegistry(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}

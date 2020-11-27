@@ -95,8 +95,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			GitCloneModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.clone(workspace, model);
 		return Response.ok().build();
@@ -118,8 +117,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			GitPullModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.pull(workspace, model);
 		return Response.ok().build();
@@ -142,8 +140,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPullModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.pull(workspace, model);
@@ -166,8 +163,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			GitPushModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.push(workspace, model);
 		return Response.ok().build();
@@ -190,8 +186,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.push(workspace, model);
@@ -214,8 +209,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			GitResetModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.reset(workspace, model);
 		return Response.ok().build();
@@ -238,8 +232,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitResetModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.reset(workspace, model);
@@ -263,8 +256,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("repositoryName") String repositoryName) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.delete(workspace, repositoryName);
 		return Response.ok().build();
@@ -287,8 +279,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitShareModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProject(project);
 		processor.share(workspace, model);
@@ -312,8 +303,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitCheckoutModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProject(project);
 		processor.checkout(workspace, model);
@@ -337,8 +327,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.commit(workspace, model);
@@ -362,8 +351,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			GitUpdateDependenciesModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.updateDependencies(workspace, model);
 		return Response.ok().build();
@@ -388,8 +376,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		model.setProjects(Arrays.asList(project));
 		processor.updateDependencies(workspace, model);
@@ -418,8 +405,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitProjectLocalBranches gitProjectBranches = processor.getLocalBranches(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectBranches)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -443,8 +429,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitProjectRemoteBranches gitProjectBranches = processor.getRemoteBranches(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectBranches)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -464,20 +449,17 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	public Response getGitRepositories(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IWorkspace workspaceObject = processor.getWorkspace(workspace);
 		if (!workspaceObject.exists()) {
-			sendErrorNotFound(response, workspace);
-			return Response.status(Status.NOT_FOUND).build();
+			return createErrorResponseNotFound(workspace);
 		}
 		return Response.ok().entity(processor.renderGitRepositories(user, workspace)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
@@ -500,8 +482,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		IWorkspace workspaceObject = processor.getWorkspace(workspace);
 		return Response.ok().entity(processor.renderWorkspaceProject(workspaceObject, project)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -524,8 +505,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitProjectChangedFiles gitProjectFiles = processor.getUnstagedFiles(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -549,8 +529,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitProjectChangedFiles gitProjectFiles = processor.getStagedFiles(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -577,8 +556,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.addFileToIndex(workspace, project, paths);
 		return Response.ok().build();
@@ -605,8 +583,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.revertToHeadRevision(workspace, project, paths);
 		return Response.ok().build();
@@ -633,8 +610,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.removeFileFromIndex(workspace, project, paths);
 		return Response.ok().build();
@@ -662,8 +638,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		GitDiffModel diff = processor.getFileDiff(workspace, repositoryName, path);
 		return Response.ok().entity(GsonHelper.GSON.toJson(diff)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -688,8 +663,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		List<GitCommitInfo> history = processor.getHistory(workspace, project, path);
 		return Response.ok().entity(GsonHelper.GSON.toJson(history)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -712,8 +686,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Name of the Repository", required = true) @PathParam("repository") String repository) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.importProjects(workspace, repository);
 		return Response.ok().build();

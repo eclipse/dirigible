@@ -77,8 +77,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response getSessions() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -90,8 +89,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 
@@ -123,8 +121,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 			@ApiParam(value = "executionId", required = true) @PathParam("executionId") String executionId) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -140,8 +137,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -158,8 +154,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response stepInto() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -171,8 +166,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -189,8 +183,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response stepOver() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -202,8 +195,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -220,8 +212,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response continueExecution() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -233,8 +224,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -251,8 +241,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response pauseExecution() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -264,8 +253,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -282,7 +270,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response resumeExecution() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 			return Response.status(Status.FORBIDDEN).build();
 		}
 		try {
@@ -295,8 +283,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -313,8 +300,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response listVariableValues() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -326,8 +312,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -344,8 +329,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response getCurrentLineBreak() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -357,8 +341,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -380,8 +363,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 			@ApiParam(value = "row", required = true) @PathParam("row") int row) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -393,8 +375,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -413,8 +394,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 			@ApiParam(value = "row", required = true) @PathParam("row") int row) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -426,8 +406,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -444,8 +423,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response removeAllBreakpoints() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -457,8 +435,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -475,8 +452,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response listBreakpoints() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			DebugModel debugModel = retrieveDebugModel(user);
@@ -488,8 +464,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -516,8 +491,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response enable() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			Configuration.set(RhinoJavascriptEngineExecutor.DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED, "true");
@@ -525,8 +499,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -543,8 +516,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 	public Response disable() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			Configuration.set(RhinoJavascriptEngineExecutor.DIRIGBLE_JAVASCRIPT_RHINO_DEBUGGER_ENABLED, "false");
@@ -553,8 +525,7 @@ public class RhinoJavascriptEngineDebugRestService extends AbstractRestService i
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 

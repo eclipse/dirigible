@@ -19,7 +19,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
@@ -62,8 +61,7 @@ public class GraalVMJavascriptEngineDebugRestService extends AbstractRestService
 	public Response enable() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			GraalVMJavascriptDebugProcessor.addUserSession(user);
@@ -71,8 +69,7 @@ public class GraalVMJavascriptEngineDebugRestService extends AbstractRestService
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 	
@@ -89,8 +86,7 @@ public class GraalVMJavascriptEngineDebugRestService extends AbstractRestService
 	public Response disable() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		try {
 			GraalVMJavascriptDebugProcessor.clear();
@@ -98,8 +94,7 @@ public class GraalVMJavascriptEngineDebugRestService extends AbstractRestService
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 

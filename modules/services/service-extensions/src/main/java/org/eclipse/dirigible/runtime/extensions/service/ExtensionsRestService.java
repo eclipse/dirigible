@@ -23,7 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
@@ -74,8 +73,7 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 	public Response listExtensionPoints() throws ExtensionsException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		return Response.ok().entity(processor.renderExtensionPoints()).build();
@@ -100,15 +98,13 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 			throws ExtensionsException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		String json = processor.renderExtensionPoint(name);
 		if (json == null) {
 			String error = format("ExtensionPoint with name [{0}] does not exist", name);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		return Response.ok().entity(json).build();
 	}
