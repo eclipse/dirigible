@@ -76,8 +76,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 		} catch (Throwable e) {
 			String message = e.getMessage();
 			logger.error(message, e);
-			sendErrorInternalServerError(response, message);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+			return createErrorResponseInternalServerError(message);
 		}
 	}
 

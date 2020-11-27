@@ -63,8 +63,7 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	public Response listSecurityAccess() throws AccessException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.serverError().status(Status.FORBIDDEN.getStatusCode(), NO_LOGGED_IN_USER).build();
 		}
 
 		return Response.ok().entity(processor.renderAccess()).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -82,8 +81,7 @@ public class SecurityRestService extends AbstractRestService implements IRestSer
 	public Response listSecurityRoles() throws AccessException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		return Response.ok().entity(processor.renderRoles()).type(ContentTypeHelper.APPLICATION_JSON).build();

@@ -27,7 +27,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -81,8 +80,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 			@ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		for (byte[] file : files) {
@@ -108,8 +106,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project) throws RepositoryExportException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		SimpleDateFormat pattern = getDateFormat();
@@ -138,8 +135,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 			@ApiParam(value = "The Zip file(s) containing the Snapshot contents", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		for (byte[] file : files) {
@@ -162,8 +158,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	public Response exportSnapshot() throws RepositoryExportException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		SimpleDateFormat pattern = getDateFormat();

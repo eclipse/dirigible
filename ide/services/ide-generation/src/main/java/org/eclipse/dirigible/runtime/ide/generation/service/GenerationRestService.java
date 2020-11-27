@@ -27,7 +27,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -91,28 +90,25 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 			GenerationTemplateParameters parameters, @Context HttpServletRequest request) throws URISyntaxException, ScriptingException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			processor.createProject(workspace, project);
 //			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-//			sendErrorNotFound(response, error);
+//			return createErrorNotFoundResponse(error);
 //			return Response.status(Status.NOT_FOUND).entity(error).build();
 		}
 
 		IFile file = processor.getFile(workspace, project, path);
 		if (file.exists()) {
 			String error = format("File {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
-			sendErrorBadRequest(response, error);
-			return Response.status(Status.BAD_REQUEST).entity(error).build();
+			return createErrorResponseBadRequest(error);
 		}
 
 		List<IFile> files = processor.generateFile(workspace, project, path, parameters);
@@ -138,27 +134,23 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 			GenerationTemplateModelParameters parameters, @Context HttpServletRequest request) throws URISyntaxException, ScriptingException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IFile model = processor.getFile(workspace, project, parameters.getModel());
 		if (!model.exists()) {
 			String error = format("Model file {0} does not exist in Project {1} in Workspace {2}.", parameters.getModel(), project, workspace);
-			sendErrorBadRequest(response, error);
-			return Response.status(Status.BAD_REQUEST).entity(error).build();
+			return createErrorResponseBadRequest(error);
 		}
 
 		List<IFile> files = processor.generateModel(model, workspace, project, path, parameters);

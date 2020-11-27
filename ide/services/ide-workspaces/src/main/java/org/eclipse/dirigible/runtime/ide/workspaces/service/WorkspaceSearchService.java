@@ -92,8 +92,7 @@ public class WorkspaceSearchService extends AbstractRestService implements IRest
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((term == null) || term.isEmpty()) {
