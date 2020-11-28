@@ -11,9 +11,8 @@
  */
 package org.eclipse.dirigible.commons.api.service;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 
@@ -33,83 +32,71 @@ public abstract class AbstractRestService implements IRestService {
 	protected abstract Logger getLogger();
 
 	/**
-	 * Send error not found.
+	 * Create general error response for given status.
 	 *
-	 * @param response
-	 *            the response
+	 * @param status
+	 *            the status
 	 * @param message
 	 *            the message
+	 * @return the error response
 	 */
-	protected void sendErrorNotFound(HttpServletResponse response, String message) {
-		try {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		} catch (IOException e) {
-			getLogger().error(e.getMessage(), e);
-		}
+	protected Response createErrorResponse(Status status, String message) {
+		return Response.serverError().status(status).entity(message).build();
 	}
 
 	/**
-	 * Send error forbidden.
+	 * Create error response not found.
 	 *
-	 * @param response
-	 *            the response
 	 * @param message
 	 *            the message
+	 * @return the error response
 	 */
-	protected void sendErrorForbidden(HttpServletResponse response, String message) {
-		try {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-		} catch (IOException e) {
-			getLogger().error(e.getMessage(), e);
-		}
+	protected Response createErrorResponseNotFound(String message) {
+		return createErrorResponse(Status.NOT_FOUND, message);
 	}
 
 	/**
-	 * Send error bad request.
+	 * Create error response forbidden.
 	 *
-	 * @param response
-	 *            the response
 	 * @param message
 	 *            the message
+	 * @return the error response
 	 */
-	protected void sendErrorBadRequest(HttpServletResponse response, String message) {
-		try {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		} catch (IOException e) {
-			getLogger().error(e.getMessage(), e);
-		}
+	protected Response createErrorResponseForbidden(String message) {
+		return createErrorResponse(Status.FORBIDDEN, message);
 	}
 
 	/**
-	 * Send error unathorized.
+	 * Create error response bad request.
 	 *
-	 * @param response
-	 *            the response
 	 * @param message
 	 *            the message
+	 * @return the error response
 	 */
-	protected void sendErrorUnathorized(HttpServletResponse response, String message) {
-		try {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		} catch (IOException e) {
-			getLogger().error(e.getMessage(), e);
-		}
+	protected Response createErrorResponseBadRequest(String message) {
+		return createErrorResponse(Status.BAD_REQUEST, message);
 	}
 
 	/**
-	 * Send error internal server error.
+	 * Create error response unathorized.
 	 *
-	 * @param response
-	 *            the response
 	 * @param message
 	 *            the message
+	 * @return the error response
 	 */
-	protected void sendErrorInternalServerError(HttpServletResponse response, String message) {
-		try {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-		} catch (IOException e) {
-			getLogger().error(e.getMessage(), e);
-		}
+	protected Response createErrorResponseUnauthorized(String message) {
+		return createErrorResponse(Status.UNAUTHORIZED, message);
+	}
+
+	/**
+	 * Create error response internal server error.
+	 *
+	 * @param message
+	 *            the message
+	 * @return the error response
+	 */
+	protected Response createErrorResponseInternalServerError(String message) {
+		return createErrorResponse(Status.INTERNAL_SERVER_ERROR, message);
 	}
 
 }

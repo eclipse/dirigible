@@ -107,11 +107,9 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 			}
 		} catch (RepositoryNotFoundException e) {
 			String error = "Resource not found: " + path;
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
-		sendErrorNotFound(response, path);
-		return Response.status(Status.NOT_FOUND).build();
+		return createErrorResponseNotFound(path);
 	}
 
 	private Response sendResourceNotModified() {

@@ -28,7 +28,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
@@ -77,16 +76,14 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	public Response getRepositoryResource(@PathParam("path") String path) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
 			ICollection collection = processor.getCollection(path);
 			if (!collection.exists()) {
-				sendErrorNotFound(response, path);
-				return Response.status(Status.NOT_FOUND).build();
+				return createErrorResponseNotFound(path);
 			}
 			return Response.ok().entity(processor.renderRepository(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
@@ -114,8 +111,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	public Response createResource(@PathParam("path") String path, byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
@@ -126,8 +122,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 		IResource resource = processor.getResource(path);
 		if (resource.exists()) {
 			String message = format("Resource at location {0} already exists", path);
-			sendErrorBadRequest(response, message);
-			return Response.status(Status.BAD_REQUEST).entity(message).build();
+			return createErrorResponseBadRequest(message);
 		}
 		resource = processor.createResource(path, content, request.getContentType());
 		return Response.created(processor.getURI(UrlFacade.escape(resource.getPath()))).build();
@@ -147,15 +142,13 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	public Response updateResource(@PathParam("path") String path, byte[] content) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		IResource resource = processor.getResource(path);
 		if (!resource.exists()) {
 			String message = format("Resource at location {0} does not exist", path);
-			sendErrorNotFound(response, message);
-			return Response.status(Status.NOT_FOUND).entity(message).build();
+			return createErrorResponseNotFound(message);
 		}
 		resource = processor.updateResource(path, content);
 		return Response.noContent().build();
@@ -173,8 +166,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 	public Response deleteResource(@PathParam("path") String path) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
@@ -190,8 +182,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 				return Response.noContent().build();
 			}
 			String message = format("Collection or Resource at location {0} does not exist", path);
-			sendErrorNotFound(response, message);
-			return Response.status(Status.NOT_FOUND).entity(message).build();
+			return createErrorResponseNotFound(message);
 		}
 		processor.deleteResource(path);
 		return Response.noContent().build();

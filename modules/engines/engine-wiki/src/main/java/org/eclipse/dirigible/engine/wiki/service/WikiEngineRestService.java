@@ -22,7 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
@@ -87,15 +86,13 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 	protected Response render(@PathParam("path") String path) {
 		if ("".equals(path.trim()) || path.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
 			String message = "Listing of web folders is forbidden.";
-			sendErrorForbidden(response, message);
-			return Response.status(Status.FORBIDDEN).entity(message).build();
+			return createErrorResponseForbidden(message);
 		}
 		if (processor.existResource(path)) {
 			IResource resource = processor.getResource(path);
 			if (resource.isBinary()) {
 				String message = "Resource found, but it is a binary file: " + path;
-				sendErrorNotFound(response, message);
-				return Response.status(Status.NOT_FOUND).entity(message).build();
+				return createErrorResponseNotFound(message);
 			}
 			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 			String html = renderContent(content);
@@ -109,11 +106,9 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 			}
 		} catch (RepositoryNotFoundException e) {
 			String message = "Resource not found: " + path;
-			sendErrorNotFound(response, message);
-			return Response.status(Status.NOT_FOUND).entity(message).build();
+			return createErrorResponseNotFound(message);
 		}
-		sendErrorNotFound(response, path);
-		return Response.status(Status.NOT_FOUND).build();
+		return createErrorResponseNotFound(path);
 	}
 
 	/**

@@ -33,7 +33,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -97,8 +96,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	public Response listWorkspaces(@Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		List<IWorkspace> workspaces = processor.listWorkspaces();
@@ -123,20 +121,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	public Response getWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IWorkspace workspaceObject = processor.getWorkspace(workspace);
 		if (!workspaceObject.exists()) {
-			sendErrorNotFound(response, workspace);
-			return Response.status(Status.NOT_FOUND).build();
+			return createErrorResponseNotFound(workspace);
 		}
 		return Response.ok().entity(processor.renderWorkspaceTree(workspaceObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
@@ -157,8 +152,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	public Response createWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (processor.existsWorkspace(workspace)) {
@@ -167,8 +161,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 		IWorkspace workspaceObject = processor.createWorkspace(workspace);
 		if (!workspaceObject.exists()) {
-			sendErrorNotFound(response, workspace);
-			return Response.status(Status.NOT_FOUND).build();
+			return createErrorResponseNotFound(workspace);
 		}
 		return Response.created(processor.getURI(workspace, null, null)).entity(processor.renderWorkspaceTree(workspaceObject))
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -188,8 +181,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	public Response deleteWorkspace(@PathParam("workspace") String workspace, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
@@ -218,26 +210,22 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 	public Response getProject(@PathParam("workspace") String workspace, @PathParam("project") String project, @Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IProject projectObject = processor.getProject(workspace, project);
 		if (!projectObject.exists()) {
-			sendErrorNotFound(response, project);
-			return Response.status(Status.NOT_FOUND).build();
+			return createErrorResponseNotFound(project);
 		}
 		return Response.ok().entity(processor.renderProjectTree(projectObject)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
@@ -261,14 +249,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (processor.existsProject(workspace, project)) {
@@ -277,8 +263,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 		IProject projectObject = processor.createProject(workspace, project);
 		if (!projectObject.exists()) {
-			sendErrorNotFound(response, project);
-			return Response.status(Status.NOT_FOUND).build();
+			return createErrorResponseNotFound(project);
 		}
 		return Response.created(processor.getURI(workspace, project, null)).entity(processor.renderProjectTree(projectObject))
 				.type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -302,14 +287,12 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			@Context HttpServletRequest request) throws IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
@@ -341,28 +324,24 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			@Context HttpServletRequest request) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IFile file = processor.getFile(workspace, project, path);
 		if (!file.exists()) {
 			IFolder folder = processor.getFolder(workspace, project, path);
 			if (!folder.exists()) {
-				sendErrorNotFound(response, path);
-				return Response.status(Status.NOT_FOUND).build();
+				return createErrorResponseNotFound(path);
 			}
 			return Response.ok().entity(processor.renderFolderTree(folder)).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
@@ -400,28 +379,24 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (path.endsWith(IRepositoryStructure.SEPARATOR)) {
 			IFolder folder = processor.getFolder(workspace, project, path);
 			if (folder.exists()) {
 				String error = format("Folder {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
-				sendErrorBadRequest(response, error);
-				return Response.status(Status.BAD_REQUEST).entity(error).build();
+				return createErrorResponseBadRequest(error);
 			}
 
 			folder = processor.createFolder(workspace, project, path);
@@ -431,8 +406,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 		IFile file = processor.getFile(workspace, project, path);
 		if (file.exists()) {
 			String error = format("File {0} already exists in Project {1} in Workspace {2}.", path, project, workspace);
-			sendErrorBadRequest(response, error);
-			return Response.status(Status.BAD_REQUEST).entity(error).build();
+			return createErrorResponseBadRequest(error);
 		}
 
 		if (request.getHeader("Content-Transfer-Encoding") != null && "base64".equals(request.getHeader("Content-Transfer-Encoding"))) {
@@ -489,27 +463,23 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IFile file = processor.getFile(workspace, project, path);
 		if (!file.exists()) {
 			String error = format("File {0} does not exists in Project {1} in Workspace {2}.", path, project, workspace);
-			sendErrorBadRequest(response, error);
-			return Response.status(Status.BAD_REQUEST).entity(error).build();
+			return createErrorResponseBadRequest(error);
 		}
 
 		file = processor.updateFile(workspace, project, path, content);
@@ -563,20 +533,17 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 			byte[] content, @Context HttpServletRequest request) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		if (!processor.existsProject(workspace, project)) {
 			String error = format("Project {0} does not exist in Workspace {1}.", project, workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		IFolder folder = processor.getFolder(workspace, project, path);

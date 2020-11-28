@@ -25,7 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.DecoderException;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -90,8 +89,7 @@ public class WorkspaceFindService extends AbstractRestService implements IRestSe
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((pattern == null) || pattern.isEmpty()) {
@@ -126,8 +124,7 @@ public class WorkspaceFindService extends AbstractRestService implements IRestSe
 			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if ((pattern == null) || pattern.isEmpty()) {
