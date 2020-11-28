@@ -46,8 +46,6 @@ public class KymaModule extends AbstractDirigibleModule {
 	@Override
 	protected void configure() {
 		configureOAuth();
-
-		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
 	}
 
 	private void configureOAuth() {

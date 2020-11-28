@@ -35,7 +35,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryException;
-import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,8 +191,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 		final String message = String.format("There is no resource at the specified path: %s", repositoryPath);
 		logger.error(message);
-		sendErrorNotFound(response, message);
-		throw new RepositoryNotFoundException(message);
+		return createErrorResponseNotFound(message);
 	}
 
 	/*

@@ -28,7 +28,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
@@ -89,22 +88,19 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Path", required = true) @PathParam("path") String path) {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		String model = null;
 		try {
 			model = processor.getModel(workspace, project, path);
 		} catch (JsonProcessingException e) {
-			sendErrorInternalServerError(response, e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return createErrorResponseInternalServerError(e.getMessage());
 		}
 		
 		if (model == null) {
 			String error = format("Model in workspace: {0} and project {1} with path {2} does not exist.", workspace, project, path);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		return Response.ok().entity(model).build();
 	}
@@ -134,15 +130,13 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 			@ApiParam(value = "Model Payload", required = true) @FormParam("json_xml") String payload) throws URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		try {
 			processor.saveModel(workspace, project, path, payload);
 		} catch (IOException e) {
-			sendErrorInternalServerError(response, e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return createErrorResponseInternalServerError(e.getMessage());
 		}
 		
 		return Response.ok().location(workspaceProcessor.getURI(workspace, project, path)).build();
@@ -163,22 +157,19 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	public Response getStencilSet() {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		String stencilSets = null;
 		try {
 			stencilSets = processor.getStencilSet();
 		} catch (IOException e) {
-			sendErrorInternalServerError(response, e.getMessage());
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			return createErrorResponseInternalServerError(e.getMessage());
 		}
 		
 		if (stencilSets == null) {
 			String error = "Stencil Sets definition does not exist.";
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 		return Response.ok().entity(stencilSets).build();
 	}

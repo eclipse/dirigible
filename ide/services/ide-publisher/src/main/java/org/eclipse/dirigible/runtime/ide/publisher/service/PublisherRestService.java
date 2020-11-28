@@ -29,7 +29,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
@@ -101,14 +100,12 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 			throws PublisherException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(user, workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		long id = processor.requestPublishing(user, workspace, path);
@@ -140,14 +137,12 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 			throws PublisherException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		if (!processor.existsWorkspace(user, workspace)) {
 			String error = format("Workspace {0} does not exist.", workspace);
-			sendErrorNotFound(response, error);
-			return Response.status(Status.NOT_FOUND).entity(error).build();
+			return createErrorResponseNotFound(error);
 		}
 
 		long id = processor.requestUnpublishing(user, workspace, path);
@@ -171,8 +166,7 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 	public Response getRequest(@PathParam("id") long id, @Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		PublishRequestDefinition publishRequestDefinition = processor.getPublishingRequest(id);
@@ -180,8 +174,7 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 			return Response.ok().entity(publishRequestDefinition).type(ContentTypeHelper.APPLICATION_JSON).build();
 		}
 		String message = "Publishing request does not exist or has already been processed.";
-		sendErrorNotFound(response, message);
-		return Response.status(Status.NOT_FOUND).entity(message).build();
+		return createErrorResponseNotFound(message);
 	}
 
 	/**
@@ -198,8 +191,7 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 	public Response listLog(@Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		List<PublishLogDefinition> publishLogDefinitions = processor.listPublishingLog();
@@ -220,8 +212,7 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 	public Response clearLog(@Context HttpServletRequest request) throws PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
-			sendErrorForbidden(response, NO_LOGGED_IN_USER);
-			return Response.status(Status.FORBIDDEN).build();
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
 		processor.clearPublishingLog();
