@@ -36,7 +36,6 @@
 		<module>server-javascript</module>
 		<module>server-database</module>
 		<module>server-cms</module>
-		<!-- <module>embedded-all</module> -->
 	</modules>
 
 	<properties>
