@@ -78,6 +78,9 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_FONT_WOFF. */
 	public static final String APPLICATION_FONT_WOFF = "application/font-woff";
 
+	/** The Constant APPLICATION_FONT_WOFF2. */
+	public static final String APPLICATION_FONT_WOFF2 = "font/woff2";
+
 	/** The Constant APPLICATION_X_FONT_OPENTYPE. */
 	public static final String APPLICATION_X_FONT_OPENTYPE = "application/x-font-opentype";
 
@@ -645,6 +648,7 @@ public class ContentTypeHelper {
 		BINARY_CONTENT_TYPES.put("ttf", APPLICATION_X_FONT_TTF); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("otf", APPLICATION_X_FONT_OPENTYPE); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("woff", APPLICATION_FONT_WOFF); //$NON-NLS-1$
+		BINARY_CONTENT_TYPES.put("woff2", APPLICATION_FONT_WOFF2); //$NON-NLS-1$
 		BINARY_CONTENT_TYPES.put("eot", APPLICATION_VND_MS_FONTOBJECT); //$NON-NLS-1$
 
 		TEXT_CONTENT_TYPES.put("txt", TEXT_PLAIN); //$NON-NLS-1$
