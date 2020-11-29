@@ -180,7 +180,7 @@
 			$http.get('../../js/ide-core/services/templates.js').success(function(response) {
 				$scope.templates = response.filter(function(value, index, arr){return !value.extension;});
 				$scope.templateParameters = [];
-				for (var i = 0 ; i < this.templates.length; i++) {
+				for (var i = 0 ; i < $scope.templates.length; i++) {
 					$scope.templateParameters[$scope.templates[i].id] = $scope.templates[i].parameters;
 				}
 			});
