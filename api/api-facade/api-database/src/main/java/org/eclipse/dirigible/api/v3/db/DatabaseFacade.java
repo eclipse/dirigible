@@ -20,6 +20,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -398,10 +399,45 @@ public class DatabaseFacade implements IScriptingFacade {
 				if (parameterElement.isJsonPrimitive()) {
 					if (parameterElement.getAsJsonPrimitive().isBoolean()) {
 						preparedStatement.setBoolean(i++, parameterElement.getAsBoolean());
-					} else if (parameterElement.getAsJsonPrimitive().isNumber()) {
-						preparedStatement.setObject(i++, parameterElement.getAsNumber().toString());
 					} else if (parameterElement.getAsJsonPrimitive().isString()) {
 						preparedStatement.setString(i++, parameterElement.getAsString());
+					} else if (parameterElement.getAsJsonPrimitive().isNumber()) {
+						boolean isNumberParameterSet = false;
+						int numberIndex = i++;
+						try {
+							preparedStatement.setInt(numberIndex, parameterElement.getAsInt());
+							isNumberParameterSet = true;
+						} catch (SQLException | ClassCastException e) {
+							// Do nothing
+						}
+
+						if (!isNumberParameterSet) {
+							try {
+								preparedStatement.setShort(numberIndex, parameterElement.getAsShort());
+								isNumberParameterSet = true;
+							} catch (SQLException | ClassCastException e) {
+								// Do nothing
+							}
+						}
+						if (!isNumberParameterSet) {
+							try {
+								preparedStatement.setLong(numberIndex, parameterElement.getAsLong());
+								isNumberParameterSet = true;
+							} catch (SQLException | ClassCastException e) {
+								// Do nothing
+							}
+						}
+						if (!isNumberParameterSet) {
+							try {
+								preparedStatement.setBigDecimal(numberIndex, parameterElement.getAsBigDecimal());
+								isNumberParameterSet = true;
+							} catch (SQLException | ClassCastException e) {
+								// Do nothing
+							}
+						}
+						if (!isNumberParameterSet) {
+							preparedStatement.setObject(numberIndex, parameterElement.getAsNumber().toString());
+						}
 					} else {
 						throw new IllegalArgumentException("Parameter type unkown");
 					}
