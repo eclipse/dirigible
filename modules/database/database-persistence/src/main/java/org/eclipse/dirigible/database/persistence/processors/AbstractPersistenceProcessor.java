@@ -576,7 +576,7 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 	 *            the table model
 	 * @return the primary key
 	 */
-	protected String getPrimaryKey(PersistenceTableModel tableModel) {
+	public String getPrimaryKey(PersistenceTableModel tableModel) {
 		PersistenceTableColumnModel columnModel = getPrimaryKeyModel(tableModel);
 		return columnModel == null ? null : columnModel.getName();
 	}

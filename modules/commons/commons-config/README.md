@@ -81,6 +81,22 @@
 - `DIRIGIBLE_SCHEDULER_MEMORY_STORE`: (default: false)
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE`: (default: null)
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_NAME`: (default: null)
+- `DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE`: (default: org.quartz.impl.jdbcjobstore.StdJDBCDelegate)
+
+	org.quartz.impl.jdbcjobstore.StdJDBCDelegate (for fully JDBC-compliant drivers)
+	org.quartz.impl.jdbcjobstore.MSSQLDelegate (for Microsoft SQL Server, and Sybase)
+	org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+	org.quartz.impl.jdbcjobstore.WebLogicDelegate (for WebLogic drivers)
+	org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
+	org.quartz.impl.jdbcjobstore.oracle.WebLogicOracleDelegate (for Oracle drivers used within Weblogic)
+	org.quartz.impl.jdbcjobstore.oracle.weblogic.WebLogicOracleDelegate (for Oracle drivers used within Weblogic)
+	org.quartz.impl.jdbcjobstore.CloudscapeDelegate
+	org.quartz.impl.jdbcjobstore.DB2v6Delegate
+	org.quartz.impl.jdbcjobstore.DB2v7Delegate
+	org.quartz.impl.jdbcjobstore.DB2v8Delegate
+	org.quartz.impl.jdbcjobstore.HSQLDBDelegate
+	org.quartz.impl.jdbcjobstore.PointbaseDelegate
+	org.quartz.impl.jdbcjobstore.SybaseDelegate
 
 
 ### Runtime

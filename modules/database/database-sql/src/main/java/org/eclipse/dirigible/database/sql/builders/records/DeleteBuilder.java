@@ -97,6 +97,7 @@ public class DeleteBuilder extends AbstractQuerySqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
 		sql.append(SPACE).append(KEYWORD_FROM).append(SPACE).append(this.table);
 	}
 

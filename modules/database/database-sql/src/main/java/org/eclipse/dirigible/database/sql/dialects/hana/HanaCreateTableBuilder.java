@@ -42,8 +42,9 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 	 */
 	@Override
 	protected void generateTable(StringBuilder sql) {
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
 		sql.append(SPACE).append(isColumnTable ? KEYWORD_COLUMN : "").append(isColumnTable ? SPACE : "").append(KEYWORD_TABLE).append(SPACE)
-				.append(getTable());
+				.append(tableName);
 	}
 
 }

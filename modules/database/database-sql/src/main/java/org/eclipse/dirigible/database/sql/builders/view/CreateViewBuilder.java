@@ -144,7 +144,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateView(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(this.view);
+		String viewName = (isCaseSensitive()) ? encapsulate(this.getView()) : this.getView();
+		sql.append(SPACE).append(KEYWORD_VIEW).append(SPACE).append(viewName);
 	}
 
 	/**
@@ -168,7 +169,8 @@ public class CreateViewBuilder extends AbstractCreateSqlBuilder {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
 		for (String column : this.columns) {
-			snippet.append(column).append(SPACE);
+			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+			snippet.append(columnName).append(SPACE);
 			snippet.append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
