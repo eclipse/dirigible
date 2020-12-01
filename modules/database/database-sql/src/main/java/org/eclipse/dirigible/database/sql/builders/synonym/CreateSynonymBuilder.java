@@ -86,7 +86,8 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSynonym(StringBuilder sql) {
-		sql.append(SPACE)/*.append(KEYWORD_PUBLIC).append(SPACE)*/.append(KEYWORD_SYNONYM).append(SPACE).append('"').append(this.synonym).append('"');
+		String synonymName = (isCaseSensitive()) ? encapsulate(this.getSynonym()) : this.getSynonym();
+		sql.append(SPACE)/*.append(KEYWORD_PUBLIC).append(SPACE)*/.append(KEYWORD_SYNONYM).append(SPACE).append(synonymName);
 	}
 
 	/**
@@ -96,10 +97,11 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSource(StringBuilder sql) {
+		String sourceName = (isCaseSensitive()) ? encapsulate(this.getSource()) : this.getSource();
 		 sql.append(SPACE)
 			 .append(KEYWORD_FOR)
 			 .append(SPACE)
-			 .append(this.source);
+			 .append(sourceName);
 	}
 
 	/**
@@ -109,6 +111,15 @@ public class CreateSynonymBuilder extends AbstractCreateSqlBuilder {
 	 */
 	public String getSynonym() {
 		return synonym;
+	}
+	
+	/**
+	 * Gets the source.
+	 *
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
 	}
 
 }

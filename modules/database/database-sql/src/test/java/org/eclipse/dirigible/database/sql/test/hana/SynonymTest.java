@@ -30,12 +30,12 @@ public class SynonymTest {
 	public void createSequence() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
 			.create()
-			.synonym("my.namespace::Customers")
+			.synonym("CUSTOMERS_SEQUENCE")
 			.forSource("CUSTOMERS")
 			.build();
 		
 		assertNotNull(sql);
-		assertEquals("CREATE SYNONYM \"my.namespace::Customers\" FOR CUSTOMERS", sql);
+		assertEquals("CREATE SYNONYM CUSTOMERS_SEQUENCE FOR CUSTOMERS", sql);
 	}
 	
 	/**
@@ -45,11 +45,11 @@ public class SynonymTest {
 	public void dropSequnce() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
 			.drop()
-			.synonym("my.namespace::Customers")
+			.synonym("CUSTOMERS_SEQUENCE")
 			.build();
 		
 		assertNotNull(sql);
-		assertEquals("DROP SYNONYM \"my.namespace::Customers\"", sql);
+		assertEquals("DROP SYNONYM CUSTOMERS_SEQUENCE", sql);
 	}
 
 }

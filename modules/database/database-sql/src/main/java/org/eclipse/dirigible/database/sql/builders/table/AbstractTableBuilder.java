@@ -2086,7 +2086,8 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(this.getTable());
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+		sql.append(SPACE).append(KEYWORD_TABLE).append(SPACE).append(tableName);
 	}
 
 	/**
@@ -2107,12 +2108,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 * @param sql
 	 *            the sql
 	 */
-	protected void generateColumnNames(StringBuilder sql) {
+	protected void generateColumnNamesForDrop(StringBuilder sql) {
 		if (!this.getColumns().isEmpty()) {
-			sql.append(traverseColumnNames());
+			sql.append(traverseColumnNamesForDrop());
 		}
 	}
-
+	
 	/**
 	 * Traverse columns.
 	 *
@@ -2122,7 +2123,14 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
 		for (String[] column : this.columns) {
+			boolean first = true;
 			for (String arg : column) {
+				if (first) {
+					String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
+					snippet.append(columnName).append(SPACE);
+					first = false;
+					continue;
+				}
 				snippet.append(arg).append(SPACE);
 			}
 			snippet.append(COMMA).append(SPACE);
@@ -2135,11 +2143,12 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 *
 	 * @return the string
 	 */
-	protected String traverseColumnNames() {
+	protected String traverseColumnNamesForDrop() {
 		StringBuilder snippet = new StringBuilder();
-		snippet.append(SPACE);
 		for (String[] column : this.columns) {
-			snippet.append(column[0]).append(SPACE);
+			String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
+			snippet.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_COLUMN).append(SPACE);
+			snippet.append(columnName).append(SPACE);
 			snippet.append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
@@ -2148,15 +2157,16 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	/**
 	 * Traverse column names.
 	 *
-	 * @param columns
+	 * @param names
 	 *            the columns
 	 * @return the string
 	 */
-	protected String traverseColumnNames(Set<String> columns) {
+	protected String traverseNames(Set<String> names) {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
-		for (String column : columns) {
-			snippet.append(column).append(SPACE).append(COMMA).append(SPACE);
+		for (String column : names) {
+			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+			snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
@@ -2168,7 +2178,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	 *            the columns
 	 * @return the string[]
 	 */
-	private String[] splitValues(String columns) {
+	protected String[] splitValues(String columns) {
 		String[] array = new String[] {};
 		if (columns != null) {
 			array = columns.split(",");

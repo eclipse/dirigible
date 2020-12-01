@@ -323,10 +323,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	public SelectBuilder genericJoin(String type, String table, String on, String alias) {
 		logger.trace("genericJoin: " + type + ", table: " + table + ", on: " + on + ", alias: " + alias);
 		StringBuilder snippet = new StringBuilder();
-		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(table).append(SPACE).append(KEYWORD_ON).append(SPACE).append(on);
-
+		String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
+		snippet.append(type).append(SPACE).append(KEYWORD_JOIN).append(SPACE).append(tableName).append(SPACE).append(KEYWORD_ON).append(SPACE).append(on);
 		if (alias != null) {
-			snippet.append(SPACE).append(alias);
+			String aliasName = (isCaseSensitive()) ? encapsulate(alias) : alias;
+			snippet.append(SPACE).append(aliasName);
 		}
 		this.joins.add(snippet.toString());
 		return this;
@@ -354,7 +355,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	public SelectBuilder order(String column) {
 		logger.trace("order: " + column);
-		return order(column, true);
+		String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+		return order(columnName, true);
 	}
 
 	/**
@@ -368,10 +370,11 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	 */
 	public SelectBuilder order(String column, boolean asc) {
 		logger.trace("order: " + column + ", asc: " + asc);
+		String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
 		if (asc) {
-			this.orders.add(column + SPACE + KEYWORD_ASC);
+			this.orders.add(columnName + SPACE + KEYWORD_ASC);
 		} else {
-			this.orders.add(column + SPACE + KEYWORD_DESC);
+			this.orders.add(columnName + SPACE + KEYWORD_DESC);
 		}
 
 		return this;
@@ -618,7 +621,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 		if (!this.columns.isEmpty()) {
 			StringBuilder snippet = new StringBuilder();
 			for (String column : this.columns) {
-				snippet.append(column).append(COMMA).append(SPACE);
+				String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+				snippet.append(columnName).append(COMMA).append(SPACE);
 			}
 			return snippet.toString().substring(0, snippet.length() - 2);
 		}
@@ -633,7 +637,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseTables() {
 		StringBuilder snippet = new StringBuilder();
 		for (String table : this.tables) {
-			snippet.append(table).append(COMMA).append(SPACE);
+			String tableName = (isCaseSensitive()) ? encapsulate(table) : table;
+			snippet.append(tableName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
@@ -659,7 +664,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseGroups() {
 		StringBuilder snippet = new StringBuilder();
 		for (String group : this.groups) {
-			snippet.append(group).append(COMMA).append(SPACE);
+			String groupName = (isCaseSensitive()) ? encapsulate(group) : group;
+			snippet.append(groupName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}
@@ -672,7 +678,8 @@ public class SelectBuilder extends AbstractQuerySqlBuilder {
 	protected String traverseUnions() {
 		StringBuilder snippet = new StringBuilder();
 		for (String union : this.unions) {
-			snippet.append(union).append(SPACE);
+			String unionName = (isCaseSensitive()) ? encapsulate(union) : union;
+			snippet.append(unionName).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 1);
 	}

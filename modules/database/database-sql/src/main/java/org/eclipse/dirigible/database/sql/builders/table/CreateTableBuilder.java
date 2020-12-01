@@ -259,10 +259,11 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
 		if (this.primaryKey != null) {
 			sql.append(COMMA).append(SPACE);
 			if (this.primaryKey.getName() != null) {
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(this.primaryKey.getName()).append(SPACE);
+				String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
 			}
 			sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
-					.append(traverseColumnNames(this.primaryKey.getColumns())).append(CLOSE);
+					.append(traverseNames(this.primaryKey.getColumns())).append(CLOSE);
 		}
 	}
 
@@ -290,11 +291,13 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
 		if (foreignKey != null) {
 			sql.append(COMMA).append(SPACE);
 			if (foreignKey.getName() != null) {
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKey.getName()).append(SPACE);
+				String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
 			}
+			String referencedTableName = (isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable()) : foreignKey.getReferencedTable();
 			sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
-					.append(traverseColumnNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
-					.append(foreignKey.getReferencedTable()).append(OPEN).append(traverseColumnNames(foreignKey.getReferencedColumns()))
+					.append(traverseNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
+					.append(referencedTableName).append(OPEN).append(traverseNames(foreignKey.getReferencedColumns()))
 					.append(CLOSE);
 		}
 	}
@@ -323,9 +326,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
 		if (uniqueIndex != null) {
 			sql.append(COMMA).append(SPACE);
 			if (uniqueIndex.getName() != null) {
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndex.getName()).append(SPACE);
+				String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(uniqueIndexName).append(SPACE);
 			}
-			sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseColumnNames(uniqueIndex.getColumns())).append(CLOSE);
+			sql.append(KEYWORD_UNIQUE).append(SPACE).append(OPEN).append(traverseNames(uniqueIndex.getColumns())).append(CLOSE);
 		}
 	}
 
@@ -353,61 +357,11 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
 		if (check != null) {
 			sql.append(COMMA).append(SPACE);
 			if (check.getName() != null) {
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(check.getName()).append(SPACE);
+				String checkName = (isCaseSensitive()) ? encapsulate(check.getName()) : check.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(checkName).append(SPACE);
 			}
 			sql.append(KEYWORD_CHECK).append(SPACE).append(OPEN).append(check.getExpression()).append(CLOSE);
 		}
-	}
-
-	/**
-	 * Traverse columns.
-	 *
-	 * @return the string
-	 */
-	protected String traverseColumns() {
-		StringBuilder snippet = new StringBuilder();
-		snippet.append(SPACE);
-		for (String[] column : this.getColumns()) {
-			for (String arg : column) {
-				snippet.append(arg).append(SPACE);
-			}
-			snippet.append(COMMA).append(SPACE);
-		}
-		return snippet.toString().substring(0, snippet.length() - 2);
-	}
-
-	/**
-	 * Traverse column names.
-	 *
-	 * @param columns
-	 *            the columns
-	 * @return the string
-	 */
-	protected String traverseColumnNames(Set<String> columns) {
-		StringBuilder snippet = new StringBuilder();
-		snippet.append(SPACE);
-		for (String column : columns) {
-			snippet.append(column).append(SPACE).append(COMMA).append(SPACE);
-		}
-		return snippet.toString().substring(0, snippet.length() - 2);
-	}
-
-	/**
-	 * Split values.
-	 *
-	 * @param columns
-	 *            the columns
-	 * @return the string[]
-	 */
-	private String[] splitValues(String columns) {
-		String[] array = new String[] {};
-		if (columns != null) {
-			array = columns.split(",");
-		}
-		for (int i = 0; i < array.length; i++) {
-			array[i] = array[i].trim();
-		}
-		return array;
 	}
 
 }

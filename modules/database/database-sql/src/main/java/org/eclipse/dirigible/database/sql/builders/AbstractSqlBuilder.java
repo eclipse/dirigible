@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 
@@ -20,7 +21,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
 	private ISqlDialect dialect;
-
+	
 	/**
 	 * Instantiates a new abstract sql builder.
 	 *
@@ -58,6 +59,28 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	@Override
 	public String build() {
 		return generate();
+	}
+	
+	/**
+	 * Whether the names of tables, columns, indices are case sensitive
+	 * 
+	 * @return
+	 */
+	protected boolean isCaseSensitive() {
+		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
+	}
+	
+	/**
+	 * Encapsulate the name within qutes
+	 * 
+	 * @param name the name
+	 * @return the encapsulated name
+	 */
+	protected String encapsulate(String name) {
+		if (!name.startsWith("\"")) {
+			name = "\"" + name + "\"";
+		}
+		return name;
 	}
 
 }

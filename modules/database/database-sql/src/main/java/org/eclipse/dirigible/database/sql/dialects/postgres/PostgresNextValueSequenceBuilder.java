@@ -41,7 +41,8 @@ public class PostgresNextValueSequenceBuilder extends NextValueSequenceBuilder {
 	 */
 	@Override
 	public String generate() {
-		String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, getSequence());
+		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence()) : this.getSequence();
+		String sql = format(PATTERN_SELECT_NEXT_VAL_SEQUENCE, sequenceName);
 		return sql;
 	}
 }

@@ -134,7 +134,8 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateTable(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_INTO).append(SPACE).append(this.table);
+		String tableName = (isCaseSensitive()) ? encapsulate(this.getTable()) : this.getTable();
+		sql.append(SPACE).append(KEYWORD_INTO).append(SPACE).append(tableName);
 	}
 
 	/**
@@ -183,7 +184,8 @@ public class InsertBuilder extends AbstractSqlBuilder {
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		for (String column : this.columns) {
-			snippet.append(column).append(COMMA).append(SPACE);
+			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+			snippet.append(columnName).append(COMMA).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 2);
 	}

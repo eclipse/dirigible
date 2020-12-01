@@ -103,7 +103,8 @@ public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 	 *            the sql
 	 */
 	protected void generateSequence(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(this.sequence);
+		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence()) : this.getSequence();
+		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(sequenceName);
 	}
 
 	/**

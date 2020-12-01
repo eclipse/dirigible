@@ -123,10 +123,9 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 				generateForeignKeys(sql);
 			}
 		} else if (KEYWORD_DROP.equals(this.action)) {
-			sql.append(KEYWORD_DROP);
 			if (!getColumns().isEmpty()) {
 				// COLUMNS
-				generateColumnNames(sql);
+				generateColumnNamesForDrop(sql);
 			} else if (!getForeignKeys().isEmpty()) {
 				// FOREIGN KEYS
 				generateForeignKeyNames(sql);
@@ -166,20 +165,26 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 		if (foreignKey != null) {
 			sql.append(SPACE);
 			if (foreignKey.getName() != null) {
-				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKey.getName()).append(SPACE);
+				String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+				sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(foreignKeyName).append(SPACE);
 			}
+			String referencedTableName = (isCaseSensitive()) ? encapsulate(foreignKey.getReferencedTable()) : foreignKey.getReferencedTable();
 			sql.append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
-					.append(traverseColumnNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
-					.append(foreignKey.getReferencedTable()).append(OPEN).append(traverseColumnNames(foreignKey.getReferencedColumns()))
+					.append(traverseNames(foreignKey.getColumns())).append(CLOSE).append(SPACE).append(KEYWORD_REFERENCES).append(SPACE)
+					.append(referencedTableName).append(OPEN).append(traverseNames(foreignKey.getReferencedColumns()))
 					.append(CLOSE);
 		}
 	}
 	
 	private void generateForeignKeyNames(StringBuilder sql) {
 		StringBuilder snippet = new StringBuilder();
-		snippet.append(SPACE).append(KEYWORD_FOREIGN).append(SPACE).append(KEYWORD_KEY)
-			.append(SPACE).append(this.foreignKeys.get(0));
-		sql.append(snippet.toString());		
+		for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
+			String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+			snippet.append(KEYWORD_DROP).append(SPACE).append(KEYWORD_CONSTRAINT).append(SPACE);
+			snippet.append(foreignKeyName).append(SPACE);
+			snippet.append(COMMA).append(SPACE);
+		}
+		sql.append(snippet.toString().substring(0, snippet.length() - 2));
 	}
 
 //	/**

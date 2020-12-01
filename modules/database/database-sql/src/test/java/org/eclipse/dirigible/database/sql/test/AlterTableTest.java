@@ -66,7 +66,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP FIRST_NAME", sql);
+		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME", sql);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP FIRST_NAME", sql);
+		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME", sql);
 	}
 
 }
