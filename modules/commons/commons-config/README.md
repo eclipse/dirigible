@@ -77,6 +77,9 @@
 
 - `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
 
+### MongoDB
+- `DIRIGIBLE_MONGODB_CLIENT_URI`: (default: mongodb://localhost:27017)
+
 ### Scheduler
 - `DIRIGIBLE_SCHEDULER_MEMORY_STORE`: (default: false)
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE`: (default: null)

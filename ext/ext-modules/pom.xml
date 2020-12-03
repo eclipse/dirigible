@@ -42,6 +42,7 @@
 		<module>ext-jasmine</module>
 		<module>ext-qunit</module>
 		<module>ext-kafka</module>
+		<module>ext-mongodb</module>
 	</modules>
 
 	<profiles>

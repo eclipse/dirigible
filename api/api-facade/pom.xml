@@ -33,6 +33,7 @@
 		<module>api-bpm</module>
 		<module>api-net</module>
 		<module>api-kafka</module>
+		<module>api-mongodb</module>
 	</modules>
 
 	<properties>
