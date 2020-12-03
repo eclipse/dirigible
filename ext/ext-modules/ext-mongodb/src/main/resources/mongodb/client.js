@@ -382,12 +382,12 @@ function DBObject() {
 		return this.native.isPartialObject();
 	}
 
-	this.containsField = function() {
-		return this.native.containsField();
+	this.containsField = function(key) {
+		return this.native.containsField(key);
 	}
 
-	this.get = function() {
-		return this.native.get();
+	this.get = function(key) {
+		return this.native.get(key);
 	}
 
 	this.put = function(key, value) {
