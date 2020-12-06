@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010-2020 SAP and others.
+ * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * Contributors:
- *   SAP - initial API and implementation
+ * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
  */
-
 /** Client API for MongoDB */
 
 
@@ -59,12 +59,15 @@ function DB() {
  * DBCollection object
  */
 function DBCollection() {
-	
+
 	this.insert = function(dbObject) {
+		dbObject = implicit(dbObject);
 		this.native.insert(dbObject.native);
 	};
 
 	this.find = function(query, projection) {
+		query = implicit(query);
+		projection = implicit(projection);
 		var dbCursor = new DBCursor();
 		var native = null;
 		if (query) {
@@ -81,7 +84,9 @@ function DBCollection() {
 	};
 
 	this.findOne = function(query, projection, sort) {
-		var dbObject = new DBObject();
+		query = implicit(query);
+		projection = implicit(projection);
+		var dbObject = exports.createBasicDBObject();
 		var native = null;
 		if (query) {
 			if (projection) {
@@ -102,7 +107,8 @@ function DBCollection() {
 	};
 
 	this.findOneById = function(id, projection) {
-		var dbObject = new DBObject();
+		projection = implicit(projection);
+		var dbObject = exports.createBasicDBObject();
 		var native = null;
 		if (id) {
 			if (projection) {
@@ -119,6 +125,7 @@ function DBCollection() {
 	};
 
 	this.count = function(query) {
+		query = implicit(query);
 		if (query) {
 			return this.native.count(query.native);
 		}
@@ -126,6 +133,7 @@ function DBCollection() {
 	};
 
 	this.getCount = function(query) {
+		query = implicit(query);
 		if (query) {
 			return this.native.getCount(query.native);
 		}
@@ -133,6 +141,8 @@ function DBCollection() {
 	};
 
 	this.createIndex = function(keys, options) {
+		keys = implicit(keys);
+		options = implicit(options);
 		if (keys) {
 			if (options) {
 				this.native.createIndex(keys.native, options.native);	
@@ -153,6 +163,7 @@ function DBCollection() {
 	};
 
 	this.distinct = function(name, query) {
+		query = implicit(query);
 		if (name) {
 			if (query) {
 				this.native.distinct(keys.native, query.native);	
@@ -185,6 +196,7 @@ function DBCollection() {
 	};
 
 	this.remove = function(query) {
+		query = implicit(query);
 		this.native.remove(query.native);
 	};
 
@@ -193,10 +205,13 @@ function DBCollection() {
 	};
 
 	this.save = function(dbObject) {
+		dbObject = implicit(dbObject);
 		this.native.save(dbObject.native);
 	};
 
 	this.update = function(query, update, upsert, multi) {
+		query = implicit(query);
+		update = implicit(update);
 		if (query) {
 			if (update) {
 				if (upsert) {
@@ -217,6 +232,8 @@ function DBCollection() {
 	};
 
 	this.updateMulti = function(query, update) {
+		query = implicit(query);
+		update = implicit(update);
 		if (query) {
 			if (update) {
 				this.native.update(query.native, update.native);
@@ -227,6 +244,20 @@ function DBCollection() {
 			throw new Error("The query parameter must be provided");
 		}
 	};
+
+	this.getNextId = function() {
+		var cursor = this.find({}, {"_id": 1});
+		if (!cursor.hasNext()) {
+			return 1;
+		}
+		cursor.sort({"_id": -1}).limit(1);
+        var next = cursor.hasNext() ? cursor.next()["_id"] + 1 : 1;
+		return next;
+	}
+
+	this.generateUUID = function() {
+		return require("utils/v4/uuid").random();
+	}
 
 }
 
@@ -407,9 +438,27 @@ function DBObject() {
 }
 
 function extract(dbObject) {
+	if (!dbObject.native) {
+		return {};
+	}
 	var extracted = JSON.parse(dbObject.native.toJson());
 	for(var propertyName in extracted) {
 		dbObject[propertyName] = extracted[propertyName];
 	}
+}
+
+function implicit(object) {
+	if (!object) {
+		return object;
+	}
+	if (object.native) {
+		return object;
+	}
+	var dbObject = exports.createBasicDBObject();
+
+	for(var propertyName in object) {
+		dbObject.append(propertyName, object[propertyName]);
+	}
+	return dbObject;
 }
 
