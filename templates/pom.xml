@@ -70,6 +70,9 @@
 		<module>template-openui5-master-detail</module>
 		<module>template-openui5-table</module>
 		<module>template-websocket</module>
+		<module>template-application-dao-mongodb</module>
+		<module>template-application-rest-mongodb</module>
+		<module>template-application-ui-angular-mongodb</module>
 	</modules>
 
 	<profiles>

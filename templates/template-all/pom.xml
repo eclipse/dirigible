@@ -185,5 +185,20 @@
 			<artifactId>dirigible-template-websocket</artifactId>
 			<version>5.6.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-dao-mongodb</artifactId>
+			<version>5.6.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-rest-mongodb</artifactId>
+			<version>5.6.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-template-application-ui-angular-mongodb</artifactId>
+			<version>5.6.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

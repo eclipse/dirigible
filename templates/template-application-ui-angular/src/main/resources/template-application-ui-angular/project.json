@@ -2,8 +2,8 @@
     "guid": "template-application-ui-angular",
     "dependencies": [
         {
-            "guid": "template-application-rest",
-            "url": "https://github.com/dirigiblelabs/template-application-rest.git",
+            "guid": "template-application-ui-angular",
+            "url": "https://github.com/dirigiblelabs/template-application-ui-angular.git",
             "type": "git",
             "branch": "master"
         }
