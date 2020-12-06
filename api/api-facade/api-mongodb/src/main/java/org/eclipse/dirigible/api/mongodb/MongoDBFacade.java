@@ -27,6 +27,10 @@ public class MongoDBFacade implements IScriptingFacade {
 	
 	private static final String CLIENT_URI = "mongodb://localhost:27017";
 	
+	private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT = "DIRIGIBLE_MONGODB_DATABASE_DEFAULT";
+	
+	private static final String DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB = "db";
+	
 	private static final Logger logger = LoggerFactory.getLogger(MongoDBFacade.class);
 	
 	
@@ -41,6 +45,10 @@ public class MongoDBFacade implements IScriptingFacade {
 	
 	public static DBObject createBasicDBObject() {
 		return new BasicDBObject();
+	}
+	
+	public static String getDefaultDatabaseName() {
+		return Configuration.get(DIRIGIBLE_MONGODB_DATABASE_DEFAULT, DIRIGIBLE_MONGODB_DATABASE_DEFAULT_DB);
 	}
 
 }

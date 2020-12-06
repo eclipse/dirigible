@@ -79,6 +79,7 @@
 
 ### MongoDB
 - `DIRIGIBLE_MONGODB_CLIENT_URI`: (default: mongodb://localhost:27017)
+- `DIRIGIBLE_MONGODB_DATABASE_DEFAULT`: (default: db)
 
 ### Scheduler
 - `DIRIGIBLE_SCHEDULER_MEMORY_STORE`: (default: false)
