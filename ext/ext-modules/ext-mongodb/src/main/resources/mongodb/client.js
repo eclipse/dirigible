@@ -34,7 +34,14 @@ function Client() {
 	
 	this.getDB = function(name) {
 		var db = new DB();
-		var native = this.native.getDB(name);
+		var native = null;
+		if (name) {
+			native = this.native.getDB(name);
+		} else {
+			var defaultDB = org.eclipse.dirigible.api.mongodb.MongoDBFacade.getDefaultDatabaseName();
+			native = this.native.getDB(defaultDB);
+		}
+		
 		db.native = native;
 		return db;
 	};
