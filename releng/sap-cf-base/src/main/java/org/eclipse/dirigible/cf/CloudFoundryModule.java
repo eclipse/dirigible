@@ -108,7 +108,6 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		setDatabaseProperties(name, url, driver, username, password);
 
 		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
-		Configuration.set(SchedulerManager.DIRIGIBLE_SCHEDULER_MEMORY_STORE, "true");
 		Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
 		return true;
 	}
