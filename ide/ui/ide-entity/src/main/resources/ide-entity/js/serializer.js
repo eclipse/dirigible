@@ -195,6 +195,14 @@ function createModel(graph) {
 		}
 	}
 	model.push(' </entities>\n');
+	
+	if (graph.getModel().sidebar) {
+		model.push(' <sidebar>\n');
+		for (var i=0; i<graph.getModel().sidebar.length; i++) {
+			model.push('  <item><path>' + _.escape(graph.getModel().sidebar[i].path) + '</path><label>' + _.escape(graph.getModel().sidebar[i].label) + '</label><icon>' + _.escape(graph.getModel().sidebar[i].icon) + '</icon><url>' + _.escape(graph.getModel().sidebar[i].url) + '</url></item>\n');
+		}
+		model.push(' </sidebar>\n');
+	}
 
 	var enc = new mxCodec(mxUtils.createXmlDocument());
 	var node = enc.encode(graph.getModel());
