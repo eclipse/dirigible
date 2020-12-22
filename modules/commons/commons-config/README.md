@@ -77,6 +77,10 @@
 
 - `DIRIGIBLE_PERSISTENCE_CREATE_TABLE_ON_USE`: (true : false)
 
+### MongoDB
+- `DIRIGIBLE_MONGODB_CLIENT_URI`: (default: mongodb://localhost:27017)
+- `DIRIGIBLE_MONGODB_DATABASE_DEFAULT`: (default: db)
+
 ### Scheduler
 - `DIRIGIBLE_SCHEDULER_MEMORY_STORE`: (default: false)
 - `DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE`: (default: null)
@@ -160,6 +164,15 @@
 ### Messaging
 
 - `DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE`: (default: true)
+
+### Kafka
+
+- `DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER`: (default: localhost:9092)
+- `DIRIGIBLE_KAFKA_ACKS`: (default: all)
+- `DIRIGIBLE_KAFKA_KEY_SERIALIZER`: (default: org.apache.kafka.common.serialization.StringSerializer)
+- `DIRIGIBLE_KAFKA_VALUE_SERIALIZER`: (default: org.apache.kafka.common.serialization.StringSerializer)
+- `DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED`: (default: true)
+- `DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL`: (default: 1000)
 
 ## Engines
 

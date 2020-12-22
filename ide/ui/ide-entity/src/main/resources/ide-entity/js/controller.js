@@ -436,6 +436,10 @@ function main(container, outline, toolbar, sidebar, status) {
 		editor.addAction('properties', function(editor, cell) {
 			if (!cell) {
 				cell = graph.getSelectionCell();
+				if (!cell) {
+					showAlert('Error', 'Select an Entity, a Property or a Connector', $scope);
+					return;
+				}
 			}
 			if (cell.style && cell.style.startsWith('projection')) {
 				return;
@@ -449,7 +453,7 @@ function main(container, outline, toolbar, sidebar, status) {
 					//showProperties(graph, cell);
 					$('#propertyPropertiesOpen').click();
 				} else {
-					showAlert('Error', 'Select a property', $scope);
+					showAlert('Error', 'Select a Property', $scope);
 				}
 			} else {
 				// assume Entity or Connector
@@ -464,6 +468,21 @@ function main(container, outline, toolbar, sidebar, status) {
 				}
 				
 			}
+		});
+
+		toolbar.appendChild(spacer.cloneNode(true));
+
+		addToolbarButton(editor, toolbar, 'sidebarnav', 'Sidebar Navigation', 'map-signs', true);
+
+		// Defines a new sidebarnav action
+		editor.addAction('sidebarnav', function(editor, cell) {
+
+			//graph.getModel()
+			$('#sidebarNavigationPropertiesOpen').click();
+
+			// $scope.$parent.cell = cell;
+			// $scope.$apply();
+			
 		});
 
 		toolbar.appendChild(spacer.cloneNode(true));
@@ -532,6 +551,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
 
 	deserializeFilter(graph);
+	loadSidebar(doc, graph);
 }
 
 function deserializeFilter(graph) {
@@ -558,3 +578,38 @@ function deserializeFilter(graph) {
 	}
 }
 		
+ function loadSidebar(doc, graph) {
+	//  console.log(JSON.stringify(doc));
+	if (!graph.getModel().sidebar) {
+		graph.getModel().sidebar = [];
+	}
+	for (var i=0;i<doc.children.length;i++) {
+		var element = doc.children[i];
+		if (element.localName === "model") {
+			for (var j=0;j<element.children.length;j++) {
+				var sidebar = element.children[j];
+				if (sidebar.localName === "sidebar") {
+					for (var k=0;k<sidebar.children.length;k++) {
+						var item = sidebar.children[k];
+						var copy = {};
+						for (var m=0;m<item.children.length;m++) {
+							var attribute = item.children[m];
+							if (attribute.localName === "path") {
+								copy.path = attribute.textContent;
+							} else if (attribute.localName === "label") {
+								copy.label = attribute.textContent;
+							} else if (attribute.localName === "icon") {
+								copy.icon = attribute.textContent;
+							} else if (attribute.localName === "url") {
+								copy.url = attribute.textContent;
+							}
+						}
+						graph.getModel().sidebar.push(copy);
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+ }

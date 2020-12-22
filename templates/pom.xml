@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>5.6.0-SNAPSHOT</version>
+		<version>5.7.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -70,6 +70,9 @@
 		<module>template-openui5-master-detail</module>
 		<module>template-openui5-table</module>
 		<module>template-websocket</module>
+		<module>template-application-dao-mongodb</module>
+		<module>template-application-rest-mongodb</module>
+		<module>template-application-ui-angular-mongodb</module>
 	</modules>
 
 	<profiles>

@@ -1,0 +1,11 @@
+{
+    "guid": "template-application-ui-angular-mongodb",
+    "dependencies": [
+        {
+            "guid": "template-application-ui-angular-mongodb",
+            "url": "https://github.com/dirigiblelabs/template-application-ui-angular-mongodb.git",
+            "type": "git",
+            "branch": "master"
+        }
+    ]
+}

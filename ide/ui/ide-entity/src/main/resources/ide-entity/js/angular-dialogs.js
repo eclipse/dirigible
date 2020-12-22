@@ -609,6 +609,91 @@ angular.module('ui.entity-data.modeler').controller('ModelerCtrl', function ($ui
 		$scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 	};
 
+	// Save SidebarNavigation's properties
+	ctrl.okSidebarNavigationProperties = function() {
+		// var clone = $scope.$parent.sidebar;
+		// $scope.$parent.graph.model.sidebar = clone;
+		
+		// var sidebarNavigation = new SidebarNavigation();
+		// connector.name = $scope.$parent.cell.source.value.relationshipName;
+		// $scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
+	};
+
+
+
+
+
+
+
+
+
+	$scope.openSidebarNewDialog = function() {
+		$scope.actionType = 'sidebarNew';
+		$scope.sidebarEntity = {};
+		toggleSidebarEntityModal();
+	};
+
+	$scope.openSidebarEditDialog = function(entity) {
+		$scope.actionType = 'sidebarUpdate';
+		$scope.sidebarEntity = entity;
+		toggleSidebarEntityModal();
+	};
+
+	$scope.openSidebarDeleteDialog = function(entity) {
+		$scope.actionType = 'sidebarDelete';
+		$scope.sidebarEntity = entity;
+		toggleSidebarEntityModal();
+	};
+
+	$scope.closeSidebar = function() {
+		//load();
+		toggleSidebarEntityModal();
+	};
+	
+	$scope.sidebarCreate = function() {
+		if (!$scope.$parent.graph.model.sidebar) {
+			$scope.$parent.graph.model.sidebar = [];
+		}
+		var exists = $scope.$parent.graph.model.sidebar.filter(function(e) {
+			return e.path === $scope.sidebarEntity.path;
+		});
+		if (exists.length === 0) {
+			$scope.$parent.graph.model.sidebar.push($scope.sidebarEntity);
+			toggleSidebarEntityModal();
+		} else {
+			$scope.error = "Navigation with the path [" + $scope.sidebarEntity.path + "] already exists!";
+		}
+		
+	};
+
+	$scope.sidebarUpdate = function() {
+		// auto-wired
+		toggleSidebarEntityModal();
+	};
+
+	$scope.sidebarDelete = function() {
+		if (!$scope.$parent.graph.model.sidebar) {
+			$scope.$parent.graph.model.sidebar = [];
+		}
+		$scope.$parent.graph.model.sidebar = $scope.$parent.graph.model.sidebar.filter(function(e) {
+			return e !== $scope.sidebarEntity;
+		}); 
+		toggleSidebarEntityModal();
+	};
+
+	
+	function toggleSidebarEntityModal() {
+		$('#sidebarEntityModal').modal('toggle');
+		$scope.error = null;
+	}
+
+
+
+
+
+
+
+
 	main(document.getElementById('graphContainer'),
 			document.getElementById('outlineContainer'),
 		 	document.getElementById('toolbarContainer'),

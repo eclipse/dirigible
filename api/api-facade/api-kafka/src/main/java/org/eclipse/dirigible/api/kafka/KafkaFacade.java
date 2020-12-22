@@ -23,13 +23,36 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KafkaFacade implements IScriptingFacade {
 	
+	private static final String DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER = "DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER";
+	
+	private static final String DIRIGIBLE_KAFKA_ACKS = "DIRIGIBLE_KAFKA_ACKS";
+	
+	private static final String DIRIGIBLE_KAFKA_KEY_SERIALIZER = "DIRIGIBLE_KAFKA_KEY_SERIALIZER";
+	
+	private static final String DIRIGIBLE_KAFKA_VALUE_SERIALIZER = "DIRIGIBLE_KAFKA_VALUE_SERIALIZER";
+	
+	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED = "DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED";
+	
+	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL = "DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL";
+	
+	
 	private static final String DEFAULT_BOOTSTRAP_SERVER = "localhost:9092";
-
+	
+	private static final String DIRIGIBLE_KAFKA_ACKS_ALL = "all";
+	
+	private static final String DIRIGIBLE_KAFKA_SERIALIZER_STRING = "org.apache.kafka.common.serialization.StringSerializer";
+	
+	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT = "true";
+	
+	private static final String DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT = "1000";
+	
+	
 	private static final Logger logger = LoggerFactory.getLogger(KafkaFacade.class);
 	
 	private static Map<String, Producer<String, String>> PRODUCERS = Collections.synchronizedMap(new HashMap());
@@ -51,7 +74,8 @@ public class KafkaFacade implements IScriptingFacade {
 		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
 		Producer<String, String> producer = null;
 		
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : DEFAULT_BOOTSTRAP_SERVER;
+		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
 		if (server != null) {
 			producer = PRODUCERS.get(server);
 		}
@@ -63,19 +87,22 @@ public class KafkaFacade implements IScriptingFacade {
 			}
 			if (props.get("bootstrap.servers") == null) {
 				// default to localhost
-				props.put("bootstrap.servers", DEFAULT_BOOTSTRAP_SERVER);
+				props.put("bootstrap.servers", bootstrapServer);
 			}
 			if (props.get("acks") == null) {
 				// default to all
-				props.put("acks", "all");
+				String acks = Configuration.get(DIRIGIBLE_KAFKA_ACKS, DIRIGIBLE_KAFKA_ACKS_ALL);
+				props.put("acks", acks);
 			}
 			if (props.get("key.serializer") == null) {
 				// default to org.apache.kafka.common.serialization.StringSerializer
-				props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+				String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+				props.put("key.serializer", keySerializer);
 			}
 			if (props.get("value.serializer") == null) {
 				// default to org.apache.kafka.common.serialization.StringSerializer
-				props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+				String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+				props.put("value.serializer", valueSerializer);
 			}
 			producer = new KafkaProducer<>(props);
 			PRODUCERS.put(server, producer);
@@ -100,7 +127,8 @@ public class KafkaFacade implements IScriptingFacade {
 		Map map = GsonHelper.GSON.fromJson(configuration, Map.class);
 		Producer<String, String> producer = null;
 		
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : DEFAULT_BOOTSTRAP_SERVER;
+		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
 		if (server != null) {
 			producer = PRODUCERS.get(server);
 		}
@@ -124,7 +152,8 @@ public class KafkaFacade implements IScriptingFacade {
 		KafkaConsumerRunner consumerRunner = null;
 		
 		String location = null;
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : DEFAULT_BOOTSTRAP_SERVER;
+		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
 		location = createLocation(destination, server); 
 		consumerRunner = CONSUMERS.get(location);
 		
@@ -135,7 +164,7 @@ public class KafkaFacade implements IScriptingFacade {
 			}
 			if (props.get("bootstrap.servers") == null) {
 				// default to localhost
-				props.put("bootstrap.servers", DEFAULT_BOOTSTRAP_SERVER);
+				props.put("bootstrap.servers", bootstrapServer);
 			}
 			if (props.get("group.id") == null) {
 				// default to handler
@@ -143,19 +172,23 @@ public class KafkaFacade implements IScriptingFacade {
 			}
 			if (props.get("enable.auto.commit") == null) {
 				// autocommit
-				props.put("enable.auto.commit", "true");
+				String enableAutoCommit = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED, DIRIGIBLE_KAFKA_AUTOCOMMIT_ENABLED_DEFAULT);
+				props.put("enable.auto.commit", enableAutoCommit);
 			}
 			if (props.get("auto.commit.interval.ms") == null) {
 				// autocommit interval 1000
-				props.put("auto.commit.interval.ms", "1000");
+				String autoCommitInterval = Configuration.get(DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL, DIRIGIBLE_KAFKA_AUTOCOMMIT_INTERVAL_DEFAULT);
+				props.put("auto.commit.interval.ms", autoCommitInterval);
 			}
 			if (props.get("key.deserializer") == null) {
 				// default to org.apache.kafka.common.serialization.StringSerializer
-				props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+				String keySerializer = Configuration.get(DIRIGIBLE_KAFKA_KEY_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+				props.put("key.deserializer", keySerializer);
 			}
 			if (props.get("value.deserializer") == null) {
 				// default to org.apache.kafka.common.serialization.StringSerializer
-				props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+				String valueSerializer = Configuration.get(DIRIGIBLE_KAFKA_VALUE_SERIALIZER, DIRIGIBLE_KAFKA_SERIALIZER_STRING);
+				props.put("value.deserializer", valueSerializer);
 			}
 			
 			consumer = new KafkaConsumer<>(props);
@@ -181,7 +214,8 @@ public class KafkaFacade implements IScriptingFacade {
 		KafkaConsumerRunner consumerRunner = null;
 		
 		String location = null;
-		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : DEFAULT_BOOTSTRAP_SERVER;
+		String bootstrapServer = Configuration.get(DIRIGIBLE_KAFKA_BOOTSTRAP_SERVER, DEFAULT_BOOTSTRAP_SERVER);
+		String server = map.get("bootstrap.servers") != null ? map.get("bootstrap.servers").toString() : bootstrapServer;
 		location = createLocation(destination, server);
 		consumerRunner = CONSUMERS.get(location);
 		
