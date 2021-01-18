@@ -556,7 +556,7 @@
 		<commons.io>2.6</commons.io>
 		<commons.codec>1.10</commons.codec>
 		<commons.lang3>3.9</commons.lang3>
-		<cxf.version>3.3.4</cxf.version>
+		<cxf.version>3.4.2</cxf.version>
 		<gson.version>2.2.4</gson.version>
 		<guice.version>4.2.2</guice.version>
 		<mockito.version>2.23.0</mockito.version>
