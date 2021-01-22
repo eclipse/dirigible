@@ -38,7 +38,7 @@ public class SecuritySynchronizerJobDefinitionProvider implements IJobDefinition
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(SecuritySynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription(SECURITY_ROLES_AND_ACCESS_SYNCHRONIZER_JOB);
-		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_SECURITY, "0/10 * * * * ?");
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_SECURITY, "0/20 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.migrations.test;
@@ -24,10 +24,12 @@ import javax.inject.Inject;
 
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.synchronizer.MigrationsSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 import org.eclipse.dirigible.core.test.AbstractGuiceTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -72,8 +74,6 @@ public class MigrationsSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createMigrationTest() throws MigrationsException, IOException, MigrationsException {
-//		migrationsPublisher.registerPredeliveredMigrations("/migrations/test.migrate");
-
 		InputStream in = MigrationsArtifactTest.class.getResourceAsStream("/migrations/test.migrate");
 		InputStream js = MigrationsArtifactTest.class.getResourceAsStream("/migrations/migration.js");
 		try {
@@ -85,6 +85,7 @@ public class MigrationsSynchronizerTest extends AbstractGuiceTest {
 					migrationsCoreService.serializeMigration(migration).getBytes());
 			repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/migrations/migration.js", handler.getBytes());
 
+			Configuration.set(ISynchronizer.DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES, "true");
 			migrationsPublisher.synchronize();
 
 			MigrationDefinition migrationBack = migrationsCoreService.getMigration("/migrations/test.migrate");
@@ -112,6 +113,7 @@ public class MigrationsSynchronizerTest extends AbstractGuiceTest {
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/migrations/test.migrate");
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/migrations/migration.js");
 
+		Configuration.set(ISynchronizer.DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES, "true");
 		migrationsPublisher.synchronize();
 
 		MigrationDefinition migrationBack = migrationsCoreService.getMigration(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/migrations/test.migrate");

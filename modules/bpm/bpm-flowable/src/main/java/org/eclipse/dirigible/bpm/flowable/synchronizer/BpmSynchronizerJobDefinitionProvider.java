@@ -38,7 +38,7 @@ public class BpmSynchronizerJobDefinitionProvider implements IJobDefinitionProvi
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(BpmSynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription(BPM_SYNCHRONIZER_JOB);
-		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_BPM, "0/30 * * * * ?");
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_BPM, "0/50 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;

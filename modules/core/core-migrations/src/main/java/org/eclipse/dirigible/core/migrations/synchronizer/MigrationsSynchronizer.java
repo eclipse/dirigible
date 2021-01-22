@@ -108,16 +108,20 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 		synchronized (MigrationsSynchronizer.class) {
 			logger.trace("Synchronizing Migrations artifacts...");
 			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				startMigrations();
-				int immutableCount = MIGRATIONS_PREDELIVERED.size();
-				int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					startMigrations();
+					int immutableCount = MIGRATIONS_PREDELIVERED.size();
+					int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				} else {
+					failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+				}
 			} catch (Exception e) {
 				logger.error("Synchronizing process for Migrations artifacts failed.", e);
 				try {

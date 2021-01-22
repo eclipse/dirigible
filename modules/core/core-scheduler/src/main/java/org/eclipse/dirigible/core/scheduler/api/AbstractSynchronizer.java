@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -172,10 +173,12 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
 		long currentTimeMillis = System.currentTimeMillis();
 		if (synchronizerStateDefinition == null) {
-			throw new SchedulerException(format("Invalid state - finishing failed synchronization for: {0}, which has not been initialized yet.", this.getClass().getCanonicalName()));
+			logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been initialized yet.", this.getClass().getCanonicalName()));
+			synchronizerCoreService.createSynchronizerState(name, ISynchronizerCoreService.STATE_FAILED, message, 
+					0, 0, 0, 0);
 		} else {
 			if (synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_IN_PROGRESS) {
-				throw new SchedulerException(format("Invalid state - finishing failed synchronization for: {0}, which has not been 'in progress'.", this.getClass().getCanonicalName()));
+				logger.error(format("Invalid state - finishing failed synchronization for: {0}, which has not been 'in progress'.", this.getClass().getCanonicalName()));
 			}
 			synchronizerStateDefinition.setState(ISynchronizerCoreService.STATE_FAILED);
 			synchronizerStateDefinition.setMessage(message);
@@ -185,6 +188,16 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			}
 			synchronizerCoreService.updateSynchronizerState(synchronizerStateDefinition);
 		}
+	}
+	
+	protected boolean isSynchronizerSuccessful(String name) throws SchedulerException {
+		boolean ignoreDependencies = Boolean.parseBoolean(Configuration.get(ISynchronizer.DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES, "false"));
+		if (ignoreDependencies) {
+			logger.warn(format("Dependencies skiped for: {0}, due to configuration.", this.getClass().getCanonicalName()));
+			return true;
+		}
+		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
+		return synchronizerStateDefinition != null && synchronizerStateDefinition.getState() == ISynchronizerCoreService.STATE_SUCCESSFUL;
 	}
 
 }

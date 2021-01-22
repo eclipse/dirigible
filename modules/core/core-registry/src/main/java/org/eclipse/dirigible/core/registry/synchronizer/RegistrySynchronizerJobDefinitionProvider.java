@@ -31,7 +31,7 @@ public class RegistrySynchronizerJobDefinitionProvider implements IJobDefinition
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(RegistrySynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription(REGISTRY_SYNCHRONIZER_JOB);
-		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_REGISTRY, "0/12 * * * * ?");
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_REGISTRY, "0/35 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;

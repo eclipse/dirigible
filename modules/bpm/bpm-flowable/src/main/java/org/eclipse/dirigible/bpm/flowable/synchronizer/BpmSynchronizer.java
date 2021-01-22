@@ -115,16 +115,20 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		synchronized (BpmSynchronizer.class) {
 			logger.trace("Synchronizing BPMN files...");
 			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				updateProcessEngine();
-				int immutableCount = BPMN_PREDELIVERED.size();
-				int mutableCount = BPMN_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					updateProcessEngine();
+					int immutableCount = BPMN_PREDELIVERED.size();
+					int mutableCount = BPMN_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				} else {
+					failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+				}
 			} catch (Exception e) {
 				logger.error("Synchronizing process for BPMN files failed.", e);
 				try {

@@ -102,6 +102,8 @@
 	org.quartz.impl.jdbcjobstore.PointbaseDelegate
 	org.quartz.impl.jdbcjobstore.SybaseDelegate
 
+### Synchronizer
+- `DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES`: (default: false)
 
 ### Runtime
 
@@ -111,16 +113,16 @@
 
 #### Jobs
 
-- `DIRIGIBLE_JOB_EXPRESSION_BPM`: (default: "0/30 * * * * ?")
-- `DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES`: (default: "0/20 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_BPM`: (default: "0/50 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES`: (default: "0/25 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_EXTENSIONS`: (default: "0/10 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_JOBS`: (default: "0/15 * * * * ?")
-- `DIRIGIBLE_JOB_EXPRESSION_MESSAGING`: (default: "0/10 * * * * ?")
-- `DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS`: (default: "0/50 * * * * ?")
-- `DIRIGIBLE_JOB_EXPRESSION_ODATA`: (default: "0/25 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_MESSAGING`: (default: "0/25 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS`: (default: "0/55 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_ODATA`: (default: "0/45 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_PUBLISHER`: (default: "0/5 * * * * ?")
 - `DIRIGIBLE_JOB_EXPRESSION_SECURITY`: (default: "0/10 * * * * ?")
-- `DIRIGIBLE_JOB_EXPRESSION_REGISTRY` : (default: "0/12 * * * * ?")
+- `DIRIGIBLE_JOB_EXPRESSION_REGISTRY` : (default: "0/35 * * * * ?")
 - `DIRIGIBLE_JOB_DEFAULT_TIMEOUT`: (default: 3 minutes)
 
 ### CMS

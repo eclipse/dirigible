@@ -38,7 +38,7 @@ public class MigrationsSynchronizerJobDefinitionProvider implements IJobDefiniti
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_INTERNAL);
 		jobDefinition.setClazz(MigrationsSynchronizerJob.class.getCanonicalName());
 		jobDefinition.setDescription(MIGRATIONS_SYNCHRONIZER_JOB);
-		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS, "0/50 * * * * ?");
+		String expression = Configuration.get(DIRIGIBLE_JOB_EXPRESSION_MIGRATIONS, "0/55 * * * * ?");
 		jobDefinition.setExpression(expression);
 		jobDefinition.setSingleton(true);
 		return jobDefinition;
