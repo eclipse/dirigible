@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.job.synchronizer;
+
+import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,8 @@ public class JobSynchronizer extends AbstractSynchronizer {
 
 	// @Inject
 	// private SchedulerManager schedulerManager;
+	
+	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	/**
 	 * Force synchronization.
@@ -95,14 +99,23 @@ public class JobSynchronizer extends AbstractSynchronizer {
 		synchronized (JobSynchronizer.class) {
 			logger.trace("Synchronizing Jobs...");
 			try {
+				startSynchronization(SYNCHRONIZER_NAME);
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
 				startJobs();
+				int immutableCount = JOBS_PREDELIVERED.size();
+				int mutableCount = JOBS_SYNCHRONIZED.size();
 				cleanup();
 				clearCache();
+				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 			} catch (Exception e) {
 				logger.error("Synchronizing process for Jobs failed.", e);
+				try {
+					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+				} catch (SchedulerException e1) {
+					logger.error("Synchronizing process for Jobs files failed in registering the state log.", e);
+				}
 			}
 			logger.trace("Done synchronizing Jobs.");
 		}
@@ -144,6 +157,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Jobs...");
+		super.cleanup();
 
 		try {
 			List<JobDefinition> jobDefinitions = schedulerCoreService.getJobs();

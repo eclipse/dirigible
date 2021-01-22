@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.ds.synchronizer;
@@ -38,7 +38,9 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
@@ -127,9 +129,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 
 	@Inject
 	private DataStructuresCoreService dataStructuresCoreService;
-
+	
 	@Inject
 	private DataSource dataSource;
+	
+	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	/**
 	 * Force synchronization.
@@ -260,15 +264,42 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 		synchronized (DataStructuresSynchronizer.class) {
 			logger.trace("Synchronizing Data Structures...");
 			try {
+				startSynchronization(SYNCHRONIZER_NAME);
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
 				updateDatabaseSchema();
 				updateDatabaseContent();
+				int immutableTablesCount = TABLES_PREDELIVERED.size();
+				int immutableViewsCount = VIEWS_PREDELIVERED.size();
+				int immutableSchemaCount = SCHEMA_PREDELIVERED.size();
+				int immutableReplaceCount = REPLACE_PREDELIVERED.size();
+				int immutableAppendCount = APPEND_PREDELIVERED.size();
+				int immutableDeleteCount = DELETE_PREDELIVERED.size();
+				int immutableUpdateCount = UPDATE_PREDELIVERED.size();
+				
+				int mutableTablesCount = TABLES_SYNCHRONIZED.size();
+				int mutableViewsCount = VIEWS_SYNCHRONIZED.size();
+				int mutableSchemaCount = DATA_STRUCTURE_SCHEMA_MODELS.size();
+				int mutableReplaceCount = DATA_STRUCTURE_REPLACE_MODELS.size();
+				int mutableAppendCount = DATA_STRUCTURE_APPEND_MODELS.size();
+				int mutableDeleteCount = DATA_STRUCTURE_DELETE_MODELS.size();
+				int mutableUpdateCount = DATA_STRUCTURE_UPDATE_MODELS.size();
+				
 				cleanup(); // TODO drop tables and views for non-existing models
 				clearCache();
+				
+				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Tables: {0}, Views: {1}, Schema: {2}, Replace: {3}, Append: {4}, Delete: {5}, Update: {6}], "
+						+ "Mutable: [Tables: {7}, Views: {8}, Schema: {9}, Replace: {10}, Append: {11}, Delete: {12}, Update: {13}]", 
+						immutableTablesCount, immutableViewsCount, immutableSchemaCount, immutableReplaceCount, immutableAppendCount, immutableDeleteCount, immutableUpdateCount,
+						mutableTablesCount, mutableViewsCount, mutableSchemaCount, mutableReplaceCount, mutableAppendCount, mutableDeleteCount, mutableUpdateCount));
 			} catch (Exception e) {
 				logger.error("Synchronizing process for Data Structures failed.", e);
+				try {
+					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+				} catch (SchedulerException e1) {
+					logger.error("Synchronizing process for Data Structures files failed in registering the state log.", e);
+				}
 			}
 			logger.trace("Done synchronizing Data Structures.");
 		}
@@ -659,6 +690,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Data Structures...");
+		super.cleanup();
 
 		try {
 			Connection connection = null;

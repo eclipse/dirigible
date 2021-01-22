@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.security.synchronizer;
@@ -37,6 +37,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -74,8 +75,9 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	@Inject
 	private PersistenceManager<AccessDefinition> accessPersistenceManager;
 
-	
 	private volatile boolean upgradePassed; 
+	
+	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	/**
 	 * Force synchronization.
@@ -142,16 +144,28 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 		synchronized (SecuritySynchronizer.class) {
 			logger.trace("Synchronizing Roles and Access artifacts...");
 			try {
+				startSynchronization(SYNCHRONIZER_NAME);
 				if (!upgradePassed) {
 					upgradePassed = checkUpgrade();
 				}
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
+				int immutableRolesCount = ROLES_PREDELIVERED.size();
+				int immutableAccessCount = ACCESS_PREDELIVERED.size();
+				int mutableRolesCount = ROLES_SYNCHRONIZED.size();
+				int mutableAccessCount = ACCESS_SYNCHRONIZED.size();
 				cleanup();
 				clearCache();
+				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Roles: {0}, Immutable Accesses: {1}, Mutable Roles: {2}, Mutable Accesses: {3}", 
+						immutableRolesCount, immutableAccessCount, mutableRolesCount, mutableAccessCount));
 			} catch (Exception e) {
 				logger.error("Synchronizing process for Roles and Access artifacts failed.", e);
+				try {
+					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+				} catch (SchedulerException e1) {
+					logger.error("Synchronizing process for Roles and Access files failed in registering the state log.", e);
+				}
 			}
 			logger.trace("Done synchronizing Roles and Access artifacts.");
 		}
@@ -348,6 +362,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Roles and Access artifacts...");
+		super.cleanup();
 
 		try {
 			List<RoleDefinition> roleDefinitions = securityCoreService.getRoles();

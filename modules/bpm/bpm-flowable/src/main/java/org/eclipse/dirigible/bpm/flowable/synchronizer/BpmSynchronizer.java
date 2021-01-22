@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 /*
@@ -44,6 +44,7 @@ import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
 import org.eclipse.dirigible.bpm.flowable.service.BpmCoreService;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.flowable.engine.ProcessEngine;
@@ -70,6 +71,8 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	
 	@Inject
 	private BpmProviderFlowable bpmProviderFlowable;
+	
+	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	/**
 	 * Force synchronization.
@@ -112,14 +115,23 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 		synchronized (BpmSynchronizer.class) {
 			logger.trace("Synchronizing BPMN files...");
 			try {
+				startSynchronization(SYNCHRONIZER_NAME);
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
 				updateProcessEngine();
+				int immutableCount = BPMN_PREDELIVERED.size();
+				int mutableCount = BPMN_SYNCHRONIZED.size();
 				cleanup();
 				clearCache();
+				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 			} catch (Exception e) {
 				logger.error("Synchronizing process for BPMN files failed.", e);
+				try {
+					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+				} catch (SchedulerException e1) {
+					logger.error("Synchronizing process for BPMN files failed in registering the state log.", e);
+				}
 			}
 			logger.trace("Done synchronizing BPMN files.");
 		}
@@ -198,6 +210,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up BPMN files...");
+		super.cleanup();
 
 		try {
 			List<BpmDefinition> bpmDefinitions = bpmCoreService.getBpmList();

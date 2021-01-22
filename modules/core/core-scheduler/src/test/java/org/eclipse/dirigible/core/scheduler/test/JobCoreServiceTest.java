@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.scheduler.test;
@@ -76,9 +76,9 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	public void getJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
 		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
-		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
-		assertEquals("test_job1", extensionPointDefinition.getName());
-		assertEquals("Test", extensionPointDefinition.getDescription());
+		JobDefinition jobDefinition = jobCoreService.getJob("test_job1");
+		assertEquals("test_job1", jobDefinition.getName());
+		assertEquals("Test", jobDefinition.getDescription());
 		jobCoreService.removeJob("test_job1");
 	}
 
@@ -92,13 +92,13 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	public void updatetJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
 		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
-		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
-		assertEquals("test_job1", extensionPointDefinition.getName());
-		assertEquals("Test", extensionPointDefinition.getDescription());
+		JobDefinition jobDefinition = jobCoreService.getJob("test_job1");
+		assertEquals("test_job1", jobDefinition.getName());
+		assertEquals("Test", jobDefinition.getDescription());
 		jobCoreService.updateJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test 2", "expr...", false);
-		extensionPointDefinition = jobCoreService.getJob("test_job1");
-		assertEquals("test_job1", extensionPointDefinition.getName());
-		assertEquals("Test 2", extensionPointDefinition.getDescription());
+		jobDefinition = jobCoreService.getJob("test_job1");
+		assertEquals("test_job1", jobDefinition.getName());
+		assertEquals("Test 2", jobDefinition.getDescription());
 		jobCoreService.removeJob("test_job1");
 	}
 
@@ -112,12 +112,12 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	public void removeJob() throws SchedulerException {
 		jobCoreService.removeJob("test_job1");
 		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
-		JobDefinition extensionPointDefinition = jobCoreService.getJob("test_job1");
-		assertEquals("test_job1", extensionPointDefinition.getName());
-		assertEquals("Test", extensionPointDefinition.getDescription());
+		JobDefinition jobDefinition = jobCoreService.getJob("test_job1");
+		assertEquals("test_job1", jobDefinition.getName());
+		assertEquals("Test", jobDefinition.getDescription());
 		jobCoreService.removeJob("test_job1");
-		extensionPointDefinition = jobCoreService.getJob("test_job1");
-		assertNull(extensionPointDefinition);
+		jobDefinition = jobCoreService.getJob("test_job1");
+		assertNull(jobDefinition);
 	}
 
 }

@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.messaging.synchronizer;
+
+import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +33,7 @@ import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
 import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
@@ -55,6 +58,8 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	@Inject
 	private SchedulerManager messagingManager;
+	
+	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	/**
 	 * Force synchronization.
@@ -95,14 +100,23 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		synchronized (MessagingSynchronizer.class) {
 			logger.trace("Synchronizing Listeners...");
 			try {
+				startSynchronization(SYNCHRONIZER_NAME);
 				clearCache();
 				synchronizePredelivered();
 				synchronizeRegistry();
 				startListeners();
+				int immutableCount = LISTENERS_PREDELIVERED.size();
+				int mutableCount = LISTENERS_SYNCHRONIZED.size();
 				cleanup();
 				clearCache();
+				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
 			} catch (Exception e) {
 				logger.error("Synchronizing process for Listeners failed.", e);
+				try {
+					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+				} catch (SchedulerException e1) {
+					logger.error("Synchronizing process for Listeners files failed in registering the state log.", e);
+				}
 			}
 			logger.trace("Done synchronizing Listeners.");
 		}
@@ -144,6 +158,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	@Override
 	protected void cleanup() throws SynchronizationException {
 		logger.trace("Cleaning up Listeners...");
+		super.cleanup();
 
 		try {
 			List<ListenerDefinition> listenerDefinitions = messagingCoreService.getListeners();

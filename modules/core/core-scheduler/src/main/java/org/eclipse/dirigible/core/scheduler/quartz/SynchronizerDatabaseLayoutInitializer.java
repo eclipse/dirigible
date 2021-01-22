@@ -26,11 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Quartz Database Layout Initializer.
+ * The Synchronizer Database Layout Initializer.
  */
-public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutInitializer {
+public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayoutInitializer {
 
-	private static final Logger logger = LoggerFactory.getLogger(QuartzDatabaseLayoutInitializer.class);
+	private static final Logger logger = LoggerFactory.getLogger(SynchronizerDatabaseLayoutInitializer.class);
 
 	@Inject
 	private DataSource datasource;
@@ -53,44 +53,17 @@ public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutIniti
 				datasource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
 			}
 			connection = datasource.getConnection();
-			logger.debug("Starting to create the database layout for Quartz...");
+			logger.debug("Starting to create the database layout for Synchronizer...");
 			@SuppressWarnings("rawtypes")
 			SqlFactory sqlFactory = SqlFactory.getNative(connection);
-			if (!sqlFactory.exists(connection, "QUARTZ_JOB_DETAILS")) {
-				createTable(connection, "/quartz/QUARTZ_JOB_DETAILS.json");
+			if (!sqlFactory.exists(connection, "DIRIGIBLE_SYNCHRONIZER_STATE")) {
+				createTable(connection, "/synchronizer/DIRIGIBLE_SYNCHRONIZER_STATE.json");
 			}
-			if (!sqlFactory.exists(connection, "QUARTZ_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_SIMPLE_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_SIMPLE_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_CRON_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_CRON_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_SIMPROP_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_SIMPROP_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_BLOB_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_BLOB_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_CALENDARS")) {
-				createTable(connection, "/quartz/QUARTZ_CALENDARS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_PAUSED_TRIGGER_GRPS")) {
-				createTable(connection, "/quartz/QUARTZ_PAUSED_TRIGGER_GRPS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_FIRED_TRIGGERS")) {
-				createTable(connection, "/quartz/QUARTZ_FIRED_TRIGGERS.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_SCHEDULER_STATE")) {
-				createTable(connection, "/quartz/QUARTZ_SCHEDULER_STATE.json");
-			}
-			if (!sqlFactory.exists(connection, "QUARTZ_LOCKS")) {
-				createTable(connection, "/quartz/QUARTZ_LOCKS.json");
+			if (!sqlFactory.exists(connection, "DIRIGIBLE_SYNCHRONIZER_STATE_LOG")) {
+				createTable(connection, "/synchronizer/DIRIGIBLE_SYNCHRONIZER_STATE_LOG.json");
 			}
 
-			logger.debug("Done creating the database layout for Quartz.");
+			logger.debug("Done creating the database layout for Synchronizer.");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
