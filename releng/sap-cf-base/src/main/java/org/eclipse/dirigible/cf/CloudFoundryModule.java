@@ -17,13 +17,13 @@ import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.PostgreDbEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.PostgreHyperscalerDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.XsuaaEnv.XsuaaCredentialsEnv;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.oauth.OAuthService;
@@ -59,9 +59,10 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	protected void configure() {
 		configureOAuth();
 		boolean customPostgreDb = bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
+		boolean customPostgreHyperscalerDb = bindPostgreHyperscalerDb(CloudFoundryUtils.getPostgreHyperscalerDbEnv());
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
 		boolean customHanaSchema = bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
-		if (!customPostgreDb && !customHanaDb && !customHanaSchema) {
+		if (!customPostgreDb && !customPostgreHyperscalerDb && !customHanaDb && !customHanaSchema) {
 			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
 		}
 	}
@@ -112,6 +113,24 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		return true;
 	}
 
+	private boolean bindPostgreHyperscalerDb(PostgreHyperscalerDbEnv env) {
+		if (env == null) {
+			return false;
+		}
+
+		String name = DATABASE_POSTGRE;
+		String url = env.getCredentials().getUrl();
+		String driver = DATABASE_POSTGRE_DRIVER;
+		String username = env.getCredentials().getUsername();
+		String password = env.getCredentials().getPassword();
+
+		setDatabaseProperties(name, url, driver, username, password);
+
+		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
+		Configuration.set(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "true");
+
+		return true;
+	}
 	private boolean bindHanaDb(HanaDbEnv env) {
 		if (env == null) {
 			return false;
