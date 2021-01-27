@@ -58,7 +58,7 @@ public class CloudFoundryUtils {
 	public static PostgreHyperscalerDbEnv getPostgreHyperscalerDbEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
-		return vcapServicesEnv.getPostgreDbEnv() != null ? vcapServicesEnv.getPostgreHyperscalerDbEnv().get(0) : null;
+		return vcapServicesEnv.getPostgreHyperscalerDbEnv() != null ? vcapServicesEnv.getPostgreHyperscalerDbEnv().get(0) : null;
 	}
 
 	public static HanaDbEnv getHanaDbEnv() {
