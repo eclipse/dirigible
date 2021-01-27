@@ -200,7 +200,20 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 			"session_user",
 			"system_user",
 			"user",
-			"version"
+			"version",
+			
+			"and",
+			"between",
+			"binary",
+			"case",
+			"div",
+			"in",
+			"is",
+			"not",
+			"null",
+			"like",
+			"rlike",
+			"xor"
 			
 			})));
 

@@ -511,5 +511,68 @@ public class SelectTest {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
 	}
+	
+	/**
+	 * Select column and where clause in case sensitive mode
+	 */
+	@Test
+	public void selectFunctionCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("COS(0.0) c")
+				.from("DUMMY")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
+	
+	/**
+	 * Select column and where clause in case sensitive mode
+	 */
+	@Test
+	public void selectColumnWithSpecialCharsCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("FIRST_NAME1$")
+				.from("CUSTOMERS")
+				.where("PRICE_BASIC1$ LIKE ?")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?)", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
+	
+	/**
+	 * Select column and where clause in case sensitive mode
+	 */
+	@Test
+	public void selectColumnWithSpecialCharsAndNumbersCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("FIRST_NAME1$")
+				.from("CUSTOMERS")
+				.where("PRICE_BASIC1$ LIKE ?")
+				.where("PRICE_BASIC2$ == 0")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT \"FIRST_NAME1$\" FROM \"CUSTOMERS\" WHERE (\"PRICE_BASIC1$\" LIKE ?) AND (\"PRICE_BASIC2$\" == 0)", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
 
 }

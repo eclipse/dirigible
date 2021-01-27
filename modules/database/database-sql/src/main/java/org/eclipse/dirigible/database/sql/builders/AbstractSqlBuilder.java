@@ -93,34 +93,52 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		return name;
 	}
 	
+	private Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
+	
 	/**
 	 * Check whether the name is a column (one word) or it is complex expression containing functions, etc. (count(*))
 	 * @param name the name of the eventual column
 	 * @return true if it is one word
 	 */
 	protected boolean isColumn(String name) {
-		try {
-			String pattern = "^([\\w\\-]+)";
-			Pattern r = Pattern.compile(pattern);
-			Matcher m = r.matcher(name);
-			m.find();
-			String found = m.group(1);
-			return name.equals(found);
-		} catch (Exception e) {
-			return false;
-		}
+		if (name == null) {
+	        return false; 
+	    }
+	    return columnPattern.matcher(name).matches();
 	}
 	
+	/**
+	 * Encapsulate all the non-function and non-numeric words
+	 * @param line the input string
+	 * @return the transformed string
+	 */
 	protected String encapsulateMany(String line) {
-		String regex = "([^a-zA-Z']+)'*\\1*";
+		String regex = "([^a-zA-Z0-9_#$']+)'*\\1*";
 		String[] words = line.split(regex);
 		Set<Set> functionsNames = getDialect().getFunctionsNames();
 		for (String word : words) {
+			if (isNumeric(word)) {
+				continue;
+			}
 			if (!"".equals(word.trim())
 					&& !functionsNames.contains(word.toLowerCase())) {
 				line = line.replace(word, "\"" + word + "\"");
 			}
 		}
 		return line;
+	}
+	
+	private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+	
+	/**
+	 * Check whether the string is a number
+	 * @param s the input
+	 * @return true if it is a number
+	 */
+	protected boolean isNumeric(String s) {
+	    if (s == null) {
+	        return false; 
+	    }
+	    return numericPattern.matcher(s).matches();
 	}
 }

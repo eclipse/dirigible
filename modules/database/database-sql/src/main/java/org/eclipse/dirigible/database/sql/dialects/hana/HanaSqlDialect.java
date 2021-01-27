@@ -243,7 +243,27 @@ public class HanaSqlDialect extends
 			"xmlextractvalue",
 			"xmltable",
 			"year",
-			"years_between"
+			"years_between",
+			
+			"count",
+			"sum",
+			"avg",
+			"min",
+			"max",
+			
+			"and",
+			"between",
+			"binary",
+			"case",
+			"div",
+			"in",
+			"is",
+			"not",
+			"null",
+			"like",
+			"rlike",
+			"xor"
+			
 			})));
 
 
