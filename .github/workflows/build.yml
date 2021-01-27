@@ -38,3 +38,103 @@ jobs:
         docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous
         docker push dirigiblelabs/dirigible-runtime-anonymous
         cd ../../
+    - name: Push OpenShift
+      run: |
+        cd releng/openshift-all
+        docker build -t dirigible-base-platform-openshift -f Dockerfile-base .
+        docker tag dirigible-base-platform-openshift dirigiblelabs/dirigible-base-platform-openshift
+        docker push dirigiblelabs/dirigible-base-platform-openshift
+        docker build -t dirigible-openshift .
+        docker tag dirigible-openshift dirigiblelabs/dirigible-openshift
+        docker push dirigiblelabs/dirigible-openshift
+        cd ../../
+    - name: Push SAP Cloud Foundry
+      run: |
+        cd releng/sap-cf-all
+        docker build -t dirigible-base-platform-sap-cf -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf
+        docker push dirigiblelabs/dirigible-base-platform-sap-cf
+        docker build -t dirigible-sap-cf .
+        docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf
+        docker push dirigiblelabs/dirigible-sap-cf
+        cd ../../
+    - name: Push SAP Cloud Foundry - Runtime
+      run: |
+        cd releng/sap-cf-runtime
+        docker build -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime
+        docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime
+        docker build -t dirigible-sap-cf-runtime .
+        docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime
+        docker push dirigiblelabs/dirigible-sap-cf-runtime
+        cd ../../
+    - name: Push SAP Kyma
+      run: |
+        cd releng/sap-kyma-all
+        docker build -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma
+        docker push dirigiblelabs/dirigible-base-platform-sap-kyma
+        docker build -t dirigible-sap-kyma .
+        docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma
+        docker push dirigiblelabs/dirigible-sap-kyma
+        cd ../../
+    - name: Push SAP Kyma - Runtime
+      run: |
+        cd releng/sap-kyma-runtime
+        docker build -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
+        docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime
+        docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime
+        docker build -t dirigible-sap-kyma-runtime .
+        docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime
+        docker push dirigiblelabs/dirigible-sap-kyma-runtime
+        cd ../../
+    - name: Push Dirigible
+      run: |
+        cd releng/server-all
+        docker build -t dirigible-base-platform -f Dockerfile-base .
+        docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform
+        docker push dirigiblelabs/dirigible-base-platform
+        docker build -t dirigible-all .
+        docker tag dirigible-all dirigiblelabs/dirigible-all
+        docker push dirigiblelabs/dirigible-all
+        cd ../../
+    - name: Push Dirigible - Runtime
+      run: |
+        cd releng/server-runtime
+        docker build -t dirigible-base-platform-runtime -f Dockerfile-base .
+        docker tag dirigible-base-platform-runtime dirigiblelabs/dirigible-base-platform-runtime
+        docker push dirigiblelabs/dirigible-base-platform-runtime
+        docker build -t dirigible-runtime .
+        docker tag dirigible-runtime dirigiblelabs/dirigible-runtime
+        docker push dirigiblelabs/dirigible-runtime
+        cd ../../
+    - name: Push Dirigible - Trial
+      run: |
+        cd releng/trial-all
+        docker build -t dirigible-base-platform-trial -f Dockerfile-base .
+        docker tag dirigible-base-platform-trial dirigiblelabs/dirigible-base-platform-trial
+        docker push dirigiblelabs/dirigible-base-platform-trial
+        docker build -t dirigible-trial .
+        docker tag dirigible-trial dirigiblelabs/dirigible-trial
+        docker push dirigiblelabs/dirigible-trial
+        cd ../../
+    - name: Push Dirigible - Keycloak
+      run: |
+        cd releng/server-keycloak-all
+        docker build -t dirigible-base-platform-keycloak -f Dockerfile-base .
+        docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak
+        docker push dirigiblelabs/dirigible-base-platform-keycloak
+        docker build -t dirigible-keycloak .
+        docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak
+        docker push dirigiblelabs/dirigible-keycloak
+        cd ../../
+    - name: Push Dirigible - Keycloak - Runtime
+      run: |
+        cd releng/server-runtime-keycloak
+        docker build -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
+        docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak
+        docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak
+        docker build -t dirigible-runtime-keycloak .
+        docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak
+        docker push dirigiblelabs/dirigible-runtime-keycloak
+        cd ../../
