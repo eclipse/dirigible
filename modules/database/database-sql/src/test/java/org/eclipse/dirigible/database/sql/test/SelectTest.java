@@ -391,6 +391,27 @@ public class SelectTest {
 	}
 	
 	/**
+	 * Select star in case sensitive mode
+	 */
+	@Test
+	public void selectStarAndColumnCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("*")
+				.column("FIRST_NAME")
+				.from("CUSTOMERS")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT *, \"FIRST_NAME\" FROM \"CUSTOMERS\"", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
+	
+	/**
 	 * Select count in case sensitive mode
 	 */
 	@Test
