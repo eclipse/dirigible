@@ -82,9 +82,11 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the encapsulated name
 	 */
 	protected String encapsulate(String name) {
+		if ("*".equals(name.trim())) {
+			return name;
+		}
 		if (!name.startsWith("\"")) {
-			if (!"*".equals(name.trim())
-				&& isColumn(name.trim())) {
+			if (isColumn(name.trim())) {
 				name = "\"" + name + "\"";
 			} else {
 				name = encapsulateMany(name);
@@ -109,6 +111,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	
 	/**
 	 * Encapsulate all the non-function and non-numeric words
+	 * 
 	 * @param line the input string
 	 * @return the transformed string
 	 */
