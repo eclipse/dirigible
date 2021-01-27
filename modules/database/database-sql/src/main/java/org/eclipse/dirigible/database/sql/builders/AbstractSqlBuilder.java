@@ -82,12 +82,13 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the encapsulated name
 	 */
 	protected String encapsulate(String name) {
-		if (!name.startsWith("\"")
-				&& !"*".equals(name.trim())
+		if (!name.startsWith("\"")) {
+			if (!"*".equals(name.trim())
 				&& isColumn(name.trim())) {
-			name = "\"" + name + "\"";
-		} else {
-			name = encapsulateMany(name);
+				name = "\"" + name + "\"";
+			} else {
+				name = encapsulateMany(name);
+			}
 		}
 		return name;
 	}

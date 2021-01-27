@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.ds.model.processors;
@@ -56,12 +56,19 @@ public class TableCreateProcessor {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void execute(Connection connection, DataStructureTableModel tableModel, boolean skipForeignKeys) throws SQLException {
+		boolean caseSensitive = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
 		String tableName = tableModel.getName();
+		if (caseSensitive) {
+			tableName = "\"" + tableName + "\"";
+		}
 		logger.info("Processing Create Table: " + tableName);
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
 		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
 		for (DataStructureTableColumnModel columnModel : columns) {
 			String name = columnModel.getName();
+			if (caseSensitive) {
+				name = "\"" + name + "\"";
+			}
 			DataType type = DataType.valueOf(columnModel.getType());
 			String length = columnModel.getLength();
 			boolean isNullable = columnModel.isNullable();
@@ -97,7 +104,11 @@ public class TableCreateProcessor {
 				String[] primaryKeyColumns = new String[tableModel.getConstraints().getPrimaryKey().getColumns().length];
 				int i = 0;
 				for (String column : tableModel.getConstraints().getPrimaryKey().getColumns()) {
-					primaryKeyColumns[i++] = column;
+					if (caseSensitive) {
+						primaryKeyColumns[i++] = "\"" + column + "\"";
+					} else {
+						primaryKeyColumns[i++] = column;
+					}
 				}
 				
 				createTableBuilder.primaryKey(primaryKeyColumns);
@@ -106,16 +117,30 @@ public class TableCreateProcessor {
 				if (tableModel.getConstraints().getForeignKeys() != null && !tableModel.getConstraints().getForeignKeys().isEmpty()) {
 					for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
 						String foreignKeyName = foreignKey.getName();
+						if (caseSensitive) {
+							foreignKeyName = "\"" + foreignKeyName + "\"";
+						}
 						String[] foreignKeyColumns = new String[foreignKey.getColumns().length];
 						int i = 0;
 						for (String column : foreignKey.getColumns()) {
-							foreignKeyColumns[i++] = column;
+							if (caseSensitive) {
+								foreignKeyColumns[i++] = "\"" + column + "\"";
+							} else {
+								foreignKeyColumns[i++] = column;
+							}
 						}
 						String foreignKeyReferencedTable = foreignKey.getReferencedTable();
+						if (caseSensitive) {
+							foreignKeyReferencedTable = "\"" + foreignKeyReferencedTable + "\"";
+						}
 						String[] foreignKeyReferencedColumns = new String[foreignKey.getReferencedColumns().length];
 						i = 0;
 						for (String column : foreignKey.getReferencedColumns()) {
-							foreignKeyReferencedColumns[i++] = column;
+							if (caseSensitive) {
+								foreignKeyReferencedColumns[i++] = "\"" + column + "\"";
+							} else {
+								foreignKeyReferencedColumns[i++] = column;
+							}
 						}
 						
 						createTableBuilder.foreignKey(foreignKeyName, foreignKeyColumns, foreignKeyReferencedTable,
@@ -126,10 +151,17 @@ public class TableCreateProcessor {
 			if (tableModel.getConstraints().getUniqueIndices() != null) {
 				for (DataStructureTableConstraintUniqueModel uniqueIndex : tableModel.getConstraints().getUniqueIndices()) {
 					String uniqueIndexName = uniqueIndex.getName();
+					if (caseSensitive) {
+						uniqueIndexName = "\"" + uniqueIndexName + "\"";
+					}
 					String[] uniqueIndexColumns = new String[uniqueIndex.getColumns().length];
 					int i = 0;
 					for (String column : uniqueIndex.getColumns()) {
-						uniqueIndexColumns[i++] = column;
+						if (caseSensitive) {
+							uniqueIndexColumns[i++] = "\"" + column + "\"";
+						} else {
+							uniqueIndexColumns[i++] = column;
+						}
 					}
 					
 					createTableBuilder.unique(uniqueIndexName, uniqueIndexColumns);
@@ -138,6 +170,9 @@ public class TableCreateProcessor {
 			if (tableModel.getConstraints().getChecks() != null) {
 				for (DataStructureTableConstraintCheckModel check : tableModel.getConstraints().getChecks()) {
 					String checkName = check.getName();
+					if (caseSensitive) {
+						checkName = "\"" + checkName + "\"";
+					}
 					createTableBuilder.check(checkName, check.getExpression());
 				}
 			}
