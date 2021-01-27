@@ -182,10 +182,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			}
 			synchronizerStateDefinition.setState(ISynchronizerCoreService.STATE_FAILED);
 			synchronizerStateDefinition.setMessage(message);
-			synchronizerStateDefinition.setLastTimeFinished(currentTimeMillis);
-			if (synchronizerStateDefinition.getFirstTimeFinished() == 0) {
-				synchronizerStateDefinition.setFirstTimeFinished(currentTimeMillis);
-			}
+//			synchronizerStateDefinition.setLastTimeFinished(currentTimeMillis);
+//			if (synchronizerStateDefinition.getFirstTimeFinished() != 0) {
+//				synchronizerStateDefinition.setFirstTimeFinished(currentTimeMillis);
+//			}
 			synchronizerCoreService.updateSynchronizerState(synchronizerStateDefinition);
 		}
 	}
@@ -197,7 +197,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			return true;
 		}
 		SynchronizerStateDefinition synchronizerStateDefinition = synchronizerCoreService.getSynchronizerState(name);
-		return synchronizerStateDefinition != null && synchronizerStateDefinition.getState() == ISynchronizerCoreService.STATE_SUCCESSFUL;
+//		return synchronizerStateDefinition != null && synchronizerStateDefinition.getState() == ISynchronizerCoreService.STATE_SUCCESSFUL;
+		return synchronizerStateDefinition != null 
+				&& synchronizerStateDefinition.getFirstTimeTriggered() != 0 && synchronizerStateDefinition.getFirstTimeFinished() != 0
+				&& synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_FAILED;
 	}
 
 }
