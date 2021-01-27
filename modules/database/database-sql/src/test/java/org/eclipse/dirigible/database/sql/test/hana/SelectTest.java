@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.sql.test.hana;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
@@ -355,6 +356,26 @@ public class SelectTest {
 		
 		assertNotNull(sql);
 		assertEquals("SELECT COUNTRY FROM CUSTOMERS UNION SELECT COUNTRY FROM SUPPLIERS", sql);
+	}
+	
+	/**
+	 * Select column and where clause in case sensitive mode
+	 */
+	@Test
+	public void selectFunctionCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+				.select()
+				.column("COS(0.0) c")
+				.from("DUMMY")
+				.build();
+			
+			assertNotNull(sql);
+			assertEquals("SELECT COS(0.0) \"c\" FROM \"DUMMY\"", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
 	}
 
 }
