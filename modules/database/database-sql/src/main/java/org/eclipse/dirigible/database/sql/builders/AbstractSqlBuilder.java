@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 public abstract class AbstractSqlBuilder implements ISqlBuilder {
 
 	private ISqlDialect dialect;
+	
 	
 	/**
 	 * Instantiates a new abstract sql builder.
@@ -84,6 +86,8 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 				&& !"*".equals(name.trim())
 				&& isColumn(name.trim())) {
 			name = "\"" + name + "\"";
+		} else {
+			name = encapsulateMany(name);
 		}
 		return name;
 	}
@@ -94,12 +98,28 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return true if it is one word
 	 */
 	protected boolean isColumn(String name) {
-		String pattern = "^([\\w\\-]+)";
-		Pattern r = Pattern.compile(pattern);
-		Matcher m = r.matcher(name);
-		m.find();
-		String found = m.group(1);
-		return name.equals(found);
+		try {
+			String pattern = "^([\\w\\-]+)";
+			Pattern r = Pattern.compile(pattern);
+			Matcher m = r.matcher(name);
+			m.find();
+			String found = m.group(1);
+			return name.equals(found);
+		} catch (Exception e) {
+			return false;
+		}
 	}
-
+	
+	protected String encapsulateMany(String line) {
+		String regex = "([^a-zA-Z']+)'*\\1*";
+		String[] words = line.split(regex);
+		Set<Set> functionsNames = getDialect().getFunctionsNames();
+		for (String word : words) {
+			if (!"".equals(word.trim())
+					&& !functionsNames.contains(word.toLowerCase())) {
+				line = line.replace(word, "\"" + word + "\"");
+			}
+		}
+		return line;
+	}
 }

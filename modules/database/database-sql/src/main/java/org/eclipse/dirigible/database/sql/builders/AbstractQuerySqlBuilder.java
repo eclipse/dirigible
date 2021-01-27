@@ -97,6 +97,8 @@ public abstract class AbstractQuerySqlBuilder extends AbstractSqlBuilder {
 	private String traverseWheres(List<String> wheres) {
 		StringBuilder snippet = new StringBuilder();
 		for (String where : wheres) {
+			where = isCaseSensitive() ? encapsulateMany(where) : where;
+		
 			snippet.append(where).append(SPACE).append(KEYWORD_AND).append(SPACE);
 		}
 		return snippet.toString().substring(0, snippet.length() - 5);

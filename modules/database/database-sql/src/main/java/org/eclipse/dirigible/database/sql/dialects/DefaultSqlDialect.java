@@ -16,6 +16,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
@@ -54,6 +58,151 @@ import org.eclipse.dirigible.database.sql.builders.sequence.NextValueSequenceBui
  */
 public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends InsertBuilder, UPDATE extends UpdateBuilder, DELETE extends DeleteBuilder, CREATE extends CreateBranchingBuilder, ALTER extends AlterBranchingBuilder, DROP extends DropBranchingBuilder, NEXT extends NextValueSequenceBuilder, LAST extends LastValueIdentityBuilder>
 		implements ISqlDialect<SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, NEXT, LAST> {
+	
+	public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {
+			"ascii",
+			"char_length",
+			"character_length",
+			"concat",
+			"concat_ws",
+			"field",
+			"find_in_set",
+			"format",
+			"insert",
+			"instr",
+			"lcase",
+			"left",
+			"length",
+			"locate",
+			"lower",
+			"lpad",
+			"ltrim",
+			"mid",
+			"position",
+			"repeat",
+			"replace",
+			"reverse",
+			"right",
+			"rpad",
+			"rtrim",
+			"space",
+			"strcmp",
+			"substr",
+			"substring",
+			"substring_index",
+			"trim",
+			"ucase",
+			"upper",
+			
+			"abs",
+			"acos",
+			"asin",
+			"atan",
+			"atan2",
+			"avg",
+			"ceil",
+			"ceiling",
+			"cos",
+			"cot",
+			"count",
+			"degrees",
+			"div",
+			"exp",
+			"floor",
+			"greatest",
+			"least",
+			"ln",
+			"log",
+			"log10",
+			"log2",
+			"max",
+			"min",
+			"mod",
+			"pi",
+			"pow",
+			"power",
+			"radians",
+			"rand",
+			"round",
+			"sign",
+			"sin",
+			"sqrt",
+			"sum",
+			"tan",
+			"truncate",
+			
+			"adddate",
+			"addtime",
+			"curdate",
+			"current_date",
+			"current_time",
+			"current_timestamp",
+			"curtime",
+			"date",
+			"datediff",
+			"date_add",
+			"date_format",
+			"date_sub",
+			"day",
+			"dayname",
+			"dayofmonth",
+			"dayofweek",
+			"dayofyear",
+			"extract",
+			"from_days",
+			"hour",
+			"last_day",
+			"localtime",
+			"localtimestamp",
+			"makedate",
+			"maketime",
+			"microsecond",
+			"minute",
+			"month",
+			"monthname",
+			"now",
+			"period_add",
+			"period_diff",
+			"quarter",
+			"second",
+			"sec_to_time",
+			"str_to_date",
+			"subdate",
+			"subtime",
+			"sysdate",
+			"time",
+			"time_format",
+			"time_to_sec",
+			"timediff",
+			"timestamp",
+			"to_days",
+			"week",
+			"weekday",
+			"weekofyear",
+			"year",
+			"yearweek",
+			
+			"bin",
+			"binary",
+			"case",
+			"cast",
+			"coalesce",
+			"connection_id",
+			"conv",
+			"convert",
+			"current_user",
+			"database",
+			"if",
+			"ifnull",
+			"isnull",
+			"last_insert_id",
+			"nullif",
+			"session_user",
+			"system_user",
+			"user",
+			"version"
+			
+			})));
 
 	/*
 	 * (non-Javadoc)
@@ -302,6 +451,15 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	@Override
 	public boolean isSynonymSupported() {
 		return true;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#getFunctionsNames()
+	 */
+	@Override
+	public Set<String> getFunctionsNames() {
+		return FUNCTIONS;
 	}
 
 }
