@@ -110,7 +110,7 @@ public class MySQLSqlDialect extends
 			"dayofmonth",
 			"dayofweek",
 			"dayofyear",
-			"default"
+			"default",
 			"degrees",
 			"dense_rank",
 			"div",
@@ -257,6 +257,7 @@ public class MySQLSqlDialect extends
 			"md5",
 			"member",
 			"of",
+			"or",
 			"microsecond",
 			"mid",
 			"min",

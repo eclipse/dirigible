@@ -120,7 +120,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		String[] words = line.split(regex);
 		Set<Set> functionsNames = getDialect().getFunctionsNames();
 		for (String word : words) {
-			if (isNumeric(word)) {
+			if (isNumeric(word) || isValue(word)) {
 				continue;
 			}
 			if (!"".equals(word.trim())
@@ -143,5 +143,12 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	        return false; 
 	    }
 	    return numericPattern.matcher(s).matches();
+	}
+
+	protected boolean isValue(String s) {
+		if (s == null) {
+			return false;
+		}
+		return s.startsWith("'") || s.endsWith("'");
 	}
 }

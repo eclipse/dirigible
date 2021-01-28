@@ -203,6 +203,7 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 			"version",
 			
 			"and",
+			"or",
 			"between",
 			"binary",
 			"case",

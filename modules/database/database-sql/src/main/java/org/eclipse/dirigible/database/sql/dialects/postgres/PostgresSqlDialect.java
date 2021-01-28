@@ -74,6 +74,7 @@ public class PostgresSqlDialect extends
 			"max",
 			
 			"and",
+			"or",
 			"between",
 			"binary",
 			"case",
@@ -341,13 +342,19 @@ public class PostgresSqlDialect extends
 	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
+		boolean exists = false;
+		ResultSet resultSet = null;
+
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toLowerCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-		if (resultSet.next()) {
-			return true;
+
+		resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+		exists = resultSet != null && resultSet.next();
+		if (!exists) {
+			resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toLowerCase()), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+			exists = resultSet != null && resultSet.next();
 		}
-		return false;
+		return exists;
 	}
 
 	/*
