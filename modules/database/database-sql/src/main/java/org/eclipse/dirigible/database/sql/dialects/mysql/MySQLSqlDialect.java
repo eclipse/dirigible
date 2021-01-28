@@ -110,7 +110,7 @@ public class MySQLSqlDialect extends
 			"dayofmonth",
 			"dayofweek",
 			"dayofyear",
-			"default"
+			"default",
 			"degrees",
 			"dense_rank",
 			"div",
