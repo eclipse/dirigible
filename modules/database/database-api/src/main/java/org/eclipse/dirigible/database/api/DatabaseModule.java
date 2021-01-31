@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.api;
 import static java.text.MessageFormat.format;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -120,11 +121,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 	 * @return the database types
 	 */
 	public static List<String> getDatabaseTypes() {
-		List<String> result = new ArrayList<String>();
+		Set<String> result = new HashSet<String>();
 		for (IDatabase next : DATABASES) {
 			result.add(next.getType());
 		}
-		return result;
+		return new ArrayList<String>(result);
 	}
 
 	/**
