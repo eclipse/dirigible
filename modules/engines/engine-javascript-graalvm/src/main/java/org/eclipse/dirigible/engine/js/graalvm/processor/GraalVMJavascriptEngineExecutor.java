@@ -61,6 +61,13 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED";
 	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN";
+	public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
+	
 	public static final String DEFAULT_DEBUG_PORT = "8081";
 
 	private GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
@@ -120,23 +127,34 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		boolean isDebugEnabled = isDebugEnabled();
 
-		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
+//		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
 		
-//		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-//		Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-//		bindings.put("polyglot.js.allowHostAccess", true);
-//		bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
+		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+		Bindings engineBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+		engineBindings.put("polyglot.js.allowHostAccess", true);
+		engineBindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
 		
-//		Builder contextBuilder = Context.newBuilder("js")
-//		        .allowHostClassLookup(s -> true)
-//		        .allowHostAccess(HostAccess.ALL)
-//		        .allowAllAccess(true)
-//		        .allowCreateThread(true)
-//		        .allowIO(true)
-//		        .allowCreateProcess(true)
-//		        .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
-//		        .option("js.ecmascript-version", "2021")
-//		        .option("js.nashorn-compat", "true");
+		Builder contextBuilder = Context.newBuilder("js")
+				.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
+				.option("js.ecmascript-version", "2021");
+		
+		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
+			contextBuilder.allowHostClassLookup(s -> true)
+			.allowHostAccess(HostAccess.ALL)
+	        .allowAllAccess(true);
+		}
+		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD, "true"))) {
+			contextBuilder.allowCreateThread(true);
+		}
+		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
+			contextBuilder.allowIO(true);
+		}
+		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
+			contextBuilder.allowCreateProcess(true);
+		}
+		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN, "true"))) {
+			contextBuilder.option("js.nashorn-compat", "true");
+		}
 		
 		if (isDebugEnabled) {
 			contextBuilder.option(BUILDER_OPTION_INSPECT, Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, DEFAULT_DEBUG_PORT));
@@ -153,7 +171,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			bindings.putMember(CONSOLE, ConsoleFacade.getConsole());
 			
             context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
-//            context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
+            if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
+            	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
+            }
             
             beforeEval(context);
             if (isDebugEnabled) {
