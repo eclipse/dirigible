@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor;
@@ -14,6 +14,12 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.function.Predicate;
+
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -27,8 +33,13 @@ import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugPr
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
+import org.graalvm.polyglot.EnvironmentAccess;
+import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 /**
  * The GraalVM Javascript Engine Executor.
@@ -110,6 +121,23 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		boolean isDebugEnabled = isDebugEnabled();
 
 		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
+		
+//		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+//		Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+//		bindings.put("polyglot.js.allowHostAccess", true);
+//		bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
+		
+//		Builder contextBuilder = Context.newBuilder("js")
+//		        .allowHostClassLookup(s -> true)
+//		        .allowHostAccess(HostAccess.ALL)
+//		        .allowAllAccess(true)
+//		        .allowCreateThread(true)
+//		        .allowIO(true)
+//		        .allowCreateProcess(true)
+//		        .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
+//		        .option("js.ecmascript-version", "2021")
+//		        .option("js.nashorn-compat", "true");
+		
 		if (isDebugEnabled) {
 			contextBuilder.option(BUILDER_OPTION_INSPECT, Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, DEFAULT_DEBUG_PORT));
 			contextBuilder.option(BUILDER_OPTION_INSPECT_SECURE, Boolean.FALSE.toString());
@@ -118,11 +146,15 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		try (Context context = contextBuilder.build()) {
 			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
-			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(SOURCE_PROVIDER, sourceProvider);
-			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
-			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(CONTEXT, executionContext);
-			context.getBindings(ENGINE_JAVA_SCRIPT).putMember(CONSOLE, ConsoleFacade.getConsole());
+			Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
+			bindings.putMember(SOURCE_PROVIDER, sourceProvider);
+			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
+			bindings.putMember(CONTEXT, executionContext);
+			bindings.putMember(CONSOLE, ConsoleFacade.getConsole());
+			
             context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+//            context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
+            
             beforeEval(context);
             if (isDebugEnabled) {
             	code = CODE_DEBUGGER + code;
