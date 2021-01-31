@@ -313,7 +313,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		}
 	}
 
-	private void mockRequest(HttpServletRequest mockedRequest) {
+	protected void mockRequest(HttpServletRequest mockedRequest) {
 		when(mockedRequest.getMethod()).thenReturn("GET");
 		when(mockedRequest.getRemoteUser()).thenReturn("tester");
 		when(mockedRequest.getPathInfo()).thenReturn("/path");
@@ -332,15 +332,15 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		mockSession(mockedSession);
 	}
 	
-	private void mockSession(HttpSession mockedSession) {
+	protected void mockSession(HttpSession mockedSession) {
 		when(mockedSession.getAttributeNames()).thenReturn(Collections.enumeration(Arrays.asList("attr1")));
 	}
 
-	private void mockResponse(HttpServletResponse mockedResponse) {
+	protected void mockResponse(HttpServletResponse mockedResponse) {
 		when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
 	}
 
-	private Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
+	protected Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
 
 		try {
 			InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
