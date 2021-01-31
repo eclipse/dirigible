@@ -267,8 +267,22 @@ public class SybaseSqlDialect extends
 			"width_bucket",
 			"year",
 			"years",
-			"ymd"
-			
+			"ymd",
+
+			"and",
+			"or",
+			"between",
+			"binary",
+			"case",
+			"div",
+			"in",
+			"is",
+			"not",
+			"null",
+			"like",
+			"rlike",
+			"xor"
+
 			})));
 
 	/*

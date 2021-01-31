@@ -257,6 +257,7 @@ public class MySQLSqlDialect extends
 			"md5",
 			"member",
 			"of",
+			"or",
 			"microsecond",
 			"mid",
 			"min",

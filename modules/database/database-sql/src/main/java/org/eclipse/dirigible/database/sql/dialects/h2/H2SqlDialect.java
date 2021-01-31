@@ -202,6 +202,7 @@ public class H2SqlDialect extends
 			"any",
 			"count",
 			
+			
 			"stddev_pop",
 			"stddev_samp",
 			"var_pop",
@@ -222,8 +223,22 @@ public class H2SqlDialect extends
 			"mode",
 			"json",
 			"json_objectagg",
-			"json_arrayagg"
+			"json_arrayagg",
 			
+			"and",
+			"or",
+			"between",
+			"binary",
+			"case",
+			"div",
+			"in",
+			"is",
+			"not",
+			"null",
+			"like",
+			"rlike",
+			"xor"
+
 			})));
 	
 	/*

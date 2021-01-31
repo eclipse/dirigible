@@ -252,6 +252,7 @@ public class HanaSqlDialect extends
 			"max",
 			
 			"and",
+			"or",
 			"between",
 			"binary",
 			"case",

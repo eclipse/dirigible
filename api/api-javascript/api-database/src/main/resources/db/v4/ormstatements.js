@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 "use strict";
@@ -18,13 +18,6 @@ var ORMStatements = function(orm, dialect){
 	this.orm.properties.forEach(function(property) {
 		property.columnName = property.column;
 	});
-	let isCaseSensitive = require("core/v4/configurations").get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
-	if (isCaseSensitive) {
-		this.orm.table = "\"" + this.orm.table + "\"";
-		this.orm.properties.forEach(function(property) {
-			property.column = "\"" + property.column + "\"" ;
-		});
-	};
 	this.dialect = dialect || require('db/v4/sql').getDialect();
 };
 ORMStatements.prototype.constructor = ORMStatements;
