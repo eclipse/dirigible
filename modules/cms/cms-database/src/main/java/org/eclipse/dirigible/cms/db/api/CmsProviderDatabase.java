@@ -1,19 +1,16 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.cms.db.api;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ServiceLoader;
 
 import javax.sql.DataSource;
@@ -67,8 +64,8 @@ public class CmsProviderDatabase implements ICmsProvider {
 	 * @return the repository
 	 */
 	private CmsDatabaseRepository createInstance(String dataSourceType, String dataSourceName) {
-		logger.debug("creating CMS Database Repository...");
-		logger.debug("Data source name [{}]", dataSourceName);
+		logger.info("Creating CMS Database Repository...");
+		logger.info("Data source name [{}]", dataSourceName);
 		CmsDatabaseRepository databaseRepository = null;
 		ServiceLoader<IDatabase> DATABASES = ServiceLoader.load(IDatabase.class);
 		DataSource dataSource = null;
@@ -84,24 +81,7 @@ public class CmsProviderDatabase implements ICmsProvider {
 				break;
 			}
 		}
-//		try {
-//			if (dataSource != null) {
-//				Connection conn = null;
-//				try {
-//					conn = dataSource.getConnection();
-//					Statement stmt = conn.createStatement();
-//					stmt.executeUpdate("INSERT INTO DIRIGIBLE_CMS_FILES VALUES ('/', 'root', 0, '', 0, 'SYSTEM', 0, 'SYSTEM')");
-//					stmt.close();
-//				} finally {
-//					if (conn != null) {
-//						conn.close();
-//					}
-//				}
-//			}
-//		} catch (SQLException e) {
-//			logger.error("CMS Database Repository creation failed.", e);
-//		}
-		logger.debug("CMS Database Repository created.");
+		logger.info("CMS Database Repository created.");
 		return databaseRepository;
 	}
 
