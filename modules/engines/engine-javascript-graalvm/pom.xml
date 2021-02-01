@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -86,37 +87,37 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>5.8.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		    <version>1.1</version>
-		    <scope>provided</scope>
+			<groupId>javax.websocket</groupId>
+			<artifactId>javax.websocket-api</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>5.8.0-SNAPSHOT</version>
-    	</dependency>
-    	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-local</artifactId>
-            <version>5.8.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-repository-local</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
 			<version>5.8.0-SNAPSHOT</version>
 			<scope>test</scope>
-    	</dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-tests</artifactId>
-            <version>5.8.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-api-facade-tests</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
