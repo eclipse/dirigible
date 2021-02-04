@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.module;
@@ -20,6 +20,7 @@ import java.util.ServiceLoader.Provider;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,16 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		logger.debug("Initializing Dirigible Modules...");
+
+		while (!Configuration.LOADED) {
+			logger.info("Waiting for Dirigible Configuration to be initialized");
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// Do nothing
+			}
+		}
+
 		ServiceLoader<AbstractDirigibleModule> dirigibleModules = ServiceLoader.load(AbstractDirigibleModule.class);
 
 		List<Provider<AbstractDirigibleModule>> sortedDirigibleModules = dirigibleModules.stream().sorted((provider1, provider2) -> {
