@@ -57,15 +57,9 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 
 	@Override
 	protected void configure() {
+		Configuration.loadModuleConfig("/dirigible-cloud-foundry.properties");
 		configureOAuth();
-		boolean customPostgreDb = bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
-		boolean customPostgreHyperscalerDb = bindPostgreHyperscalerDb(CloudFoundryUtils.getPostgreHyperscalerDbEnv());
-		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
-		boolean customHanaSchema = bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
-		boolean haveCustomDatasourceConfiguration = haveCustomDatasourceConfiguration();
-		if (!customPostgreDb && !customPostgreHyperscalerDb && !customHanaDb && !customHanaSchema && !haveCustomDatasourceConfiguration) {
-			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
-		}
+		configureDatasource();
 	}
 
 	private void configureOAuth() {
@@ -94,6 +88,13 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_NAME, applicationName);
 		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_HOST, applicationHost);
 		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_ISSUER, issuer);
+	}
+
+	private void configureDatasource() {
+		bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
+		bindPostgreHyperscalerDb(CloudFoundryUtils.getPostgreHyperscalerDbEnv());
+		bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
+		bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
 	}
 
 	private boolean bindPostgreDb(PostgreDbEnv env) {

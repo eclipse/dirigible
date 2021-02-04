@@ -45,6 +45,7 @@ public class KymaModule extends AbstractDirigibleModule {
 
 	@Override
 	protected void configure() {
+		Configuration.loadModuleConfig("/dirigible-kyma.properties");
 		configureOAuth();
 	}
 
