@@ -62,7 +62,8 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		boolean customPostgreHyperscalerDb = bindPostgreHyperscalerDb(CloudFoundryUtils.getPostgreHyperscalerDbEnv());
 		boolean customHanaDb = bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
 		boolean customHanaSchema = bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
-		if (!customPostgreDb && !customPostgreHyperscalerDb && !customHanaDb && !customHanaSchema) {
+		boolean haveCustomDatasourceConfiguration = haveCustomDatasourceConfiguration();
+		if (!customPostgreDb && !customPostgreHyperscalerDb && !customHanaDb && !customHanaSchema && !haveCustomDatasourceConfiguration) {
 			Configuration.set(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "local");
 		}
 	}
@@ -227,6 +228,11 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		}
 	}
 
+	private boolean haveCustomDatasourceConfiguration() {
+		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "").equals("custom")
+				&& !Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES, "").equals("")
+				&& !Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, "").equals("");
+	}
 	@Override
 	public String getName() {
 		return MODULE_NAME;
