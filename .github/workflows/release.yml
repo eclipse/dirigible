@@ -14,11 +14,17 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 13
+        gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
     - name: Set Dirigible Version
       run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr v " " | sed 's/ //'  >> $GITHUB_ENV
+    - name: Updates /.m2/settings.xml
+      run: echo '${{ secrets.MAVEN_M2_SETTINGS }}' > /home/runner/.m2/settings.xml
 
     - name: Build Dirigible
       run: mvn clean install
+
+#-----------------Publish to DockerHub-------------------#
+
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
     - name: Push Anonymous
@@ -149,7 +155,19 @@ jobs:
         docker push dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
         cd ../../
 
-#-----------------Create Release------------------#
+#-----------------Publish to DockerHub-------------------#
+
+#---------------Publish to Maven Central-----------------#
+
+    - name: Publish packages to Maven Central
+      run: |
+        mvn javadoc:jar
+        mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
+
+#---------------Publish to Maven Central-----------------#
+
+#----------------Publish GitHub Release------------------#
+
     - name: Package WAR files
       run: |
         zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT.war
@@ -311,4 +329,28 @@ jobs:
         asset_path: ./trial-all.zip
         asset_name: trial-all.zip
         asset_content_type: application/zip
-#-----------------Create Release------------------#
+
+#----------------Publish GitHub Release------------------#
+
+#-----------------Create GitHub Branch-------------------#
+
+    - name: Create GitHub Branch
+      run: |
+        git checkout -b $DIRIGIBLE_VERSION
+        git push origin $DIRIGIBLE_VERSION
+
+#-----------------Create GitHub Branch-------------------#
+
+#-----------------Update Trial Instance------------------#
+
+    - name: Kubectl tool installer
+      uses: Azure/setup-kubectl@v1
+    - name: Setup Kube Config File
+      run: |
+        mkdir $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
+    - name: Update Trial Instance
+      run: kubectl set image deployment/dirigible dirigible=dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
+
+#-----------------Update Trial Instance------------------#
+
