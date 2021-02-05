@@ -1,0 +1,5 @@
+{
+	"module": "ide-operations/views/configurations/configurations.js",
+	"extensionPoint": "ide-view",
+	"description": "Configurations View"
+}

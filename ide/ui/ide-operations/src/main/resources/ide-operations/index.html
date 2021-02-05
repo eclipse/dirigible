@@ -68,7 +68,7 @@
 		.controller('Controller', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['registry', 'repository', 'extensions', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'console', 'logs'],
+				views: ['registry', 'repository', 'extensions', 'configurations', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'console', 'logs'],
 				events: {
 					'repository.resource.open': function(msg){
 						Layouts.manager.openEditor(msg.data.path, msg.data.label, msg.data.contentType, "repository");

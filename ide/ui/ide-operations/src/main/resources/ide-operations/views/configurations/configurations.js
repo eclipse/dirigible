@@ -9,7 +9,13 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var context = require('core/v4/configurations');
-for(var propertyName in context) {
-	exports[propertyName] = context[propertyName];
-}
+exports.getView = function() {
+	return {
+		"id": "configurations",
+		"name": "Configurations",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Configurations",
+		"link": "../ide-operations/views/configurations/index.html"
+	};
+};
