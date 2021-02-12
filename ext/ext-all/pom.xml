@@ -39,6 +39,36 @@
 			<artifactId>dirigible-ext-mongodb</artifactId>
 			<version>5.8.0-SNAPSHOT</version>
 	   </dependency>
+	   <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-cassandra</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-elasticsearch</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-etcd</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-rabbitmq</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-redis</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ext-spark</artifactId>
+			<version>5.8.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<properties>

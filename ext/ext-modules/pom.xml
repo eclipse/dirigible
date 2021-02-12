@@ -43,6 +43,12 @@
 		<module>ext-qunit</module>
 		<module>ext-kafka</module>
 		<module>ext-mongodb</module>
+		<module>ext-cassandra</module>
+		<module>ext-elasticsearch</module>
+		<module>ext-etcd</module>
+		<module>ext-rabbitmq</module>
+		<module>ext-redis</module>
+		<module>ext-spark</module>
 	</modules>
 
 	<profiles>
