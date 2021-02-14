@@ -48,7 +48,7 @@ You can try the sandbox instance to have a quick look on the functionality you a
 
 ### Download
 
-The "fast-track" - you can download the precompiled binaries produced from the Hudson builds from [http://download.eclipse.org/dirigible](http://download.eclipse.org/dirigible) and skip the build section.
+The "fast-track" - you can download the precompiled binaries produced by the GitHub Actions from [http://download.dirigible.io/](http://download.dirigible.io/) and skip the build section.
 
 Nevertheless, we highly recommend building the binaries from source in order to have all experimental features that are not available in the releases.
 
