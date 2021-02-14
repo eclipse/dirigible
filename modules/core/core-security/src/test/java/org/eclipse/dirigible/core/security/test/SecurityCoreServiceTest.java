@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.security.test;
@@ -53,7 +53,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createRole() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		List<RoleDefinition> list = securityCoreService.getRoles();
 		assertEquals(1, list.size());
@@ -71,7 +73,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void getRole() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		RoleDefinition RoleDefinition = securityCoreService.getRole("test_role1");
 		assertEquals("test_role1", RoleDefinition.getName());
@@ -86,7 +90,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void updatetRole() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		RoleDefinition RoleDefinition = securityCoreService.getRole("test_role1");
 		assertEquals("test_role1", RoleDefinition.getName());
@@ -105,7 +111,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void removeRole() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		RoleDefinition RoleDefinition = securityCoreService.getRole("test_role1");
 		assertEquals("test_role1", RoleDefinition.getName());
@@ -125,7 +133,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createAccessDefinition() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
 		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test", "1234");
@@ -147,7 +157,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void getAccessDefinition() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 
 		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access", "1234");
@@ -169,9 +181,10 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void getAccessDefinitionList() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
-		securityCoreService.removeRole("test_role2");
 		securityCoreService.createRole("test_role2", "/abc/my.roles", "Test");
 
 		securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access 1", "1234");
@@ -215,7 +228,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void updatetAccessDefinition() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
 		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", "GET", "test_role1", "Test access", "1234");
@@ -240,7 +255,9 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void removeAccessDefinition() throws AccessException {
-		securityCoreService.removeRole("test_role1");
+		securityCoreService.deleteAllRoles();
+		securityCoreService.deleteAllAccessDefinitions();
+		
 		securityCoreService.createRole("test_role1", "/abc/my.roles", "Test");
 		
 		AccessDefinition accessDefinition = securityCoreService.createAccessDefinition("/abc/my.access", "HTTP", "test_access1", AccessDefinition.METHOD_ANY, "test_role1", "Test access", "1234");

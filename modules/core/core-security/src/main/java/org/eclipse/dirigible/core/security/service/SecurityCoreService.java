@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.security.service;
@@ -154,6 +154,63 @@ public class SecurityCoreService implements ISecurityCoreService {
 				roleDefinition.setLocation(location);
 				roleDefinition.setDescription(description);
 				rolesPersistenceManager.update(connection, roleDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteRolesByLocation(java.util.List)
+	 */
+	public void deleteRolesByLocation(String location) throws AccessException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				rolesPersistenceManager.tableCheck(connection, RoleDefinition.class);
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ROLES").where("ROLE_LOCATION = ?").toString();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				try {
+					statement.setString(1, location);
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+					clearCache();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAllRoles(java.util.List)
+	 */
+	public void deleteAllRoles() throws AccessException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				rolesPersistenceManager.tableCheck(connection, RoleDefinition.class);
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ROLES").toString();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				try {
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+					clearCache();
+				}
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -368,6 +425,63 @@ public class SecurityCoreService implements ISecurityCoreService {
 			throw new AccessException(e);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAccessDefinitionsByLocation(java.util.List)
+	 */
+	public void deleteAccessDefinitionsByLocation(String location) throws AccessException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				accessPersistenceManager.tableCheck(connection, AccessDefinition.class);
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ?").toString();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				try {
+					statement.setString(1, location);
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+					clearCache();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#deleteAllAccessDefinitions(java.util.List)
+	 */
+	public void deleteAllAccessDefinitions() throws AccessException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				accessPersistenceManager.tableCheck(connection, AccessDefinition.class);
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").toString();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				try {
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+					clearCache();
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new AccessException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -507,6 +621,10 @@ public class SecurityCoreService implements ISecurityCoreService {
 		CACHE.clear();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.security.api.ISecurityCoreService#dropModifiedAccessDefinitions(java.util.List)
+	 */
 	public void dropModifiedAccessDefinitions(String location, String hash) throws AccessException {
 		try {
 			Connection connection = null;
@@ -520,6 +638,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 					statement.executeUpdate();
 				} finally {
 					statement.close();
+					clearCache();
 				}
 			} finally {
 				if (connection != null) {

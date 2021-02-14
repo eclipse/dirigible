@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.security.api;
@@ -96,6 +96,21 @@ public interface ISecurityCoreService extends ICoreService {
 	 *             the access exception
 	 */
 	public void updateRole(String name, String location, String description) throws AccessException;
+	
+	/**
+	 * Delete the roles associated by a given file form the location
+	 * 
+	 * @param location the location of the file
+	 * @throws AccessException the error
+	 */
+	public void deleteRolesByLocation(String location) throws AccessException;
+	
+	/**
+	 * Delete all the roles
+	 * 
+	 * @throws AccessException the error
+	 */
+	public void deleteAllRoles() throws AccessException;
 
 	/**
 	 * Gets the roles.
@@ -210,6 +225,21 @@ public interface ISecurityCoreService extends ICoreService {
 	 *             the access exception
 	 */
 	public void updateAccessDefinition(long id, String location, String scope, String path, String method, String role, String description, String hash) throws AccessException;
+	
+	/**
+	 * Delete the access definitions associated by a given file form the location
+	 * 
+	 * @param location the location of the file
+	 * @throws AccessException the error
+	 */
+	public void deleteAccessDefinitionsByLocation(String location) throws AccessException;
+	
+	/**
+	 * Delete all the access definitions
+	 * 
+	 * @throws AccessException the error
+	 */
+	public void deleteAllAccessDefinitions() throws AccessException;
 
 	/**
 	 * Gets the access definitions.
@@ -318,5 +348,14 @@ public interface ISecurityCoreService extends ICoreService {
 	 * @return the string
 	 */
 	public String serializeAccessDefinitions(List<AccessDefinition> accessDefinitions);
+	
+	/**
+	 * Remove the modified access definitions
+	 * 
+	 * @param location the location
+	 * @param hash the hash of the file
+	 * @throws AccessException the error
+	 */
+	public void dropModifiedAccessDefinitions(String location, String hash) throws AccessException;
 
 }
