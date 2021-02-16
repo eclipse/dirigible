@@ -14,7 +14,8 @@ exports.getTemplate = function() {
 			"name":"edm",
 			"label":"Entity Data Model",
 			"extension":"edm",
-			"data":'<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>'
+			"data":'<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
+			"order": 10
 	};
 	return view;
 };

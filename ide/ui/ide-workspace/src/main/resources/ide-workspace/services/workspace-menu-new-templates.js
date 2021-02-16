@@ -21,11 +21,13 @@ for (var i = 0; i < templateExtensions.length; i++) {
     	var templateExtension = require(module);
     	var template = templateExtension.getTemplate();
     	template.id = module;
-    	templates.push(template);	
+    	templates.push(template);
     } catch(error) {
     	console.error('Error occured while loading metadata for the template: ' + module);
     	console.error(error);
     }
 }
+
+templates = templates.sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
 
 response.println(JSON.stringify(templates));
