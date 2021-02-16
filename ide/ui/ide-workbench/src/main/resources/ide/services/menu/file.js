@@ -23,13 +23,6 @@ exports.getMenu = function() {
 					"data": "",
 					"items":[
 						{
-							"name":"Workspace",
-							"link":"#",
-							"order":"101",
-							"event":"workspace.create.workspace",
-							"data": ""
-						},
-						{
 							"name":"Project",
 							"link":"#",
 							"order":"102",
@@ -41,6 +34,13 @@ exports.getMenu = function() {
 							"link":"#",
 							"order":"103",
 							"event":"workspace.link.project",
+							"data": ""
+						},
+						{
+							"name":"Workspace",
+							"link":"#",
+							"order":"101",
+							"event":"workspace.create.workspace",
 							"data": ""
 						}
 					]
