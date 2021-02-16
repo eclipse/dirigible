@@ -25,21 +25,21 @@ exports.getMenu = function() {
 						{
 							"name":"Project",
 							"link":"#",
-							"order":"102",
+							"order":"101",
 							"event":"workspace.create.project",
 							"data": ""
 						},
 						{
 							"name":"Linked Project",
 							"link":"#",
-							"order":"103",
+							"order":"102",
 							"event":"workspace.link.project",
 							"data": ""
 						},
 						{
 							"name":"Workspace",
 							"link":"#",
-							"order":"101",
+							"order":"103",
 							"event":"workspace.create.workspace",
 							"data": ""
 						}
