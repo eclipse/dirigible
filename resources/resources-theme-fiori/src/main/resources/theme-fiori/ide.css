@@ -458,6 +458,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	padding-right: 1em;
 	color: #156aaf;
 	font-size: 16px;
+	top: -1px;
 }
 
 .dropdown-top {
@@ -581,7 +582,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #fff;
 	border-bottom: 2px solid #edeff0;
 	white-space: nowrap;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 .preview-button {

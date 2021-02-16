@@ -364,6 +364,12 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
     border-color: #bbb;
 }
 
+.btn-toolbar-top {
+	width: 100%;
+	height: 1.8em;
+	margin-top: 2px;
+}
+
 .btn-top {
 	padding: 0.2em;
 	padding-left: 1em;
@@ -431,7 +437,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	background-color: #343436;
 	border-bottom: 2px solid #333;
 	white-space: nowrap;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 .preview-button {
