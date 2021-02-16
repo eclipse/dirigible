@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/eclipse/dirigible/workflows/Build/badge.svg)](https://github.com/eclipse/dirigible/actions?query=workflow%3ABuild)
 [![Eclipse License](https://img.shields.io/badge/License-EPL%202.0-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
-[![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.eclipse.org/dirigible/)
+[![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.dirigible.io/)
 [![Maven Central](https://img.shields.io/maven-central/v/org.eclipse.dirigible/dirigible-server-all.svg)](https://search.maven.org/#search%7Cga%7C1%7Corg.eclipse.dirigible)
 [![GitHub contributors](https://img.shields.io/github/contributors/eclipse/dirigible.svg)](https://github.com/eclipse/dirigible/graphs/contributors)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Feclipse%2Fdirigible.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Feclipse%2Fdirigible?ref=badge_shield)
@@ -48,7 +48,7 @@ You can try the sandbox instance to have a quick look on the functionality you a
 
 ### Download
 
-The "fast-track" - you can download the precompiled binaries produced from the Hudson builds from [http://download.eclipse.org/dirigible](http://download.eclipse.org/dirigible) and skip the build section.
+The "fast-track" - you can download the precompiled binaries produced by the GitHub Actions from [http://download.dirigible.io/](http://download.dirigible.io/) and skip the build section.
 
 Nevertheless, we highly recommend building the binaries from source in order to have all experimental features that are not available in the releases.
 
