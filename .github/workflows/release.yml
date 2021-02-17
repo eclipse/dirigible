@@ -196,6 +196,8 @@ jobs:
           ## Eclipse Dirigible - ${{ env.DIRIGIBLE_VERSION }}
 
           The lates release notes are available [here](https://www.dirigible.io/releases.html).
+
+          > _**Note:** All released versions can be found [here](https://github.com/eclipse/dirigible/releases/)._
           
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
