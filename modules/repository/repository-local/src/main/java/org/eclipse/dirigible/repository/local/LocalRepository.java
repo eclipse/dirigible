@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -33,6 +35,8 @@ public class LocalRepository extends FileSystemRepository {
 
 	/** The Constant DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE. */
 	public static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE"; //$NON-NLS-1$
+	
+	private static final AtomicLong lastModified = new AtomicLong(0);
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -54,6 +58,7 @@ public class LocalRepository extends FileSystemRepository {
 	 */
 	public LocalRepository(String rootFolder) throws LocalRepositoryException {
 		super(rootFolder);
+		lastModified.set(System.currentTimeMillis());
 	}
 
 	/**
@@ -68,6 +73,7 @@ public class LocalRepository extends FileSystemRepository {
 	 */
 	public LocalRepository(String rootFolder, boolean absolute) throws LocalRepositoryException {
 		super(rootFolder, absolute);
+		lastModified.set(System.currentTimeMillis());
 	}
 
 	/*
@@ -78,6 +84,15 @@ public class LocalRepository extends FileSystemRepository {
 	public void initialize() {
 		Configuration.loadModuleConfig("/dirigible-repository-local.properties");
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+	}
+	
+	@Override
+	public long getLastModified() {
+		return lastModified.get();
+	}
+	
+	void setLastModified(long time) {
+		lastModified.set(time);
 	}
 
 }

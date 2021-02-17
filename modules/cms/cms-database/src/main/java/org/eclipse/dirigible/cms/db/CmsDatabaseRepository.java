@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.cms.db;
@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.ZipInputStream;
 
 import javax.sql.DataSource;
@@ -29,13 +30,11 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
 import org.eclipse.dirigible.repository.api.RepositoryImportException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.eclipse.dirigible.repository.api.RepositorySearchException;
-import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.search.RepositorySearcher;
 import org.eclipse.dirigible.repository.zip.RepositoryZipExporter;
@@ -62,6 +61,8 @@ public class CmsDatabaseRepository implements IRepository {
 	private RepositorySearcher repositorySearcher;
 	
 	private Map<String, String> parameters = Collections.synchronizedMap(new HashMap<>());
+	
+	private final AtomicLong lastModified = new AtomicLong(0);
 
 	/**
 	 * Constructor with default root folder - user.dir and without database initialization
@@ -74,6 +75,7 @@ public class CmsDatabaseRepository implements IRepository {
 	public CmsDatabaseRepository(DataSource datasource) throws CmsDatabaseRepositoryException {
 		this.databaseRepositoryDao = new CmisDatabaseRepositoryDao(this, datasource);
 		this.repositorySearcher = new RepositorySearcher(this);
+		lastModified.set(System.currentTimeMillis());
 	}
 
 	public CmisDatabaseRepositoryDao getRepositoryDao() {
@@ -330,5 +332,14 @@ public class CmsDatabaseRepository implements IRepository {
 		List<String> result = new ArrayList<String>();
 		databaseRepositoryDao.searchName(pattern, false).forEach(e -> result.add(e.getPath()));
 		return result;
+	}
+	
+	@Override
+	public long getLastModified() {
+		return lastModified.get();
+	}
+	
+	protected void setLastModified(long time) {
+		lastModified.set(time);
 	}
 }

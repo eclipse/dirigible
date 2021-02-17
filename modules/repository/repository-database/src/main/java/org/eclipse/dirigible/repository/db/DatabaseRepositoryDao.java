@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.repository.db.dao;
+package org.eclipse.dirigible.repository.db;
 
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -32,16 +32,6 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositorySearchException;
 import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
-import org.eclipse.dirigible.repository.db.DatabaseCollection;
-import org.eclipse.dirigible.repository.db.DatabaseEntity;
-import org.eclipse.dirigible.repository.db.DatabaseFile;
-import org.eclipse.dirigible.repository.db.DatabaseFileVersion;
-import org.eclipse.dirigible.repository.db.DatabaseFolder;
-import org.eclipse.dirigible.repository.db.DatabaseObject;
-import org.eclipse.dirigible.repository.db.DatabaseRepository;
-import org.eclipse.dirigible.repository.db.DatabaseRepositoryException;
-import org.eclipse.dirigible.repository.db.DatabaseResource;
-import org.eclipse.dirigible.repository.db.DatabaseResourceVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +109,7 @@ public class DatabaseRepositoryDao {
 	 */
 	public void createFile(String path, byte[] content, boolean isBinary, String contentType) throws DatabaseRepositoryException {
 		createFile(path, content, isBinary, contentType, true);
+		((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 	}
 
 	/**
@@ -148,6 +139,7 @@ public class DatabaseRepositoryDao {
 				} finally {
 					closeConnection(connection);
 				}
+				((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 				createVersion(path, content);
 			}
 		} catch (Exception e) {
@@ -244,6 +236,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			createVersion(workspacePath, content);
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
@@ -292,6 +285,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			if (content != null) {
 				createVersion(newPath, content);
 				removeVersions(path);
@@ -322,6 +316,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			if (content != null) {
 				createVersion(newPath, content);
 			}
@@ -346,6 +341,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			removeVersions(path);
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
@@ -368,6 +364,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			removeVersions(path);
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
@@ -390,6 +387,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (RepositoryWriteException e) {
 			throw new DatabaseRepositoryException(e);
 		}
@@ -413,6 +411,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 			removeVersions(newPath);
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
@@ -439,6 +438,7 @@ public class DatabaseRepositoryDao {
 			} finally {
 				closeConnection(connection);
 			}
+			((DatabaseRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (Exception e) {
 			throw new DatabaseRepositoryException(e);
 		}
