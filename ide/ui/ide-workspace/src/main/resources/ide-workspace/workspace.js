@@ -843,7 +843,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     
     
     
-    var specificFileTemplates = JSON.parse(templates);
+	var priorityFileTemplates = JSON.parse(templates).filter(e => e.order !== undefined).sort((a, b) => a.order - b.order);
+    var specificFileTemplates = JSON.parse(templates).filter(e => e.order === undefined);
 
 	return {
 		'core' : {
@@ -963,6 +964,26 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				}
 				
 				if (ctxmenu.create) {
+					for (let i = 0; i < priorityFileTemplates.length; i ++) {
+						let fileTemplate = priorityFileTemplates[i];
+						ctxmenu.create.submenu[fileTemplate.name] = {
+							"separator_after"	: (i + 1 === priorityFileTemplates.length),
+							"label"				: fileTemplate.label,
+							"action"			: function (wnd, data) {
+								var tree = $.jstree.reference(data.reference);
+								var parentNode = tree.get_node(data.reference);
+								var fileNode = {
+									type: 'file'
+								};
+								fileNode.text = 'file.'+fileTemplate.extension;
+								fileNode.data = fileTemplate.data;
+								tree.create_node(parentNode, fileNode, "last", function (new_node) {
+									tree.edit(new_node);
+								});
+							}.bind(self, this)
+						};
+					}
+
 					specificFileTemplates.forEach(function(fileTemplate){
 						ctxmenu.create.submenu[fileTemplate.name] = {
 								"label"				: fileTemplate.label,

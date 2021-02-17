@@ -41,28 +41,39 @@ exports.getMenu = function() {
 		
 		
 	var perspectiveExtensions = extensions.getExtensions('ide-perspective');
-	for (var i=0; i<perspectiveExtensions.length; i++) {
+	var perspectiveExtensionDefinitions = [];
+
+	for (var i = 0; i < perspectiveExtensions.length; i++) {
     	var module = perspectiveExtensions[i];
-    	perspectiveExtension = require(module);
-    	var perspectiveInfo = perspectiveExtension.getPerspective();
+    	perspectiveExtensionDefinitions.push(require(module).getPerspective());
+	}
+	perspectiveExtensionDefinitions = perspectiveExtensionDefinitions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+	for (var i = 0; i < perspectiveExtensionDefinitions.length; i++) {
+		var perspectiveInfo = perspectiveExtensionDefinitions[i];
     	var perspectiveMenu = {
 			"name": perspectiveInfo.name,
 			"link":"#",
 			"order":"" + (810 + i),
-			"onClick":"window.open('" + perspectiveInfo.link + "', '_blank')"};
+			"onClick":"window.open('" + perspectiveInfo.link + "', '_blank')"
+		};
     	menu.items[0].items.push(perspectiveMenu);
 	}
 	
 	var viewExtensions = extensions.getExtensions('ide-view');
-	for (var i=0; i<viewExtensions.length; i++) {
+	var viewExtensionDefinitions = [];
+	for (var i = 0; i < viewExtensions.length; i++) {
     	var module = viewExtensions[i];
-    	viewExtension = require(module);
-    	var viewInfo = viewExtension.getView();
+    	viewExtensionDefinitions.push(require(module).getView());
+	}
+	viewExtensionDefinitions = viewExtensionDefinitions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+	for (var i = 0; i < viewExtensionDefinitions.length; i++) {
+		var viewInfo = viewExtensionDefinitions[i];
     	var viewMenu = {
 			"name": viewInfo.name,
 			"link":"#",
 			"order":"" + (820 + i),
-			"onClick":"window.open('" + viewInfo.link + "', '_blank')"};
+			"onClick":"window.open('" + viewInfo.link + "', '_blank')"
+		};
     	menu.items[1].items.push(viewMenu);
 	}
 		
