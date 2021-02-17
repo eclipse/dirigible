@@ -12,10 +12,10 @@
 exports.getView = function () {
     return {
         'id': 'documents-access',
-        'name': 'Access',
+        'name': ' Documents Access',
         'factory': 'frame',
         'region': 'center-bottom',
-        'label': 'Access',
+        'label': 'Documents Access',
         'link': '../ide-documents/access.html'
     };
 }
