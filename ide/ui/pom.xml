@@ -53,7 +53,6 @@
 		<module>ide-documents</module>
 		<module>ide-documents-ext-content-type-ms</module>
 		<module>ide-git</module>
-		<module>ide-help</module>
 		<module>ide-preview</module>
 		<module>ide-repository</module>
 		<module>ide-swagger</module>
