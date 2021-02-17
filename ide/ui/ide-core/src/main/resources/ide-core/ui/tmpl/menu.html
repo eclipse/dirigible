@@ -25,6 +25,7 @@
 									<a href="{{subItem.link}}" ng-click="menuClick(item, subItem)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
 								</li>
 							</ul>
+							<hr style="margin: 5px;" ng-show="item.divider">
 						</li>
 						<li ng-hide="item.items" ng-repeat="item in menuItem.items">
 					        <a ng-hide="item.items" href="{{item.link}}" ng-click="menuClick(item)" target="{{item.newTab ? '_blank' : '_self'}}">{{ item.name }}</a>
@@ -34,6 +35,7 @@
 									<a href="{{subItem.link}}" ng-click="menuClick(item, subItem)" target="{{subItem.newTab ? '_blank' : '_self'}}">{{ subItem.name }}</a>
 								</li>
 							</ul>
+							<hr style="margin: 5px;" ng-show="item.divider">
 						</li>
 					</ul>
 				</li>
@@ -43,6 +45,7 @@
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li ng-repeat="next in themes"><a href="#" data-theme="{{next.id}}" class="theme-link" ng-click="selectTheme(next.id)">{{next.name}}</a></li>
+					<hr style="margin: 5px;">
 					<li><a href="#" class="theme-link" ng-click="resetTheme()">Reset</a></li>
 				</ul>
 			  </li>

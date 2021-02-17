@@ -64,7 +64,8 @@ exports.getMenu = function() {
 					"link":"#",
 					"order":"105",
 					"event":"workbench.editor.save",
-					"data": ""
+					"data": "",
+					"divider": true
 				},
 				{
 					"name":"Exit",

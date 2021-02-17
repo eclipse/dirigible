@@ -9,55 +9,55 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getMenu = function() {
+exports.getMenu = function () {
 	var menu = {
-			"name":"Help",
-			"link":"#",
-			"order":"900",
-			"onClick":"alert('Help has been clicked')",
-			"items":[
-				{
-					"name":"Contents",
-					"link":"#",
-					"order":"910",
-					"event":"open",
-					"data": "http://www.dirigible.io/help/index.html"
-				},
-				{
-					"name":"API",
-					"link":"#",
-					"order":"915",
-					"event":"open",
-					"data": "http://www.dirigible.io/api/index.html"
-				},
-				{
-					"name":"Issues",
-					"link":"#",
-					"order":"920",
-					"event":"open",
-					"data": "https://github.com/eclipse/dirigible/issues"
-				},
-				{
-					"name":"Wiki",
-					"link":"#",
-					"order":"920",
-					"event":"open",
-					"data": "https://github.com/eclipse/dirigible/wiki"
-				},
-				{
-					"name":"Site",
-					"link":"#",
-					"order":"990",
-					"event":"open",
-					"data": "http://www.dirigible.io"
-				},
-				{
-					"name":"About",
-					"link":"#",
-					"order":"991",
-					"event":"openView"
-				}
-			]
-		};
+		"name": "Help",
+		"link": "#",
+		"order": "900",
+		"items": [
+			{
+				"name": "Help Portal",
+				"link": "#",
+				"order": "910",
+				"event": "open",
+				"data": "https://www.dirigible.io/help/"
+			},
+			{
+				"name": "Contact Support",
+				"link": "#",
+				"order": "915",
+				"event": "open",
+				"data": "https://github.com/eclipse/dirigible/issues"
+			},
+			{
+				"name": "Suggest a Feature",
+				"link": "#",
+				"order": "920",
+				"event": "open",
+				"data": "https://github.com/eclipse/dirigible/issues/new?assignees=&labels=&template=feature_request.md&title=[New%20Feature]"
+			},
+			{
+				"name": "What's New",
+				"link": "#",
+				"order": "920",
+				"event": "open",
+				"data": "https://twitter.com/dirigible_io"
+			},
+			{
+				"name": "Check for Update",
+				"link": "#",
+				"order": "990",
+				"event": "open",
+				"data": "http://download.dirigible.io/",
+				"divider": true
+			},
+			{
+				"name": "About",
+				"link": "#",
+				"order": "991",
+				"event": "openView"
+			}
+		]
+	};
 	return menu;
 };
