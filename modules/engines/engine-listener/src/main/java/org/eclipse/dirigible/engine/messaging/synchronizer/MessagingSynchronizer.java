@@ -60,13 +60,52 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private SchedulerManager messagingManager;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (MessagingSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing Listeners...");
+				try {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					startListeners();
+					int immutableCount = LISTENERS_PREDELIVERED.size();
+					int mutableCount = LISTENERS_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				} catch (Exception e) {
+					logger.error("Synchronizing process for Listeners failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for Listeners files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing Listeners.");
+				afterSynchronizing();
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		MessagingSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
-		extensionsSynchronizer.synchronize();
+		MessagingSynchronizer synchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -88,37 +127,6 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (MessagingSynchronizer.class) {
-			logger.trace("Synchronizing Listeners...");
-			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				startListeners();
-				int immutableCount = LISTENERS_PREDELIVERED.size();
-				int mutableCount = LISTENERS_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
-			} catch (Exception e) {
-				logger.error("Synchronizing process for Listeners failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for Listeners files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing Listeners.");
 		}
 	}
 

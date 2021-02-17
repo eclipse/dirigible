@@ -14,6 +14,8 @@ package org.eclipse.dirigible.core.scheduler.api;
 import static java.text.MessageFormat.format;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 
@@ -40,6 +42,35 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	@Inject
 	private SynchronizerCoreService synchronizerCoreService;
 	
+	private final AtomicLong lastSynchronized = new AtomicLong(0);
+	
+	private final AtomicBoolean forcedSynchronization = new AtomicBoolean(false);
+	
+	@Override
+	public boolean beforeSynchronizing() {
+		if (forcedSynchronization.get() || getLastSynchronized() < getRepository().getLastModified()) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void afterSynchronizing() {
+		setLastSynchronized(System.currentTimeMillis());
+	}
+	
+	@Override
+	public void setForcedSynchronization(boolean forced) {
+		forcedSynchronization.set(forced);
+	}
+	
+	public long getLastSynchronized() {
+		return lastSynchronized.get();
+	}
+	
+	protected void setLastSynchronized(long time) {
+		lastSynchronized.set(time);
+	}
 
 	/**
 	 * Gets the repository.

@@ -55,13 +55,50 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	private WebsocketsCoreService websocketsCoreService;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (WebsocketsSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing Websockets...");
+				try {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					int immutableCount = WEBSOCKETS_PREDELIVERED.size();
+					int mutableCount = WEBSOCKETS_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				} catch (Exception e) {
+					logger.error("Synchronizing process for Websockets failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for Websockets files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing Websockets.");
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		WebsocketsSynchronizer websocketsSynchronizer = StaticInjector.getInjector().getInstance(WebsocketsSynchronizer.class);
-		websocketsSynchronizer.synchronize();
+		WebsocketsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(WebsocketsSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -83,36 +120,6 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (WebsocketsSynchronizer.class) {
-			logger.trace("Synchronizing Websockets...");
-			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				int immutableCount = WEBSOCKETS_PREDELIVERED.size();
-				int mutableCount = WEBSOCKETS_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
-			} catch (Exception e) {
-				logger.error("Synchronizing process for Websockets failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for Websockets files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing Websockets.");
 		}
 	}
 

@@ -59,13 +59,52 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	// private SchedulerManager schedulerManager;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (JobSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing Jobs...");
+				try {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					startJobs();
+					int immutableCount = JOBS_PREDELIVERED.size();
+					int mutableCount = JOBS_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+				} catch (Exception e) {
+					logger.error("Synchronizing process for Jobs failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for Jobs files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing Jobs.");
+				afterSynchronizing();
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		JobSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
-		extensionsSynchronizer.synchronize();
+		JobSynchronizer synchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -87,37 +126,6 @@ public class JobSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (JobSynchronizer.class) {
-			logger.trace("Synchronizing Jobs...");
-			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				startJobs();
-				int immutableCount = JOBS_PREDELIVERED.size();
-				int mutableCount = JOBS_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
-			} catch (Exception e) {
-				logger.error("Synchronizing process for Jobs failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for Jobs files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing Jobs.");
 		}
 	}
 

@@ -22,5 +22,18 @@ public interface ISynchronizer {
 	 * Synchronize.
 	 */
 	public void synchronize();
+	
+	/**
+	 * Before synchronizing.
+	 */
+	public boolean beforeSynchronizing();
+	
+	/**
+	 * After synchronizing.
+	 */
+	public void afterSynchronizing();
+
+	/** Set the flag whether the synchronization is forced or not*/
+	void setForcedSynchronization(boolean forced);
 
 }

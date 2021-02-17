@@ -88,13 +88,61 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	private OData2ODataXTransformer odata2ODataXTransformer;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (ODataSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing OData Schemas and Mappings...");
+				try {
+					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						updateOData();
+						int immutableSchemasCount = SCHEMAS_PREDELIVERED.size();
+						int immutableMappingsCount = MAPPINGS_PREDELIVERED.size();
+						int immutableODataCount = ODATA_PREDELIVERED.size();
+						int mutableSchemasCount = SCHEMAS_SYNCHRONIZED.size();
+						int mutableMappingsCount = MAPPINGS_SYNCHRONIZED.size();
+						int mutableODataCount = ODATA_MODELS.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Schemas: {0}, Mappings: {1}, OData: {2}], "
+								+ "Mutable: [Schemas: {3}, Mappings: {4}, OData: {5}]", 
+								immutableSchemasCount, immutableMappingsCount, immutableODataCount, mutableSchemasCount, mutableMappingsCount, mutableODataCount));
+					} else {
+						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+					}
+				} catch (Exception e) {
+					logger.error("Synchronizing process for OData Schemas and Mappings failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for OData files Schemas and Mappings failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing OData Schemas and Mappings.");
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		ODataSynchronizer mappingsSynchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
-		mappingsSynchronizer.synchronize();
+		ODataSynchronizer synchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -165,47 +213,6 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (ODataSynchronizer.class) {
-			logger.trace("Synchronizing OData Schemas and Mappings...");
-			try {
-				if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					updateOData();
-					int immutableSchemasCount = SCHEMAS_PREDELIVERED.size();
-					int immutableMappingsCount = MAPPINGS_PREDELIVERED.size();
-					int immutableODataCount = ODATA_PREDELIVERED.size();
-					int mutableSchemasCount = SCHEMAS_SYNCHRONIZED.size();
-					int mutableMappingsCount = MAPPINGS_SYNCHRONIZED.size();
-					int mutableODataCount = ODATA_MODELS.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Schemas: {0}, Mappings: {1}, OData: {2}], "
-							+ "Mutable: [Schemas: {3}, Mappings: {4}, OData: {5}]", 
-							immutableSchemasCount, immutableMappingsCount, immutableODataCount, mutableSchemasCount, mutableMappingsCount, mutableODataCount));
-				} else {
-					failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
-				}
-			} catch (Exception e) {
-				logger.error("Synchronizing process for OData Schemas and Mappings failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for OData files Schemas and Mappings failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing OData Schemas and Mappings.");
 		}
 	}
 

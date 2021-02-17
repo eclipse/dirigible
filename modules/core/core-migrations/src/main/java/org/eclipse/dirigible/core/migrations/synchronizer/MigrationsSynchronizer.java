@@ -61,20 +61,57 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 	@Inject
 	private MigrationsCoreService migrationsCoreService;
 	
-	@Inject
-	private DataSource dataSource;
-
-	@Inject
-	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager;
-	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (MigrationsSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing Migrations artifacts...");
+				try {
+					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						startMigrations();
+						int immutableCount = MIGRATIONS_PREDELIVERED.size();
+						int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					} else {
+						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+					}
+				} catch (Exception e) {
+					logger.error("Synchronizing process for Migrations artifacts failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for Migrations files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing Migrations artifacts.");
+				afterSynchronizing();
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		MigrationsSynchronizer migrationsSynchronizer = StaticInjector.getInjector().getInstance(MigrationsSynchronizer.class);
-		migrationsSynchronizer.synchronize();
+		MigrationsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(MigrationsSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -96,41 +133,6 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (MigrationsSynchronizer.class) {
-			logger.trace("Synchronizing Migrations artifacts...");
-			try {
-				if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					startMigrations();
-					int immutableCount = MIGRATIONS_PREDELIVERED.size();
-					int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
-				} else {
-					failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
-				}
-			} catch (Exception e) {
-				logger.error("Synchronizing process for Migrations artifacts failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for Migrations files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing Migrations artifacts.");
 		}
 	}
 

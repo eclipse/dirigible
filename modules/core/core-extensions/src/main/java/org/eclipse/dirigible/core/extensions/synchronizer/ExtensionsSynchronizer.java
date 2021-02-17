@@ -61,13 +61,54 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	private ExtensionsCoreService extensionsCoreService;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (ExtensionsSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing Extension Points and Extensions...");
+				try {
+					startSynchronization(SYNCHRONIZER_NAME);
+					clearCache();
+					synchronizePredelivered();
+					synchronizeRegistry();
+					int immutableExtensionPointsCount = EXTENSION_POINTS_PREDELIVERED.size();
+					int immutableExtensionsCount = EXTENSIONS_PREDELIVERED.size();
+					int mutableExtensionPointsCount = EXTENSION_POINTS_SYNCHRONIZED.size();
+					int mutableExtensionsCount = EXTENSIONS_SYNCHRONIZED.size();
+					cleanup();
+					clearCache();
+					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Extension Points: {0}, Immutable Extensions: {1}, Mutable Extension Points: {2}, Mutable Extensions: {3}", 
+							immutableExtensionPointsCount, immutableExtensionsCount, mutableExtensionPointsCount, mutableExtensionsCount));
+				} catch (Exception e) {
+					logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for Extension Points and Extensions files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing Extension Points and Extensions.");
+				afterSynchronizing();
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		ExtensionsSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
-		extensionsSynchronizer.synchronize();
+		ExtensionsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -111,39 +152,6 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (ExtensionsSynchronizer.class) {
-			logger.trace("Synchronizing Extension Points and Extensions...");
-			try {
-				startSynchronization(SYNCHRONIZER_NAME);
-				clearCache();
-				synchronizePredelivered();
-				synchronizeRegistry();
-				int immutableExtensionPointsCount = EXTENSION_POINTS_PREDELIVERED.size();
-				int immutableExtensionsCount = EXTENSIONS_PREDELIVERED.size();
-				int mutableExtensionPointsCount = EXTENSION_POINTS_SYNCHRONIZED.size();
-				int mutableExtensionsCount = EXTENSIONS_SYNCHRONIZED.size();
-				cleanup();
-				clearCache();
-				successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Extension Points: {0}, Immutable Extensions: {1}, Mutable Extension Points: {2}, Mutable Extensions: {3}", 
-						immutableExtensionPointsCount, immutableExtensionsCount, mutableExtensionPointsCount, mutableExtensionsCount));
-			} catch (Exception e) {
-				logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for Extension Points and Extensions files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing Extension Points and Extensions.");
 		}
 	}
 

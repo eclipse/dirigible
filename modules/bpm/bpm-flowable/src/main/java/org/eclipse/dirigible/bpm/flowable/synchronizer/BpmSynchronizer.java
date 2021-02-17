@@ -73,13 +73,56 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	private BpmProviderFlowable bpmProviderFlowable;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
+	 */
+	@Override
+	public void synchronize() {
+		synchronized (BpmSynchronizer.class) {
+			if (beforeSynchronizing()) {
+				logger.trace("Synchronizing BPMN files...");
+				try {
+					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						updateProcessEngine();
+						int immutableCount = BPMN_PREDELIVERED.size();
+						int mutableCount = BPMN_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					} else {
+						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+					}
+				} catch (Exception e) {
+					logger.error("Synchronizing process for BPMN files failed.", e);
+					try {
+						failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
+					} catch (SchedulerException e1) {
+						logger.error("Synchronizing process for BPMN files failed in registering the state log.", e);
+					}
+				}
+				logger.trace("Done synchronizing BPMN files.");
+				afterSynchronizing();
+			}
+		}
+	}
 
 	/**
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		BpmSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(BpmSynchronizer.class);
-		extensionsSynchronizer.synchronize();
+		BpmSynchronizer synchronizer = StaticInjector.getInjector().getInstance(BpmSynchronizer.class);
+		synchronizer.setForcedSynchronization(true);
+		try {
+			synchronizer.synchronize();
+		} finally {
+			synchronizer.setForcedSynchronization(false);
+		}
 	}
 
 	/**
@@ -103,41 +146,6 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			if (in != null) {
 				in.close();
 			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
-	 */
-	@Override
-	public void synchronize() {
-		synchronized (BpmSynchronizer.class) {
-			logger.trace("Synchronizing BPMN files...");
-			try {
-				if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					updateProcessEngine();
-					int immutableCount = BPMN_PREDELIVERED.size();
-					int mutableCount = BPMN_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
-				} else {
-					failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
-				}
-			} catch (Exception e) {
-				logger.error("Synchronizing process for BPMN files failed.", e);
-				try {
-					failedSynchronization(SYNCHRONIZER_NAME, e.getMessage());
-				} catch (SchedulerException e1) {
-					logger.error("Synchronizing process for BPMN files failed in registering the state log.", e);
-				}
-			}
-			logger.trace("Done synchronizing BPMN files.");
 		}
 	}
 
