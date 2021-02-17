@@ -1,1 +1,13 @@
-<div class="statusbar"><div class="statusbar-message pull-left"><i class="fa fa-window-maximize" aria-hidden="true"></i> {{message}}</div> <div class="statusbar-error pull-left"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{error}}</div> <div class="pull-right">{{caret}}</div></div>
+<div class="statusbar row">
+	<div class="col-md-5 statusbar-message pull-left" ng-class="visible: message, invisible: !message">
+		<i class="fa fa-window-maximize" ng-show="message"></i>
+		 {{message}} 
+		<i style="margin-bottom: 2px;" class="btn fa fa-ban" ng-click="cleanStatusMessages()" ng-show="message"></i>
+	</div>
+	<div class="col-md-5 statusbar-error pull-left" ng-class="visible: error, invisible: !error">
+		<i class="fa fa-exclamation-triangle" ng-show="error"></i>
+		 {{error}} 
+		<i style="margin-bottom: 2px;" class="btn fa fa-ban" ng-click="cleanErrorMessages()" ng-show="error"></i>
+	</div>
+	<div class="col-md-2 pull-right">{{caret}}</div>
+</div>
