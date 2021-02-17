@@ -364,6 +364,16 @@ angular.module('ideUiCore', ['ngResource'])
 				scope.error = msg.data;
 				scope.$apply();
 			});
+
+			scope.cleanStatusMessages = function() {
+				scope.message = null;
+				scope.$apply();
+			};
+
+			scope.cleanErrorMessages = function() {
+				scope.error = null;
+				scope.$apply();
+			};
 		},
 		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/statusbar.html'
 	}
