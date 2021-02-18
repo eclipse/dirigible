@@ -12,7 +12,7 @@
 exports.getView = function () {
     return {
         'id': 'documents-access',
-        'name': ' Documents Access',
+        'name': 'Documents Access',
         'factory': 'frame',
         'region': 'center-bottom',
         'label': 'Documents Access',
