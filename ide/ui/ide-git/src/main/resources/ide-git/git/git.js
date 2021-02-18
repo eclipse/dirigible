@@ -494,7 +494,7 @@ GitService.prototype.load = function(wsResourcePath){
 			});
 }
 GitService.prototype.cloneProject = function(wsTree, workspace, repository, branch, username, password, projectName) {
-	var gitBranch = branch ? branch : "master";
+	var gitBranch = branch ? branch : "";
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path("clone").build();
 	return this.$http.post(url, {
 		"repository": repository,

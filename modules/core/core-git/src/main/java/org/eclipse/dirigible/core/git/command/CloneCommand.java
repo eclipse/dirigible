@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -33,9 +34,12 @@ import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,9 +160,13 @@ public class CloneCommand {
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
-	protected void cloneProject(final String user, final String repositoryURI, final String repositoryBranch, final String username, final String password,
+	protected void cloneProject(final String user, final String repositoryURI, String repositoryBranch, final String username, final String password,
 			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects, String optionalProjectName) throws GitConnectorException {
 		try {
+			if (repositoryBranch == null || repositoryBranch.isEmpty()) {
+				repositoryBranch = getDefaultBranch(repositoryURI);
+			}
+			
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getCanonicalPath()));
 			GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryURI, username, password, repositoryBranch);
@@ -306,6 +314,41 @@ public class CloneCommand {
 		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR).append(UserFacade.getName())
 				.append(IRepositoryStructure.SEPARATOR).append(workspace);
 		return relativePath.toString();
+	}
+	
+	private String getDefaultBranch(String gitUrl) throws InvalidRemoteException, TransportException, GitAPIException {
+		
+		String result = "refs/heads/master";
+		String defaultId = "";
+		
+		Ref head = Git.lsRemoteRepository()
+				.setRemote(gitUrl)
+				.callAsMap()
+				.get("HEAD");
+		
+		if (head != null) {
+		   if(head.isSymbolic()) {
+		      Ref b = head.getTarget();
+		      defaultId = b.getName();
+		   } else {
+			   AnyObjectId id = head.getObjectId();
+			   defaultId = id.getName();
+		   }
+		}
+		
+		Map<String, Ref> refMap = Git.lsRemoteRepository()
+			    .setRemote(gitUrl)
+			    .setHeads(true)
+			    .setTags(true)
+			    .callAsMap();
+		
+		for (Map.Entry<String, Ref> entry : refMap.entrySet()) {
+			if (entry.getValue().getObjectId().getName().equals(defaultId)) {
+				result = entry.getKey();
+			}
+		}
+		
+		return result.substring(result.lastIndexOf('/') + 1);
 	}
 
 }
