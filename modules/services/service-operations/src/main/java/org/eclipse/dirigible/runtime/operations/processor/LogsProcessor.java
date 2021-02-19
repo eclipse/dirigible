@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.operations.processor;
@@ -25,6 +25,12 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.runtime.operations.service.LogInfo;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 
 public class LogsProcessor {
 	
@@ -61,6 +67,40 @@ public class LogsProcessor {
 				input.close();
 			}
 		}
+	}
+	
+	public Object listLoggers() {
+		List<LogInfo> result = new ArrayList<LogInfo>();
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        List<Logger> loggers = loggerContext.getLoggerList();
+        for (Logger logger : loggers) {
+        	LogInfo logInfo = new LogInfo(logger.getName(), logger.getLevel() == null ? "-" : logger.getLevel().toString());
+        	result.add(logInfo);
+        }
+        return result;
+	}
+
+	public Object getSeverity(String loggerName) {
+		if (LoggerFactory.getLogger(loggerName).isTraceEnabled()) {
+			return Level.TRACE.toString();
+		} else if (LoggerFactory.getLogger(loggerName).isDebugEnabled()) {
+			return Level.DEBUG.toString();
+		} else if (LoggerFactory.getLogger(loggerName).isWarnEnabled()) {
+			return Level.WARN.toString();
+		} else if (LoggerFactory.getLogger(loggerName).isInfoEnabled()) {
+			return Level.INFO.toString();
+		} else if (LoggerFactory.getLogger(loggerName).isErrorEnabled()) {
+			return Level.ERROR.toString();
+		}
+		
+		return "Unknown logger: " + loggerName;
+	}
+	
+	public Object setSeverity(String loggerName, String logLevel) {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        Logger logger = loggerContext.getLogger(loggerName);
+        logger.setLevel(Level.toLevel(logLevel));
+        return getSeverity(loggerName);
 	}
 
 }

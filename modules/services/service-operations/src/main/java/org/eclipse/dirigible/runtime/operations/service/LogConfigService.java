@@ -13,12 +13,14 @@ package org.eclipse.dirigible.runtime.operations.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,17 +42,17 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front facing REST service serving the Logs.
+ * Front facing REST service serving the Log Configurations.
  */
 @Singleton
-@Path("/ops/logs")
+@Path("/ops/logconfig")
 @RolesAllowed({ "Operator" })
-@Api(value = "Operations - Logs", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@Api(value = "Operations - Log Configuration", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
-public class LogsService extends AbstractRestService implements IRestService {
+public class LogConfigService extends AbstractRestService implements IRestService {
 
-	private static final Logger logger = LoggerFactory.getLogger(LogsService.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogConfigService.class);
 
 	@Inject
 	private LogsProcessor processor;
@@ -64,11 +66,11 @@ public class LogsService extends AbstractRestService implements IRestService {
 	 */
 	@Override
 	public Class<? extends IRestService> getType() {
-		return LogsService.class;
+		return LogConfigService.class;
 	}
-
+	
 	/**
-	 * List all the log files in the logs folder.
+	 * List all loggers with their severity level.
 	 *
 	 * @return the response
 	 * @throws URISyntaxException
@@ -80,21 +82,20 @@ public class LogsService extends AbstractRestService implements IRestService {
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listLogs()
-			throws URISyntaxException, DecoderException, IOException {
+	public Response listLoggers() throws URISyntaxException, DecoderException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		return Response.ok().entity(processor.list()).build();
+		return Response.ok().entity(processor.listLoggers()).build();
 	}
-	
+
 	/**
-	 * Search.
+	 * Get severity.
 	 *
-	 * @param file
-	 *            the file
+	 * @param loggerName
+	 *            the loggerName
 	 * @return the response
 	 * @throws URISyntaxException
 	 *             the URI syntax exception
@@ -103,15 +104,49 @@ public class LogsService extends AbstractRestService implements IRestService {
 	 * @throws IOException the I/O error
 	 */
 	@GET
-	@Path("{file}")
+	@Path("severity/{loggerName}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response list(@PathParam("file") String file) throws URISyntaxException, DecoderException, IOException {
+	public Response getSeverity(@PathParam("loggerName") String loggerName) throws URISyntaxException, DecoderException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
+		
+		if (loggerName == null) {
+			loggerName = "ROOT";
+		}
 
-		return Response.ok().entity(processor.get(file)).build();
+		return Response.ok().entity(processor.getSeverity(loggerName)).build();
+	}
+	
+	/**
+	 * Set severity.
+	 *
+	 * @param loggerName
+	 *            the loggerName
+	 * @param logLevel
+	 *            the logLevel
+	 * @return the response
+	 * @throws URISyntaxException
+	 *             the URI syntax exception
+	 * @throws DecoderException
+	 *             the decoder exception
+	 * @throws IOException the I/O error
+	 */
+	@POST
+	@Path("severity/{loggerName}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response setSeverity(@PathParam("loggerName") String loggerName, String logLevel) throws URISyntaxException, DecoderException, IOException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		
+		if (loggerName == null) {
+			loggerName = "ROOT";
+		}
+
+		return Response.ok().entity(processor.setSeverity(loggerName, logLevel)).build();
 	}
 
 	/*
