@@ -19,6 +19,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -70,7 +71,7 @@ public class DataStructuresService extends AbstractRestService implements IRestS
 	 */
 	@GET
 	@Path("")
-	@Produces({ "application/json" })
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response listDataStructures()
 			throws DataStructuresException {
 		String user = UserFacade.getName();
