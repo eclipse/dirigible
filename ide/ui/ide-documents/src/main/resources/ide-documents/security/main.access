@@ -26,15 +26,6 @@
                 "ReadOnly",
                 "Operator"
             ]
-        },
-        {
-            "scope": "HTTP",
-            "path": "/ide-documents/web",
-            "method": "*",
-            "roles": [
-                "ReadOnly",
-                "Operator"
-            ]
         }
     ]
 }
