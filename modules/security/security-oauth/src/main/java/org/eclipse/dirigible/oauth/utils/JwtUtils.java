@@ -468,16 +468,7 @@ public class JwtUtils {
 		String sessionToken = getSessionToken(request);
 		if (sessionToken == null || !sessionToken.equals(token)) {
 			try {
-				String verificationKey = OAuthUtils.getOAuthVerificationKey();
-				RSAPublicKey publicKey = getPublicKeyFromString(verificationKey);
-				Algorithm algorithm = Algorithm.RSA256(publicKey, null);
-				JWTVerifier verifier = JWT.require(algorithm)
-						.acceptLeeway(1) // 1 sec for nbf and iat
-						.acceptExpiresAt(5) // 5 secs for exp
-						.withAudience(OAuthUtils.getOAuthClientId())
-						.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer())
-						.build();
-				verifier.verify(token);
+				verifyJwt(token);
 				setSessionToken(request, token);
 			} catch (Exception e) {
 				isValid = false;
@@ -487,6 +478,19 @@ public class JwtUtils {
 		}
 
 		return isValid;
+	}
+
+	public static void verifyJwt(String token) throws IOException, GeneralSecurityException {
+		String verificationKey = OAuthUtils.getOAuthVerificationKey();
+		RSAPublicKey publicKey = getPublicKeyFromString(verificationKey);
+		Algorithm algorithm = Algorithm.RSA256(publicKey, null);
+		JWTVerifier verifier = JWT.require(algorithm)
+				.acceptLeeway(1) // 1 sec for nbf and iat
+				.acceptExpiresAt(5) // 5 secs for exp
+				.withAudience(OAuthUtils.getOAuthClientId())
+				.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer())
+				.build();
+		verifier.verify(token);
 	}
 
 	public static boolean isExpiredJwt(ServletRequest request, String token) {

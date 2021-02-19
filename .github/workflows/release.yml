@@ -195,10 +195,23 @@ jobs:
         body: |
           ## Eclipse Dirigible - ${{ env.DIRIGIBLE_VERSION }}
 
+          #### Release:
+
           The lates release notes are available [here](https://www.dirigible.io/releases.html).
 
           > _**Note:** All released versions can be found [here](https://github.com/eclipse/dirigible/releases/)._
           
+          #### Maven:
+
+          250+ Maven dependencies can be found [here]( https://search.maven.org/#search%7Cga%7C1%7Corg.eclipse.dirigible).
+          ```xml
+          <dependency>
+              <groupId>org.eclipse.dirigible</groupId>
+              <artifactId>dirigible-server-all</artifactId>
+              <version>${{ env.DIRIGIBLE_VERSION }}</version>
+          </dependency>
+          ```
+
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
             - [dirigiblelabs/dirigible-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-anonymous/tags?page=1&ordering=last_updated) - Anonymous access _(runtime only)_.

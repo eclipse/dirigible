@@ -99,7 +99,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	}
 
 	function loadContents() {
-		return getResource('../../../../../../services/v4/js/ide-documents/services/access');
+		return getResource('../../../../../../services/v4/js/ide-documents/services/constraints');
 	}
 
 	function load() {
@@ -115,7 +115,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 
 	function saveContents(text) {
 		var xhr = new XMLHttpRequest();
-		xhr.open('PUT', '../../../../../../services/v4/js/ide-documents/services/access');
+		xhr.open('PUT', '../../../../../../services/v4/js/ide-documents/services/constraints');
 		xhr.setRequestHeader('X-Requested-With', 'Fetch');
 		xhr.setRequestHeader('X-CSRF-Token', csrfToken);
 		xhr.send(text);
