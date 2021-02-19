@@ -11,11 +11,11 @@
  */
 exports.getView = function () {
     return {
-        'id': 'documents-access',
-        'name': 'Documents Access',
+        'id': 'documents-constraints',
+        'name': 'Constraints',
         'factory': 'frame',
         'region': 'center-bottom',
-        'label': 'Documents Access',
-        'link': '../ide-documents/access.html'
+        'label': 'Constraints',
+        'link': '../ide-documents/constraints.html'
     };
 }
