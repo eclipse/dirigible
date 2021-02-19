@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.oauth.filters;
@@ -52,6 +52,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	private static final String SERVICES_V3_PUBLIC = "/services/v3/public";
 	private static final String SERVICES_V4_PUBLIC = "/services/v4/public";
 	private static final String SERVICES_V4_OAUTH = "/services/v4/oauth";
+	private static final String SERVICES_V4_WEB_RESOURCES = "/services/v4/web/resources";
 
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
@@ -59,7 +60,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String jwt = null;
-		if (!isPublicEnabledAccess(request) && !isOAuth(request)) {			
+		if (!isPublicEnabledAccess(request) && !isOAuth(request) && !isPublicResource(request)) {			
 			jwt = JwtUtils.getJwt(request);
 
 			if (jwt == null || (jwt != null && jwt.equals(""))) {
@@ -119,6 +120,12 @@ public class OAuthFilter extends AbstractOAuthFilter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
 		return requestURI.startsWith(SERVICES_V4_OAUTH);
+	}
+
+	private boolean isPublicResource(ServletRequest servletRequest) {
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		String requestURI = request.getRequestURI();
+		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES);
 	}
 
 	@Override
