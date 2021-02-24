@@ -28,6 +28,7 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
+import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -165,7 +166,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		try (Context context = contextBuilder.build()) {
 			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 			Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
-			bindings.putMember(SOURCE_PROVIDER, sourceProvider);
+			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
 			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
 			bindings.putMember(CONTEXT, executionContext);
 			bindings.putMember(CONSOLE, ConsoleFacade.getConsole());
@@ -192,7 +193,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	}
 
 	protected String loadSource(String module) throws IOException, URISyntaxException {
-		return sourceProvider.loadSource(module);
+		return getSourceProvider().loadSource(module);
 	}
 
 	protected void beforeEval(Context context) throws IOException {
@@ -219,5 +220,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	@Override
 	public String getName() {
 		return ENGINE_NAME;
+	}
+	
+	public IJavascriptModuleSourceProvider getSourceProvider() {
+		return sourceProvider;
 	}
 }
