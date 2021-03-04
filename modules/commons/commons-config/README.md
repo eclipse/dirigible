@@ -1,3 +1,4 @@
+
 # Configuration Parameters
 
 ## Anonymous Access
@@ -203,7 +204,7 @@
 
 ### Theme
 
-- `DIRIGIBLE_THEME_DEFAULT`: (default: ../Default)
+- `DIRIGIBLE_THEME_DEFAULT`: (default: `fiori`)
 
 ### OData
 
