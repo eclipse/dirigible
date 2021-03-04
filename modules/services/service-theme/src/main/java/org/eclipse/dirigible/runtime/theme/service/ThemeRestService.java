@@ -56,7 +56,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 	private static final String NAME_PARAM = "name"; //$NON-NLS-1$
 
-	private static final String DEFAULT_THEME = "default"; //$NON-NLS-1$
+	private static final String DEFAULT_THEME = "fiori"; //$NON-NLS-1$
 
 	private static final String INIT_PARAM_DEFAULT_THEME = "DIRIGIBLE_THEME_DEFAULT"; //$NON-NLS-1$
 
