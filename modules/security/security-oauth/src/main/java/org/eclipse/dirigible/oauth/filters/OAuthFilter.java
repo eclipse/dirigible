@@ -53,6 +53,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	private static final String SERVICES_V4_PUBLIC = "/services/v4/public";
 	private static final String SERVICES_V4_OAUTH = "/services/v4/oauth";
 	private static final String SERVICES_V4_WEB_RESOURCES = "/services/v4/web/resources";
+	private static final String SERVICES_V4_HEALTHCHECK = "/services/v4/healthcheck";
 
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
@@ -125,7 +126,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	private boolean isPublicResource(ServletRequest servletRequest) {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
-		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES);
+		return requestURI.startsWith(SERVICES_V4_WEB_RESOURCES) || requestURI.startsWith(SERVICES_V4_HEALTHCHECK);
 	}
 
 	@Override
