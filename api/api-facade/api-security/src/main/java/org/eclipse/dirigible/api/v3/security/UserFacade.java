@@ -90,13 +90,13 @@ public class UserFacade implements IScriptingFacade {
 	public static final void setName(String userName) throws ContextException {
 		if (Configuration.isAnonymousModeEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
 		} else if (Configuration.isJwtModeEnabled()) {
 			setContextProperty(DIRIGIBLE_JWT_USER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
