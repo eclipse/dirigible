@@ -14,7 +14,6 @@ package org.eclipse.dirigible.repository.local;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericMultiThreadTest;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LocalRepositoryMultiThreadTest.
  */

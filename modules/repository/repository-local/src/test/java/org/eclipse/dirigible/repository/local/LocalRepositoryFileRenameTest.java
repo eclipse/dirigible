@@ -16,7 +16,6 @@ import static org.junit.Assert.fail;
 import org.eclipse.dirigible.repository.generic.RepositoryGenericFileRenameTest;
 import org.junit.Before;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LocalRepositoryFileRenameTest.
  */

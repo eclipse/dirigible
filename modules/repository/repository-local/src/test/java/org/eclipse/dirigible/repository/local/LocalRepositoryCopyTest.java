@@ -27,7 +27,6 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LocalRepositoryCopyTest.
  */
