@@ -35,6 +35,9 @@ public interface IRepository
 	/** The Constant DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE. */
 	public static final String DIRIGIBLE_REPOSITORY_PROVIDER_DATABASE = "database"; //$NON-NLS-1$
 	
+	/** The Constant DIRIGIBLE_REPOSITORY_DISABLE_CACHE. */
+	public static final String DIRIGIBLE_REPOSITORY_DISABLE_CACHE = "DIRIGIBLE_REPOSITORY_DISABLE_CACHE"; //$NON-NLS-1$
+	
 	/** Gets the internal named parameter value*/
 	public String getParameter(String key);
 	

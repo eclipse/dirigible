@@ -19,6 +19,7 @@
 ## Repository
 
 - `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
+- `DIRIGIBLE_REPOSITORY_DISABLE_CACHE`: (true | false)
 
 ### Database Repository
 
