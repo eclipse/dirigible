@@ -11,19 +11,16 @@
  */
 package org.eclipse.dirigible.repository.local;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.FileWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryCache;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -84,9 +81,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertEquals("cached file", content);
 			
 			try {
-				Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "true");
-				RepositoryCache cache = new RepositoryCache();
-				cache.clear();
+				RepositoryCache.disable();
 				resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
 				assertNotNull(resource2);
 				assertTrue(resource2.exists());
@@ -104,7 +99,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 				assertEquals("cached file changed 2", content);
 				
 			} finally {
-				Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "false");
+				RepositoryCache.enable();
 			}
 			
 

@@ -22,6 +22,10 @@ public class RepositoryCache {
 	private static Map<String, byte[]> cache;
 	
 	public RepositoryCache() {
+		initialize();
+	}
+
+	private static void initialize() {
 		if (!Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "false"))) {
 			if (cache == null) {
 				cache = Collections.synchronizedMap(new HashMap<String, byte[]>());
@@ -54,6 +58,16 @@ public class RepositoryCache {
 		if (cache != null) {
 			cache.clear();
 		}
+	}
+	
+	public static void enable() {
+		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "false");
+		initialize();
+	}
+	
+	public static void disable() {
+		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "true");
+		initialize();
 	}
 
 }

@@ -52,7 +52,7 @@ public class LocalRepositoryDao {
 
 	private FileSystemRepository repository;
 	
-	private static final RepositoryCache cache = new RepositoryCache();
+	private final RepositoryCache cache = new RepositoryCache();
 	
 
 	/**
