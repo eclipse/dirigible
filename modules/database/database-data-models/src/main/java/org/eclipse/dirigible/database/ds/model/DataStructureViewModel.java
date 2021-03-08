@@ -11,11 +11,14 @@
  */
 package org.eclipse.dirigible.database.ds.model;
 
+import javax.persistence.Transient;
+
 /**
  * The view model representation.
  */
 public class DataStructureViewModel extends DataStructureModel {
 
+	@Transient
 	private String query;
 
 	/**

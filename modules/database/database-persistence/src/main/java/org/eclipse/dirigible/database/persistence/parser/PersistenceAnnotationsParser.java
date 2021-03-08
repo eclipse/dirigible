@@ -31,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
@@ -148,7 +149,10 @@ public class PersistenceAnnotationsParser {
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {
-				logger.warn(format("No Column annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				Annotation annotationTransient = field.getAnnotation(Transient.class);
+				if (annotationTransient == null) {
+					logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				}
 				continue;
 			}
 			Column column = (Column) annotationColumn;

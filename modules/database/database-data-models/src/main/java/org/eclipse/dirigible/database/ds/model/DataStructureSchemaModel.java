@@ -14,13 +14,17 @@ package org.eclipse.dirigible.database.ds.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Transient;
+
 /**
  * The schema model representation.
  */
 public class DataStructureSchemaModel extends DataStructureContentModel {
 	
+	@Transient
 	private List<DataStructureTableModel> tables = new ArrayList<DataStructureTableModel>();
 
+	@Transient
 	private List<DataStructureViewModel> views = new ArrayList<DataStructureViewModel>();
 
 	/**

@@ -18,6 +18,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
@@ -46,6 +47,7 @@ public class DataStructureModel {
 	@Column(name = "DS_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 
+	@Transient
 	private List<DataStructureDependencyModel> dependencies = new ArrayList<DataStructureDependencyModel>();
 
 	/**

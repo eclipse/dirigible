@@ -11,11 +11,14 @@
  */
 package org.eclipse.dirigible.database.ds.model;
 
+import javax.persistence.Transient;
+
 /**
  * The data model representation for *.append files.
  */
 public class DataStructureContentModel extends DataStructureModel {
 
+	@Transient
 	private transient String content;
 
 	public String getContent() {
