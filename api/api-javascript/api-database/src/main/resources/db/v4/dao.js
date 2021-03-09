@@ -52,7 +52,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		var sql = sqlBuilder.build();
 		if(sql === undefined || sql.length<1)
 			throw Error("Illegal argument: sql from statement builder is invalid["+sql+"]");
-		this.$log.info('Executing SQL Statement: {}', sql);
+		this.$log.trace('Executing SQL Statement: {}', sql);
 	 	
 	 	var parameters = sqlBuilder.parameters && sqlBuilder.parameters();
 	 	var _parameterBindings;
@@ -71,7 +71,7 @@ var DAO = exports.DAO = function(orm, logCtxName, dataSourceName, databaseType){
 		 			continue;
 	 			}
 		 		var index = i+1;
-		 		this.$log.info('Binding to parameter[{}]: {}', index, val);
+		 		this.$log.trace('Binding to parameter[{}]: {}', index, val);
 		 		_parameterBindings.push({
 		 			"type": parameters[i].type,
 		 			"value": parseValue(parameters[i].type, val)
@@ -135,7 +135,7 @@ DAO.prototype.createSQLEntity = function(entity) {
 		} 
 	}
 	var msgIdSegment = persistentItem[this.orm.getPrimaryKey().name]?"["+persistentItem[this.orm.getPrimaryKey().name]+"]":"";
-	this.$log.info("Transformation to {} DB JSON object finished", (this.orm.table + msgIdSegment));
+	this.$log.trace("Transformation to {} DB JSON object finished", (this.orm.table + msgIdSegment));
 	return persistentItem;
 };
 
@@ -164,7 +164,7 @@ DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
 	if(entity[this.orm.getPrimaryKey().name]){
 		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
 	}
-    this.$log.info("Transformation from {} DB JSON object finished", (this.orm.table+entitySegment));
+    this.$log.trace("Transformation from {} DB JSON object finished", (this.orm.table+entitySegment));
     return entity;
 };
 
@@ -199,7 +199,7 @@ DAO.prototype.insert = function(_entity){
 		entities = [_entity];
 	}
 
-	this.$log.info('Inserting {} {}', this.orm.table, (entities.length===1?'entity':'entities'));
+	this.$log.trace('Inserting {} {}', this.orm.table, (entities.length===1?'entity':'entities'));
 	
 	for(var i=0; i<entities.length; i++) {
 	
@@ -239,7 +239,7 @@ DAO.prototype.insert = function(_entity){
 			this.notify('beforeInsertAssociationSets', dbEntity);
 			if(updatedRecordCount > 0 && this.orm.associations && Object.keys(this.orm.associations).length){
 				//Insert dependencies if any are provided inline with this entity
-				this.$log.info('Inserting association sets for {}[{}]', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
+				this.$log.trace('Inserting association sets for {}[{}]', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 				for(var idx in Object.keys(this.orm.associations)){
 					var association = this.orm.associations[idx];
 					var associationName = association['name'];
@@ -250,7 +250,7 @@ DAO.prototype.insert = function(_entity){
 								throw Error('Invalid ORM: Association ' + associationName + ' dao property is expected to be function. Instead, it is: ' + (typeof associationDaoFactoryFunc))
 							var associationDAO = associationDaoFactoryFunc.apply(this);
 							this.notify('beforeInsertAssociationSet', entity[associationName], entity);
-							this.$log.info('Inserting {} inline entities into association set {}', entity[associationName].length, associationName);
+							this.$log.trace('Inserting {} inline entities into association set {}', entity[associationName].length, associationName);
 							for(var j=0; j<entity[associationName].length; j++){
 				        		var associatedEntity = entity[associationName][j];
 				        		var associatedEntityJoinKey = association.joinKey;
@@ -261,7 +261,7 @@ DAO.prototype.insert = function(_entity){
 								associationDAO.insert.apply(associationDAO, [associatedEntity]);
 								
 				    		}
-				    		this.$log.info('Inserting {} inline entities into association set {} finsihed', entity[associationName].length, associationName);
+				    		this.$log.trace('Inserting {} inline entities into association set {} finsihed', entity[associationName].length, associationName);
 				    		this.notify('afterInsertAssociationSet', entity[associationName], dbEntity);
 						}				
 					}
@@ -270,15 +270,15 @@ DAO.prototype.insert = function(_entity){
 
 			if(updatedRecordCount>0){
       			ids.push(dbEntity[this.orm.getPrimaryKey().name]);				
-				this.$log.info('{}[] entity inserted', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
+				this.$log.trace('{}[] entity inserted', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 			} else {
-				this.$log.info('No changes incurred in {}', this.orm.table);
+				this.$log.trace('No changes incurred in {}', this.orm.table);
 			}
 
 
 	    } catch(e) {
 	    	this.$log.error("Inserting {} {} failed", e, this.orm.table, (entities.length===1?'entity':'entities'));
-	    	this.$log.info('Rolling back changes after failed {}[{}] insert. ', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
+	    	this.$log.trace('Rolling back changes after failed {}[{}] insert. ', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
 			if(dbEntity[this.orm.getPrimaryKey().name]){
 				try{
 					this.remove(dbEntity[this.orm.getPrimaryKey().name]);
@@ -299,7 +299,7 @@ DAO.prototype.insert = function(_entity){
 // update entity from a JSON object. Returns the id of the updated entity.
 DAO.prototype.update = function(entity) {
 
-	this.$log.info('Updating {}[{}] entity', this.orm.table, entity!==undefined?entity[this.orm.getPrimaryKey().name]:entity);
+	this.$log.trace('Updating {}[{}] entity', this.orm.table, entity!==undefined?entity[this.orm.getPrimaryKey().name]:entity);
 
 	if(entity === undefined || entity === null){
 		throw new Error('Illegal argument: entity is ' + entity);
@@ -322,9 +322,9 @@ DAO.prototype.update = function(entity) {
      	this.notify('beforeUpdateEntity', dbEntity);
     	var updatedRecordsCount = this.execute(parametericStatement, dbEntity);
     	if(updatedRecordsCount > 0)
-        	this.$log.info('{}[{}] entity updated', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
+        	this.$log.trace('{}[{}] entity updated', this.orm.table, dbEntity[this.orm.getPrimaryKey().name]);
         else
-            this.$log.info('No changes incurred in {}', this.orm.table);
+            this.$log.trace('No changes incurred in {}', this.orm.table);
         
         return this;
         
@@ -352,7 +352,7 @@ DAO.prototype.remove = function() {
 		}
 	}
 
-	this.$log.info('Deleting '+this.orm.table+((ids!==undefined && ids.length===1)?'['+ids[0]+'] entity': ids.length+' entities'));
+	this.$log.trace('Deleting '+this.orm.table+((ids!==undefined && ids.length===1)?'['+ids[0]+'] entity': ids.length+' entities'));
 	
 	for(var i=0; i<ids.length; i++) {
 	
@@ -362,7 +362,7 @@ DAO.prototype.remove = function() {
        		id = parseInt(id, 10);
        		
 		if(ids.length>1)
-			this.$log.info('Deleting {}[{}] entity', this.orm.table, id);
+			this.$log.trace('Deleting {}[{}] entity', this.orm.table, id);
 	
 		if(id === undefined || id === null){
 			throw new Error('Illegal argument for id parameter:' + id);
@@ -379,7 +379,7 @@ DAO.prototype.remove = function() {
 					var association = this.orm.associations[idx];
 					var associationName = association['name'];
 					if([this.orm.ASSOCIATION_TYPES['MANY-TO-MANY'], this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']].indexOf(association.type)<0){
-						this.$log.info("Inspecting {}[{}}] entity's dependency '{}' for entities to delete.", this.orm.table, id, associationName);
+						this.$log.trace("Inspecting {}[{}}] entity's dependency '{}' for entities to delete.", this.orm.table, id, associationName);
 						var associationDAO = association.targetDao ? association.targetDao() : this;
 						var settings = {};
 						var joinId = id;
@@ -393,7 +393,7 @@ DAO.prototype.remove = function() {
 						//associatedEntities = this.expand(associationName, id);
 						associatedEntities = associationDAO.list(settings);
 						if(associatedEntities && associatedEntities.length > 0){
-							this.$log.info("Deleting {}[{}] entity's {} dependent {}", this.orm.table, id, associatedEntities.length, associationName);
+							this.$log.trace("Deleting {}[{}] entity's {} dependent {}", this.orm.table, id, associatedEntities.length, associationName);
 							this.notify('beforeRemoveAssociationSet', associatedEntities, id);
 							for(var j=0; j<associatedEntities.length; j++){
 								var associatedEntity = associatedEntities[j];
@@ -402,7 +402,7 @@ DAO.prototype.remove = function() {
 								associationDAO.remove.apply(associationDAO, [associatedEntity[associationDAO.orm.getPrimaryKey().name]]);
 								
 							}
-							this.$log.info("{}[{}] entity's {} dependent {} {} deleted.", this.orm.table, id, associatedEntities.length, associationName, associatedEntities.length>1?'entities':'entity');
+							this.$log.trace("{}[{}] entity's {} dependent {} {} deleted.", this.orm.table, id, associatedEntities.length, associationName, associatedEntities.length>1?'entities':'entity');
 						}					
 					}
 				} 
@@ -415,9 +415,9 @@ DAO.prototype.remove = function() {
 			var updatedRecordsCount = this.execute(parametericStatement, params);
 			
 			if(updatedRecordsCount>0)
-	   			this.$log.info('{}[{}] entity deleted', this.orm.table,  id);
+	   			this.$log.trace('{}[{}] entity deleted', this.orm.table,  id);
 	   		else
-	   			this.$log.info('No changes incurred in {}', this.orm.table);
+	   			this.$log.trace('No changes incurred in {}', this.orm.table);
 
 	    } catch(e) {
 			this.$log.error('Deleting {}[{}] entity failed', e, this.orm.table, id);
@@ -429,7 +429,7 @@ DAO.prototype.remove = function() {
 };
 
 DAO.prototype.expand = function(expansionPath, context){
-	this.$log.info('Expanding for association path {} and context entity {}', expansionPath, (typeof arguments[1] !== 'object' ? 'id ': '') + JSON.stringify(arguments[1]));
+	this.$log.trace('Expanding for association path {} and context entity {}', expansionPath, (typeof arguments[1] !== 'object' ? 'id ': '') + JSON.stringify(arguments[1]));
 	if(!expansionPath || !expansionPath.length){
 		throw new Error('Illegal argument: expansionPath['+expansionPath+']');
 	}
@@ -462,7 +462,7 @@ DAO.prototype.expand = function(expansionPath, context){
 
 	if(association.type===this.orm.ASSOCIATION_TYPES['ONE-TO-ONE'] || association.type===this.orm.ASSOCIATION_TYPES['MANY-TO-ONE']){
 		var joinId = contextEntity[joinKey];
-		this.$log.info('Expanding association type {} on {}[{}]', association.type, joinKey, joinId);
+		this.$log.trace('Expanding association type {} on {}[{}]', association.type, joinKey, joinId);
 		if(!association.key || association.key === associationTargetDAO.orm.getPrimaryKey().name)
 			expansion = associationTargetDAO.find.apply(associationTargetDAO, [joinId]);
 		else {
@@ -481,7 +481,7 @@ DAO.prototype.expand = function(expansionPath, context){
 			settings = association.defaults;
 		var key = association.key || this.orm.getPrimaryKey().name;
 		var joinId = contextEntity[key];
-		this.$log.info('Expanding association type {} on {}[{}]', association.type, joinKey, joinId);
+		this.$log.trace('Expanding association type {} on {}[{}]', association.type, joinKey, joinId);
 		settings[joinKey] = joinId;
 		associationEntities = associationEntities.concat(associationTargetDAO.list.apply(associationTargetDAO, [settings]));
 		
@@ -526,7 +526,7 @@ DAO.prototype.find = function(id, expand, select) {
 		select = arguments[0].$select || arguments[0].select;
 	}
 
-	this.$log.info('Finding {}[{}] entity with list parameters expand[{}], select[{}]', this.orm.table, id, expand, select);
+	this.$log.trace('Finding {}[{}] entity with list parameters expand[{}], select[{}]', this.orm.table, id, expand, select);
 
 	if(id === undefined || id === null){
 		throw new Error('Illegal argument for id parameter:' + id);
@@ -574,7 +574,7 @@ DAO.prototype.find = function(id, expand, select) {
         if (resultSet[0]) {
         	entity = this.createEntity(resultSet[0], select);
 			if(entity){
-            	this.$log.info('{}[{}] entity found', this.orm.table, id);
+            	this.$log.trace('{}[{}] entity found', this.orm.table, id);
             	this.notify('afterFound', entity);
 				if(expand!==undefined){
 					if(expand.constructor !== Array){
@@ -598,7 +598,7 @@ DAO.prototype.find = function(id, expand, select) {
 					}
 				}		
         	} else {
-	        	this.$log.info('{}[{}] entity not found', this.orm.table, id);
+	        	this.$log.trace('{}[{}] entity not found', this.orm.table, id);
         	}
         } 
         return entity;
@@ -610,7 +610,7 @@ DAO.prototype.find = function(id, expand, select) {
 
 DAO.prototype.count = function() {
 
-	this.$log.info('Counting '+this.orm.table+' entities');
+	this.$log.trace('Counting '+this.orm.table+' entities');
 
     var count = 0;
     try {
@@ -627,7 +627,7 @@ DAO.prototype.count = function() {
 		throw e;
     }
     
-    this.$log.info('{} {} entities counted', String(count), this.orm.table);
+    this.$log.trace('{} {} entities counted', String(count), this.orm.table);
 
     return count;
 };
@@ -690,7 +690,7 @@ DAO.prototype.list = function(settings) {
 		listArgs.push(' ' + key + '[' + settings[key] + ']');
 	}
 	
-	this.$log.info('Listing {} entity collection with list operators: {}', this.orm.table, listArgs.join(','));
+	this.$log.trace('Listing {} entity collection with list operators: {}', this.orm.table, listArgs.join(','));
 	
 	if(settings.$select!==undefined && expand!==undefined){
 		settings.$select.push(this.orm.getPrimaryKey().name);
@@ -745,7 +745,7 @@ DAO.prototype.list = function(settings) {
       entities.push(entity);
 	}.bind(this));
 	
-    this.$log.info('{} {} entities found', entities.length, this.orm.table);
+    this.$log.trace('{} {} entities found', entities.length, this.orm.table);
         
     return entities;
   } catch(e) {
@@ -755,7 +755,7 @@ DAO.prototype.list = function(settings) {
 };
 
 DAO.prototype.existsTable = function() {
-	this.$log.info('Check exists table ' + this.orm.table);
+	this.$log.trace('Check exists table ' + this.orm.table);
     try {
     	var parametericStatement = this.ormstatements.count.apply(this.ormstatements);
 		var rs = this.execute(parametericStatement);
@@ -766,11 +766,11 @@ DAO.prototype.existsTable = function() {
 };
 
 DAO.prototype.createTable = function() {
-	this.$log.info('Creating table {}', this.orm.table);
+	this.$log.trace('Creating table {}', this.orm.table);
 	var parametericStatement = this.ormstatements.createTable.apply(this.ormstatements);
     try {
     	this.execute(parametericStatement);
-        this.$log.info('{} table created', this.orm.table);
+        this.$log.trace('{} table created', this.orm.table);
         return this;
     } catch(e) {
     	this.$log.error("Create table {} failed", e, this.orm.table);
@@ -779,21 +779,21 @@ DAO.prototype.createTable = function() {
 };
 
 DAO.prototype.dropTable = function(dropIdSequence) {
-	this.$log.info('Dropping table {}.', this.orm.table);
+	this.$log.trace('Dropping table {}.', this.orm.table);
 	var parametericStatement = this.ormstatements.dropTable.apply(this.ormstatements);
     try {
     	this.execute(parametericStatement);
-        this.$log.info('Table {} dropped.', this.orm.table);
+        this.$log.trace('Table {} dropped.', this.orm.table);
     } catch(e) {
     	this.$log.error("Dropping table {} failed.", e, this.orm.table);
 		throw e;
     } 
     
     if(dropIdSequence){
-	    this.$log.info('Dropping table {} sequence {}.', this.orm.table, this.sequenceName);
+	    this.$log.trace('Dropping table {} sequence {}.', this.orm.table, this.sequenceName);
 	   	try{
 	   	   	this.dropIdGenerator();	
-	    	this.$log.info('Table {} sequence {} dropped.', this.orm.table, this.sequenceName);   	   	
+	    	this.$log.trace('Table {} sequence {} dropped.', this.orm.table, this.sequenceName);   	   	
 	   	} catch(e) {
 	    	this.$log.error("Dropping table {} sequence {} failed.", e, this.orm.table, this.sequenceName);
 			throw e;
