@@ -134,8 +134,8 @@ DAO.prototype.createSQLEntity = function(entity) {
 			persistentItem[optionals[i].name] = entity[optionals[i].name] === undefined ? null : entity[optionals[i].name];
 		} 
 	}
-	var msgIdSegment = persistentItem[this.orm.getPrimaryKey().name]?"["+persistentItem[this.orm.getPrimaryKey().name]+"]":"";
-	this.$log.trace("Transformation to {} DB JSON object finished", (this.orm.table + msgIdSegment));
+	// var msgIdSegment = persistentItem[this.orm.getPrimaryKey().name] ? "[" + persistentItem[this.orm.getPrimaryKey().name] + "]" : "";
+	// this.$log.trace("Transformation to {} DB JSON object finished", (this.orm.table + msgIdSegment));
 	return persistentItem;
 };
 
@@ -164,7 +164,7 @@ DAO.prototype.createEntity = function(resultSetEntry, entityPropertyNames) {
 	if(entity[this.orm.getPrimaryKey().name]){
 		entitySegment= "["+entity[this.orm.getPrimaryKey().name]+"]";
 	}
-    this.$log.trace("Transformation from {} DB JSON object finished", (this.orm.table+entitySegment));
+    // this.$log.trace("Transformation from {} DB JSON object finished", (this.orm.table + entitySegment));
     return entity;
 };
 
