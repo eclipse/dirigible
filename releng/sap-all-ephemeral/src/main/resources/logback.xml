@@ -16,6 +16,27 @@
 		</encoder>
 	</appender>
 	
+	<appender name="FILE_CORE" class="ch.qos.logback.core.FileAppender">
+	    <file>../logs/dirigible-core-${date}.log</file>
+	    <encoder>
+	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+	    </encoder>
+	</appender>
+	
+	<appender name="FILE_APPS" class="ch.qos.logback.core.FileAppender">
+	    <file>../logs/dirigible-apps-${date}.log</file>
+	    <encoder>
+	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+	    </encoder>
+	</appender>
+	
+	<appender name="FILE_BASE" class="ch.qos.logback.core.FileAppender">
+	    <file>../logs/dirigible-base-${date}.log</file>
+	    <encoder>
+	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+	    </encoder>
+	</appender>
+	
 	<!-- Send messages to ConsoleLoggingAppender -->
 	<appender name="ConsoleLoggingAppender" class="org.eclipse.dirigible.runtime.ide.console.service.ConsoleLoggingAppender">
 		<encoder>
@@ -23,18 +44,27 @@
 		</encoder>
 	</appender>
 
-	<logger name="org.eclipse.dirigible" level="DEBUG" additivity="false">
+	<logger name="org.eclipse.dirigible" level="ERROR" additivity="false">
     	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE_CORE" />
     	<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
-	
-	<logger name="app" level="ALL" additivity="false">
+
+	<logger name="org.eclipse.dirigible.api.v3.core.Console" level="ALL" additivity="false">
     	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE_CORE" />
+    	<appender-ref ref="ConsoleLoggingAppender" />
+	</logger>
+
+	<logger name="app" level="ERROR" additivity="false">
+    	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE_APPS" />
     	<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE_BASE" />
 	</root>
 	
 	<shutdownHook/>
