@@ -1,0 +1,8 @@
+{{- if .Values.apirule.enabled }}
+
+1. Assign the required roles to your user.
+
+2. Access the Eclipse Dirigible instance at: https://{{ $.Values.apirule.host }}
+  NOTE: It may take a few minutes for the APIRule to be accessible.
+
+{{- end }}

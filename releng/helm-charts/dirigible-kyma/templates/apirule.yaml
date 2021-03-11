@@ -1,0 +1,28 @@
+{{- if .Values.apirule.enabled -}}
+{{- $fullName := include "dirigible.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: {{ $fullName }}
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+  - accessStrategies:
+    - config: {}
+      handler: noop
+    methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - HEAD
+    path: /.*
+  service:
+    host: {{ .Values.apirule.host }}
+    name: {{ $fullName }}
+    port: {{ $svcPort }}
+{{- end }}
+{{- end }}
