@@ -48,6 +48,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIGINT, DataType.BIGINT);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.SMALLINT, DataType.SMALLINT);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.REAL, DataType.REAL);
+		DATABASE_TYPE_TO_DATA_TYPE.put(Types.FLOAT, DataType.FLOAT);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DOUBLE, DataType.DOUBLE);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DATE, DataType.DATE);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BOOLEAN, DataType.BOOLEAN);
@@ -64,6 +65,7 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("BIGINT", Types.BIGINT);
 		STRING_TO_DATABASE_TYPE.put("SMALLINT", Types.SMALLINT);
 		STRING_TO_DATABASE_TYPE.put("REAL", Types.REAL);
+		STRING_TO_DATABASE_TYPE.put("FLOAT", Types.FLOAT);
 		STRING_TO_DATABASE_TYPE.put("DOUBLE", Types.DOUBLE);
 		STRING_TO_DATABASE_TYPE.put("DATE", Types.DATE);
 		STRING_TO_DATABASE_TYPE.put("BOOLEAN", Types.BOOLEAN);
@@ -251,6 +253,17 @@ public class DataTypeUtils {
 	 */
 	public static boolean isReal(String dataType) {
 		return DataType.REAL.toString().equals(dataType);
+	}
+	
+	/**
+	 * Checks if is float.
+	 *
+	 * @param dataType
+	 *            the data type
+	 * @return true, if is real
+	 */
+	public static boolean isFloat(String dataType) {
+		return DataType.FLOAT.toString().equals(dataType);
 	}
 
 	/**

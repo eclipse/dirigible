@@ -98,6 +98,10 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					createTableBuilder.columnReal(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());
 					break;
+				case FLOAT:
+					createTableBuilder.columnFloat(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
 				case DOUBLE:
 					createTableBuilder.columnDouble(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());

@@ -1656,6 +1656,100 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	public TABLE_BUILDER columnReal(String name) {
 		return columnSmallint(name, false, true, false, new String[] {});
 	}
+	
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
+		return this.column(name, DataType.FLOAT, isPrimaryKey, isNullable, isUnique, args);
+	}
+
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @param args
+	 *            the args
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
+		return columnReal(name, isPrimaryKey, isNullable, isUnique, splitValues(args));
+	}
+
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @param isUnique
+	 *            the is unique
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
+		return columnReal(name, isPrimaryKey, isNullable, isUnique, new String[] {});
+	}
+
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @param isNullable
+	 *            the is nullable
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey, Boolean isNullable) {
+		return columnReal(name, isPrimaryKey, isNullable, false, new String[] {});
+	}
+
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @param isPrimaryKey
+	 *            the is primary key
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name, Boolean isPrimaryKey) {
+		return columnReal(name, isPrimaryKey, true, false, new String[] {});
+	}
+
+	/**
+	 * Column float.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the creates the table builder
+	 */
+	public TABLE_BUILDER columnFloat(String name) {
+		return columnSmallint(name, false, true, false, new String[] {});
+	}
 
 	/**
 	 * Column double.
