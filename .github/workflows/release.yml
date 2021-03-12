@@ -212,6 +212,16 @@ jobs:
           </dependency>
           ```
 
+          #### Helm:
+
+          All Helm Charts can be found [here](https://artifacthub.io/packages/search?page=1&repo=eclipse-dirigible).
+
+          ```
+          helm repo add dirigible https://eclipse.github.io/dirigible
+          helm repo update
+          helm install dirigible dirigible/dirigible --ingress.enabled=false --version ${{ env.DIRIGIBLE_VERSION }}
+          ```
+
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
             - [dirigiblelabs/dirigible-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-anonymous/tags?page=1&ordering=last_updated) - Anonymous access _(runtime only)_.
@@ -350,6 +360,76 @@ jobs:
         asset_content_type: application/zip
 
 #----------------Publish GitHub Release------------------#
+
+#----------------Publish Helm Release------------------#
+
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v1
+    - name: Helm Charts Release - Checkout gh-pages
+      run: |
+        mkdir charts-temp
+        cp -r releng/helm-charts/ charts-temp/
+
+        #### Git Checkout Workaround
+        git add .github/
+        git add .reuse/
+        git add LICENSES/
+        git add api/
+        git add ext/
+        git add groups/
+        git add ide/
+        git add logo/
+        git add modules/
+        git add releng/
+        git add resources/
+        git add templates/
+        git reset --hard
+        ####
+
+        git fetch
+        git checkout gh-pages
+        
+        cp charts/* .
+
+    - name: Helm Charts Release - Set Chart Version - Dirigible
+      run: |
+        cd charts-temp/helm-charts/dirigible/
+        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
+
+    - name: Helm Charts Release - Set Chart Version - Dirigible - Kyma
+      run: |
+        cd charts-temp/helm-charts/dirigible-kyma/
+        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
+
+    - name: Helm Charts Release
+      run: |
+
+        cp charts/* charts-temp/helm-charts/
+        cd charts-temp/helm-charts/
+
+        helm package dirigible
+        helm package dirigible-kyma
+        mv dirigible-$DIRIGIBLE_VERSION.tgz chart-dirigible-$DIRIGIBLE_VERSION.tgz
+        mv dirigible-kyma-$DIRIGIBLE_VERSION.tgz chart-dirigible-kyma-$DIRIGIBLE_VERSION.tgz
+        cd ..
+        helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
+        
+        cp helm-charts/index.yaml ../.
+        cp helm-charts/chart-dirigible-$DIRIGIBLE_VERSION.tgz ../charts/
+        cp helm-charts/chart-dirigible-kyma-$DIRIGIBLE_VERSION.tgz ../charts/
+
+        cd ..
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        git add index.yaml
+        git add charts/
+        git commit -m "Updates Helm Charts - Release $DIRIGIBLE_VERSION"
+        git push origin gh-pages
+
+        git add .
+        git reset --hard
+        git checkout master
+#----------------Publish Helm Release------------------#
 
 #-----------------Create GitHub Branch-------------------#
 

@@ -44,13 +44,19 @@
 		</encoder>
 	</appender>
 
-	<logger name="org.eclipse.dirigible" level="DEBUG" additivity="false">
+	<logger name="org.eclipse.dirigible" level="ERROR" additivity="false">
     	<appender-ref ref="STDOUT" />
     	<appender-ref ref="FILE_CORE" />
     	<appender-ref ref="ConsoleLoggingAppender" />
 	</logger>
-	
-	<logger name="app" level="ALL" additivity="false">
+
+	<logger name="org.eclipse.dirigible.api.v3.core.Console" level="ALL" additivity="false">
+    	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE_CORE" />
+    	<appender-ref ref="ConsoleLoggingAppender" />
+	</logger>
+
+	<logger name="app" level="ERROR" additivity="false">
     	<appender-ref ref="STDOUT" />
     	<appender-ref ref="FILE_APPS" />
     	<appender-ref ref="ConsoleLoggingAppender" />

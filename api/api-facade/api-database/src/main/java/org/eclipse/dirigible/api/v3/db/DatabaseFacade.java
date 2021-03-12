@@ -257,7 +257,7 @@ public class DatabaseFacade implements IScriptingFacade {
 					setParameters(parameters, preparedStatement);
 				}
 				ResultSet resultSet = preparedStatement.executeQuery();
-				return DatabaseResultSetHelper.toJson(resultSet, true);
+				return DatabaseResultSetHelper.toJson(resultSet, false);
 			} finally {
 				if (preparedStatement != null) {
 					preparedStatement.close();

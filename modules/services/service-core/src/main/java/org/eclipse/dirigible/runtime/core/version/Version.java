@@ -26,6 +26,8 @@ public class Version {
 	
 	private String productCommitId;
 
+	private String productRepository;
+
 	private String productType;
 	
 	private String instanceName;
@@ -78,6 +80,20 @@ public class Version {
 	 */
 	public void setProductCommitId(String productCommitId) {
 		this.productCommitId = productCommitId;
+	}
+
+	/**
+	 * @return the productRepository
+	 */
+	public String getProductRepository() {
+		return productRepository;
+	}
+
+	/**
+	 * @param productRepository the productRepository to set
+	 */
+	public void setProductRepository(String productRepository) {
+		this.productRepository = productRepository;
 	}
 
 	/**
