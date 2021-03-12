@@ -2,35 +2,6 @@ apiVersion: v1
 entries:
   dirigible:
   - apiVersion: v2
-    appVersion: 5.8.4
-    created: "2021-03-12T13:30:06.69303837Z"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 26f3cffdd88df9d3115f3cf5ecaaf5842f2a1efb58834124b29d39f52b3cdaef
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.4.tgz
-    version: 5.8.4
-  - apiVersion: v2
     appVersion: 5.8.3
     created: "2021-03-12T13:30:06.692328037Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
@@ -147,36 +118,6 @@ entries:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.0.tgz
     version: 5.8.0
   dirigible-kyma:
-  - apiVersion: v2
-    appVersion: 5.8.4
-    created: "2021-03-12T13:30:06.697467172Z"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 18659ace68d8136973e58cd7baff617324911a4d25ec69badb9dc796cec3c72b
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.4.tgz
-    version: 5.8.4
   - apiVersion: v2
     appVersion: 5.8.3
     created: "2021-03-12T13:30:06.696794742Z"
