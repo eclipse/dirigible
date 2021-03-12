@@ -161,10 +161,10 @@ jobs:
 
 #---------------Publish to Maven Central-----------------#
 
-#     - name: Publish packages to Maven Central
-#       run: |
-#         mvn javadoc:jar
-#         mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
+    - name: Publish packages to Maven Central
+      run: |
+        mvn javadoc:jar
+        mvn deploy -P release -DskipTests -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASS_PHRASE }}
 
 #---------------Publish to Maven Central-----------------#
 
@@ -219,7 +219,7 @@ jobs:
           ```
           helm repo add dirigible https://eclipse.github.io/dirigible
           helm repo update
-          helm install dirigible dirigible/dirigible --ingress.enabled=false
+          helm install dirigible dirigible/dirigible --ingress.enabled=false --version ${{ env.DIRIGIBLE_VERSION }}
           ```
 
           #### Docker images:
