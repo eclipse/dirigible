@@ -369,6 +369,23 @@ jobs:
       run: |
         mkdir charts-temp
         cp -r releng/helm-charts/ charts-temp/
+
+        #### Git Checkout Workaround
+        git add .github/
+        git add .reuse/
+        git add LICENSES/
+        git add api/
+        git add ext/
+        git add groups/
+        git add ide/
+        git add logo/
+        git add modules/
+        git add releng/
+        git add resources/
+        git add templates/
+        git reset --hard
+        ####
+
         git fetch
         git checkout gh-pages
         
