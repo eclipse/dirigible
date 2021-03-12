@@ -28,7 +28,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-5.8.3.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.3.tgz
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
@@ -57,7 +57,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-5.8.2.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.2.tgz
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
@@ -86,7 +86,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-5.8.1.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.1.tgz
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
@@ -115,7 +115,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-5.8.0.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.0.tgz
     version: 5.8.0
   dirigible-kyma:
   - apiVersion: v2
@@ -146,7 +146,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-kyma-5.8.3.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.3.tgz
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
@@ -176,7 +176,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-kyma-5.8.2.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.2.tgz
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
@@ -206,7 +206,7 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-kyma-5.8.1.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.1.tgz
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
@@ -236,6 +236,6 @@ entries:
     - https://github.com/dirigiblelabs/charts
     type: application
     urls:
-    - https://github.com/eclipse/dirigible/releases/download/v5.8.3/chart-dirigible-kyma-5.8.0.tgz
+    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.0.tgz
     version: 5.8.0
 generated: "2021-03-12T10:26:16.59650487Z"
