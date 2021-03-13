@@ -12,11 +12,11 @@ spec:
     xsappname: {{ include "dirigible.fullname" . }}-xsuaa
     oauth2-configuration:
       redirect-uris:
-      - https://dirigible.c-61c0503.kyma.shoot.live.k8s-hana.ondemand.com
+      - https://{{ .Values.apirule.host }}
       token-validity: 7200
     role-collections:
     - description: Dirigible Developer
-      name: dirigible
+      name: {{ include "dirigible.fullname" . }}
       role-template-references:
       - $XSAPPNAME.Developer
       - $XSAPPNAME.Operator
