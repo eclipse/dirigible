@@ -1,0 +1,12 @@
+{{- if .Values.volume.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dirigible.fullname" . }}-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.volume.storage }}
+{{- end }}
