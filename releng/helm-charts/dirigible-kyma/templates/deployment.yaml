@@ -23,7 +23,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- if .Values.apirule.enabled }}
+          {{- if .Values.volume.enabled }}
           volumeMounts:
           - name: {{ include "dirigible.fullname" . }}-volume
             mountPath: /usr/local/tomcat/target/dirigible
@@ -53,7 +53,7 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.apirule.enabled }}
+      {{- if .Values.volume.enabled }}
       volumes:
         - name: {{ include "dirigible.fullname" . }}-volume
           persistentVolumeClaim:
