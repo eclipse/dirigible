@@ -1,10 +1,8 @@
 1. Assign the required roles to your user.
 {{- if .Values.ingress.enabled }}
-{{- range $host := .Values.ingress.hosts }}
-{{- range .paths }}
-2. Access the Eclipse Dirigible instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
-{{- end }}
-{{- end }}
+
+2. Access the Eclipse Dirigible instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Release.Name }}{{ .Values.ingress.host }}
+
 {{- else if contains "NodePort" .Values.service.type }}
 
 2. Access the Eclipse Dirigible instance at:
@@ -20,7 +18,7 @@
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "dirigible.fullname" . }}'
 
-{{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
+{{- else if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
 
 2. Access the Eclipse Dirigible instance at: https://{{ .Release.Name }}.{{ .Values.kyma.apirule.host }}
   NOTE: It may take a few minutes for the APIRule to be accessible.
@@ -30,6 +28,6 @@
 2. Access the Eclipse Dirigible instance at:
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "dirigible.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
   echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:8080}
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:8080
 
 {{- end }}
