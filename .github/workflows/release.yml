@@ -396,11 +396,6 @@ jobs:
         cd charts-temp/helm-charts/dirigible/
         find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
 
-    - name: Helm Charts Release - Set Chart Version - Dirigible - Kyma
-      run: |
-        cd charts-temp/helm-charts/dirigible-kyma/
-        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
-
     - name: Helm Charts Release
       run: |
 
@@ -408,15 +403,11 @@ jobs:
         cd charts-temp/helm-charts/
 
         helm package dirigible
-        helm package dirigible-kyma
-        mv dirigible-$DIRIGIBLE_VERSION.tgz chart-dirigible-$DIRIGIBLE_VERSION.tgz
-        mv dirigible-kyma-$DIRIGIBLE_VERSION.tgz chart-dirigible-kyma-$DIRIGIBLE_VERSION.tgz
         cd ..
         helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
         
         cp helm-charts/index.yaml ../.
-        cp helm-charts/chart-dirigible-$DIRIGIBLE_VERSION.tgz ../charts/
-        cp helm-charts/chart-dirigible-kyma-$DIRIGIBLE_VERSION.tgz ../charts/
+        cp helm-charts/dirigible-$DIRIGIBLE_VERSION.tgz ../charts/
 
         cd ..
         git config user.name "$GITHUB_ACTOR"
