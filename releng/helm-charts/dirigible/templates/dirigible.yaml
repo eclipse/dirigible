@@ -36,6 +36,16 @@ spec:
       serviceAccountName: {{ include "dirigible.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.database.enabled }}
+      initContainers:
+      - name: check-db-ready
+        image: postgres:9.6.5
+        command:
+          - sh
+          - -c
+          - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database;
+          sleep 2; done;
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- if .Values.volume.enabled }}
@@ -63,6 +73,10 @@ spec:
               value: {{ .Values.database.username }}
             - name: POSTGRE_PASSWORD
               value: {{ .Values.database.password }}
+            - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
+              value: "false"
+            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
+              value: "true"
             {{- end }}
             {{- if .Values.keycloak.enabled }}
             - name: KEYCLOAK_CONFIDENTIAL_PORT
@@ -163,7 +177,7 @@ spec:
     - HEAD
     path: /.*
   service:
-    host: {{ .Values.kyma.apirule.host }}
+    host: {{ .Release.Name }}
     name: {{ include "dirigible.fullname" . }}
     port: {{ .Values.service.port }}
 {{- end }}

@@ -90,6 +90,16 @@ spec:
       labels:
         app: {{ .Values.keycloak.name }}
     spec:
+      {{- if .Values.keycloak.database.enabled }}
+      initContainers:
+      - name: check-db-ready
+        image: postgres:9.6.5
+        command:
+          - sh
+          - -c
+          - until pg_isready -h {{ .Values.keycloak.name }}-database -p 5432; do echo waiting for database;
+          sleep 2; done;
+      {{- end }}
       containers:
         - name: {{ .Values.keycloak.name }}
           image: {{ .Values.keycloak.image }}
@@ -156,7 +166,7 @@ spec:
     - HEAD
     path: /.*
   service:
-    host: {{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
+    host: {{ .Values.keycloak.name }}
     name: {{ .Values.keycloak.name }}
     port: 8080
 {{- else if .Values.ingress.enabled }}
