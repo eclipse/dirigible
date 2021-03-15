@@ -164,11 +164,7 @@ spec:
 ---
 
 {{- if .Values.ingress.enabled -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
   name: {{ .Values.keycloak.name }}
@@ -182,7 +178,7 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.keycloak.name }}.{{ .Values.ingress.host }}
+      - {{ .Values.keycloak.name }}.{{ .Values.ingress.host }}
       secretName: {{ .Values.keycloak.name }}-tls
 {{- end }}
   rules:
@@ -193,4 +189,5 @@ spec:
             backend:
               serviceName: {{ .Values.keycloak.name }}
               servicePort: 8080
+{{- end }}
 {{- end }}
