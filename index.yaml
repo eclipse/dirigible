@@ -3,12 +3,13 @@ entries:
   dirigible:
   - apiVersion: v2
     appVersion: 5.8.4
-    created: "2021-03-15T13:26:16.010483+02:00"
+    created: "2021-03-15T15:06:31.874184+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 028f3b1c4483b18beee9a012b5b3a89d25f97593b9b11208fb5a21652ffafd2c
+    digest: d46048057a37e244b6d734d07d0873b326ae0e447bef172b3f3719ce72fe9d3a
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
+    - kyma
     - dirigible
     - platform
     - eclipse
@@ -25,19 +26,19 @@ entries:
     name: dirigible
     sources:
     - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
     type: application
     urls:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.4.tgz
     version: 5.8.4
   - apiVersion: v2
     appVersion: 5.8.3
-    created: "2021-03-15T13:26:16.009788+02:00"
+    created: "2021-03-15T15:06:31.87324+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 44077e339b4f18769f92618421e4bc8341759768768b938545dd547745882b04
+    digest: 3df30488aaf3f06f4c39a8dec06ea1b005a7ff26de44b89e62c784b3354479fa
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
+    - kyma
     - dirigible
     - platform
     - eclipse
@@ -54,19 +55,19 @@ entries:
     name: dirigible
     sources:
     - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
     type: application
     urls:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.3.tgz
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
-    created: "2021-03-15T13:26:16.009102+02:00"
+    created: "2021-03-15T15:06:31.872254+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: abae0451c19e333da1650d48d0300a486f7752b75185dc1ae0fd2c49e9ff6057
+    digest: 19de54f3bd032fc853f22df41c261d5efb9537eb6a7df4df48a0237f5144c3fe
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
+    - kyma
     - dirigible
     - platform
     - eclipse
@@ -83,19 +84,19 @@ entries:
     name: dirigible
     sources:
     - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
     type: application
     urls:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.2.tgz
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
-    created: "2021-03-15T13:26:16.008362+02:00"
+    created: "2021-03-15T15:06:31.871301+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: de17b7667391dcf2ed415211064ef5f02396a50368dcaf723e5208c1e0189307
+    digest: 4b388fd6553dbaf3d91217760418b5663351576130ba7da78c9b9eeec072fecf
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
+    - kyma
     - dirigible
     - platform
     - eclipse
@@ -112,19 +113,19 @@ entries:
     name: dirigible
     sources:
     - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
     type: application
     urls:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.1.tgz
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
-    created: "2021-03-15T13:26:16.00766+02:00"
+    created: "2021-03-15T15:06:31.870378+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: cea4c6c5f962668c85beebfe60417b72b253b19b067db1016afd9b7031be5cdd
+    digest: 14f6b50d52ae98c053da4250af504f31272765bda9428cd736299fea9dbe7016
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
+    - kyma
     - dirigible
     - platform
     - eclipse
@@ -141,160 +142,8 @@ entries:
     name: dirigible
     sources:
     - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
     type: application
     urls:
     - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.0.tgz
     version: 5.8.0
-  dirigible-kyma:
-  - apiVersion: v2
-    appVersion: 5.8.4
-    created: "2021-03-15T13:26:16.014091+02:00"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 679dfe8e8132f3bcd1584f248314fb5ec8eaccaf18c12477d6ba671373951e21
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.4.tgz
-    version: 5.8.4
-  - apiVersion: v2
-    appVersion: 5.8.3
-    created: "2021-03-15T13:26:16.013235+02:00"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 6e93c2f4b82c66c80d0f4b43e75429363db6ac8f1a16f34bcea3f846bef0d17f
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.3.tgz
-    version: 5.8.3
-  - apiVersion: v2
-    appVersion: 5.8.2
-    created: "2021-03-15T13:26:16.012545+02:00"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 56071485540ef3e5276c4987923fdcbf70d3f9c2db249bc0762e9a95d35e3e89
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.2.tgz
-    version: 5.8.2
-  - apiVersion: v2
-    appVersion: 5.8.1
-    created: "2021-03-15T13:26:16.011861+02:00"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 2481567b447311a0f0d4d42ab5803127a426e76e7ad6bb6264f0b3fdf6b1f362
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.1.tgz
-    version: 5.8.1
-  - apiVersion: v2
-    appVersion: 5.8.0
-    created: "2021-03-15T13:26:16.011171+02:00"
-    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: d3bdd454fd7d8c764676ab876923b5e24a4d4197e634b46a36f56cf09afd0cb9
-    home: https://www.dirigible.io
-    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
-    keywords:
-    - kyma
-    - dirigible
-    - platform
-    - eclipse
-    - development
-    - applications
-    - in-system
-    - low-code
-    - no-code
-    - lcnc
-    maintainers:
-    - email: yordan.pavlov@sap.com
-      name: Yordan Pavlov
-      url: https://github.com/ThuF
-    name: dirigible-kyma
-    sources:
-    - https://github.com/eclipse/dirigible/
-    - https://github.com/dirigiblelabs/charts
-    type: application
-    urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-kyma-5.8.0.tgz
-    version: 5.8.0
-generated: "2021-03-15T13:26:16.006722+02:00"
+generated: "2021-03-15T15:06:31.869294+02:00"
