@@ -62,6 +62,7 @@ Resources:
     ```
     git add .
     git reset --hard
+    cd ../../
     ```
 
 1. Switch to the `gh-pages` branch:
