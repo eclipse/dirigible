@@ -13,5 +13,8 @@ exports.getContent = function() {
 	return [{
 		name: "security/v4/user",
 		description: "User API"
+	}, {
+		name: "security/v4/oauth",
+		description: "OAuth API"
 	}];
 };
