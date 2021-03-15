@@ -1,3 +1,18 @@
+{{- if .Values.volume.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dirigible.fullname" . }}-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.volume.storage }}
+{{- end }}
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,10 +45,26 @@ spec:
           {{- end }}
           env:
             - name: DIRIGIBLE_HOST
-              value: https://{{ $.Values.apirule.host }}
+              value: https://{{ .Release.Name }}.{{ $.Values.apirule.host }}
+            {{- if .Values.keycloak.enabled }}
+            - name: KEYCLOAK_CONFIDENTIAL_PORT
+              value: "443"
+            - name: KEYCLOAK_SSL_REQUIRED
+              value: "none"
+            - name: KEYCLOAK_REALM
+              value: {{ .Values.keycloak.relam }}
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ .Values.keycloak.clientId }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: https://{{ .Values.keycloak.name }}.{{ .Values.apirule.host }}
+            {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- if .Values.keycloak.enabled }}
+          image: "{{ .Values.image.repositoryKeycloak }}:{{ .Chart.AppVersion }}"
+          {{- else }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -71,3 +102,48 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dirigible.fullname" . }}
+  labels:
+    {{- include "dirigible.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "dirigible.selectorLabels" . | nindent 4 }}
+
+---
+
+{{- if .Values.apirule.enabled -}}
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: {{ include "dirigible.fullname" . }}
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+  - accessStrategies:
+    - config: {}
+      handler: noop
+    methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - HEAD
+    path: /.*
+  service:
+    host: {{ .Values.apirule.host }}
+    name: {{ include "dirigible.fullname" . }}
+    port: {{ .Values.service.port }}
+{{- end }}

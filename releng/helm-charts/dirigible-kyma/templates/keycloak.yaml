@@ -1,0 +1,147 @@
+{{- if .Values.keycloak.install }}
+{{- if .Values.keycloak.database.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.keycloak.name }}-database-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.keycloak.database.storage }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.keycloak.name }}-database
+  namespace: {{ $.Values.keycloak.namespace }}
+  labels:
+    app: {{ .Values.keycloak.name }}-database
+spec:
+  replicas: {{ .Values.keycloak.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.keycloak.name }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.keycloak.name }}-database
+    spec:
+      containers:
+        - name: {{ .Values.keycloak.name }}-database
+          image: {{ $.Values.keycloak.database.image }}
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: {{ .Values.keycloak.name }}-database-volume
+            mountPath: /var/lib/postgresql/data
+          env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+            - name: POSTGRES_USER
+              value: {{ $.Values.keycloak.database.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ $.Values.keycloak.database.password }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+      volumes:
+        - name: {{ .Values.keycloak.name }}-database-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.keycloak.name }}-database-claim
+
+{{- end }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.keycloak.name }}
+  namespace: {{ $.Values.keycloak.namespace }}
+  labels:
+    app: {{ .Values.keycloak.name }}
+spec:
+  replicas: {{ .Values.keycloak.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.keycloak.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.keycloak.name }}
+    spec:
+      containers:
+        - name: {{ .Values.keycloak.name }}
+          image: {{ $.Values.keycloak.image }}
+          imagePullPolicy: Always
+          env:
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
+            - name: KEYCLOAK_USER
+              value: {{ $.Values.keycloak.username }}
+            - name: KEYCLOAK_PASSWORD
+              value: {{ $.Values.keycloak.password }}
+            {{- if .Values.keycloak.database.enabled }}
+            - name: DB_VENDOR
+              value: postgres
+            - name: DB_USER
+              value: {{ $.Values.keycloak.database.username }}
+            - name: DB_PASSWORD
+              value: {{ $.Values.keycloak.database.password }}
+            - name: DB_ADDR
+              value: {{ .Values.keycloak.name }}-database
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.keycloak.name }}
+  namespace: {{ $.Values.keycloak.namespace }}
+  labels:
+    app: {{ .Values.keycloak.name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.keycloak.name }}
+
+---
+
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: {{ .Values.keycloak.name }}
+  namespace: {{ $.Values.keycloak.namespace }}
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+  - accessStrategies:
+    - config: {}
+      handler: noop
+    methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - HEAD
+    path: /.*
+  service:
+    host: {{ .Values.keycloak.name }}.{{ .Values.apirule.host }}
+    name: {{ .Values.keycloak.name }}
+    port: 8080
+{{- end }}
