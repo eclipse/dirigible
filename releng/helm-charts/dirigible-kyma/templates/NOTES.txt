@@ -2,7 +2,7 @@
 1. Assign the required roles to your user.
 
 {{- if .Values.apirule.enabled }}
-2. Access the Eclipse Dirigible instance at: https://{{ $.Values.apirule.host }}
+2. Access the Eclipse Dirigible instance at: https://{{ .Release.Name }}.{{ $.Values.apirule.host }}
   NOTE: It may take a few minutes for the APIRule to be accessible.
 
 {{- end }}

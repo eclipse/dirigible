@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: dirigiblelabs/dirigible-sap-kyma
+  repository: dirigiblelabs/dirigible-all
+  repositoryKyma: dirigiblelabs/dirigible-sap-kyma
   repositoryKeycloak: dirigiblelabs/dirigible-keycloak
   pullPolicy: IfNotPresent
 
@@ -51,6 +52,10 @@ database:
   driver: org.postgresql.Driver
   username: dirigible
   password: dirigible
+  storage: 1Gi
+
+kyma:
+  enabled: false
 
 keycloak:
   enabled: false

@@ -44,8 +44,26 @@ spec:
             mountPath: /usr/local/tomcat/target/dirigible
           {{- end }}
           env:
+            {{- if .Values.kyma.enabled }}
             - name: DIRIGIBLE_HOST
               value: https://{{ .Release.Name }}.{{ $.Values.apirule.host }}
+            {{- end }}
+            {{- if .Values.database.enabled }}
+            - name: DIRIGIBLE_DATABASE_PROVIDER
+              value: custom
+            - name: DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES
+              value: POSTGRE
+            - name: DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT
+              value: POSTGRE
+            - name: POSTGRE_URL
+              value: jdbc:postgresql://{{ include "dirigible.fullname" . }}-database:5432/{{ .Values.database.username }}
+            - name: POSTGRE_DRIVER
+              value: org.postgresql.Driver
+            - name: POSTGRE_USERNAME
+              value: {{ .Values.database.username }}
+            - name: POSTGRE_PASSWORD
+              value: {{ .Values.database.password }}
+            {{- end }}
             {{- if .Values.keycloak.enabled }}
             - name: KEYCLOAK_CONFIDENTIAL_PORT
               value: "443"
@@ -62,6 +80,8 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- if .Values.keycloak.enabled }}
           image: "{{ .Values.image.repositoryKeycloak }}:{{ .Chart.AppVersion }}"
+          {{- else if .Values.kyma.enabled }}
+          image: "{{ .Values.image.repositoryKyma }}:{{ .Chart.AppVersion }}"
           {{- else }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           {{- end }}
@@ -123,6 +143,7 @@ spec:
 
 ---
 
+{{- if .Values.kyma.enabled -}}
 {{- if .Values.apirule.enabled -}}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
@@ -146,4 +167,77 @@ spec:
     host: {{ .Values.apirule.host }}
     name: {{ include "dirigible.fullname" . }}
     port: {{ .Values.service.port }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.database.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.database.storage }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database
+  labels:
+    app: {{ include "dirigible.fullname" . }}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "dirigible.fullname" . }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ include "dirigible.fullname" . }}-database
+    spec:
+      containers:
+        - name: {{ include "dirigible.fullname" . }}-database
+          image: {{ $.Values.database.image }}
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: {{ include "dirigible.fullname" . }}-database-volume
+            mountPath: /var/lib/postgresql/data
+          env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+            - name: POSTGRES_USER
+              value: {{ $.Values.database.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ $.Values.database.password }}
+          ports:
+            - name: jdbc
+              containerPort: 5432
+              protocol: TCP
+      volumes:
+        - name: {{ include "dirigible.fullname" . }}-database-volume
+          persistentVolumeClaim:
+            claimName: {{ include "dirigible.fullname" . }}-database-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dirigible.fullname" . }}-database
+  labels:
+    app: {{ include "dirigible.fullname" . }}-database
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: jdbc
+      protocol: TCP
+      name: jdbc
+  selector:
+    app: {{ include "dirigible.fullname" . }}-database
 {{- end }}
