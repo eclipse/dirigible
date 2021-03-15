@@ -6,6 +6,8 @@ replicaCount: 1
 
 image:
   repository: dirigiblelabs/dirigible-all
+  repositoryKyma: dirigiblelabs/dirigible-sap-kyma
+  repositoryKeycloak: dirigiblelabs/dirigible-keycloak
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -37,7 +39,7 @@ service:
   port: 8080
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -48,6 +50,42 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+kyma:
+  enabled: false
+  apirule:
+    enabled: true
+    host: ""
+
+volume:
+  enabled: true
+  storage: 1Gi
+
+database:
+  enabled: false
+  image: postgres:13
+  driver: org.postgresql.Driver
+  username: dirigible
+  password: dirigible
+  storage: 1Gi
+
+keycloak:
+  enabled: false
+  install: false
+  name: keycloak
+  image: jboss/keycloak:12.0.4
+  namespace: auth
+  username: admin
+  password: admin
+  replicaCount: 1
+  realm: master
+  clientId: dirigible
+  database:
+    enabled: true
+    image: postgres:13
+    storage: 1Gi
+    username: keycloak
+    password: keycloak
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

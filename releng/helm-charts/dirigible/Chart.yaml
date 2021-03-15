@@ -12,6 +12,7 @@ version: #{DirigibleVersion}#
 appVersion: #{DirigibleVersion}#
 
 keywords:
+  - kyma
   - dirigible
   - platform
   - eclipse
@@ -31,6 +32,5 @@ maintainers:
 
 sources:
   - https://github.com/eclipse/dirigible/
-  - https://github.com/dirigiblelabs/charts
 
 icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png

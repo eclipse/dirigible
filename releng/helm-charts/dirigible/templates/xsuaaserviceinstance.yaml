@@ -14,7 +14,7 @@ spec:
     xsappname: {{ include "dirigible.fullname" . }}-xsuaa
     oauth2-configuration:
       redirect-uris:
-      - https://{{ .Release.Name }}.{{ .Values.apirule.host }}
+      - https://{{ .Release.Name }}.{{ .Values.kyma.apirule.host }}
       token-validity: 7200
     role-collections:
     - description: Dirigible Developer

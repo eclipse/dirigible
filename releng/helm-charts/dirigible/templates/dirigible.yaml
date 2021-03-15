@@ -46,7 +46,7 @@ spec:
           env:
             {{- if .Values.kyma.enabled }}
             - name: DIRIGIBLE_HOST
-              value: https://{{ .Release.Name }}.{{ $.Values.apirule.host }}
+              value: https://{{ .Release.Name }}.{{ $.Values.kyma.apirule.host }}
             {{- end }}
             {{- if .Values.database.enabled }}
             - name: DIRIGIBLE_DATABASE_PROVIDER
@@ -74,7 +74,7 @@ spec:
             - name: KEYCLOAK_CLIENT_ID
               value: {{ .Values.keycloak.clientId }}
             - name: KEYCLOAK_AUTH_SERVER_URL
-              value: https://{{ .Values.keycloak.name }}.{{ .Values.apirule.host }}
+              value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
             {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -144,7 +144,7 @@ spec:
 ---
 
 {{- if .Values.kyma.enabled -}}
-{{- if .Values.apirule.enabled -}}
+{{- if .Values.kyma.apirule.enabled -}}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
 metadata:
@@ -164,11 +164,55 @@ spec:
     - HEAD
     path: /.*
   service:
-    host: {{ .Values.apirule.host }}
+    host: {{ .Values.kyma.apirule.host }}
     name: {{ include "dirigible.fullname" . }}
     port: {{ .Values.service.port }}
 {{- end }}
 {{- end }}
+
+---
+
+{{- if .Values.ingress.enabled -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "dirigible.fullname" . }}
+  labels:
+    {{- include "dirigible.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ . }}
+            backend:
+              serviceName: {{ include "dirigible.fullname" . }}
+              servicePort: {{ .Values.service.port }}
+        {{- end }}
+  {{- end }}
+{{- end }}
+
+---
 
 {{- if .Values.database.enabled -}}
 apiVersion: v1

@@ -12,7 +12,7 @@ Some of the key features are:
 Add Dirigible Helm repo:
 
 ```console
-$ helm repo add dirigiblelabs https://dirigiblelabs.github.io/charts
+$ helm repo add dirigible https://eclipse.github.io/dirigible
 ```
 
 Update repo:
@@ -24,7 +24,7 @@ $ helm repo update
 Install Dirigible with Helm:
 
 ```console
-$ helm install dirigible dirigiblelabs/dirigible
+$ helm install dirigible dirigible/dirigible
 ```
 
 Resources:
