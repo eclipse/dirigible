@@ -49,13 +49,7 @@ Resources:
     helm package dirigible
     ```
 
-1. Rename the packaged chart:
-
-    ```
-    dirigible-5.8.4.tgz -> chart-dirigible-5.8.4.tgz
-    ```
-
-1. Copy the `chart-dirigible-5.8.4.tgz` somewhere outside the Git repository.
+1. Copy the `dirigible-5.8.4.tgz` somewhere outside the Git repository.
 
 1. Reset all changes:
 
@@ -72,7 +66,7 @@ Resources:
     git pull origin gh-pages
     ```
 
-1. Paste the `chart-dirigible-5.8.4.tgz` chart into the `charts` directory.
+1. Paste the `dirigible-5.8.4.tgz` chart into the `charts` directory.
 
 1. Build Helm Index:
 
