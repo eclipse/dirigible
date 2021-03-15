@@ -3,9 +3,9 @@ entries:
   dirigible:
   - apiVersion: v2
     appVersion: 5.8.4
-    created: "2021-03-15T16:03:33.223017+02:00"
+    created: "2021-03-15T18:24:36.35052+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 6e084af764d767b21d7001e9cd980e2453397d21a586f93765acd5d87630ae67
+    digest: 3fb1100bf7482ccf3ccb9b9e0ce095727e41cdf5104b8099fa395f2a2e97e1f9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -28,13 +28,13 @@ entries:
     - https://github.com/eclipse/dirigible/
     type: application
     urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.4.tgz
+    - https://eclipse.github.io/dirigible/charts/dirigible-5.8.4.tgz
     version: 5.8.4
   - apiVersion: v2
     appVersion: 5.8.3
-    created: "2021-03-15T16:03:33.222073+02:00"
+    created: "2021-03-15T18:24:36.349589+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 14600a1e4b80fbacfe77f73e07164e7f87e1f7a06ddf4c8f820071a931b78c2b
+    digest: 97b32a28ac19c81014dc9bcb6965e39b884921c430694e829b41dafb5383d7f0
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -57,13 +57,13 @@ entries:
     - https://github.com/eclipse/dirigible/
     type: application
     urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.3.tgz
+    - https://eclipse.github.io/dirigible/charts/dirigible-5.8.3.tgz
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
-    created: "2021-03-15T16:03:33.221099+02:00"
+    created: "2021-03-15T18:24:36.348652+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 87a04affd7387dfe74242bc989662cba5d8fddaa742e4fb03be1ad459194ba1b
+    digest: fe686dfed19d126ceb4a471919bacb29b0bc33f79f59db78efc83c1beee7ec07
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -86,13 +86,13 @@ entries:
     - https://github.com/eclipse/dirigible/
     type: application
     urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.2.tgz
+    - https://eclipse.github.io/dirigible/charts/dirigible-5.8.2.tgz
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
-    created: "2021-03-15T16:03:33.220169+02:00"
+    created: "2021-03-15T18:24:36.347714+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 446a55f2d7148e8c5365adc3017827890df034c957ec79a68b361ebe2a7b6e68
+    digest: 46133c6ae9d1c6a7a059efc61e0decd88f218493d55d5148ab919539de25d788
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -115,13 +115,13 @@ entries:
     - https://github.com/eclipse/dirigible/
     type: application
     urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.1.tgz
+    - https://eclipse.github.io/dirigible/charts/dirigible-5.8.1.tgz
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
-    created: "2021-03-15T16:03:33.219171+02:00"
+    created: "2021-03-15T18:24:36.346793+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime environment for In-System Development and Low-Code/No-Code Development.
-    digest: 9466012a431bc4ce2e261b8a46681308107977600cbe94fe184fbb1f47532634
+    digest: 51f372ec1f804b155fd647fe0fbf90166fdfeb8ca884f44b8c6bd938ee367833
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -144,6 +144,6 @@ entries:
     - https://github.com/eclipse/dirigible/
     type: application
     urls:
-    - https://eclipse.github.io/dirigible/charts/chart-dirigible-5.8.0.tgz
+    - https://eclipse.github.io/dirigible/charts/dirigible-5.8.0.tgz
     version: 5.8.0
-generated: "2021-03-15T16:03:33.218079+02:00"
+generated: "2021-03-15T18:24:36.345688+02:00"
