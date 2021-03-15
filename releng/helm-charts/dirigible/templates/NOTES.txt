@@ -20,9 +20,9 @@
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "dirigible.fullname" . }}'
 
-{{- else if .Values.kyma.apirule.enabled }}
+{{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
 
-2. Access the Eclipse Dirigible instance at: https://{{ .Release.Name }}.{{ $.Values.kyma.apirule.host }}
+2. Access the Eclipse Dirigible instance at: https://{{ .Release.Name }}.{{ .Values.kyma.apirule.host }}
   NOTE: It may take a few minutes for the APIRule to be accessible.
 
 {{- else if contains "ClusterIP" .Values.service.type }}

@@ -1,4 +1,4 @@
-{{- if .Values.volume.enabled -}}
+{{- if .Values.volume.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -8,7 +8,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: {{ $.Values.volume.storage }}
+      storage: {{ .Values.volume.storage }}
 {{- end }}
 
 ---
@@ -46,7 +46,7 @@ spec:
           env:
             {{- if .Values.kyma.enabled }}
             - name: DIRIGIBLE_HOST
-              value: https://{{ .Release.Name }}.{{ $.Values.kyma.apirule.host }}
+              value: https://{{ .Release.Name }}.{{ .Values.kyma.apirule.host }}
             {{- end }}
             {{- if .Values.database.enabled }}
             - name: DIRIGIBLE_DATABASE_PROVIDER
@@ -143,8 +143,7 @@ spec:
 
 ---
 
-{{- if .Values.kyma.enabled -}}
-{{- if .Values.kyma.apirule.enabled -}}
+{{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
 metadata:
@@ -168,11 +167,10 @@ spec:
     name: {{ include "dirigible.fullname" . }}
     port: {{ .Values.service.port }}
 {{- end }}
-{{- end }}
 
 ---
 
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -202,7 +200,7 @@ spec:
 
 ---
 
-{{- if .Values.database.enabled -}}
+{{- if .Values.database.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -212,7 +210,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: {{ $.Values.database.storage }}
+      storage: {{ .Values.database.storage }}
 
 ---
 
@@ -234,7 +232,7 @@ spec:
     spec:
       containers:
         - name: {{ include "dirigible.fullname" . }}-database
-          image: {{ $.Values.database.image }}
+          image: {{ .Values.database.image }}
           imagePullPolicy: Always
           volumeMounts:
           - name: {{ include "dirigible.fullname" . }}-database-volume
@@ -243,9 +241,9 @@ spec:
             - name: PGDATA
               value: "/var/lib/postgresql/data/pgdata"
             - name: POSTGRES_USER
-              value: {{ $.Values.database.username }}
+              value: {{ .Values.database.username }}
             - name: POSTGRES_PASSWORD
-              value: {{ $.Values.database.password }}
+              value: {{ .Values.database.password }}
           ports:
             - name: jdbc
               containerPort: 5432

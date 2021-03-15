@@ -1,5 +1,6 @@
 {{- if .Values.keycloak.install }}
 {{- if .Values.keycloak.database.enabled }}
+### Keycloak Database (PostgreSQL) Enabled###
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -9,10 +10,10 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: {{ $.Values.keycloak.database.storage }}
-
+      storage: {{ .Values.keycloak.database.storage }}
+### Keycloak Database (PostgreSQL) Enabled###
 ---
-
+### Keycloak Database (PostgreSQL) Enabled###
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,7 +32,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.keycloak.name }}-database
-          image: {{ $.Values.keycloak.database.image }}
+          image: {{ .Values.keycloak.database.image }}
           imagePullPolicy: Always
           volumeMounts:
           - name: {{ .Values.keycloak.name }}-database-volume
@@ -40,9 +41,9 @@ spec:
             - name: PGDATA
               value: "/var/lib/postgresql/data/pgdata"
             - name: POSTGRES_USER
-              value: {{ $.Values.keycloak.database.username }}
+              value: {{ .Values.keycloak.database.username }}
             - name: POSTGRES_PASSWORD
-              value: {{ $.Values.keycloak.database.password }}
+              value: {{ .Values.keycloak.database.password }}
           ports:
             - name: jdbc
               containerPort: 5432
@@ -51,9 +52,9 @@ spec:
         - name: {{ .Values.keycloak.name }}-database-volume
           persistentVolumeClaim:
             claimName: {{ .Values.keycloak.name }}-database-claim
-
+### Keycloak Database (PostgreSQL) Enabled###
 ---
-
+### Keycloak Database (PostgreSQL) Enabled###
 apiVersion: v1
 kind: Service
 metadata:
@@ -69,9 +70,8 @@ spec:
       name: jdbc
   selector:
     app: {{ .Values.keycloak.name }}-database
-
+### Keycloak Database (PostgreSQL) Enabled###
 {{- end }}
-
 ---
 
 apiVersion: apps/v1
@@ -92,22 +92,22 @@ spec:
     spec:
       containers:
         - name: {{ .Values.keycloak.name }}
-          image: {{ $.Values.keycloak.image }}
+          image: {{ .Values.keycloak.image }}
           imagePullPolicy: Always
           env:
             - name: PROXY_ADDRESS_FORWARDING
               value: "true"
             - name: KEYCLOAK_USER
-              value: {{ $.Values.keycloak.username }}
+              value: {{ .Values.keycloak.username }}
             - name: KEYCLOAK_PASSWORD
-              value: {{ $.Values.keycloak.password }}
+              value: {{ .Values.keycloak.password }}
             {{- if .Values.keycloak.database.enabled }}
             - name: DB_VENDOR
               value: postgres
             - name: DB_USER
-              value: {{ $.Values.keycloak.database.username }}
+              value: {{ .Values.keycloak.database.username }}
             - name: DB_PASSWORD
-              value: {{ $.Values.keycloak.database.password }}
+              value: {{ .Values.keycloak.database.password }}
             - name: DB_ADDR
               value: {{ .Values.keycloak.name }}-database
             {{- end }}
@@ -136,7 +136,7 @@ spec:
 
 ---
 
-{{- if .Values.kyma.apirule.enabled -}}
+{{- if .Values.kyma.apirule.enabled }}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
 metadata:
@@ -159,11 +159,7 @@ spec:
     host: {{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
     name: {{ .Values.keycloak.name }}
     port: 8080
-{{- end }}
-
----
-
-{{- if .Values.ingress.enabled -}}
+{{- else if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
