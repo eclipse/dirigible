@@ -92,12 +92,18 @@ spec:
     spec:
       {{- if .Values.keycloak.database.enabled }}
       initContainers:
-        - name: check-db-ready
-          image: postgres:9.6.5
+        - name: wait-db-ready
+          image: busybox:1.28
           command:
             - sh
             - -c
-            - until pg_isready -h {{ .Values.keycloak.name }}-database -p 5432; do echo waiting for database; sleep 2; done;
+            - sleep 30; done;
+        # - name: check-db-ready
+        #   image: postgres:9.6.5
+        #   command:
+        #     - sh
+        #     - -c
+        #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
       {{- end }}
       containers:
         - name: {{ .Values.keycloak.name }}
@@ -110,6 +116,13 @@ spec:
               value: {{ .Values.keycloak.username }}
             - name: KEYCLOAK_PASSWORD
               value: {{ .Values.keycloak.password }}
+            {{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  "https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}/auth/"
+            {{- else if .Values.ingress.enabled }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  "http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.keycloak.name }}.{{ .Values.ingress.host }}/auth/"
+            {{- end }}
             {{- if .Values.keycloak.database.enabled }}
             - name: DB_VENDOR
               value: postgres
@@ -145,7 +158,7 @@ spec:
 
 ---
 
-{{- if .Values.kyma.apirule.enabled }}
+{{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
 metadata:
@@ -168,6 +181,9 @@ spec:
     host: {{ .Values.keycloak.name }}
     name: {{ .Values.keycloak.name }}
     port: 8080
+
+---
+
 {{- else if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

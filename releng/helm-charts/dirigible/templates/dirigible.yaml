@@ -38,12 +38,18 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.database.enabled }}
       initContainers:
-        - name: check-db-ready
-          image: postgres:9.6.5
+        - name: wait-db-ready
+          image: busybox:1.28
           command:
             - sh
             - -c
-            - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+            - sleep 30; done;
+        # - name: check-db-ready
+        #   image: postgres:9.6.5
+        #   command:
+        #     - sh
+        #     - -c
+        #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -75,6 +81,8 @@ spec:
             - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
               value: "false"
             - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
+              value: "true"
+            - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
               value: "true"
             {{- end }}
             {{- if .Values.keycloak.enabled }}
