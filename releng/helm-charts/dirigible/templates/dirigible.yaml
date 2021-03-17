@@ -43,7 +43,7 @@ spec:
           command:
             - sh
             - -c
-            - sleep 30; done;
+            - for i in {1..15}; do echo "Waiting for database creation ..."; sleep 2; done;
         # - name: check-db-ready
         #   image: postgres:9.6.5
         #   command:
