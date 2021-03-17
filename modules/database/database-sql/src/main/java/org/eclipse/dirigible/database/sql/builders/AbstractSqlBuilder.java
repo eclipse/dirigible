@@ -69,7 +69,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	/**
 	 * Whether the names of tables, columns, indices are case sensitive
 	 * 
-	 * @return
+	 * @return true if set
 	 */
 	protected boolean isCaseSensitive() {
 		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));

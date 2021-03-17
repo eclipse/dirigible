@@ -266,7 +266,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 *             the SQL exception
 	 */
 	@Override
-	public boolean exists(Connection connection, String table, int type) throws SQLException;
+	public boolean exists(Connection connection, String name, int type) throws SQLException;
 
 	/**
 	 * Returns the count of rows in the given table.
