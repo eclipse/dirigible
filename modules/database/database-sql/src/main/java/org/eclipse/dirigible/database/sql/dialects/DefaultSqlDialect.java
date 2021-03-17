@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlException;
@@ -350,6 +351,15 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
+		return exists(connection, table, DatabaseArtifactTypes.TABLE);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String, java.lang.int)
+	 */
+	@Override
+	public boolean exists(Connection connection, String table, int type) throws SQLException {
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
 		ResultSet resultSet = metadata.getTables(null, null, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));

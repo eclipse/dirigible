@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
@@ -306,6 +307,15 @@ public class HanaSqlDialect extends
 	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
+		return exists(connection, table, DatabaseArtifactTypes.TABLE);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String, java.lang.int)
+	 */
+	@Override
+	public boolean exists(Connection connection, String table, int type) throws SQLException {
 		try {
 			count(connection, table);
 		} catch(Exception e) {

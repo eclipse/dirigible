@@ -251,6 +251,22 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 */
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Check existence of an artifacts.
+	 *
+	 * @param connection
+	 *            the current connection
+	 * @param name
+	 *            the artifact name
+	 * @param type
+	 *            the artifact type
+	 * @return true if the table exists and false otherwise
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	@Override
+	public boolean exists(Connection connection, String table, int type) throws SQLException;
 
 	/**
 	 * Returns the count of rows in the given table.

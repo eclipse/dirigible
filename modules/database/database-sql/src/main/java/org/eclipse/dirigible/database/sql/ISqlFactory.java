@@ -117,6 +117,21 @@ public interface ISqlFactory<SELECT extends SelectBuilder, INSERT extends Insert
 	 *             the SQL exception
 	 */
 	public boolean exists(Connection connection, String table) throws SQLException;
+	
+	/**
+	 * Check existence of an artifacts.
+	 *
+	 * @param connection
+	 *            the current connection
+	 * @param name
+	 *            the artifact name
+	 * @param type
+	 *            the artifact type
+	 * @return true if the table exists and false otherwise
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public boolean exists(Connection connection, String table, int type) throws SQLException;
 
 	/**
 	 * Count.
