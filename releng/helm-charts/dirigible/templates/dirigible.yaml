@@ -91,11 +91,11 @@ spec:
             - name: KEYCLOAK_SSL_REQUIRED
               value: "none"
             - name: KEYCLOAK_REALM
-              value: {{ .Values.keycloak.relam }}
+              value: {{ .Values.keycloak.realm }}
             - name: KEYCLOAK_CLIENT_ID
               value: {{ .Values.keycloak.clientId }}
             - name: KEYCLOAK_AUTH_SERVER_URL
-              value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
+              value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}/auth/
             {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
