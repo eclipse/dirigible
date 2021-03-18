@@ -99,7 +99,9 @@ spec:
             {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          {{- if .Values.keycloak.enabled }}
+          {{- if .Values.dirigible.image }}
+          image: "{{ .Values.dirigible.image }}"
+          {{- else if .Values.keycloak.enabled }}
           image: "{{ .Values.image.repositoryKeycloak }}:{{ .Chart.AppVersion }}"
           {{- else if .Values.kyma.enabled }}
           image: "{{ .Values.image.repositoryKyma }}:{{ .Chart.AppVersion }}"

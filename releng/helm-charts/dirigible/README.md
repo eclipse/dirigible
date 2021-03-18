@@ -135,6 +135,7 @@ The following table lists all the configurable parameters expose by the Dirigibl
 
 |             Name             |          Description            |            Default                 |
 |------------------------------|---------------------------------|------------------------------------|
+| `dirigible.image`            | Custom Dirigible image          | `""`                               |
 | `image.repository`           | Dirigible image repo            | `dirigiblelabs/dirigible-all`      |
 | `image.repositoryKyma`       | Dirigible Kyma image repo       | `dirigiblelabs/dirigible-sap-kyma` |
 | `image.repositoryKeycloak`   | Dirigible Keycloak image repo   | `dirigiblelabs/dirigible-keycloak` |

@@ -64,6 +64,9 @@ tolerations: []
 
 affinity: {}
 
+dirigible:
+  image: ""
+
 volume:
   enabled: true
   storage: 1Gi
