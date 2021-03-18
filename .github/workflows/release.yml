@@ -214,12 +214,12 @@ jobs:
 
           #### Helm:
 
-          All Helm Charts can be found [here](https://artifacthub.io/packages/search?page=1&repo=eclipse-dirigible).
+          All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?page=1&org=dirigiblelabs).
 
           ```
           helm repo add dirigible https://eclipse.github.io/dirigible
           helm repo update
-          helm install dirigible dirigible/dirigible --ingress.enabled=false --version ${{ env.DIRIGIBLE_VERSION }}
+          helm install dirigible dirigible/dirigible --version ${{ env.DIRIGIBLE_VERSION }}
           ```
 
           #### Docker images:
