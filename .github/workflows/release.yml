@@ -214,7 +214,7 @@ jobs:
 
           #### Helm:
 
-          All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?page=1&org=dirigiblelabs).
+          All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?org=dirigiblelabs).
 
           ```
           helm repo add dirigible https://eclipse.github.io/dirigible
