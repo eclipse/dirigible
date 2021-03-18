@@ -2,24 +2,16 @@
 
 [Eclipse Dirigible](https://www.dirigible.io/) is a cloud development platform providing development tools (Web IDE) and runtime environment (Java based) for In-System Development and Low-Code/No-Code Development.
 
-## TL;DR;
+## Overview
 
-```
-helm repo add dirigible https://eclipse.github.io/dirigible
-helm repo update
-helm install dirigible dirigible/dirigible
-```
+This chart bootstraps a [Eclipse Dirigible](https://www.dirigible.io/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-## Introduction
-
-This chart bootstraps a Eclipse Dirigible deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
-## Prerequisites
+#### Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3+
 
-## Setup
+#### Setup
 
 Add the Eclipse Dirigible chart repository:
 
@@ -47,6 +39,7 @@ kubectl --namespace default port-forward $POD_NAME 8080:8080
 ```
 
 Navigate to: [http://127.0.0.1:8080](http://127.0.0.1:8080)
+
 Login with: `dirigible`/`dirigible`
 
 ### Kubernetes
@@ -108,7 +101,9 @@ helm install dirigible dirigible/dirigible \
 
 > _**Note:** In addition **Keycloak** will be deployed and configured._
 
-These commands deploy Dirigible on a Kubernetes cluster with the default configuration and with the release name `my-release`. The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
+#### Custom Configurations
+
+The deployment configuration can be customized by specifying the customization parameters with the `helm install` command using the `--values` or `--set` arguments. Find more information in the [configuration section](#configuration) of this document.
 
 ## Upgrading
 
@@ -136,29 +131,85 @@ The command uninstall the release named `dirigible` and frees all the kubernetes
 
 The following table lists all the configurable parameters expose by the Dirigible chart and their default values.
 
-|             Name             |          Description          |            Default            |
-|------------------------------|-------------------------------|-------------------------------|
-| `replicaCount`               | Number of replicas            | `1`                           |
-| `image.repository`           | Dirigible image name          | `dirigiblelabs/dirigible-all` |
-| `image.tag`                  | Dirigible image tag           | `5.8.3`                     |
-| `env.dirigibleThemeDefault`  | Dirigible default theme       | `fiori`                       |
-| `service.type`               | Kubernetes Service type       | `ClusterIP`                   |
-| `service.port`               | Dirigible service port        | `8080`                        |
-| `service.targetPort`         | Dirigible service targetPort  | `8080`                        |
-| `ingress.host`               | Ingress host                  | ``                            |
+#### Generic
+
+|             Name             |          Description            |            Default                 |
+|------------------------------|---------------------------------|------------------------------------|
+| `image.repository`           | Dirigible image repo            | `dirigiblelabs/dirigible-all`      |
+| `image.repositoryKyma`       | Dirigible Kyma image repo       | `dirigiblelabs/dirigible-sap-kyma` |
+| `image.repositoryKeycloak`   | Dirigible Keycloak image repo   | `dirigiblelabs/dirigible-keycloak` |
+| `image.pullPolicy`           | Image pull policy               | `IfNotPresent`                     |
+| `service.type`               | Service type                    | `ClusterIP`                        |
+| `service.port`               | Service port                    | `8080`                             |
+| `replicaCount`               | Number of replicas              | `1`                                |
+| `imagePullSecrets`           | Image pull secrets              | `[]`                               |
+| `nameOverride`               | Name override                   | `""`                               |
+| `fullnameOverride`           | Fullname override               | `""`                               |
+| `podSecurityContext`         | Pod security context            | `{}`                               |
+| `nodeSelector`               | Node selector                   | `{}`                               |
+| `tolerations`                | Tolerations                     | `[]`                               |
+| `affinity`                   | Affinity                        | `{}`                               |
+| `resources`                  | Resources                       | `{}`                               |
+
+#### Basic
+
+|             Name             |          Description            |            Default                 |
+|------------------------------|---------------------------------|------------------------------------|
+| `volume.enabled`             | Volume to be mounted            | `true`                             |
+| `volume.storage`             | Volume storage size             | `1Gi`                              |
+| `database.enabled`           | Database to be deployed         | `false`                            |
+| `database.image`             | Database image                  | `postgres:13`                      |
+| `database.driver`            | Database JDBC driver            | `org.postgresql.Driver`            |
+| `database.storage`           | Database storage size           | `1Gi`                              |
+| `database.username`          | Database username               | `dirigible`                        |
+| `database.password`          | Database password               | `dirigible`                        |
+| `ingress.enabled`            | Ingress to be created           | `false`                            |
+| `ingress.annotations`        | Ingress annotations             | `{}`                               |
+| `ingress.host`               | Ingress host                    | `""`                               |
+| `ingress.tls`                | Ingress tls                     | `false`                            |
+
+#### Kyma
+
+|             Name             |          Description            |            Default                 |
+|------------------------------|---------------------------------|------------------------------------|
+| `kyma.enabled`               | Kyma environment to be used     | `false`                            |
+| `kyma.apirule.enabled`       | Kyma ApiRule to be created      | `true`                             |
+| `kyma.apirule.host`          | Kyma host to be used in ApiRule | `""`                               |
+
+#### Keycloak
+
+|             Name             |          Description            |            Default                 |
+|------------------------------|---------------------------------|------------------------------------|
+| `keycloak.enabled`           | Keycloak environment to be used | `false`                            |
+| `keycloak.install`           | Keycloak to be installed        | `false`                            |
+| `keycloak.name`              | Keycloak deployment name        | `keycloak`                         |
+| `keycloak.image`             | Keycloak image                  | `jboss/keycloak:12.0.4`            |
+| `keycloak.username`          | Keycloak username               | `admin`                            |
+| `keycloak.password`          | Keycloak password               | `admin`                            |
+| `keycloak.replicaCount`      | Keycloak number of replicas     | `1`                                |
+| `keycloak.realm`             | Keycloak realm to be set        | `master`                           |
+| `keycloak.clientId`          | Keycloak clientId to be used    | `dirigible`                        |
+| `keycloak.database.enabled`  | Keycloak database to be used    | `false`                            |
+| `keycloak.database.enabled`  | Keycloak database to be used    | `true`                             |
+| `keycloak.database.image`    | Keycloak database image         | `postgres:13`                      |
+| `keycloak.database.storage`  | Keycloak database storage size  | `1Gi`                              |
+| `keycloak.database.username` | Keycloak database username      | `keycloak`                         |
+| `keycloak.database.password` | Keycloak database password      | `keycloak`                         |
+
+#### Usage
 
 Specify the parameters you which to customize using the `--set` argument to the `helm install` command. For instance,
 
-```bash
-$ helm install dirigible/dirigible --name my-deployment --set ingress.host=my-ingress-host.com
+```
+helm install dirigible dirigible/dirigible --set ingress.enabled=true --set ingress.host=my-ingress-host.com
 ```
 
 The above command sets the `ingress.host` to `my-ingress-host.com`.
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
 
-```bash
-$ helm install dirigible/dirigible --name my-deployment --values values.yaml
+```
+helm install dirigible dirigible/dirigible --values values.yaml
 ```
 
-**Tip**: You can use the default [values.yaml](values.yaml).
+**Tip**: You can use the default **values.yaml**.
