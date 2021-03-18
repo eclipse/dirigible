@@ -1,25 +1,28 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.api.metadata.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.database.api.metadata.ProcedureMetadata;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
 import org.eclipse.dirigible.database.derby.DerbyDatabase;
@@ -103,6 +106,53 @@ public class DatabaseMetadataHelperTest {
 				}
 			}
 			fail("No SYSKEYS table present");
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+	
+	/**
+	 * List table names test.
+	 *
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	@Test
+	public void listProceduresNamesTest() throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "CREATE PROCEDURE TOTAL_REVENUE(IN S_MONTH INTEGER,\n"
+					+ "IN S_YEAR INTEGER, OUT TOTAL DECIMAL(10,2))\n"
+					+ "PARAMETER STYLE JAVA READS SQL DATA LANGUAGE JAVA EXTERNAL NAME \n"
+					+ "'com.acme.sales.calculateRevenueByMonth'";
+			
+			try (PreparedStatement pstms = connection.prepareStatement(sql)) {
+				pstms.execute();
+			}
+			
+			List<ProcedureMetadata> procedures = DatabaseMetadataHelper.listProcedures(connection, null, null, null);
+			for (ProcedureMetadata procedure : procedures) {
+				if ("TOTAL_REVENUE".equals(procedure.getName())) {
+					
+					assertEquals(procedure.getColumns().size(), 0);
+					
+					ProcedureMetadata procedureMetadata = DatabaseMetadataHelper.describeProcedure(connection, null, null, "TOTAL_REVENUE");
+					
+					assertEquals(procedureMetadata.getColumns().size(), 3);
+					
+					sql = "DROP PROCEDURE TOTAL_REVENUE";
+					try (PreparedStatement pstms = connection.prepareStatement(sql)) {
+						pstms.execute();
+					}
+					
+					return;
+				}
+			}
+			fail("No TOTAL_REVENUE procedure present");
 		} finally {
 			if (connection != null) {
 				connection.close();

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.api.metadata;
@@ -459,12 +459,12 @@ public class DatabaseMetadata {
 	 *            the catalog name
 	 * @param schemaNameFilter
 	 *            the schema name filter
-	 * @param tableNameFilter
-	 *            the table name filter
+	 * @param nameFilter
+	 *            the name filter
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> tableNameFilter)
+	public DatabaseMetadata(Connection connection, String catalogName, Filter<String> schemaNameFilter, Filter<String> nameFilter)
 			throws SQLException {
 		super();
 		DatabaseMetaData databaseMetaData = connection.getMetaData();
@@ -1139,7 +1139,7 @@ public class DatabaseMetadata {
 			logger.error(NOT_SUPPORTED + "DatabaseMetaData.supportsRefCursors()");
 		}
 
-		this.schemas = DatabaseMetadataHelper.listSchemas(connection, catalogName, schemaNameFilter, tableNameFilter);
+		this.schemas = DatabaseMetadataHelper.listSchemas(connection, catalogName, schemaNameFilter, nameFilter);
 	}
 
 	/**

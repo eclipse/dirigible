@@ -17,13 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
-import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.ColumnsIteratorCallback;
-import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIteratorCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.ProcedureColumnsIteratorCallback;
 
 /**
- * The Table Metadata transport object.
+ * The Procedure Metadata transport object.
  */
-public class TableMetadata {
+public class ProcedureMetadata {
 
 	private String name;
 
@@ -31,14 +30,10 @@ public class TableMetadata {
 
 	private String remarks;
 
-	private List<ColumnMetadata> columns;
-
-	private List<IndexMetadata> indices;
-
-	private String kind = "table";
+	private List<ProcedureColumnMetadata> columns;
 
 	/**
-	 * Instantiates a new table metadata.
+	 * Instantiates a new procedure metadata.
 	 *
 	 * @param name
 	 *            the name
@@ -57,29 +52,19 @@ public class TableMetadata {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public TableMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
+	public ProcedureMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
 		this.remarks = remarks;
 
-		this.columns = new ArrayList<ColumnMetadata>();
-		this.indices = new ArrayList<IndexMetadata>();
+		this.columns = new ArrayList<ProcedureColumnMetadata>();
 
 		if (deep) {
-			DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
+			DatabaseMetadataHelper.iterateProcedureDefinition(connection, catalogName, schemaName, name, new ProcedureColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
-					columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
-							Boolean.parseBoolean(isNullable), Boolean.parseBoolean(isKey)));
-				}
-			}, new IndicesIteratorCallback() {
-				@Override
-				public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
-						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
-					indices.add(new IndexMetadata(indexName, indexType, columnName, Boolean.parseBoolean(isNonUnique), indexQualifier, ordinalPosition,
-							sortOrder, cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
-							filterCondition));
+				public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks) {
+					columns.add(new ProcedureColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
 				}
 			});
 		}
@@ -143,40 +128,18 @@ public class TableMetadata {
 	}
 
 	/**
-	 * Gets the columns.
-	 *
 	 * @return the columns
 	 */
-	public List<ColumnMetadata> getColumns() {
+	public List<ProcedureColumnMetadata> getColumns() {
 		return columns;
 	}
 
 	/**
-	 * Gets the indices.
-	 *
-	 * @return the indices
+	 * @param columns the columns to set
 	 */
-	public List<IndexMetadata> getIndices() {
-		return indices;
+	public void setColumns(List<ProcedureColumnMetadata> columns) {
+		this.columns = columns;
 	}
 
-	/**
-	 * Gets the kind.
-	 *
-	 * @return the kind
-	 */
-	public String getKind() {
-		return kind;
-	}
-
-	/**
-	 * Sets the kind.
-	 *
-	 * @param kind
-	 *            the new kind
-	 */
-	public void setKind(String kind) {
-		this.kind = kind;
-	}
 
 }

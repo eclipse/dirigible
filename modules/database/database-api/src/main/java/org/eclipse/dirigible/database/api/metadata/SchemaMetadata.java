@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.api.metadata;
@@ -28,6 +28,8 @@ public class SchemaMetadata {
 	private String kind = "schema";
 
 	private List<TableMetadata> tables;
+	
+	private List<ProcedureMetadata> procedures;
 
 	/**
 	 * Instantiates a new schema metadata.
@@ -38,16 +40,19 @@ public class SchemaMetadata {
 	 *            the connection
 	 * @param catalogName
 	 *            the catalog name
-	 * @param tableNameFilter
-	 *            the table name filter
+	 * @param nameFilter
+	 *            the name filter
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public SchemaMetadata(String name, Connection connection, String catalogName, Filter<String> tableNameFilter) throws SQLException {
+	public SchemaMetadata(String name, Connection connection, String catalogName, Filter<String> nameFilter) throws SQLException {
 		super();
+		
 		this.name = name;
 
-		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, tableNameFilter);
+		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+		
+		this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
 	}
 
 	/**
@@ -76,6 +81,15 @@ public class SchemaMetadata {
 	 */
 	public List<TableMetadata> getTables() {
 		return tables;
+	}
+	
+	
+
+	/**
+	 * @return the procedures
+	 */
+	public List<ProcedureMetadata> getProcedures() {
+		return procedures;
 	}
 
 	/**
