@@ -30,6 +30,8 @@ public class SchemaMetadata {
 	private List<TableMetadata> tables;
 	
 	private List<ProcedureMetadata> procedures;
+	
+	private List<FunctionMetadata> functions;
 
 	/**
 	 * Instantiates a new schema metadata.
@@ -53,6 +55,8 @@ public class SchemaMetadata {
 		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
 		
 		this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
+		
+		this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
 	}
 
 	/**
@@ -90,6 +94,13 @@ public class SchemaMetadata {
 	 */
 	public List<ProcedureMetadata> getProcedures() {
 		return procedures;
+	}
+	
+	/**
+	 * @return the functions
+	 */
+	public List<FunctionMetadata> getFunctions() {
+		return functions;
 	}
 
 	/**

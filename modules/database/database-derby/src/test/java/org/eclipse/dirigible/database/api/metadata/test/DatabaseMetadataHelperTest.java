@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.database.api.metadata.FunctionMetadata;
 import org.eclipse.dirigible.database.api.metadata.ProcedureMetadata;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
@@ -114,7 +115,7 @@ public class DatabaseMetadataHelperTest {
 	}
 	
 	/**
-	 * List table names test.
+	 * List procedures names test.
 	 *
 	 * @throws SQLException
 	 *             the SQL exception
@@ -138,15 +139,71 @@ public class DatabaseMetadataHelperTest {
 			for (ProcedureMetadata procedure : procedures) {
 				if ("TOTAL_REVENUE".equals(procedure.getName())) {
 					
-					assertEquals(procedure.getColumns().size(), 0);
+					try {
+						assertEquals(procedure.getColumns().size(), 0);
+						ProcedureMetadata procedureMetadata = DatabaseMetadataHelper.describeProcedure(connection, null,
+								null, "TOTAL_REVENUE");
+						assertEquals(procedureMetadata.getColumns().size(), 3);
+					} finally {
+						sql = "DROP PROCEDURE TOTAL_REVENUE";
+						try (PreparedStatement pstms = connection.prepareStatement(sql)) {
+							pstms.execute();
+						}
+					}
 					
-					ProcedureMetadata procedureMetadata = DatabaseMetadataHelper.describeProcedure(connection, null, null, "TOTAL_REVENUE");
+					return;
+				}
+			}
+			fail("No TOTAL_REVENUE procedure present");
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
+		}
+	}
+	
+	/**
+	 * List functions names test.
+	 *
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	@Test
+	public void listFunctionsNamesTest() throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			
+			String sql = "CREATE FUNCTION PROPERTY_FILE_READER\n"
+					+ "( FILENAME VARCHAR( 32672 ) )\n"
+					+ "RETURNS TABLE\n"
+					+ "  (\n"
+					+ "     KEY_COL     VARCHAR( 10 ),\n"
+					+ "     VALUE_COL VARCHAR( 1000 )\n"
+					+ "  )\n"
+					+ "LANGUAGE JAVA\n"
+					+ "PARAMETER STYLE DERBY_JDBC_RESULT_SET\n"
+					+ "NO SQL\n"
+					+ "EXTERNAL NAME 'vtis.example.PropertyFileVTI.propertyFileVTI'";
+			
+			try (PreparedStatement pstms = connection.prepareStatement(sql)) {
+				pstms.execute();
+			}
+			
+			List<FunctionMetadata> functions = DatabaseMetadataHelper.listFunctions(connection, null, null, null);
+			for (FunctionMetadata function : functions) {
+				if ("PROPERTY_FILE_READER".equals(function.getName())) {
 					
-					assertEquals(procedureMetadata.getColumns().size(), 3);
-					
-					sql = "DROP PROCEDURE TOTAL_REVENUE";
-					try (PreparedStatement pstms = connection.prepareStatement(sql)) {
-						pstms.execute();
+					try {
+						assertEquals(function.getColumns().size(), 0);
+						FunctionMetadata functionMetadata = DatabaseMetadataHelper.describeFunction(connection, null,
+								null, "PROPERTY_FILE_READER");
+						assertEquals(functionMetadata.getColumns().size(), 3);
+					} finally {
+						sql = "DROP FUNCTION PROPERTY_FILE_READER";
+						try (PreparedStatement pstms = connection.prepareStatement(sql)) {
+							pstms.execute();
+						}
 					}
 					
 					return;

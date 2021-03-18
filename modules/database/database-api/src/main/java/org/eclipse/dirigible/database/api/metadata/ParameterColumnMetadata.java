@@ -14,7 +14,7 @@ package org.eclipse.dirigible.database.api.metadata;
 /**
  * The Procedure Column Metadata transport object.
  */
-public class ProcedureColumnMetadata {
+public class ParameterColumnMetadata {
 
 	private String name;
 
@@ -47,7 +47,7 @@ public class ProcedureColumnMetadata {
 	 * @param nullable nullable
 	 * @param remarks remarks
 	 */
-	public ProcedureColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix,
+	public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix,
 			int nullable, String remarks) {
 		super();
 		this.name = name;

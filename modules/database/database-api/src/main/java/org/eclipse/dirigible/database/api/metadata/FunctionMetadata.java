@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
-import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.ProcedureColumnsIteratorCallback;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.FunctionColumnsIteratorCallback;
 
 /**
- * The Procedure Metadata transport object.
+ * The Function Metadata transport object.
  */
-public class ProcedureMetadata {
+public class FunctionMetadata {
 
 	private String name;
 
@@ -33,7 +33,7 @@ public class ProcedureMetadata {
 	private List<ParameterColumnMetadata> columns;
 
 	/**
-	 * Instantiates a new procedure metadata.
+	 * Instantiates a new function metadata.
 	 *
 	 * @param name
 	 *            the name
@@ -52,7 +52,7 @@ public class ProcedureMetadata {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public ProcedureMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
+	public FunctionMetadata(String name, String type, String remarks, Connection connection, String catalogName, String schemaName, boolean deep) throws SQLException {
 		super();
 		this.name = name;
 		this.type = type;
@@ -61,9 +61,9 @@ public class ProcedureMetadata {
 		this.columns = new ArrayList<ParameterColumnMetadata>();
 
 		if (deep) {
-			DatabaseMetadataHelper.iterateProcedureDefinition(connection, catalogName, schemaName, name, new ProcedureColumnsIteratorCallback() {
+			DatabaseMetadataHelper.iterateFunctionDefinition(connection, catalogName, schemaName, name, new FunctionColumnsIteratorCallback() {
 				@Override
-				public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks) {
+				public void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks) {
 					columns.add(new ParameterColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
 				}
 			});

@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
+import org.eclipse.dirigible.database.api.metadata.FunctionMetadata;
 import org.eclipse.dirigible.database.api.metadata.ProcedureMetadata;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
@@ -297,6 +298,56 @@ public class DatabaseMetadataHelper {
 		return result;
 	}
 	
+	/**
+	 * List functions.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param functionNameFilter
+	 *            the function name filter
+	 * @return the list
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static List<FunctionMetadata> listFunctions(Connection connection, String catalogName, String schemeName, Filter<String> functionNameFilter)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		List<FunctionMetadata> result = new ArrayList<FunctionMetadata>();
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getFunctions(schemeName, null, PRCNT);
+			} else {
+				rs = dmd.getFunctions(catalogName, schemeName, PRCNT);
+			}
+
+			while (rs.next()) {
+				String functionName = rs.getString("FUNCTION_NAME");
+				String functionType = rs.getString("FUNCTION_TYPE");
+				String functionRemarks = rs.getString("REMARKS");
+				if ((functionNameFilter != null) && !functionNameFilter.accepts(functionName)) {
+					continue;
+				}
+				result.add(new FunctionMetadata(functionName, functionType, functionRemarks, connection, catalogName, schemeName, false));
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+
+		return result;
+	}
+	
 	
 	/**
 	 * Describe table.
@@ -383,6 +434,49 @@ public class DatabaseMetadataHelper {
 		}
 		return null;
 	}
+	
+	/**
+	 * Describe function.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param functionName
+	 *            the function name
+	 * @return the FunctionMetadata
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static FunctionMetadata describeFunction(Connection connection, String catalogName, String schemeName, String functionName)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getFunctions(schemeName, null, normalizeTableName(functionName));
+			} else {
+				rs = dmd.getFunctions(catalogName, schemeName, normalizeTableName(functionName));
+			}
+
+			if (rs.next()) {
+				String functionType = rs.getString("FUNCTION_TYPE");
+				String functionRemarks = rs.getString("REMARKS");
+				return new FunctionMetadata(functionName, functionType, functionRemarks, connection, catalogName, schemeName, true);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * The Interface ColumnsIteratorCallback.
@@ -424,6 +518,26 @@ public class DatabaseMetadataHelper {
 		 * @param remarks remarks
 		 */
 		void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
+	}
+	
+	/**
+	 * The Interface FunctionColumnsIteratorCallback.
+	 */
+	public interface FunctionColumnsIteratorCallback {
+
+		/**
+		 * 
+		 * @param name name
+		 * @param kind kind
+		 * @param type type
+		 * @param precision precision
+		 * @param length length
+		 * @param scale scale
+		 * @param radix radix
+		 * @param nullable nullable
+		 * @param remarks remarks
+		 */
+		void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
 	}
 
 	/**
@@ -558,6 +672,48 @@ public class DatabaseMetadataHelper {
 				if (procedureColumnsIteratorCallback != null) {
 					String cname = columns.getString(COLUMN_NAME);
 					procedureColumnsIteratorCallback.onProcedureColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
+							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
+				}
+			}
+
+		} finally {
+			columns.close();
+		}
+	}
+	
+	/**
+	 * Iterate function definition.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemaName
+	 *            the schema name
+	 * @param functionName
+	 *            the function name
+	 * @param functionColumnsIteratorCallback
+	 *            the function columns iterator callback
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static void iterateFunctionDefinition(Connection connection, String catalogName, String schemaName, String functionName,
+			FunctionColumnsIteratorCallback functionColumnsIteratorCallback) throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ResultSet columns = dmd.getFunctionColumns(catalogName, schemaName, normalizeTableName(functionName), null);
+		if (columns == null) {
+			throw new SQLException("DatabaseMetaData.getFunctionColumns returns null");
+		}
+
+		try {
+
+			
+			while (columns.next()) {
+				if (functionColumnsIteratorCallback != null) {
+					String cname = columns.getString(COLUMN_NAME);
+					functionColumnsIteratorCallback.onFunctionColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
 							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
 				}
 			}
