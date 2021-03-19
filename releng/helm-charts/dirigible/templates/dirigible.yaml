@@ -94,8 +94,15 @@ spec:
               value: {{ .Values.keycloak.realm }}
             - name: KEYCLOAK_CLIENT_ID
               value: {{ .Values.keycloak.clientId }}
+            {{- if .Values.ingress.enabled }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.keycloak.name }}.{{ .Values.ingress.host }}/auth/
+            {{- else if .Values.kyma.apirule.host }}
             - name: KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}/auth/
+            {{- else }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: https://{{ .Values.keycloak.name }}/auth/
             {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
