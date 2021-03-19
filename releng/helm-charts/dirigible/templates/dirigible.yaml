@@ -104,6 +104,7 @@ spec:
             - name: KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ .Values.keycloak.name }}/auth/
             {{- end }}
+            {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           {{- if .Values.dirigible.image }}
