@@ -1,8 +1,13 @@
 1. Assign the required roles to your user.
 {{- if .Values.ingress.enabled }}
 
-2. Access the Eclipse Dirigible instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Release.Name }}{{ .Values.ingress.host }}
+2. Access the Eclipse Dirigible instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Release.Name }}.{{ .Values.ingress.host }}
 
+{{- if .Values.keycloak.enabled }}
+3. Access the Keycloak instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.keycloak.name }}.{{ .Values.ingress.host }}
+  NOTE: It may take a few minutes for the APIRule to be accessible.
+
+{{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
 
 2. Access the Eclipse Dirigible instance at:
@@ -23,6 +28,11 @@
 2. Access the Eclipse Dirigible instance at: https://{{ .Release.Name }}.{{ .Values.kyma.apirule.host }}
   NOTE: It may take a few minutes for the APIRule to be accessible.
 
+{{- if .Values.keycloak.enabled }}
+3. Access the Keycloak instance at: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
+  NOTE: It may take a few minutes for the APIRule to be accessible.
+
+{{- end }}
 {{- else if contains "ClusterIP" .Values.service.type }}
 
 2. Access the Eclipse Dirigible instance at:

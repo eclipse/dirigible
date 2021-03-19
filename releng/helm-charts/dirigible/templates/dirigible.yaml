@@ -197,7 +197,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "dirigible.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "dirigible.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -216,9 +216,12 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: {{ include "dirigible.fullname" . }}
-              servicePort: {{ .Values.service.port }}
+              service:
+                name: {{ include "dirigible.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
 {{- end }}
 
 ---
