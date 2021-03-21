@@ -185,7 +185,7 @@ spec:
 ---
 
 {{- else if .Values.ingress.enabled }}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.keycloak.name }}
@@ -207,8 +207,11 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: {{ .Values.keycloak.name }}
-              servicePort: 8080
+              service:
+                name: {{ .Values.keycloak.name }}
+                port: 
+                  number: 8080
 {{- end }}
 {{- end }}

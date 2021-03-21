@@ -91,15 +91,25 @@ spec:
             - name: KEYCLOAK_SSL_REQUIRED
               value: "none"
             - name: KEYCLOAK_REALM
-              value: {{ .Values.keycloak.relam }}
+              value: {{ .Values.keycloak.realm }}
             - name: KEYCLOAK_CLIENT_ID
               value: {{ .Values.keycloak.clientId }}
+            {{- if .Values.ingress.enabled }}
             - name: KEYCLOAK_AUTH_SERVER_URL
-              value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}
+              value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.keycloak.name }}.{{ .Values.ingress.host }}/auth/
+            {{- else if .Values.kyma.apirule.host }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}/auth/
+            {{- else }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: https://{{ .Values.keycloak.name }}/auth/
+            {{- end }}
             {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          {{- if .Values.keycloak.enabled }}
+          {{- if .Values.dirigible.image }}
+          image: "{{ .Values.dirigible.image }}"
+          {{- else if .Values.keycloak.enabled }}
           image: "{{ .Values.image.repositoryKeycloak }}:{{ .Chart.AppVersion }}"
           {{- else if .Values.kyma.enabled }}
           image: "{{ .Values.image.repositoryKyma }}:{{ .Chart.AppVersion }}"
@@ -192,10 +202,10 @@ spec:
 ---
 
 {{- if .Values.ingress.enabled }}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "dirigible.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "dirigible.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -214,9 +224,12 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: {{ include "dirigible.fullname" . }}
-              servicePort: {{ .Values.service.port }}
+              service:
+                name: {{ include "dirigible.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
 {{- end }}
 
 ---

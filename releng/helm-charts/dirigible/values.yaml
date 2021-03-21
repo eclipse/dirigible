@@ -46,42 +46,6 @@ ingress:
   host: ""
   tls: false
 
-kyma:
-  enabled: false
-  apirule:
-    enabled: true
-    host: ""
-
-volume:
-  enabled: true
-  storage: 1Gi
-
-database:
-  enabled: false
-  image: postgres:13
-  driver: org.postgresql.Driver
-  username: dirigible
-  password: dirigible
-  storage: 1Gi
-
-keycloak:
-  enabled: false
-  install: false
-  name: keycloak
-  image: jboss/keycloak:12.0.4
-  namespace: auth
-  username: admin
-  password: admin
-  replicaCount: 1
-  realm: master
-  clientId: dirigible
-  database:
-    enabled: true
-    image: postgres:13
-    storage: 1Gi
-    username: keycloak
-    password: keycloak
-
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -99,3 +63,42 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+dirigible:
+  image: ""
+
+volume:
+  enabled: true
+  storage: 1Gi
+
+database:
+  enabled: false
+  image: postgres:13
+  driver: org.postgresql.Driver
+  username: dirigible
+  password: dirigible
+  storage: 1Gi
+
+kyma:
+  enabled: false
+  apirule:
+    enabled: true
+    host: ""
+
+keycloak:
+  enabled: false
+  install: false
+  name: keycloak
+  image: jboss/keycloak:12.0.4
+  username: admin
+  password: admin
+  replicaCount: 1
+  realm: master
+  clientId: dirigible
+  database:
+    enabled: true
+    image: postgres:13
+    storage: 1Gi
+    username: keycloak
+    password: keycloak
+
