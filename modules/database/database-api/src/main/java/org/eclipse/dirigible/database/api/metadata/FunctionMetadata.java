@@ -31,6 +31,8 @@ public class FunctionMetadata {
 	private String remarks;
 
 	private List<ParameterColumnMetadata> columns;
+	
+	private String kind = "function";
 
 	/**
 	 * Instantiates a new function metadata.
@@ -140,6 +142,19 @@ public class FunctionMetadata {
 	public void setColumns(List<ParameterColumnMetadata> columns) {
 		this.columns = columns;
 	}
-
+	
+	/**
+	 * @return the kind
+	 */
+	public String getKind() {
+		return kind;
+	}
+	
+	/**
+	 * @param kind the kind
+	 */
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
 
 }

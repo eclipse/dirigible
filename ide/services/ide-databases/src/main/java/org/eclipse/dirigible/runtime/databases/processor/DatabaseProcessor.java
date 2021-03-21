@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.databases.processor;
@@ -24,7 +24,9 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.api.metadata.DatabaseArtifactTypes;
 import org.eclipse.dirigible.databases.helpers.DatabaseErrorHelper;
+import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper.RequestExecutionCallback;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
@@ -100,6 +102,37 @@ public class DatabaseProcessor {
 			dataSource = DatabaseModule.getDataSource(type, name);
 		}
 		return dataSource;
+	}
+	
+	/**
+	 * Describe the requested artifact in JSON
+	 * 
+	 * @param dataSource the requested datasource
+	 * @param schema the requested schema
+	 * @param artifact the requested artifact
+	 * @param kind the type of the artifact
+	 * @return the JSON representation
+	 * @throws SQLException in case of an error
+	 */
+	public String describeArtifact(DataSource dataSource, String schema, String artifact, String kind) throws SQLException {
+		
+		String metadata = null;
+				
+		if (artifact != null && !artifact.trim().isEmpty()) {
+			DatabaseArtifactTypes type = DatabaseArtifactTypes.TABLE;
+			try {
+				type = DatabaseArtifactTypes.valueOf(kind);
+			} catch (Exception e) {
+				logger.warn("Kind is unknown", e);
+			}
+			switch (type) {
+				case PROCEDURE: metadata = DatabaseMetadataHelper.getProcedureMetadataAsJson(dataSource, schema, artifact); break;
+				case FUNCTION: metadata = DatabaseMetadataHelper.getFunctionMetadataAsJson(dataSource, schema, artifact); break;
+				default: metadata = DatabaseMetadataHelper.getTableMetadataAsJson(dataSource, schema, artifact); // TABLE, VIEW
+			}
+		}
+		return metadata;
+		
 	}
 
 	/**

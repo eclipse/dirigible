@@ -176,10 +176,10 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						  		var position = 'last';
 						  		
 						  		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-						  			+ '/' + schemaParent.text + '/' + tableParent.text)
+						  			+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 									.success(function(data) {
 										data.columns.forEach(function(column) {
-											var nodeText = column.name + ':' + column.type + "(" + column.size + ")";
+											var nodeText = column.name + ':' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length:"N/A")) + ")";
   											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + column.name, "icon": "fa fa-th-large"};
   											var child = $('.database').jstree("create_node", parent, newNode, position, false, false);
 										})
@@ -222,9 +222,22 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 		var icon = 'fa fa-th-large';
 		var name = f.name;
 		if(f.kind=='schema') {
-			children = f.tables.map(function(_table){
+
+			var tablesChildren = f.tables.map(function(_table){
 				return build(_table)
 			});
+			children = children.concat(tablesChildren);
+
+			var proceduresChildren = f.procedures.map(function(_procedure){
+				return build(_procedure)
+			});
+			children = children.concat(proceduresChildren);
+
+			var functionsChildren = f.functions.map(function(_function){
+				return build(_function)
+			});
+			children = children.concat(functionsChildren);
+
 			icon = 'fa fa-database';
 		} else if(f.kind=='table' && f.type === 'TABLE') {
 			//children = ['Loading...'];
@@ -233,9 +246,6 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
 			];
 			
-//			f.columns.map(function(_column){
-//				return build(_column)
-//			});
 			icon = 'fa fa-table';
 		} else if(f.kind=='table' && f.type === 'VIEW') {
 			//children = ['Loading...'];
@@ -252,10 +262,21 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
 			];
 			
-//			f.columns.map(function(_column){
-//				return build(_column)
-//			});
 			icon = 'fa fa-lock';
+		} else if(f.kind=='procedure') { // && f.type === 'XXX'
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
+			];
+			
+			icon = 'fa fa-cog';
+		} else if(f.kind=='function') { // && f.type === 'XXX'
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
+			];
+			
+			icon = 'fa fa-calculator';
 		} else if(f.kind=='column') {
 			icon = 'fa fa-th-large';
 			name += ' [<i>' + f.type + '</i>';

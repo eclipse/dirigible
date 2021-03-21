@@ -31,6 +31,8 @@ public class ProcedureMetadata {
 	private String remarks;
 
 	private List<ParameterColumnMetadata> columns;
+	
+	private String kind = "procedure";
 
 	/**
 	 * Instantiates a new procedure metadata.
@@ -140,6 +142,19 @@ public class ProcedureMetadata {
 	public void setColumns(List<ParameterColumnMetadata> columns) {
 		this.columns = columns;
 	}
-
+	
+	/**
+	 * @return the kind
+	 */
+	public String getKind() {
+		return kind;
+	}
+	
+	/**
+	 * @param kind the kind
+	 */
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
 
 }

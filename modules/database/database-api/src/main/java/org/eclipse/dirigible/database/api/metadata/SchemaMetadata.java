@@ -13,15 +13,20 @@ package org.eclipse.dirigible.database.api.metadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Schema Metadata transport object.
  */
 public class SchemaMetadata {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SchemaMetadata.class);
 
 	private String name;
 
@@ -54,9 +59,19 @@ public class SchemaMetadata {
 
 		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
 		
-		this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
+		try {
+			this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
+		} catch (SQLException e) {
+			this.procedures = new ArrayList<ProcedureMetadata>();
+			logger.error(e.getMessage(), e);
+		}
 		
-		this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
+		try {
+			this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
+		} catch (SQLException e) {
+			this.functions = new ArrayList<FunctionMetadata>();
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**

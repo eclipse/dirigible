@@ -782,6 +782,68 @@ public class DatabaseMetadataHelper {
 	}
 	
 	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param schema
+	 * 			  the schema name
+	 * @param procedure
+	 * 			  the procedure name
+	 * @return the metadata as json
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getProcedureMetadataAsJson(DataSource dataSource, String schema, String procedure) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			ProcedureMetadata procedureMetadata = describeProcedure(connection, null, schema, procedure);
+			String json = GsonHelper.GSON.toJson(procedureMetadata);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param schema
+	 * 			  the schema name
+	 * @param function
+	 * 			  the function name
+	 * @return the metadata as json
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getFunctionMetadataAsJson(DataSource dataSource, String schema, String function) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			FunctionMetadata functionMetadata = describeFunction(connection, null, schema, function);
+			String json = GsonHelper.GSON.toJson(functionMetadata);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Gets the product name
 	 *
 	 * @param dataSource
