@@ -45,6 +45,7 @@
 		<module>api-utils</module>
 		<module>api-security</module>
 		<module>api-database</module>
+		<module>api-documents</module>
 		<module>api-io</module>
 		<module>api-mail</module>
 		<module>api-messaging</module>
