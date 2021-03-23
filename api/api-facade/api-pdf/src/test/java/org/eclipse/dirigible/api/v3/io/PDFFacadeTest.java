@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.api.v3.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -25,27 +25,23 @@ public class PDFFacadeTest {
 
 	@Test
 	public void convertToPdfTest() throws IOException {
-		int expectedPdfSize = 5339;
-
 		String template = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("template.xsl"), Charset.defaultCharset());
 		String data = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("data.xml"), Charset.defaultCharset());
 
 		byte[] pdf = PDFFacade.convertToPdf(template, data);
 		
 		assertNotNull(pdf);
-		assertEquals(expectedPdfSize, pdf.length);
+		assertTrue(pdf.length > 0);
 	}
 
 	@Test
 	public void convertToPdfLargerTestDataTest() throws IOException {
-		int expectedPdfSize = 5421;
-
 		String template = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("template.xsl"), Charset.defaultCharset());
 		String data = IOUtils.toString(PDFFacadeTest.class.getResourceAsStream("data2.xml"), Charset.defaultCharset());
 
 		byte[] pdf = PDFFacade.convertToPdf(template, data);
 		
 		assertNotNull(pdf);
-		assertEquals(expectedPdfSize, pdf.length);
+		assertTrue(pdf.length > 0);
 	}
 }
