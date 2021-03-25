@@ -149,7 +149,23 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 													}.bind(this)
 												};
 											}
-											
+										}
+
+										// Drop procedure
+										if (node.original.kind === 'procedure') {
+											ctxmenu.dropProcedure = {
+												"separator_before": true,
+												"label": "Drop Procedure",
+												"action": function(data){
+													var tree = $.jstree.reference(data.reference);
+													var node = tree.get_node(data.reference);
+													if (confirmRemove("PROCEDURE", node.original.text)) {
+														var sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
+														messageHub.post({data: sqlCommand}, 'database.sql.execute');
+														$('.database').jstree(true).refresh();
+													}
+												}.bind(this)
+											};
 										}
 										return ctxmenu;
 									}

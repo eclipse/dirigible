@@ -272,6 +272,45 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 	}
 
 	/**
+	 * Execute procedure.
+	 *
+	 * @param type
+	 *            the type
+	 * @param name
+	 *            the name
+	 * @param sql
+	 *            the sql
+	 * @param request
+	 *            the request
+	 * @return the response
+	 */
+	@POST
+	@Path("{type}/{name}/procedure")
+	@ApiOperation("Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
+			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
+	public Response executeProcedure(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
+			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		if (!processor.existsDatabase(type, name)) {
+			String error = format("Datasource {0} does not exist as {1}.", name, type);
+			return createErrorResponseNotFound(error);
+		}
+
+		String accept = request.getHeader("Accept");
+		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
+			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}
+		String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), true);
+		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
+	}
+
+	/**
 	 * Execute.
 	 *
 	 * @param type
