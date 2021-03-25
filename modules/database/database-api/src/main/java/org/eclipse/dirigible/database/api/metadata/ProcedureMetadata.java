@@ -65,7 +65,7 @@ public class ProcedureMetadata {
 		if (deep) {
 			DatabaseMetadataHelper.iterateProcedureDefinition(connection, catalogName, schemaName, name, new ProcedureColumnsIteratorCallback() {
 				@Override
-				public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks) {
+				public void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks) {
 					columns.add(new ParameterColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
 				}
 			});

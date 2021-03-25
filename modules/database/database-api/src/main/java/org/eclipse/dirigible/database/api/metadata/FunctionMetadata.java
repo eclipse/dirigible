@@ -65,7 +65,7 @@ public class FunctionMetadata {
 		if (deep) {
 			DatabaseMetadataHelper.iterateFunctionDefinition(connection, catalogName, schemaName, name, new FunctionColumnsIteratorCallback() {
 				@Override
-				public void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks) {
+				public void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks) {
 					columns.add(new ParameterColumnMetadata(name, kind, type, precision, length, scale, radix, nullable, remarks));
 				}
 			});

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.h2.test;
@@ -122,12 +122,12 @@ public class DatabaseH2Test {
 			connection = dataSource.getConnection();
 			DatabaseMetadataHelper.iterateTableDefinition(connection, null, "SYS", "SYSKEYS", new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey) {
 					assertNotNull(columnName);
 				}
 			}, new IndicesIteratorCallback() {
 				@Override
-				public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
+				public void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
 						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
 					assertNotNull(indexName);
 				}

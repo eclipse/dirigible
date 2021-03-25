@@ -69,15 +69,15 @@ public class TableMetadata {
 		if (deep) {
 			DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey) {
 					columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
-							Boolean.parseBoolean(isNullable), Boolean.parseBoolean(isKey)));
+							isNullable, isKey));
 				}
 			}, new IndicesIteratorCallback() {
 				@Override
-				public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
+				public void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
 						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
-					indices.add(new IndexMetadata(indexName, indexType, columnName, Boolean.parseBoolean(isNonUnique), indexQualifier, ordinalPosition,
+					indices.add(new IndexMetadata(indexName, indexType, columnName, isNonUnique, indexQualifier, ordinalPosition,
 							sortOrder, cardinality != null ? Integer.parseInt(cardinality) : 0, pagesIndex != null ? Integer.parseInt(pagesIndex) : 0,
 							filterCondition));
 				}

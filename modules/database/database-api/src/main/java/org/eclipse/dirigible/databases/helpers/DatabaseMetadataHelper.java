@@ -497,7 +497,7 @@ public class DatabaseMetadataHelper {
 		 * @param isKey
 		 *            the is key
 		 */
-		void onColumn(String name, String type, String size, String isNullable, String isKey);
+		void onColumn(String name, String type, String size, boolean isNullable, boolean isKey);
 	}
 	
 	/**
@@ -517,7 +517,7 @@ public class DatabaseMetadataHelper {
 		 * @param nullable nullable
 		 * @param remarks remarks
 		 */
-		void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
+		void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks);
 	}
 	
 	/**
@@ -537,7 +537,7 @@ public class DatabaseMetadataHelper {
 		 * @param nullable nullable
 		 * @param remarks remarks
 		 */
-		void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
+		void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, boolean nullable, String remarks);
 	}
 
 	/**
@@ -569,7 +569,7 @@ public class DatabaseMetadataHelper {
 		 * @param filterCondition
 		 *            the filter condition
 		 */
-		void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier, String ordinalPosition,
+		void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier, String ordinalPosition,
 				String sortOrder, String cardinality, String pagesIndex, String filterCondition);
 	}
 
@@ -621,13 +621,13 @@ public class DatabaseMetadataHelper {
 				if (columnsIteratorCallback != null) {
 					String cname = columns.getString(COLUMN_NAME);
 					columnsIteratorCallback.onColumn(cname, columns.getString(TYPE_NAME), columns.getInt(COLUMN_SIZE) + EMPTY,
-							columns.getString(IS_NULLABLE), pkList.contains(cname) ? PK : EMPTY);
+							columns.getBoolean(IS_NULLABLE), pkList.contains(cname));
 				}
 			}
 			while (indexes.next()) {
 				if (indicesIteratorCallback != null) {
 					indicesIteratorCallback.onIndex(indexes.getString(INDEX_NAME), indexes.getString(TYPE_INDEX), indexes.getString(COLUMN_NAME),
-							indexes.getString(NON_UNIQUE), indexes.getString(INDEX_QUALIFIER), indexes.getShort(ORDINAL_POSITION) + EMPTY,
+							indexes.getBoolean(NON_UNIQUE), indexes.getString(INDEX_QUALIFIER), indexes.getShort(ORDINAL_POSITION) + EMPTY,
 							indexes.getString(ASC_OR_DESC), indexes.getInt(CARDINALITY) + EMPTY, indexes.getInt(PAGES_INDEX) + EMPTY,
 							indexes.getString(FILTER_CONDITION));
 				}
@@ -672,7 +672,7 @@ public class DatabaseMetadataHelper {
 				if (procedureColumnsIteratorCallback != null) {
 					String cname = columns.getString(COLUMN_NAME);
 					procedureColumnsIteratorCallback.onProcedureColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
-							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
+							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getBoolean(NULLABLE), columns.getString(REMARKS));
 				}
 			}
 
@@ -714,7 +714,7 @@ public class DatabaseMetadataHelper {
 				if (functionColumnsIteratorCallback != null) {
 					String cname = columns.getString(COLUMN_NAME);
 					functionColumnsIteratorCallback.onFunctionColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
-							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
+							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getBoolean(NULLABLE), columns.getString(REMARKS));
 				}
 			}
 
