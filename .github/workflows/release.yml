@@ -38,6 +38,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-anonymous .
         docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-anonymous:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Anonymous - Runtime
       run: |
@@ -48,6 +49,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-anonymous .
         docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime-anonymous:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push OpenShift
       run: |
@@ -58,6 +60,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-openshift .
         docker tag dirigible-openshift dirigiblelabs/dirigible-openshift:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-openshift:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Cloud Foundry
       run: |
@@ -78,6 +81,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-cf-runtime .
         docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-cf-runtime:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Kyma
       run: |
@@ -98,6 +102,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-kyma-runtime .
         docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-kyma-runtime:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible
       run: |
@@ -108,6 +113,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-all .
         docker tag dirigible-all dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Runtime
       run: |
@@ -118,6 +124,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime .
         docker tag dirigible-runtime dirigiblelabs/dirigible-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Trial
       run: |
@@ -128,6 +135,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-trial .
         docker tag dirigible-trial dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Tomcat
       run: |
@@ -135,6 +143,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-tomcat -f Dockerfile-tomcat .
         docker tag dirigible-tomcat dirigiblelabs/dirigible-tomcat:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-tomcat:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../
     - name: Push Dirigible - Keycloak
       run: |
@@ -145,6 +154,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-keycloak .
         docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Keycloak - Runtime
       run: |
@@ -155,6 +165,7 @@ jobs:
         docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-keycloak .
         docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
+        docker image prune -a -f
         cd ../../
 
 #-----------------Publish to DockerHub-------------------#
@@ -210,6 +221,16 @@ jobs:
               <artifactId>dirigible-server-all</artifactId>
               <version>${{ env.DIRIGIBLE_VERSION }}</version>
           </dependency>
+          ```
+
+          #### Helm:
+
+          All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?org=dirigiblelabs).
+
+          ```
+          helm repo add dirigible https://eclipse.github.io/dirigible
+          helm repo update
+          helm install dirigible dirigible/dirigible --version ${{ env.DIRIGIBLE_VERSION }}
           ```
 
           #### Docker images:
@@ -350,6 +371,67 @@ jobs:
         asset_content_type: application/zip
 
 #----------------Publish GitHub Release------------------#
+
+#----------------Publish Helm Release------------------#
+
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v1
+    - name: Helm Charts Release - Checkout gh-pages
+      run: |
+        mkdir charts-temp
+        cp -r releng/helm-charts/ charts-temp/
+
+        #### Git Checkout Workaround
+        git add .github/
+        git add .reuse/
+        git add LICENSES/
+        git add api/
+        git add ext/
+        git add groups/
+        git add ide/
+        git add logo/
+        git add modules/
+        git add releng/
+        git add resources/
+        git add templates/
+        git reset --hard
+        ####
+
+        git fetch
+        git checkout gh-pages
+        
+        cp charts/* .
+
+    - name: Helm Charts Release - Set Chart Version - Dirigible
+      run: |
+        cd charts-temp/helm-charts/dirigible/
+        find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
+
+    - name: Helm Charts Release
+      run: |
+
+        cp charts/* charts-temp/helm-charts/
+        cd charts-temp/helm-charts/
+
+        helm package dirigible
+        cd ..
+        helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
+        
+        cp helm-charts/index.yaml ../.
+        cp helm-charts/dirigible-$DIRIGIBLE_VERSION.tgz ../charts/
+
+        cd ..
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        git add index.yaml
+        git add charts/
+        git commit -m "Updates Helm Charts - Release $DIRIGIBLE_VERSION"
+        git push origin gh-pages
+
+        git add .
+        git reset --hard
+        git checkout master
+#----------------Publish Helm Release------------------#
 
 #-----------------Create GitHub Branch-------------------#
 

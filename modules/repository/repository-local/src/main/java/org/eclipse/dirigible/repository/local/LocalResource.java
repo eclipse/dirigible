@@ -1,29 +1,23 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.repository.local;
 
 import static java.text.MessageFormat.format;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
-import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.slf4j.Logger;
@@ -122,10 +116,11 @@ public class LocalResource extends LocalEntity implements IResource {
 		try {
 			String repositorySourcePath = getRepositoryPath().toString();
 			String repositoryTargetPath = RepositoryPath.normalizePath(path, getName());
-			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), repositorySourcePath);
-			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryTargetPath);
-			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
-		} catch (IOException e) {
+//			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), repositorySourcePath);
+//			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryTargetPath);
+			getRepository().getRepositoryDao().copyFile(repositorySourcePath, repositoryTargetPath);
+//			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
+		} catch (LocalRepositoryException e) {
 			throw new RepositoryWriteException(e);
 		}
 	}
@@ -137,8 +132,8 @@ public class LocalResource extends LocalEntity implements IResource {
 	@Override
 	public boolean exists() throws RepositoryReadException {
 		String repositoryPath = getRepositoryPath().toString();
-		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
-		return (FileSystemUtils.fileExists(localPath));
+//		String localPath = LocalWorkspaceMapper.getMappedName(getRepository(), repositoryPath);
+		return getRepository().getRepositoryDao().fileExists(repositoryPath);//  (FileSystemUtils.fileExists(localPath));
 	}
 
 	/*

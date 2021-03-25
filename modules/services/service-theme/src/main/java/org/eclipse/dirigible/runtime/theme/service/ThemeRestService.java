@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.theme.service;
@@ -56,7 +56,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 	private static final String NAME_PARAM = "name"; //$NON-NLS-1$
 
-	private static final String DEFAULT_THEME = "default"; //$NON-NLS-1$
+	private static final String DEFAULT_THEME = "fiori"; //$NON-NLS-1$
 
 	private static final String INIT_PARAM_DEFAULT_THEME = "DIRIGIBLE_THEME_DEFAULT"; //$NON-NLS-1$
 

@@ -1,3 +1,4 @@
+
 # Configuration Parameters
 
 ## Anonymous Access
@@ -18,6 +19,7 @@
 ## Repository
 
 - `DIRIGIBLE_REPOSITORY_PROVIDER`: (local | database)
+- `DIRIGIBLE_REPOSITORY_DISABLE_CACHE`: (true | false)
 
 ### Database Repository
 
@@ -203,7 +205,7 @@
 
 ### Theme
 
-- `DIRIGIBLE_THEME_DEFAULT`: (default: ../Default)
+- `DIRIGIBLE_THEME_DEFAULT`: (default: `fiori`)
 
 ### OData
 

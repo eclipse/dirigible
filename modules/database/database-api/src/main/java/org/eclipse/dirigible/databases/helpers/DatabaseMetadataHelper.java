@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.databases.helpers;
@@ -22,6 +22,8 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
+import org.eclipse.dirigible.database.api.metadata.FunctionMetadata;
+import org.eclipse.dirigible.database.api.metadata.ProcedureMetadata;
 import org.eclipse.dirigible.database.api.metadata.SchemaMetadata;
 import org.eclipse.dirigible.database.api.metadata.TableMetadata;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
@@ -55,6 +57,8 @@ public class DatabaseMetadataHelper {
 	private static final String PRCNT = "%"; //$NON-NLS-1$
 
 	private static final String COLUMN_NAME = "COLUMN_NAME"; //$NON-NLS-1$
+	
+	private static final String COLUMN_TYPE = "COLUMN_TYPE"; //$NON-NLS-1$
 
 	private static final String TYPE_NAME = "TYPE_NAME"; //$NON-NLS-1$
 
@@ -83,6 +87,22 @@ public class DatabaseMetadataHelper {
 	private static final String PAGES_INDEX = "PAGES"; //$NON-NLS-1$
 
 	private static final String FILTER_CONDITION = "FILTER_CONDITION"; //$NON-NLS-1$
+	
+	private static final String PRECISION = "PRECISION"; //$NON-NLS-1$
+	
+	private static final String LENGTH = "LENGTH"; //$NON-NLS-1$
+	
+	private static final String SCALE = "SCALE"; //$NON-NLS-1$
+	
+	private static final String RADIX = "RADIX"; //$NON-NLS-1$
+	
+	private static final String NULLABLE = "NULLABLE"; //$NON-NLS-1$
+	
+	private static final String REMARKS = "REMARKS"; //$NON-NLS-1$
+	
+	
+	
+	
 
 	/**
 	 * The Interface Filter.
@@ -122,19 +142,18 @@ public class DatabaseMetadataHelper {
 	 *            the catalog name
 	 * @param schemaNameFilter
 	 *            the schema name filter
-	 * @param tableNameFilter
-	 *            the table name filter
+	 * @param nameFilter
+	 *            the name filter
 	 * @return the list
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
 	public static List<SchemaMetadata> listSchemas(Connection connection, String catalogName, Filter<String> schemaNameFilter,
-			Filter<String> tableNameFilter) throws SQLException {
+			Filter<String> nameFilter) throws SQLException {
 		
 		ISqlDialect sqlDialect = getDialect(connection);
 
 		
-
 		List<SchemaMetadata> result = new ArrayList<SchemaMetadata>();
 		ResultSet rs = null;
 
@@ -166,7 +185,7 @@ public class DatabaseMetadataHelper {
 					if ((schemaNameFilter != null) && !schemaNameFilter.accepts(schemeName)) {
 						continue;
 					}
-					result.add(new SchemaMetadata(schemeName, connection, catalogName, tableNameFilter));
+					result.add(new SchemaMetadata(schemeName, connection, catalogName, nameFilter));
 				}
 			}
 
@@ -229,9 +248,109 @@ public class DatabaseMetadataHelper {
 		return result;
 	}
 	
+	/**
+	 * List procedures.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param procedureNameFilter
+	 *            the procedure name filter
+	 * @return the list
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static List<ProcedureMetadata> listProcedures(Connection connection, String catalogName, String schemeName, Filter<String> procedureNameFilter)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		List<ProcedureMetadata> result = new ArrayList<ProcedureMetadata>();
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getProcedures(schemeName, null, PRCNT);
+			} else {
+				rs = dmd.getProcedures(catalogName, schemeName, PRCNT);
+			}
+
+			while (rs.next()) {
+				String procedureName = rs.getString("PROCEDURE_NAME");
+				String procedureType = rs.getString("PROCEDURE_TYPE");
+				String procedureRemarks = rs.getString("REMARKS");
+				if ((procedureNameFilter != null) && !procedureNameFilter.accepts(procedureName)) {
+					continue;
+				}
+				result.add(new ProcedureMetadata(procedureName, procedureType, procedureRemarks, connection, catalogName, schemeName, false));
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+
+		return result;
+	}
 	
 	/**
-	 * List tables.
+	 * List functions.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param functionNameFilter
+	 *            the function name filter
+	 * @return the list
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static List<FunctionMetadata> listFunctions(Connection connection, String catalogName, String schemeName, Filter<String> functionNameFilter)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		List<FunctionMetadata> result = new ArrayList<FunctionMetadata>();
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getFunctions(schemeName, null, PRCNT);
+			} else {
+				rs = dmd.getFunctions(catalogName, schemeName, PRCNT);
+			}
+
+			while (rs.next()) {
+				String functionName = rs.getString("FUNCTION_NAME");
+				String functionType = rs.getString("FUNCTION_TYPE");
+				String functionRemarks = rs.getString("REMARKS");
+				if ((functionNameFilter != null) && !functionNameFilter.accepts(functionName)) {
+					continue;
+				}
+				result.add(new FunctionMetadata(functionName, functionType, functionRemarks, connection, catalogName, schemeName, false));
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+
+		return result;
+	}
+	
+	
+	/**
+	 * Describe table.
 	 *
 	 * @param connection
 	 *            the connection
@@ -272,6 +391,92 @@ public class DatabaseMetadataHelper {
 		}
 		return null;
 	}
+	
+	/**
+	 * Describe procedure.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param procedureName
+	 *            the procedure name
+	 * @return the ProcedureMetadata
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static ProcedureMetadata describeProcedure(Connection connection, String catalogName, String schemeName, String procedureName)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getProcedures(schemeName, null, normalizeTableName(procedureName));
+			} else {
+				rs = dmd.getProcedures(catalogName, schemeName, normalizeTableName(procedureName));
+			}
+
+			if (rs.next()) {
+				String procedureType = rs.getString("PROCEDURE_TYPE");
+				String procedureRemarks = rs.getString("REMARKS");
+				return new ProcedureMetadata(procedureName, procedureType, procedureRemarks, connection, catalogName, schemeName, true);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Describe function.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemeName
+	 *            the scheme name
+	 * @param functionName
+	 *            the function name
+	 * @return the FunctionMetadata
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static FunctionMetadata describeFunction(Connection connection, String catalogName, String schemeName, String functionName)
+			throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ISqlDialect sqlDialect = getDialect(connection);
+
+		ResultSet rs = null;
+		try {
+			if (sqlDialect.isCatalogForSchema()) {
+				rs = dmd.getFunctions(schemeName, null, normalizeTableName(functionName));
+			} else {
+				rs = dmd.getFunctions(catalogName, schemeName, normalizeTableName(functionName));
+			}
+
+			if (rs.next()) {
+				String functionType = rs.getString("FUNCTION_TYPE");
+				String functionRemarks = rs.getString("REMARKS");
+				return new FunctionMetadata(functionName, functionType, functionRemarks, connection, catalogName, schemeName, true);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * The Interface ColumnsIteratorCallback.
@@ -293,6 +498,46 @@ public class DatabaseMetadataHelper {
 		 *            the is key
 		 */
 		void onColumn(String name, String type, String size, String isNullable, String isKey);
+	}
+	
+	/**
+	 * The Interface ProceduresColumnsIteratorCallback.
+	 */
+	public interface ProcedureColumnsIteratorCallback {
+
+		/**
+		 * 
+		 * @param name name
+		 * @param kind kind
+		 * @param type type
+		 * @param precision precision
+		 * @param length length
+		 * @param scale scale
+		 * @param radix radix
+		 * @param nullable nullable
+		 * @param remarks remarks
+		 */
+		void onProcedureColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
+	}
+	
+	/**
+	 * The Interface FunctionColumnsIteratorCallback.
+	 */
+	public interface FunctionColumnsIteratorCallback {
+
+		/**
+		 * 
+		 * @param name name
+		 * @param kind kind
+		 * @param type type
+		 * @param precision precision
+		 * @param length length
+		 * @param scale scale
+		 * @param radix radix
+		 * @param nullable nullable
+		 * @param remarks remarks
+		 */
+		void onFunctionColumn(String name, int kind, String type, int precision, int length, int scale, int radix, int nullable, String remarks);
 	}
 
 	/**
@@ -393,6 +638,90 @@ public class DatabaseMetadataHelper {
 			pks.close();
 		}
 	}
+	
+	/**
+	 * Iterate procedure definition.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemaName
+	 *            the schema name
+	 * @param procedureName
+	 *            the procedure name
+	 * @param procedureColumnsIteratorCallback
+	 *            the procedure columns iterator callback
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static void iterateProcedureDefinition(Connection connection, String catalogName, String schemaName, String procedureName,
+			ProcedureColumnsIteratorCallback procedureColumnsIteratorCallback) throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ResultSet columns = dmd.getProcedureColumns(catalogName, schemaName, normalizeTableName(procedureName), null);
+		if (columns == null) {
+			throw new SQLException("DatabaseMetaData.getProcedureColumns returns null");
+		}
+
+		try {
+
+			
+			while (columns.next()) {
+				if (procedureColumnsIteratorCallback != null) {
+					String cname = columns.getString(COLUMN_NAME);
+					procedureColumnsIteratorCallback.onProcedureColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
+							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
+				}
+			}
+
+		} finally {
+			columns.close();
+		}
+	}
+	
+	/**
+	 * Iterate function definition.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param catalogName
+	 *            the catalog name
+	 * @param schemaName
+	 *            the schema name
+	 * @param functionName
+	 *            the function name
+	 * @param functionColumnsIteratorCallback
+	 *            the function columns iterator callback
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static void iterateFunctionDefinition(Connection connection, String catalogName, String schemaName, String functionName,
+			FunctionColumnsIteratorCallback functionColumnsIteratorCallback) throws SQLException {
+
+		DatabaseMetaData dmd = connection.getMetaData();
+
+		ResultSet columns = dmd.getFunctionColumns(catalogName, schemaName, normalizeTableName(functionName), null);
+		if (columns == null) {
+			throw new SQLException("DatabaseMetaData.getFunctionColumns returns null");
+		}
+
+		try {
+
+			
+			while (columns.next()) {
+				if (functionColumnsIteratorCallback != null) {
+					String cname = columns.getString(COLUMN_NAME);
+					functionColumnsIteratorCallback.onFunctionColumn(cname, columns.getInt(COLUMN_TYPE), columns.getString(TYPE_NAME), columns.getInt(PRECISION),
+							columns.getInt(LENGTH), columns.getInt(SCALE), columns.getInt(RADIX), columns.getInt(NULLABLE), columns.getString(REMARKS));
+				}
+			}
+
+		} finally {
+			columns.close();
+		}
+	}
 
 	/**
 	 * Gets the metadata as json.
@@ -440,6 +769,68 @@ public class DatabaseMetadataHelper {
 			connection = dataSource.getConnection();
 			TableMetadata tableMetadata = describeTable(connection, null, schema, table);
 			String json = GsonHelper.GSON.toJson(tableMetadata);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param schema
+	 * 			  the schema name
+	 * @param procedure
+	 * 			  the procedure name
+	 * @return the metadata as json
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getProcedureMetadataAsJson(DataSource dataSource, String schema, String procedure) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			ProcedureMetadata procedureMetadata = describeProcedure(connection, null, schema, procedure);
+			String json = GsonHelper.GSON.toJson(procedureMetadata);
+			return json;
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the metadata as json.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param schema
+	 * 			  the schema name
+	 * @param function
+	 * 			  the function name
+	 * @return the metadata as json
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String getFunctionMetadataAsJson(DataSource dataSource, String schema, String function) throws SQLException {
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			FunctionMetadata functionMetadata = describeFunction(connection, null, schema, function);
+			String json = GsonHelper.GSON.toJson(functionMetadata);
 			return json;
 		} finally {
 			if (connection != null) {

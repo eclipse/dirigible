@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql;
@@ -226,6 +226,15 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 	@Override
 	public boolean exists(Connection connection, String table) throws SQLException {
 		return this.dialect.exists(connection, table);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String, java.lang.int)
+	 */
+	@Override
+	public boolean exists(Connection connection, String name, int type) throws SQLException {
+		return this.dialect.exists(connection, name, type);
 	}
 
 	/*

@@ -27,6 +27,7 @@ jobs:
         docker build -t dirigible-anonymous .
         docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous
         docker push dirigiblelabs/dirigible-anonymous
+        docker image prune -a -f
         cd ../../
     - name: Push Anonymous - Runtime
       run: |
@@ -37,6 +38,7 @@ jobs:
         docker build -t dirigible-runtime-anonymous .
         docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous
         docker push dirigiblelabs/dirigible-runtime-anonymous
+        docker image prune -a -f
         cd ../../
     - name: Push OpenShift
       run: |
@@ -47,6 +49,7 @@ jobs:
         docker build -t dirigible-openshift .
         docker tag dirigible-openshift dirigiblelabs/dirigible-openshift
         docker push dirigiblelabs/dirigible-openshift
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Cloud Foundry
       run: |
@@ -57,6 +60,7 @@ jobs:
         docker build -t dirigible-sap-cf .
         docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf
         docker push dirigiblelabs/dirigible-sap-cf
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Cloud Foundry - Runtime
       run: |
@@ -67,6 +71,7 @@ jobs:
         docker build -t dirigible-sap-cf-runtime .
         docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime
         docker push dirigiblelabs/dirigible-sap-cf-runtime
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Kyma
       run: |
@@ -77,6 +82,7 @@ jobs:
         docker build -t dirigible-sap-kyma .
         docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma
         docker push dirigiblelabs/dirigible-sap-kyma
+        docker image prune -a -f
         cd ../../
     - name: Push SAP Kyma - Runtime
       run: |
@@ -87,6 +93,7 @@ jobs:
         docker build -t dirigible-sap-kyma-runtime .
         docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime
         docker push dirigiblelabs/dirigible-sap-kyma-runtime
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible
       run: |
@@ -97,6 +104,7 @@ jobs:
         docker build -t dirigible-all .
         docker tag dirigible-all dirigiblelabs/dirigible-all
         docker push dirigiblelabs/dirigible-all
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Runtime
       run: |
@@ -107,6 +115,7 @@ jobs:
         docker build -t dirigible-runtime .
         docker tag dirigible-runtime dirigiblelabs/dirigible-runtime
         docker push dirigiblelabs/dirigible-runtime
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Trial
       run: |
@@ -117,6 +126,7 @@ jobs:
         docker build -t dirigible-trial .
         docker tag dirigible-trial dirigiblelabs/dirigible-trial
         docker push dirigiblelabs/dirigible-trial
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Tomcat
       run: |
@@ -124,6 +134,7 @@ jobs:
         docker build -t dirigible-tomcat -f Dockerfile-tomcat .
         docker tag dirigible-tomcat dirigiblelabs/dirigible-tomcat
         docker push dirigiblelabs/dirigible-tomcat
+        docker image prune -a -f
         cd ../
     - name: Push Dirigible - Keycloak
       run: |
@@ -134,6 +145,7 @@ jobs:
         docker build -t dirigible-keycloak .
         docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak
         docker push dirigiblelabs/dirigible-keycloak
+        docker image prune -a -f
         cd ../../
     - name: Push Dirigible - Keycloak - Runtime
       run: |
@@ -144,4 +156,5 @@ jobs:
         docker build -t dirigible-runtime-keycloak .
         docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak
         docker push dirigiblelabs/dirigible-runtime-keycloak
+        docker image prune -a -f
         cd ../../

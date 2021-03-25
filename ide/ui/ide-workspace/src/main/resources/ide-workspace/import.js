@@ -36,8 +36,8 @@ angular
 }])
 .factory('$messageHub', [function(){
 	var messageHub = new FramesMessageHub();	
-	var message = function(evtName, data){
-		messageHub.post({data: data}, 'properties.' + evtName);
+	var message = function(evtName, evtData){
+		messageHub.post({data: evtData}, evtName);
 	};
 	var on = function(topic, callback){
 		messageHub.subscribe(callback, topic);
@@ -113,7 +113,7 @@ angular
 //        console.info('onCompleteItem', fileItem, response, status, headers);
     };
     uploader.onCompleteAll = function() {
-//        console.info('onCompleteAll');
+		$messageHub.message('workspace.refresh');
     };
 
 		

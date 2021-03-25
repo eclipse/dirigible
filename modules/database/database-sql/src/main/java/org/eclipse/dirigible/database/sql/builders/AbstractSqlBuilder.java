@@ -69,7 +69,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	/**
 	 * Whether the names of tables, columns, indices are case sensitive
 	 * 
-	 * @return
+	 * @return true if set
 	 */
 	protected boolean isCaseSensitive() {
 		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
@@ -116,7 +116,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the transformed string
 	 */
 	protected String encapsulateMany(String line) {
-		String regex = "([^a-zA-Z0-9_#$']+)'*\\1*";
+		String regex = "([^a-zA-Z0-9_#$'::]+)'*\\1*";
 		String[] words = line.split(regex);
 		Set<Set> functionsNames = getDialect().getFunctionsNames();
 		for (String word : words) {

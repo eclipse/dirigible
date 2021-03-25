@@ -1,0 +1,217 @@
+{{- if .Values.keycloak.install }}
+{{- if .Values.keycloak.database.enabled }}
+### Keycloak Database (PostgreSQL) Enabled###
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.keycloak.name }}-database-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.keycloak.database.storage }}
+### Keycloak Database (PostgreSQL) Enabled###
+---
+### Keycloak Database (PostgreSQL) Enabled###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.keycloak.name }}-database
+  labels:
+    app: {{ .Values.keycloak.name }}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.keycloak.name }}-database
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.keycloak.name }}-database
+    spec:
+      containers:
+        - name: {{ .Values.keycloak.name }}-database
+          image: {{ .Values.keycloak.database.image }}
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: {{ .Values.keycloak.name }}-database-volume
+            mountPath: /var/lib/postgresql/data
+          env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+            - name: POSTGRES_USER
+              value: {{ .Values.keycloak.database.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.keycloak.database.password }}
+          ports:
+            - name: jdbc
+              containerPort: 5432
+              protocol: TCP
+      volumes:
+        - name: {{ .Values.keycloak.name }}-database-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.keycloak.name }}-database-claim
+### Keycloak Database (PostgreSQL) Enabled###
+---
+### Keycloak Database (PostgreSQL) Enabled###
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.keycloak.name }}-database
+  labels:
+    app: {{ .Values.keycloak.name }}-database
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: jdbc
+      protocol: TCP
+      name: jdbc
+  selector:
+    app: {{ .Values.keycloak.name }}-database
+### Keycloak Database (PostgreSQL) Enabled###
+{{- end }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.keycloak.name }}
+  labels:
+    app: {{ .Values.keycloak.name }}
+spec:
+  replicas: {{ .Values.keycloak.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.keycloak.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.keycloak.name }}
+    spec:
+      {{- if .Values.keycloak.database.enabled }}
+      initContainers:
+        - name: wait-db-ready
+          image: busybox:1.28
+          command:
+            - sh
+            - -c
+            - for i in {1..15}; do echo "Waiting for database creation."; sleep 2; done;
+        # - name: check-db-ready
+        #   image: postgres:9.6.5
+        #   command:
+        #     - sh
+        #     - -c
+        #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
+      {{- end }}
+      containers:
+        - name: {{ .Values.keycloak.name }}
+          image: {{ .Values.keycloak.image }}
+          imagePullPolicy: Always
+          env:
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
+            - name: KEYCLOAK_USER
+              value: {{ .Values.keycloak.username }}
+            - name: KEYCLOAK_PASSWORD
+              value: {{ .Values.keycloak.password }}
+            {{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  "https://{{ .Values.keycloak.name }}.{{ .Values.kyma.apirule.host }}/auth/"
+            {{- else if .Values.ingress.enabled }}
+            - name: KEYCLOAK_FRONTEND_URL
+              value:  "http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.keycloak.name }}.{{ .Values.ingress.host }}/auth/"
+            {{- end }}
+            {{- if .Values.keycloak.database.enabled }}
+            - name: DB_VENDOR
+              value: postgres
+            - name: DB_USER
+              value: {{ .Values.keycloak.database.username }}
+            - name: DB_PASSWORD
+              value: {{ .Values.keycloak.database.password }}
+            - name: DB_ADDR
+              value: {{ .Values.keycloak.name }}-database
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.keycloak.name }}
+  labels:
+    app: {{ .Values.keycloak.name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.keycloak.name }}
+
+---
+
+{{- if and (eq .Values.kyma.enabled true) (eq .Values.kyma.apirule.enabled true) }}
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: {{ .Values.keycloak.name }}
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+  - accessStrategies:
+    - config: {}
+      handler: noop
+    methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - HEAD
+    path: /.*
+  service:
+    host: {{ .Values.keycloak.name }}
+    name: {{ .Values.keycloak.name }}
+    port: 8080
+
+---
+
+{{- else if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.keycloak.name }}
+  labels:
+    app: {{ .Values.keycloak.name }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+      - {{ .Values.keycloak.name }}.{{ .Values.ingress.host }}
+      secretName: {{ .Values.keycloak.name }}-tls
+{{- end }}
+  rules:
+    - host: {{ .Values.keycloak.name }}.{{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.keycloak.name }}
+                port: 
+                  number: 8080
+{{- end }}
+{{- end }}

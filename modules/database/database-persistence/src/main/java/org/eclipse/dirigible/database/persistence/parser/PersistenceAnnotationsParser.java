@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.parser;
@@ -31,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.database.persistence.PersistenceException;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
@@ -148,7 +149,10 @@ public class PersistenceAnnotationsParser {
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {
-				logger.warn(format("No Column annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				Annotation annotationTransient = field.getAnnotation(Transient.class);
+				if (annotationTransient == null) {
+					logger.warn(format("No Column nor Transient annotation found in Class {0} and Field {1}", clazz, field.getName()));
+				}
 				continue;
 			}
 			Column column = (Column) annotationColumn;

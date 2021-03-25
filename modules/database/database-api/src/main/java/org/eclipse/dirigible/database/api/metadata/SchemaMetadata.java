@@ -1,33 +1,42 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.api.metadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Schema Metadata transport object.
  */
 public class SchemaMetadata {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SchemaMetadata.class);
 
 	private String name;
 
 	private String kind = "schema";
 
 	private List<TableMetadata> tables;
+	
+	private List<ProcedureMetadata> procedures;
+	
+	private List<FunctionMetadata> functions;
 
 	/**
 	 * Instantiates a new schema metadata.
@@ -38,16 +47,31 @@ public class SchemaMetadata {
 	 *            the connection
 	 * @param catalogName
 	 *            the catalog name
-	 * @param tableNameFilter
-	 *            the table name filter
+	 * @param nameFilter
+	 *            the name filter
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public SchemaMetadata(String name, Connection connection, String catalogName, Filter<String> tableNameFilter) throws SQLException {
+	public SchemaMetadata(String name, Connection connection, String catalogName, Filter<String> nameFilter) throws SQLException {
 		super();
+		
 		this.name = name;
 
-		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, tableNameFilter);
+		this.tables = DatabaseMetadataHelper.listTables(connection, catalogName, name, nameFilter);
+		
+		try {
+			this.procedures = DatabaseMetadataHelper.listProcedures(connection, catalogName, name, nameFilter);
+		} catch (SQLException e) {
+			this.procedures = new ArrayList<ProcedureMetadata>();
+			logger.error(e.getMessage(), e);
+		}
+		
+		try {
+			this.functions = DatabaseMetadataHelper.listFunctions(connection, catalogName, name, nameFilter);
+		} catch (SQLException e) {
+			this.functions = new ArrayList<FunctionMetadata>();
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -76,6 +100,22 @@ public class SchemaMetadata {
 	 */
 	public List<TableMetadata> getTables() {
 		return tables;
+	}
+	
+	
+
+	/**
+	 * @return the procedures
+	 */
+	public List<ProcedureMetadata> getProcedures() {
+		return procedures;
+	}
+	
+	/**
+	 * @return the functions
+	 */
+	public List<FunctionMetadata> getFunctions() {
+		return functions;
 	}
 
 	/**

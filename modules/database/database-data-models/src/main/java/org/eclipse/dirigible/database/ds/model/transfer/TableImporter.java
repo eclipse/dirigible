@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.ds.model.transfer;
@@ -14,20 +14,18 @@ package org.eclipse.dirigible.database.ds.model.transfer;
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.sql.Types;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
+import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,20 +33,7 @@ public class TableImporter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TableImporter.class);
 
-	private static final String CLOSE = ")"; //$NON-NLS-1$
-
-	private static final String VALUES = " VALUES ("; //$NON-NLS-1$
-
-	private static final String INSERT_INTO = "INSERT INTO "; //$NON-NLS-1$
-
-	private static final String Q = "?"; //$NON-NLS-1$
-
-	private static final String COMMA = ","; //$NON-NLS-1$
-
 	private static final int BATCH_SIZE = 500;
-
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-	private static final DateFormat DATE_FORMAT_1 = new SimpleDateFormat("yyyy-MM-dd");
 
 	private byte[] content;
 	private String tableName;
@@ -75,18 +60,19 @@ public class TableImporter {
 
 	private void insertRecords(Connection connection, List<String[]> records, String tableName) throws SQLException, ParseException {
 		logger.debug("Start importing data for the table: {} ...", tableName);
-		int columnsCount = records.get(0).length;
+		InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
+	    insertBuilder.into(tableName);
+	    
+	    List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName);
+	    for (int i = 0; i < availableTableColumns.size(); i++) {
+	    	String columnName = availableTableColumns.get(i).getName();
+			insertBuilder.column("\"" + columnName + "\"").value("?");
+		}
+	        
 		PreparedStatement insertStatement = connection
-				.prepareStatement(INSERT_INTO + tableName + VALUES + generateQM(columnsCount) + CLOSE);
+				.prepareStatement(insertBuilder.build());
 
 		int recordsInBatch = 0;
-
-		List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName);
-		
-		for (TableColumn tableColumn : availableTableColumns) {
-			logger.debug("    {}: {}", tableColumn.getName(), tableColumn.getType());
-		}
-		
 		int rn = 0;
 		for (String[] record : records) {
 			rn++;
@@ -123,26 +109,18 @@ public class TableImporter {
 						insertStatement.setBigDecimal(i + 1, new BigDecimal(record[i]));
 						break;
 					case Types.DATE:
-						if (record[i] != null) {							
-							try {
-								insertStatement.setDate(i + 1, new Date(DATE_FORMAT.parse(record[i]).getTime()));
-							} catch (ParseException e) {
-								insertStatement.setDate(i + 1, new Date(DATE_FORMAT_1.parse(record[i]).getTime()));
-							}
-						}
-						insertStatement.setDate(i + 1, null);
+						insertStatement.setDate(i + 1, DateTimeUtils.parseDate(record[i]));
 						break;
 					case Types.TIME:
-						insertStatement.setTime(i + 1, new Time(DateFormat.getInstance().parse(record[i]).getTime()));
+						insertStatement.setTime(i + 1,DateTimeUtils.parseTime(record[i]));
 						break;
 					case Types.TIMESTAMP:
-						insertStatement.setTimestamp(i + 1, new Timestamp(DateFormat.getInstance().parse(record[i]).getTime()));
+						insertStatement.setTimestamp(i + 1, DateTimeUtils.parseDateTime(record[i]));
 						break;
 					default:
 						insertStatement.setString(i + 1, record[i]);
 						break;
 				}
-				
 				
 			}
 			insertStatement.addBatch();
@@ -157,18 +135,6 @@ public class TableImporter {
 			insertStatement.executeBatch();
 		}
 		logger.debug("Done importing data for the table: {}, records: {}", tableName, rn);
-	}
-
-	private String generateQM(int number) {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < number; i++) {
-			result.append(Q);
-
-			if ((i + 1) < number) {
-				result.append(COMMA);
-			}
-		}
-		return result.toString();
 	}
 
 	private void closeConnection(Connection con) throws SQLException {

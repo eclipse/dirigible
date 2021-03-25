@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/eclipse/dirigible/workflows/Build/badge.svg)](https://github.com/eclipse/dirigible/actions?query=workflow%3ABuild)
 [![Eclipse License](https://img.shields.io/badge/License-EPL%202.0-brightgreen.svg)](https://github.com/eclipse/dirigible/blob/master/LICENSE)
 [![Download Dirigible](https://img.shields.io/badge/download-releases-green.svg)](http://download.dirigible.io/)
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/eclipse-dirigible)](https://artifacthub.io/packages/search?org=dirigiblelabs)
 [![Maven Central](https://img.shields.io/maven-central/v/org.eclipse.dirigible/dirigible-server-all.svg)](https://search.maven.org/#search%7Cga%7C1%7Corg.eclipse.dirigible)
 [![GitHub contributors](https://img.shields.io/github/contributors/eclipse/dirigible.svg)](https://github.com/eclipse/dirigible/graphs/contributors)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Feclipse%2Fdirigible.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Feclipse%2Fdirigible?ref=badge_shield)

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.api.v3.security;
@@ -90,13 +90,13 @@ public class UserFacade implements IScriptingFacade {
 	public static final void setName(String userName) throws ContextException {
 		if (Configuration.isAnonymousModeEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_IDENTIFIER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
 		} else if (Configuration.isAnonymousUserEnabled()) {
 			setContextProperty(DIRIGIBLE_ANONYMOUS_USER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the anonymous mode is enabled", userName));
 		} else if (Configuration.isJwtModeEnabled()) {
 			setContextProperty(DIRIGIBLE_JWT_USER, userName);
-			logger.warn(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
+			logger.debug(format("User name has been set programmatically {0} to the session as the JWT mode is enabled", userName));
 		} else {
 			throw new SecurityException("Setting the user name programmatically is supported only when the anonymous mode is enabled");
 		}
