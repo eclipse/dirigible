@@ -116,7 +116,7 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the transformed string
 	 */
 	protected String encapsulateMany(String line) {
-		String regex = "([^a-zA-Z0-9_#$'::]+)'*\\1*";
+		String regex = "([^a-zA-Z0-9_#$'::-]+)'*\\1*";
 		String[] words = line.split(regex);
 		Set<Set> functionsNames = getDialect().getFunctionsNames();
 		for (String word : words) {
