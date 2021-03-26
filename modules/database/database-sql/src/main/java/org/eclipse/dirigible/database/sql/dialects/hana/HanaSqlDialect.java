@@ -42,6 +42,7 @@ public class HanaSqlDialect extends
 			statement.executeUpdate();
 			return true;
 		}catch(Exception e){
+
 			throw new SQLException("Sequence does not exist: " + sequence);
 		}
 	}
