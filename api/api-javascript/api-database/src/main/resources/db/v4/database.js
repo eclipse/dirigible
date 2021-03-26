@@ -655,6 +655,13 @@ function CallableStatement() {
  */
 function ResultSet(internalResultset) {
 
+	this.toJson = function(limited) {
+		if (limited === undefined || limited === false) {
+			limited = false;
+		}
+		return org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper.toJson(this.native, limited);
+	};
+
 	this.close = function() {
 		this.native.close();
 	};

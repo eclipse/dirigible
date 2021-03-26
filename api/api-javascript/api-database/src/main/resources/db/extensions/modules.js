@@ -23,6 +23,9 @@ exports.getContent = function() {
 		name: "db/v4/ormstatements",
 		description: "Database ORM Statements API"
 	}, {
+		name: "db/v4/procedure",
+		description: "Database Procedure API"
+	}, {
 		name: "db/v4/query",
 		description: "Database Query API"
 	}, {
