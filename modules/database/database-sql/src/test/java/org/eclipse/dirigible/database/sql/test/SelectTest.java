@@ -511,6 +511,44 @@ public class SelectTest {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
 	}
+
+	/**
+	 * Select count and where clause is in case sensitive mode
+	 */
+	@Test
+	public void selectArtifactWithNamespaceAndSchemaNameCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+					.select()
+					.column("COUNT(*)")
+					.from("\"ShemaName\".\"projName.db::MySynonym\"")
+					.build();
+			assertNotNull(sql);
+			assertEquals("SELECT COUNT(*) FROM \"ShemaName\".\"projName.db::MySynonym\"", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
+
+	/**
+	 * Select count and where clause is in case sensitive mode
+	 */
+	@Test
+	public void selectArtifactWithNamespaceCaseSensitive() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+					.select()
+					.column("COUNT(*)")
+					.from("projName::MySynonym")
+					.build();
+			assertNotNull(sql);
+			assertEquals("SELECT COUNT(*) FROM \"projName::MySynonym\"", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
 	
 	/**
 	 * Select column and where clause in case sensitive mode
