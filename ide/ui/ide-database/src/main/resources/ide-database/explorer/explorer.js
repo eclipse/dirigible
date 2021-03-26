@@ -151,10 +151,10 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 											}
 										}
 
-										// Drop procedure
+										// Procedure related actions
 										if (node.original.kind === 'procedure') {
 											ctxmenu.dropProcedure = {
-												"separator_before": true,
+												"separator_before": false,
 												"label": "Drop Procedure",
 												"action": function(data){
 													var tree = $.jstree.reference(data.reference);
@@ -364,6 +364,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						$scope.selectedDatasource = data[0];
 						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
 						messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
+						$scope.datasourceChanged();
 					} else {
 						$scope.selectedDatasource = undefined;
 					}
