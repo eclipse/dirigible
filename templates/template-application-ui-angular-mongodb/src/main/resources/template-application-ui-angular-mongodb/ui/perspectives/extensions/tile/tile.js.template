@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 SAP and others.
+ * Copyright (c) 2010-2021 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,12 @@
 var dao = require("${projectName}/data/dao/${perspectiveName}/${name}.js")
 
 exports.getTile = function(relativePath) {
+	let count = "n/a";
+	try {
+		count = dao.customDataCount();	
+	} catch (e) {
+		console.error("Error occured while involking '${projectName}/data/dao/${perspectiveName}/${name}.customDataCount()': " + e);
+	}
 	return {
 #if($title)
 		name: "${title}",
@@ -32,7 +38,7 @@ exports.getTile = function(relativePath) {
 		icon: "life-ring",
  #end
 		location: relativePath + "services/v4/web/${projectName}/ui/${perspectiveName}/index.html",
-		count: dao.customDataCount(),
+		count: count,
 #if($perspectiveOrder)
 		order: "${perspectiveOrder}"
 #else
