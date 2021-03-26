@@ -71,7 +71,7 @@
 			</ul>
 
 			<div class="tab-content">
-				<div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in active">
+				<div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in" ng-class="{active: $index === 0}">
 					<table class="table table-striped"">
 						<thead>
 							<tr>
