@@ -1,55 +1,97 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.test.hana;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
- * The Class SequenceTest.
+ * The Class SynonymTest.
  */
 public class SynonymTest {
-	
-	/**
-	 * Creates the sequence.
-	 */
-	@Test
-	public void createSequence() {
-		String sql = SqlFactory.getNative(new HanaSqlDialect())
-			.create()
-			.synonym("CUSTOMERS_SEQUENCE")
-			.forSource("CUSTOMERS")
-			.build();
-		
-		assertNotNull(sql);
-		assertEquals("CREATE SYNONYM CUSTOMERS_SEQUENCE FOR CUSTOMERS", sql);
-	}
-	
-	/**
-	 * Drop sequnce.
-	 */
-	@Test
-	public void dropSequnce() {
-		String sql = SqlFactory.getNative(new HanaSqlDialect())
-			.drop()
-			.synonym("CUSTOMERS_SEQUENCE")
-			.build();
-		
-		assertNotNull(sql);
-		assertEquals("DROP SYNONYM CUSTOMERS_SEQUENCE", sql);
-	}
+
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private Connection mockConnection;
+
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private PreparedStatement mockPrepareStatement;
+
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private ResultSet mockresultSet;
+
+    @Before
+    public void openMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+
+    @Test
+    public void executeCreateSynonym() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                .create()
+                .synonym("CUSTOMERS_SEQUENCE")
+                .forSource("CUSTOMERS")
+                .build();
+
+        assertNotNull(sql);
+        assertEquals("CREATE SYNONYM CUSTOMERS_SEQUENCE FOR CUSTOMERS", sql);
+    }
+
+
+    @Test
+    public void executeDropSynonym() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                .drop()
+                .synonym("CUSTOMERS_SEQUENCE")
+                .build();
+
+        assertNotNull(sql);
+        assertEquals("DROP SYNONYM CUSTOMERS_SEQUENCE", sql);
+    }
+
+    @Test
+    public void checkIfSynonymExist() throws SQLException {
+        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
+        when(mockPrepareStatement.executeQuery()).thenReturn(mockresultSet);
+        when(mockresultSet.next()).thenReturn(true);
+        when(mockresultSet.getInt(any())).thenReturn(1);
+        boolean exist = SqlFactory.getNative(new HanaSqlDialect())
+                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+        assertTrue(exist);
+    }
+
+    @Test
+    public void checkIfSynonymDoesNotExist() throws SQLException {
+        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
+        when(mockPrepareStatement.executeQuery()).thenReturn(mockresultSet);
+        when(mockresultSet.next()).thenReturn(false);
+        boolean exist = SqlFactory.getNative(new HanaSqlDialect())
+                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+        assertFalse(exist);
+    }
 
 }
