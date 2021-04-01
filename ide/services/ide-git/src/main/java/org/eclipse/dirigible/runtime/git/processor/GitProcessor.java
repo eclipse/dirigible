@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.git.processor;
@@ -61,8 +61,6 @@ import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.jgit.lib.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Processing the Git Service incoming requests.
@@ -70,8 +68,6 @@ import org.slf4j.LoggerFactory;
 public class GitProcessor {
 
 	private static final String DOT_GIT = ".git";
-
-	private static final Logger logger = LoggerFactory.getLogger(GitProcessor.class);
 
 	@Inject
 	private WorkspacesCoreService workspacesCoreService;
@@ -116,8 +112,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void pull(String workspace, GitPullModel model) {
+	public void pull(String workspace, GitPullModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		pullCommand.execute(workspaceApi, model.getProjects(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
 	}
@@ -127,8 +124,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void push(String workspace, GitPushModel model) {
+	public void push(String workspace, GitPushModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		pushCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd(), model.isAutoCommit());
 	}
@@ -138,8 +136,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void reset(String workspace, GitResetModel model) {
+	public void reset(String workspace, GitResetModel model) throws GitConnectorException {
 		resetCommand.execute(workspace, model.getProjects());
 	}
 
@@ -174,8 +173,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void share(String workspace, GitShareModel model) {
+	public void share(String workspace, GitShareModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject project = getProject(workspaceApi, model.getProject());
 		shareCommand.execute(workspaceApi, project, model.getRepository(), model.getBranch(), model.getCommitMessage(), model.getUsername(),
@@ -187,8 +187,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void checkout(String workspace, GitCheckoutModel model) {
+	public void checkout(String workspace, GitCheckoutModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		checkoutCommand.execute(workspaceApi, model.getProject(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
 	}
@@ -198,8 +199,9 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
+	 * @throws GitConnectorException 
 	 */
-	public void commit(String workspace, GitPushModel model) {
+	public void commit(String workspace, GitPushModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		commitCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd());
 	}

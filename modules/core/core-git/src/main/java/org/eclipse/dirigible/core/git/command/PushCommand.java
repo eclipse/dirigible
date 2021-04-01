@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -75,9 +75,10 @@ public class PushCommand {
 	 *            the add
 	 * @param commit
 	 *            the add
+	 * @throws GitConnectorException 
 	 */
 	public void execute(final IWorkspace workspace, List<String> repositories, final String commitMessage, final String username,
-			final String password, final String email, final String branch, boolean add, boolean commit) {
+			final String password, final String email, final String branch, boolean add, boolean commit) throws GitConnectorException {
 		if (repositories.size() == 0) {
 			logger.warn("No repository is selected for the Push action");
 		}
@@ -108,11 +109,12 @@ public class PushCommand {
 	 *            the password
 	 * @param email
 	 *            the email
+	 * @throws GitConnectorException 
 	 */
 	private void pushProjectToGitRepository(final IWorkspace workspace, String repositoryName, final String commitMessage,
-			final String username, final String password, final String email, final String branch, boolean add, boolean commit) {
+			final String username, final String password, final String email, final String branch, boolean add, boolean commit) throws GitConnectorException {
 
-		final String errorMessage = String.format("Error occurred while pushing repository [%s]. ", repositoryName);
+		String errorMessage = String.format("Error occurred while pushing repository [%s]. ", repositoryName);
 		
 		try {
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
@@ -151,25 +153,20 @@ public class PushCommand {
 						numberOfConflictingFiles, gitRepositoryBranch);
 				logger.warn(message);
 			}
-		} catch (IOException e) {
-			logger.error(errorMessage, e);
-		} catch (InvalidRemoteException e) {
-			logger.error(errorMessage, e);
-		} catch (TransportException e) {
-			logger.error(errorMessage, e);
+		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
 				if (rootCause instanceof UnknownHostException) {
-					logger.error("Please check if proxy settings are set properly");
+					errorMessage += " Please check your network, or if proxy settings are set properly";
 				} else {
-					logger.error("Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]");
+					errorMessage += " Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]";
 				}
+			} else {
+				errorMessage += " " + e.getMessage();
 			}
-		} catch (GitAPIException e) {
-			logger.error(errorMessage, e);
-		} catch (GitConnectorException e) {
-			logger.error(errorMessage, e);
+			logger.error(errorMessage);
+			throw new GitConnectorException(errorMessage, e);
 		}
 	}
 }

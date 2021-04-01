@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -72,9 +72,10 @@ public class CheckoutCommand {
 	 *            the branch
 	 * @param publishAfterPull
 	 *            the publish after pull
+	 * @throws GitConnectorException 
 	 */
 	public void execute(final IWorkspace workspace, String repositoryName, final String username, final String password, 
-			final String branch, final boolean publishAfterPull) {
+			final String branch, final boolean publishAfterPull) throws GitConnectorException {
 		boolean atLeastOne = false;
 		if (verifier.verify(workspace.getName(), repositoryName)) {
 			logger.debug(String.format("Start checkout %s repository and %s branch...", repositoryName, branch));
@@ -100,10 +101,11 @@ public class CheckoutCommand {
 	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
+	 * @throws GitConnectorException 
 	 */
 	boolean checkoutProjectFromGitRepository(final IWorkspace workspace, String repositoryName, 
-			final String username, final String password, final String branch) {
-		final String errorMessage = String.format("Error occurred while pulling repository [%s]", repositoryName);
+			final String username, final String password, final String branch) throws GitConnectorException {
+		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);
 
 		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
 		for (String projectName : projects) {
@@ -127,28 +129,20 @@ public class CheckoutCommand {
 					repositoryName, numberOfConflictingFiles);
 				logger.error(message);
 			}
-		} catch (CheckoutConflictException e) {
-			logger.error(errorMessage, e);
-		} catch (IOException e) {
-			logger.error(errorMessage, e);
-		} catch (InvalidRemoteException e) {
-			logger.error(errorMessage, e);
-		} catch (TransportException e) {
-			logger.error(errorMessage, e);
+		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
-				logger.error(errorMessage, e);
 				if (rootCause instanceof UnknownHostException) {
-					logger.error("Please check if proxy settings are set properly");
+					errorMessage += " Please check your network, or if proxy settings are set properly";
 				} else {
-					logger.error("Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]");
+					errorMessage += " Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]";
 				}
+			} else {
+				errorMessage += " " + e.getMessage();
 			}
-		} catch (GitAPIException e) {
-			logger.error(errorMessage, e);
-		} catch (GitConnectorException e) {
-			logger.error(errorMessage, e);
+			logger.error(errorMessage);
+			throw new GitConnectorException(errorMessage, e);
 		}
 		return true;
 	}
