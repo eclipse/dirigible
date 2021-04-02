@@ -343,22 +343,26 @@ public class HanaSqlDialect extends
     @Override
     public boolean exists(Connection connection, String artefact, int type) throws SQLException {
         boolean exists = false;
-            switch (type) {
-                case DatabaseArtifactTypes.TABLE:
-                case DatabaseArtifactTypes.VIEW:
-                case DatabaseArtifactTypes.SYNONYM:
-                    exists = count(connection, artefact) > 0;
-                    break;
-                case DatabaseArtifactTypes.FUNCTION:
-                    exists = isFunctionExisting(connection, artefact);
-                    break;
-                case DatabaseArtifactTypes.PROCEDURE:
-                    exists = isProcedureExisting(connection, artefact);
-                    break;
-                case DatabaseArtifactTypes.SEQUENCE:
-                    exists = isSequenceExisting(connection, artefact);
-                    break;
-            }
+           try {
+               switch (type) {
+                   case DatabaseArtifactTypes.TABLE:
+                   case DatabaseArtifactTypes.VIEW:
+                   case DatabaseArtifactTypes.SYNONYM:
+                       exists = count(connection, artefact) > 0;
+                       break;
+                   case DatabaseArtifactTypes.FUNCTION:
+                       exists = isFunctionExisting(connection, artefact);
+                       break;
+                   case DatabaseArtifactTypes.PROCEDURE:
+                       exists = isProcedureExisting(connection, artefact);
+                       break;
+                   case DatabaseArtifactTypes.SEQUENCE:
+                       exists = isSequenceExisting(connection, artefact);
+                       break;
+               }
+           } catch(Exception e) {
+               // Do nothing, because the artifact do not exist
+           }
         return exists;
     }
 
