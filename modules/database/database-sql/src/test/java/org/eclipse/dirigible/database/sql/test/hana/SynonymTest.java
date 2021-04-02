@@ -41,7 +41,7 @@ public class SynonymTest {
     private PreparedStatement mockPrepareStatement;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private ResultSet mockresultSet;
+    private ResultSet mockResultSet;
 
     @Before
     public void openMocks() {
@@ -76,9 +76,9 @@ public class SynonymTest {
     @Test
     public void checkIfSynonymExist() throws SQLException {
         when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-        when(mockPrepareStatement.executeQuery()).thenReturn(mockresultSet);
-        when(mockresultSet.next()).thenReturn(true);
-        when(mockresultSet.getInt(any())).thenReturn(1);
+        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(1)).thenReturn(1);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
                 .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
         assertTrue(exist);
@@ -87,8 +87,8 @@ public class SynonymTest {
     @Test
     public void checkIfSynonymDoesNotExist() throws SQLException {
         when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-        when(mockPrepareStatement.executeQuery()).thenReturn(mockresultSet);
-        when(mockresultSet.next()).thenReturn(false);
+        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
                 .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
         assertFalse(exist);
