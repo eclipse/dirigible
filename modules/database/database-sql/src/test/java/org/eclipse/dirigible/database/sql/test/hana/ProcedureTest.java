@@ -21,24 +21,21 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-/**
- * The Class SynonymTest.
- */
-public class SynonymTest {
+public class ProcedureTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Connection mockConnection;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private PreparedStatement mockPrepareStatement;
+    private DatabaseMetaData mockDatabaseMetaData;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ResultSet mockResultSet;
@@ -48,49 +45,25 @@ public class SynonymTest {
         MockitoAnnotations.initMocks(this);
     }
 
-
     @Test
-    public void executeCreateSynonym() {
-        String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .create()
-                .synonym("CUSTOMERS_SEQUENCE")
-                .forSource("CUSTOMERS")
-                .build();
-
-        assertNotNull(sql);
-        assertEquals("CREATE SYNONYM CUSTOMERS_SEQUENCE FOR CUSTOMERS", sql);
-    }
-
-
-    @Test
-    public void executeDropSynonym() {
-        String sql = SqlFactory.getNative(new HanaSqlDialect())
-                .drop()
-                .synonym("CUSTOMERS_SEQUENCE")
-                .build();
-
-        assertNotNull(sql);
-        assertEquals("DROP SYNONYM CUSTOMERS_SEQUENCE", sql);
-    }
-
-    @Test
-    public void checkIfSynonymExist() throws SQLException {
-        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+    public void checkIfProcedureExist() throws SQLException {
+        String funcName = "\"MYSCHEMA\".\"namespace.path::MyFunction\"";
+        when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
+        when(mockDatabaseMetaData.getProcedures(null, null, funcName)).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+                .exists(mockConnection, funcName, DatabaseArtifactTypes.PROCEDURE);
         assertTrue(exist);
     }
 
     @Test
-    public void checkIfSynonymDoesNotExist() throws SQLException {
-        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+    public void checkIfProcedureDoesNotExist() throws SQLException {
+        String funcName = "\"MYSCHEMA\".\"namespace.path::MyProcedure\"";
+        when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
+        when(mockDatabaseMetaData.getProcedures(null, null, funcName)).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MyProcedure\"", DatabaseArtifactTypes.PROCEDURE);
         assertFalse(exist);
     }
 
