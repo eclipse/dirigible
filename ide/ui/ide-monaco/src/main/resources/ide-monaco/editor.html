@@ -563,6 +563,7 @@
 							});
 							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {return new Module();};', 'js:require.js');
 							monaco.languages.registerCompletionItemProvider('javascript', {
+								triggerCharacters: ["\"", "'"],
 							    provideCompletionItems: function(model, position) {
 							        // find out if we are completing a property in the 'dependencies' object.
 //							        var wordObject = model.getWordUntilPosition(position);
@@ -599,10 +600,11 @@
 							    }
 							});
 							monaco.languages.registerCompletionItemProvider('javascript', {
+								triggerCharacters: ["."],
 							    provideCompletionItems: function(model, position) {
 							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
 
-							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
+							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
 									var afterDotToken = token.substring(token.indexOf(".") + 1);
 									var tokenParts = token.split(".");
 									var moduleName = moduleImport ? moduleImport.module : null;
