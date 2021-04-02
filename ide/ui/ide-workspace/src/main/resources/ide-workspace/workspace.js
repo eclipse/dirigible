@@ -162,6 +162,7 @@ WorkspaceService.prototype.createFile = function(name, path, node){
 	return this.$http.post(url, JSON.stringify(node.data))
 			.then(function(response){
 				var filePath = response.headers('location');
+				filePath = filePath.substring(filePath.indexOf("/services"))
 				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
 					.then(function(response){ return response.data;});
 			}.bind(this))
@@ -193,6 +194,7 @@ WorkspaceService.prototype.uploadFile = function(name, path, node){
 	return this.$http(req)
 			.then(function(response){
 				var filePath = response.headers('location');
+				filePath = filePath.substring(filePath.indexOf("/services"));
 				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
 					.then(function(response){ return response.data;});
 			}.bind(this))
