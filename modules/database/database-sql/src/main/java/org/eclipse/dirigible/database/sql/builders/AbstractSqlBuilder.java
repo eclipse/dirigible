@@ -136,7 +136,6 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * The Regex find the content between single quotes.
 	 */
 	private Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
-
 	private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 	
 	/**
