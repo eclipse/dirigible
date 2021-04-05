@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -17,15 +17,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
-import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.workspace.api.IProject;
-import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +33,10 @@ public class ResetCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
-	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
-
 	/** The verifier. */
 	@Inject
 	private ProjectPropertiesVerifier verifier;
 
-	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
 
 	/**
 	 * Execute the Reset command.
@@ -56,8 +45,9 @@ public class ResetCommand {
 	 *            the workspace
 	 * @param repositories
 	 *            the repositories
+	 * @throws GitConnectorException 
 	 */
-	public void execute(String workspace, List<String> repositories) {
+	public void execute(String workspace, List<String> repositories) throws GitConnectorException {
 		if (repositories.size() == 0) {
 			logger.warn("No repository is selected for the Reset action");
 		}
@@ -81,9 +71,10 @@ public class ResetCommand {
 	 *            the workspace
 	 * @param repositoryName
 	 *            the project
+	 * @throws GitConnectorException 
 	 */
-	private void hardReset(String workspace, String repositoryName) {
-		String errorMessage = String.format("While hard reseting repository [%s] error occurred", repositoryName);
+	private void hardReset(String workspace, String repositoryName) throws GitConnectorException {
+		String errorMessage = String.format("Error occurred while hard reseting repository [%s].", repositoryName);
 
 		try {
 			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName).getCanonicalFile();
@@ -98,6 +89,7 @@ public class ResetCommand {
 			logger.info(message);
 		} catch (IOException | GitConnectorException e) {
 			logger.error(errorMessage, e);
+			throw new GitConnectorException(errorMessage, e);
 		}
 	}
 

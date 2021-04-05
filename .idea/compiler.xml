@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="dirigible-cms-api" />
+        <module name="dirigible-template-openui5-wizard" />
+        <module name="dirigible-api-javascript-messaging" />
+        <module name="dirigible-template-application-dao" />
+        <module name="dirigible-database-managed" />
+        <module name="dirigible-service-transport" />
+        <module name="dirigible-service-registry" />
+        <module name="dirigible-resources-dev-tools" />
+        <module name="dirigible-sap-kyma-base" />
+        <module name="dirigible-sap-all" />
+        <module name="dirigible-commons-test" />
+        <module name="dirigible-ide-ui-form-builder" />
+        <module name="dirigible-ide-ui-core" />
+        <module name="dirigible-repository-api-test" />
+        <module name="dirigible-service-repository" />
+        <module name="dirigible-ide-ui-group-all" />
+        <module name="dirigible-api-facade-tests" />
+        <module name="dirigible-core-publisher" />
+        <module name="dirigible-commons-process" />
+        <module name="dirigible-template-application-launchpad" />
+        <module name="dirigible-ide-ui-logs" />
+        <module name="dirigible-engine-api" />
+        <module name="dirigible-ext-cassandra" />
+        <module name="dirigible-engine-odata" />
+        <module name="dirigible-resources-resources" />
+        <module name="dirigible-resources-requirejs" />
+        <module name="dirigible-trial-all" />
+        <module name="dirigible-desktop-all" />
+        <module name="dirigible-ext-redis" />
+        <module name="dirigible-ide-ui-discussions" />
+        <module name="dirigible-core-security" />
+        <module name="dirigible-ide-service-console" />
+        <module name="dirigible-template-application-rest" />
+        <module name="dirigible-ext-qunit" />
+        <module name="dirigible-ide-ui-repository" />
+        <module name="dirigible-core-generation-javascript" />
+        <module name="dirigible-ide-ui-branding" />
+        <module name="dirigible-template-application-ui-angular-mongodb" />
+        <module name="dirigible-ext" />
+        <module name="dirigible-resources-themes" />
+        <module name="dirigible-ext-elasticsearch" />
+        <module name="dirigible-ide-ui-swagger" />
+        <module name="dirigible-api" />
+        <module name="dirigible-engine" />
+        <module name="dirigible-engine-javascript" />
+        <module name="dirigible-bpm-api" />
+        <module name="dirigible-template-application-dao-mongodb" />
+        <module name="dirigible-template-database-access" />
+        <module name="dirigible-ext-etcd" />
+        <module name="dirigible-ide-ui-entity" />
+        <module name="dirigible-database-data-structures" />
+        <module name="dirigible-resources-theme-default" />
+        <module name="dirigible-core-scheduler" />
+        <module name="dirigible-resources-mxgraph" />
+        <module name="dirigible-template-application-feed" />
+        <module name="dirigible-openshift-all" />
+        <module name="dirigible-api-facade-rabbitmq" />
+        <module name="dirigible-ide-javascript" />
+        <module name="dirigible-repository-database" />
+        <module name="dirigible-api-facade-messaging" />
+        <module name="dirigible-ide-services-group-javascript" />
+        <module name="dirigible-template-extension-perspective" />
+        <module name="dirigible-template-websocket" />
+        <module name="dirigible-api-javascript-indexing" />
+        <module name="dirigible-server-keycloak-all" />
+        <module name="dirigible-api-javascript-bpm" />
+        <module name="dirigible-server-runtime-keycloak" />
+        <module name="dirigible-ide-ui-websockets" />
+        <module name="dirigible-ide-service-terminal" />
+        <module name="dirigible-api-facade-log" />
+        <module name="dirigible-sap-all-ephemeral" />
+        <module name="dirigible-services" />
+        <module name="dirigible-ide-ui-debugger" />
+        <module name="dirigible-api-facade-cms" />
+        <module name="dirigible-template-database-table" />
+        <module name="dirigible-ide-service-generation" />
+        <module name="dirigible-service-core" />
+        <module name="dirigible-ide-ui-preview" />
+        <module name="dirigible-api-facade-security" />
+        <module name="dirigible-template-application-data" />
+        <module name="dirigible-template-mobile-hello-world" />
+        <module name="dirigible-api-facade-core" />
+        <module name="dirigible-api-javascript-core" />
+        <module name="dirigible-bpm" />
+        <module name="dirigible-database" />
+        <module name="dirigible-template-openui5-planning-calendar" />
+        <module name="dirigible-ide-ui-group-database" />
+        <module name="dirigible-anonymous-all" />
+        <module name="dirigible-template-openui5-master-detail" />
+        <module name="dirigible-engine-javascript-graalvm" />
+        <module name="dirigible-repository-api" />
+        <module name="dirigible-core-migrations" />
+        <module name="dirigible-core-generation-velocity" />
+        <module name="dirigible-ide-ui-registry" />
+        <module name="dirigible-repository-local" />
+        <module name="dirigible-cms-managed" />
+        <module name="dirigible-ide-ui-listeners" />
+        <module name="dirigible-ide-services-group-database" />
+        <module name="dirigible-ide-ui-plugins" />
+        <module name="dirigible-api-facade-documents" />
+        <module name="dirigible-templates" />
+        <module name="dirigible-sap-cf-base" />
+        <module name="dirigible-bpm-flowable" />
+        <module name="dirigible-ide-database" />
+        <module name="dirigible-database-dynamic" />
+        <module name="dirigible-core-indexing" />
+        <module name="dirigible-api-facade-mail" />
+        <module name="dirigible-api-javascript-mail" />
+        <module name="dirigible-engine-job" />
+        <module name="dirigible-core-extensions" />
+        <module name="dirigible-server-runtime" />
+        <module name="dirigible-api-javascript-platform" />
+        <module name="dirigible-sap-cms" />
+        <module name="dirigible-api-javascript-database" />
+        <module name="dirigible-cms-database" />
+        <module name="dirigible-repository" />
+        <module name="dirigible-template-listener" />
+        <module name="dirigible-group-runtime-all" />
+        <module name="dirigible-ide-service-databases" />
+        <module name="dirigible-sap-kyma-runtime" />
+        <module name="dirigible-cms-internal" />
+        <module name="dirigible-api-facade-all" />
+        <module name="dirigible-ide-services-group-all" />
+        <module name="dirigible-resources-jquery" />
+        <module name="dirigible-sap-cf-runtime" />
+        <module name="dirigible-api-javascript-utils" />
+        <module name="dirigible-resources-goldenlayout" />
+        <module name="dirigible-api-javascript-security" />
+        <module name="dirigible-service-extensions" />
+        <module name="dirigible-core" />
+        <module name="dirigible-api-facade-http-async" />
+        <module name="dirigible-service-theme" />
+        <module name="dirigible-anonymous-runtime" />
+        <module name="dirigible-api-facade-net" />
+        <module name="dirigible-core-git" />
+        <module name="dirigible-template-http-client" />
+        <module name="dirigible-template-application-openui5" />
+        <module name="dirigible-service-anonymous" />
+        <module name="dirigible-server-javascript" />
+        <module name="dirigible-database-derby" />
+        <module name="dirigible-template-database-view" />
+        <module name="dirigible-ide-ui-documents" />
+        <module name="dirigible-template-application-ui-angular" />
+        <module name="dirigible-ext-spark" />
+        <module name="dirigible-ext-jasmine" />
+        <module name="dirigible-resources-bootstrap" />
+        <module name="dirigible-template-application-angular" />
+        <module name="dirigible-ide-service-workspaces" />
+        <module name="dirigible-api-javascript-cms" />
+        <module name="dirigible-template-application-odata" />
+        <module name="dirigible-template-html" />
+        <module name="dirigible-api-javascript-log" />
+        <module name="dirigible-core-messaging" />
+        <module name="dirigible-resources-jqplot" />
+        <module name="dirigible-ide-ui-workbench" />
+        <module name="dirigible-template-application-rest-mongodb" />
+        <module name="dirigible-ide-ui-documents-ext-content-type-ms" />
+        <module name="dirigible-cms" />
+        <module name="dirigible-service-security" />
+        <module name="dirigible-template-bookstore" />
+        <module name="dirigible-resources-angular" />
+        <module name="dirigible-security-oauth" />
+        <module name="dirigible-resources-jquery-ui" />
+        <module name="dirigible-database-custom" />
+        <module name="dirigible-ide-cms" />
+        <module name="dirigible-commons-xml2json" />
+        <module name="dirigible-repository-master" />
+        <module name="dirigible-service-operations" />
+        <module name="dirigible-api-javascript-all" />
+        <module name="dirigible-api-facade-bpm" />
+        <module name="dirigible-ext-mongodb" />
+        <module name="dirigible-sap-runtime-ephemeral" />
+        <module name="dirigible-server-all" />
+        <module name="dirigible-api-javascript-net" />
+        <module name="dirigible-template-openui5-tiles" />
+        <module name="dirigible-resources-jstree" />
+        <module name="dirigible-ide-ui-group-javascript" />
+        <module name="dirigible-commons" />
+        <module name="dirigible-service-websockets" />
+        <module name="dirigible-ide-service-publisher" />
+        <module name="dirigible-api-facade-redis" />
+        <module name="dirigible-security" />
+        <module name="dirigible-database-persistence" />
+        <module name="dirigible-sap-cf-all" />
+        <module name="dirigible-api-facade-etcd" />
+        <module name="dirigible-ide-ui-schema" />
+        <module name="dirigible-engine-web" />
+        <module name="dirigible-api-facade-cassandra" />
+        <module name="dirigible-server-database" />
+        <module name="dirigible-core-registry" />
+        <module name="dirigible-api-facade-http" />
+        <module name="dirigible-template-job" />
+        <module name="dirigible-ide-ui-console" />
+        <module name="dirigible-ide-ui-operations" />
+        <module name="dirigible-ide-ui-monaco" />
+        <module name="dirigible-template-openui5-list" />
+        <module name="dirigible-api-facade-io" />
+        <module name="dirigible-database-api" />
+        <module name="dirigible-commons-api" />
+        <module name="dirigible-template-openui5-simple-form" />
+        <module name="dirigible-ide-ui-monaco-extensions" />
+        <module name="dirigible-api-javascript-documents" />
+        <module name="dirigible-ide-ui-jobs" />
+        <module name="dirigible-api-facade-database" />
+        <module name="dirigible-resources-theme-fiori" />
+        <module name="dirigible-api-facade-kafka" />
+        <module name="dirigible-repository-search" />
+        <module name="dirigible-ide-ui-bpm" />
+        <module name="dirigible-api-javascript-http" />
+        <module name="dirigible-api-facade-platform" />
+        <module name="dirigible-api-facade-mongodb" />
+        <module name="dirigible-core-websockets" />
+        <module name="dirigible-ide-ui-security" />
+        <module name="dirigible-resources" />
+        <module name="dirigible-server-cms" />
+        <module name="dirigible-ide-ui-extensions" />
+        <module name="dirigible-api-facade-elasticsearch" />
+        <module name="dirigible-template-openui5-table" />
+        <module name="dirigible-ide-ui-git" />
+        <module name="dirigible-resources-fonts" />
+        <module name="dirigible-template-hello-world" />
+        <module name="dirigible-api-javascript-test" />
+        <module name="dirigible-core-workspace" />
+        <module name="dirigible-ide-service-bpm" />
+        <module name="dirigible-api-facade-indexing" />
+        <module name="dirigible-commons-config" />
+        <module name="dirigible-database-sql" />
+        <module name="dirigible-ext-acorn" />
+        <module name="dirigible-sap-kyma-all" />
+        <module name="dirigible-group-runtime-javascript" />
+        <module name="dirigible-repository-zip" />
+        <module name="dirigible-ide-ui-database" />
+        <module name="dirigible-ext-rabbitmq" />
+        <module name="dirigible-ide-service-git" />
+        <module name="dirigible-api-javascript-io" />
+        <module name="dirigible-database-data-models" />
+        <module name="dirigible-ide-ui-deploy-manager" />
+        <module name="dirigible-template-application-schema" />
+        <module name="dirigible-core-generation-mustache" />
+        <module name="dirigible-core-generation" />
+        <module name="dirigible-ide-ui-group-cms" />
+        <module name="dirigible-api-facade-spark" />
+        <module name="dirigible-ide" />
+        <module name="dirigible-engine-wiki" />
+        <module name="dirigible-api-facade-utils" />
+        <module name="dirigible-engine-command" />
+        <module name="dirigible-database-h2" />
+        <module name="dirigible-engine-listener" />
+        <module name="template-form-builder-angularjs" />
+        <module name="dirigible-resources-flowable-libs" />
+        <module name="dirigible-ide-ui-data-structures" />
+        <module name="dirigible-ide-ui-workspace" />
+        <module name="dirigible-ide-ui-terminal" />
+        <module name="dirigible-template-extension-view" />
+        <module name="dirigible-ext-kafka" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dirigible-anonymous-all" target="11" />
+      <module name="dirigible-anonymous-runtime" target="11" />
+      <module name="dirigible-api" target="11" />
+      <module name="dirigible-api-facade-all" target="11" />
+      <module name="dirigible-api-facade-bpm" target="11" />
+      <module name="dirigible-api-facade-cassandra" target="11" />
+      <module name="dirigible-api-facade-cms" target="11" />
+      <module name="dirigible-api-facade-core" target="11" />
+      <module name="dirigible-api-facade-database" target="11" />
+      <module name="dirigible-api-facade-documents" target="11" />
+      <module name="dirigible-api-facade-elasticsearch" target="11" />
+      <module name="dirigible-api-facade-etcd" target="11" />
+      <module name="dirigible-api-facade-http" target="11" />
+      <module name="dirigible-api-facade-http-async" target="11" />
+      <module name="dirigible-api-facade-indexing" target="11" />
+      <module name="dirigible-api-facade-io" target="11" />
+      <module name="dirigible-api-facade-kafka" target="11" />
+      <module name="dirigible-api-facade-log" target="11" />
+      <module name="dirigible-api-facade-mail" target="11" />
+      <module name="dirigible-api-facade-messaging" target="11" />
+      <module name="dirigible-api-facade-mongodb" target="11" />
+      <module name="dirigible-api-facade-net" target="11" />
+      <module name="dirigible-api-facade-parent" target="11" />
+      <module name="dirigible-api-facade-platform" target="11" />
+      <module name="dirigible-api-facade-rabbitmq" target="11" />
+      <module name="dirigible-api-facade-redis" target="11" />
+      <module name="dirigible-api-facade-security" target="11" />
+      <module name="dirigible-api-facade-spark" target="11" />
+      <module name="dirigible-api-facade-tests" target="11" />
+      <module name="dirigible-api-facade-utils" target="11" />
+      <module name="dirigible-api-javascript-all" target="11" />
+      <module name="dirigible-api-javascript-bpm" target="11" />
+      <module name="dirigible-api-javascript-cms" target="11" />
+      <module name="dirigible-api-javascript-core" target="11" />
+      <module name="dirigible-api-javascript-database" target="11" />
+      <module name="dirigible-api-javascript-documents" target="11" />
+      <module name="dirigible-api-javascript-http" target="11" />
+      <module name="dirigible-api-javascript-indexing" target="11" />
+      <module name="dirigible-api-javascript-io" target="11" />
+      <module name="dirigible-api-javascript-log" target="11" />
+      <module name="dirigible-api-javascript-mail" target="11" />
+      <module name="dirigible-api-javascript-messaging" target="11" />
+      <module name="dirigible-api-javascript-net" target="11" />
+      <module name="dirigible-api-javascript-parent" target="11" />
+      <module name="dirigible-api-javascript-platform" target="11" />
+      <module name="dirigible-api-javascript-security" target="11" />
+      <module name="dirigible-api-javascript-test" target="11" />
+      <module name="dirigible-api-javascript-utils" target="11" />
+      <module name="dirigible-api-parent" target="11" />
+      <module name="dirigible-bpm" target="11" />
+      <module name="dirigible-bpm-api" target="11" />
+      <module name="dirigible-bpm-flowable" target="11" />
+      <module name="dirigible-bpm-parent" target="11" />
+      <module name="dirigible-cms" target="11" />
+      <module name="dirigible-cms-api" target="11" />
+      <module name="dirigible-cms-database" target="11" />
+      <module name="dirigible-cms-internal" target="11" />
+      <module name="dirigible-cms-managed" target="11" />
+      <module name="dirigible-cms-parent" target="11" />
+      <module name="dirigible-commons" target="11" />
+      <module name="dirigible-commons-api" target="11" />
+      <module name="dirigible-commons-config" target="11" />
+      <module name="dirigible-commons-parent" target="11" />
+      <module name="dirigible-commons-process" target="11" />
+      <module name="dirigible-commons-test" target="11" />
+      <module name="dirigible-commons-xml2json" target="11" />
+      <module name="dirigible-core" target="11" />
+      <module name="dirigible-core-extensions" target="11" />
+      <module name="dirigible-core-generation" target="11" />
+      <module name="dirigible-core-generation-javascript" target="11" />
+      <module name="dirigible-core-generation-mustache" target="11" />
+      <module name="dirigible-core-generation-velocity" target="11" />
+      <module name="dirigible-core-git" target="11" />
+      <module name="dirigible-core-indexing" target="11" />
+      <module name="dirigible-core-messaging" target="11" />
+      <module name="dirigible-core-migrations" target="11" />
+      <module name="dirigible-core-parent" target="11" />
+      <module name="dirigible-core-publisher" target="11" />
+      <module name="dirigible-core-registry" target="11" />
+      <module name="dirigible-core-scheduler" target="11" />
+      <module name="dirigible-core-security" target="11" />
+      <module name="dirigible-core-websockets" target="11" />
+      <module name="dirigible-core-workspace" target="11" />
+      <module name="dirigible-database" target="11" />
+      <module name="dirigible-database-api" target="11" />
+      <module name="dirigible-database-custom" target="11" />
+      <module name="dirigible-database-data-models" target="11" />
+      <module name="dirigible-database-data-structures" target="11" />
+      <module name="dirigible-database-derby" target="11" />
+      <module name="dirigible-database-dynamic" target="11" />
+      <module name="dirigible-database-h2" target="11" />
+      <module name="dirigible-database-managed" target="11" />
+      <module name="dirigible-database-parent" target="11" />
+      <module name="dirigible-database-persistence" target="11" />
+      <module name="dirigible-database-sql" target="11" />
+      <module name="dirigible-desktop-all" target="11" />
+      <module name="dirigible-engine" target="11" />
+      <module name="dirigible-engine-api" target="11" />
+      <module name="dirigible-engine-command" target="11" />
+      <module name="dirigible-engine-javascript" target="11" />
+      <module name="dirigible-engine-javascript-graalvm" target="11" />
+      <module name="dirigible-engine-job" target="11" />
+      <module name="dirigible-engine-listener" target="11" />
+      <module name="dirigible-engine-odata" target="11" />
+      <module name="dirigible-engine-parent" target="11" />
+      <module name="dirigible-engine-web" target="11" />
+      <module name="dirigible-engine-wiki" target="11" />
+      <module name="dirigible-ext" target="11" />
+      <module name="dirigible-ext-acorn" target="11" />
+      <module name="dirigible-ext-cassandra" target="11" />
+      <module name="dirigible-ext-elasticsearch" target="11" />
+      <module name="dirigible-ext-etcd" target="11" />
+      <module name="dirigible-ext-jasmine" target="11" />
+      <module name="dirigible-ext-kafka" target="11" />
+      <module name="dirigible-ext-modules-parent" target="11" />
+      <module name="dirigible-ext-mongodb" target="11" />
+      <module name="dirigible-ext-parent" target="11" />
+      <module name="dirigible-ext-qunit" target="11" />
+      <module name="dirigible-ext-rabbitmq" target="11" />
+      <module name="dirigible-ext-redis" target="11" />
+      <module name="dirigible-ext-spark" target="11" />
+      <module name="dirigible-group-runtime-all" target="11" />
+      <module name="dirigible-group-runtime-javascript" target="11" />
+      <module name="dirigible-ide" target="11" />
+      <module name="dirigible-ide-cms" target="11" />
+      <module name="dirigible-ide-database" target="11" />
+      <module name="dirigible-ide-javascript" target="11" />
+      <module name="dirigible-ide-parent" target="11" />
+      <module name="dirigible-ide-service-bpm" target="11" />
+      <module name="dirigible-ide-service-console" target="11" />
+      <module name="dirigible-ide-service-databases" target="11" />
+      <module name="dirigible-ide-service-generation" target="11" />
+      <module name="dirigible-ide-service-git" target="11" />
+      <module name="dirigible-ide-service-parent" target="11" />
+      <module name="dirigible-ide-service-publisher" target="11" />
+      <module name="dirigible-ide-service-terminal" target="11" />
+      <module name="dirigible-ide-service-workspaces" target="11" />
+      <module name="dirigible-ide-services-group-all" target="11" />
+      <module name="dirigible-ide-services-group-database" target="11" />
+      <module name="dirigible-ide-services-group-javascript" target="11" />
+      <module name="dirigible-ide-ui-bpm" target="11" />
+      <module name="dirigible-ide-ui-branding" target="11" />
+      <module name="dirigible-ide-ui-console" target="11" />
+      <module name="dirigible-ide-ui-core" target="11" />
+      <module name="dirigible-ide-ui-data-structures" target="11" />
+      <module name="dirigible-ide-ui-database" target="11" />
+      <module name="dirigible-ide-ui-debugger" target="11" />
+      <module name="dirigible-ide-ui-deploy-manager" target="11" />
+      <module name="dirigible-ide-ui-discussions" target="11" />
+      <module name="dirigible-ide-ui-documents" target="11" />
+      <module name="dirigible-ide-ui-documents-ext-content-type-ms" target="11" />
+      <module name="dirigible-ide-ui-entity" target="11" />
+      <module name="dirigible-ide-ui-extensions" target="11" />
+      <module name="dirigible-ide-ui-form-builder" target="11" />
+      <module name="dirigible-ide-ui-git" target="11" />
+      <module name="dirigible-ide-ui-group-all" target="11" />
+      <module name="dirigible-ide-ui-group-cms" target="11" />
+      <module name="dirigible-ide-ui-group-database" target="11" />
+      <module name="dirigible-ide-ui-group-javascript" target="11" />
+      <module name="dirigible-ide-ui-jobs" target="11" />
+      <module name="dirigible-ide-ui-listeners" target="11" />
+      <module name="dirigible-ide-ui-logs" target="11" />
+      <module name="dirigible-ide-ui-monaco" target="11" />
+      <module name="dirigible-ide-ui-monaco-extensions" target="11" />
+      <module name="dirigible-ide-ui-operations" target="11" />
+      <module name="dirigible-ide-ui-parent" target="11" />
+      <module name="dirigible-ide-ui-plugins" target="11" />
+      <module name="dirigible-ide-ui-preview" target="11" />
+      <module name="dirigible-ide-ui-registry" target="11" />
+      <module name="dirigible-ide-ui-repository" target="11" />
+      <module name="dirigible-ide-ui-schema" target="11" />
+      <module name="dirigible-ide-ui-security" target="11" />
+      <module name="dirigible-ide-ui-swagger" target="11" />
+      <module name="dirigible-ide-ui-terminal" target="11" />
+      <module name="dirigible-ide-ui-websockets" target="11" />
+      <module name="dirigible-ide-ui-workbench" target="11" />
+      <module name="dirigible-ide-ui-workspace" target="11" />
+      <module name="dirigible-openshift-all" target="11" />
+      <module name="dirigible-parent" target="11" />
+      <module name="dirigible-releng-parent" target="11" />
+      <module name="dirigible-repository" target="11" />
+      <module name="dirigible-repository-api" target="11" />
+      <module name="dirigible-repository-api-test" target="11" />
+      <module name="dirigible-repository-database" target="11" />
+      <module name="dirigible-repository-local" target="11" />
+      <module name="dirigible-repository-master" target="11" />
+      <module name="dirigible-repository-parent" target="11" />
+      <module name="dirigible-repository-search" target="11" />
+      <module name="dirigible-repository-zip" target="11" />
+      <module name="dirigible-resources" target="11" />
+      <module name="dirigible-resources-angular" target="11" />
+      <module name="dirigible-resources-bootstrap" target="11" />
+      <module name="dirigible-resources-dev-tools" target="11" />
+      <module name="dirigible-resources-flowable-libs" target="11" />
+      <module name="dirigible-resources-fonts" target="11" />
+      <module name="dirigible-resources-goldenlayout" target="11" />
+      <module name="dirigible-resources-jqplot" target="11" />
+      <module name="dirigible-resources-jquery" target="11" />
+      <module name="dirigible-resources-jquery-ui" target="11" />
+      <module name="dirigible-resources-jstree" target="11" />
+      <module name="dirigible-resources-mxgraph" target="11" />
+      <module name="dirigible-resources-parent" target="11" />
+      <module name="dirigible-resources-requirejs" target="11" />
+      <module name="dirigible-resources-resources" target="11" />
+      <module name="dirigible-resources-theme-default" target="11" />
+      <module name="dirigible-resources-theme-fiori" target="11" />
+      <module name="dirigible-resources-themes" target="11" />
+      <module name="dirigible-sap-all" target="11" />
+      <module name="dirigible-sap-all-ephemeral" target="11" />
+      <module name="dirigible-sap-cf-all" target="11" />
+      <module name="dirigible-sap-cf-base" target="11" />
+      <module name="dirigible-sap-cf-runtime" target="11" />
+      <module name="dirigible-sap-cms" target="11" />
+      <module name="dirigible-sap-kyma-all" target="11" />
+      <module name="dirigible-sap-kyma-base" target="11" />
+      <module name="dirigible-sap-kyma-runtime" target="11" />
+      <module name="dirigible-sap-runtime-ephemeral" target="11" />
+      <module name="dirigible-security" target="11" />
+      <module name="dirigible-security-oauth" target="11" />
+      <module name="dirigible-security-parent" target="11" />
+      <module name="dirigible-server-all" target="11" />
+      <module name="dirigible-server-cms" target="11" />
+      <module name="dirigible-server-database" target="11" />
+      <module name="dirigible-server-javascript" target="11" />
+      <module name="dirigible-server-keycloak-all" target="11" />
+      <module name="dirigible-server-runtime" target="11" />
+      <module name="dirigible-server-runtime-keycloak" target="11" />
+      <module name="dirigible-service-anonymous" target="11" />
+      <module name="dirigible-service-core" target="11" />
+      <module name="dirigible-service-extensions" target="11" />
+      <module name="dirigible-service-operations" target="11" />
+      <module name="dirigible-service-parent" target="11" />
+      <module name="dirigible-service-registry" target="11" />
+      <module name="dirigible-service-repository" target="11" />
+      <module name="dirigible-service-security" target="11" />
+      <module name="dirigible-service-theme" target="11" />
+      <module name="dirigible-service-transport" target="11" />
+      <module name="dirigible-service-websockets" target="11" />
+      <module name="dirigible-services" target="11" />
+      <module name="dirigible-template-application-angular" target="11" />
+      <module name="dirigible-template-application-dao" target="11" />
+      <module name="dirigible-template-application-dao-mongodb" target="11" />
+      <module name="dirigible-template-application-data" target="11" />
+      <module name="dirigible-template-application-feed" target="11" />
+      <module name="dirigible-template-application-launchpad" target="11" />
+      <module name="dirigible-template-application-odata" target="11" />
+      <module name="dirigible-template-application-openui5" target="11" />
+      <module name="dirigible-template-application-rest" target="11" />
+      <module name="dirigible-template-application-rest-mongodb" target="11" />
+      <module name="dirigible-template-application-schema" target="11" />
+      <module name="dirigible-template-application-ui-angular" target="11" />
+      <module name="dirigible-template-application-ui-angular-mongodb" target="11" />
+      <module name="dirigible-template-bookstore" target="11" />
+      <module name="dirigible-template-database-access" target="11" />
+      <module name="dirigible-template-database-table" target="11" />
+      <module name="dirigible-template-database-view" target="11" />
+      <module name="dirigible-template-extension-perspective" target="11" />
+      <module name="dirigible-template-extension-view" target="11" />
+      <module name="dirigible-template-hello-world" target="11" />
+      <module name="dirigible-template-html" target="11" />
+      <module name="dirigible-template-http-client" target="11" />
+      <module name="dirigible-template-job" target="11" />
+      <module name="dirigible-template-listener" target="11" />
+      <module name="dirigible-template-mobile-hello-world" target="11" />
+      <module name="dirigible-template-openui5-list" target="11" />
+      <module name="dirigible-template-openui5-master-detail" target="11" />
+      <module name="dirigible-template-openui5-planning-calendar" target="11" />
+      <module name="dirigible-template-openui5-simple-form" target="11" />
+      <module name="dirigible-template-openui5-table" target="11" />
+      <module name="dirigible-template-openui5-tiles" target="11" />
+      <module name="dirigible-template-openui5-wizard" target="11" />
+      <module name="dirigible-template-parent" target="11" />
+      <module name="dirigible-template-websocket" target="11" />
+      <module name="dirigible-templates" target="11" />
+      <module name="dirigible-trial-all" target="11" />
+      <module name="template-form-builder-angularjs" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
