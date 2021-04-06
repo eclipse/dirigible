@@ -21,7 +21,7 @@ public class SparkFacade implements IScriptingFacade {
 
 	private static final String DIRIGIBLE_SPARK_CLIENT_URI = "DIRIGIBLE_SPARK_CLIENT_URI";
 
-	private static final String CLIENT_URI = "spark://192.168.56.1:7077";
+	private static final String CLIENT_URI = "spark://192.168.0.143:7077";
 
 	private static final String POSTGRESQL_URI = "jdbc:postgresql://localhost:5432/%s?user=%s&password=%s";
 
@@ -43,6 +43,10 @@ public class SparkFacade implements IScriptingFacade {
 	в джаваскрипта с празни параметри
 	а тук подавам параметри в метода
 	 */
+	public static Dataset<String> readFile(String path) {
+		return getSession().read().textFile(path);
+	}
+
 	public static String getHead(Dataset<String> data) {
 		return data.head();
 	}
