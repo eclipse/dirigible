@@ -230,12 +230,12 @@ public class DatabaseMetadataHelperTest {
 			connection = dataSource.getConnection();
 			DatabaseMetadataHelper.iterateTableDefinition(connection, null, "SYS", "SYSKEYS", new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, String isNullable, String isKey) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey) {
 					assertNotNull(columnName);
 				}
 			}, new IndicesIteratorCallback() {
 				@Override
-				public void onIndex(String indexName, String indexType, String columnName, String isNonUnique, String indexQualifier,
+				public void onIndex(String indexName, String indexType, String columnName, boolean isNonUnique, String indexQualifier,
 						String ordinalPosition, String sortOrder, String cardinality, String pagesIndex, String filterCondition) {
 					assertNotNull(indexName);
 				}

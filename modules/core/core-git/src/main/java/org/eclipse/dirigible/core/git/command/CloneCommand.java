@@ -73,10 +73,6 @@ public class CloneCommand {
 	@Inject
 	private GitFileUtils gitFileUtils;
 
-	/** The pull command. */
-	@Inject
-	private PullCommand pull;
-
 	/**
 	 * Execute a Clone command.
 	 *
@@ -195,26 +191,21 @@ public class CloneCommand {
 			}
 			logger.debug("Cloning of dependencies finished");
 
-		} catch (InvalidRemoteException e) {
-			logger.error(e.getMessage(), e);
-			throw new GitConnectorException(e);
-		} catch (TransportException e) {
-			logger.error("An error occurred while cloning repository", e);
+		} catch (IOException | GitAPIException | GitConnectorException e) {
+			String errorMessage = "An error occurred while cloning repository.";
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
 				if (rootCause instanceof UnknownHostException) {
-					throw new GitConnectorException("Please check if proxy settings are set properly", e);
+					errorMessage += " Please check your network, or if proxy settings are set properly";
+				} else {
+					errorMessage += " Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]";
 				}
-				throw new GitConnectorException(e.getCause().getMessage(), e);
+			} else {
+				errorMessage += " " + e.getMessage();
 			}
-			throw new GitConnectorException(e);
-		} catch (GitAPIException e) {
-			logger.error(e.getMessage(), e);
-			throw new GitConnectorException(e);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new GitConnectorException(e);
+			logger.error(errorMessage);
+			throw new GitConnectorException(errorMessage, e);
 		} finally {
 //			try {
 //				GitFileUtils.deleteDirectory(gitDirectory);

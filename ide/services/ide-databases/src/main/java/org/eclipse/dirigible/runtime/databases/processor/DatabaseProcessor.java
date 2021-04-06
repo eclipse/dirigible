@@ -22,6 +22,8 @@ import java.util.StringTokenizer;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.metadata.DatabaseArtifactTypes;
@@ -38,9 +40,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DatabaseProcessor {
 
+
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseProcessor.class);
 
+	private static final String CREATE_PROCEDURE = "CREATE PROCEDURE";
+
 	private static final String SCRIPT_DELIMITER = ";";
+	private static final String PROCEDURE_DELIMITER = "--";
 
 	private boolean LIMITED = true;
 
@@ -178,6 +184,27 @@ public class DatabaseProcessor {
 	}
 
 	/**
+	 * Execute update.
+	 *
+	 * @param type
+	 *            the type
+	 * @param name
+	 *            the name
+	 * @param sql
+	 *            the sql
+	 * @param isJson
+	 *            the is json
+	 * @return the string
+	 */
+	public String executeProcedure(String type, String name, String sql, boolean isJson) {
+		DataSource dataSource = getDataSource(type, name);
+		if (dataSource != null) {
+			return executeProcedure(dataSource, sql, isJson);
+		}
+		return null;
+	}
+
+	/**
 	 * Execute.
 	 *
 	 * @param type
@@ -220,7 +247,7 @@ public class DatabaseProcessor {
 		List<String> results = new ArrayList<String>();
 		List<String> errors = new ArrayList<String>();
 
-		StringTokenizer tokenizer = new StringTokenizer(sql, SCRIPT_DELIMITER);
+		StringTokenizer tokenizer = new StringTokenizer(sql, getDelimiter(sql));
 		while (tokenizer.hasMoreTokens()) {
 			String line = tokenizer.nextToken();
 			if ("".equals(line.trim())) {
@@ -278,6 +305,97 @@ public class DatabaseProcessor {
 		}
 
 		return String.join("\n", results);
+	}
+
+	/**
+	 * Execute procedure.
+	 *
+	 * @param dataSource
+	 *            the data source
+	 * @param sql
+	 *            the sql
+	 * @param isJson
+	 *            the is json
+	 * @return the string
+	 */
+	private String executeProcedure(DataSource dataSource, String sql, boolean isJson) {
+
+		if ((sql == null) || (sql.length() == 0)) {
+			return "";
+		}
+
+		List<String> results = new ArrayList<String>();
+		List<String> errors = new ArrayList<String>();
+
+		StringTokenizer tokenizer = new StringTokenizer(sql, getDelimiter(sql));
+		while (tokenizer.hasMoreTokens()) {
+			String line = tokenizer.nextToken();
+			if ("".equals(line.trim())) {
+				continue;
+			}
+
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				DatabaseQueryHelper.executeSingleProcedure(connection, line, new RequestExecutionCallback() {
+
+					@Override
+					public void updateDone(int recordsCount) {
+						results.add(recordsCount + "");
+					}
+
+					@Override
+					public void queryDone(ResultSet rs) {
+						try {
+							if (isJson) {
+								results.add(DatabaseResultSetHelper.toJson(rs, LIMITED));
+							} else {
+								results.add(DatabaseResultSetHelper.print(rs, LIMITED));
+							}
+						} catch (SQLException e) {
+							logger.warn(e.getMessage(), e);
+							errors.add(e.getMessage());
+						}
+					}
+
+					@Override
+					public void error(Throwable t) {
+						logger.warn(t.getMessage(), t);
+						errors.add(t.getMessage());
+					}
+				});
+			} catch (SQLException e) {
+				logger.warn(e.getMessage(), e);
+				errors.add(e.getMessage());
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						logger.warn(e.getMessage(), e);
+					}
+				}
+			}
+		}
+
+		if (!errors.isEmpty()) {
+			if (isJson) {
+				return DatabaseErrorHelper.toJson(String.join("\n", errors));
+			}
+			return DatabaseErrorHelper.print(String.join("\n", errors));
+		}
+
+		if (isJson) {
+			return GsonHelper.GSON.toJson(results);
+		}
+		return String.join("\n", results);
+	}
+
+	private String getDelimiter(String sql) {
+		if (StringUtils.containsIgnoreCase(sql, CREATE_PROCEDURE)) {
+			return PROCEDURE_DELIMITER;
+		}
+		return SCRIPT_DELIMITER;
 	}
 
 }

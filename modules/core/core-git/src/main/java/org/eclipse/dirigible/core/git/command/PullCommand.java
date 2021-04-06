@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
@@ -30,10 +29,7 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +69,10 @@ public class PullCommand {
 	 *            the branch
 	 * @param publishAfterPull
 	 *            the publish after pull
+	 * @throws GitConnectorException 
 	 */
 	public void execute(final IWorkspace workspace, List<String> repositories, final String username, final String password, 
-			final String branch, final boolean publishAfterPull) {
+			final String branch, final boolean publishAfterPull) throws GitConnectorException {
 		if (repositories.size() == 0) {
 			logger.warn("No repository is selected for the Pull action");
 		}
@@ -108,9 +105,10 @@ public class PullCommand {
 	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
+	 * @throws GitConnectorException 
 	 */
-	boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, final String username, final String password, final String branch) {
-		final String errorMessage = String.format("Error occurred while pulling repository [%s]", repositoryName);
+	boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, final String username, final String password, final String branch) throws GitConnectorException {
+		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);
 
 		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
 		for (String projectName: projects) {
@@ -136,28 +134,20 @@ public class PullCommand {
 					repositoryName, numberOfConflictingFiles);
 				logger.error(message);
 			}
-		} catch (CheckoutConflictException e) {
-			logger.error(errorMessage, e);
-		} catch (IOException e) {
-			logger.error(errorMessage, e);
-		} catch (InvalidRemoteException e) {
-			logger.error(errorMessage, e);
-		} catch (TransportException e) {
-			logger.error(errorMessage, e);
+		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
-				logger.error(errorMessage, e);
 				if (rootCause instanceof UnknownHostException) {
-					logger.error("Please check if proxy settings are set properly");
+					errorMessage += " Please check your network, or if proxy settings are set properly";
 				} else {
-					logger.error("Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]");
+					errorMessage += " Doublecheck the correctness of the [Username] and/or [Password] or [Git Repository URI]";
 				}
+			} else {
+				errorMessage += " " + e.getMessage();
 			}
-		} catch (GitAPIException e) {
-			logger.error(errorMessage, e);
-		} catch (GitConnectorException e) {
-			logger.error(errorMessage, e);
+			logger.error(errorMessage);
+			throw new GitConnectorException(errorMessage, e);
 		}
 		return true;
 	}

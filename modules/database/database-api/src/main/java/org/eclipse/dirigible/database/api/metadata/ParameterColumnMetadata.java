@@ -30,7 +30,7 @@ public class ParameterColumnMetadata {
 	
 	private int radix;
 	
-	private int nullable;
+	private boolean nullable;
 
 	private String remarks;
 
@@ -48,7 +48,7 @@ public class ParameterColumnMetadata {
 	 * @param remarks remarks
 	 */
 	public ParameterColumnMetadata(String name, int kind, String type, int precision, int length, int scale, int radix,
-			int nullable, String remarks) {
+			boolean nullable, String remarks) {
 		super();
 		this.name = name;
 		this.kind = kind;
@@ -162,14 +162,14 @@ public class ParameterColumnMetadata {
 	/**
 	 * @return the nullable
 	 */
-	public int getNullable() {
+	public boolean getNullable() {
 		return nullable;
 	}
 
 	/**
 	 * @param nullable the nullable to set
 	 */
-	public void setNullable(int nullable) {
+	public void setNullable(boolean nullable) {
 		this.nullable = nullable;
 	}
 

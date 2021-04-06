@@ -266,9 +266,9 @@ jobs:
 
           #### Available for download `*.war` packages:
             - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-all.zip) - Anonymous access.
-            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only).
+            - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
             - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
-            - [server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.
+            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
             - [server-cms](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-cms.zip) - CMS package.
             - [server-database](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-database.zip) - Database package.
             - [server-javascript](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-javascript.zip) - JavaScript engine package.
