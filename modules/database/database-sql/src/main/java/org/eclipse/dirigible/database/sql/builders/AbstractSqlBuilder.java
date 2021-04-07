@@ -116,8 +116,9 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the transformed string
 	 */
 	protected String encapsulateMany(String line) {
+		String lineWithoughContentBetweenSingleQuotes = String.join("", line.split(contentBetweenSingleQuotes.toString()));
 		String regex = "([^a-zA-Z0-9_#$::']+)'*\\1*";
-		String[] words = line.split(regex);
+		String[] words = lineWithoughContentBetweenSingleQuotes.split(regex);
 		Set<Set> functionsNames = getDialect().getFunctionsNames();
 		for (String word : words) {
 			if (isNumeric(word) || isValue(word)) {
@@ -130,7 +131,11 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 		}
 		return line;
 	}
-	
+
+	/**
+	 * The Regex find the content between single quotes.
+	 */
+	private Pattern contentBetweenSingleQuotes = Pattern.compile("'([^']*?)'");
 	private Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 	
 	/**
