@@ -67,12 +67,11 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>5.10.0-SNAPSHOT</version>
 		</dependency>
-
-		<!-- RabbitMQ dependencies -->
-		
-		<!-- / RabbitMQ dependencies -->
-		
-
+		<dependency>
+		    <groupId>com.rabbitmq</groupId>
+		    <artifactId>amqp-client</artifactId>
+		    <version>5.11.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
