@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Services</name>
-	<artifactId>dirigible-ide-services-group-javascript</artifactId>
+	<name>IDE - Service - Core</name>
+	<artifactId>dirigible-ide-service-core</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -33,32 +33,17 @@
     <dependencies>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-console</artifactId>
+            <artifactId>dirigible-commons-api</artifactId>
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-core</artifactId>
-            <version>5.10.0-SNAPSHOT</version>
-        </dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-scheduler</artifactId>
+			<version>5.10.0-SNAPSHOT</version>
+    	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-databases</artifactId>
-            <version>5.10.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-git</artifactId>
-            <version>5.10.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-publisher</artifactId>
-            <version>5.10.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-workspaces</artifactId>
+            <artifactId>dirigible-engine-javascript</artifactId>
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

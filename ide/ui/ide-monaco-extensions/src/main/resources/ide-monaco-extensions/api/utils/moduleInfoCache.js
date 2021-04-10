@@ -64,6 +64,7 @@ exports.refresh = function() {
             console.log(`Refreshing ModuleInfo: ${e.name}`);
             exports.get(e.name)
         });
+    console.log("Refreshing ModuleInfo Finished");
 };
 
 exports.clear = function() {

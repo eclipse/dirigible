@@ -54,7 +54,7 @@ public abstract class AbstractSynchronizerJob implements Job {
 	      		HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Succeeded); // context.getJobDetail().getKey().getName()
 	      		logger.trace("Synchronizer [{}] execution passed successfully for {} ms...", getName(), System.currentTimeMillis() - startTime);
 	        }
-	      }, TimeLimited.getTimeout(), TimeUnit.MINUTES);
+	      }, getTimeout(), getTimeoutUnit());
 	    } catch (TimeoutException e) {
 	    	logger.error("Synchronizer [{}] got timeout during execution at: {}", getName(), new Date(System.currentTimeMillis()));
 	    	logger.error(e.getMessage(), e);
@@ -65,6 +65,14 @@ public abstract class AbstractSynchronizerJob implements Job {
 	    	HealthStatus.getInstance().getJobs().setStatus(getName(), JobStatus.Failed);
 	    }
 		logger.trace("Synchronizer [{}] ended execution for {} ms...", getName(), System.currentTimeMillis() - startTime);
+	}
+
+	protected int getTimeout() {
+		return TimeLimited.getTimeout();
+	}
+
+	protected TimeUnit getTimeoutUnit() {
+		return TimeUnit.MINUTES;
 	}
 
 	/**
