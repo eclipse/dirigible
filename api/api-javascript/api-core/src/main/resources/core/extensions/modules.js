@@ -26,7 +26,7 @@ exports.getContent = function() {
 		name: "core/v4/extensions",
 		description: "Extensions API"
 	}, {
-		name: "core/v4/gloabls",
+		name: "core/v4/globals",
 		description: "Globals API"
 	}];
 };

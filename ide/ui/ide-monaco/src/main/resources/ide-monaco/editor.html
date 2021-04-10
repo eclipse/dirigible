@@ -28,15 +28,17 @@
 		<div  id="embeddedEditor"></div>
 		
 		<script src="monaco-editor/min/vs/loader.js"></script>
+		<script src="js/assignmentsParser.js"></script>
 		<script>
-		    var messageHub = new FramesMessageHub();
+
+			var messageHub = new FramesMessageHub();
 		    var csrfToken;
 		    var dirty = false;
 
 			var modulesSuggestions = [];
 			var codeCompletionSuggestions = [];
 			var codeCompletionNestedSuggestions = {};
-			var codeCompletionNestedObjectsSuggestions = [];
+			var codeCompletionAssignments = {};
 			var _editor;
 
 		    /*eslint-disable no-extend-native */
@@ -427,7 +429,6 @@
 								}
 								nestedSuggestions[key].push(suggestion);
 							});
-						loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
 					}
 				};
 				xhr.send();
@@ -453,54 +454,29 @@
 				return moduleImports;
 			}
 
-			function loadNestedSuggestions(nestedObjectsSuggestions) {
-				var text = _editor.getValue();
-				var modules = getModuleImports(text);
-
-				var nestedKeys = {};
-				for (var key in codeCompletionNestedSuggestions) {
-					var split = key.split(".");
-					var moduleKey = split[0];
-					var functionKey = split[1];
-					modules.forEach(e => {
-						if (e.module === moduleKey) {
-							nestedKeys[e.keyWord + "." + functionKey] = codeCompletionNestedSuggestions[key];
-						}
-					});
+			function traverseAssignment(assignment, assignmentInfo) {
+				if (assignment.parentModule) {
+					traverseAssignment(assignment.parentModule, assignmentInfo);
 				}
-
-				for (var keyword in nestedKeys) {
-					var objects = text.match(new RegExp("(var|let)\\s[a-zA-Z0-9_-]+\\s?=\\s?" + keyword, "gm"))
-					if (objects) {
-						objects.map(function(text) {
-							var split = text.split("=");
-							var key = split[0].replace("var ", "").replace("let ", "").trim();
-							return {
-								keyWord: key,
-								suggestions: nestedKeys[keyword]
-							}
-						}).forEach(e => {
-							let found = false;
-							for (let i = 0; i < nestedObjectsSuggestions.length; i ++) {
-								if (e.keyWord === nestedObjectsSuggestions[i].keyWord) {
-									found = true;
-									break;
-								}
-							}
-							if (!found) {
-								nestedObjectsSuggestions.push(e);
-							}
-						});
-					}
+				if (assignment.parentModule && !assignment.parentModule.parentModule) {
+					assignmentInfo.parentModule = assignment.parentModule
+				}
+				if (assignment.method) {
+					assignmentInfo.methods.push(assignment.method);
 				}
 			}
 
 			(function init(){
-				require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
+				require.config({
+					paths: {
+						'vs': 'monaco-editor/min/vs',
+						'parser': 'js/parser'
+					}
+				});
 
 				loadModuleSuggestions(modulesSuggestions);
 
-				require(['vs/editor/editor.main'], function() {
+				require(['vs/editor/editor.main', 'parser/acorn-loose.min'], function(monaco, acornLoose) {
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
 
@@ -538,7 +514,7 @@
 								messageHub.post({data: caretInfo}, 'status.caret');
 							});
 							_editor.onDidChangeModelContent(function(e) {
-								loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
+								codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
 								var newModuleImports = getModuleImports(_editor.getValue());
 								if (e && !dirty) {
 									dirty = true;
@@ -608,6 +584,9 @@
 									var afterDotToken = token.substring(token.indexOf(".") + 1);
 									var tokenParts = token.split(".");
 									var moduleName = moduleImport ? moduleImport.module : null;
+									if (tokenParts != null && tokenParts.length > 2) {
+										moduleName = null;
+									}
 									var nestedObjectKeyword = null;
 									if (!moduleName) {
 										var nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
@@ -631,11 +610,25 @@
 									if (moduleSuggestions) {
 										suggestions = moduleSuggestions.suggestions;
 									} else if (nestedObjectKeyword) {
-										codeCompletionNestedObjectsSuggestions.forEach(function(e) {
-											if (e.keyWord.trim() === nestedObjectKeyword) {
-												suggestions = e.suggestions;
+										let assignment = codeCompletionAssignments[nestedObjectKeyword];
+										if (assignment) {
+											let assignmentInfo = {
+												parentModule: null,
+												methods: []
+											};
+											traverseAssignment(assignment, assignmentInfo)
+
+											let suggestionsModule = codeCompletionSuggestions.filter(e => e.module === assignmentInfo.parentModule)[0]; // get suggestions module
+											if (suggestionsModule && suggestionsModule.suggestions) {
+												for (let i = 0; i < assignmentInfo.methods.length; i ++) {
+													suggestionsModule = suggestionsModule.suggestions.filter(e => e.name.startsWith(assignmentInfo.methods[i]))[0];
+													if (suggestionsModule && suggestionsModule.returnType && suggestionsModule.returnType.suggestions) {
+														suggestions = suggestionsModule.returnType.suggestions;
+														suggestionsModule = suggestionsModule.returnType.suggestions;
+													}
+												}
 											}
-										})
+										}
 									}
 							        return {
 										suggestions: suggestions
