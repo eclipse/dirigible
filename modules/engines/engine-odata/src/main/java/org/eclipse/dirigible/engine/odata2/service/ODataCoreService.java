@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.service;
@@ -28,9 +28,9 @@ import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactory;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 
 public class ODataCoreService implements IODataCoreService {
 	
