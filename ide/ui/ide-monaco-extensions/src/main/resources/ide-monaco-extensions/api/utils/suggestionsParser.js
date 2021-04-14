@@ -12,6 +12,8 @@
 var contentManager = require("platform/v4/registry");
 var acorn = require("acornjs/acorn");
 
+const COMMENTS_OFFSET_LENGTH = 12;
+
 String.prototype.replaceAll = function(search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
@@ -24,96 +26,117 @@ exports.parse = function(moduleName) {
         ranges: true
     });
 
-    var functionDeclarations = nodes.body
-        .filter(e => e.type === "FunctionDeclaration")
-        .map(function(element) {
-            let name = element.id.name;
-            let suggestions = element.body.body
-                .filter(e => e.type === "ExpressionStatement")
-                .map(e => extractExpression(e, comments))
-                .filter(e => e !== null);
-            return {
-                name: name,
-                suggestions: suggestions
-            }
-        });
+    let objects = getObjects(nodes.body);
+    let functions = getFunctions(nodes.body);
+    let transformedFunctions = {};
 
-    var result = nodes.body
-        .filter(e => e.type === "ExpressionStatement")
-        .map(function(element) {
-            return extractExpression(element, comments, functionDeclarations);
-        }).filter(e => e !== null);
-
-    return result;
-}
-
-function extractExpression(element, comments, functionDeclarations) {
-    let expression = element.expression;
-    if (expression && expression.type === "AssignmentExpression" && expression.operator === "=") {
-        let left = expression.left;
-        let right = expression.right;
-        if (right.type === "FunctionExpression") {
-            let properties = right.params.map(e => e.name);
-            let name = left.property.name + "(" + properties.join(", ") + ")"; 
-            let documentation = extractDocumentation(comments, element, name);
-            documentation = formatDocumentation(documentation);
-            let bodyExpressions = right.body.body;
-            let returnStatement = bodyExpressions.filter(e => e.type === "ReturnStatement")[0];
-            let returnType = null;
-            if (functionDeclarations && returnStatement) {
-                if (returnStatement.argument.type === "NewExpression") {
-                    returnType = returnStatement.argument.callee.name;
-                    returnType = functionDeclarations.filter(e => e.name === returnType)[0];
-                } else if (returnStatement.argument.type === "Identifier") {
-                    let returnIdentifierName = returnStatement.argument.name;
-                    let returnIdentifierType = bodyExpressions
-                        .filter(e => e.type === "VariableDeclaration")
-                        .map(e => e.declarations[0])
-                        .filter(e => e && e.init && e.init.type === "NewExpression")
-                        .map(function(e) {
-                            return {
-                                name: e.id.name,
-                                type: e.init.callee.name
-                            }
-                        })
-                        .filter(e => e.name === returnIdentifierName)
-                        .map(e => e.type)[0];
-                    if (returnIdentifierType) {
-                        returnType = functionDeclarations.filter(e => e.name === returnIdentifierType)[0]
-                    }
-                }
-            }
-            return {
-                name: name,
-                documentation: documentation,
-                returnType: returnType,
-                isFunction: true
-            };
-        } else if (right.type === "Literal") {
-            let name = left.property.name;
-            let documentation = extractDocumentation(comments, element, name);
-            documentation = formatDocumentation(documentation);
-            return {
-                name: name,
-                documentation: documentation,
-                isProperty: true
-            };
-        }
+    for (let i = 0; i < functions.length; i ++) {
+        let func = transformFunction(functions[i], comments);
+        addTransformedFunction(transformedFunctions, "exports", func);
     }
-    return null;
+
+    for (let i = 0; i < objects.length; i ++) {
+        getFunctions(objects[i].body.body).forEach(next => {
+            let func = transformFunction(next, comments);
+            addTransformedFunction(transformedFunctions, objects[i].id.name, func);
+        });
+    }
+
+    return transformedFunctions;
 }
 
-function extractDocumentation(comments, element, defaultDocumentation) {
-    let documentation = comments.filter(function(comment) {
-        if (comment.type === "Block") {
-            let diff = element.start - comment.end;
-            return  diff > 0 && diff <= 10;
+function getObjects(body) {
+    return body.filter(e => e.type === "FunctionDeclaration");
+}
+
+function getFunctions(body) {
+    return body.filter(e => {
+        let isFunction = false;
+        if (e.type === "ExpressionStatement" && e.expression.type === "AssignmentExpression") {
+            if (e.expression.operator === "=" && e.expression.left.object.name === "exports" || e.expression.left.object.type === "ThisExpression") {
+                isFunction = true;
+            }
         }
-        return false;
-    })[0];  
-    return documentation ? documentation.value : defaultDocumentation;
+        return isFunction;
+    });
+}
+
+function transformFunction(func, comments) {
+    return {
+        id: func.expression.left.property.name,
+        params: getParams(func),
+        documentation: getDocumentation(func, comments),
+        returnType: getReturnType(func),
+        isFunction: func.expression.right.type === "FunctionExpression"
+    };
+}
+
+function addTransformedFunction(transformedFunctions, objectName, func) {
+    if (!transformedFunctions[objectName]) {
+        transformedFunctions[objectName] = {};
+    }
+    let functionId = func.id;
+    if (func.isFunction) {
+        func.definition = `${functionId}(${func.params.join(", ")})`;
+    } else {
+        func.definition = functionId;
+    }
+    delete func.id;
+
+    transformedFunctions[objectName][functionId] = func;
+    let documentation;
+    if (func.documentation && !isEmptyObject(func.documentation)) {
+        documentation = func.documentation.value;
+    } else {
+        documentation = transformedFunctions[objectName][functionId].definition;
+    }
+    transformedFunctions[objectName][functionId].documentation = formatDocumentation(documentation);
+}
+
+function getParams(func) {
+    let params = func.expression.right.params;
+    return params && params.length > 0 ? params.map(e => e.name) : [];
+}
+
+function getDocumentation(func, comments) {
+    let selectedComments = comments.filter(e => {
+        let matches = false;
+        if (e.type === "Block") {
+            matches = e.start > 0 // skip the first "Header/License" comment
+                && e.end < func.expression.start 
+                && e.end + COMMENTS_OFFSET_LENGTH >= func.expression.start;
+        }
+        return matches;
+    });
+    return selectedComments && selectedComments.length > 0 ? selectedComments[selectedComments.length - 1] : {}
+}
+
+function getReturnType(func) {
+    if (func.expression && func.expression.right && func.expression.right.body && func.expression.right.body.body) {
+        let returnType = "void";
+        let returnStatement = func.expression.right.body.body.filter(e => e.type === "ReturnStatement")[0];
+        if (returnStatement && returnStatement.argument) {
+            switch(returnStatement.argument.type) {
+                case "NewExpression":
+                    returnType = returnStatement.argument.callee.name;
+                    break;
+                case "Identifier":
+                    let identifierName = returnStatement.argument.entity;
+                    let returnObject = func.expression.right.body.body.filter(e => e.type === "VariableDeclaration" && e.declarations[0].name === identifierName)[0];
+                    if (returnObject.declarations[0].init && returnObject.declarations[0].init.type === "NewExpression") {
+                        returnType = returnObject.declarations[0].init.callee.name
+                    }
+                    break;
+            }
+        }
+        return returnType;
+    }
 }
 
 function formatDocumentation(documentation) {
-    return documentation.replaceAll("\\*", "")
+    return documentation ? documentation.replaceAll("\\*", "") : documentation;
+}
+
+function isEmptyObject(obj) {
+    return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }
