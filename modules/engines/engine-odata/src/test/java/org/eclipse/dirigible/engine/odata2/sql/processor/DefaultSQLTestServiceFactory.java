@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
@@ -24,9 +24,9 @@ import org.apache.olingo.odata2.api.ODataService;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
-import org.eclipse.dirigible.engine.odata2.sql.binding.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.edm.TestChild;
 import org.eclipse.dirigible.engine.odata2.sql.edm.TestRoot;
+import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 
 public class DefaultSQLTestServiceFactory extends ODataServiceFactory {

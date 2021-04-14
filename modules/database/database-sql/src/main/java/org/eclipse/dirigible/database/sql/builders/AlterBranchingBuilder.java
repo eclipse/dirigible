@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders;
 
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
+import org.eclipse.dirigible.database.sql.builders.sequence.AlterSequenceBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
 
 /**
@@ -20,34 +21,36 @@ import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
  */
 public class AlterBranchingBuilder extends AbstractSqlBuilder {
 
-	/**
-	 * Instantiates a new creates the branching builder.
-	 *
-	 * @param dialect
-	 *            the dialect
-	 */
-	public AlterBranchingBuilder(ISqlDialect dialect) {
-		super(dialect);
-	}
+    /**
+     * Instantiates a new creates the branching builder.
+     *
+     * @param dialect the dialect
+     */
+    public AlterBranchingBuilder(ISqlDialect dialect) {
+        super(dialect);
+    }
 
-	/**
-	 * Table branch.
-	 *
-	 * @param table
-	 *            the table
-	 * @return the alters the table builder
-	 */
-	public AlterTableBuilder table(String table) {
-		return new AlterTableBuilder(getDialect(), table);
-	}
+    /**
+     * Table branch.
+     *
+     * @param table the table
+     * @return the alters the table builder
+     */
+    public AlterTableBuilder table(String table) {
+        return new AlterTableBuilder(getDialect(), table);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-	 */
-	@Override
-	public String generate() {
-		throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
-	}
+    public AlterSequenceBuilder sequence(String sequence) {
+        return new AlterSequenceBuilder(getDialect(), sequence);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+     */
+    @Override
+    public String generate() {
+        throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
+    }
 
 }

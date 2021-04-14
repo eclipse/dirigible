@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.scheduler.manager;
@@ -36,6 +36,7 @@ import org.quartz.JobKey;
 import org.quartz.ObjectAlreadyExistsException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -205,8 +206,12 @@ public class SchedulerManager {
 					job.getJobDataMap().put(ISchedulerCoreService.JOB_PARAMETER_ENGINE, jobDefinition.getEngine());
 				}
 
-				CronTrigger trigger = newTrigger().withIdentity(triggerKey).withSchedule(cronSchedule(jobDefinition.getExpression())).build();
-
+				Trigger trigger = null;
+				if (!jobDefinition.getExpression().equals("")) {					
+					trigger = newTrigger().withIdentity(triggerKey).withSchedule(cronSchedule(jobDefinition.getExpression())).build();
+				} else {
+					trigger = newTrigger().withIdentity(triggerKey).startNow().build();
+				}
 				scheduler.scheduleJob(job, trigger);
 
 				logger.info("Scheduled Job: [{}] of group: [{}] at: [{}]", jobDefinition.getName(), jobDefinition.getGroup(),

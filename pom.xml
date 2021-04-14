@@ -614,6 +614,7 @@
 		<module>modules/cms</module>
 		<module>modules/bpm</module>
 		<module>modules/security</module>
+		<module>modules/odata</module>
 
 		<module>groups/runtime-all</module>
 		<module>groups/runtime-javascript</module>

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
@@ -32,7 +32,6 @@ import org.apache.olingo.odata2.api.uri.UriParser;
 import org.apache.olingo.odata2.api.uri.expression.ExpressionParserException;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
-import org.eclipse.dirigible.engine.odata2.sql.binding.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils;
@@ -41,6 +40,7 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionW
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
+import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;

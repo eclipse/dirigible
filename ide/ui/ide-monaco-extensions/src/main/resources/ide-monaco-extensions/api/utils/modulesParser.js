@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var registry = require("platform/v4/registry");
+var extensions = require("core/v4/extensions");
 
 exports.getModules = function() {
     let modules = [];
@@ -23,6 +24,12 @@ exports.getModules = function() {
             });
         }
     }
+
+    let apiModulesExtensions = extensions.getExtensions("api-modules");
+    apiModulesExtensions.forEach(function(apiModule) {
+        var module = require(apiModule);
+        modules = modules.concat(module.getContent());
+    });
     return modules;
 }
 
