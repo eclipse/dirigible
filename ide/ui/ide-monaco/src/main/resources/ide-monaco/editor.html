@@ -10,6 +10,7 @@
             overflow: hidden;
             height: 100%
         }
+
         #embeddedEditor {
             margin: 0;
             position: absolute;
@@ -158,6 +159,11 @@
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);
 							messageHub.post({data: fileName}, 'editor.file.saved');
+							messageHub.post({
+								data: {
+									path: fileName
+								}
+							}, 'workspace.file.selected');
 							messageHub.post({data: 'File [' + fileName + '] saved.'}, 'status.message');
 							dirty = false;
 						} else {
