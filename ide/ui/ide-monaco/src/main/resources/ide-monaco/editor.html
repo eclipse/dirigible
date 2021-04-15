@@ -494,6 +494,12 @@
 
 							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
 
+							messageHub.subscribe(function() {
+								if (dirty) {
+									fileIO.saveText(_editor.getModel().getValue());
+								}
+							}, "workbench.editor.save");
+
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
 							_editor.addAction(createSaveAction());
