@@ -66,6 +66,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// v4
 		registerModulesV4();
+
+		// ext
+		registerModulesExt();
 	}
 
 	protected void registerModulesV4() {
@@ -276,6 +279,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v3/context/get.js");
 		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
 		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
+	}
+
+	protected void registerModulesExt() {
+		registerModulesEtcdExt();
+	}
+
+	private void registerModulesEtcdExt() {
+		TEST_MODULES.add("ext/etcd/client/getClient.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
