@@ -35,7 +35,7 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(RabbitMQFacade.class);
 
-	private static Map<String, RabbitMQReceiverRunner> RECEIVERS = Collections.synchronizedMap(new HashMap());
+	private static Map<String, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
 
 	public static Connection connect() {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -65,6 +65,12 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		return channel;
 	}
 
+	/**
+	 * Send message to given queue
+	 * 
+	 * @param queue the queue being used
+	 * @param message the message to be delivered
+	 */
 	public static void send(String queue, String message) {
 		try {
 			Connection connection = connect();
@@ -79,35 +85,64 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 		}
 	}
 
-	public static final void startReceive(String queue) {
+	/**
+	 * Start listening given queue and destination
+	 * 
+	 * @param queue the queue being used
+	 * @param handler the destination for the message
+	 */
+	public static final void startListening(String queue, String handler) {
 		Connection connection = connect();
 		Channel channel = createChannel(connection);
+		String location = null;
 		
 		RabbitMQReceiverRunner receiverRunner = null;
-		receiverRunner = RECEIVERS.get(queue);
+		location = createLocation(queue, handler);
+		receiverRunner = CONSUMERS.get(location);
 		
 		if(receiverRunner == null) {
-			receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue);
+			receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, handler);
 			Thread receiverThread = new Thread(receiverRunner);
 			receiverThread.setDaemon(false);
 			receiverThread.start();
 			
-			RECEIVERS.put(queue, receiverRunner);
+			CONSUMERS.put(location, receiverRunner);
 			logger.info("RabbitMQ receiver created for [" + queue + "]");
 		}else {
 			logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");
 		}
 	}
 
-	public static final void stopReceive(String queue) {
+	
+	/**
+	 * Stop listening on given queue and destination
+	 * 
+	 * @param queue the queue being used
+	 * @param handler the destination for the message
+	 */
+	public static final void stopListening(String queue, String handler) {
 		RabbitMQReceiverRunner receiverRunner = null;
-		receiverRunner = RECEIVERS.get(queue);
+		String location = null;
+		
+		location = createLocation(queue, handler);
+		receiverRunner = CONSUMERS.get(location);
 		if(receiverRunner != null) {
 			receiverRunner.stop();
-			RECEIVERS.remove(queue);
+			CONSUMERS.remove(location);
 			logger.info("RabbitMQ receiver stopped for [" + queue + "]");
 		}else {
 			logger.warn("RabbitMQ receiver [" + queue + "] has not been started yet.");
 		}
 	}
+	
+	/**
+	 * Create internal identifier for a consumer
+	 * 
+	 * @param queue the queue being used
+	 * @param handler the destination for the message
+	 * @return the identifier
+	 */
+	private static String createLocation(String queue, String handler) {
+		return "[" + queue + "]:[" + handler + "]";
+	}	
 }
