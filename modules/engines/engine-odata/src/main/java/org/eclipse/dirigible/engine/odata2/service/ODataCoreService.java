@@ -28,6 +28,7 @@ import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
@@ -48,6 +49,9 @@ public class ODataCoreService implements IODataCoreService {
 	
 	@Inject
 	private PersistenceManager<ODataDefinition> odataPersistenceManager;
+	
+	@Inject
+	private PersistenceManager<ODataHandlerDefinition> odataHandlerPersistenceManager;
 
 
 	@Override
@@ -476,9 +480,7 @@ public class ODataCoreService implements IODataCoreService {
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA").toString();
-				List<ODataDefinition> tableModels = odataPersistenceManager.query(connection, ODataDefinition.class, sql);
-				return tableModels;
+				return odataPersistenceManager.findAll(connection, ODataDefinition.class);
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -504,5 +506,182 @@ public class ODataCoreService implements IODataCoreService {
 			throw new ODataException(e);
 		}		
 	}
+
+	@Override
+	public ODataHandlerDefinition createHandler(String location, String namespace, String name, String method,
+			String type, String handler) throws ODataException {
+		ODataHandlerDefinition odataHandlerDefinition = new ODataHandlerDefinition();
+		odataHandlerDefinition.setLocation(location);
+		odataHandlerDefinition.setNamespace(namespace);
+		odataHandlerDefinition.setName(name);
+		odataHandlerDefinition.setMethod(method);
+		odataHandlerDefinition.setType(type);
+		odataHandlerDefinition.setHandler(handler);
+		odataHandlerDefinition.setCreatedBy(UserFacade.getName());
+		odataHandlerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				odataHandlerPersistenceManager.insert(connection, odataHandlerDefinition);
+				return odataHandlerDefinition;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+	
+	@Override
+	public ODataHandlerDefinition getHandler(String location, String namespace, String name, String method, String type)
+			throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA_HANDLER")
+						.where("ODATAH_LOCATION = ?")
+						.where("ODATAH_NAMESPACE = ?")
+						.where("ODATAH_NAME = ?")
+						.where("ODATAH_METHOD = ?")
+						.where("ODATAH_TYPE = ?")
+						.build();
+				List<ODataHandlerDefinition> handlerModels = odataHandlerPersistenceManager.query(connection, ODataHandlerDefinition.class, sql,
+						location, namespace, name, method, type);
+				return handlerModels.size() > 0 ? handlerModels.get(0) : null;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public List<ODataHandlerDefinition> getHandlers(String namespace, String name, String method, String type)
+			throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA_HANDLER")
+						.where("ODATAH_NAMESPACE = ?")
+						.where("ODATAH_NAME = ?")
+						.where("ODATAH_METHOD = ?")
+						.where("ODATAH_TYPE = ?")
+						.build();
+				List<ODataHandlerDefinition> handlerModels = odataHandlerPersistenceManager.query(connection, ODataHandlerDefinition.class, sql,
+						namespace, name, method, type);
+				return handlerModels;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public boolean existsHandler(String namespace, String name, String method, String type) throws ODataException {
+		return getHandlers(namespace, name, method, type).size() > 0;
+	}
+
+	@Override
+	public void removeHandler(String location, String namespace, String name, String method, String type)
+			throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_HANDLER")
+						.where("ODATAH_LOCATION = ?")
+						.where("ODATAH_NAMESPACE = ?")
+						.where("ODATAH_NAME = ?")
+						.where("ODATAH_METHOD = ?")
+						.where("ODATAH_TYPE = ?")
+						.build();
+				odataHandlerPersistenceManager.execute(connection, sql, location, namespace, name, method, type);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public void removeHandlers(String location) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_HANDLER")
+						.where("ODATAH_LOCATION = ?")
+						.build();
+				odataHandlerPersistenceManager.execute(connection, sql, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+
+	@Override
+	public void updateHandler(String location, String namespace, String name, String method, String type,
+			String handler) throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				ODataHandlerDefinition odataHandlerDefinition = getHandler(location, namespace, name, method, type);
+				odataHandlerDefinition.setLocation(location);
+				odataHandlerDefinition.setNamespace(namespace);
+				odataHandlerDefinition.setName(name);
+				odataHandlerDefinition.setMethod(method);
+				odataHandlerDefinition.setType(type);
+				odataHandlerDefinition.setHandler(handler);
+				odataHandlerPersistenceManager.update(connection, odataHandlerDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+		
+	}
+
+	@Override
+	public List<ODataHandlerDefinition> getAllHandlers() throws ODataException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				return odataHandlerPersistenceManager.findAll(connection, ODataHandlerDefinition.class);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new ODataException(e);
+		}
+	}
+	
+	
 
 }

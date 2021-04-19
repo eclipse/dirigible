@@ -30,7 +30,9 @@ import org.apache.olingo.odata2.core.edm.provider.EdmxProvider;
 import org.eclipse.dirigible.api.v3.db.DatabaseFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
+import org.eclipse.dirigible.engine.odata2.handler.ScriptingOData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 import org.slf4j.Logger;
@@ -38,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DefaultSQLProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultSQLProcessor.class);
 	
 	private static IODataCoreService odataCoreService = StaticInjector.getInjector().getInstance(ODataCoreService.class);
 
@@ -51,12 +53,14 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 			setDefaultDataSource(ctx);
 			
 			DefaultEdmTableMappingProvider tableMappingProvider = new DefaultEdmTableMappingProvider();
+			
+			OData2EventHandler odata2EventHandler = StaticInjector.getInjector().getInstance(ScriptingOData2EventHandler.class);
 
-			DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(tableMappingProvider);
+			DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(tableMappingProvider, odata2EventHandler);
 
 			return createODataSingleProcessorService(edmProvider, singleProcessor);
 		} catch (org.eclipse.dirigible.engine.odata2.api.ODataException e) {
-			LOG.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			throw new ODataException(e);
 		}
 	}
@@ -72,7 +76,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 	private class ODataDefaulErrorCallback implements ODataErrorCallback {
 		@Override
 		public ODataResponse handleError(ODataErrorContext context) throws ODataApplicationException {
-			LOG.error(context.getMessage(), context.getException());
+			logger.error(context.getMessage(), context.getException());
 			return EntityProvider.writeErrorDocument(context);
 		}
 	}
