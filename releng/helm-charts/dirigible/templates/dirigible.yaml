@@ -36,8 +36,8 @@ spec:
       serviceAccountName: {{ include "dirigible.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.database.enabled }}
       initContainers:
+        {{- if .Values.database.enabled }}
         - name: wait-db-ready
           image: busybox:1.28
           command:
@@ -50,7 +50,14 @@ spec:
         #     - sh
         #     - -c
         #     - until pg_isready -h {{ include "dirigible.fullname" . }}-database -p 5432; do echo waiting for database; sleep 2; done;
-      {{- end }}
+        {{- else if .Values.volume.enabled }}
+        - name: wait-volume-ready
+          image: busybox:1.28
+          command:
+            - sh
+            - -c
+            - for i in {1..15}; do echo "Waiting for volume creation ..."; sleep 2; done;
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- if .Values.volume.enabled }}

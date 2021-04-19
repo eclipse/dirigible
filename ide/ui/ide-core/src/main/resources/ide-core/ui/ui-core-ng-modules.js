@@ -340,6 +340,58 @@ angular.module('ideUiCore', ['ngResource'])
 		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/sidebar.html'
 	}
 }])
+.directive('alert', ['messageHub', function(messageHub) {
+	return {
+		restrict: 'AE',
+		transclude: true,
+		replace: 'true',
+		scope: {
+			active: '@'
+		},
+		link: function(scope, el, attrs){
+			let alertModalId = "#alertModal";
+
+			scope.clearAlerts = function() {
+				scope.alerts = [];
+				$(alertModalId).modal('hide')
+			};
+
+			messageHub.on('ide.alert', function(msg) {
+				let alert = {
+					messageType: "info",
+					title: msg.data.title,
+					message: msg.data.message
+				};
+
+				if (msg.data.type) {
+					switch(msg.data.type.toLowerCase()) {
+						case "success":
+						case "ok":
+							alert.messageType = "success";
+							break;
+						case "warning":
+							alert.messageType = "warning";
+							break;
+						case "info":
+							alert.messageType = "info";
+							break;
+						case "error":
+						case "danger":
+							alert.messageType = "danger";
+							break;
+					}
+				}
+				if (!scope.alerts) {
+					scope.alerts = [];
+				}
+				scope.alerts.push(alert);
+				$(alertModalId).modal('show')
+				scope.$apply();
+			});
+		},
+		templateUrl: '../../../../services/v4/web/ide-core/ui/tmpl/alert.html'
+	}
+}])
 .directive('statusBar', ['messageHub', function(messageHub){
 	return {
 		restrict: 'AE',

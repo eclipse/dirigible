@@ -38,6 +38,16 @@ public class SequenceTest {
 		assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
 	}
 
+	@Test
+	public void alterSequence(){
+		String sql = SqlFactory.getDefault()
+				.alter()
+				.sequence("CUSTOMERS_SEQUENCE")
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+	}
 	/**
 	 * Creates the sequence case sensitive.
 	 */

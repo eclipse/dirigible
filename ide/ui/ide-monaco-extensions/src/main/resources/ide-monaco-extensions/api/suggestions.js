@@ -9,26 +9,12 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var response = require("http/v4/response");
-var request = require("http/v4/request");
-var suggestionsParser = require("ide-monaco-extensions/api/utils/suggestionsParser");
+let response = require("http/v4/response");
+let request = require("http/v4/request");
+let moduleInfoCache = require("ide-monaco-extensions/api/utils/moduleInfoCache");
 
-var suggestions = suggestionsParser.parse(request.getParameter("moduleName"));
+let moduleInfo = moduleInfoCache.get(request.getParameter("moduleName"));
 
-var secondLevelSuggestions = [];
-
-suggestions
-    .filter(e => e.returnType)
-    .forEach(function(e) {
-        e.returnType.functions.forEach(function(f) {
-            f.parent = e.name.substring(0, e.name.indexOf("("));
-            f.fqn = e.name + "." + f.name
-        });
-        secondLevelSuggestions = secondLevelSuggestions.concat(e.returnType.functions);
-    });
-
-suggestions = suggestions.concat(secondLevelSuggestions);
-
-response.print(JSON.stringify(suggestions));
+response.print(JSON.stringify(moduleInfo.suggestions));
 response.flush();
 response.close();

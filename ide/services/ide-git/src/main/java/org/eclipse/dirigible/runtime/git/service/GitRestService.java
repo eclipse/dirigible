@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.git.service;
@@ -107,6 +107,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/pull")
@@ -114,7 +115,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Pull Git Projects into the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Projects Pulled") })
 	public Response pullProjects(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			GitPullModel model) {
+			GitPullModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -130,6 +131,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/pull")
@@ -137,7 +139,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Pull Git Project into the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Pulled") })
 	public Response pullProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPullModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPullModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -153,6 +155,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/push")
@@ -160,7 +163,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Push Git Projects into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Projects Pushed") })
 	public Response pushProjects(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			GitPushModel model) {
+			GitPushModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -176,6 +179,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/push")
@@ -183,7 +187,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Push Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Pushed") })
 	public Response pushProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -199,6 +203,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param workspace the workspace
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/reset")
@@ -206,7 +211,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Hard Reset Git Projects in the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Projects Reset") })
 	public Response resetProjects(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			GitResetModel model) {
+			GitResetModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -222,6 +227,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/reset")
@@ -229,7 +235,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Hard Reset Git Project in the Workspace")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Reset") })
 	public Response resetProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitResetModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitResetModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -269,6 +275,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/share")
@@ -276,7 +283,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Share Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Shared") })
 	public Response shareProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitShareModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitShareModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -293,6 +300,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/checkout")
@@ -300,7 +308,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Checkout Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Branch is Checked-out") })
 	public Response checkoutBranch(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitCheckoutModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitCheckoutModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -317,6 +325,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param model the model
 	 * @return the response
+	 * @throws GitConnectorException 
 	 */
 	@POST
 	@Path("/{project}/commit")
@@ -324,7 +333,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Commit Git Project into Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Committed") })
 	public Response commitProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project, GitPushModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);

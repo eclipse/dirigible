@@ -10,6 +10,7 @@
             overflow: hidden;
             height: 100%
         }
+
         #embeddedEditor {
             margin: 0;
             position: absolute;
@@ -28,15 +29,16 @@
 		<div  id="embeddedEditor"></div>
 		
 		<script src="monaco-editor/min/vs/loader.js"></script>
+		<script src="js/assignmentsParser.js"></script>
 		<script>
-		    var messageHub = new FramesMessageHub();
+
+			var messageHub = new FramesMessageHub();
 		    var csrfToken;
 		    var dirty = false;
 
 			var modulesSuggestions = [];
-			var codeCompletionSuggestions = [];
-			var codeCompletionNestedSuggestions = {};
-			var codeCompletionNestedObjectsSuggestions = [];
+			var codeCompletionSuggestions = {};
+			var codeCompletionAssignments = {};
 			var _editor;
 
 		    /*eslint-disable no-extend-native */
@@ -157,6 +159,11 @@
 							xhr.onerror = () => reject(xhr.statusText);
 							xhr.send(text);
 							messageHub.post({data: fileName}, 'editor.file.saved');
+							messageHub.post({
+								data: {
+									path: fileName
+								}
+							}, 'workspace.file.selected');
 							messageHub.post({data: 'File [' + fileName + '] saved.'}, 'status.message');
 							dirty = false;
 						} else {
@@ -397,15 +404,13 @@
 				xhrModules.send();
 			}
 
-			function loadSuggestions(moduleName, suggestions, nestedSuggestions) {
+			function loadSuggestions(moduleName, suggestions) {
 				if (moduleName.split("/").length <= 1) {
 					return
 				}
 
-				for (var i = 0; i < suggestions.length; i ++) {
-					if (suggestions[i].module === moduleName) {
-						return;
-					}
+				if (suggestions[moduleName]) {
+					return;
 				}
 
 				var xhr = new XMLHttpRequest();
@@ -414,20 +419,7 @@
 				xhr.onload = function(xhr) {
 					if (xhr.target.status === 200) {
 						var loadedSuggestions = JSON.parse(xhr.target.responseText);
-						suggestions.push({
-							module: moduleName,
-							suggestions: loadedSuggestions.filter(e => e.parent === undefined || e.parent === null)
-						});
-						loadedSuggestions
-							.filter(e => e.parent !== undefined && e.parent !== null)
-							.forEach(function(suggestion) {
-								var key = moduleName + "." + suggestion.parent;
-								if (!nestedSuggestions[key]) {
-									nestedSuggestions[key] = [];
-								}
-								nestedSuggestions[key].push(suggestion);
-							});
-						loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
+						suggestions[moduleName] = loadedSuggestions;
 					}
 				};
 				xhr.send();
@@ -453,54 +445,29 @@
 				return moduleImports;
 			}
 
-			function loadNestedSuggestions(nestedObjectsSuggestions) {
-				var text = _editor.getValue();
-				var modules = getModuleImports(text);
-
-				var nestedKeys = {};
-				for (var key in codeCompletionNestedSuggestions) {
-					var split = key.split(".");
-					var moduleKey = split[0];
-					var functionKey = split[1];
-					modules.forEach(e => {
-						if (e.module === moduleKey) {
-							nestedKeys[e.keyWord + "." + functionKey] = codeCompletionNestedSuggestions[key];
-						}
-					});
+			function traverseAssignment(assignment, assignmentInfo) {
+				if (assignment.parentModule) {
+					traverseAssignment(assignment.parentModule, assignmentInfo);
 				}
-
-				for (var keyword in nestedKeys) {
-					var objects = text.match(new RegExp("(var|let)\\s[a-zA-Z0-9_-]+\\s?=\\s?" + keyword, "gm"))
-					if (objects) {
-						objects.map(function(text) {
-							var split = text.split("=");
-							var key = split[0].replace("var ", "").replace("let ", "").trim();
-							return {
-								keyWord: key,
-								suggestions: nestedKeys[keyword]
-							}
-						}).forEach(e => {
-							let found = false;
-							for (let i = 0; i < nestedObjectsSuggestions.length; i ++) {
-								if (e.keyWord === nestedObjectsSuggestions[i].keyWord) {
-									found = true;
-									break;
-								}
-							}
-							if (!found) {
-								nestedObjectsSuggestions.push(e);
-							}
-						});
-					}
+				if (assignment.parentModule && !assignment.parentModule.parentModule) {
+					assignmentInfo.parentModule = assignment.parentModule
+				}
+				if (assignment.method) {
+					assignmentInfo.methods.push(assignment.method);
 				}
 			}
 
 			(function init(){
-				require.config({ paths: { 'vs': 'monaco-editor/min/vs' }});
+				require.config({
+					paths: {
+						'vs': 'monaco-editor/min/vs',
+						'parser': 'js/parser'
+					}
+				});
 
 				loadModuleSuggestions(modulesSuggestions);
 
-				require(['vs/editor/editor.main'], function() {
+				require(['vs/editor/editor.main', 'parser/acorn-loose.min'], function(monaco, acornLoose) {
 					var fileIO = new FileIO();
 					var fileName = fileIO.resolveFileName();
 
@@ -523,8 +490,15 @@
 							var fileType = fileIO.resolveFileType(fileName);
 
 							var moduleImports = getModuleImports(fileText);
+							codeCompletionAssignments = parseAssignments(acornLoose, fileText);
 
-							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions, codeCompletionNestedSuggestions));
+							moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
+
+							messageHub.subscribe(function() {
+								if (dirty) {
+									fileIO.saveText(_editor.getModel().getValue());
+								}
+							}, "workbench.editor.save");
 
 							var model = monaco.editor.createModel(fileText, fileType || 'text');
 							_editor.setModel(model);
@@ -538,7 +512,9 @@
 								messageHub.post({data: caretInfo}, 'status.caret');
 							});
 							_editor.onDidChangeModelContent(function(e) {
-								loadNestedSuggestions(codeCompletionNestedObjectsSuggestions);
+								if (e.changes && e.changes[0].text === ".") {
+									codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
+								}
 								var newModuleImports = getModuleImports(_editor.getValue());
 								if (e && !dirty) {
 									dirty = true;
@@ -563,9 +539,8 @@
 							});
 							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {return new Module();};', 'js:require.js');
 							monaco.languages.registerCompletionItemProvider('javascript', {
+								triggerCharacters: ["\"", "'"],
 							    provideCompletionItems: function(model, position) {
-							        // find out if we are completing a property in the 'dependencies' object.
-//							        var wordObject = model.getWordUntilPosition(position);
 							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
 							        if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0) {
 							            return { suggestions: [] };
@@ -589,7 +564,7 @@
 											return {
 												label: e.name,
 												kind: monaco.languages.CompletionItemKind.Module,
-												documentation: e.description,
+												documentation: e.documentation,
 												detail: e.description,
 												insertText: e.name,
 												range: range
@@ -599,13 +574,17 @@
 							    }
 							});
 							monaco.languages.registerCompletionItemProvider('javascript', {
+								triggerCharacters: ["."],
 							    provideCompletionItems: function(model, position) {
 							        var token = model.getValueInRange({startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column})
 
-							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
+							        var moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
 									var afterDotToken = token.substring(token.indexOf(".") + 1);
 									var tokenParts = token.split(".");
 									var moduleName = moduleImport ? moduleImport.module : null;
+									if (tokenParts != null && tokenParts.length > 2) {
+										moduleName = null;
+									}
 									var nestedObjectKeyword = null;
 									if (!moduleName) {
 										var nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
@@ -625,15 +604,34 @@
 										endColumn: wordPosition.endColumn
 									};
 									var suggestions = [];
-									var moduleSuggestions = codeCompletionSuggestions.filter(e => e.module === moduleName)[0];
+									var moduleSuggestions = codeCompletionSuggestions[moduleName];
 									if (moduleSuggestions) {
-										suggestions = moduleSuggestions.suggestions;
+										Object.keys(moduleSuggestions["exports"]).forEach(suggestionName => {
+											let suggestion = moduleSuggestions["exports"][suggestionName];
+											suggestion.name = suggestion.definition;
+											suggestions.push(suggestion);
+										});
 									} else if (nestedObjectKeyword) {
-										codeCompletionNestedObjectsSuggestions.forEach(function(e) {
-											if (e.keyWord.trim() === nestedObjectKeyword) {
-												suggestions = e.suggestions;
+										let assignment = codeCompletionAssignments[nestedObjectKeyword];
+										if (assignment) {
+											let assignmentInfo = {
+												parentModule: null,
+												methods: []
+											};
+											traverseAssignment(assignment, assignmentInfo);
+
+											let parentObject = "exports";
+											for (let i = 0; i < assignmentInfo.methods.length; i ++) {
+												parentObject = codeCompletionSuggestions[assignmentInfo.parentModule][parentObject][assignmentInfo.methods[i]].returnType;
 											}
-										})
+
+											let moduleSuggestions = codeCompletionSuggestions[assignmentInfo.parentModule];
+											Object.keys(moduleSuggestions[parentObject]).forEach(suggestionName => {
+												let suggestion = moduleSuggestions[parentObject][suggestionName];
+												suggestion.name = suggestion.definition;
+												suggestions.push(suggestion);
+											});
+										}
 									}
 							        return {
 										suggestions: suggestions

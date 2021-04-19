@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.core.git.command;
@@ -43,8 +43,9 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	 *            the password
 	 * @param publishAfterClone
 	 *            the publish after clone
+	 * @throws GitConnectorException 
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) {
+	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) throws GitConnectorException {
 		for (IProject selectedProject : projects) {
 			String user = UserFacade.getName();
 			try {
@@ -54,10 +55,10 @@ public class UpdateDependenciesCommand extends CloneCommand {
 					publishProjects(workspace, clonedProjects);
 				}
 				logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));
-			} catch (IOException e) {
-				logger.error(String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName()), e);
-			} catch (GitConnectorException e) {
-				logger.error(String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName()), e);
+			} catch (IOException | GitConnectorException e) {
+				String errorMessage = String.format("Error occured while updating dependencies of the project [%s]", selectedProject.getName());
+				logger.error(errorMessage, e);
+				throw new GitConnectorException(errorMessage, e);
 			}
 		}
 	}

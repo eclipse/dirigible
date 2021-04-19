@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.builders.sequence;
@@ -21,143 +21,230 @@ import org.slf4j.LoggerFactory;
  */
 public class CreateSequenceBuilder extends AbstractCreateSqlBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateSequenceBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateSequenceBuilder.class);
 
-	private String sequence = null;
+    private String sequence;
 
-	private int start = 0;
+    private Integer start;
 
-	private int increment = 1;
+    private Integer increment;
 
-	/**
-	 * Instantiates a new creates the sequence builder.
-	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param sequence
-	 *            the sequence
-	 */
-	public CreateSequenceBuilder(ISqlDialect dialect, String sequence) {
-		super(dialect);
-		this.sequence = sequence;
-	}
+    private Integer maxvalue;
 
-	/**
-	 * Start.
-	 *
-	 * @param start
-	 *            the start
-	 * @return the creates the sequence builder
-	 */
-	public CreateSequenceBuilder start(int start) {
-		logger.trace("start: " + start);
-		this.start = start;
-		return this;
-	}
+    private Boolean nomaxvalue;
 
-	/**
-	 * Increment.
-	 *
-	 * @param increment
-	 *            the increment
-	 * @return the creates the sequence builder
-	 */
-	public CreateSequenceBuilder increment(int increment) {
-		logger.trace("increment: " + increment);
-		this.increment = increment;
-		return this;
-	}
+    private Integer minvalue;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-	 */
-	@Override
-	public String generate() {
+    private Boolean nominvalue;
 
-		StringBuilder sql = new StringBuilder();
+    private Boolean cycles;
 
-		// CREATE
-		generateCreate(sql);
+    private String resetBy;
 
-		// SEQUENCE
-		generateSequence(sql);
+    private Boolean publicc;
 
-		// // START
-		generateStart(sql);
-		//
-		// // INCREMENT
-		generateIncrement(sql);
+    public CreateSequenceBuilder(ISqlDialect dialect, String sequence) {
+        super(dialect);
+        this.sequence = sequence;
+    }
 
-		String generated = sql.toString();
+    /**
+     * Gets the sequence.
+     *
+     * @return the sequence
+     */
+    public String getSequence() {
+        return sequence;
+    }
 
-		logger.trace("generated: " + generated);
+    /**
+     * Gets the start.
+     *
+     * @return the start
+     */
+    public Integer getStart() {
+        return start;
+    }
 
-		return generated;
-	}
+    /**
+     * Gets the increment.
+     *
+     * @return the increment
+     */
+    public Integer getIncrement() {
+        return increment;
+    }
 
-	/**
-	 * Generate sequence.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateSequence(StringBuilder sql) {
-		String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence()) : this.getSequence();
-		sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(sequenceName);
-	}
+    public CreateSequenceBuilder start(Integer start) {
+        logger.trace("start: " + start);
+        this.start = start;
+        return this;
+    }
 
-	/**
-	 * Generate start.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateStart(StringBuilder sql) {
-		// sql.append(SPACE)
-		// .append(KEYWORD_START)
-		// .append(SPACE)
-		// .append(this.start);
-	}
+    /**
+     * Increment.
+     *
+     * @param increment the increment
+     * @return the creates the sequence builder
+     */
+    public CreateSequenceBuilder increment(int increment) {
+        logger.trace("increment: " + increment);
+        this.increment = increment;
+        return this;
+    }
 
-	/**
-	 * Generate increment.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateIncrement(StringBuilder sql) {
-		// sql.append(SPACE)
-		// .append(KEYWORD_INCREMENT)
-		// .append(SPACE)
-		// .append(this.increment);
-	}
+    public CreateSequenceBuilder maxvalue(Integer maxvalue) {
+        logger.trace("maxvalue: " + maxvalue);
+        this.maxvalue = maxvalue;
+        return this;
+    }
 
-	/**
-	 * Gets the sequence.
-	 *
-	 * @return the sequence
-	 */
-	public String getSequence() {
-		return sequence;
-	}
+    public CreateSequenceBuilder nomaxvalue(Boolean nomaxvalue) {
+        logger.trace("nomaxvalue: " + nomaxvalue);
+        this.nomaxvalue = nomaxvalue;
+        return this;
+    }
 
-	/**
-	 * Gets the start.
-	 *
-	 * @return the start
-	 */
-	public int getStart() {
-		return start;
-	}
+    public CreateSequenceBuilder minvalue(Integer minvalue) {
+        logger.trace("minvalue: " + minvalue);
+        this.minvalue = minvalue;
+        return this;
+    }
 
-	/**
-	 * Gets the increment.
-	 *
-	 * @return the increment
-	 */
-	public int getIncrement() {
-		return increment;
-	}
+    public CreateSequenceBuilder nominvalue(Boolean nominvalue) {
+        logger.trace("nominvalue: " + nominvalue);
+        this.nominvalue = nominvalue;
+        return this;
+    }
+
+    public CreateSequenceBuilder cycles(Boolean cycles) {
+        logger.trace("cycles: " + cycles);
+        this.cycles = cycles;
+        return this;
+    }
+
+    public CreateSequenceBuilder resetBy(String resetBy) {
+        logger.trace("resetBy: " + resetBy);
+        this.resetBy = resetBy;
+        return this;
+    }
+
+    public CreateSequenceBuilder publicc(Boolean publicc) {
+        logger.trace("public: " + publicc);
+        this.publicc = publicc;
+        return this;
+    }
+
+    @Override
+    public String generate() {
+        StringBuilder sql = new StringBuilder();
+
+        // CREATE
+        generateCreate(sql);
+
+        // SEQUENCE
+        generateSequence(sql);
+
+        // START_WITH
+        generateStart(sql);
+
+        // INCREMENT_BY
+        generateIncrement(sql);
+
+        //MAXVALUE
+        generateMaxvalue(sql);
+
+        //NO MAXVALUE
+        generateNomaxvalue(sql);
+
+        //MINVALUE
+        generateMinvalue(sql);
+
+        //NO MINVALUE
+        generateNominvalue(sql);
+
+        //CYCLE
+        generateCycle(sql);
+
+        //RESET BY
+        generateResetBy(sql);
+
+        String generated = sql.toString();
+
+        logger.trace("generated: " + generated);
+
+        return generated;
+    }
+
+    /**
+     * Generate sequence.
+     *
+     * @param sql the sql
+     */
+    protected void generateSequence(StringBuilder sql) {
+        String sequenceName = (isCaseSensitive()) ? encapsulate(this.sequence) : this.sequence;
+        sql.append(SPACE).append(KEYWORD_SEQUENCE).append(SPACE).append(sequenceName);
+    }
+
+
+    protected void generateStart(StringBuilder sql) {
+        if (this.start != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_START_WITH, String.valueOf(this.start));
+        }
+
+    }
+
+    protected void generateIncrement(StringBuilder sql) {
+        if (this.increment != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_INCREMENT_BY, String.valueOf(this.increment));
+        }
+    }
+
+    protected void generateMaxvalue(StringBuilder sql) {
+        if (this.maxvalue != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_MAXVALUE, String.valueOf(this.maxvalue));
+        }
+
+    }
+
+    protected void generateNomaxvalue(StringBuilder sql) {
+        if ((this.nomaxvalue != null && this.nomaxvalue)) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_NO_MAXVALUE, KEYWORD_SEQUENCE_EMPTY_STRING_FOR_BOOLEAN_TYPES);
+        }
+
+    }
+
+    protected void generateMinvalue(StringBuilder sql) {
+        if (this.minvalue != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_MINVALUE, String.valueOf(this.minvalue));
+        }
+    }
+
+    protected void generateNominvalue(StringBuilder sql) {
+        if ((this.nominvalue != null && this.nominvalue)) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_NO_MINVALUE, KEYWORD_SEQUENCE_EMPTY_STRING_FOR_BOOLEAN_TYPES);
+        }
+    }
+
+    protected void generateCycle(StringBuilder sql) {
+        if (this.cycles != null && this.cycles) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_CYCLE, KEYWORD_SEQUENCE_EMPTY_STRING_FOR_BOOLEAN_TYPES);
+        }
+
+    }
+
+    protected void generateResetBy(StringBuilder sql) {
+        if (this.resetBy != null) {
+            generateSequenceParameter(sql, KEYWORD_SEQUENCE_RESET_BY, String.valueOf(this.resetBy));
+        }
+
+    }
+
+    protected void generateSequenceParameter(StringBuilder sql, String parameterName, String parameterValue) {
+        sql.append(SPACE)
+                .append(parameterName)
+                .append(SPACE)
+                .append(parameterValue);
+    }
 
 }

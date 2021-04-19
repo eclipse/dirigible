@@ -73,4 +73,37 @@ public class DeleteTest {
 			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
 		}
 	}
+
+	@Test
+	public void deleteWehereWithSpecialCharsCaseSensitiveWIthEqualCondition() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+					.delete()
+					.from("CUSTOMERS")
+					.where("id= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\'")
+					.build();
+
+			assertNotNull(sql);
+			assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\"= 'asas.as.as:asas`,_!@#$%^&*()+-::/\\')", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
+	@Test
+	public void deleteWehereWithSpecialCharsCaseSensitiveWithInCondition() {
+		Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+		try {
+			String sql = SqlFactory.getDefault()
+					.delete()
+					.from("CUSTOMERS")
+					.where("id in('as', 'bd')")
+					.build();
+
+			assertNotNull(sql);
+			assertEquals("DELETE FROM \"CUSTOMERS\" WHERE (\"id\" in('as', 'bd'))", sql);
+		} finally {
+			Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+		}
+	}
 }

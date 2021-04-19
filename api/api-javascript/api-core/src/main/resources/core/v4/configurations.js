@@ -31,7 +31,12 @@ exports.remove = function(key) {
 };
 
 exports.getKeys = function() {
-	return org.eclipse.dirigible.commons.config.Configuration.getKeys();
+	let keys = [];
+	let keysAsArray = org.eclipse.dirigible.commons.config.Configuration.getKeys();
+	for (let i = 0; i < keysAsArray.length; i ++) {
+		keys.push(keysAsArray[i]);
+	}
+	return keys;
 };
 
 exports.load = function(path) {

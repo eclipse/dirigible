@@ -22,6 +22,7 @@
 		
 		<!-- Plugin Modules -->
 		<module>ide-console</module>
+		<module>ide-core</module>
 		<module>ide-databases</module>
 		<module>ide-generation</module>
 		<module>ide-git</module>

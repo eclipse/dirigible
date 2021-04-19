@@ -91,8 +91,33 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 	}])
 	.factory('$messageHub', [function () {
 		var messageHub = new FramesMessageHub();
-
+		var announceAlert = function(title, message, type) {
+			messageHub.post({
+				data: {
+					title: title,
+					message: message,
+					type: type
+				}
+			}, 'ide.alert');
+		};
+		var announceAlertSuccess = function(title, message) {
+			announceAlert(title, message, "success");
+		};
+		var announceAlertInfo = function(title, message) {
+			announceAlert(title, message, "info");
+		};
+		var announceAlertWarning = function(title, message) {
+			announceAlert(title, message, "warning");
+		};
+		var announceAlertError = function(title, message) {
+			announceAlert(title, message, "error");
+		};
 		return {
+			announceAlert: announceAlert,
+			announceAlertSuccess: announceAlertSuccess,
+			announceAlertInfo: announceAlertInfo,
+			announceAlertWarning: announceAlertWarning,
+			announceAlertError: announceAlertError,
 			on: function (evt, cb) {
 				messageHub.subscribe(cb, evt);
 			}
@@ -113,6 +138,7 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 		}
 
 		this.refresh = function () {
+			var messageHub = $messageHub;
 			if (!this.selectedWorkspace || !this.selectedProject) {
 				this.history = [];
 				this.scope.$apply();
@@ -127,7 +153,10 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 					} catch (e) {
 						//
 					}
-				}.bind(this));
+				}.bind(this), function (response) {
+					let errorMessage = JSON.parse(response.data.error).message;
+					messageHub.announceAlertError("Loading Git Repository History Error", errorMessage);
+				});
 		};
 
 		$messageHub.on('git.repository.selected', function (msg) {
