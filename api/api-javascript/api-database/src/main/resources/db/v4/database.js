@@ -170,6 +170,17 @@ function PreparedStatement(internalStatement) {
 		this.native.close();
 	};
 
+	this.getResultSet = function() {
+		var resultset = new ResultSet();
+		var native = this.native.getResultSet();
+		resultset.native = native;
+		return resultset;
+	};
+
+	this.execute = function() {
+		return this.native.execute();
+	};
+
 	this.executeQuery = function() {
 		var resultset = new ResultSet();
 		var native = this.native.executeQuery();
@@ -350,7 +361,7 @@ function PreparedStatement(internalStatement) {
     };
 
     this.getMoreResults = function() {
-        return this.native.getMoreResults();
+		return this.native.getMoreResults();
     };
 
     this.getParameterMetaData = function() {
@@ -376,6 +387,24 @@ function PreparedStatement(internalStatement) {
 }
 
 function CallableStatement() {
+
+	this.getResultSet = function() {
+		var resultset = new ResultSet();
+		var native = this.native.getResultSet();
+		resultset.native = native;
+		return resultset;
+	};
+
+	this.executeQuery = function() {
+		var resultset = new ResultSet();
+		var native = this.native.executeQuery();
+		resultset.native = native;
+		return resultset;
+	};
+
+	this.executeUpdate = function() {
+		return this.native.executeUpdate();
+	};
 
 	this.registerOutParameter = function(parameterIndex, sqlType) {
 		this.native.registerOutParameter(parameterIndex, sqlType);
@@ -601,7 +630,7 @@ function CallableStatement() {
 	};
 
 	this.getMoreResults = function() {
-    	return this.native.getMoreResults();
+		return this.native.getMoreResults();
     };
 
     this.getParameterMetaData = function() {
@@ -625,6 +654,13 @@ function CallableStatement() {
  * ResultSet object
  */
 function ResultSet(internalResultset) {
+
+	this.toJson = function(limited) {
+		if (limited === undefined || limited === false) {
+			limited = false;
+		}
+		return org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper.toJson(this.native, limited);
+	};
 
 	this.close = function() {
 		this.native.close();

@@ -41,7 +41,8 @@ angular.module('preview', [])
 		var url = this.previewUrl;
 		if (url) {
 			url = url.indexOf('?refreshToken') > 0 ? url.substring(0, url.indexOf('?refreshToken')) : url;
-			this.previewUrl = url + '?refreshToken=' + new Date().getTime();
+			var tokenParam = 'refreshToken=' + new Date().getTime();
+			this.previewUrl = url + (url.indexOf('?') > 0 ? (url.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam));
 		}
 	};
 

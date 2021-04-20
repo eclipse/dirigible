@@ -13,6 +13,8 @@
  * API v4 OAuth
  */
 
+var httpClient = require("http/v4/client");
+var url = require("utils/v4/url");
 var base64 = require("utils/v4/base64");
 var bytes = require("io/v4/bytes");
 
@@ -53,3 +55,70 @@ exports.verify = function(token) {
     }
     return true;
 };
+
+exports.getClient = function(config) {
+    return new OAuthClient(config);
+};
+
+function OAuthClient (config) {
+    this.url = config ? config.url : null;
+    this.isAbsoluteUrl = config && config.isAbsoluteUrl ? config.isAbsoluteUrl : false;
+    this.clientId = config ? config.clientId : null;
+    this.clientSecret = config ? config.clientSecret : null;
+    this.grantType = config && config.granType ? config.granType : "client_credentials";
+
+    this.setUrl = function(url) {
+        this.url = url;
+    };
+
+    this.setClientId = function(clientId) {
+        this.clientId = clientId;
+    };
+
+    this.setClientSecret = function(clientSecret) {
+        this.clientSecret = clientSecret;
+    };
+
+    this.setGrantType = function(grantType) {
+        this.grantType = grantType;
+    };
+
+    this.getToken = function() {
+        if (!this.url) {
+            console.error("The OAuth 'url' property is not provided.")
+            throw new Error("The OAuth 'url' property is not provided.");
+        } else if (!this.clientId) {
+            console.error("The OAuth 'clientId' property is not provided.")
+            throw new Error("The OAuth 'clientId' property is not provided.");
+        } else if (!this.clientSecret) {
+            console.error("The OAuth 'clientSecret' property is not provided.")
+            throw new Error("The OAuth 'clientSecret' property is not provided.");
+        }
+        let oauthUrl = this.url;
+        if (!this.isAbsoluteUrl) {
+            oauthUrl += "/oauth/token";
+        }
+        let oauthResponse = httpClient.post(oauthUrl, {
+            params: [{
+                name: "grant_type",
+                value: this.grantType
+            }, {
+                name: "client_id",
+                value: url.encode(this.clientId)
+            }, {
+                name: "client_secret",
+                value: url.encode(this.clientSecret)
+            }],
+            headers: [{
+                name: "Content-Type",
+                value: "application/x-www-form-urlencoded"
+            }]
+        });
+        if (oauthResponse.statusCode !== 200) {
+            let errorMessage = `Error occurred while retrieving OAuth token. Status code: [${response.status}], text: [${response.text}]`;
+            console.error(errorMessage);
+            throw new Error(errorMessage);
+        }
+        return JSON.parse(oauthResponse.text);
+    };
+}

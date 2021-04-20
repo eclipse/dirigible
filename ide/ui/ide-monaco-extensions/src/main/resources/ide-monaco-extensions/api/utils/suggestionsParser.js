@@ -28,13 +28,13 @@ exports.parse = function(moduleName) {
         .filter(e => e.type === "FunctionDeclaration")
         .map(function(element) {
             let name = element.id.name;
-            let functions = element.body.body
+            let suggestions = element.body.body
                 .filter(e => e.type === "ExpressionStatement")
                 .map(e => extractExpression(e, comments))
                 .filter(e => e !== null);
             return {
                 name: name,
-                functions: functions
+                suggestions: suggestions
             }
         });
 

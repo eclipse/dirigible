@@ -14,6 +14,7 @@
 
 exports.getClient = function() {
 	var client = new Client();
+	console.log(org);
 	var native = org.eclipse.dirigible.api.mongodb.MongoDBFacade.getClient();
 	client.native = native;
 	return client;

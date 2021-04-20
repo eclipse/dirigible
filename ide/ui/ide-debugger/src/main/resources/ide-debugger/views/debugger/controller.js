@@ -67,7 +67,8 @@ angular.module('debugger', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 
 	function refreshDebugger(resourcePath) {
 		$scope.previewUrl = debuggerLocation + resourcePath;
-		$scope.previewUrl += "&refreshToken=" + new Date().getTime();
+		var tokenParam = 'refreshToken=' + new Date().getTime();
+		$scope.previewUrl += ($scope.previewUrl.indexOf('?') > 0 ? ($scope.previewUrl.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam));
 		$scope.$apply();
 	}
 	$messageHub.on('workspace.file.selected', function(msg) {

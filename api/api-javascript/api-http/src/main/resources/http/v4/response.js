@@ -20,6 +20,7 @@ exports.isValid = function() {
 };
 
 exports.print = function(text) {
+	if (!text) text += "";
 	var out = this.getOutputStream().native;
 	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
@@ -28,6 +29,7 @@ exports.print = function(text) {
 };
 
 exports.println = function(text) {
+	if (!text) text = +"";
 	var out = this.getOutputStream().native;
 	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
@@ -37,6 +39,7 @@ exports.println = function(text) {
 };
 
 exports.write = function(bytes) {
+	if (!bytes) bytes += "";
 	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.write(bytes);
 };
 

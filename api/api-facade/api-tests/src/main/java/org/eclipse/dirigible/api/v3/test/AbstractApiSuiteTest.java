@@ -66,6 +66,17 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// v4
 		registerModulesV4();
+		
+		// ext
+		registerModulesExt();
+	}
+	
+	protected void registerModulesExt() {
+		registerModulesRedis();
+	}
+	
+	private void registerModulesRedis() {
+		TEST_MODULES.add("ext/redis/client/client.js");
 	}
 
 	protected void registerModulesV4() {

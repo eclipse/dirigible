@@ -46,9 +46,9 @@
 </head>
 
 <body ng-app="database-table" ng-controller="DatabaseTableController">
-	<h4 ng-show="result">{{result}}</h4>
+	<h4 ng-hide="hasMultipleProcedureResults" ng-show="result">{{result}}</h4>
 	<div class="tableFixHead">
-		<table class="table table-striped" ng-show="columns">
+		<table class="table table-striped" ng-hide="hasMultipleProcedureResults" ng-show="columns">
 			<thead>
 				<tr>
 					<th ng-repeat="column in columns">{{column}}</th>
@@ -64,6 +64,34 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<div ng-show="hasMultipleProcedureResults">
+			<ul class="nav nav-tabs">
+				<li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults"><a data-toggle="pill" href="#{{$index + 1}}">Result {{$index + 1}}</a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in" ng-class="{active: $index === 0}">
+					<table class="table table-striped"">
+						<thead>
+							<tr>
+								<th ng-repeat="column in procedureResults[$index].columns">{{column}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in procedureResults[$index].rows">
+								<td ng-repeat="cell in row">
+									<div class="tdSingleLine">
+										{{cell}}
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<script>
@@ -91,7 +119,8 @@
 
 			messageHub.subscribe(function(command) {
 				var url = "../../../../../services/v4/ide/databases/" + $scope.database + "/" + $scope.datasource;
-				if (command.data.trim().toLowerCase().startsWith('select')) {
+				var sql = command.data.trim().toLowerCase();
+				if (sql.startsWith('select')) {
 					$http({
 						method: 'POST',
 						url: url + "/query",
@@ -111,6 +140,53 @@
 									$scope.columns.push(column);
 								}
 								break;
+							}
+						} else if (result !== null && result.errorMessage !== null && result.errorMessage !== undefined) {
+							$scope.result = result.errorMessage;
+						} else {
+							$scope.result = 'Empty result';
+						}
+					});
+				} else if (sql.startsWith('call')) {
+					$http({
+						method: 'POST',
+						url: url + "/procedure",
+						data: command.data,
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+							'X-Requested-With': 'Fetch',
+							'X-CSRF-Token': csrfToken
+						}
+					}).success(function(result) {
+						cleanScope();
+						if (result != null && result.length > 0) {
+							$scope.hasMultipleProcedureResults = result.length > 1;
+							if ($scope.hasMultipleProcedureResults) {
+								$scope.procedureResults = [];
+								for (var resultIndex = 0; resultIndex < result.length; resultIndex ++) {
+									var procedureResult = JSON.parse(result[resultIndex]);
+									var data = {
+										rows: procedureResult,
+										columns: []
+									};
+									for (var i = 0 ; i < procedureResult.length; i ++) {
+										for (var column in procedureResult[i]) {
+											data.columns.push(column);
+										}
+										break;
+									}
+									$scope.procedureResults.push(data);
+								}
+							} else {
+								result = JSON.parse(result[0]);
+								$scope.rows = result;
+								$scope.columns = [];
+								for (var i = 0 ; i < result.length; i ++) {
+									for (var column in result[i]) {
+										$scope.columns.push(column);
+									}
+									break;
+								}
 							}
 						} else if (result !== null && result.errorMessage !== null && result.errorMessage !== undefined) {
 							$scope.result = result.errorMessage;
@@ -142,6 +218,8 @@
 				$scope.result = null;
 				$scope.columns = null;
 				$scope.rows = null;
+				$scope.hasMultipleProcedureResults = false;
+				$scope.procedureResults = null;
 			}
 		});
 	</script>

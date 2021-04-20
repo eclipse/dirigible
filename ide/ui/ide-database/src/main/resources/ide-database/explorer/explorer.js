@@ -149,12 +149,28 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 													}.bind(this)
 												};
 											}
-											
+										}
+
+										// Procedure related actions
+										if (node.original.kind === 'procedure') {
+											ctxmenu.dropProcedure = {
+												"separator_before": false,
+												"label": "Drop Procedure",
+												"action": function(data){
+													var tree = $.jstree.reference(data.reference);
+													var node = tree.get_node(data.reference);
+													if (confirmRemove("PROCEDURE", node.original.text)) {
+														var sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
+														messageHub.post({data: sqlCommand}, 'database.sql.execute');
+														$('.database').jstree(true).refresh();
+													}
+												}.bind(this)
+											};
 										}
 										return ctxmenu;
 									}
 								},
-								"plugins": ['state','dnd','sort','types','contextmenu','unique']
+								"plugins": ['state','dnd','types','contextmenu','unique']
 						  })
 						 .on('select_node.jstree', function (e, data) {
 							//
@@ -176,11 +192,57 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						  		var position = 'last';
 						  		
 						  		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-						  			+ '/' + schemaParent.text + '/' + tableParent.text)
+						  			+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
 									.success(function(data) {
 										data.columns.forEach(function(column) {
-											var nodeText = column.name + ':' + column.type + "(" + column.size + ")";
-  											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + column.name, "icon": "fa fa-th-large"};
+											var icon = "fa fa-th-large";
+											if (column.key) {
+												icon = "fa fa-key";
+											} else {
+												switch(column.type.toLowerCase()) {
+													case "varchar":
+													case "nvarchar":
+														icon = "fa fa-sort-alpha-asc";
+														break;
+													case "char":
+														icon = "fa fa-font";
+														break;
+													case "date":
+														icon = "fa fa-calendar";
+														break;
+													case "datetime":
+													case "timestamp":
+														icon = "fa fa-clock-o";
+														break;
+													case "smallint":
+													case "tinyint":
+													case "integer":
+														icon = "fa fa-list-ol";
+														break;
+													case "float":
+													case "double":
+													case "decimal":
+														icon = "fa fa-percent"
+														break;
+													case "bigint":
+														icon = "fa fa-signal";
+														break;
+													case "boolean":
+														icon = "fa fa-toggle-on";
+														break;
+													case "clob":
+													case "blob":
+														icon = "fa fa-ellipsis-h";
+														break;
+												}
+											}
+											var nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length:"N/A")) + ")</i>";
+  											var newNode = {
+												id: parent.id + "$" + column.name,
+												state: "open",
+												text: nodeText,
+												icon: icon
+											};
   											var child = $('.database').jstree("create_node", parent, newNode, position, false, false);
 										})
 									});
@@ -198,7 +260,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 									.success(function(data) {
 										data.indices.forEach(function(index) {
 											var nodeText = index.name;
-  											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-sort-amount-desc"};
+  											var newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-list-ul"};
   											var child = $('.database').jstree("create_node", parent, newNode, position, false, false);
 										})
 									});
@@ -222,40 +284,61 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 		var icon = 'fa fa-th-large';
 		var name = f.name;
 		if(f.kind=='schema') {
-			children = f.tables.map(function(_table){
+
+			var tablesChildren = f.tables.map(function(_table){
 				return build(_table)
 			});
+			children = children.concat(tablesChildren);
+
+			var proceduresChildren = f.procedures.map(function(_procedure){
+				return build(_procedure)
+			});
+			children = children.concat(proceduresChildren);
+
+			var functionsChildren = f.functions.map(function(_function){
+				return build(_function)
+			});
+			children = children.concat(functionsChildren);
+
 			icon = 'fa fa-database';
 		} else if(f.kind=='table' && f.type === 'TABLE') {
 			//children = ['Loading...'];
 			children = [
-				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
-				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
+				{text:"Columns", "icon": "fa fa-columns", children: ['Loading Columns...']},
+				{text:"Indices", "icon": "fa fa-bars", children: ['Loading Indices...']},
 			];
 			
-//			f.columns.map(function(_column){
-//				return build(_column)
-//			});
 			icon = 'fa fa-table';
 		} else if(f.kind=='table' && f.type === 'VIEW') {
 			//children = ['Loading...'];
 			children = [
-				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
-				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
+				{text:"Columns", "icon": "fa fa-columns", children: ['Loading Columns...']},
+				{text:"Indices", "icon": "fa fa-bars", children: ['Loading Indices...']},
 			];
 			
 			icon = 'fa fa-th';
 		} else if(f.kind=='table' && f.type !== 'TABLE' && f.type !== 'VIEW') {
 			//children = ['Loading...'];
 			children = [
-				{text:"Columns", "icon": "fa fa-th-large", children: ['Loading Columns...']},
-				{text:"Indices", "icon": "fa fa-sort-amount-desc", children: ['Loading Indices...']},
+				{text:"Columns", "icon": "fa fa-columns", children: ['Loading Columns...']},
+				{text:"Indices", "icon": "fa fa-bars", children: ['Loading Indices...']},
 			];
 			
-//			f.columns.map(function(_column){
-//				return build(_column)
-//			});
 			icon = 'fa fa-lock';
+		} else if(f.kind=='procedure') { // && f.type === 'XXX'
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-columns", children: ['Loading Columns...']},
+			];
+			
+			icon = 'fa fa-cog';
+		} else if(f.kind=='function') { // && f.type === 'XXX'
+			//children = ['Loading...'];
+			children = [
+				{text:"Columns", "icon": "fa fa-columns", children: ['Loading Columns...']},
+			];
+			
+			icon = 'fa fa-calculator';
 		} else if(f.kind=='column') {
 			icon = 'fa fa-th-large';
 			name += ' [<i>' + f.type + '</i>';
@@ -281,6 +364,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 						$scope.selectedDatasource = data[0];
 						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
 						messageHub.post($scope.selectedDatasource, 'database.datasource.selection.changed');
+						$scope.datasourceChanged();
 					} else {
 						$scope.selectedDatasource = undefined;
 					}

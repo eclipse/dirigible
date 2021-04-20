@@ -44,12 +44,14 @@ angular.module('git.config', [])
 /**
  * Git Service API delegate
  */
-var GitService = function ($http, gitServiceUrl) {
+var GitService = function ($http, $messageHub, gitServiceUrl) {
 	this.gitServiceUrl = gitServiceUrl;
 	this.$http = $http;
+	this.$messageHub = $messageHub;
 }
 
 GitService.prototype.commit = function (workspace, project, commitMessage, username, password, email, branch) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("commit").build();
 	return this.$http.post(url, {
 		"commitMessage": commitMessage,
@@ -60,12 +62,17 @@ GitService.prototype.commit = function (workspace, project, commitMessage, usern
 		"autoAdd": false,
 		"autoCommit": false
 	})
-		.then(function (response) {
-			return response.data;
-		});
+	.then(function (response) {
+		return response.data;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Commit Error", errorMessage);
+	});
 }
 GitService.prototype.push = function (workspace, project, commitMessage, username, password, email, branch) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("push").build();
+
 	return this.$http.post(url, {
 		"commitMessage": commitMessage,
 		"username": username,
@@ -74,39 +81,75 @@ GitService.prototype.push = function (workspace, project, commitMessage, usernam
 		"branch": branch,
 		"autoAdd": false,
 		"autoCommit": false
-	})
-		.then(function (response) {
-			return response.data;
-		});
+	}).then(function (response) {
+		return response.data;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Push Error", errorMessage);
+	});
 }
 GitService.prototype.getUnstagedFiles = function (workspace, project) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("unstaged").build();
+
 	return this.$http.get(url, {})
-		.then(function (response) {
-			return response.data.files;
-		});
+	.then(function (response) {
+		return response.data.files;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Staging Error", errorMessage);
+	});
 }
 GitService.prototype.getStagedFiles = function (workspace, project) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("staged").build();
+
 	return this.$http.get(url, {})
-		.then(function (response) {
-			return response.data.files;
-		});
+	.then(function (response) {
+		return response.data.files;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Staging Error", errorMessage);
+	});
 }
 GitService.prototype.addFiles = function (workspace, project, files) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("add").build();
 	var list = files.join(",");
-	return this.$http.post(url, JSON.stringify(list));
+
+	return this.$http.post(url, JSON.stringify(list))
+	.then(function (response) {
+		return response.data;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Staging Error", errorMessage);
+	});
 }
 GitService.prototype.revertFiles = function (workspace, project, files) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("revert").build();
 	var list = files.join(",");
-	return this.$http.post(url, JSON.stringify(list));
+
+	return this.$http.post(url, JSON.stringify(list))
+	.then(function (response) {
+		return response.data;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Staging Error", errorMessage);
+	});
 }
 GitService.prototype.removeFiles = function (workspace, project, files) {
+	var messageHub = this.$messageHub;
 	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("remove").build();
 	var list = files.join(",");
-	return this.$http.post(url, JSON.stringify(list));
+
+	return this.$http.post(url, JSON.stringify(list))
+	.then(function (response) {
+		return response.data;
+	}, function (response) {
+		let errorMessage = JSON.parse(response.data.error).message;
+		messageHub.announceAlertError("Git Staging Error", errorMessage);
+	});
 }
 
 var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
@@ -148,24 +191,52 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		var announceFileDiff = function (fileDescriptor) {
 			this.message('staging.file.diff', fileDescriptor);
 		};
+		var announceAlert = function(title, message, type) {
+			messageHub.post({
+				data: {
+					title: title,
+					message: message,
+					type: type
+				}
+			}, 'ide.alert');
+		};
+		var announceAlertSuccess = function(title, message) {
+			announceAlert(title, message, "success");
+		};
+		var announceAlertInfo = function(title, message) {
+			announceAlert(title, message, "info");
+		};
+		var announceAlertWarning = function(title, message) {
+			announceAlert(title, message, "warning");
+		};
+		var announceAlertError = function(title, message) {
+			announceAlert(title, message, "error");
+		};
 		return {
 			message: message,
 			announceFileDiff: announceFileDiff,
+			announceAlert: announceAlert,
+			announceAlertSuccess: announceAlertSuccess,
+			announceAlertInfo: announceAlertInfo,
+			announceAlertWarning: announceAlertWarning,
+			announceAlertError: announceAlertError,
 			on: function (evt, cb) {
 				messageHub.subscribe(cb, evt);
 			}
 		};
 	}])
-	.factory('gitService', ['$http', 'GIT_SVC_URL', function ($http, GIT_SVC_URL) {
-		return new GitService($http, GIT_SVC_URL);
+	.factory('gitService', ['$http', '$messageHub', 'GIT_SVC_URL', function ($http, $messageHub, GIT_SVC_URL) {
+		return new GitService($http, $messageHub, GIT_SVC_URL);
 	}])
-	.controller('StagingContoller', ['gitService', '$messageHub', '$http', '$scope', function (gitService, $messageHub, $http, $scope) {
+	.controller('StagingContoller', ['gitService', '$messageHub', '$scope', function (gitService, $messageHub, $scope) {
 
 		this.gitService = gitService;
-		this.http = $http;
 		this.scope = $scope;
 
 		this.okCommitAndPushClicked = function () {
+			if (this.commitMessage === undefined || this.commitMessage === "") {
+				this.commitMessage = null;
+			}
 			gitService.commit(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
 				.then(function () {
 					gitService.push(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
@@ -178,6 +249,9 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		};
 
 		this.okCommitClicked = function () {
+			if (this.commitMessage === undefined || this.commitMessage === "") {
+				this.commitMessage = null;
+			}
 			gitService.commit(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
 				.then(function () {
 					this.commitMessage = "";
