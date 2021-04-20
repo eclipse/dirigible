@@ -59,6 +59,7 @@ import org.apache.olingo.odata2.api.uri.info.GetMediaResourceUriInfo;
 import org.apache.olingo.odata2.api.uri.info.GetSimplePropertyUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
@@ -73,9 +74,18 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSQLProcessor extends ODataSingleProcessor implements SQLProcessor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractSQLProcessor.class);
+	
+	private OData2EventHandler odata2EventHandler;
 
 	public AbstractSQLProcessor() {
+		this.odata2EventHandler = new DummyOData2EventHandler();
 	}
+	
+	public AbstractSQLProcessor(OData2EventHandler odata2EventHandler) {
+		this.odata2EventHandler = odata2EventHandler;
+	}
+	
+	
 
 	@Override
 	public ODataResponse countEntitySet(final GetEntitySetCountUriInfo uriInfo, final String contentType)
@@ -170,6 +180,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	// TODO add unit tests for the expand functionality
 	@Override
 	public ODataResponse readEntity(final GetEntityUriInfo uriInfo, final String contentType) throws ODataException {
+		
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
@@ -228,7 +239,10 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		} finally {
 			OData2Utils.closeConsumeException(connection);
 		}
-		return OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
+		
+		ODataResponse response = OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
+		
+		return response;
 	}
 
 	// TODO add unit tests for the expand functionality
@@ -527,6 +541,21 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	@Override
 	public ODataResponse createEntity(final PostUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final String contentType) throws ODataException {
+		
+		if (this.odata2EventHandler.forbidCreateEntity(uriInfo, content,
+				requestContentType, contentType)) {
+			throw new ODataException(String.format("Create operation on entity: %s:%s is forbidden.", 
+					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
+		}
+		
+		this.odata2EventHandler.beforeCreateEntity(uriInfo, content,
+				requestContentType, contentType);
+		
+		if (this.odata2EventHandler.usingOnCreateEntity(uriInfo, content,
+				requestContentType, contentType)) {
+			return this.odata2EventHandler.onCreateEntity(uriInfo, content,
+					requestContentType, contentType);
+		}
 
 		final EdmEntitySet entitySet = uriInfo.getTargetEntitySet();
 
@@ -564,6 +593,10 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				.build();
 		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(),
 				writeProperties);
+		
+		this.odata2EventHandler.afterCreateEntity(uriInfo, content,
+				requestContentType, contentType, response);
+		
 		return response;
 	}
 
@@ -582,6 +615,17 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
 	@Override
 	public ODataResponse deleteEntity(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
+		
+		if (this.odata2EventHandler.forbidDeleteEntity(uriInfo, contentType)) {
+			throw new ODataException(String.format("Delete operation on entity: %s:%s is forbidden.", 
+					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
+		}
+		
+		this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType);
+		
+		if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
+			return this.odata2EventHandler.onDeleteEntity(uriInfo, contentType);
+		}
 
 		SQLQuery query = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo,
 				mapKeys(uriInfo.getKeyPredicates()));
@@ -609,8 +653,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		} finally {
 			OData2Utils.closeConsumeException(connection);
 		}
-
-		return ODataResponse.newBuilder().build();
+		
+		ODataResponse response = ODataResponse.newBuilder().build();
+		
+		this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, response);
+		
+		return response;
 	}
 
 	private static Map<String, Object> mapKeys(final List<KeyPredicate> keys) throws EdmException {
@@ -639,7 +687,18 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	@Override
 	public ODataResponse updateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final boolean merge, final String contentType) throws ODataException {
-
+		
+		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, content, requestContentType, merge, contentType)) {
+			throw new ODataException(String.format("Update operation on entity: %s:%s is forbidden.", 
+					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
+		}
+		
+		this.odata2EventHandler.beforeUpdateEntity(uriInfo, content, requestContentType, merge, contentType);
+		
+		if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, content, requestContentType, merge, contentType)) {
+			return this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType);
+		}
+		
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
@@ -717,6 +776,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				.build();
 		final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry.getProperties(),
 				writeProperties);
+		
+		this.odata2EventHandler.afterUpdateEntity(uriInfo, content, requestContentType, merge, contentType, response);
+		
 		return response;
 
 	}

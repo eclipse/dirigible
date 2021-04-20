@@ -18,7 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The OData Schema Entity.
+ * The OData Mapping for Entity.
  */
 @Table(name = "DIRIGIBLE_ODATA_MAPPING")
 public class ODataMappingDefinition {

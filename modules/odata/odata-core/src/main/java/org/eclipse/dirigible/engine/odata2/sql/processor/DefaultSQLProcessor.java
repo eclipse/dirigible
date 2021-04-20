@@ -21,6 +21,7 @@ import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
@@ -35,10 +36,22 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSQLProcessor.class);
 
     public DefaultSQLProcessor(EdmTableBindingProvider tableMappingProvider) {
+    	super();
         this.sqlQueryBuilder = new SQLQueryBuilder(tableMappingProvider);
     }
 
     public DefaultSQLProcessor(SQLQueryBuilder queryBuilder) {
+    	super();
+        this.sqlQueryBuilder = queryBuilder;
+    }
+    
+    public DefaultSQLProcessor(EdmTableBindingProvider tableMappingProvider, OData2EventHandler odata2EventHandler) {
+    	super(odata2EventHandler);
+        this.sqlQueryBuilder = new SQLQueryBuilder(tableMappingProvider);
+    }
+
+    public DefaultSQLProcessor(SQLQueryBuilder queryBuilder, OData2EventHandler odata2EventHandler) {
+    	super(odata2EventHandler);
         this.sqlQueryBuilder = queryBuilder;
     }
 

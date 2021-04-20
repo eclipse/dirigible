@@ -28,19 +28,19 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 public class ODataDefinition {
 	
 	@Id
-	@Column(name = "OD_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "ODATA_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
-	@Column(name = "OD_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	@Column(name = "ODATA_NAMESPACE", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String namespace;
 	
-	@Column(name = "OD_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "ODATA_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String hash;
 
-	@Column(name = "OD_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "ODATA_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
 	private String createdBy;
 
-	@Column(name = "OD_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
+	@Column(name = "ODATA_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
 	
 	private List<ODataEntityDefinition> entities = new ArrayList<ODataEntityDefinition>();

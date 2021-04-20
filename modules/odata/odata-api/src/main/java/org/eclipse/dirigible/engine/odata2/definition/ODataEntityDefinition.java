@@ -25,6 +25,8 @@ public class ODataEntityDefinition {
 	private List<ODataProperty> properties = new ArrayList<ODataProperty>();
 	
 	private List<ODataNavigation> navigations = new ArrayList<ODataNavigation>();
+	
+	private List<ODataHandler> handlers = new ArrayList<ODataHandler>();
 
 	/**
 	 * @return the name
@@ -96,6 +98,18 @@ public class ODataEntityDefinition {
 		this.navigations = navigations;
 	}
 	
+	/**
+	 * @return the handlers
+	 */
+	public List<ODataHandler> getHandlers() {
+		return handlers;
+	}
 	
+	/**
+	 * @param handlers the handlers set
+	 */
+	public void setHandlers(List<ODataHandler> handlers) {
+		this.handlers = handlers;
+	}
 
 }

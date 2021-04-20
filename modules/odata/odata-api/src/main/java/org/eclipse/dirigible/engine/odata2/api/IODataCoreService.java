@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.engine.odata2.definition.ODataContainerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataSchemaDefinition;
 
@@ -173,14 +174,6 @@ public interface IODataCoreService extends ICoreService {
 	public List<ODataMappingDefinition> getMappings() throws ODataException;
 
 	/**
-	 * Generates the EDMX Metadata
-	 * 
-	 * @return the metadata
-	 * @throws ODataException in case of an error
-	 */
-	public InputStream getMetadata() throws ODataException;
-
-	/**
 	 * Removes all the mappings matching given location.
 	 *
 	 * @param location
@@ -271,7 +264,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @param data the content
 	 * @return the ODataDefinition object
 	 */
-	ODataDefinition parseOData(String contentPath, String data);
+	public ODataDefinition parseOData(String contentPath, String data);
 
 	/**
 	 * Getter for the OData entity
@@ -280,7 +273,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @return
 	 * @throws ODataException
 	 */
-	ODataDefinition getOData(String location) throws ODataException;
+	public ODataDefinition getOData(String location) throws ODataException;
 
 	/**
 	 * Update the OData entity
@@ -290,14 +283,14 @@ public interface IODataCoreService extends ICoreService {
 	 * @param hash the hash
 	 * @throws ODataException in case of an error
 	 */
-	void updateOData(String location, String namespace, String hash) throws ODataException;
+	public void updateOData(String location, String namespace, String hash) throws ODataException;
 
 	/**
 	 * Get all the OData entities
 	 * @return the list of the OData entities
 	 * @throws ODataException in case of an error
 	 */
-	List<ODataDefinition> getODatas() throws ODataException;
+	public List<ODataDefinition> getODatas() throws ODataException;
 
 	/**
 	 * Whether OData entity exists already or not
@@ -306,7 +299,7 @@ public interface IODataCoreService extends ICoreService {
 	 * @return true if exists and false otherwise
 	 * @throws ODataException in case of an error
 	 */
-	boolean existsOData(String location) throws ODataException;
+	public boolean existsOData(String location) throws ODataException;
 
 	/**
 	 * Create the OData entity
@@ -317,6 +310,115 @@ public interface IODataCoreService extends ICoreService {
 	 * @return newly created OData entity
 	 * @throws ODataException in case of an error
 	 */
-	ODataDefinition createOData(String location, String namespace, String hash) throws ODataException;
+	public ODataDefinition createOData(String location, String namespace, String hash) throws ODataException;
+	
+	
+	
+	// Handler
+
+	/**
+	 * Creates the handler
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @param handler the handler
+	 * @return the handler definition
+	 * @throws ODataException in case of an error
+	 */
+	public ODataHandlerDefinition createHandler(String location, String namespace, String name, String method, String type, String handler) throws ODataException;
+
+	/**
+	 * Gets the handler
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @return the handler
+	 * @throws ODataException in case of an error
+	 */
+	public ODataHandlerDefinition getHandler(String location, String namespace, String name, String method, String type) throws ODataException;
+	
+	/**
+	 * Gets the handlers
+	 * 
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @return the list of handlers
+	 * @throws ODataException in case of an error
+	 */
+	public List<ODataHandlerDefinition> getHandlers(String namespace, String name, String method, String type) throws ODataException;
+
+	/**
+	 * Exists handler
+	 * 
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @return true if exists at least one
+	 * @throws ODataException in case of an error
+	 */
+	public boolean existsHandler(String namespace, String name,  String method, String type) throws ODataException;
+
+	/**
+	 * Removes the handler
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @throws ODataException in case of an error
+	 */
+	public void removeHandler(String location, String namespace, String name, String method, String type) throws ODataException;
+	
+	/**
+	 * Removes the handlers
+	 * 
+	 * @param location
+	 * @throws ODataException in case of an error
+	 */
+	public void removeHandlers(String location) throws ODataException;
+
+	/**
+	 * Update handler
+	 * 
+	 * @param location the location
+	 * @param namespace the namespace
+	 * @param name the name
+	 * @param method the method
+	 * @param type the type
+	 * @param handler the handler
+	 * @throws ODataException in case of an error
+	 */
+	public void updateHandler(String location, String namespace, String name, String method, String type, String handler) throws ODataException;
+
+	/**
+	 * Gets the handlers.
+	 *
+	 * @return the handlers
+	 * @throws ODataException in case of an error
+	 */
+	public List<ODataHandlerDefinition> getAllHandlers() throws ODataException;
+	
+	
+	
+	
+	// Overall
+	
+	/**
+	 * Generates the EDMX Metadata
+	 * 
+	 * @return the metadata
+	 * @throws ODataException in case of an error
+	 */
+	public InputStream getMetadata() throws ODataException;
 
 }

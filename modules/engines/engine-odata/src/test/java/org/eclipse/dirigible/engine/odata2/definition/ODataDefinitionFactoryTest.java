@@ -42,5 +42,18 @@ public class ODataDefinitionFactoryTest {
 		assertEquals(1, definition.getAssociations().size());
 		assertEquals("OrderItems", definition.getAssociations().get(0).getName());
 	}
+	
+	@Test
+	public void testHandlers() throws IOException {
+		String def = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/def/OData1.odata"));
+		ODataDefinition definition = ODataDefinitionFactory.parseOData("/def/OData1.odata", def);
+		assertEquals(1, definition.getEntities().size());
+		assertNotNull(definition.getEntities().get(0));
+		assertEquals("ENTITY1", definition.getEntities().get(0).getTable());
+		assertEquals(4, definition.getEntities().get(0).getHandlers().size());
+		assertEquals("create", definition.getEntities().get(0).getHandlers().get(0).getMethod());
+		assertEquals("before", definition.getEntities().get(0).getHandlers().get(0).getType());
+		assertEquals("/test1/myhandler", definition.getEntities().get(0).getHandlers().get(0).getHandler());
+	}
 
 }
