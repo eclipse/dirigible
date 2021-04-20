@@ -11,20 +11,16 @@
  */
 /** Client API for Apache Spark */
 
-exports.getSession = function() {
+exports.getSession = function(sparkUri) {
     var session = new Session();
-    var native = org.eclipse.dirigible.api.spark.SparkFacade.getSession();
+    var native = org.eclipse.dirigible.api.spark.SparkFacade.getSession(sparkUri);
     session.native = native;
     return session;
 };
 
-exports.getHead = function(dataset) {
-    return org.eclipse.dirigible.api.spark.SparkFacade.getHead(dataset);
-};
-
-exports.getDBTableDataset = function(dbName, user, pass, table) {
+exports.getDBTableDataset = function(sparkUri, dbName, user, pass, table) {
     var datasetRow = new DatasetRow
-    var native = org.eclipse.dirigible.api.spark.SparkFacade.getDBTableDataset(dbName, user, pass, table);
+    var native = org.eclipse.dirigible.api.spark.SparkFacade.getDBTableDataset(sparkUri, dbName, user, pass, table);
     datasetRow.native = native;
     return datasetRow;
 }
@@ -33,23 +29,62 @@ exports.getDBTableDataset = function(dbName, user, pass, table) {
  * Session object
  */
 function Session() {
-    this.readDataset = function(file) {
-        var dataset = new Dataset();
-        dataset.native = this.native.read().textFile(file).cache();
+    this.readDefault = function(path) {
+        var dataset = new DatasetRow();
+        dataset.native = this.native.read().load(path);
+        return dataset;
+    }
+
+    this.readFormat = function(path, format) {
+        var dataset = new DatasetRow();
+        dataset.native = this.native.read().format(format).load(path);
         return dataset;
     }
 }
 
-function Dataset() {
-    this.getHead = function () {
-        return this.native.head();
+/**
+ * DatasetRow object
+ */
+function DatasetRow() {
+    this.getHeadRow = function () {
+        var row = new Row();
+        row.native = this.native.head();
+        return row;
     }
 
-    this.getUniqueEntries = function () {
-        return this.native.distinct();
+    this.getRowAsString = function (rowNum) {
+        var result = ""
+        if (this.native) {
+            result = this.native.collectAsList().get(rowNum).toString()
+        } else {
+            result = "Dataset is empty!"
+            console.error(result)
+        }
+        return result
+    }
+
+    this.filterDataset = function(condition) {
+        var dataset = new DatasetRow();
+        if (/([\w]+[\s]?[\>?\<?\=?][\s]?[\w]+)/.test(condition)) {
+            dataset.native = this.native.filter(condition)
+        } else {
+            console.error("Parameter not a valid boolean condition. Example: age > 34")
+        }
+        return dataset;
     }
 }
 
-function DatasetRow() {
-
+/**
+ * Row object
+ */
+function Row() {
+    this.asJson = function() {
+        var result = ""
+        if (this.native) {
+            result = this.native.prettyJson()
+        } else {
+            result = "Row is empty!"
+        }
+        return result
+    }
 }

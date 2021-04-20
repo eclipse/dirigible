@@ -25,40 +25,29 @@ public class SparkFacade implements IScriptingFacade {
 
 	private static final String POSTGRESQL_URI = "jdbc:postgresql://localhost:5432/%s?user=%s&password=%s";
 
-	public static SparkSession getSession() {
+	public static SparkSession getSession(String sparkUri) {
 
 		String clientUri = Configuration.get(DIRIGIBLE_SPARK_CLIENT_URI, CLIENT_URI);
 
 		SparkSession sparkSession = SparkSession
 				.builder()
 				.appName("Dirigible-Spark")
-				.master(clientUri)
+				.master(sparkUri != null && !sparkUri.isBlank()? sparkUri : clientUri)
 				.config("spark.driver.memory", "5g")
 				.getOrCreate();
 
 		return sparkSession;
 	}
-	//TODO getSessionByParameters pass mongo clientUri and default DB
-	/*
-	в джаваскрипта с празни параметри
-	а тук подавам параметри в метода
-	 */
-	public static Dataset<String> readFile(String path) {
-		return getSession().read().textFile(path);
-	}
 
-	public static String getHead(Dataset<String> data) {
-		return data.head();
-	}
-
-	public static Dataset<Row> getDBTableDataset(String dbName,
+	public static Dataset<Row> getDBTableDataset(String sparkUri,
+												 String dbName,
 												 String user,
 												 String pass,
 												 String table) {
 
 		String url = String.format(POSTGRESQL_URI, dbName, user, pass);
 
-		Dataset<Row> df = getSession().sqlContext()
+		Dataset<Row> df = getSession(sparkUri).sqlContext()
 				.read()
 				.format("jdbc")
 				.option("url", url)
