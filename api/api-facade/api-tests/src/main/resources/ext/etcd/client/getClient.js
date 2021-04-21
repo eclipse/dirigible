@@ -9,28 +9,93 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
+// Loading the etcd module.
 var etcd = require('etcd/client');
 
+// Function for comparing typed arrays for equality.
+function typedArraysAreEqual(a, b) {
+    if (a.byteLength !== b.byteLength) return false;
+    return a.every((val, i) => val === b[i]);
+}
+
+// Initializing the etcd client.
 var etcdClient = etcd.getClient();
 ((etcdClient !== null) && (etcdClient !== undefined));
 
+// Initializing key and both string and byte array value.
 var key = "foo";
-var strVal = "test";
-var byteArrayVal = [116, 101, 115, 116];
+var strVal = "bar";
+var byteArrayVal = new Int8Array([116, 101, 115, 116]);
+
 console.log(JSON.stringify({[key]: strVal}));
 console.log(JSON.stringify({[key]: byteArrayVal}));
 
+// Setting into etcd new kvs pair with string value.
 var putStrVal = etcdClient.putStringValue(key, strVal);
+java.lang.Thread.sleep(3000);
+!(putStrVal instanceof Error);
+
+// Getting the kvs pair for the specified key with string value.
 var getKvsStrVal = etcdClient.getKvsStringValue(key);
 console.log(JSON.stringify(getKvsStrVal));
-// (getKvsStrVal === {[key]: strVal});
+getKvsStrVal[key] === strVal;
 
-// var putByteArrayVal = etcdClient.putByteArrayValue(key, byteArrayVal);
-// var getKvsByteArrayVal = etcdClient.getKvsByteArrayValue(key);
-// (getKvsByteArrayVal === {[key]: byteArrayVal});
+// Setting into etcd new kvs pair with byte array value.
+var putByteArrayVal = etcdClient.putByteArrayValue(key, byteArrayVal);
+java.lang.Thread.sleep(3000);
+!(putByteArrayVal instanceof Error);
 
-// var deleteKvs = etcdClient.delete(key);
-// var getKvsStrVal = etcdClient.getKvsStringValue(key);
-// var getKvsByteArrayVal = etcdClient.getKvsByteArrayValue(key);
-// (getKvsStrVal === { });
-// (getKvsByteArrayVal === { });
+// Getting the kvs pair for the specified key with byte array value.
+var getKvsByteArrayVal = etcdClient.getKvsByteArrayValue(key);
+console.log(JSON.stringify(getKvsByteArrayVal));
+typedArraysAreEqual(getKvsByteArrayVal[key], byteArrayVal);
+
+// Deleting the etcd kvs pair with the specified key.
+var deleteKvs = etcdClient.delete(key);
+java.lang.Thread.sleep(3000);
+!(deleteKvs instanceof Error);
+
+// Getting deleted kvs pair for both value types after the delete.
+var getKvsStrValDel = etcdClient.getKvsStringValue(key);
+console.log(JSON.stringify(getKvsStrVal));
+var getKvsByteArrayValDel = etcdClient.getKvsByteArrayValue(key);
+console.log(JSON.stringify(getKvsByteArrayVal));
+Object.keys(getKvsStrValDel).length === 0
+Object.keys(getKvsByteArrayValDel).length === 0
+
+// Test put for error when key is not string.
+var putKvs = etcdClient.putStringValue(100, 'bar');
+console.log(JSON.stringify(putKvs.message));
+putKvs instanceof Error;
+
+// Test put for error when value is not string.
+var putKvs = etcdClient.putStringValue('foo', 100);
+console.log(JSON.stringify(putKvs.message));
+putKvs instanceof Error;
+
+// Test put for error when key is not string for byte array value.
+var putKvs = etcdClient.putByteArrayValue(100, [116, 101, 115, 116]);
+console.log(JSON.stringify(putKvs.message));
+putKvs instanceof Error;
+
+// Test put for error when value is not int8array for byte array value.
+var putKvs = etcdClient.putByteArrayValue('foo', [116, 101, 115, 116]);
+console.log(JSON.stringify(putKvs.message));
+putKvs instanceof Error;
+
+// Test get for error when key is not string for string value;
+var getKvs = etcdClient.getKvsStringValue(10);
+console.log(JSON.stringify(getKvs.message));
+getKvs instanceof Error;
+
+// Test get for error when key is not string for byte array value;
+var getKvs = etcdClient.getKvsByteArrayValue(10);
+console.log(JSON.stringify(getKvs.message));
+getKvs instanceof Error;
+
+// Test delete for error when key is not string.
+var deleteKvs = etcdClient.delete(10);
+console.log(JSON.stringify(deleteKvs.message));
+deleteKvs instanceof Error;
+

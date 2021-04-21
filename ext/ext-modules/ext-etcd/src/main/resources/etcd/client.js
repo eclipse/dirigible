@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
 /** Client API for Etcd */
 
 exports.getClient = function () {
@@ -20,11 +21,27 @@ exports.getClient = function () {
 
 function Client() {
     this.putStringValue = function (key, value) {
-        this.native.put(StringToByteSequence(key), StringToByteSequence(value));
+        if (typeof (key) !== 'string') {
+            return new Error('Key is not a string.');
+        }
+        else if (typeof (value) !== 'string') {
+            return new Error('Value is not a string.');
+        }
+        else {
+            this.native.put(StringToByteSequence(key), StringToByteSequence(value));
+        }
     }
 
     this.putByteArrayValue = function (key, value) {
-        this.native.put(StringToByteSequence(key), ByteArrayToByteSequence(value));
+        if (typeof (key) !== 'string') {
+            return new Error('Key is not a string.');
+        }
+        else if (!(value instanceof Int8Array)) {
+            return new Error('Value is not a Int8Array.');
+        }
+        else {
+            this.native.put(StringToByteSequence(key), ByteArrayToByteSequence(value));
+        }
     }
 
     this.getHeader = function (key) {
@@ -32,11 +49,21 @@ function Client() {
     }
 
     this.getKvsStringValue = function (key) {
-        return get(key, this.native).getKvsString();
+        if (typeof (key) !== 'string') {
+            return new Error('Key is not a string.');
+        }
+        else {
+            return get(key, this.native).getKvsString();
+        }
     }
 
     this.getKvsByteArrayValue = function (key) {
-        return get(key, this.native).getKvsByteArray();
+        if (typeof (key) !== 'string') {
+            return new Error('Key is not a string.');
+        }
+        else {
+            return get(key, this.native).getKvsByteArray();
+        }
     }
 
     this.getCount = function (key) {
@@ -44,7 +71,12 @@ function Client() {
     }
 
     this.delete = function (key) {
-        this.native.delete(StringToByteSequence(key));
+        if (typeof (key) !== 'string') {
+            return new Error('Key is not a string.');
+        }
+        else {
+            this.native.delete(StringToByteSequence(key));
+        }
     }
 
     function get(key, native) {
@@ -127,9 +159,9 @@ function KeyValueObject(kvsList, func) {
 
 function BytesToArray(value) {
     var array = value.getBytes();
-    var result = [];
+    var result = new Int8Array(array.length);
     for (var i = 0; i < array.length; i++) {
-        result.push(parseInt(array[i]));
+        result[i] = parseInt(array[i]);
     }
     return result;
 }
