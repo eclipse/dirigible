@@ -38,13 +38,13 @@ public class EtcdFacadeTest {
 		ByteSequence value = ByteSequence.from("bar", Charsets.UTF_8);
 
 		etcdClient.put(key, value);
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 
 		GetResponse getPutResponse = etcdClient.get(key).get();
 		assertEquals(getPutResponse.getKvs().get(0).getValue().toString(Charsets.UTF_8), value.toString(Charsets.UTF_8));
 
 		etcdClient.delete(key);
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 
 		GetResponse getDelResponse = etcdClient.get(key).get();
 		assertTrue(getDelResponse.getKvs().isEmpty());
