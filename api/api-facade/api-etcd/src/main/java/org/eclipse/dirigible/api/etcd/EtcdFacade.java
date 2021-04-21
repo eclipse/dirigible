@@ -23,6 +23,9 @@ import io.etcd.jetcd.KV;
 
 import com.google.common.base.Charsets;
 
+/**
+ * The Class EtcdFacade.
+ */
 public class EtcdFacade implements IScriptingFacade {
 	
 	private static final String DIRIGIBLE_ETCD_CLIENT_ENDPOINT = "DIRIGIBLE_ETCD_CLIENT_ENDPOINT";
@@ -31,6 +34,11 @@ public class EtcdFacade implements IScriptingFacade {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EtcdFacade.class);
 
+	/**
+	 * Gets the etcd client.
+	 *
+	 * @return the etcd client object
+	 */
 	public static KV getClient() {
 		
 		String clientEndpoint = Configuration.get(DIRIGIBLE_ETCD_CLIENT_ENDPOINT, CLIENT_ENDPOINT);
@@ -40,15 +48,33 @@ public class EtcdFacade implements IScriptingFacade {
 		KV kvClient = client.getKVClient();
 		return kvClient;
 	}
-	
+
+	/**
+	 * Converts a string to etcd byte sequence.
+	 *
+	 * @param str the string to be converted
+	 * @return the ByteSequence of the string
+	 */
 	public static ByteSequence stringToByteSequence(String str) {
 		return ByteSequence.from(str, Charsets.UTF_8);
 	}
-	
+
+	/**
+	 * Converts a byte array to etcd byte sequence.
+	 *
+	 * @param arr the byte array to be converted
+	 * @return the ByteSequence of the byte array
+	 */
 	public static ByteSequence byteArrayToByteSequence(byte[] arr) {
 		return ByteSequence.from(arr);
 	}
-	
+
+	/**
+	 * Converts an etcd byte sequence to string.
+	 *
+	 * @param value the byte sequence to be converted
+	 * @return the string of the byte sequence
+	 */
 	public static String byteSequenceToString(ByteSequence value) {
 		return value.toString(Charsets.UTF_8);
 	}
