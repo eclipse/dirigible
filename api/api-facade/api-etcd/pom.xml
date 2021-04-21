@@ -63,11 +63,6 @@
 			<version>5.10.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>5.10.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
   			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-core</artifactId>
 			<version>0.5.0</version>
@@ -75,12 +70,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>5.10.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
 			<version>5.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
