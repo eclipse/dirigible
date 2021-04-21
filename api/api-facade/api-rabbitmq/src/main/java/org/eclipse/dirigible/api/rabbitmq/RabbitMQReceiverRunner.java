@@ -35,7 +35,7 @@ public class RabbitMQReceiverRunner implements Runnable {
 
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage";
 	private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError";
-	
+
 	private final Connection connection;
 	private final Channel channel;
 	private String queue;
@@ -57,7 +57,7 @@ public class RabbitMQReceiverRunner implements Runnable {
 	public void run() {
 		try {
 			logger.info("Starting a RabbitMQ receiver for: " + this.queue);
-			channel.queueDeclare(queue, false, false, false, null);			
+			channel.queueDeclare(queue, false, false, false, null);
 			while (!stopped.get()) {
 				Map<Object, Object> context = createMessagingContext();
 				Consumer consumer = new DefaultConsumer(channel) {
@@ -67,12 +67,16 @@ public class RabbitMQReceiverRunner implements Runnable {
 						String message = new String(body, "UTF-8");
 						context.put("message", message);
 						try {
-							ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
+							ScriptEngineExecutorsManager.executeServiceModule(
+									IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
+									DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE, context);
 						} catch (ScriptingException e) {
 							logger.error(e.getMessage(), e);
 							try {
 								context.put("error", escapeCodeString(e.getMessage()));
-								ScriptEngineExecutorsManager.executeServiceModule(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
+								ScriptEngineExecutorsManager.executeServiceModule(
+										IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT,
+										DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR, context);
 							} catch (ScriptingException es) {
 								logger.error(es.getMessage(), es);
 							}
@@ -88,7 +92,7 @@ public class RabbitMQReceiverRunner implements Runnable {
 				channel.queueDelete(queue);
 				channel.close();
 				connection.close();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -111,16 +115,15 @@ public class RabbitMQReceiverRunner implements Runnable {
 		context.put("handler", this.handler);
 		return context;
 	}
-	
+
 	/**
 	 * Escape code string.
 	 *
-	 * @param raw
-	 *            the raw
+	 * @param raw the raw
 	 * @return the string
 	 */
 	private String escapeCodeString(String raw) {
 		return raw.replace("'", "&amp;");
 	}
-	
+
 }

@@ -25,50 +25,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RabbitMQFacade extends Thread implements IScriptingFacade {
+
+	private static final Logger logger = LoggerFactory.getLogger(RabbitMQFacade.class);
+
 	private static final String DIRIGIBLE_RABBITQM_USERNAME = "guest";
 
 	private static final String DIRIGIBLE_RABBITQM_PASSWORD = "guest";
 
 	private static final String DIRIGIBLE_RABBITQM_HOST = "127.0.0.1";
-	
+
 	private static final int DEFAULT_RABBITQM_PORT = 5672;
 
-	private static final Logger logger = LoggerFactory.getLogger(RabbitMQFacade.class);
-
 	private static Map<String, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
-
-	public static Connection connect() {
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(DIRIGIBLE_RABBITQM_HOST);
-		factory.setUsername(DIRIGIBLE_RABBITQM_USERNAME);
-		factory.setPassword(DIRIGIBLE_RABBITQM_PASSWORD);
-		factory.setPort(DEFAULT_RABBITQM_PORT);
-		factory.setConnectionTimeout(20000);
-		Connection connection = null;
-
-		try {
-			connection = factory.newConnection();
-		} catch (Exception e) {
-			logger.error("Error establishing connection to AMQP" +  e.toString());
-		}
-		return connection;
-	}
-
-	public static Channel createChannel(Connection connection) {
-		Channel channel = null;
-		try {
-			channel = connection.createChannel();
-		} catch (IOException e) {
-			logger.error("Error creating channel" + e.toString());
-			e.printStackTrace();
-		}
-		return channel;
-	}
 
 	/**
 	 * Send message to given queue
 	 * 
-	 * @param queue the queue being used
+	 * @param queue   the queue being used
 	 * @param message the message to be delivered
 	 */
 	public static void send(String queue, String message) {
@@ -88,61 +61,88 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 	/**
 	 * Start listening given queue and destination
 	 * 
-	 * @param queue the queue being used
+	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 */
 	public static final void startListening(String queue, String handler) {
 		Connection connection = connect();
 		Channel channel = createChannel(connection);
 		String location = null;
-		
+
 		RabbitMQReceiverRunner receiverRunner = null;
 		location = createLocation(queue, handler);
 		receiverRunner = CONSUMERS.get(location);
-		
-		if(receiverRunner == null) {
+
+		if (receiverRunner == null) {
 			receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, handler);
 			Thread receiverThread = new Thread(receiverRunner);
 			receiverThread.setDaemon(false);
 			receiverThread.start();
-			
+
 			CONSUMERS.put(location, receiverRunner);
 			logger.info("RabbitMQ receiver created for [" + queue + "]");
-		}else {
+		} else {
 			logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");
 		}
 	}
 
-	
 	/**
 	 * Stop listening on given queue and destination
 	 * 
-	 * @param queue the queue being used
+	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 */
 	public static final void stopListening(String queue, String handler) {
 		RabbitMQReceiverRunner receiverRunner = null;
 		String location = null;
-		
+
 		location = createLocation(queue, handler);
 		receiverRunner = CONSUMERS.get(location);
-		if(receiverRunner != null) {
+		if (receiverRunner != null) {
 			receiverRunner.stop();
 			CONSUMERS.remove(location);
 			logger.info("RabbitMQ receiver stopped for [" + queue + "]");
-		}else {
+		} else {
 			logger.warn("RabbitMQ receiver [" + queue + "] has not been started yet.");
 		}
 	}
-	
+
+	private static Connection connect() {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(DIRIGIBLE_RABBITQM_HOST);
+		factory.setUsername(DIRIGIBLE_RABBITQM_USERNAME);
+		factory.setPassword(DIRIGIBLE_RABBITQM_PASSWORD);
+		factory.setPort(DEFAULT_RABBITQM_PORT);
+		factory.setConnectionTimeout(20000);
+		Connection connection = null;
+
+		try {
+			connection = factory.newConnection();
+		} catch (Exception e) {
+			logger.error("Error establishing connection to AMQP" + e.toString());
+		}
+		return connection;
+	}
+
+	private static Channel createChannel(Connection connection) {
+		Channel channel = null;
+		try {
+			channel = connection.createChannel();
+		} catch (IOException e) {
+			logger.error("Error creating channel" + e.toString());
+			e.printStackTrace();
+		}
+		return channel;
+	}
+
 	/**
 	 * Create internal identifier for a consumer
 	 * 
-	 * @param queue the queue being used
+	 * @param queue   the queue being used
 	 * @param handler the destination for the message
 	 * @return the identifier
 	 */
 	private static String createLocation(String queue, String handler) {
 		return "[" + queue + "]:[" + handler + "]";
-	}	
+	}
 }

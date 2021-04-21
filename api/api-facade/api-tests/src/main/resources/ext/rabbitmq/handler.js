@@ -9,12 +9,8 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-/** Consumer API for RabbitMQ */
+var configurations = require("core/v4/configurations");
 
-exports.startListening = function(queue, handler){
-	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.startListening(queue, handler);
-}
-
-exports.stopListening = function(queue, handler){
-	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.stopListening(queue, handler);
+exports.onMessage = function(message){
+	configurations.set("RABBITMQ_MESSAGE", message);
 }

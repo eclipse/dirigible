@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
@@ -9,12 +9,19 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-/** Consumer API for RabbitMQ */
 
-exports.startListening = function(queue, handler){
-	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.startListening(queue, handler);
-}
+var producer = require("rabbitmq/producer");
+var consumer = require("rabbitmq/consumer");
+var configurations = require("core/v4/configurations");
 
-exports.stopListening = function(queue, handler){
-	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.stopListening(queue, handler);
-}
+var newMessage = "testMessage";
+
+producer.sendMessage("test-queue", newMessage);
+
+consumer.startListening("test-queue", "ext/rabbitmq/handler");
+
+java.lang.Thread.sleep(1000);
+
+consumer.stopListening("test-queue", "ext/rabbitmq/handler");
+
+configurations.get("RABBITMQ_MESSAGE") == newMessage;

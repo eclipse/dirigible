@@ -78,6 +78,7 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		registerModulesIoV4();
 		registerModulesSecurityV4();
 		registerModulesPlatformV4();
+		registerModulesRabbitMQExt();
 	}
 
 	private void registerModulesPlatformV4() {
@@ -186,6 +187,10 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("utils/v4/url/escapeForm.js");
 	}
 
+	private void registerModulesRabbitMQExt() {
+		TEST_MODULES.add("ext/rabbitmq/rabbitmq.js");
+	}
+	
 	protected void registerModulesV3() {
 		registerModulesCoreV3();
 		registerModulesSecurityV3();
