@@ -152,28 +152,28 @@ WorkspaceService.prototype.createFolder = function(type){
 	});
 };
 
-WorkspaceService.prototype.createFile = function(name, path, node){
+WorkspaceService.prototype.createFile = function (name, path, node) {
 	var isDirectory = node.type === 'folder';
-	var url = new UriBuilder().path((this.workspacesServiceUrl+path).split('/')).path(name).build();
-	if(isDirectory)
-		url+="/";
+	var url = new UriBuilder().path((this.workspacesServiceUrl + path).split('/')).path(name).build();
+	if (isDirectory)
+		url += "/";
 	if (!node.data)
 		node.data = '';
-	return this.$http.post(url, JSON.stringify(node.data))
-			.then(function(response){
-				var filePath = response.headers('location');
-				filePath = filePath.substring(filePath.indexOf("/services"))
-				return this.$http.get(filePath, {headers: { 'describe': 'application/json'}})
-					.then(function(response){ return response.data;});
-			}.bind(this))
-			.catch(function(response) {
-				var msg;
-				if(response.data && response.data.error)
-					msg = response.data.error;
-				else 
-					msg = response.data || response.statusText || 'Unspecified server error. HTTP Code ['+response.status+']';
-				throw msg;
-			});	
+	return this.$http.post(url, JSON.stringify(node.data), { headers: { 'Dirigible-Editor': 'Workspace' } })
+		.then(function (response) {
+			var filePath = response.headers('location');
+			filePath = filePath.substring(filePath.indexOf("/services"))
+			return this.$http.get(filePath, { headers: { 'describe': 'application/json' } })
+				.then(function (response) { return response.data; });
+		}.bind(this))
+		.catch(function (response) {
+			var msg;
+			if (response.data && response.data.error)
+				msg = response.data.error;
+			else
+				msg = response.data || response.statusText || 'Unspecified server error. HTTP Code [' + response.status + ']';
+			throw msg;
+		});
 };
 WorkspaceService.prototype.uploadFile = function(name, path, node){
 	var isDirectory = node.type === 'folder';
