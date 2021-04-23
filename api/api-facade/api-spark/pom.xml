@@ -94,12 +94,13 @@
 			<version>5.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
-			<version>5.10.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
+<!-- Conflicts with other dependencies -->
+<!--		<dependency>-->
+<!--			<groupId>org.eclipse.dirigible</groupId>-->
+<!--			<artifactId>dirigible-engine-javascript-graalvm</artifactId>-->
+<!--			<version>5.10.0-SNAPSHOT</version>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>

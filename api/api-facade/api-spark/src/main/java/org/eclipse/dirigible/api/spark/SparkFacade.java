@@ -21,7 +21,7 @@ public class SparkFacade implements IScriptingFacade {
 
 	private static final String DIRIGIBLE_SPARK_CLIENT_URI = "DIRIGIBLE_SPARK_CLIENT_URI";
 
-	private static final String CLIENT_URI = "spark://192.168.0.143:7077";
+	private static final String CLIENT_URI = "spark://192.168.32.1:7077";
 
 	private static final String POSTGRESQL_URI = "jdbc:postgresql://localhost:5432/%s?user=%s&password=%s";
 
