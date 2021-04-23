@@ -375,7 +375,7 @@ public class ODataCoreService implements IODataCoreService {
 	public InputStream getMetadata() throws ODataException {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<?xml version='1.0' encoding='UTF-8'?>\n");
-		builder.append("<edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\" Version=\"1.0\">\n");
+		builder.append("<edmx:Edmx xmlns:edmx=\"http://schemas.microsoft.com/ado/2007/06/edmx\"  xmlns:sap=\"http://www.sap.com/Protocols/SAPData\" Version=\"1.0\">\n");
 		builder.append("    <edmx:DataServices m:DataServiceVersion=\"1.0\" xmlns:m=\"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\">\n");
 		
 		List<ODataSchemaDefinition> schemas = getSchemas();
