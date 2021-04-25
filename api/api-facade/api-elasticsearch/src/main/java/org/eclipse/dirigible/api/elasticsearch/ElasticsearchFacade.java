@@ -16,16 +16,23 @@ import java.io.IOException;
 import org.apache.http.HttpHost;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.action.support.replication.ReplicationResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 
 public class ElasticsearchFacade implements IScriptingFacade {
 
@@ -49,20 +56,24 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return new RestHighLevelClient(RestClient.builder(new HttpHost(clientHostname, clientPort, clientScheme)));
     }
 
-    public static IndexResponse index(RestHighLevelClient client, String index, String id, String documentSource)
+    // TODO: add optional parameters to each function
+
+    // DOCUMENT API
+
+    public static boolean indexDocument(RestHighLevelClient client, String index, String id, String documentSource, String xContentType)
             throws IOException {
         IndexRequest indexRequest = new IndexRequest(index);
 
         indexRequest.id(id);
-        indexRequest.source(documentSource, XContentType.JSON);
+        indexRequest.source(documentSource, XContentType.valueOf(xContentType));
 
         IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+        ReplicationResponse.ShardInfo shardInfo = indexResponse.getShardInfo();
 
-        return indexResponse;
+        return shardInfo.getTotal() == shardInfo.getSuccessful();
     }
 
-    public static GetResponse get(RestHighLevelClient client, String index, String id) throws IOException {
-        // TODO: add optional arguments
+    public static GetResponse getDocument(RestHighLevelClient client, String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
 
         GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
@@ -70,13 +81,46 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return getResponse;
     }
 
-    public static DeleteResponse delete(RestHighLevelClient client, String index, String id) throws IOException {
+    public static boolean documentExists(RestHighLevelClient client, String index, String id) throws IOException {
+        GetRequest getRequest = new GetRequest(index, id);
+
+        getRequest.fetchSourceContext(new FetchSourceContext(false));
+        getRequest.storedFields("_none_");
+
+        return client.exists(getRequest, RequestOptions.DEFAULT);
+    }
+
+    public static boolean deleteDocument(RestHighLevelClient client, String index, String id) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(index, id);
 
         DeleteResponse deleteResponse = client.delete(
                 deleteRequest, RequestOptions.DEFAULT);
+        ReplicationResponse.ShardInfo shardInfo = deleteResponse.getShardInfo();
 
-        return deleteResponse;
+        return shardInfo.getTotal() != shardInfo.getSuccessful();
     }
 
+    // INDEX API
+
+    public static boolean createIndex(RestHighLevelClient client, String name) throws IOException {
+        CreateIndexRequest request = new CreateIndexRequest(name);
+
+        CreateIndexResponse createIndexResponse = client.indices().create(request, RequestOptions.DEFAULT);
+
+        return createIndexResponse.isAcknowledged() && createIndexResponse.isShardsAcknowledged();
+    }
+
+    public static boolean deleteIndex(RestHighLevelClient client, String name) throws IOException {
+        DeleteIndexRequest request = new DeleteIndexRequest(name);
+
+        AcknowledgedResponse deleteIndexResponse = client.indices().delete(request, RequestOptions.DEFAULT);
+
+        return deleteIndexResponse.isAcknowledged();
+    }
+
+    public static boolean indexExists(RestHighLevelClient client, String name) throws IOException {
+        GetIndexRequest request = new GetIndexRequest(name);
+
+        return client.indices().exists(request, RequestOptions.DEFAULT);
+    }
 }
