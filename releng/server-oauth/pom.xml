@@ -9,8 +9,8 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-    <name>Releng - Server - All</name>
-	<artifactId>dirigible-server-all</artifactId>
+    <name>Releng - Server - OAuth</name>
+	<artifactId>dirigible-server-oauth</artifactId>
 	<packaging>jar</packaging>
 
 	<build>
