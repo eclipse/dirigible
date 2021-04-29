@@ -51,6 +51,7 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	@Override
 	public void registerModules() {
 		registerModulesV4();
+		registerModulesExt();
 	}
 	/**
 	 * Run suite.

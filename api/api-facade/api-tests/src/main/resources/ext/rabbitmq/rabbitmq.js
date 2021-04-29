@@ -16,7 +16,7 @@ var configurations = require("core/v4/configurations");
 
 var newMessage = "testMessage";
 
-producer.sendMessage("test-queue", newMessage);
+producer.send("test-queue", newMessage);
 
 consumer.startListening("test-queue", "ext/rabbitmq/handler");
 

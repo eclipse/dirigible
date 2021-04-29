@@ -11,6 +11,6 @@
  */
 /** Producer API for RabbitMQ */
 
-exports.sendMessage = function(queue, message){
+exports.send = function(queue, message){
 	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.send(queue, message);
 }
