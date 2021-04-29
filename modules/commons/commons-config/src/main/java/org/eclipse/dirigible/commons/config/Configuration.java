@@ -247,18 +247,26 @@ public class Configuration {
 		return true;
 	}
 
+	public static boolean isOAuthAuthenticationEnabled() {
+		return Boolean.parseBoolean(get("DIRIGIBLE_OAUTH_ENABLED", Boolean.FALSE.toString()));
+	}
+
 	/**
 	 * Checks if is JWT mode enabled.
 	 *
 	 * @return true, if is JWT mode enabled
 	 */
 	public static boolean isJwtModeEnabled() {
-		try {
-			Class.forName("org.eclipse.dirigible.jwt.JwtAccess");
-		} catch (ClassNotFoundException e) {
-			return false;
+		boolean enabled = false;
+		if (isOAuthAuthenticationEnabled()) {
+			try {
+				Class.forName("org.eclipse.dirigible.jwt.JwtAccess");
+				enabled = true;
+			} catch (ClassNotFoundException e) {
+				// Do nothing
+			}
 		}
-		return true;
+		return enabled;
 	}
 
 	/**

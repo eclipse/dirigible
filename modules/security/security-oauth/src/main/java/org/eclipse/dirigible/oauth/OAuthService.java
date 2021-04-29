@@ -61,6 +61,7 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	@Context
 	private HttpServletResponse response;
 
+	public static final String DIRIGIBLE_OAUTH_ENABLED = "DIRIGIBLE_OAUTH_ENABLED";
 	public static final String DIRIGIBLE_OAUTH_AUTHORIZE_URL = "DIRIGIBLE_OAUTH_AUTHORIZE_URL";
 	public static final String DIRIGIBLE_OAUTH_TOKEN_URL = "DIRIGIBLE_OAUTH_TOKEN_URL";
 	public static final String DIRIGIBLE_OAUTH_CLIENT_ID = "DIRIGIBLE_OAUTH_CLIENT_ID";

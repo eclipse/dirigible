@@ -99,7 +99,14 @@
 		 	<artifactId>dirigible-commons-config</artifactId>
 		 	<version>5.9.3</version>
 		</dependency>
-	
+
+		<!-- Security -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-security</artifactId>
+			<version>5.9.3</version>
+	   </dependency>
+
 		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
