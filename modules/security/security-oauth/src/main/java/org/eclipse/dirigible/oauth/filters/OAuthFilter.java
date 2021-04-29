@@ -62,41 +62,39 @@ public class OAuthFilter extends AbstractOAuthFilter {
 	
 	@Override
 	protected void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		if (Configuration.isOAuthAuthenticationEnabled()) {
-			String jwt = null;
-			if (!isPublicEnabledAccess(request) && !isOAuth(request) && !isPublicResource(request)) {
-				jwt = JwtUtils.getJwt(request);
+		String jwt = null;
+		if (!isPublicEnabledAccess(request) && !isOAuth(request) && !isPublicResource(request)) {
+			jwt = JwtUtils.getJwt(request);
 
-				if (jwt == null || (jwt != null && jwt.equals(""))) {
-					authenticate(request, response);
-					return;
-				}
-
-				if (!JwtUtils.isValidJwt(request, jwt)) {
-					if (JwtUtils.isExpiredJwt(request, jwt)) {
-						authenticate(request, response);
-						return;
-					}  else {
-						unauthorized(request, response, UNAUTHORIZED_MESSAGE);
-						return;
-					}
-				} else if (JwtUtils.isExpiredJwt(request, jwt)) {
-					authenticate(request, response);
-					return;
-				}
+			if (jwt == null || (jwt != null && jwt.equals(""))) {
+				authenticate(request, response);
+				return;
 			}
 
-			try {
-				ThreadContextFacade.setUp();
-				ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-				ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
-
-				if (jwt != null) {
-					UserFacade.setName(JwtUtils.getClaim(jwt).getUserName());
+			if (!JwtUtils.isValidJwt(request, jwt)) {
+				if (JwtUtils.isExpiredJwt(request, jwt)) {
+					authenticate(request, response);
+					return;
+				}  else {
+					unauthorized(request, response, UNAUTHORIZED_MESSAGE);
+					return;
 				}
-			} catch (ContextException e) {
-				logger.info("Error while setting userName from XSUAA Filter.", e);
+			} else if (JwtUtils.isExpiredJwt(request, jwt)) {
+				authenticate(request, response);
+				return;
 			}
+		}
+
+		try {
+			ThreadContextFacade.setUp();
+			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+
+			if (jwt != null) {
+				UserFacade.setName(JwtUtils.getClaim(jwt).getUserName());
+			}
+		} catch (ContextException e) {
+			logger.info("Error while setting userName from XSUAA Filter.", e);
 		}
 		chain.doFilter(request, response);
 	}

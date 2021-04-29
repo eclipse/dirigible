@@ -37,6 +37,7 @@ public abstract class AbstractOAuthFilter implements Filter {
 	 */
 	public static final String INITIAL_REQUEST_PATH_COOKIE = "initialRequestPath";
 	private static final String SLASH = "/";
+	private static final boolean IS_OAUTH_AUTHENTICATION_ENABLED = Configuration.isOAuthAuthenticationEnabled();
 
 	protected abstract Logger getLogger();
 
@@ -50,7 +51,7 @@ public abstract class AbstractOAuthFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		if (Configuration.isOAuthAuthenticationEnabled()) {
+		if (IS_OAUTH_AUTHENTICATION_ENABLED) {
 			filter(request, response, chain);
 		}
 		chain.doFilter(request, response);
