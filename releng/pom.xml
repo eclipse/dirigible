@@ -30,6 +30,7 @@
 		<module>sap-runtime-ephemeral</module>
 		<module>server-all</module>
 		<module>server-keycloak-all</module>
+		<module>server-oauth</module>
 		<module>server-runtime</module>
 		<module>server-runtime-keycloak</module>
 		<module>trial-all</module>

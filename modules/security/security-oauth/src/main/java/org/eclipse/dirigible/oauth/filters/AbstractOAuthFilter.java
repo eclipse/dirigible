@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.oauth.filters;
@@ -17,6 +17,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import java.io.IOException;
 
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -25,6 +26,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.oauth.utils.OAuthUtils;
 import org.slf4j.Logger;
 
@@ -45,6 +47,26 @@ public abstract class AbstractOAuthFilter implements Filter {
 	public void destroy() {
 		// Do nothing
 	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		if (Configuration.isOAuthAuthenticationEnabled()) {
+			filter(request, response, chain);
+		}
+		chain.doFilter(request, response);
+		
+	}
+
+	/**
+	 * Perform OAuth related filtering
+	 * 
+	 * @param request
+	 * @param response
+	 * @param chain
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	protected abstract void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException;
 
 	/**
 	 * Authenticate.
