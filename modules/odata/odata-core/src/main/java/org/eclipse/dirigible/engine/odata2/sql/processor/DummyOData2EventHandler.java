@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.odata2.sql.processor;
 
 import java.io.InputStream;
 
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
@@ -22,17 +23,17 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 public class DummyOData2EventHandler implements OData2EventHandler {
 
 	@Override
-	public void beforeCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
-			String contentType) {
+	public void beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
+			String contentType, ODataEntry entry) {
 	}
 
 	@Override
-	public void afterCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
-			String contentType, ODataResponse response) {
+	public void afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
+			String contentType, ODataEntry entry) {
 	}
 
 	@Override
-	public boolean usingOnCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
+	public boolean usingOnCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType) {
 		return false;
 	}
@@ -44,23 +45,23 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public boolean forbidCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
+	public boolean forbidCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType) {
 		return false;
 	}
 
 	@Override
-	public void beforeUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
-			boolean merge, String contentType) {
+	public void beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+			boolean merge, String contentType, ODataEntry entry) {
 	}
 
 	@Override
-	public void afterUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
-			boolean merge, String contentType, ODataResponse response) {
+	public void afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+			boolean merge, String contentType, ODataEntry entry) {
 	}
 
 	@Override
-	public boolean usingOnUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
+	public boolean usingOnUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType) {
 		return false;
 	}
@@ -72,7 +73,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public boolean forbidUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
+	public boolean forbidUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType) {
 		return false;
 	}
@@ -82,7 +83,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, ODataResponse response) {
+	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
 	}
 
 	@Override

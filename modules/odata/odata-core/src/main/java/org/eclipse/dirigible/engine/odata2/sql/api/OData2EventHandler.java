@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.odata2.sql.api;
 
 import java.io.InputStream;
 
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
@@ -20,39 +21,39 @@ import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 
 public interface OData2EventHandler {
 	
-	void beforeCreateEntity(final PostUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final String contentType);
+	void beforeCreateEntity(final PostUriInfo uriInfo,
+			final String requestContentType, final String contentType, ODataEntry entry);
 	
-	void afterCreateEntity(final PostUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final String contentType, final ODataResponse response);
+	void afterCreateEntity(final PostUriInfo uriInfo,
+			final String requestContentType, final String contentType, final ODataEntry entry);
 	
-	boolean usingOnCreateEntity(final PostUriInfo uriInfo, final InputStream content,
+	boolean usingOnCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType);
 	
 	ODataResponse onCreateEntity(final PostUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final String contentType);
 	
-	boolean forbidCreateEntity(final PostUriInfo uriInfo, final InputStream content,
+	boolean forbidCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType);
 	
-	void beforeUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final boolean merge, final String contentType);
+	void beforeUpdateEntity(final PutMergePatchUriInfo uriInfo,
+			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry);
 	
-	void afterUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final boolean merge, final String contentType, final ODataResponse response);
+	void afterUpdateEntity(final PutMergePatchUriInfo uriInfo,
+			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry);
 	
-	boolean usingOnUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
+	boolean usingOnUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType);
 	
 	ODataResponse onUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final boolean merge, final String contentType);
 	
-	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
+	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType);
 	
 	void beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
 	
-	void afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, final ODataResponse response);
+	void afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
 	
 	boolean usingOnDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
 	

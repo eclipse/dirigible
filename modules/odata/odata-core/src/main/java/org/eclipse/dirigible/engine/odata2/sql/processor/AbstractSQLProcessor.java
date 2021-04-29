@@ -542,16 +542,13 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	public ODataResponse createEntity(final PostUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final String contentType) throws ODataException {
 		
-		if (this.odata2EventHandler.forbidCreateEntity(uriInfo, content,
+		if (this.odata2EventHandler.forbidCreateEntity(uriInfo,
 				requestContentType, contentType)) {
 			throw new ODataException(String.format("Create operation on entity: %s:%s is forbidden.", 
 					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
 		}
 		
-		this.odata2EventHandler.beforeCreateEntity(uriInfo, content,
-				requestContentType, contentType);
-		
-		if (this.odata2EventHandler.usingOnCreateEntity(uriInfo, content,
+		if (this.odata2EventHandler.usingOnCreateEntity(uriInfo,
 				requestContentType, contentType)) {
 			return this.odata2EventHandler.onCreateEntity(uriInfo, content,
 					requestContentType, contentType);
@@ -560,6 +557,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final EdmEntitySet entitySet = uriInfo.getTargetEntitySet();
 
 		ODataEntry entry = parseEntry(entitySet, content, requestContentType, false);
+		
+		this.odata2EventHandler.beforeCreateEntity(uriInfo,
+				requestContentType, contentType, entry);
 
 		SQLQuery query = this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry);
 
@@ -594,8 +594,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(),
 				writeProperties);
 		
-		this.odata2EventHandler.afterCreateEntity(uriInfo, content,
-				requestContentType, contentType, response);
+		this.odata2EventHandler.afterCreateEntity(uriInfo,
+				requestContentType, contentType, entry);
 		
 		return response;
 	}
@@ -621,11 +621,11 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
 		}
 		
-		this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType);
-		
 		if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
 			return this.odata2EventHandler.onDeleteEntity(uriInfo, contentType);
 		}
+		
+		this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType);
 
 		SQLQuery query = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo,
 				mapKeys(uriInfo.getKeyPredicates()));
@@ -656,7 +656,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		
 		ODataResponse response = ODataResponse.newBuilder().build();
 		
-		this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, response);
+		this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType);
 		
 		return response;
 	}
@@ -688,14 +688,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	public ODataResponse updateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final boolean merge, final String contentType) throws ODataException {
 		
-		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, content, requestContentType, merge, contentType)) {
+		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
 			throw new ODataException(String.format("Update operation on entity: %s:%s is forbidden.", 
 					uriInfo.getTargetType().getNamespace(), uriInfo.getTargetType().getName()));
 		}
 		
-		this.odata2EventHandler.beforeUpdateEntity(uriInfo, content, requestContentType, merge, contentType);
-		
-		if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, content, requestContentType, merge, contentType)) {
+		if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
 			return this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType);
 		}
 		
@@ -743,6 +741,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		}
 
 		ODataEntry entry = parseEntry(targetEntitySet, content, requestContentType, false);
+		
+		this.odata2EventHandler.beforeUpdateEntity(uriInfo, requestContentType, merge, contentType, entry);
 
 		query = this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
 				mapKeys(uriInfo.getKeyPredicates()));
@@ -777,7 +777,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry.getProperties(),
 				writeProperties);
 		
-		this.odata2EventHandler.afterUpdateEntity(uriInfo, content, requestContentType, merge, contentType, response);
+		this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry);
 		
 		return response;
 
