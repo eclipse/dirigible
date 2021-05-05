@@ -280,7 +280,7 @@ jobs:
             
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
-          For more infromation go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
+          For more information go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
           
     - name: Upload anonymous-all
       id: upload-anonymous-all 
