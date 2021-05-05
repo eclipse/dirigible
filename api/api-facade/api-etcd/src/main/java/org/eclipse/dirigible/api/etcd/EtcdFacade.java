@@ -42,7 +42,7 @@ public class EtcdFacade implements IScriptingFacade {
 	public static KV getClient() {
 		
 		String clientEndpoint = Configuration.get(DIRIGIBLE_ETCD_CLIENT_ENDPOINT, CLIENT_ENDPOINT);
-		
+
 		Client client = Client.builder().endpoints(clientEndpoint).build();
 		
 		KV kvClient = client.getKVClient();

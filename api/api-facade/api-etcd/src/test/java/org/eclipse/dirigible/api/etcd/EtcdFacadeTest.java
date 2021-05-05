@@ -22,12 +22,25 @@ import java.util.concurrent.ExecutionException;
 import io.etcd.jetcd.kv.GetResponse;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.KV;
+import io.etcd.jetcd.launcher.EtcdCluster;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 
 import com.google.common.base.Charsets;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 public class EtcdFacadeTest {
+
+	@RegisterExtension static final EtcdCluster etcd = new EtcdClusterExtension("test-etcd", 1);
+
+	@Before
+	public void setUp() {
+		etcd.start();
+		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.getClientEndpoints().get(0).toString());
+	}
 
 	@Test
 	public void getClient() throws IOException, ExecutionException, InterruptedException {
