@@ -18,12 +18,14 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.RabbitMQContainer;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -46,6 +48,13 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		super.setUp();
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
+
+		RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:alpine");
+		rabbit.start();
+
+		String host = rabbit.getHost();
+		Integer port = rabbit.getFirstMappedPort();
+		Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
 	}
 
 	@Override

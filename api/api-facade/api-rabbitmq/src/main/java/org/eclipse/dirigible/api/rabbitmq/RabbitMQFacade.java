@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +29,17 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(RabbitMQFacade.class);
 
-	private static final String DIRIGIBLE_RABBITQM_USERNAME = "guest";
+	private static final String DIRIGIBLE_RABBITMQ_USERNAME = "guest";
 
-	private static final String DIRIGIBLE_RABBITQM_PASSWORD = "guest";
+	private static final String DIRIGIBLE_RABBITMQ_PASSWORD = "guest";
 
-	private static final String DIRIGIBLE_RABBITQM_HOST = "127.0.0.1";
+	//private static final String DIRIGIBLE_RABBITMQ_HOST = "127.0.0.1";
 
-	private static final int DEFAULT_RABBITQM_PORT = 5672;
+	//private static final int DEFAULT_RABBITQM_PORT = 5672;
+	
+	private static final String RABBITMQ_CLIENT = "127.0.0.1:5672";
+	
+	private static final String DIRIGIBLE_RABBITMQ_CLIENT_URI = "DIRIGIBLE_RABBITMQ_CLIENT_URI";
 
 	private static Map<String, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap());
 
@@ -108,11 +113,15 @@ public class RabbitMQFacade extends Thread implements IScriptingFacade {
 	}
 
 	private static Connection connect() {
+		String[] splitUri = Configuration.get(DIRIGIBLE_RABBITMQ_CLIENT_URI, RABBITMQ_CLIENT).split(":");
+        String host = splitUri[0];
+        int port = Integer.parseInt(splitUri[1]);
+        
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(DIRIGIBLE_RABBITQM_HOST);
-		factory.setUsername(DIRIGIBLE_RABBITQM_USERNAME);
-		factory.setPassword(DIRIGIBLE_RABBITQM_PASSWORD);
-		factory.setPort(DEFAULT_RABBITQM_PORT);
+		factory.setHost(host);
+		factory.setUsername(DIRIGIBLE_RABBITMQ_USERNAME);
+		factory.setPassword(DIRIGIBLE_RABBITMQ_PASSWORD);
+		factory.setPort(port);
 		factory.setConnectionTimeout(20000);
 		Connection connection = null;
 

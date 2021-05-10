@@ -13,7 +13,10 @@ package org.eclipse.dirigible.api.rabbitmq;
 
 import static org.junit.Assert.*;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.RabbitMQContainer;
 
 import nl.altindag.log.LogCaptor;
 
@@ -23,6 +26,17 @@ public class RabbitMQFacadeTest {
 	LogCaptor logCaptor = LogCaptor.forClass(RabbitMQFacade.class);
 	private static final String message = "testMessage";
 	private static final String queue = "test-queue";
+	  
+	
+	@Before
+	public void setUp() {
+		RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:alpine");
+		rabbit.start();
+		
+		String host = rabbit.getHost();
+	    Integer port = rabbit.getFirstMappedPort();
+	    Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
+	}
 	
 	@Test
 	public void send() {

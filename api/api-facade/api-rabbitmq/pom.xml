@@ -96,6 +96,18 @@
 		    <version>2.5.0</version>
 		    <scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.testcontainers</groupId>
+		    <artifactId>testcontainers</artifactId>
+		    <version>1.15.3</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>rabbitmq</artifactId>
+			<version>1.15.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
