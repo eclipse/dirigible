@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.oauth;
@@ -61,6 +61,7 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	@Context
 	private HttpServletResponse response;
 
+	public static final String DIRIGIBLE_OAUTH_ENABLED = "DIRIGIBLE_OAUTH_ENABLED";
 	public static final String DIRIGIBLE_OAUTH_AUTHORIZE_URL = "DIRIGIBLE_OAUTH_AUTHORIZE_URL";
 	public static final String DIRIGIBLE_OAUTH_TOKEN_URL = "DIRIGIBLE_OAUTH_TOKEN_URL";
 	public static final String DIRIGIBLE_OAUTH_CLIENT_ID = "DIRIGIBLE_OAUTH_CLIENT_ID";

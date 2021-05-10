@@ -187,6 +187,7 @@ jobs:
         zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT.war
         zip --junk-paths desktop-all releng/desktop-all/target/ROOT.war
         zip --junk-paths server-all releng/server-all/target/ROOT.war
+        zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
         zip --junk-paths server-cms releng/server-cms/target/ROOT.war
         zip --junk-paths server-database releng/server-database/target/ROOT.war
         zip --junk-paths server-javascript releng/server-javascript/target/ROOT.war
@@ -225,6 +226,7 @@ jobs:
 
           #### Helm:
 
+          To install Eclipse Dirigible with Helm go to the [Setup with Helm](https://www.dirigible.io/help/setup/helm/) page.
           All Helm charts, with detailed explanation, setup and configurations, can be found [here](https://artifacthub.io/packages/search?org=dirigiblelabs).
 
           ```
@@ -269,6 +271,7 @@ jobs:
             - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
             - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
             - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
+            - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
             - [server-cms](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-cms.zip) - CMS package.
             - [server-database](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-database.zip) - Database package.
             - [server-javascript](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-javascript.zip) - JavaScript engine package.
@@ -277,7 +280,7 @@ jobs:
             
           > _**Note:** Unzip the downloaded file to extract the `ROOT.war` binary._
           
-          For more infromation go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
+          For more information go to [https://www.dirigible.io/help/setup/](https://www.dirigible.io/help/setup/).
           
     - name: Upload anonymous-all
       id: upload-anonymous-all 
@@ -318,6 +321,16 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./server-all.zip
         asset_name: server-all.zip
+        asset_content_type: application/zip
+    - name: Upload server-oauth
+      id: upload-server-oauth
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./server-oauth.zip
+        asset_name: server-oauth.zip
         asset_content_type: application/zip
     - name: Upload server-cms
       id: upload-server-cms
@@ -451,7 +464,7 @@ jobs:
         mkdir $HOME/.kube
         echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
     - name: Update Trial Instance
-      run: kubectl set image deployment/dirigible dirigible=dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
+      run: kubectl set image deployment/trial-dirigible dirigible=dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
 
 #-----------------Update Trial Instance------------------#
 

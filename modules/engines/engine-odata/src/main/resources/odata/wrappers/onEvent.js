@@ -12,26 +12,26 @@
 var handler = require(__context.get("handler"));
 if (__context.get("method") === 'create') {
 	if (__context.get("type") === 'before') {
-		handler.onBeforeCreate(__context.get("namespace"), __context.get("name"));
+		handler.onBeforeCreate(__context);
 	} else if (__context.get("type") === 'after') {
-		handler.onAfterCreate(__context.get("namespace"), __context.get("name"));
+		handler.onAfterCreate(__context);
 	} else if (__context.get("type") === 'on') {
-		handler.onCreate(__context.get("namespace"), __context.get("name"));
+		handler.onCreate(__context);
 	}
 } else if (__context.get("method") === 'update') {
 	if (__context.get("type") === 'before') {
-		handler.onBeforeUpdate(__context.get("namespace"), __context.get("name"));
+		handler.onBeforeUpdate(__context);
 	} else if (__context.get("type") === 'after') {
-		handler.onAfterUpdate(__context.get("namespace"), __context.get("name"));
+		handler.onAfterUpdate(__context);
 	} else if (__context.get("type") === 'on') {
-		handler.onUpdate(__context.get("namespace"), __context.get("name"));
+		handler.onUpdate(__context);
 	}
 } else if (__context.get("method") === 'delete') {
 	if (__context.get("type") === 'before') {
-		handler.onBeforeDelete(__context.get("namespace"), __context.get("name"));
+		handler.onBeforeDelete(__context);
 	} else if (__context.get("type") === 'after') {
-		handler.onAfterDelete(__context.get("namespace"), __context.get("name"));
+		handler.onAfterDelete(__context);
 	} else if (__context.get("type") === 'on') {
-		handler.onDelete(__context.get("namespace"), __context.get("name"));
+		handler.onDelete(__context);
 	}
 }

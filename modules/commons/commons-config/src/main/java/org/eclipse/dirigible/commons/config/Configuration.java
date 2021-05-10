@@ -247,18 +247,26 @@ public class Configuration {
 		return true;
 	}
 
+	public static boolean isOAuthAuthenticationEnabled() {
+		return Boolean.parseBoolean(get("DIRIGIBLE_OAUTH_ENABLED", Boolean.FALSE.toString()));
+	}
+
 	/**
 	 * Checks if is JWT mode enabled.
 	 *
 	 * @return true, if is JWT mode enabled
 	 */
 	public static boolean isJwtModeEnabled() {
-		try {
-			Class.forName("org.eclipse.dirigible.jwt.JwtAccess");
-		} catch (ClassNotFoundException e) {
-			return false;
+		boolean enabled = false;
+		if (isOAuthAuthenticationEnabled()) {
+			try {
+				Class.forName("org.eclipse.dirigible.jwt.JwtAccess");
+				enabled = true;
+			} catch (ClassNotFoundException e) {
+				// Do nothing
+			}
 		}
-		return true;
+		return enabled;
 	}
 
 	/**
@@ -407,6 +415,21 @@ public class Configuration {
 			"DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT",
 			"DIRIGIBLE_THEME_DEFAULT",
 			"DIRIGIBLE_GENERATE_PRETTY_NAMES",
+			"DIRIGIBLE_OAUTH_ENABLED",
+			"DIRIGIBLE_OAUTH_AUTHORIZE_UR",
+			"DIRIGIBLE_OAUTH_TOKEN_URL",
+			"DIRIGIBLE_OAUTH_CLIENT_ID",
+			"DIRIGIBLE_OAUTH_CLIENT_SECRET",
+			"DIRIGIBLE_OAUTH_VERIFICATION_KEY",
+			"DIRIGIBLE_OAUTH_APPLICATION_NAME",
+			"DIRIGIBLE_OAUTH_APPLICATION_HOST",
+			"DIRIGIBLE_OAUTH_ISSUER",
+			"DIRIGIBLE_PRODUCT_NAME",
+			"DIRIGIBLE_PRODUCT_VERSION",
+			"DIRIGIBLE_PRODUCT_REPOSITORY",
+			"DIRIGIBLE_PRODUCT_COMMIT_ID",
+			"DIRIGIBLE_PRODUCT_TYPE",
+			"DIRIGIBLE_INSTANCE_NAME",
 			"DIRIGIBLE_SPARK_CLIENT_URI"
 	};
 
