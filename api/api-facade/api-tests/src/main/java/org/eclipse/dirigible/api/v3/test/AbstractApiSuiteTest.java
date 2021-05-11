@@ -42,6 +42,8 @@ import org.junit.Before;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	

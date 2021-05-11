@@ -18,12 +18,15 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -51,7 +54,19 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	@Override
 	public void registerModules() {
 		registerModulesV4();
+		setUpRedis();
 		registerModulesExt();
+	}
+
+	private void setUpRedis(){
+		GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:5.0.3-alpine"))
+				.withExposedPorts(6379);
+		redis.start();
+
+		String host = redis.getHost();
+		Integer port = redis.getFirstMappedPort();
+
+		Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
 	}
 	/**
 	 * Run suite.

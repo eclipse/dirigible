@@ -14,20 +14,20 @@ package org.eclipse.dirigible.api.redis;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 public class RedisFacade implements IScriptingFacade {
 	private static final String DIRIGIBLE_REDIS_CLIENT_URI = "DIRIGIBLE_REDIS_CLIENT_URI";
-	private static final String CLIENT_URI = "localhost";
-	private static final Logger logger = LoggerFactory.getLogger(RedisFacade.class);
+	private static final String CLIENT_URI = "localhost:6379";
 	
 	public static Jedis getClient() {
 		
-		String clientUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI);
+		String[] splitUri = Configuration.get(DIRIGIBLE_REDIS_CLIENT_URI, CLIENT_URI).split(":");
+
+		String host = splitUri[0];
+		int port = Integer.parseInt(splitUri[1]);
 		
-		Jedis redisClient = new Jedis(clientUri);
+		Jedis redisClient = new Jedis(host, port);
 		
 		return redisClient;
 	}

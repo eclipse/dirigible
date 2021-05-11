@@ -17,4 +17,4 @@ redisClient.set("name", "Alice");
 
 var result = redisClient.get("name");
 
-result !== null && result !== undefined;
+result !== null && result !== undefined && result == "Alice";
