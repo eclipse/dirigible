@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
@@ -25,6 +25,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.RabbitMQContainer;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -47,15 +48,26 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		super.setUp();
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
+
+		if (Boolean.parseBoolean(Configuration.get("rabbitmq.value", "false"))) {
+			RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:alpine");
+			rabbit.start();
+
+			String host = rabbit.getHost();
+			Integer port = rabbit.getFirstMappedPort();
+			Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
+		}
 	}
 
 	@Override
 	public void registerModules() {
-
 		registerModulesV4();
 
 		if (Boolean.parseBoolean(Configuration.get("spark.value", "false"))) {
 			sparkRegisterModule();
+		}
+		if (Boolean.parseBoolean(Configuration.get("rabbitmq.value", "false"))) {
+			registerModulesExt();
 		}
 	}
 	/**

@@ -69,6 +69,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// Apache Spark
 		sparkRegisterModule();
+
+		//ext
+		registerModulesExt();
 	}
 
 	protected void registerModulesV4() {
@@ -287,6 +290,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	private void sparkRegisterModulesUtils() {
 		TEST_MODULES.add("ext/spark/client.js");
+	}
+
+	protected void registerModulesExt() {
+		registerModulesRabbitMQExt();
+	}
+
+	private void registerModulesRabbitMQExt() {
+		TEST_MODULES.add("ext/rabbitmq/rabbitmq.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)
