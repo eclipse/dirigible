@@ -75,6 +75,12 @@
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 			<version>7.7.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>1.15.3</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- / Elasticsearch dependencies -->
 		
@@ -82,12 +88,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>5.10.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
 			<version>5.10.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>

@@ -34,20 +34,29 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 
+/**
+ * The Class ElasticsearchFacade.
+ */
 public class ElasticsearchFacade implements IScriptingFacade {
 
-    private static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME = "DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME";
-
+    /** The Elasticsearch client's host env var. */
+    public static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME = "DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME";
+    /** The default value for Elasticsearch client's host env var. */
     private static final String CLIENT_HOSTNAME = "localhost";
 
-    private static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT = "DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT";
-
+    /** The Elasticsearch client's port env var . */
+    public static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT = "DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT";
+    /** The default value for Elasticsearch client's port env var. */
     private static final String CLIENT_PORT = "9200";
 
-    private static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_SCHEME = "DIRIGIBLE_ELASTICSEARCH_CLIENT_SCHEME";
-
+    /** The Elasticsearch client's scheme env var. */
+    public static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_SCHEME = "DIRIGIBLE_ELASTICSEARCH_CLIENT_SCHEME";
+    /** The default value for Elasticsearch client's scheme env var. */
     private static final String CLIENT_SCHEME = "http";
 
+    /**
+     * Creates a client.
+     */
     public static RestHighLevelClient getClient() {
         String clientHostname = Configuration.get(DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME, CLIENT_HOSTNAME);
         int clientPort = Integer.parseInt(Configuration.get(DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT, CLIENT_PORT));
@@ -56,10 +65,18 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return new RestHighLevelClient(RestClient.builder(new HttpHost(clientHostname, clientPort, clientScheme)));
     }
 
-    // TODO: add optional parameters to each function
-
     // DOCUMENT API
 
+    /**
+     * Indexes a document.
+     *
+     * @param client the client
+     * @param index the index's name
+     * @param id the document's id
+     * @param documentSource the document's source
+     * @param xContentType the document source's x-content-type
+     * @throws IOException
+     */
     public static boolean indexDocument(RestHighLevelClient client, String index, String id, String documentSource, String xContentType)
             throws IOException {
         IndexRequest indexRequest = new IndexRequest(index);
@@ -73,6 +90,14 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return shardInfo.getTotal() == shardInfo.getSuccessful();
     }
 
+    /**
+     * Retrieves a document.
+     *
+     * @param client the client
+     * @param index the index's name
+     * @param id the document's id
+     * @throws IOException
+     */
     public static GetResponse getDocument(RestHighLevelClient client, String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
 
@@ -81,6 +106,14 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return getResponse;
     }
 
+    /**
+     * Checks if a document exists.
+     *
+     * @param client the client
+     * @param index the index's name
+     * @param id the document's id
+     * @throws IOException
+     */
     public static boolean documentExists(RestHighLevelClient client, String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
 
@@ -90,6 +123,14 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return client.exists(getRequest, RequestOptions.DEFAULT);
     }
 
+    /**
+     * Deletes a document.
+     *
+     * @param client the client
+     * @param index the index's name
+     * @param id the document's id
+     * @throws IOException
+     */
     public static boolean deleteDocument(RestHighLevelClient client, String index, String id) throws IOException {
         DeleteRequest deleteRequest = new DeleteRequest(index, id);
 
@@ -102,6 +143,13 @@ public class ElasticsearchFacade implements IScriptingFacade {
 
     // INDEX API
 
+    /**
+     * Creates an index.
+     *
+     * @param client the client
+     * @param name the name of the index
+     * @throws IOException
+     */
     public static boolean createIndex(RestHighLevelClient client, String name) throws IOException {
         CreateIndexRequest request = new CreateIndexRequest(name);
 
@@ -110,6 +158,13 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return createIndexResponse.isAcknowledged() && createIndexResponse.isShardsAcknowledged();
     }
 
+    /**
+     * Deletes an index.
+     *
+     * @param client the client
+     * @param name the name of the index
+     * @throws IOException
+     */
     public static boolean deleteIndex(RestHighLevelClient client, String name) throws IOException {
         DeleteIndexRequest request = new DeleteIndexRequest(name);
 
@@ -118,6 +173,13 @@ public class ElasticsearchFacade implements IScriptingFacade {
         return deleteIndexResponse.isAcknowledged();
     }
 
+    /**
+     * Checks if an index exists.
+     *
+     * @param client the client
+     * @param name the name of the index
+     * @throws IOException
+     */
     public static boolean indexExists(RestHighLevelClient client, String name) throws IOException {
         GetIndexRequest request = new GetIndexRequest(name);
 

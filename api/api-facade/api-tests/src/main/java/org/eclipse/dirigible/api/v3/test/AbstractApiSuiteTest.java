@@ -66,6 +66,17 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// v4
 		registerModulesV4();
+
+		// ext
+		registerModulesExt();
+	}
+
+	protected void registerModulesExt() {
+		registerModulesElasticsearch();
+	}
+
+	protected void registerModulesElasticsearch() {
+		TEST_MODULES.add("ext/elasticsearch/client/client.js");
 	}
 
 	protected void registerModulesV4() {
