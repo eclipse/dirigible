@@ -137,6 +137,11 @@
             <artifactId>dirigible-api-facade-elasticsearch</artifactId>
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-redis</artifactId>
+            <version>5.9.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -204,6 +209,17 @@
             <artifactId>dirigible-ext-elasticsearch</artifactId>
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+        	<groupId>org.eclipse.dirigible</groupId>
+        	<artifactId>dirigible-ext-redis</artifactId>
+        	<version>5.9.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.15.3</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -219,6 +235,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>${hamcrest.all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.15.3</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

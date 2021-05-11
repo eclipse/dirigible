@@ -42,6 +42,8 @@ import org.junit.Before;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	
@@ -75,6 +77,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// ElasticSearch
 		registerModulesElastic();
+
+		// Redis
+		registerModulesRedisExt();
 	}
 
 	protected void registerModulesV4() {
@@ -309,6 +314,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	protected void registerModulesElasticsearch() {
 		TEST_MODULES.add("ext/elasticsearch/client/client.js");
+	}
+
+	protected void registerModulesRedisExt() {
+		registerModulesRedis();
+	}
+
+	private void registerModulesRedis() {
+		TEST_MODULES.add("ext/redis/client/client.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

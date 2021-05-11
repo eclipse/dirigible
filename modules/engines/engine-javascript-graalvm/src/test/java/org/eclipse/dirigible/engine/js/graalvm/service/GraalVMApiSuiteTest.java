@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -70,6 +72,16 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME", container.getHost());
 			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT", container.getFirstMappedPort().toString());
 		}
+		if (Boolean.parseBoolean(Configuration.get("redis.value", "false"))) {
+			GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:5.0.3-alpine"))
+					.withExposedPorts(6379);
+			redis.start();
+
+			String host = redis.getHost();
+			Integer port = redis.getFirstMappedPort();
+
+			Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
+		}
 	}
 
 	@Override
@@ -85,7 +97,11 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		if (Boolean.parseBoolean(Configuration.get("elastic.value", "false"))) {
 			registerModulesElastic();
 		}
+		if (Boolean.parseBoolean(Configuration.get("redis.value", "false"))) {
+			registerModulesRedisExt();
+		}
 	}
+
 	/**
 	 * Run suite.
 	 *
