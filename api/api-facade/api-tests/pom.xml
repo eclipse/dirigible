@@ -132,6 +132,11 @@
             <artifactId>dirigible-api-facade-rabbitmq</artifactId>
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-elasticsearch</artifactId>
+            <version>5.10.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -194,6 +199,12 @@
             <version>5.10.0-SNAPSHOT</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ext-elasticsearch</artifactId>
+            <version>5.10.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

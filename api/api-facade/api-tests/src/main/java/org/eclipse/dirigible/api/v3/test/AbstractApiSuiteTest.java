@@ -70,8 +70,11 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		// Apache Spark
 		sparkRegisterModule();
 
-		//ext
-		registerModulesExt();
+		// RabbitMQ
+		registerModulesRabbitMQ();
+
+		// ElasticSearch
+		registerModulesElastic();
 	}
 
 	protected void registerModulesV4() {
@@ -292,12 +295,20 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("ext/spark/client.js");
 	}
 
-	protected void registerModulesExt() {
+	protected void registerModulesRabbitMQ() {
 		registerModulesRabbitMQExt();
 	}
 
 	private void registerModulesRabbitMQExt() {
 		TEST_MODULES.add("ext/rabbitmq/rabbitmq.js");
+	}
+
+	protected void registerModulesElastic() {
+		registerModulesElasticsearch();
+	}
+
+	protected void registerModulesElasticsearch() {
+		TEST_MODULES.add("ext/elasticsearch/client/client.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

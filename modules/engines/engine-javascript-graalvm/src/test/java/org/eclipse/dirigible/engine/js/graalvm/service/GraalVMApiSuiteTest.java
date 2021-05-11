@@ -26,6 +26,7 @@ import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -38,6 +39,11 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
+
+	/** The Docker Elasticsearch image. */
+	private static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:7.7.1";
+	/** The Elasticsearch container client. */
+	private static ElasticsearchContainer container;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
@@ -57,6 +63,13 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 			Integer port = rabbit.getFirstMappedPort();
 			Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
 		}
+		if (Boolean.parseBoolean(Configuration.get("elastic.value", "false"))) {
+			container = new ElasticsearchContainer(ELASTICSEARCH_IMAGE);
+			container.start();
+
+			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME", container.getHost());
+			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT", container.getFirstMappedPort().toString());
+		}
 	}
 
 	@Override
@@ -67,7 +80,10 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 			sparkRegisterModule();
 		}
 		if (Boolean.parseBoolean(Configuration.get("rabbitmq.value", "false"))) {
-			registerModulesExt();
+			registerModulesRabbitMQ();
+		}
+		if (Boolean.parseBoolean(Configuration.get("elastic.value", "false"))) {
+			registerModulesElastic();
 		}
 	}
 	/**
