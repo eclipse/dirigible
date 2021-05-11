@@ -80,6 +80,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// Redis
 		registerModulesRedisExt();
+
+		// etcd
+		registerModulesEtcd();
 	}
 
 	protected void registerModulesV4() {
@@ -322,6 +325,14 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	private void registerModulesRedis() {
 		TEST_MODULES.add("ext/redis/client/client.js");
+	}
+
+	protected void registerModulesEtcd() {
+		registerModulesEtcdExt();
+	}
+
+	private void registerModulesEtcdExt() {
+		TEST_MODULES.add("ext/etcd/client/getClient.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

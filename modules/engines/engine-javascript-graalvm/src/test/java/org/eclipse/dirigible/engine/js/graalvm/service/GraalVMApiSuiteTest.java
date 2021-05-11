@@ -15,6 +15,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import io.etcd.jetcd.launcher.EtcdCluster;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -29,6 +31,7 @@ import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -46,6 +49,9 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	private static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:7.7.1";
 	/** The Elasticsearch container client. */
 	private static ElasticsearchContainer container;
+
+	@RegisterExtension
+	static EtcdCluster etcd;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
@@ -82,6 +88,11 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 
 			Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
 		}
+		if (Boolean.parseBoolean(Configuration.get("etcd.value", "false"))) {
+			etcd = new EtcdClusterExtension("test-etcd", 1);
+			etcd.start();
+			Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.getClientEndpoints().get(0).toString());
+		}
 	}
 
 	@Override
@@ -99,6 +110,9 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		}
 		if (Boolean.parseBoolean(Configuration.get("redis.value", "false"))) {
 			registerModulesRedisExt();
+		}
+		if (Boolean.parseBoolean(Configuration.get("etcd.value", "false"))) {
+			registerModulesEtcd();
 		}
 	}
 
