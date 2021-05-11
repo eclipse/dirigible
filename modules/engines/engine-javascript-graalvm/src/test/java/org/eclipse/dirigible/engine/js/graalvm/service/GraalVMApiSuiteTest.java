@@ -15,8 +15,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import io.etcd.jetcd.launcher.EtcdCluster;
-import io.etcd.jetcd.test.EtcdClusterExtension;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -31,7 +29,7 @@ import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import utils.TestContainerConstants;
 
 /**
  * The Class GraalVMApiSuiteTest.
@@ -45,13 +43,8 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
 
-	/** The Docker Elasticsearch image. */
-	private static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:7.7.1";
-	/** The Elasticsearch container client. */
-	private static ElasticsearchContainer container;
-
-	@RegisterExtension
-	static EtcdCluster etcd;
+//	@RegisterExtension
+//	static EtcdCluster etcd;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
@@ -63,55 +56,53 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
 
-		if (Boolean.parseBoolean(Configuration.get("rabbitmq.value", "false"))) {
-			RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:alpine");
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.RABBITMQ_POM_CONST, "false"))) {
+			RabbitMQContainer rabbit = new RabbitMQContainer(TestContainerConstants.RABBITMQ_DOCKER_IMAGE);
 			rabbit.start();
 
-			String host = rabbit.getHost();
-			Integer port = rabbit.getFirstMappedPort();
-			Configuration.set("DIRIGIBLE_RABBITMQ_CLIENT_URI", host + ":" + port);
+			Configuration.set(TestContainerConstants.DIRIGIBLE_RABBITMQ_CLIENT_URI_CONST,
+					rabbit.getHost() + ":" + rabbit.getFirstMappedPort());
 		}
-		if (Boolean.parseBoolean(Configuration.get("elastic.value", "false"))) {
-			container = new ElasticsearchContainer(ELASTICSEARCH_IMAGE);
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.ELASTICSEARCH_POM_CONST, "false"))) {
+			ElasticsearchContainer container = new ElasticsearchContainer(TestContainerConstants.ELASTICSEARCH_DOCKER_IMAGE);
 			container.start();
 
-			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME", container.getHost());
-			Configuration.set("DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT", container.getFirstMappedPort().toString());
+			Configuration.set(TestContainerConstants.DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME_CONST, container.getHost());
+			Configuration.set(TestContainerConstants.DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT_CONST,
+					container.getFirstMappedPort().toString());
 		}
-		if (Boolean.parseBoolean(Configuration.get("redis.value", "false"))) {
-			GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:5.0.3-alpine"))
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.REDIS_POM_CONST, "false"))) {
+			GenericContainer redis = new GenericContainer(DockerImageName.parse(TestContainerConstants.REDIS_DOCKER_IMAGE))
 					.withExposedPorts(6379);
 			redis.start();
 
-			String host = redis.getHost();
-			Integer port = redis.getFirstMappedPort();
-
-			Configuration.set("DIRIGIBLE_REDIS_CLIENT_URI", host + ":" + port);
+			Configuration.set(TestContainerConstants.DIRIGIBLE_REDIS_CLIENT_URI_CONST,
+					redis.getHost() + ":" + redis.getFirstMappedPort());
 		}
-		if (Boolean.parseBoolean(Configuration.get("etcd.value", "false"))) {
-			etcd = new EtcdClusterExtension("test-etcd", 1);
-			etcd.start();
-			Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.getClientEndpoints().get(0).toString());
-		}
+//		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.ETCD_POM_CONST, "false"))) {
+//			etcd = new EtcdClusterExtension(TestContainerConstants.ETCD_CLUSTER_IMAGE, 1);
+//			etcd.start();
+//			Configuration.set(TestContainerConstants.DIRIGIBLE_ETCD_CLIENT_ENDPOINT_CONST, etcd.getClientEndpoints().get(0).toString());
+//		}
 	}
 
 	@Override
 	public void registerModules() {
 		registerModulesV4();
 
-		if (Boolean.parseBoolean(Configuration.get("spark.value", "false"))) {
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.SPARK_POM_CONST, "false"))) {
 			sparkRegisterModule();
 		}
-		if (Boolean.parseBoolean(Configuration.get("rabbitmq.value", "false"))) {
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.RABBITMQ_POM_CONST, "false"))) {
 			registerModulesRabbitMQ();
 		}
-		if (Boolean.parseBoolean(Configuration.get("elastic.value", "false"))) {
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.ELASTICSEARCH_POM_CONST, "false"))) {
 			registerModulesElastic();
 		}
-		if (Boolean.parseBoolean(Configuration.get("redis.value", "false"))) {
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.REDIS_POM_CONST, "false"))) {
 			registerModulesRedisExt();
 		}
-		if (Boolean.parseBoolean(Configuration.get("etcd.value", "false"))) {
+		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.ETCD_POM_CONST, "false"))) {
 			registerModulesEtcd();
 		}
 	}
