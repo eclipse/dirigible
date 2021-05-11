@@ -81,7 +81,6 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		registerModulesIoV4();
 		registerModulesSecurityV4();
 		registerModulesPlatformV4();
-		registerModulesRabbitMQExt();
 	}
 
 	private void registerModulesPlatformV4() {
