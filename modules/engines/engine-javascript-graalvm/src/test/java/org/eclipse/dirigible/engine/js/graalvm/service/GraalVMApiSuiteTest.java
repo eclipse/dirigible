@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -50,8 +51,12 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 
 	@Override
 	public void registerModules() {
-//		registerModulesV4();
-		sparkRegisterModule();
+
+		registerModulesV4();
+
+		if (Boolean.parseBoolean(Configuration.get("spark.value", "false"))) {
+			sparkRegisterModule();
+		}
 	}
 	/**
 	 * Run suite.
