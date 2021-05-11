@@ -145,7 +145,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-etcd</artifactId>
-            <version>5.10.0-SNAPSHOT</version>
+            <version>5.11.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
