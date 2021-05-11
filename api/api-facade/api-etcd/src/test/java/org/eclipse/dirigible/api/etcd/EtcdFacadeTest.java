@@ -38,6 +38,7 @@ public class EtcdFacadeTest {
 
 	@Before
 	public void setUp() {
+		System.out.println(Configuration.get("etcd.test", "alabala"));
 		etcd.start();
 		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.getClientEndpoints().get(0).toString());
 	}
