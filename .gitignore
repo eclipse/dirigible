@@ -4,6 +4,7 @@ dist/
 target/
 dirigible_local/
 bin/
+.idea
 
 # files
 .DS_Store
