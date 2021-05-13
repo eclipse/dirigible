@@ -137,14 +137,6 @@ jobs:
         docker push dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
         docker image prune -a -f
         cd ../../
-    - name: Push Dirigible - Tomcat
-      run: |
-        cd releng
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-tomcat -f Dockerfile-tomcat .
-        docker tag dirigible-tomcat dirigiblelabs/dirigible-tomcat:$DIRIGIBLE_VERSION
-        docker push dirigiblelabs/dirigible-tomcat:$DIRIGIBLE_VERSION
-        docker image prune -a -f
-        cd ../
     - name: Push Dirigible - Keycloak
       run: |
         cd releng/server-keycloak-all
@@ -248,7 +240,6 @@ jobs:
             - [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development.
             - [dirigiblelabs/dirigible-runtime](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime/tags?page=1&ordering=last_updated) - Basic docker image - recommended for local test & development _(runtime only)_.
             - [dirigiblelabs/dirigible-trial](https://hub.docker.com/r/dirigiblelabs/dirigible-trial/tags?page=1&ordering=last_updated) - Trial _(guest/nickname access)_.
-            - [dirigiblelabs/dirigible-tomcat](https://hub.docker.com/r/dirigiblelabs/dirigible-tomcat/tags?page=1&ordering=last_updated) - Similar to [dirigiblelabs/dirigible-all](https://hub.docker.com/r/dirigiblelabs/dirigible-all/tags).
             - [dirigiblelabs/dirigible-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration.
             - [dirigiblelabs/dirigible-runtime-keycloak](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-keycloak/tags?page=1&ordering=last_updated) - Keycloak integration _(runtime only)_
 
