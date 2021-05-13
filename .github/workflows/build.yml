@@ -128,14 +128,14 @@ jobs:
         docker push dirigiblelabs/dirigible-trial
         docker image prune -a -f
         cd ../../
-#     - name: Push Dirigible - Tomcat
-#       run: |
-#         cd releng
-#         docker build -t dirigible-tomcat -f Dockerfile-tomcat .
-#         docker tag dirigible-tomcat dirigiblelabs/dirigible-tomcat
-#         docker push dirigiblelabs/dirigible-tomcat
-#         docker image prune -a -f
-#         cd ../
+    - name: Push Dirigible - Tomcat
+      run: |
+        cd releng
+        docker build -t dirigible-tomcat -f Dockerfile-tomcat .
+        docker tag dirigible-tomcat dirigiblelabs/dirigible-tomcat
+        docker push dirigiblelabs/dirigible-tomcat
+        docker image prune -a -f
+        cd ../
     - name: Push Dirigible - Keycloak
       run: |
         cd releng/server-keycloak-all
