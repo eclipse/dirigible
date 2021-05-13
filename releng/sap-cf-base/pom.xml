@@ -112,6 +112,11 @@
 		 	<artifactId>dirigible-database-custom</artifactId>
 		 	<version>5.11.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-database-managed</artifactId>
+			<version>5.11.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
