@@ -350,7 +350,7 @@ function main(container, outline, toolbar, sidebar, status) {
 				if (target.style && target.style.startsWith('projection')) {
 					prop1.value.name = primaryKey.parent.value.projectionReferencedEntity + primaryKey.value.name;
 				} else {
-					prop1.value.name = primaryKey.value.name;
+					prop1.value.name = primaryKey.parent.value.name + primaryKey.value.name;
 				}
 				prop1.value.dataType = primaryKey.value.dataType;
 				prop1.value.dataLength = primaryKey.value.dataLength;
