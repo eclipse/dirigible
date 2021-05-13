@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
@@ -19,96 +19,108 @@ import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
  */
 public class PostgresCreateViewBuilder extends CreateViewBuilder {
 
-	private String values = null;
+    private String values = null;
 
-	/**
-	 * Instantiates a new PostgreSQL create view builder.
-	 *
-	 * @param dialect
-	 *            the dialect
-	 * @param view
-	 *            the view
-	 */
-	public PostgresCreateViewBuilder(ISqlDialect dialect, String view) {
-		super(dialect, view);
-	}
+    /**
+     * Instantiates a new PostgreSQL create view builder.
+     *
+     * @param dialect the dialect
+     * @param view    the view
+     */
+    public PostgresCreateViewBuilder(ISqlDialect dialect, String view) {
+        super(dialect, view);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
-	 */
-	@Override
-	public PostgresCreateViewBuilder column(String name) {
-		super.getColumns().add(name);
-		return this;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#column(java.lang.String)
+     */
+    @Override
+    public PostgresCreateViewBuilder column(String name) {
+        super.getColumns().add(name);
+        return this;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
-	 */
-	@Override
-	public PostgresCreateViewBuilder asSelect(String select) {
-		if (this.values != null) {
-			throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
-		}
-		setSelect(select);
-		return this;
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#asSelect(java.lang.String)
+     */
+    @Override
+    public PostgresCreateViewBuilder asSelect(String select) {
 
-	/**
-	 * As values.
-	 *
-	 * @param values
-	 *            the values
-	 * @return the PostgreSQL create view builder
-	 */
-	public PostgresCreateViewBuilder asValues(String values) {
-		if (getSelect() != null) {
-			throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
-		}
-		this.values = values;
-		return this;
-	}
+        if (this.values != null) {
+            throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
+        }
+        setSelect(this.getSelectColumnsEscapingRemoved(select));
+        return this;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
-	 */
-	@Override
-	public String generate() {
+    private String getSelectColumnsEscapingRemoved(String select) {
+        StringBuilder builder = new StringBuilder(select);
+        int midSqlStartIndex = builder.indexOf("FROM") - 1;
+        boolean isONClauseMissing = builder.indexOf("ON") - 1 < 0;
+        int midSqlEndIndex = (isONClauseMissing)
+                ? midSqlStartIndex
+                : (builder.indexOf("ON") - 1);
+        String preFROMsql = builder
+                .substring(0, midSqlStartIndex)
+                .replaceAll("\"", "") + " ";
+        String midSql = (isONClauseMissing) ? "" : (builder.substring(midSqlStartIndex, midSqlEndIndex) + " ");
+        String postONsql = builder.substring(midSqlEndIndex + 1).replaceAll("\"", "");
+        return preFROMsql + midSql + postONsql;
+    }
 
-		StringBuilder sql = new StringBuilder();
+    /**
+     * As values.
+     *
+     * @param values the values
+     * @return the PostgreSQL create view builder
+     */
+    public PostgresCreateViewBuilder asValues(String values) {
+        if (getSelect() != null) {
+            throw new IllegalStateException("Create VIEW can use either AS SELECT or AS VALUES, but not both.");
+        }
+        this.values = values;
+        return this;
+    }
 
-		// CREATE
-		generateCreate(sql);
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder#generate()
+     */
+    @Override
+    public String generate() {
 
-		// VIEW
-		generateView(sql);
+        StringBuilder sql = new StringBuilder();
 
-		// COLUMNS
-		generateColumns(sql);
+        // CREATE
+        generateCreate(sql);
 
-		// SELECT or VALUES
-		if (getSelect() != null) {
-			generateAsSelect(sql);
-		} else if (this.values != null) {
-			generateAsValues(sql);
-		} else {
-			throw new IllegalStateException("Create VIEW must use either AS SELECT or AS VALUES.");
-		}
+        // VIEW
+        generateView(sql);
 
-		return sql.toString();
-	}
+        // COLUMNS
+        generateColumns(sql);
 
-	/**
-	 * Generate as values.
-	 *
-	 * @param sql
-	 *            the sql
-	 */
-	protected void generateAsValues(StringBuilder sql) {
-		sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
-	}
+        // SELECT or VALUES
+        if (getSelect() != null) {
+            generateAsSelect(sql);
+        } else if (this.values != null) {
+            generateAsValues(sql);
+        } else {
+            throw new IllegalStateException("Create VIEW must use either AS SELECT or AS VALUES.");
+        }
+
+        return sql.toString();
+    }
+
+    /**
+     * Generate as values.
+     *
+     * @param sql the sql
+     */
+    protected void generateAsValues(StringBuilder sql) {
+        sql.append(SPACE).append(KEYWORD_AS).append(SPACE).append(KEYWORD_VALUES).append(SPACE).append(this.values);
+    }
 
 }
