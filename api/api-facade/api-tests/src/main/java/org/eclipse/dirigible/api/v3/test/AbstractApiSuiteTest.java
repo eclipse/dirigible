@@ -75,6 +75,12 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// ElasticSearch
 		registerModulesElastic();
+
+		// Redis
+		registerModulesRedisExt();
+
+		// etcd
+		registerModulesEtcd();
 	}
 
 	protected void registerModulesV4() {
@@ -309,6 +315,22 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 	protected void registerModulesElasticsearch() {
 		TEST_MODULES.add("ext/elasticsearch/client/client.js");
+	}
+
+	protected void registerModulesRedisExt() {
+		registerModulesRedis();
+	}
+
+	private void registerModulesRedis() {
+		TEST_MODULES.add("ext/redis/client/client.js");
+	}
+
+	protected void registerModulesEtcd() {
+		registerModulesEtcdExt();
+	}
+
+	private void registerModulesEtcdExt() {
+		TEST_MODULES.add("ext/etcd/client/getClient.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

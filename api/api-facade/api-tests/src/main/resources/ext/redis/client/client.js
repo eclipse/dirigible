@@ -9,8 +9,12 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-/** Producer API for RabbitMQ */
 
-exports.send = function(queue, message){
-	return org.eclipse.dirigible.api.rabbitmq.RabbitMQFacade.send(queue, message);
-}
+var redis = require("redis/client");
+var redisClient = redis.getClient();
+
+redisClient.set("name", "Alice");
+
+var result = redisClient.get("name");
+
+result !== null && result !== undefined && result == "Alice";
