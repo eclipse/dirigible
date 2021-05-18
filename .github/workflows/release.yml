@@ -186,6 +186,8 @@ jobs:
         zip --junk-paths anonymous-all releng/anonymous-all/target/ROOT.war
         zip --junk-paths anonymous-runtime releng/anonymous-runtime/target/ROOT.war
         zip --junk-paths desktop-all releng/desktop-all/target/ROOT.war
+        zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT.war
+        zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT.war
         zip --junk-paths server-all releng/server-all/target/ROOT.war
         zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
         zip --junk-paths server-cms releng/server-cms/target/ROOT.war
@@ -269,6 +271,8 @@ jobs:
           #### Available for download `*.war` packages:
             - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-all.zip) - Anonymous access.
             - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
+            - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
+            - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
             - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
             - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
             - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
@@ -311,6 +315,26 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./desktop-all.zip
         asset_name: desktop-all.zip
+        asset_content_type: application/zip
+    - name: Upload sap-cf-all
+      id: upload-sap-cf-all 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./sap-cf-all.zip
+        asset_name: sap-cf-all.zip
+        asset_content_type: application/zip
+    - name: Upload sap-cf-runtime
+      id: upload-sap-cf-runtime
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./sap-cf-runtime.zip
+        asset_name: sap-cf-runtime.zip
         asset_content_type: application/zip
     - name: Upload server-all
       id: upload-server-all 
