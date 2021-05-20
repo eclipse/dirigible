@@ -18,12 +18,12 @@
         "name": "OrderItems",
         "from": {
         	"entity": "Order",
-        	"property": "Id",
+        	"property": ["Id"],
         	"multiplicity": "1"
         },
         "to": {
         	"entity": "Item",
-        	"property": "OrderId",
+        	"property": ["OrderId"],
         	"multiplicity": "*"
         }
     }

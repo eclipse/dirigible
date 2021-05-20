@@ -1,0 +1,31 @@
+{
+	"namespace": "np",
+	"entities": [
+		{
+			"name": "employee",
+			"alias": "Employees",
+			"table": "EMPLOYEES",
+			"handlers": [
+				{
+					"method": "create",
+					"type": "before",
+					"handler": "/test1/myhandler"
+				},
+				{
+					"method": "update",
+					"type": "after",
+					"handler": "/test2/myhandler"
+				},
+				{
+					"method": "delete",
+					"type": "on",
+					"handler": "/test3/myhandler"
+				},
+				{
+					"method": "delete",
+					"type": "forbid"
+				}
+			]
+		}
+	]
+}

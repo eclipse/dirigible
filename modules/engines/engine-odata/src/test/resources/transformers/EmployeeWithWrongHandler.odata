@@ -1,0 +1,17 @@
+{
+	"namespace": "np",
+	"entities": [
+		{
+			"name": "employee",
+			"alias": "Employees",
+			"table": "EMPLOYEES",
+			"handlers": [
+				{
+					"method": "create_wrong",
+					"type": "before_wrong",
+					"handler": "/test1/myhandler"
+				}
+			]
+		}
+	]
+}

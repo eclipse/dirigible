@@ -11,6 +11,17 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
+import com.google.common.base.CaseFormat;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -19,19 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.sql.DataSource;
-
-import com.google.common.base.CaseFormat;
-
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
-import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 
 @Singleton
@@ -152,13 +150,22 @@ public class DBMetadataUtil {
         }
     }
 
-    public static String getColumnToProperty(String columnName, List<ODataProperty> properties, boolean prityPrint) {
-    	for (ODataProperty next : properties) {
-    		if (next.getColumn().equals(columnName)) {
+    public static String getPropertyNameFromDbColumnName(String DbColumnName, List<ODataProperty> oDataProperties, boolean prettyPrint) {
+    	for (ODataProperty next : oDataProperties) {
+    		if (next.getColumn().equals(DbColumnName)) {
     			return next.getName();
     		}
     	}
-		return prityPrint ? addCorrectFormatting(columnName) : columnName;
+		return prettyPrint ? addCorrectFormatting(DbColumnName) : DbColumnName;
+    }
+
+    public static boolean isPropColumnValidDBColumn (String propColumn, List<PersistenceTableColumnModel> dbColumns) {
+        for (PersistenceTableColumnModel next : dbColumns) {
+            if (next.getName().equals(propColumn)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isNullable(PersistenceTableColumnModel column, List<ODataProperty> properties) {
