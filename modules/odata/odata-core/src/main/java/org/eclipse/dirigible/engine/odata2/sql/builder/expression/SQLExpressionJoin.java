@@ -11,12 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
-
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
@@ -24,6 +18,13 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 public final class SQLExpressionJoin implements SQLExpression {
 
@@ -42,7 +43,9 @@ public final class SQLExpressionJoin implements SQLExpression {
      */
     public static enum JoinType {
         LEFT
-    };
+    }
+
+    ;
 
     private final SQLQuery query;
     private List<KeyPredicate> keyPredicates = NO_PREDICATES_USED;
@@ -64,7 +67,7 @@ public final class SQLExpressionJoin implements SQLExpression {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
         String csl = "";
         if (caseSensitive) {
-        	csl = "\"";
+            csl = "\"";
         }
         StringBuilder join = new StringBuilder();
         join.append(joinType.toString());
@@ -73,13 +76,19 @@ public final class SQLExpressionJoin implements SQLExpression {
         join.append(" AS ");
         join.append(csl + query.getSQLTableAlias(start) + csl);
         join.append(" ON ");
-        join.append(csl + query.getSQLTableAlias(start) + csl);
-        join.append(".");
-        join.append(csl + getTargetJoinKeyForEntityType(start, target) + csl);
-        join.append(" = ");
-        join.append(csl + query.getSQLTableAlias(target) + csl);
-        join.append(".");
-        join.append(csl + query.getSQLJoinTableName(target, start) + csl);
+
+        ArrayList<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
+        for (int i = 0; i < targetKeys.size(); i++) {
+            join.append(csl + query.getSQLTableAlias(start) + csl);
+            join.append(".");
+            join.append(csl + targetKeys.get(i) + csl);
+            join.append(" = ");
+            join.append(csl + query.getSQLTableAlias(target) + csl);
+            join.append(".");
+            join.append(csl + query.getSQLJoinTableName(target, start).get(i) + csl);
+            if (i < targetKeys.size() - 1) join.append(" AND ");
+        }
+
         return join.toString();
     }
 
@@ -88,7 +97,6 @@ public final class SQLExpressionJoin implements SQLExpression {
         return !needsJoinQuery(start, keyPredicates, target);
     }
 
-   
 
     @Override
     public String toString() {
@@ -111,7 +119,7 @@ public final class SQLExpressionJoin implements SQLExpression {
         return query.getSQLTableName(type);
     }
 
-    private String getTargetJoinKeyForEntityType(EdmStructuralType start, EdmStructuralType end) throws EdmException {
+    private ArrayList<String> getTargetJoinKeyForEntityType(EdmStructuralType start, EdmStructuralType end) throws EdmException {
         return query.getSQLJoinTableName(start, end);
     }
 
@@ -159,5 +167,5 @@ public final class SQLExpressionJoin implements SQLExpression {
         return true;
     }
 
-    
+
 }

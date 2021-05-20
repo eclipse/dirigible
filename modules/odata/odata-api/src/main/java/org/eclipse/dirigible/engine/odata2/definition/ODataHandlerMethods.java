@@ -12,7 +12,14 @@
 package org.eclipse.dirigible.engine.odata2.definition;
 
 public enum ODataHandlerMethods {
-	
-	create, update, delete
 
+    create, update, delete;
+
+    public String value() {
+        return name();
+    }
+
+    public static ODataHandlerMethods fromValue(String v) {
+        return valueOf(v);
+    }
 }

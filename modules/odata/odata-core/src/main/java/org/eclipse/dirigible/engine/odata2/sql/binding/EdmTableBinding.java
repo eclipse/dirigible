@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.binding;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.edm.EdmComplexType;
@@ -43,13 +44,13 @@ public class EdmTableBinding extends Mapping {
         return readMandatoryConfig("sqlTable", String.class);
     }
 
-    public String getJoinColumnTo(EdmStructuralType target) throws EdmException {
+    public ArrayList<String> getJoinColumnTo(EdmStructuralType target) throws EdmException {
         String ref = "_ref_" + target.getName();
         String jk = "joinColumn";
         @SuppressWarnings("unchecked")
         Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
         if (refKeys.containsKey(jk)) {
-            return String.valueOf(refKeys.get(jk));
+            return (ArrayList<String>) refKeys.get(jk);
         } else {
             throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, ref + "->" + jk, targetFqn));
         }
@@ -104,7 +105,7 @@ public class EdmTableBinding extends Mapping {
         return false;
     }
 
-    public String getJoinColumnTo(EdmEntitySet target) throws EdmException {
+    public ArrayList<String> getJoinColumnTo(EdmEntitySet target) throws EdmException {
         return getJoinColumnTo(target.getEntityType());
     }
 

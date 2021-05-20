@@ -1,34 +1,32 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.odata2.sql.binding;
 
-import static org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
+import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
+import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
+import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
+import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
-import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
-import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
-import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingFactory;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
-import org.junit.Before;
-import org.junit.Test;
+import static org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils.stream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("unchecked")
 public class EdmTableBindingFactoryTest {
@@ -66,18 +64,17 @@ public class EdmTableBindingFactoryTest {
             assertTrue("complex column definition not correctly read!", config.get("Id") instanceof Map);
             assertEquals("ID", ((Map) config.get("Id")).get("name"));
             assertEquals("NUMERIC", ((Map) config.get("Id")).get("sqlType"));
-            assertEquals("HEADER_ID", ((Map<String, Object>) config.get("_ref_Entity1")).get("joinColumn"));
+            assertEquals(Arrays.asList("HEADER_ID"), ((Map<String, Object>) config.get("_ref_Entity1")).get("joinColumn"));
             assertEquals("ID", config.get("_pk_"));
         }
     }
-
 
 
     @Test
     public void testReference2() throws IOException {
         try (InputStream stream = stream(Entity1.class)) {
             Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-            assertEquals("ID", ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
+            assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
         }
     }
 
@@ -85,7 +82,7 @@ public class EdmTableBindingFactoryTest {
     public void testTableMapping() throws IOException {
         try (InputStream stream = stream(Entity1.class)) {
             Map<String, Object> config = new EdmTableBindingFactory().loadTableBindings(stream);
-            assertEquals("ID", ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
+            assertEquals(Arrays.asList("ID"), ((Map<String, Object>) config.get("_ref_Entity2")).get("joinColumn"));
         }
     }
 
@@ -109,7 +106,7 @@ public class EdmTableBindingFactoryTest {
     public void testGetJoinColumnEntity2() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
             EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-            assertEquals("ID",
+            assertEquals(Arrays.asList("ID"),
                     config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName())));
         }
     }

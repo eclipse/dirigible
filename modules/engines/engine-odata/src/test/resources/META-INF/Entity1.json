@@ -12,7 +12,7 @@
     "Status" : "STATUS",
     "_pk_" : "ID",
     "_ref_Entity2" : {
-    	"joinColumn" : "ID"
+    	"joinColumn" : ["ID"]
     }
 }
 
