@@ -22,7 +22,7 @@ public class SparkFacadeTest {
 
     @Test
     public void getSession() {
-        SparkSession sparkSession = SparkFacade.getSession("spark://192.168.0.143:7077");
+        SparkSession sparkSession = SparkFacade.getSession("spark://192.168.0.108:7077");
         assertNotNull(sparkSession);
         assertEquals("Dirigible-Spark", sparkSession.initialSessionOptions().get("spark.app.name").get());
     }
@@ -30,7 +30,7 @@ public class SparkFacadeTest {
     @Test
     public void getDBTableDataset() {
 
-        Dataset<Row> row = SparkFacade.getDBTableDataset("spark://192.168.0.143:7077",
+        Dataset<Row> row = SparkFacade.getDBTableDataset("spark://192.168.0.108:7077",
                                                          "test",
                                                             "postgres",
                                                             "admin",
