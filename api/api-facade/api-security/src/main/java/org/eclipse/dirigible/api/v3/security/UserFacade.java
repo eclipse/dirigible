@@ -146,6 +146,15 @@ public class UserFacade implements IScriptingFacade {
 		return getName();
 	}
 
+	public static final Integer getTimeout() {
+		if (HttpSessionFacade.isValid()) {
+			return HttpSessionFacade.getMaxInactiveInterval();
+		} else {
+			logger.error("Error while retrieving timeout: Session is not valid!");
+		}
+		return null;
+	}
+
 	private static String getContextProperty(String property) throws ContextException {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(property);

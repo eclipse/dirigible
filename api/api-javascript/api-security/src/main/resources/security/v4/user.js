@@ -22,3 +22,7 @@ exports.getName = function() {
 exports.isInRole = function(role) {
 	return org.eclipse.dirigible.api.v3.security.UserFacade.isInRole(role);
 };
+
+exports.getTimeout = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getTimeout();
+};
