@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -62,12 +63,12 @@ public class OData2ODataMTransformer {
             List<ODataProperty> entityProperties = entity.getProperties();
             validateProperties(tableMetadata.getColumns(), entityProperties, entity.getName());
             //expose all Db columns in case no entity props are defined
-            if(entityProperties.isEmpty()){
+            if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
                     buff.append("\t\"").append(columnValue).append("\": \"").append(column.getName()).append("\",\n");
                 });
-            }else{
+            } else {
                 //in case entity props are defined expose only them
                 entityProperties.forEach(prop -> {
                     List<PersistenceTableColumnModel> dbColumnName = tableMetadata.getColumns().stream().filter(x -> x.getName().equals(prop.getColumn())).collect(Collectors.toList());
@@ -76,11 +77,23 @@ public class OData2ODataMTransformer {
             }
 
             final List<String> assembleRef;
+
             //Process FK relations from DB
             Map<String, List<PersistenceTableRelationModel>> groupRelationsByToTableName = tableMetadata.getRelations().stream()
                     .collect(Collectors.groupingBy(PersistenceTableRelationModel::getToTableName));
-            assembleRef = groupRelationsByToTableName.entrySet().stream().map(rel -> {
-                String fkElement = rel.getValue().stream().map(x -> "\"" + x.getFkColumnName() + "\"").collect(Collectors.joining(","));
+            //In case there is FK on DB side, but the entity and it's navigation are not defined in the .odata file -> then the relation will not be exposed
+            List<Map.Entry<String, List<PersistenceTableRelationModel>>> relationsThatExistInOdataFile
+                    = groupRelationsByToTableName.entrySet().stream().filter(x -> {
+                for (ODataEntityDefinition e : model.getEntities()) {
+                    if (x.getKey().equals(e.getTable())) {
+                        return true;
+                    }
+                }
+                return false;
+            }).collect(Collectors.toList());
+
+            assembleRef = relationsThatExistInOdataFile.stream().map(rel -> {
+            String fkElement = rel.getValue().stream().map(x -> "\"" + x.getFkColumnName() + "\"").collect(Collectors.joining(","));
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntityByTableName(model, rel.getKey());
                 String dependentEntity = toSetEntity.getName();
                 return assembleOdataMRefSection(dependentEntity, fkElement);
@@ -107,7 +120,7 @@ public class OData2ODataMTransformer {
                     return refSection;
                 }
                 return null;
-            }).filter(value -> value != null).collect(Collectors.toList());
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             if (!assembleRefNav.isEmpty()) {
                 buff.append(String.join(",\n", assembleRefNav)).append(",\n");
             }
