@@ -12,11 +12,11 @@
 	<name>Database - Data Structures</name>
 	<artifactId>dirigible-database-data-structures</artifactId>
     <packaging>jar</packaging>
-    
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
@@ -27,8 +27,8 @@
 					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
 			</plugin>
-        </plugins>
-    </build>
+		</plugins>
+	</build>
     
     <dependencies>
         <dependency>
@@ -95,7 +95,7 @@
             <version>5.11.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+	</dependencies>
 
 	<properties>
 		<license.header.location>../../../license-header.txt</license.header.location>

@@ -211,5 +211,9 @@
 
 - `DIRIGIBLE_GENERATE_PRETTY_NAMES`: (default: true)
 
+### ApacheSpark
+- `DIRIGIBLE_SPARK_CLIENT_URI`: (default: spark://localhost:7077)
+- `CLIENT_URI`: (default: db)
+
 The help page is [here](https://github.com/dirigible-io/dirigible-io.github.io/blob/master/help/setup_environment_variables.md)
 

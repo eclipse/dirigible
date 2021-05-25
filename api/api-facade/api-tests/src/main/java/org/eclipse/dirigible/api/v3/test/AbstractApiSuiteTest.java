@@ -66,6 +66,21 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
 		// v4
 		registerModulesV4();
+
+		// Apache Spark
+		sparkRegisterModule();
+
+		// RabbitMQ
+		registerModulesRabbitMQ();
+
+		// ElasticSearch
+		registerModulesElastic();
+
+		// Redis
+		registerModulesRedisExt();
+
+		// etcd
+		registerModulesEtcd();
 	}
 
 	protected void registerModulesV4() {
@@ -276,6 +291,46 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		TEST_MODULES.add("core/v3/context/get.js");
 		TEST_MODULES.add("core/v3/extensions/getExtensions.js");
 		TEST_MODULES.add("core/v3/extensions/getExtensionPoints.js");
+	}
+
+	protected void sparkRegisterModule() {
+		sparkRegisterModulesUtils();
+	}
+
+	private void sparkRegisterModulesUtils() {
+		TEST_MODULES.add("ext/spark/client.js");
+	}
+
+	protected void registerModulesRabbitMQ() {
+		registerModulesRabbitMQExt();
+	}
+
+	private void registerModulesRabbitMQExt() {
+		TEST_MODULES.add("ext/rabbitmq/rabbitmq.js");
+	}
+
+	protected void registerModulesElastic() {
+		registerModulesElasticsearch();
+	}
+
+	protected void registerModulesElasticsearch() {
+		TEST_MODULES.add("ext/elasticsearch/client/client.js");
+	}
+
+	protected void registerModulesRedisExt() {
+		registerModulesRedis();
+	}
+
+	private void registerModulesRedis() {
+		TEST_MODULES.add("ext/redis/client/client.js");
+	}
+
+	protected void registerModulesEtcd() {
+		registerModulesEtcdExt();
+	}
+
+	private void registerModulesEtcdExt() {
+		TEST_MODULES.add("ext/etcd/client/getClient.js");
 	}
 
 	public void runSuite(IJavascriptEngineExecutor executor, IRepository repository)

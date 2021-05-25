@@ -128,7 +128,8 @@
 	        <div class="form-group row">
 				<label class="col-xs-3 col-form-label">Name</label>
 				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required" pattern="[a-zA-Z0-9_-]+" />
+					<span ng-show="workspace.projectName === undefined">Enter a valid project name</span>
 				</div>
 			</div>
 	    </div>
@@ -147,7 +148,8 @@
 	        <div class="form-group row">
 				<label class="col-xs-3 col-form-label">Name</label>
 				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required" pattern="[a-zA-Z0-9_-]+" />
+					<span ng-show="workspace.projectName === undefined">Enter a valid project name</span>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -179,7 +181,8 @@
 	        <div class="form-group row">
 				<label class="col-xs-3 col-form-label">Project</label>
 				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required" pattern="[a-zA-Z0-9_-]+" />
+					<span ng-show="workspace.projectName === undefined">Enter a valid project name</span>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -217,7 +220,8 @@
 	        <div class="form-group row">
 				<label class="col-xs-3 col-form-label">Project</label>
 				<div class="col-xs-9">
-					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required">
+					<input class="form-control" type="text" placeholder="project name" ng-model="workspace.projectName" required="required" pattern="[a-zA-Z0-9_-]+" />
+					<span ng-show="workspace.projectName === undefined">Enter a valid project name</span>
 				</div>
 			</div>
 			<div class="form-group row">

@@ -104,6 +104,16 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-spark</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ext-spark</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-internal</artifactId>
             <version>5.11.0-SNAPSHOT</version>
         </dependency>
@@ -117,7 +127,26 @@
             <artifactId>dirigible-api-facade-platform</artifactId>
             <version>5.11.0-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-rabbitmq</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-elasticsearch</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-redis</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-etcd</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
@@ -168,7 +197,38 @@
             <artifactId>dirigible-api-javascript-platform</artifactId>
             <version>5.11.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+        	<groupId>org.eclipse.dirigible</groupId>
+        	<artifactId>dirigible-ext-redis</artifactId>
+        	<version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.15.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ext-etcd</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ext-rabbitmq</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-javascript-messaging</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ext-elasticsearch</artifactId>
+            <version>5.11.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -183,6 +243,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>${hamcrest.all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.15.3</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
