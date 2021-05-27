@@ -13,6 +13,6 @@
     "ManufacturerId" : "CAR_MAN_ID",
     "_pk_" : "CAR_ID",
     "_ref_Manufacturer" : {
-    	"joinColumn" : "CAR_MAN_ID"
+    	"joinColumn" : ["CAR_MAN_ID"]
     }
 }
