@@ -6,7 +6,7 @@
 	"ChildValue" : "CHILDVALUE",
 	"_pk_" : "ID",
     "_ref_TestRoot" : {
-    	"joinColumn" :"ROOT_ID"
+    	"joinColumn" :["ROOT_ID"]
     },
 	"Id" : "ID"
 }

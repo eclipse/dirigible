@@ -12,7 +12,15 @@
 package org.eclipse.dirigible.engine.odata2.definition;
 
 public enum ODataHandlerTypes {
-	
-	before, after, on, forbid
+
+    before, after, on, forbid;
+
+    public String value() {
+        return name();
+    }
+
+    public static ODataHandlerTypes fromValue(String v) {
+        return valueOf(v);
+    }
 
 }

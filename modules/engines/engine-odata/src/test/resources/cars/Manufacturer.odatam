@@ -8,6 +8,6 @@
     "Updated" : "MAN_UPDATED",
     "_pk_" : "MAN_ID",
     "_ref_Car" : {
-    	"joinColumn" : "MAN_ID"
+    	"joinColumn" : ["MAN_ID"]
     }
 }
