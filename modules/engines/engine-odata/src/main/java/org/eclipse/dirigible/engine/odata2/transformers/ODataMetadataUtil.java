@@ -35,6 +35,15 @@ public class ODataMetadataUtil {
         throw new IllegalArgumentException(String.format("There is no table with name: %s defined in the model", tableName));
     }
 
+    public static String getTableNameByEntity(ODataDefinition model, String entityName) {
+        for (ODataEntityDefinition entity : model.getEntities()) {
+            if (entityName.equals(entity.getName())) {
+                return entity.getTable();
+            }
+        }
+        throw new IllegalArgumentException(String.format("There is no entity with name: %s defined in the model", entityName));
+    }
+
     public static ODataAssociationDefinition getAssociation(ODataDefinition model, String name, String navigation) {
         for (ODataAssociationDefinition association : model.getAssociations()) {
             if (name.equals(association.getName())) {
