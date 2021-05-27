@@ -20,11 +20,14 @@
 				},
 				{
 					"name": "orderId",
-					"column": "ORDER_ID",
-					"nullable": true,
-					"type": "Edm.Int32"
+					"column": "ORDER_ID"
 				}
 			]
+		},
+		{
+			"name": "phone",
+			"alias": "Phones",
+			"table": "PHONES"
 		}
 	]
 }
