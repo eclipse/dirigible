@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-engine-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -35,42 +35,42 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-odata-api</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-odata-core</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-api</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-api</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-api</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-database</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -81,12 +81,12 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-scheduler</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
     	</dependency>
 
 		<!-- Apache Olingo Library dependencies -->

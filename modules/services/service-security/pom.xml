@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,40 +34,40 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-security</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-http</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     </dependencies>

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-template-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -36,169 +36,169 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-hello-world</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-http-client</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-database-access</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-database-table</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-database-view</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-html</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-bookstore</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-job</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-listener</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-extension-view</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-extension-perspective</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-launchpad</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-schema</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-dao</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-data</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-rest</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-feed</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-ui-angular</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-angular</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<!-- <dependency> <groupId>org.eclipse.dirigible</groupId> <artifactId>dirigible-template-application-openui5</artifactId> 
 			<version>3.2.0-SNAPSHOT</version> </dependency> -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-mobile-hello-world</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>template-form-builder-angularjs</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-odata</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-wizard</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-simple-form</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-tiles</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-planning-calendar</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-list</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-master-detail</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-openui5-table</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-websocket</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-dao-mongodb</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-rest-mongodb</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-template-application-ui-angular-mongodb</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

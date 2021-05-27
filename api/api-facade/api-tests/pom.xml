@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-api-facade-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,173 +34,173 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>5.11.0-SNAPSHOT</version>
+			<version>5.12.0-SNAPSHOT</version>
     	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-engine-javascript</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-extensions</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-security</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-core</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-http</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-database</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-io</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-indexing</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-cms</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-spark</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ext-spark</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-cms-internal</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-indexing</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-platform</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-rabbitmq</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-elasticsearch</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-redis</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-etcd</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-security</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-core</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-http</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-utils</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-database</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-io</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-indexing</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-log</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-cms</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-platform</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-ext-redis</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -211,23 +211,23 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ext-etcd</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ext-rabbitmq</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-messaging</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ext-elasticsearch</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

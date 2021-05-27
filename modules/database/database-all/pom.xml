@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-database-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,32 +34,32 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-data-models</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-data-structures</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-persistence</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-sql</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-dynamic</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Database Implementations -->

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -97,38 +97,38 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 	
 		<!-- API -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-local</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository-master</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Database -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		 	<exclusions>
 		 		<exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
@@ -143,19 +143,19 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-h2</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-database-custom</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Core Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		 	<exclusions>
 		 		<!-- <exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
@@ -187,7 +187,7 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-javascript-graalvm</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<!-- <dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -202,14 +202,14 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine-web</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		 	<exclusions>
 		 		<!-- <exclusion>
 		        	<groupId>org.eclipse.dirigible</groupId>
@@ -246,14 +246,14 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-database</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Resources Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- External -->

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ide-ui-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,107 +34,107 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-branding</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-core</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-workbench</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-console</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-monaco</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-workspace</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-preview</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-database</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-git</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-repository</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-debugger</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-logs</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-jobs</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-extensions</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-operations</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-security</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-listeners</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-data-structures</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-registry</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-plugins</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-websockets</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

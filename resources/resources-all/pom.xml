@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-resources-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,82 +34,82 @@
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-angular</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-bootstrap</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-fonts</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-goldenlayout</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jquery</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jstree</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-flowable-libs</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-dev-tools</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-mxgraph</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jqplot</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-resources</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-themes</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-default</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
          <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-fiori</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-jquery-ui</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-requirejs</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 </project>

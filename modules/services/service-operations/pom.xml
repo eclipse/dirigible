@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -42,42 +42,42 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>5.11.0-SNAPSHOT</version>
+            <version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-scheduler</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-security</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-messaging</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-database-data-structures</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-websockets</artifactId>
-        	<version>5.11.0-SNAPSHOT</version>
+        	<version>5.12.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-security-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -43,21 +43,21 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-commons-config</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- API Facade HTTP -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api-facade-http</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Core Security -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core-security</artifactId>
-		 	<version>5.11.0-SNAPSHOT</version>
+		 	<version>5.12.0-SNAPSHOT</version>
 		</dependency>
 
     </dependencies>

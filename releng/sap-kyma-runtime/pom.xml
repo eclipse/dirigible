@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>5.11.0-SNAPSHOT</version>
+		<version>5.12.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -97,7 +97,7 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-sap-kyma-base</artifactId>
-			<version>5.11.0-SNAPSHOT</version> 
+			<version>5.12.0-SNAPSHOT</version> 
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
