@@ -15,18 +15,7 @@
 		{
 			"name": "phone",
 			"alias": "Phones",
-			"table": "PHONES",
-			"navigations": [
-				{
-					"name": "HisAddress",
-					"association": "Phone_Address"
-				}
-			]
-		},
-		{
-			"name": "address",
-			"alias": "Address",
-			"table": "ADDRESS"
+			"table": "PHONES"
 		}
 	],
 	"associations": [
@@ -35,8 +24,8 @@
 			"from": {
 				"entity": "employee",
 				"property": [
-					"COMPANY_ID",
-					"EMPLOYEE_NUMBER"
+					"COMPANY_ID_wrong",
+					"EMPLOYEE_NUMBER_wrong"
 				],
 				"multiplicity": "1"
 			},
@@ -47,23 +36,6 @@
 					"FK_EMPLOYEE_NUMBER"
 				],
 				"multiplicity": "*"
-			}
-		},
-		{
-			"name": "Phone_Address",
-			"from": {
-				"entity": "phone",
-				"property": [
-					"NUMBER"
-				],
-				"multiplicity": "1"
-			},
-			"to": {
-				"entity": "address",
-				"property": [
-					"FK_PHONE"
-				],
-				"multiplicity": "1"
 			}
 		}
 	]
