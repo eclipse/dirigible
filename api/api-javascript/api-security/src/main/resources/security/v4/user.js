@@ -11,7 +11,7 @@
  */
 /**
  * API v4 User
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -21,4 +21,16 @@ exports.getName = function() {
 
 exports.isInRole = function(role) {
 	return org.eclipse.dirigible.api.v3.security.UserFacade.isInRole(role);
+};
+
+exports.getTimeout = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getTimeout();
+};
+
+exports.getAuthType = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getAuthType();
+};
+
+exports.getSecurityToken = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getSecurityToken();
 };
