@@ -11,49 +11,58 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Singleton;
-
-import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
+import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Singleton
 public class OData2ODataHTransformer {
-	
-	private static final Logger logger = LoggerFactory.getLogger(OData2ODataHTransformer.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(OData2ODataHTransformer.class);
 
     public List<ODataHandlerDefinition> transform(ODataDefinition model) throws SQLException {
 
         List<ODataHandlerDefinition> result = new ArrayList<>();
 
-        Map<String, String> tableToEntity = new HashMap<String, String>();
-        for (ODataEntityDefinition entity : model.getEntities()) {
-        	tableToEntity.put(entity.getTable(), entity.getName());
-        }
-        
         for (ODataEntityDefinition entity : model.getEntities()) {
             String namespace = model.getNamespace();
             String name = entity.getName();
-            
+
             entity.getHandlers().forEach(handler -> {
-            	ODataHandlerDefinition handlerDefinition = new ODataHandlerDefinition();
-            	handlerDefinition.setNamespace(namespace);
-            	handlerDefinition.setName(name + "Type");
-            	handlerDefinition.setMethod(handler.getMethod());
-            	handlerDefinition.setType(handler.getType());
-            	handlerDefinition.setHandler(handler.getHandler());
-            	result.add(handlerDefinition);
-			});
+                validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
+                validateHandlerDefinitionTypes(handler.getType(), entity.getName());
+
+                ODataHandlerDefinition handlerDefinition = new ODataHandlerDefinition();
+                handlerDefinition.setNamespace(namespace);
+                handlerDefinition.setName(name + "Type");
+                handlerDefinition.setMethod(handler.getMethod());
+                handlerDefinition.setType(handler.getType());
+                handlerDefinition.setHandler(handler.getHandler());
+                result.add(handlerDefinition);
+            });
         }
         return result;
+    }
+
+    private void validateHandlerDefinitionTypes(String actualValue, String entityName) {
+        try {
+            ODataHandlerTypes.fromValue(actualValue);
+        } catch (IllegalArgumentException ex) {
+            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
+        }
+    }
+
+    private void validateHandlerDefinitionMethod(String actualValue, String entityName) {
+        try {
+            ODataHandlerMethods.fromValue(actualValue);
+        } catch (IllegalArgumentException ex) {
+            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
+        }
     }
 
 }

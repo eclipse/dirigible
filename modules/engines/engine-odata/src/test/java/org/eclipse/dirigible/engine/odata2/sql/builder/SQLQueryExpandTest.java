@@ -11,14 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static java.util.Collections.EMPTY_MAP;
-import static org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils.fqns;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.uri.PathSegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
@@ -27,16 +19,19 @@ import org.apache.olingo.odata2.core.ODataPathSegmentImpl;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.apache.olingo.odata2.core.uri.UriParserImpl;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
+import org.eclipse.dirigible.engine.odata2.sql.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Collections.EMPTY_MAP;
+import static org.junit.Assert.assertEquals;
 
 public class SQLQueryExpandTest {
 
@@ -49,7 +44,9 @@ public class SQLQueryExpandTest {
         Class<?>[] classes = { //
                 Entity1.class, //
                 Entity2.class, //
-                Entity3.class //
+                Entity3.class, //
+                Entity4.class, //
+                Entity5.class //
         };
         provider = new AnnotationEdmProvider(Arrays.asList(classes));
         EdmImplProv edm = new EdmImplProv(provider);
@@ -65,7 +62,7 @@ public class SQLQueryExpandTest {
         Map<String, String> params = new HashMap<>();
         params.put("$expand", "Entity2");
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
@@ -81,11 +78,46 @@ public class SQLQueryExpandTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testExpandOneToManyAssociationWithComposedKey() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("$expand", "Entity5");
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities4", EMPTY_MAP);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+
+        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLContext context = new SQLContext();
+        String expected = "SELECT T0.ID4_1 AS ID4_1_T0, T0.ID4_2 AS ID4_2_T0, T1.ID5 AS ID5_T1, T1.FK_ID4_1 AS FK_ID4_1_T1, T1.FK_ID4_2 AS FK_ID4_2_T1"
+                + " FROM ENTITY4_TABLE AS T0"
+                + " LEFT JOIN ENTITY5_TABLE AS T1 ON T1.FK_ID4_1 = T0.ID4_1 AND T1.FK_ID4_2 = T0.ID4_2"
+                + " FETCH FIRST 1000 ROWS ONLY";
+        assertEquals(expected, q.buildSelect(context));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExpandZeroOrOneAssociationWithComposedKey() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("$expand", "Entity4");
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities5", EMPTY_MAP);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+
+        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLContext context = new SQLContext();
+
+        String expected = "SELECT T0.ID5 AS ID5_T0, T0.FK_ID4_1 AS FK_ID4_1_T0, T0.FK_ID4_2 AS FK_ID4_2_T0, T1.ID4_1 AS ID4_1_T1, T1.ID4_2 AS ID4_2_T1"
+                + " FROM ENTITY5_TABLE AS T0"
+                + " LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2"
+                + " FETCH FIRST 1000 ROWS ONLY";
+        assertEquals(expected, q.buildSelect(context));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testExpandZeroOrOneAssociation() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("$expand", "Entity1");
         PathSegment ps1 = new ODataPathSegmentImpl("Entities2", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
@@ -116,6 +148,24 @@ public class SQLQueryExpandTest {
                 + "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID "//
                 + "WHERE T1.MESSAGEGUID = ? "//
                 + "FETCH FIRST 1000 ROWS ONLY";
+        assertEquals(expected, q.buildSelect(context));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExpandWithTwoPathSegmentsWithComposedKey() throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("$expand", "Entity4");
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", EMPTY_MAP);
+        PathSegment ps2 = new ODataPathSegmentImpl("Entity5", EMPTY_MAP);
+        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps2), params);
+
+        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLContext context = new SQLContext();
+        String expected = "SELECT T0.ID5 AS ID5_T0, T0.FK_ID4_1 AS FK_ID4_1_T0, T0.FK_ID4_2 AS FK_ID4_2_T0, T1.ID4_1 AS ID4_1_T1, T1.ID4_2 AS ID4_2_T1"
+                + " FROM ENTITY5_TABLE AS T0"
+                + " LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2"
+                + " WHERE T1.ID4_1 = ? AND T1.ID4_2 = ? FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -152,7 +202,7 @@ public class SQLQueryExpandTest {
         params.put("$filter", "MessageGuid eq 'AAA' and Entity2/Name eq 'Something'");
         params.put("$select", "MessageGuid,Entity2/Name");
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
@@ -179,7 +229,7 @@ public class SQLQueryExpandTest {
         params.put("$filter", "MessageGuid eq 'AAA' and Entity2/Name eq 'Something'");
         params.put("$select", "MessageGuid,Entity2/*");
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();

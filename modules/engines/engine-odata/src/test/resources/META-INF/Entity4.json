@@ -1,0 +1,14 @@
+{
+  "edmType": "Entity4",
+  "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.Entity4",
+  "sqlTable": "ENTITY4_TABLE",
+  "Id4_1": "ID4_1",
+  "Id4_2": "ID4_2",
+  "_pk_": "ID4_1, ID4_25",
+  "_ref_Entity5": {
+    "joinColumn": [
+      "ID4_1",
+      "ID4_2"
+    ]
+  }
+}

@@ -12,7 +12,7 @@
 	},
 	"MediaValue" : "MEDIAVALUE",
     "_ref_TestChild" : {
-    	"joinColumn" : "ID"
+    	"joinColumn" : ["ID"]
     },
 	"_pk_" : "ID"
 }
