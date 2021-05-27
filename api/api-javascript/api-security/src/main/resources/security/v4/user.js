@@ -26,3 +26,11 @@ exports.isInRole = function(role) {
 exports.getTimeout = function() {
 	return org.eclipse.dirigible.api.v3.security.UserFacade.getTimeout();
 };
+
+exports.getAuthType = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getAuthType();
+};
+
+exports.getSecurityToken = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getSecurityToken();
+};
