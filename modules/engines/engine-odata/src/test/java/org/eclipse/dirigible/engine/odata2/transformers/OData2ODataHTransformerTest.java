@@ -31,9 +31,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class OData2ODataHTransformerTest {
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private DBMetadataUtil dbMetadataUtil;
-
     @InjectMocks
     OData2ODataHTransformer odata2ODataHTransformer;
 

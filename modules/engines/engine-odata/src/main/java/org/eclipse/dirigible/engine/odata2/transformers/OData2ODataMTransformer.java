@@ -58,7 +58,7 @@ public class OData2ODataMTransformer {
             }
 
             List<ODataProperty> entityProperties = entity.getProperties();
-            validateODataProperties(tableMetadata.getColumns(), entityProperties, entity.getName());
+            ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
             //expose all Db columns in case no entity props are defined
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
@@ -153,26 +153,7 @@ public class OData2ODataMTransformer {
         return null;
     }
 
-    /**
-     * Check if the provided ODataProperty properties are the same as the one defined in the DB
-     */
-    private void validateODataProperties(List<PersistenceTableColumnModel> dbColumnNames, List<ODataProperty> entityProperties, String entityName) {
-        if (!entityProperties.isEmpty()) {
-            ArrayList<String> invalidProps = new ArrayList<>();
-            entityProperties.forEach(column -> {
-                List<PersistenceTableColumnModel> consistentProps = dbColumnNames.stream().filter(prop -> prop.getName().equals(column.getColumn())).collect(Collectors.toList());
-                if (consistentProps.isEmpty()) {
-                    invalidProps.add(column.getColumn());
-                }
-            });
-            if (!invalidProps.isEmpty()) {
-                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. Odata column definitions for %s do not match the DB table column definition.", entityName, invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
-            }
-            if (entityProperties.size() > dbColumnNames.size()) {
-                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. The number of defined odata columns do not match the number of DB table columns", entityName));
-            }
-        }
-    }
+
 
     private void validateAssociationProperties(ODataAssociationDefinition association, ODataDefinition model) throws SQLException {
         validateAssociationProperty(association.getFrom(), model);

@@ -317,6 +317,12 @@ public class OData2ODataMTransformerTest {
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>());
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
+        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
+
         String entityEmployee = "{\n" +
                 "\t\"edmType\": \"employeeType\",\n" +
                 "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
@@ -326,9 +332,17 @@ public class OData2ODataMTransformerTest {
                 "\t\"orderId\": \"ORDER_ID\",\n" +
                 "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
                 "}";
-
+        String phoneEntity = "{\n" +
+                "\t\"edmType\": \"phoneType\",\n" +
+                "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
+                "\t\"sqlTable\": \"PHONES\",\n" +
+                "\t\"Number\": \"NUMBER\",\n" +
+                "\t\"FkCompanyId\": \"FK_COMPANY_ID\",\n" +
+                "\t\"FkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
+                "\t\"_pk_\" : \"NUMBER\"\n" +
+                "}";
         String[] actualResult = odata2ODataMTransformer.transform(definition);
-        assertArrayEquals(new String[]{entityEmployee}, actualResult);
+        assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
     @Test
@@ -343,6 +357,12 @@ public class OData2ODataMTransformerTest {
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
+        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
+
         String entityEmployee = "{\n" +
                 "\t\"edmType\": \"employeeType\",\n" +
                 "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
@@ -352,9 +372,18 @@ public class OData2ODataMTransformerTest {
                 "\t\"orderId\": \"ORDER_ID\",\n" +
                 "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
                 "}";
+        String phoneEntity = "{\n" +
+                "\t\"edmType\": \"phoneType\",\n" +
+                "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
+                "\t\"sqlTable\": \"PHONES\",\n" +
+                "\t\"Number\": \"NUMBER\",\n" +
+                "\t\"FkCompanyId\": \"FK_COMPANY_ID\",\n" +
+                "\t\"FkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
+                "\t\"_pk_\" : \"NUMBER\"\n" +
+                "}";
 
         String[] actualResult = odata2ODataMTransformer.transform(definition);
-        assertArrayEquals(new String[]{entityEmployee}, actualResult);
+        assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
     @Test(expected = OData2TransformerException.class)

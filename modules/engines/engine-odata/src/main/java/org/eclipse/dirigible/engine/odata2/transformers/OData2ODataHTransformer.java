@@ -23,8 +23,6 @@ import java.util.List;
 @Singleton
 public class OData2ODataHTransformer {
 
-    private static final Logger logger = LoggerFactory.getLogger(OData2ODataHTransformer.class);
-
     public List<ODataHandlerDefinition> transform(ODataDefinition model) throws SQLException {
 
         List<ODataHandlerDefinition> result = new ArrayList<>();
@@ -34,8 +32,8 @@ public class OData2ODataHTransformer {
             String name = entity.getName();
 
             entity.getHandlers().forEach(handler -> {
-                validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
-                validateHandlerDefinitionTypes(handler.getType(), entity.getName());
+                ODataMetadataUtil.validateHandlerDefinitionMethod(handler.getMethod(), entity.getName());
+                ODataMetadataUtil.validateHandlerDefinitionTypes(handler.getType(), entity.getName());
 
                 ODataHandlerDefinition handlerDefinition = new ODataHandlerDefinition();
                 handlerDefinition.setNamespace(namespace);
@@ -48,21 +46,4 @@ public class OData2ODataHTransformer {
         }
         return result;
     }
-
-    private void validateHandlerDefinitionTypes(String actualValue, String entityName) {
-        try {
-            ODataHandlerTypes.fromValue(actualValue);
-        } catch (IllegalArgumentException ex) {
-            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
-        }
-    }
-
-    private void validateHandlerDefinitionMethod(String actualValue, String entityName) {
-        try {
-            ODataHandlerMethods.fromValue(actualValue);
-        } catch (IllegalArgumentException ex) {
-            throw new OData2TransformerException(String.format("There is inconsistency in odata file for entity %s on handler definition: %s", entityName, actualValue));
-        }
-    }
-
 }
