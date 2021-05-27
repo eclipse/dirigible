@@ -125,6 +125,11 @@ angular.module('preview', [])
 		$scope.$apply();
 	}.bind(this));
 
+	$messageHub.on('workspace.file.unpublished', function(msg) {
+		this.refresh();
+		$scope.$apply();
+	}.bind(this));
+
 	$scope.cancel = function(e) {
 		if (e.keyCode === 27) {
 			$scope.previewForm.preview.$rollbackViewValue();
