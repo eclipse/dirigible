@@ -39,6 +39,7 @@ public class UserFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
 	private static final String GUEST = "guest";
+	private static final String AUTH = "authorization";
 
 	/**
 	 * Gets the user name.
@@ -123,7 +124,7 @@ public class UserFacade implements IScriptingFacade {
 		}
 		return getName();
 	}
-	
+
 	/**
 	 * Gets the user name by a given request as parameter.
 	 *
@@ -146,12 +147,44 @@ public class UserFacade implements IScriptingFacade {
 		return getName();
 	}
 
+	public static final Integer getTimeout() {
+		if (HttpSessionFacade.isValid()) {
+			return HttpSessionFacade.getMaxInactiveInterval();
+		} else {
+			logger.error("Error while retrieving timeout: Session is not valid!");
+		}
+		return 0;
+	}
+
+	public static String getAuthType() {
+		if (HttpSessionFacade.isValid()) {
+			return HttpRequestFacade.getAuthType();
+		} else {
+			logger.error("Error while retrieving auth type: Session is not valid!");
+		}
+		return null;
+	}
+
+	/**
+	 * The Authorization header return the type + token.
+	 * Substring from the empty space to only get the token.
+	 */
+	public static String getSecurityToken() {
+		if (HttpSessionFacade.isValid()) {
+			String token = HttpRequestFacade.getHeader(AUTH);
+			return token.substring(token.indexOf(" "));
+		} else {
+			logger.error("Error while retrieving security token: Session is not valid!");
+		}
+		return "";
+	}
+
 	private static String getContextProperty(String property) throws ContextException {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getAttribute(property);
 		} else if (ThreadContextFacade.isValid()) {
 			Object value = ThreadContextFacade.get(property);
-			if ((value != null) && (value instanceof String)) { 
+			if ((value != null) && (value instanceof String)) {
 				return (String) value;
 			}
 		}
