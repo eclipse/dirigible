@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 SAP and others.
+ * Copyright (c) 2010-2021 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
@@ -272,6 +272,18 @@ angular.module('ideUiCore', ['ngResource'])
 
 			messageHub.on('ide-core.openView', function(msg) {
 				Layouts.manager.openView(msg.viewId);
+			});
+
+			messageHub.on('workspace.file.deleted', function(msg) {
+				Layouts.manager.closeEditor(msg.data.path);
+			});
+
+			messageHub.on('workspace.file.renamed', function(msg) {
+				Layouts.manager.closeEditor(msg.data.file.path);
+			});
+
+			messageHub.on('workspace.file.moved', function(msg) {
+				Layouts.manager.closeEditor("/" + msg.data.workspace + msg.data.sourcepath + "/" + msg.data.file);
 			});
 
 			if(!scope.menu && url)
