@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.sql.test.hana;
@@ -73,6 +73,21 @@ public class CreateTableTest {
 		
 		assertNotNull(sql);
 		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )", sql);
+	}
+
+	@Test
+	public void createTableWithCompositeKey() {
+		String sql = SqlFactory.getNative(new HanaSqlDialect())
+				.create()
+				.columnTable("CUSTOMERS")
+				.columnInteger("ID", true, false, false)
+				.columnInteger("ID2", true, false, false)
+				.columnVarchar("FIRST_NAME", 20, false, true, true)
+				.columnVarchar("LAST_NAME", 30, false, true, false)
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID,ID2) )", sql);
 	}
 
 }
