@@ -9,25 +9,25 @@
  *   SAP - initial API and implementation
  */
 var ViewRegistry = function() {
-	
+
 	var _views = {};
-	
+
 	var _factories = {};
-	
+
 	this.factory = function(name, func){
 		if(arguments.length == 1)
 			return _factories[name];
-			
+
 		if(typeof func !== 'function')
 			throw Error('Not a function');
 		_factories[name] = func;
 		return this;
 	}
-	
+
 	this.factories = function(){
 		return _factories;
 	}
-	
+
 	this.view = function(viewid, factory, region, label, settings){
 		if(viewid === undefined)
 			throw Error('Illegal argument for viewid ' + viewid);
@@ -47,7 +47,7 @@ var ViewRegistry = function() {
 		region = region || 'center-bottom';
 		settings = settings || [];
 		settings.label = label;
-		
+
 		_views[viewid] = {
 			id: viewid,
 			type: 'component',
@@ -57,19 +57,19 @@ var ViewRegistry = function() {
 		}
 		return this;
 	};
-	
+
 	this.views = function(){
 		return _views;
 	}
-	
+
 	return this;
-	
+
 };
 
 function LayoutController(viewRegistry, messageHub){
 
 	this.viewRegistry = viewRegistry;
-	
+
 	this.regions = {
 		'main': {
 			id: 'main',
@@ -103,17 +103,17 @@ function LayoutController(viewRegistry, messageHub){
 			defaultRegionId: 'main'
 		},
 		'center-top': {
-			id: 'center-top',				
+			id: 'center-top',
 			type: 'stack',
 			defaultRegionId: 'center'
 		},
 		'center-middle': {
-			id: 'center-middle',				
+			id: 'center-middle',
 			type: 'stack',
 			defaultRegionId: 'center'
 		},
 		'center-bottom': {
-			id: 'center-bottom',				
+			id: 'center-bottom',
 			type: 'stack',
 			defaultRegionId: 'center'
 		},
@@ -138,7 +138,7 @@ function LayoutController(viewRegistry, messageHub){
 			defaultRegionId: 'right'
 		}
 	}
-	
+
 	var parentIds = function(node, regionId, arr){
 		arr = arr || [];
 		var _parentId = regionId || node.defaultRegionId;
@@ -150,11 +150,11 @@ function LayoutController(viewRegistry, messageHub){
 		}
 		return arr;
 	};
-	
+
 	var copy = function(src){
-		return JSON.parse(JSON.stringify(src));	
+		return JSON.parse(JSON.stringify(src));
 	};
-	
+
 	var gridItem = function(top, id){
 		if(top.id === id)
 			return top;
@@ -165,11 +165,11 @@ function LayoutController(viewRegistry, messageHub){
 			return item && gridItem(item, id)
 		}
 	};
-	
+
 	var addView = function(views, view, grid){
 		var node;
 		var path = [view.id].concat(parentIds.call(this, view));
-		//build branches top-bottom				
+		//build branches top-bottom
 		path.reverse().forEach(function(compId, idx, arr){
 			var _gridNode = gridItem(grid, compId);
 			if(_gridNode){
@@ -180,7 +180,7 @@ function LayoutController(viewRegistry, messageHub){
 				if(child){
 					child = copy(child);
 					if(!node.content)
-						node.content = [];	
+						node.content = [];
 					if(!node.content.find(function(it){return it.id == child.id}))
 						node.content.push(child);
 					node = child;
@@ -188,25 +188,25 @@ function LayoutController(viewRegistry, messageHub){
 			}
 		}.bind(this));
 	}.bind(this);
-	
+
 	this.layoutViews = function(views){
 		var grid = copy(this.regions.main);
 		if(views){
 			Object.values(views).map(function(view){
 				if(view){
 					view = copy(view);
-					addView(views, view, grid);			
+					addView(views, view, grid);
 				}
 				return view;
 			}.bind(this));
-		}	
+		}
 		return grid;
 	}.bind(this);
-	
+
 	this.messageHub = messageHub || new FramesMessageHub();
-	
+
 	this.listeners = {};
-	
+
 	this.addListener = function(eventType, callback){
 		if(!this.listeners[eventType]){
 			this.listeners[eventType] = [];
@@ -219,7 +219,7 @@ function LayoutController(viewRegistry, messageHub){
 		};
 		this.listeners[eventType].push(entry);
 		return entry.id;
-	};		
+	};
 	this.removeListener = function(id, eventType){
 		if(!this.listeners[eventType])
 			return;
@@ -237,20 +237,20 @@ function LayoutController(viewRegistry, messageHub){
 	 * The layout will be always reconstructed on first init regardless of the reconstruct flag.
 	 */
 	this.init = function(containerEl, viewNames, id, reconstruct){
-		
+
 		this.containerEl = containerEl;
 		this.viewNames = viewNames;
 		id = id || $(containerEl).attr("id");
-		
+
 		if(id){
 			if(!reconstruct){
 				//load from localStorage
 				var savedState = localStorage.getItem('DIRIGIBLE.IDE.GL.state.'+ id);
 				if(savedState !== null) {
 					this.config = JSON.parse(savedState);
-				}				
+				}
 			}
-		} 
+		}
 		if(!id || reconstruct || !this.config){
 			//reconstruct (ignore previously saved state)
 			var views = {};
@@ -258,6 +258,9 @@ function LayoutController(viewRegistry, messageHub){
 				views[viewName] = this.viewRegistry.view(viewName);
 			}.bind(this));
 			this.config = {
+				settings:{
+					showPopoutIcon: false
+				},
 				dimensions: {
 					headerHeight: 26,
 					borderWidth: 3
@@ -265,28 +268,28 @@ function LayoutController(viewRegistry, messageHub){
 				content: [this.layoutViews.call(this, views)]
 			};
 		}
-		
+
 		this.layout = new GoldenLayout(this.config, containerEl);
-		
+
 		Object.keys(this.viewRegistry.factories()).forEach(function(factoryname){
 			this.layout.registerComponent(factoryname, this.viewRegistry.factory(factoryname));
 		}.bind(this));
-		
+
 		if(id){
 			this.layout.on('stateChanged', function(){
 				//TODO: debounce or do that only with save button! This fires a lot
 				var state = JSON.stringify( this.layout.toConfig() );
 				localStorage.setItem('DIRIGIBLE.IDE.GL.state.'+ id, state );
-			}.bind(this));			
+			}.bind(this));
 		}
-		
+
 		this.layout.on('tabCreated', function(tab){
 		   tab.closeElement.off( 'click' ).click(function(){
 		   	if (tab.contentItem.config.componentName && tab.contentItem.config.componentName === 'editor') {
 		   		if (tab.contentItem.config.title && tab.contentItem.config.title.startsWith('*')) {
 			   		if (confirm('You have unsaved changes, are you sure you want to close ' + tab.contentItem.config.title.substring(1))) {
 			        	tab.contentItem.remove();
-			    	}	
+			    	}
 			   	} else {
 			   		tab.contentItem.remove();
 			   	}
@@ -297,10 +300,10 @@ function LayoutController(viewRegistry, messageHub){
 		   	}
 		   });
 		});
-		
+
 		this.layout.init();
 	};
-	
+
 	this.openView = function(viewId/*, region*/){
 		var viewDef = this.viewRegistry.view(viewId);
 		if(viewDef){
@@ -320,14 +323,14 @@ function LayoutController(viewRegistry, messageHub){
 			}.bind(this));
 		}
 	};
-	
+
 	this.openEditor = function(resourcePath, resourceLabel, contentType, editorId){
 		var newItemConfig = {
 			id: resourcePath,
 			title: resourceLabel,
 			type: 'component',
 			componentName: 'editor',
-			componentState:{ 
+			componentState:{
 				path: resourcePath,
 				editorId: editorId,
 				contentType: contentType
@@ -405,13 +408,13 @@ function LayoutController(viewRegistry, messageHub){
 				}
 				panel.parent.setActiveContentItem(panel);
 			}
-		}	
+		}
 	};
-	
+
 	this.resize = function(){
 		this.layout.updateSize();
 	};
-	
+
 	this.reset = function(){
 		this.layout.destroy();
 		this.containerEl.empty();
