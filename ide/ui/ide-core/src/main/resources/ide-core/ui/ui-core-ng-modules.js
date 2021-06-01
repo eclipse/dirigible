@@ -90,10 +90,10 @@ angular.module('ideUiCore', ['ngResource'])
 			}
 		});
 	});
-	
+
 	var defaultEditorId = this.defaultEditorId = "monaco";
 	this.$get = [function editorsFactory() {
- 		
+
  		return {
 			defaultEditorId: defaultEditorId,
 			editorProviders: editorProviders,
@@ -113,9 +113,9 @@ angular.module('ideUiCore', ['ngResource'])
 					$('<iframe>').attr('src', componentState.path).appendTo(container.getElement().empty());
 			},
 			"editor": function(container, componentState){
-				/* Improvement hint: Instead of hardcoding ?file=.. use URL template for the editor provider values 
+				/* Improvement hint: Instead of hardcoding ?file=.. use URL template for the editor provider values
 				 * and then replace the placeholders in the template with matching properties from the componentState.
-				 * This will make it easy to replace the query string property if needed or provide additional 
+				 * This will make it easy to replace the query string property if needed or provide additional
 				 * (editor-specific) parameters easily.
 				 */
 				(function(componentState){
@@ -133,7 +133,7 @@ angular.module('ideUiCore', ['ngResource'])
 											return false;
 										default:
 											return true;
-									} 
+									}
 								});
 								if (formEditors.length > 0) {
 									componentState.editorId = formEditors[0];
@@ -151,7 +151,7 @@ angular.module('ideUiCore', ['ngResource'])
 					if (componentState.path) {
 						if (componentState.editorId === 'flowable')
 							src = editorPath + componentState.path;
-						else 
+						else
 							src = editorPath + '?file=' + componentState.path;
 						if(componentState.contentType && componentState.editorId !== 'flowable')
 							src += "&contentType="+componentState.contentType;
@@ -180,7 +180,7 @@ angular.module('ideUiCore', ['ngResource'])
 .factory('viewRegistry', ['ViewRegistrySvc', '$resource', 'ViewFactories', function(ViewRegistrySvc, $resource, ViewFactories){
 	Object.keys(ViewFactories).forEach(function(factoryName){
 		ViewRegistrySvc.factory(factoryName, ViewFactories[factoryName]);
-	});		
+	});
 	var get = function(){
 		return $resource('../../js/ide-core/services/views.js').query().$promise
 				.then(function(data){
@@ -207,7 +207,7 @@ angular.module('ideUiCore', ['ngResource'])
 					return ViewRegistrySvc;
 				});
 	};
-	
+
 	return {
 		get: get
 	};
@@ -320,15 +320,15 @@ angular.module('ideUiCore', ['ngResource'])
 				Theme.changeTheme(themeName);
 				setTimeout(function(){
 					Theme.reload();
-				}, 2000);	
+				}, 2000);
 			};
-			
+
 			scope.resetTheme = function() {
 				Theme.changeTheme('default');
 				scope.resetViews();
 				Theme.reload();
 			};
-			
+
 			scope.resetViews = function() {
 				localStorage.clear();
 			};
@@ -457,7 +457,7 @@ angular.module('ideUiCore', ['ngResource'])
 				views =  scope.viewsLayoutModel.views;
 			}
 			var eventHandlers = scope.viewsLayoutModel.events;
-			
+
 			viewRegistry.get().then(function(registry){
 				scope.layoutManager = new LayoutController(registry);
 				if(eventHandlers){
