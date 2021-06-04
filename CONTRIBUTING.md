@@ -28,7 +28,7 @@ execute both unit and integration test phases.  Additionally, consider using
 [Travis CI](http://travis-ci.org) to validate your branches before you even put them into
 pull requests.  All pull requests will be validated by Travis CI in any case
 and must pass before being merged.
-2. When commiting, your author email must be the same as your GitHub account,
+2. When committing, your author email must be the same as your GitHub account,
 and make sure that you sign-off every commit (`git commit -s`).
 3. Do not make pull requests from your `master` branch, please use topic branches
 instead.
@@ -46,21 +46,22 @@ described here: https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide
 
 ## Development process
 
-This project is separated into many smaller projects (git subprojects).
-Those subprojects can be found at the [dirigiblelabs](https://github.com/dirigiblelabs) GitHub page.
+This project is separated into modules (git subprojects).
+Some of the modules are standard Java Maven modules and some of them are following the WebJars module structure.
+The WebJars ones can be found at the [dirigiblelabs](https://github.com/dirigiblelabs) GitHub page.
 Their names start with 'ide-', 'api-' and 'ext-' depending on what they are for.
 
 If you want to contribute in any way, you must go through the following steps:
 
-1. Fork this repository into your account. Do NOT fork the subproject you want to work on.
+1. Fork this repository into your account. Do NOT fork the module you want to work on.
 2. Open Dirigible IDE. If you do not have access to a deployed instance, run it locally. See [README](README.md).
-3. From the sidebar, go to the Git section and clone the subproject you will be working on. Use the master/main branch.
-4. Go to the Editor (the first item in the sidebar) and make your changes. For front-end subprojects, this will automatically apply the changes in real time and make the development process faster.
-5. Return to the Git section, select your subproject, add all unstaged files from the Staging tab in the bottom panel, then commit and push your changes to the main/master branch.
+3. From the sidebar, go to the Git perspective and clone the module you will be working on. Use the master/main branch.
+4. Go to the Workbench perspective (the first item in the sidebar) and make your changes. For front-end modules, this will automatically apply the changes in real time and make the development process faster.
+5. Return to the Git section, select your module, add all unstaged files from the Staging tab in the bottom panel, then commit and push your changes to the main/master branch.
 6. Open the forked Dirigible repository (in Dirigible or your favorite IDE), and make sure you have the latest changes from the master branch.
 7. Checkout to a new branch by giving it either a topic name or a name starting with 'fix-' followed by the issue number.
-8. Execute `mvn clean install -Pcontent` in the terminal. This will pull all changes from all subprojects.
+8. Execute `mvn clean install -Pcontent` in the terminal. This will pull all changes from all modules.
 9. Execute `mvn clean install` and wait for the tests to pass.
-10. In case multiple subprojects get updated, use `git status` to see all changes and then use `git add /path/to/changed/file` to add ONLY the changes in the subproject which you are responsible for.
+10. In case multiple modules get updated, use `git status` to see all changes and then use `git add /path/to/changed/file` to add ONLY the changes in the module which you are responsible for.
 11. Commit and push your changes.
-12. Create a PR to the master branch in `eclipse/dirigible` by giving it a short but descriptive name and mention the issue number/numbers in the description. (See [closing issues via PR](https://github.blog/2013-05-14-closing-issues-via-pull-requests/))
+12. Create a PR to the master branch in `eclipse/dirigible` by giving it a short but descriptive name and mention the issue number/numbers in the description (See [closing issues via PR](https://github.blog/2013-05-14-closing-issues-via-pull-requests/)).
