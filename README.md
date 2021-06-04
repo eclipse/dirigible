@@ -109,8 +109,8 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
 
         catalina home
 
-2. Go to the `target` directory and delete its content.
-3. Copy the `ROOT.war` file and paste it in `target`.
+2. Go to the `webapps` directory and delete its content.
+3. Copy the `ROOT.war` file and paste it in `webapps`.
 4. Go to the `conf` directory, open `tomcat-users.xml` and configure the users store:
 
         <tomcat-users>
