@@ -34,3 +34,11 @@ exports.getAuthType = function() {
 exports.getSecurityToken = function() {
 	return org.eclipse.dirigible.api.v3.security.UserFacade.getSecurityToken();
 };
+
+exports.getInvocationCount = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getInvocationCount();
+};
+
+exports.getLanguage = function() {
+	return org.eclipse.dirigible.api.v3.security.UserFacade.getLanguage();
+};
