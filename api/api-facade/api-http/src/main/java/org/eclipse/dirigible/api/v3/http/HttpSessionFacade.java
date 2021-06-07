@@ -47,11 +47,7 @@ public class HttpSessionFacade implements IScriptingFacade {
 			if (request != null) {
 				HttpSession httpSession = request.getSession(true);
 				Integer count = (Integer)httpSession.getAttribute(INVOCATION_COUNT);
-				if (count == null) {
-					count = 1;
-				} else {
-					count++;
-				}
+				count = count == null ? 1 : ++count;
 				httpSession.setAttribute(INVOCATION_COUNT, count);
 				return httpSession;
 			}
