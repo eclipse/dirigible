@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.api.v3.http;
@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class HttpSessionFacade implements IScriptingFacade {
 
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
+	private static final String INVOCATION_COUNT = "invocation.count";
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpSessionFacade.class);
 
@@ -44,7 +45,11 @@ public class HttpSessionFacade implements IScriptingFacade {
 		try {
 			HttpServletRequest request = (HttpServletRequest) ThreadContextFacade.get(HttpServletRequest.class.getCanonicalName());
 			if (request != null) {
-				return request.getSession(true);
+				HttpSession httpSession = request.getSession(true);
+				Integer count = (Integer)httpSession.getAttribute(INVOCATION_COUNT);
+				count = count == null ? 1 : ++count;
+				httpSession.setAttribute(INVOCATION_COUNT, count);
+				return httpSession;
 			}
 		} catch (ContextException e) {
 			logger.error(e.getMessage(), e);

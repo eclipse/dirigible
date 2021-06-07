@@ -35,6 +35,9 @@ public class UserFacade implements IScriptingFacade {
 	private static final String DIRIGIBLE_ANONYMOUS_IDENTIFIER = "dirigible-anonymous-identifier";
 	private static final String DIRIGIBLE_ANONYMOUS_USER = "dirigible-anonymous-user";
 	private static final String DIRIGIBLE_JWT_USER = "dirigible-jwt-user";
+	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
+	private static final String INVOCATION_COUNT = "invocation.count";
+	private static final String LANGUAGE_HEADER = "accept-language";
 
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
@@ -151,32 +154,56 @@ public class UserFacade implements IScriptingFacade {
 		if (HttpSessionFacade.isValid()) {
 			return HttpSessionFacade.getMaxInactiveInterval();
 		} else {
-			logger.error("Error while retrieving timeout: Session is not valid!");
+			logger.error(NO_VALID_REQUEST);
 		}
 		return 0;
 	}
 
 	public static String getAuthType() {
-		if (HttpSessionFacade.isValid()) {
+		if (HttpRequestFacade.isValid()) {
 			return HttpRequestFacade.getAuthType();
 		} else {
-			logger.error("Error while retrieving auth type: Session is not valid!");
+			logger.error(NO_VALID_REQUEST);
 		}
 		return null;
 	}
 
 	/**
-	 * The Authorization header return the type + token.
+	 * The Authorization header returns the type + token.
 	 * Substring from the empty space to only get the token.
 	 */
 	public static String getSecurityToken() {
-		if (HttpSessionFacade.isValid()) {
+		if (HttpRequestFacade.isValid()) {
 			String token = HttpRequestFacade.getHeader(AUTH);
-			return token.substring(token.indexOf(" "));
+			return token != null && !"".equals(token)? token.substring(token.indexOf(" ")) : "";
 		} else {
-			logger.error("Error while retrieving security token: Session is not valid!");
+			logger.error(NO_VALID_REQUEST);
 		}
 		return "";
+	}
+
+	public static String getInvocationCount() {
+		if (HttpSessionFacade.isValid()) {
+			return HttpSessionFacade.getAttribute(INVOCATION_COUNT);
+		} else {
+			logger.error(NO_VALID_REQUEST);
+		}
+		return null;
+	}
+
+	/**
+	 * The accept-language attribute returns multiple values.
+	 * Eg. en-GB,en-US;q=0.9,en;q=0.8
+	 * Substring until the semicolon to get the IETF (BCP 47) format.
+	 */
+	public static String getLanguage() {
+		if (HttpRequestFacade.isValid()) {
+			String language = HttpRequestFacade.getHeader(LANGUAGE_HEADER);
+			return language != null && !"".equals(language)? language.substring(0, language.indexOf(';')) : "";
+		} else {
+			logger.error(NO_VALID_REQUEST);
+		}
+		return null;
 	}
 
 	private static String getContextProperty(String property) throws ContextException {
