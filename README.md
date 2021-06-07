@@ -70,9 +70,21 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install
 
+ - If you have a multi-core system, enable threads:
+
+        mvn -T 1C clean install
+
  - If you don't need to run tests, you can add the following argument:
 
         mvn clean install -DskipTests
+
+ - If you don't need to compile and run tests:
+
+        mvn clean install -Dmaven.test.skip=true -DskipTests
+
+ - If you want to do a fast build, with no tests and javadocs:
+
+        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
 
 The build should pass successfully. The produced `ROOT.war` files are in `releng/<artifact-name>/target/` and are ready to be deployed. There are separate deployable artifacts (WAR files) depending on the usage type. If you are running it locally, then you need `releng/desktop-all/target/ROOT.war`. There is also an executable JAR file under the `releng/<artifact-name>/target` folder with a name like `ROOT.jar`.
 
