@@ -1,7 +1,7 @@
 <!--
 
     =======================================================================
-    
+
     Copyright (c) 2010-2020 SAP and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v2.0
@@ -15,34 +15,44 @@
 
 	Standard build:
 		mvn clean install
-		
+
 	Build without tests:
 		mvn clean install -DskipTests
-		
+
+	Build without compiling tests:
+		mvn clean install -Dmaven.test.skip=true
+
+	Build with threads:
+		mvn -T 1C clean install
+
+	Build without javadoc:
+		mvn clean install -Dmaven.javadoc.skip=true
+
+	Do a fast build:
+		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+
 	Synchronize WebJars content:
 		mvn clean install -DskipTests -P content
 		mvn clean install -DskipTests
-		
+
 	Update the years in the license header:
 		mvn license:format -P license
-		
+
 	Update the version:
 		mvn versions:set -DnewVersion=3.3.1-SNAPSHOT
-		
+
 	Generate Javadoc:
 		mvn javadoc:javadoc
-		
+
 	Reuse tool check
 		python3 -m reuse lint
-		
+
 	Upload to Maven Central:
 		mvn javadoc:jar
 		mvn deploy -P release -DskipTests
 
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -116,9 +126,9 @@
 						</configuration> -->
 						<dependencies>
 							<dependency>
-							    <groupId>org.apache.commons</groupId>
-							    <artifactId>commons-lang3</artifactId>
-							    <version>${commons.lang3}</version>
+								<groupId>org.apache.commons</groupId>
+								<artifactId>commons-lang3</artifactId>
+								<version>${commons.lang3}</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -331,9 +341,9 @@
 						</configuration> -->
 						<dependencies>
 							<dependency>
-							    <groupId>org.apache.commons</groupId>
-							    <artifactId>commons-lang3</artifactId>
-							    <version>${commons.lang3}</version>
+								<groupId>org.apache.commons</groupId>
+								<artifactId>commons-lang3</artifactId>
+								<version>${commons.lang3}</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -482,10 +492,10 @@
 			<version>${jsr250-api.version}</version>
 		</dependency>
 
-        <dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		    <version>${commons.lang3}</version>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons.lang3}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -569,7 +579,7 @@
 		<maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
-    	<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.target>11</maven.compiler.target>
 		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
 		<commons.io>2.7</commons.io>
 		<commons.codec>1.10</commons.codec>
