@@ -34,22 +34,22 @@ import java.util.Map;
 
 @Singleton
 public class DBMetadataUtil {
-	
-	public static final String DIRIGIBLE_GENERATE_PRETTY_NAMES = "DIRIGIBLE_GENERATE_PRETTY_NAMES";
 
-	private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
+    public static final String DIRIGIBLE_GENERATE_PRETTY_NAMES = "DIRIGIBLE_GENERATE_PRETTY_NAMES";
+
+    private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
     @Inject
     private DataSource dataSource;
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
-    public static final String JDBC_FK_TABLE_NAME_PROPERTY ="FKTABLE_NAME";
-    public static final String JDBC_FK_NAME_PROPERTY ="FK_NAME";
-    public static final String JDBC_PK_NAME_PROPERTY ="PK_NAME";
-    public static final String JDBC_PK_TABLE_NAME_PROPERTY ="PKTABLE_NAME";
-    public static final String JDBC_FK_COLUMN_NAME_PROPERTY ="FKCOLUMN_NAME";
-    public static final String JDBC_PK_COLUMN_NAME_PROPERTY ="PKCOLUMN_NAME";
+    public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
+    public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
+    public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
+    public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
+    public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
+    public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     public static final Map<String, String> sqlToOdataEdmColumnTypes = new HashMap<>();
 
     static {
@@ -86,6 +86,7 @@ public class DBMetadataUtil {
             addFields(databaseMetadata, connection, tableMetadata);
             addPrimaryKeys(databaseMetadata, connection, tableMetadata);
             addForeignKeys(databaseMetadata, connection, tableMetadata);
+            addTableType(databaseMetadata, connection, tableMetadata);
         } catch (SQLException e) {
             throw e;
         }
@@ -97,8 +98,8 @@ public class DBMetadataUtil {
     private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
         if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-        	// Fallback for PostgreSQL
-        	foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            // Fallback for PostgreSQL
+            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
         while (foreignKeys.next()) {
             PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
@@ -119,28 +120,28 @@ public class DBMetadataUtil {
     private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
         if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-        	// Fallback for PostgreSQL
-        	primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            // Fallback for PostgreSQL
+            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
         while (primaryKeys.next()) {
             setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
         }
     }
 
-    private void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel){
-        tableModel.getColumns().stream().forEach(column -> {
-            if(column.getName().equals(columnName)){
+    private void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel) {
+        tableModel.getColumns().forEach(column -> {
+            if (column.getName().equals(columnName)) {
                 column.setPrimaryKey(true);
             }
         });
     }
 
     private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-    	ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
-    	if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-    		// Fallback for PostgreSQL
-    		columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
-    	}
+        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+        if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+            // Fallback for PostgreSQL
+            columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+        }
         while (columns.next()) {
             tableMetadata.getColumns().add(
                     new PersistenceTableColumnModel(
@@ -151,15 +152,15 @@ public class DBMetadataUtil {
     }
 
     public static String getPropertyNameFromDbColumnName(String DbColumnName, List<ODataProperty> oDataProperties, boolean prettyPrint) {
-    	for (ODataProperty next : oDataProperties) {
-    		if (next.getColumn().equals(DbColumnName)) {
-    			return next.getName();
-    		}
-    	}
-		return prettyPrint ? addCorrectFormatting(DbColumnName) : DbColumnName;
+        for (ODataProperty next : oDataProperties) {
+            if (DbColumnName.equals(next.getColumn())) {
+                return next.getName();
+            }
+        }
+        return prettyPrint ? addCorrectFormatting(DbColumnName) : DbColumnName;
     }
 
-    public static boolean isPropColumnValidDBColumn (String propColumn, List<PersistenceTableColumnModel> dbColumns) {
+    public static boolean isPropColumnValidDBColumn(String propColumn, List<PersistenceTableColumnModel> dbColumns) {
         for (PersistenceTableColumnModel next : dbColumns) {
             if (next.getName().equals(propColumn)) {
                 return true;
@@ -169,36 +170,47 @@ public class DBMetadataUtil {
     }
 
     public static boolean isNullable(PersistenceTableColumnModel column, List<ODataProperty> properties) {
-    	String columnName = column.getName();
-    	for (ODataProperty next : properties) {
-    		if (next.getColumn().equals(columnName)) {
-    			return next.isNullable();
-    		}
-    	}
-		return column.isNullable();
+        String columnName = column.getName();
+        for (ODataProperty next : properties) {
+            if (columnName.equals(next.getColumn())) {
+                return next.isNullable();
+            }
+        }
+        return column.isNullable();
     }
 
     public static String getType(PersistenceTableColumnModel column, List<ODataProperty> properties) {
-    	String columnName = column.getName();
-    	for (ODataProperty next : properties) {
-    		if (next.getType() != null) {
-    			if (next.getColumn().equals(columnName) || !IS_CASE_SENSETIVE && next.getColumn().equalsIgnoreCase(columnName)) {
-    				return next.getType();
-    			}
-    		}
-    	}
-		return column.getType();
+        String columnName = column.getName();
+        for (ODataProperty next : properties) {
+            if (next.getType() != null) {
+                if (columnName.equals(next.getColumn()) || !IS_CASE_SENSETIVE && columnName.equalsIgnoreCase(next.getColumn())) {
+                    return next.getType();
+                }
+            }
+        }
+        return column.getType();
     }
 
-    public static String addCorrectFormatting(String columnName){
+    public static String addCorrectFormatting(String columnName) {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
     }
-    
+
     public static String normalizeTableName(String table) {
-		if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
-			table = table.substring(1, table.length()-1);
-		}
-		return table;
-	}
+        if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
+            table = table.substring(1, table.length() - 1);
+        }
+        return table;
+    }
+
+    private void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
+        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+        if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+            // Fallback for PostgreSQL
+            tables = databaseMetadata.getTables(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+        }
+        while (tables.next()) {
+            tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
+        }
+    }
 
 }

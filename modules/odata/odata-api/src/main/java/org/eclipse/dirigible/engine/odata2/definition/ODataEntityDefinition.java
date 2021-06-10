@@ -11,105 +11,46 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Getter
+@Setter
 public class ODataEntityDefinition {
-	
-	private String name;
-	
-	private String alias;
-	
-	private String table;
-	
-	private List<ODataProperty> properties = new ArrayList<ODataProperty>();
-	
-	private List<ODataNavigation> navigations = new ArrayList<ODataNavigation>();
-	
-	private List<ODataHandler> handlers = new ArrayList<ODataHandler>();
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    private String name;
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * @return the alias
-	 */
-	public String getAlias() {
-		return alias;
-	}
+    private String alias;
 
-	/**
-	 * @param alias the alias to set
-	 */
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+    private String table;
 
-	/**
-	 * @return the table
-	 */
-	public String getTable() {
-		return table;
-	}
+    private List<ODataProperty> properties = new ArrayList<>();
 
-	/**
-	 * @param table the table to set
-	 */
-	public void setTable(String table) {
-		this.table = table;
-	}
+    private List<ODataNavigation> navigations = new ArrayList<>();
 
-	/**
-	 * @return the properties
-	 */
-	public List<ODataProperty> getProperties() {
-		return properties;
-	}
+    private List<ODataHandler> handlers = new ArrayList<>();
 
-	/**
-	 * @param properties the properties to set
-	 */
-	public void setProperties(List<ODataProperty> properties) {
-		this.properties = properties;
-	}
+    /**
+     * For VIEW type the keys need to be specified explicitly, because on DB side there will be no keys definitions
+     */
+    private List<String> keys = new ArrayList<>();
 
-	/**
-	 * @return the navigations
-	 */
-	public List<ODataNavigation> getNavigations() {
-		return navigations;
-	}
+    /**
+     * <p>Define list of additional annotations for EntitySet element.</p>
+     * For example:
+     * <code> &lt;EntitySet Name="SomeName" EntityType="someType" sap:creatable="true" sap:updatable-path="Updatable"&gt; </code>
+     */
+    private Map<String, String> annotationsEntitySet = new HashMap<>();
 
-	/**
-	 * @param navigations the navigations to set
-	 */
-	public void setNavigations(List<ODataNavigation> navigations) {
-		this.navigations = navigations;
-	}
-	
-	/**
-	 * @return the handlers
-	 */
-	public List<ODataHandler> getHandlers() {
-		return handlers;
-	}
-	
-	/**
-	 * @param handlers the handlers set
-	 */
-	public void setHandlers(List<ODataHandler> handlers) {
-		this.handlers = handlers;
-	}
-
+    /**
+     * <p>Define list of additional annotations for EntityType element.</p>
+     * For example:
+     * <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
+     */
+    private Map<String, String> annotationsEntityType = new HashMap<>();
 }

@@ -52,7 +52,7 @@ public class OData2ODataMTransformer {
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
-            if (idColumns == null || idColumns.isEmpty()) {
+            if (idColumns.isEmpty()) {
                 logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
                 continue;
             }
@@ -160,7 +160,7 @@ public class OData2ODataMTransformer {
         validateAssociationProperty(association.getTo(), model);
     }
 
-    private void validateAssociationProperty(ODataAssiciationEndDefinition assEndDefinition, ODataDefinition model) throws SQLException {
+    private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model) throws SQLException {
         PersistenceTableModel dbTable = dbMetadataUtil.getTableMetadata(ODataMetadataUtil.getTableNameByEntity(model, assEndDefinition.getEntity()));
         ArrayList<String> invalidProps = new ArrayList<>();
         assEndDefinition.getProperty().forEach(assProp -> {
