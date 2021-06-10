@@ -18,12 +18,15 @@ public class TestContainerConstants {
 
     // Docker hub images
     public static final String RABBITMQ_DOCKER_IMAGE = "rabbitmq:alpine";
+    public static final String CASSANDRA_DOCKER_IMEGE = "cassandra";
+
     public static final String REDIS_DOCKER_IMAGE = "redis:5.0.3-alpine";
     public static final String ELASTICSEARCH_DOCKER_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:7.7.1";
     public static final String ETCD_CLUSTER_IMAGE = "test-etcd";
 
     // Configuration constants
     public static final String DIRIGIBLE_RABBITMQ_CLIENT_URI_CONST = "DIRIGIBLE_RABBITMQ_CLIENT_URI";
+    public static final String DIRIGIBLE_CASSANDRA_CLIENT_URI_CONST = "DIRIGIBLE_CASSANDRA_CLIENT_URI";
     public static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME_CONST = "DIRIGIBLE_ELASTICSEARCH_CLIENT_HOSTNAME";
     public static final String DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT_CONST = "DIRIGIBLE_ELASTICSEARCH_CLIENT_PORT";
     public static final String DIRIGIBLE_REDIS_CLIENT_URI_CONST = "DIRIGIBLE_REDIS_CLIENT_URI";
@@ -35,4 +38,5 @@ public class TestContainerConstants {
     public static final String ELASTICSEARCH_POM_CONST = "elastic.value";
     public static final String ETCD_POM_CONST = "etcd.value";
     public static final String SPARK_POM_CONST = "spark.value";
+    public static final String CASSANDRA_POM_CONST = "cassandra.value";
 }

@@ -70,6 +70,9 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 		// Apache Spark
 		sparkRegisterModule();
 
+		// Apache Cassandra
+		cassandraRegisterModule();
+
 		// RabbitMQ
 		registerModulesRabbitMQ();
 
@@ -300,6 +303,10 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 	private void sparkRegisterModulesUtils() {
 		TEST_MODULES.add("ext/spark/client.js");
 	}
+
+	protected void cassandraRegisterModule(){cassandraRegisterUtils();}
+
+	private void cassandraRegisterUtils(){TEST_MODULES.add("ext/cassandra/client.js");}
 
 	protected void registerModulesRabbitMQ() {
 		registerModulesRabbitMQExt();

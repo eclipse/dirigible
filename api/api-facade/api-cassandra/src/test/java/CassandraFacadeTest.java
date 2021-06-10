@@ -11,6 +11,8 @@
  */
 import com.datastax.driver.core.*;
 import org.eclipse.dirigible.api.cassandra.CassandraFacade;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.testcontainers.containers.CassandraContainer;
@@ -24,12 +26,23 @@ import static org.junit.Assert.assertNotNull;
 public class CassandraFacadeTest {
 
     @Rule
-    public CassandraContainer cassandra = new CassandraContainer();
+    public CassandraContainer cassandraContainer = new CassandraContainer("cassandra");
+    String host ;
+    Integer port ;
+
+    @Before
+    public void setUp(){
+        cassandraContainer.start();
+        host = cassandraContainer.getHost();
+        port = cassandraContainer.getFirstMappedPort();
+        Configuration.set("DIRIGIBLE_CASSANDRA_CLIENT_URI", host + ":" + port);
+    }
 
     // get Cassandra Test Container
     @Test
     public void testA() {
-        Cluster cluster = cassandra.getCluster();
+        Cluster cluster = cassandraContainer.getCluster();
+
         try (Session session = cluster.connect()) {
             session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
@@ -48,8 +61,7 @@ public class CassandraFacadeTest {
     //Create Cassandra keyspace and table
     @Test
     public void testB() {
-
-        try (Session session = CassandraFacade.connect(cassandra.getHost(), (Integer) cassandra.getExposedPorts().get(0))) {
+        try (Session session = CassandraFacade.connect(host, port)) {
 
             session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
@@ -64,8 +76,7 @@ public class CassandraFacadeTest {
 
     @Test
     public void testC() {
-        Cluster cluster = cassandra.getCluster();
-        try (Session session = CassandraFacade.connect(cassandra.getHost(), (Integer) cassandra.getExposedPorts().get(0))) {
+        try (Session session = CassandraFacade.connect(host,port)) {
 
             session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
@@ -93,5 +104,9 @@ public class CassandraFacadeTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        cassandraContainer.stop();
     }
+
+
 }
