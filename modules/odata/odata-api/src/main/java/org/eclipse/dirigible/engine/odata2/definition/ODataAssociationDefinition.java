@@ -11,54 +11,26 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
 public class ODataAssociationDefinition {
-	
-	private String name;
-	
-	private ODataAssiciationEndDefinition from;
-	
-	private ODataAssiciationEndDefinition to;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    private String name;
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private ODataAssociationEndDefinition from;
 
-	/**
-	 * @return the from
-	 */
-	public ODataAssiciationEndDefinition getFrom() {
-		return from;
-	}
+    private ODataAssociationEndDefinition to;
 
-	/**
-	 * @param from the from to set
-	 */
-	public void setFrom(ODataAssiciationEndDefinition from) {
-		this.from = from;
-	}
-
-	/**
-	 * @return the to
-	 */
-	public ODataAssiciationEndDefinition getTo() {
-		return to;
-	}
-
-	/**
-	 * @param to the to to set
-	 */
-	public void setTo(ODataAssiciationEndDefinition to) {
-		this.to = to;
-	}
-
+    /**
+     * <p>Define list of additional annotations for EntitySet element.</p>
+     * For example:
+     * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
+     */
+    private Map<String ,String> annotationsAssociationSet = new HashMap<>();
 }

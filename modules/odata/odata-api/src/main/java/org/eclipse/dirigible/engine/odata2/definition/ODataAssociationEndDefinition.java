@@ -9,29 +9,22 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.repository.local;
+package org.eclipse.dirigible.engine.odata2.definition;
 
-import static org.junit.Assert.fail;
+import lombok.Getter;
+import lombok.Setter;
 
-import org.eclipse.dirigible.repository.generic.RepositoryGenericTextTest;
-import org.junit.Before;
+import java.util.ArrayList;
 
-/**
- * The Class LocalTextTest.
- */
-public class LocalTextTest extends RepositoryGenericTextTest {
+@Getter
+@Setter
+public class ODataAssociationEndDefinition {
 
-	/**
-	 * Sets the up.
-	 */
-	@Before
-	public void setUp() {
-		try {
-			repository = new LocalRepository("target/test");
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+    private String entity;
 
+    private ArrayList<String> property;
+
+    private String column;
+
+    private String multiplicity;
 }

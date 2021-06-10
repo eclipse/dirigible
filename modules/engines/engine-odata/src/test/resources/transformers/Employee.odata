@@ -1,0 +1,56 @@
+{
+	"namespace": "np",
+	"entities": [
+		{
+			"name": "employee",
+			"alias": "Employees",
+			"table": "EMPLOYEES",
+			"properties": [
+				{
+					"name": "companyId",
+					"column": "COMPANY_ID",
+					"nullable": false,
+					"type": "Edm.Int32"
+				},
+				{
+					"name": "employeeNumber",
+					"column": "EMPLOYEE_NUMBER",
+					"nullable": false,
+					"type": "Edm.Int32"
+				}
+			],
+			"navigations": [
+				{
+					"name": "HisPhones",
+					"association": "Employees_Phones"
+				}
+			]
+		},
+		{
+			"name": "phone",
+			"alias": "Phones",
+			"table": "PHONES"
+		}
+	],
+	"associations": [
+		{
+			"name": "Employees_Phones",
+			"from": {
+				"entity": "employee",
+				"property": [
+					"COMPANY_ID",
+					"EMPLOYEE_NUMBER"
+				],
+				"multiplicity": "1"
+			},
+			"to": {
+				"entity": "phone",
+				"property": [
+					"FK_COMPANY_ID",
+					"FK_EMPLOYEE_NUMBER"
+				],
+				"multiplicity": "*"
+			}
+		}
+	]
+}

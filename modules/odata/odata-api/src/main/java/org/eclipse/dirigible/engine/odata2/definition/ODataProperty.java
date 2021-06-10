@@ -11,70 +11,33 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
 public class ODataProperty {
-	
-	private String name;
-	
-	private String column;
-	
-	private boolean nullable;
 
-	private String type;
+    private String name;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    private String column;
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private boolean nullable;
 
-	/**
-	 * @return the column
-	 */
-	public String getColumn() {
-		return column;
-	}
+    private String type;
 
-	/**
-	 * @param column the column to set
-	 */
-	public void setColumn(String column) {
-		this.column = column;
-	}
-
-	/**
-	 * @return the nullable
-	 */
-	public boolean isNullable() {
-		return nullable;
-	}
-
-	/**
-	 * @param nullable the nullable to set
-	 */
-	public void setNullable(boolean nullable) {
-		this.nullable = nullable;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-
+    /**
+     * <p>Define list of additional annotations for Property element.</p>
+     * For example:
+     * <code> &lt;Property Name="SomeName" Type="Edm.String" sap:label="SomeLabel" sap:filterable="false"/&gt; </code>
+     */
+    private Map<String ,String> annotationsProperty = new HashMap<>();
 }

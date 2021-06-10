@@ -11,38 +11,24 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
 public class ODataNavigation {
-	
-	private String name;
-	
-	private String association;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    private String name;
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String association;
 
-	/**
-	 * @return the association
-	 */
-	public String getAssociation() {
-		return association;
-	}
-
-	/**
-	 * @param association the association to set
-	 */
-	public void setAssociation(String association) {
-		this.association = association;
-	}
-
+    /**
+     * <p>Define list of additional annotations for NavigationProperty element.</p>
+     * For example:
+     * <code> &lt;NavigationProperty Name="SomeName" Relationship="SomeRel" FromRole="FromRoleName" ToRole="ToRoleName" sap:filterable="false"/&gt; </code>
+     */
+    private Map<String ,String> annotationsNavigationProperty = new HashMap<>();
 }

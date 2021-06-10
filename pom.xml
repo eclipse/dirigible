@@ -613,6 +613,7 @@
 		<kafka.version>2.6.0</kafka.version>
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
+		<org.projectlombok.version>1.18.20</org.projectlombok.version>
 
 		<license.header.location>license-header.txt</license.header.location>
 

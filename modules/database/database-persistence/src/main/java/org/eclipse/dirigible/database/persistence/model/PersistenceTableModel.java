@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.database.persistence.model;
@@ -20,132 +20,137 @@ import java.util.Objects;
  */
 public class PersistenceTableModel {
 
-	private String className;
+    private String className;
 
-	private String tableName;
+    private String tableName;
 
-	private String schemaName;
+    private String schemaName;
 
-	private List<PersistenceTableColumnModel> columns = new ArrayList<>();
+    private String tableType;
 
-	private List<PersistenceTableRelationModel> relations = new ArrayList<>();
+    private List<PersistenceTableColumnModel> columns = new ArrayList<>();
 
-	public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations) {
-		this.tableName = tableName;
-		this.columns = columns;
-		this.relations = relations;
-	}
+    private List<PersistenceTableRelationModel> relations = new ArrayList<>();
 
-	public PersistenceTableModel() {
-	}
+    public PersistenceTableModel(String tableName, List<PersistenceTableColumnModel> columns, List<PersistenceTableRelationModel> relations) {
+        this.tableName = tableName;
+        this.columns = columns;
+        this.relations = relations;
+    }
 
-	/**
-	 * Gets the class name.
-	 *
-	 * @return the class name
-	 */
-	public String getClassName() {
-		return className;
-	}
+    public PersistenceTableModel() {
+    }
 
-	/**
-	 * Sets the class name.
-	 *
-	 * @param className
-	 *            the new class name
-	 */
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public String getTableType() {
+        return tableType;
+    }
 
-	/**
-	 * Gets the table name.
-	 *
-	 * @return the table name
-	 */
-	public String getTableName() {
-		return tableName;
-	}
+    public void setTableType(String tableType) {
+        this.tableType = tableType;
+    }
 
-	/**
-	 * Sets the table name.
-	 *
-	 * @param tableName
-	 *            the new table name
-	 */
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    /**
+     * Gets the class name.
+     *
+     * @return the class name
+     */
+    public String getClassName() {
+        return className;
+    }
 
-	/**
-	 * Gets the schema name.
-	 *
-	 * @return the schema name
-	 */
-	public String getSchemaName() {
-		return schemaName;
-	}
+    /**
+     * Sets the class name.
+     *
+     * @param className the new class name
+     */
+    public void setClassName(String className) {
+        this.className = className;
+    }
 
-	/**
-	 * Sets the schema name.
-	 *
-	 * @param schemaName
-	 *            the new schema name
-	 */
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
-	}
+    /**
+     * Gets the table name.
+     *
+     * @return the table name
+     */
+    public String getTableName() {
+        return tableName;
+    }
 
-	/**
-	 * Gets the columns.
-	 *
-	 * @return the columns
-	 */
-	public List<PersistenceTableColumnModel> getColumns() {
-		return columns;
-	}
+    /**
+     * Sets the table name.
+     *
+     * @param tableName the new table name
+     */
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	/**
-	 * Sets the columns.
-	 *
-	 * @param columns
-	 *            the new columns
-	 */
-	public void setColumns(List<PersistenceTableColumnModel> columns) {
-		this.columns = columns;
-	}
+    /**
+     * Gets the schema name.
+     *
+     * @return the schema name
+     */
+    public String getSchemaName() {
+        return schemaName;
+    }
 
-	/**
-	 * gets the relations.
-	 *
-	 *            the new columns
-	 */
-	public List<PersistenceTableRelationModel> getRelations() {
-		return relations;
-	}
+    /**
+     * Sets the schema name.
+     *
+     * @param schemaName the new schema name
+     */
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
 
-	/**
-	 * Sets the relations.
-	 *
-	 * @param relations
-	 *            the new columns
-	 */
-	public void setRelations(List<PersistenceTableRelationModel> relations) {
-		this.relations = relations;
-	}
+    /**
+     * Gets the columns.
+     *
+     * @return the columns
+     */
+    public List<PersistenceTableColumnModel> getColumns() {
+        return columns;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PersistenceTableModel that = (PersistenceTableModel) o;
-		return Objects.equals(className, that.className) &&
-				tableName.equals(that.tableName) &&
-				Objects.equals(schemaName, that.schemaName);
-	}
+    /**
+     * Sets the columns.
+     *
+     * @param columns the new columns
+     */
+    public void setColumns(List<PersistenceTableColumnModel> columns) {
+        this.columns = columns;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(className, tableName, schemaName);
-	}
+    /**
+     * gets the relations.
+     * <p>
+     * the new columns
+     */
+    public List<PersistenceTableRelationModel> getRelations() {
+        return relations;
+    }
+
+    /**
+     * Sets the relations.
+     *
+     * @param relations the new columns
+     */
+    public void setRelations(List<PersistenceTableRelationModel> relations) {
+        this.relations = relations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersistenceTableModel that = (PersistenceTableModel) o;
+        return Objects.equals(className, that.className) &&
+                tableName.equals(that.tableName) &&
+                Objects.equals(schemaName, that.schemaName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(className, tableName, schemaName);
+    }
 }
