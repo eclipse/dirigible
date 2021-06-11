@@ -28,6 +28,7 @@ exports.getDBResultSet = function (keyspaceName,query) {
  * Session object
  */
 function Session() {
+
     this.executeQuery = function (query) {
         return this.native.execute(query)
     }
@@ -39,6 +40,11 @@ function Session() {
 
     this.closeSession = function () {
         return  this.native.close();
+    }
+    this.getDBResults = function (keySpaceName,query){
+        var resultSet = new ResultSet();
+       resultSet =  getDBResultSet(keySpaceName,query);
+       return resultSet;
     }
 }
 /**
@@ -69,4 +75,6 @@ function Row() {
         }
         return result
     }
+
+
 }
