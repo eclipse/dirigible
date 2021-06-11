@@ -98,6 +98,10 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	public void registerModules() {
 		registerModulesV4();
 
+		if(Boolean.parseBoolean(Configuration.get(TestContainerConstants.CASSANDRA_POM_CONST,"false"))){
+			cassandraRegisterModule();
+		}
+
 		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.SPARK_POM_CONST, "false"))) {
 			sparkRegisterModule();
 		}

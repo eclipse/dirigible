@@ -16,13 +16,14 @@ exports.getSession = function (host,port) {
     session.native = native;
     return session;
 };
+
 exports.getDBResultSet = function (keyspaceName,query) {
     var resultSet = new ResultSet();
     var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(keyspaceName,query);
     resultSet.native = native;
     return resultSet;
 
-}
+};
 /**
  * Session object
  */

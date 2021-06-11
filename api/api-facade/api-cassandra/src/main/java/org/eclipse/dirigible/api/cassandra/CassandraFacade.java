@@ -31,7 +31,7 @@ public class CassandraFacade implements IScriptingFacade {
     private static int sessionPort;
 
 
-    public static Session connect(String node,Integer port ) {
+    public static Session connect(String node,Integer port) {
         Cluster cluster;
         Session session;
         sessionNode = node;
@@ -51,8 +51,7 @@ public class CassandraFacade implements IScriptingFacade {
         cluster = b.build();
         session = cluster.connect();
         session.execute("use "+keySpaceName+";");
-        ResultSet resultSet = session.execute(query);
-        return resultSet;
+        return session.execute(query);
     }
 
 
