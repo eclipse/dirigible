@@ -10,8 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.api.cassandra;
-
-
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
@@ -27,30 +25,14 @@ public class CassandraFacade implements IScriptingFacade {
 
     private static final String CLIENT_URI = "127.0.0.1:9042";
 
-    private static String sessionNode;
-    private static int sessionPort;
-
-
-    public static Session connect(String node,Integer port) {
-        Cluster cluster;
-        Session session;
-        sessionNode = node;
-        sessionPort = port;
-        Cluster.Builder b = Cluster.builder().addContactPoint(node);
-        b.withPort(port);
-        cluster = b.build();
-        session = cluster.connect();
-        return session;
+    public static Session connect(String node, Integer port) {
+        Cluster.Builder builder = Cluster.builder().addContactPoint(node).withPort(port);
+        Cluster cluster = builder.build();
+        return cluster.connect();
     }
 
-    public static ResultSet getResultSet(String keySpaceName,String query) {
-        Cluster cluster;
-        Session session;
-        Cluster.Builder b = Cluster.builder().addContactPoint(sessionNode);
-        b.withPort(sessionPort);
-        cluster = b.build();
-        session = cluster.connect();
-        session.execute("use "+keySpaceName+";");
+    public static ResultSet getResultSet(Session session, String keySpaceName, String query) {
+        session.execute("use " + keySpaceName + ";");
         return session.execute(query);
     }
 

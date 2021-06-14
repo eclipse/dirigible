@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
 import com.datastax.driver.core.*;
 import org.eclipse.dirigible.api.cassandra.CassandraFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -27,80 +28,79 @@ public class CassandraFacadeTest {
 
     @Rule
     public CassandraContainer cassandraContainer = new CassandraContainer("cassandra");
-    String host ;
-    Integer port ;
+    String host;
+    Integer port;
+    Session testSession;
+
 
     @Before
-    public void setUp(){
+    public void setUp() {
         cassandraContainer.start();
         host = cassandraContainer.getHost();
         port = cassandraContainer.getFirstMappedPort();
         Configuration.set("DIRIGIBLE_CASSANDRA_CLIENT_URI", host + ":" + port);
+        Cluster cluster = cassandraContainer.getCluster();
+        testSession = cluster.connect();
     }
 
-    // get Cassandra Test Container
-    @Test
-    public void testA() {
-        Cluster cluster = cassandraContainer.getCluster();
 
-        try (Session session = cluster.connect()) {
-            session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
+    @Test
+    public void checkKeyspaceName() {
+
+            testSession.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
 
-            List<KeyspaceMetadata> keyspaces = session.getCluster().getMetadata().getKeyspaces();
+            List<KeyspaceMetadata> keyspaces = testSession.getCluster().getMetadata().getKeyspaces();
             List<KeyspaceMetadata> filteredKeyspaces = keyspaces
                     .stream()
                     .filter(km -> km.getName().equals("test"))
                     .collect(Collectors.toList());
 
             assertEquals(1, filteredKeyspaces.size());
-        }
+
 
     }
 
-    //Create Cassandra keyspace and table
     @Test
-    public void testB() {
-        try (Session session = CassandraFacade.connect(host, port)) {
-
-            session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
+    public void getSession() {
+        try {
+            testSession.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
             Thread.sleep(1000);
-            session.execute("use test");
-            assertNotNull(session);
-            assertEquals("test", session.getLoggedKeyspace());
+            testSession.execute("use test");
+            assertNotNull(testSession);
+            assertEquals("test", testSession.getLoggedKeyspace());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testC() {
-        try (Session session = CassandraFacade.connect(host,port)) {
-
-            session.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
+    public void getResult() {
+        try{
+            testSession.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication = \n" +
                     "{'class':'SimpleStrategy','replication_factor':'1'};");
             Thread.sleep(1000);
-            session.execute("use test");
+            testSession.execute("use test");
             Thread.sleep(1000);
-            session.execute("CREATE table IF NOT EXISTS  test_table(id int primary key,name varchar,age int)");
+            testSession.execute("CREATE table IF NOT EXISTS  test_table(id int primary key,name varchar,age int)");
             Thread.sleep(1000);
-            session.execute("insert into test_table(id,name,age) values (1,'test_user',18)");
+            testSession.execute("insert into test_table(id,name,age) values (1,'test_user',18)");
             Thread.sleep(1000);
-            ResultSet resultSet = CassandraFacade.getResultSet("test", "select*from test_table");
+            ResultSet resultSet = CassandraFacade.getResultSet(testSession,"test", "select*from test_table");
             assertNotNull(resultSet);
-            int id=0;
-            String name="";
-            int age=0;
+            int id = 0;
+            String name = "";
+            int age = 0;
 
-            for(Row row:resultSet){
+            for (Row row : resultSet) {
                 id = row.getInt("id");
                 name = row.getString("name");
                 age = row.getInt("age");
             }
-            assertEquals(1,id);
-            assertEquals("test_user",name);
-            assertEquals(18,age);
+            assertEquals(1, id);
+            assertEquals("test_user", name);
+            assertEquals(18, age);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

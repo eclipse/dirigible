@@ -10,20 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 /** Client API for  Apache Cassandra */
-exports.getSession = function (host,port) {
+exports.getSession = function (host, port) {
     var session = new Session();
-    var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.connect(host,port)
+    var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.connect(host, port)
     session.native = native;
     return session;
 };
 
-exports.getDBResultSet = function (keyspaceName,query) {
-    var resultSet = new ResultSet();
-    var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(keyspaceName,query);
-    resultSet.native = native;
-    return resultSet;
 
-};
 /**
  * Session object
  */
@@ -39,14 +33,15 @@ function Session() {
     }
 
     this.closeSession = function () {
-        return  this.native.close();
+        return this.native.close();
     }
-    this.getDBResults = function (keySpaceName,query){
+    this.getDBResults = function (session,keySpaceName, query) {
         var resultSet = new ResultSet();
-       resultSet =  getDBResultSet(keySpaceName,query);
-       return resultSet;
+        resultSet = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(this,keyspaceName, query);
+        return resultSet;
     }
 }
+
 /**
  * ResultSet object
  */
@@ -62,11 +57,12 @@ function ResultSet() {
         return result;
     }
 }
+
 /**
  * Row object
  */
 function Row() {
-    this.asJson = function() {
+    this.asJson = function () {
         var result = ""
         if (this.native) {
             result = this.native.prettyJson()

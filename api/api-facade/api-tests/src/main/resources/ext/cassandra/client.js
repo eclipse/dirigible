@@ -11,7 +11,7 @@
  */
 var cassandra = require("cassandra/client");
 
-var cassandraSession = cassandra.getSession("127.0.0.1",9042);
+var cassandraSession = cassandra.getSession("127.0.0.1", 9042);
 
 cassandraSession.execute("CREATE KEYSPACE IF NOT EXISTS test WITH replication ={'class':'SimpleStrategy','replication_factor':'1'};");
 
@@ -22,7 +22,8 @@ cassandraSession.execute("create table if not exist test_table(id int primary ke
 java.lang.Thread.sleep(500);
 cassandraSession.execute("insert into test_table(id,name,age) values (1,'test_user',18)");
 java.lang.Thread.sleep(500);
-var resultSet = cassandraSession.getDBResults("test","select*from test_table");
+
+var resultSet = cassandraSession.getDBResults(cassandraSession,"test", "select*from test_table");
 var stringResult = resultSet.getRowAsString();
 
 stringResult !== null && stringResult !== undefined && stringResult === "[Row[1, test_user, 18]]";
