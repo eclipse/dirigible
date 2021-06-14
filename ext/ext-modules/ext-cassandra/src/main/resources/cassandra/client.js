@@ -16,6 +16,12 @@ exports.getSession = function (host, port) {
     session.native = native;
     return session;
 };
+exports.getDBResults = function ( keySpaceName, query) {
+    var resultSet = new ResultSet();
+    var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(keySpaceName,query);
+    resultSet.native = native;
+    return resultSet;
+}
 
 
 /**
@@ -35,11 +41,12 @@ function Session() {
     this.closeSession = function () {
         return this.native.close();
     }
-    this.getDBResults = function (session,keySpaceName, query) {
+    this.getDBResult = function (keySpaceName, query) {
         var resultSet = new ResultSet();
-        resultSet = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(this,keyspaceName, query);
+        var native = org.eclipse.dirigible.api.cassandra.CassandraFacade.getResultSet(keySpaceName,query);
+        resultSet.native = native;
         return resultSet;
-    }
+    };
 }
 
 /**
@@ -47,8 +54,8 @@ function Session() {
  */
 function ResultSet() {
     this.getRowAsString = function () {
-        var result = ""
-        if (this.native) {
+        var result = "";
+        if (this) {
             result = this.native.all().toString();
         } else {
             result = "Result Set is empty"

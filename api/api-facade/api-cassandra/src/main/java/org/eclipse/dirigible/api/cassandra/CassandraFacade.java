@@ -24,14 +24,16 @@ public class CassandraFacade implements IScriptingFacade {
     private static final String DIRIGIBLE_CASSANDRA_CLIENT_URI = "DIRIGIBLE_CASSANDRA_CLIENT_URI";
 
     private static final String CLIENT_URI = "127.0.0.1:9042";
+    static Session session;
 
     public static Session connect(String node, Integer port) {
         Cluster.Builder builder = Cluster.builder().addContactPoint(node).withPort(port);
         Cluster cluster = builder.build();
-        return cluster.connect();
+       session =  cluster.connect();
+       return session;
     }
 
-    public static ResultSet getResultSet(Session session, String keySpaceName, String query) {
+    public static ResultSet getResultSet(String keySpaceName, String query) {
         session.execute("use " + keySpaceName + ";");
         return session.execute(query);
     }

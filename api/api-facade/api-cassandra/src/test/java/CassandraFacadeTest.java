@@ -87,7 +87,7 @@ public class CassandraFacadeTest {
             Thread.sleep(1000);
             testSession.execute("insert into test_table(id,name,age) values (1,'test_user',18)");
             Thread.sleep(1000);
-            ResultSet resultSet = CassandraFacade.getResultSet(testSession,"test", "select*from test_table");
+            ResultSet resultSet = CassandraFacade.getResultSet("test", "select*from test_table");
             assertNotNull(resultSet);
             int id = 0;
             String name = "";
