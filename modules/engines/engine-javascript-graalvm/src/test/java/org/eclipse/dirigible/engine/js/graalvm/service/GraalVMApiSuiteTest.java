@@ -25,6 +25,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.containers.CassandraContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.containers.GenericContainer;
@@ -55,6 +56,13 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 		super.setUp();
 		this.repository = getInjector().getInstance(IRepository.class);
 		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
+
+		if(Boolean.parseBoolean(Configuration.get(TestContainerConstants.CASSANDRA_POM_CONST,"false"))){
+			CassandraContainer cassandra = new CassandraContainer(TestContainerConstants.CASSANDRA_DOCKER_IMEGE);
+			cassandra.start();
+
+			Configuration.set(TestContainerConstants.DIRIGIBLE_CASSANDRA_CLIENT_URI_CONST,cassandra.getHost()+":"+ cassandra.getFirstMappedPort());
+		}
 
 		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.RABBITMQ_POM_CONST, "false"))) {
 			RabbitMQContainer rabbit = new RabbitMQContainer(TestContainerConstants.RABBITMQ_DOCKER_IMAGE);
@@ -89,6 +97,10 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	@Override
 	public void registerModules() {
 		registerModulesV4();
+
+		if(Boolean.parseBoolean(Configuration.get(TestContainerConstants.CASSANDRA_POM_CONST,"false"))){
+			cassandraRegisterModule();
+		}
 
 		if (Boolean.parseBoolean(Configuration.get(TestContainerConstants.SPARK_POM_CONST, "false"))) {
 			sparkRegisterModule();
