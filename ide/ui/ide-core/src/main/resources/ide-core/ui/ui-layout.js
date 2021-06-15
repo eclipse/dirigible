@@ -169,7 +169,7 @@ function LayoutController(viewRegistry, messageHub) {
 	var addView = function (views, view, grid) {
 		var node;
 		var path = [view.id].concat(parentIds.call(this, view));
-		//build branches top-bottom				
+		//build branches top-bottom
 		path.reverse().forEach(function (compId, idx, arr) {
 			var _gridNode = gridItem(grid, compId);
 			if (_gridNode) {
@@ -236,10 +236,11 @@ function LayoutController(viewRegistry, messageHub) {
 	 * Providing an id and the reconstruct flag set to true will not retrive from local storage last state, but will subscribe and save the reconstructed instance future changes.
 	 * The layout will be always reconstructed on first init regardless of the reconstruct flag.
 	 */
-	this.init = function (containerEl, viewNames, id, reconstruct) {
-
+	this.init = function (containerEl, viewNames, id, reconstruct, viewSettings, layoutSettings) {
 		this.containerEl = containerEl;
 		this.viewNames = viewNames;
+		this.viewSettings = viewSettings;
+		this.layoutSettings = layoutSettings;
 		id = id || $(containerEl).attr("id");
 
 		if (id) {
@@ -255,8 +256,11 @@ function LayoutController(viewRegistry, messageHub) {
 			//reconstruct (ignore previously saved state)
 			var views = {};
 			this.viewNames.forEach(function (viewName) {
-				views[viewName] = this.viewRegistry.view(viewName);
+				if (this.layoutSettings)
+					views[viewName] = Object.assign(this.viewRegistry.view(viewName), this.viewSettings[viewName]);
+				else views[viewName] = this.viewRegistry.view(viewName)
 			}.bind(this));
+			// Default settings
 			this.config = {
 				settings: {
 					showPopoutIcon: false
@@ -267,6 +271,10 @@ function LayoutController(viewRegistry, messageHub) {
 				},
 				content: [this.layoutViews.call(this, views)]
 			};
+			// Per layout settings
+			if (this.layoutSettings) {
+				this.config.settings = Object.assign(this.config.settings, this.layoutSettings);
+			}
 		}
 
 		this.layout = new GoldenLayout(this.config, containerEl);
