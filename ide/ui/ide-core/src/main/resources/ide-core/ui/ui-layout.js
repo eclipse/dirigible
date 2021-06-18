@@ -256,14 +256,15 @@ function LayoutController(viewRegistry, messageHub) {
 			//reconstruct (ignore previously saved state)
 			var views = {};
 			this.viewNames.forEach(function (viewName) {
-				if (this.layoutSettings)
+				if (this.viewSettings)
 					views[viewName] = Object.assign(this.viewRegistry.view(viewName), this.viewSettings[viewName]);
 				else views[viewName] = this.viewRegistry.view(viewName)
 			}.bind(this));
 			// Default settings
 			this.config = {
 				settings: {
-					showPopoutIcon: false
+					showPopoutIcon: false,
+					showCloseIcon: false
 				},
 				dimensions: {
 					headerHeight: 26,
