@@ -263,7 +263,8 @@ function LayoutController(viewRegistry, messageHub) {
 			// Default settings
 			this.config = {
 				settings: {
-					showPopoutIcon: false
+					showPopoutIcon: false,
+					showCloseIcon: false
 				},
 				dimensions: {
 					headerHeight: 26,
