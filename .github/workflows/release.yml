@@ -260,12 +260,12 @@ jobs:
           > _**Note:** All Docker images are availalbe [here](https://hub.docker.com/u/dirigiblelabs)_
 
           #### Available for download `*.war` packages:
+            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
             - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-all.zip) - Anonymous access.
             - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
             - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
             - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
             - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
-            - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
             - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
             - [server-cms](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-cms.zip) - CMS package.
             - [server-database](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-database.zip) - Database package.
