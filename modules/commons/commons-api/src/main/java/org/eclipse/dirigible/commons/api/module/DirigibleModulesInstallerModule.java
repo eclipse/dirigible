@@ -13,7 +13,11 @@ package org.eclipse.dirigible.commons.api.module;
 
 import static java.text.MessageFormat.format;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
@@ -54,18 +58,24 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 
 		ServiceLoader<AbstractDirigibleModule> dirigibleModules = ServiceLoader.load(AbstractDirigibleModule.class);
 
-		List<Provider<AbstractDirigibleModule>> sortedDirigibleModules = dirigibleModules.stream().sorted((provider1, provider2) -> {
-			AbstractDirigibleModule module1 = provider1.get();
-			AbstractDirigibleModule module2 = provider2.get();
-			int priorityDiff = module1.getPriority() - module2.getPriority();
-			if (priorityDiff == 0) {
-				priorityDiff = module1.getName().compareTo(module2.getName());
-			}
-			return priorityDiff;
-		}).collect(Collectors.toList());
+		List<AbstractDirigibleModule> sortedDirigibleModules = new ArrayList<AbstractDirigibleModule>();
+		Iterator<AbstractDirigibleModule> iterator = dirigibleModules.iterator();
+		while(iterator.hasNext()) {
+			sortedDirigibleModules.add(iterator.next());
+		}
+		Collections.sort(sortedDirigibleModules, new Comparator<AbstractDirigibleModule>() {
 
-		for (Provider<AbstractDirigibleModule> nextProvider : sortedDirigibleModules) {
-			AbstractDirigibleModule next = nextProvider.get();
+			@Override
+			public int compare(AbstractDirigibleModule module1, AbstractDirigibleModule module2) {
+				int priorityDiff = module1.getPriority() - module2.getPriority();
+				if (priorityDiff == 0) {
+					priorityDiff = module1.getName().compareTo(module2.getName());
+				}
+				return priorityDiff;
+			}
+		});
+
+		for (AbstractDirigibleModule next: sortedDirigibleModules) {
 			logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));
 			try {
 				install(next);

@@ -139,6 +139,12 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine</artifactId>
 		 	<version>5.12.0-SNAPSHOT</version>
+		 	<exclusions>
+		 		<exclusion>
+		 			<groupId>org.eclipse.dirigible</groupId>
+		 			<artifactId>dirigible-engine-odata</artifactId>
+		 		</exclusion>
+		 	</exclusions>
 		</dependency>
 
 		<!-- CMS -->
