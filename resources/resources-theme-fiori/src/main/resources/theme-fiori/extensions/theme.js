@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTheme = function() {
+exports.getTheme = function () {
 	return {
 		'id': 'fiori',
 		'module': 'theme-fiori',
