@@ -266,6 +266,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
   flex-wrap: wrap;
   width: 100%;
   margin: auto;
+  align-items: center;
 }
 .key {
   flex: 1 1 auto;
