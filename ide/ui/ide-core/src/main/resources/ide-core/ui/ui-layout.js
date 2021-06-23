@@ -293,6 +293,9 @@ function LayoutController(viewRegistry, messageHub) {
 		}
 
 		this.layout.on('tabCreated', function (tab) {
+			if (tab.contentItem.config.title === "Welcome" && tab.contentItem.config.componentState.path === undefined) {
+				tab.closeElement[0].style.display = "none";
+			}
 			tab.closeElement.off('click').click(function () {
 				if (tab.contentItem.config.componentName && tab.contentItem.config.componentName === 'editor') {
 					if (tab.contentItem.config.title && tab.contentItem.config.title.startsWith('*')) {
