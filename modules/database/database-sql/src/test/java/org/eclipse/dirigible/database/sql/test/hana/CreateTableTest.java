@@ -76,7 +76,7 @@ public class CreateTableTest {
 	}
 
 	@Test
-	public void createTableWithCompositeKey() {
+	public void createTableWithCompositeKeyWithSetPKOnColumnLevel() {
 		String sql = SqlFactory.getNative(new HanaSqlDialect())
 				.create()
 				.columnTable("CUSTOMERS")
@@ -87,7 +87,39 @@ public class CreateTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID,ID2) )", sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )", sql);
+	}
+
+	@Test
+	public void createTableWithCompositeKeyWithSetPKOnConstraintLevel() {
+		String sql = SqlFactory.getNative(new HanaSqlDialect())
+				.create()
+				.columnTable("CUSTOMERS")
+				.columnInteger("ID", false, false, false)
+				.columnInteger("ID2", false, false, false)
+				.columnVarchar("FIRST_NAME", 20, false, true, true)
+				.columnVarchar("LAST_NAME", 30, false, true, false)
+				.primaryKey(new String[]{"ID", "ID2"})
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY ( ID , ID2 ))", sql);
+	}
+
+	@Test
+	public void createTableWithCompositeKeyWithSetPKOnConstraintAndColumnLevel() {
+		String sql = SqlFactory.getNative(new HanaSqlDialect())
+				.create()
+				.columnTable("CUSTOMERS")
+				.columnInteger("ID", true, false, false)
+				.columnInteger("ID2", true, false, false)
+				.columnVarchar("FIRST_NAME", 20, false, true, true)
+				.columnVarchar("LAST_NAME", 30, false, true, false)
+				.primaryKey(new String[]{"ID", "ID2"})
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY ( ID , ID2 ))", sql);
 	}
 
 }
