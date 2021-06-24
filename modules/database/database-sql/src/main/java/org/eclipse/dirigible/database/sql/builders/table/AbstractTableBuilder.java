@@ -31,9 +31,9 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractTableBuilder.class);
 
-	private String table = null;
+	private String table;
 
-	private List<String[]> columns = new ArrayList<String[]>();
+	private List<String[]> columns = new ArrayList<>();
 
 	/**
 	 * Instantiates a new creates the table builder.
@@ -90,7 +90,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 		logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
 				+ isNullable + ", isUnique: " + isUnique + ", isIdentity: " + isIdentity + ", args: " + Arrays.toString(args));
 		String[] definition = new String[] { name, getDialect().getDataTypeName(type) };
-		String[] column = null;
+		String[] column;
 		if (isIdentity) {
 			column = Stream.of(definition, args, new String[] { getDialect().getIdentityArgument() }).flatMap(Stream::of).toArray(String[]::new);
 		} else {
@@ -2217,7 +2217,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 	protected String traverseColumns() {
 		StringBuilder snippet = new StringBuilder();
 		snippet.append(SPACE);
-		List<String[]> allPrimaryKeys = this.columns.stream().filter(el -> Arrays.stream(el).filter(x -> x.equals(getDialect().getPrimaryKeyArgument())).count() > 0).collect(Collectors.toList());
+		List<String[]> allPrimaryKeys = this.columns.stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
 		boolean isCompositeKey = allPrimaryKeys.size() > 1;
 
 		for (String[] column : this.columns) {
@@ -2236,16 +2236,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 			}
 			snippet.append(COMMA).append(SPACE);
 		}
-
-		if (isCompositeKey) {
-			ArrayList<String> keys = new ArrayList<>();
-			allPrimaryKeys.forEach(el -> {
-				keys.add(el[0]);
-			});
-			snippet.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(OPEN).append(String.join(",", keys)).append(CLOSE).append(SPACE);
-			return snippet.toString();
-		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet.substring(0, snippet.length() - 2);
 	}
 	
 	/**
@@ -2261,7 +2252,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 			snippet.append(columnName).append(SPACE);
 			snippet.append(COMMA).append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet.substring(0, snippet.length() - 2);
 	}
 
 	/**
@@ -2278,7 +2269,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
 			String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
 			snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
 		}
-		return snippet.toString().substring(0, snippet.length() - 2);
+		return snippet.substring(0, snippet.length() - 2);
 	}
 
 	/**
