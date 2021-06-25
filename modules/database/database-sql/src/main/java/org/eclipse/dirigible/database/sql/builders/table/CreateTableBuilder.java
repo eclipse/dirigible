@@ -230,7 +230,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param sql the sql
      */
     protected void generatePrimaryKey(StringBuilder sql) {
-        if (this.primaryKey != null) {
+        List<String[]> allPrimaryKeys = this.getColumns().stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
+        boolean isCompositeKey = allPrimaryKeys.size() > 1;
+
+        if ((this.primaryKey != null) && allPrimaryKeys.size()==0){
             sql.append(COMMA).append(SPACE);
             if (this.primaryKey.getName() != null) {
                 String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
@@ -239,8 +242,6 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
             sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
                     .append(traverseNames(this.primaryKey.getColumns())).append(CLOSE);
         } else {
-            List<String[]> allPrimaryKeys = this.getColumns().stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
-            boolean isCompositeKey = allPrimaryKeys.size() > 1;
             if (isCompositeKey) {
                 sql.append(COMMA).append(SPACE);
                 ArrayList<String> keys = new ArrayList<>();
