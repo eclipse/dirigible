@@ -119,7 +119,21 @@ public class CreateTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY ( ID , ID2 ))", sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , ID2 INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) , PRIMARY KEY(ID , ID2) )", sql);
+	}
+
+	@Test
+	public void createTableWithSetPKOnConstraintAndColumnLevel() {
+		String sql = SqlFactory.getNative(new HanaSqlDialect())
+				.create()
+				.columnTable("CUSTOMERS")
+				.columnInteger("ID", true, false, false)
+				.columnVarchar("FIRST_NAME", 20, false, true, true)
+				.primaryKey(new String[]{"ID"})
+				.build();
+
+		assertNotNull(sql);
+		assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE )", sql);
 	}
 
 }
