@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactoryTest;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
@@ -52,12 +53,14 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("Id", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("Customer", "Edm.String", false);
         PersistenceTableModel model = new PersistenceTableModel("ORDERS", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ORDERS")).thenReturn(model);
 
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("Id", "Edm.Int32", true);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("OrderId", "Edm.Int32", false);
         PersistenceTableRelationModel rel = new PersistenceTableRelationModel("ITEMS", "ORDERS", "OrderId", "Id", "fkName", "PRIMARY_KEY_8B");
         model = new PersistenceTableModel("ITEMS", Arrays.asList(column3, column4), Collections.singletonList(rel));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ITEMS")).thenReturn(model);
 
         String entityOrder = "{\n" +
@@ -97,12 +100,14 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("ID", "Edm.Int32", true);
         PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("FK_PHONE", "Edm.Int32", false);
         PersistenceTableRelationModel relPhone = new PersistenceTableRelationModel("ADDRESS", "PHONES", "FK_PHONE", "ID", "CONSTRAINT_8C9F7", "CONSTRAINT_INDEX_E67");
         model = new PersistenceTableModel("ADDRESS", Arrays.asList(column7, column8), Collections.singletonList(relPhone));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ADDRESS")).thenReturn(model);
 
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
@@ -111,6 +116,7 @@ public class OData2ODataMTransformerTest {
         PersistenceTableRelationModel rel = new PersistenceTableRelationModel("PHONES", "EMPLOYEES", "FK_COMPANY_ID", "COMPANY_ID", "CONSTRAINT_8C", "CONSTRAINT_INDEX_4");
         PersistenceTableRelationModel rel2 = new PersistenceTableRelationModel("PHONES", "EMPLOYEES", "FK_EMPLOYEE_NUMBER", "EMPLOYEE_NUMBER", "CONSTRAINT_8C9", "CONSTRAINT_INDEX_43");
         model = new PersistenceTableModel("PHONES", Arrays.asList(column3, column4, column5), Arrays.asList(rel, rel2));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -171,17 +177,20 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("ID", "Edm.Int32", true);
         PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("FK_PHONE", "Edm.Int32", false);
         model = new PersistenceTableModel("ADDRESS", Arrays.asList(column7, column8), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ADDRESS")).thenReturn(model);
 
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column3, column4, column5), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -242,12 +251,14 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("ID", "Edm.Int32", true);
         PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("FK_PHONE", "Edm.Int32", false);
         PersistenceTableRelationModel relPhone = new PersistenceTableRelationModel("ADDRESS", "PHONES", "FK_PHONE", "ID", "CONSTRAINT_8C9F7", "CONSTRAINT_INDEX_E67");
         model = new PersistenceTableModel("ADDRESS", Arrays.asList(column7, column8), Collections.singletonList(relPhone));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ADDRESS")).thenReturn(model);
 
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
@@ -256,6 +267,7 @@ public class OData2ODataMTransformerTest {
         PersistenceTableRelationModel rel = new PersistenceTableRelationModel("PHONES", "EMPLOYEES", "FK_COMPANY_ID", "COMPANY_ID", "CONSTRAINT_8C", "CONSTRAINT_INDEX_4");
         PersistenceTableRelationModel rel2 = new PersistenceTableRelationModel("PHONES", "EMPLOYEES", "FK_EMPLOYEE_NUMBER", "EMPLOYEE_NUMBER", "CONSTRAINT_8C9", "CONSTRAINT_INDEX_43");
         model = new PersistenceTableModel("PHONES", Arrays.asList(column3, column4, column5), Arrays.asList(rel, rel2));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -301,6 +313,7 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("FK_PHONE", "Edm.Int32", false);
         PersistenceTableRelationModel relPhone = new PersistenceTableRelationModel("ADDRESS", "PHONES", "FK_PHONE_WRONG", "ID", "CONSTRAINT_8C9F7", "CONSTRAINT_INDEX_E67");
         PersistenceTableModel model = new PersistenceTableModel("ADDRESS", Arrays.asList(column7, column8), Collections.singletonList(relPhone));
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("ADDRESS")).thenReturn(model);
 
         odata2ODataMTransformer.transform(definition);
@@ -315,12 +328,14 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -355,12 +370,14 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
 
         String entityEmployee = "{\n" +
@@ -394,6 +411,7 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         odata2ODataMTransformer.transform(definition);
@@ -407,6 +425,7 @@ public class OData2ODataMTransformerTest {
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
 
         odata2ODataMTransformer.transform(definition);

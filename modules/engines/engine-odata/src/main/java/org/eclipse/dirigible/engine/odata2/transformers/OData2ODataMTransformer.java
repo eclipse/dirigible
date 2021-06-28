@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class OData2ODataMTransformer {
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
-            if (idColumns.isEmpty()) {
+            if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
                 logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
                 continue;
             }

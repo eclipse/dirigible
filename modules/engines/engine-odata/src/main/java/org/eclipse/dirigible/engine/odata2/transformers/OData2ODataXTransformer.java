@@ -36,7 +36,7 @@ public class OData2ODataXTransformer {
     @Inject
     private DBMetadataUtil dbMetadataUtil;
 
-    public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, "CALC VIEW");
+    public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
     public String[] transform(ODataDefinition model) throws SQLException {
         String[] result = new String[2];

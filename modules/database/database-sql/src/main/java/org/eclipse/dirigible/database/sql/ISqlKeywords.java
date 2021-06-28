@@ -462,6 +462,11 @@ public interface ISqlKeywords {
     public static final String METADATA_VIEW = "VIEW"; //$NON-NLS-1$
 
     /**
+     * The Constant METADATA_VIEW.
+     */
+    public static final String METADATA_CALC_VIEW = "CALC VIEW"; //$NON-NLS-1$
+
+    /**
      * The Constant METADATA_TABLE.
      */
     public static final String METADATA_TABLE = "TABLE"; //$NON-NLS-1$
