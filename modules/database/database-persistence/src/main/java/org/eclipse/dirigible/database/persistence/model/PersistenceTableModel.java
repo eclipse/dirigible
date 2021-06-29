@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.database.persistence.model;
 
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +28,7 @@ public class PersistenceTableModel {
 
     private String schemaName;
 
-    private String tableType;
+    private String tableType = ISqlKeywords.METADATA_TABLE;
 
     private List<PersistenceTableColumnModel> columns = new ArrayList<>();
 

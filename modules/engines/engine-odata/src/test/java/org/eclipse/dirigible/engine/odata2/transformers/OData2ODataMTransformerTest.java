@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactoryTest;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
