@@ -11,24 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
-import static java.text.MessageFormat.format;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
@@ -50,6 +32,18 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.*;
+
+import static java.text.MessageFormat.format;
+
 /**
  * The OData Synchronizer.
  */
@@ -59,21 +53,21 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(ODataSynchronizer.class);
 
 	private static final Map<String, ODataSchemaDefinition> SCHEMAS_PREDELIVERED = Collections
-			.synchronizedMap(new HashMap<String, ODataSchemaDefinition>());
+			.synchronizedMap(new HashMap<>());
 
 	private static final Map<String, ODataMappingDefinition> MAPPINGS_PREDELIVERED = Collections
-			.synchronizedMap(new HashMap<String, ODataMappingDefinition>());
+			.synchronizedMap(new HashMap<>());
 	
 	private static final Map<String, ODataDefinition> ODATA_PREDELIVERED = Collections
-			.synchronizedMap(new HashMap<String, ODataDefinition>());
+			.synchronizedMap(new HashMap<>());
 
-	private static final List<String> SCHEMAS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> SCHEMAS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 
-	private static final List<String> MAPPINGS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> MAPPINGS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 	
-	private static final List<String> ODATA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
+	private static final List<String> ODATA_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<>());
 	
-	private static final Map<String, ODataDefinition> ODATA_MODELS = new LinkedHashMap<String, ODataDefinition>();
+	private static final Map<String, ODataDefinition> ODATA_MODELS = new LinkedHashMap<>();
 
 	@Inject
 	private ODataCoreService odataCoreService;
@@ -135,7 +129,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Force synchronization.
 	 */
-	public static final void forceSynchronization() {
+	public static void forceSynchronization() {
 		ODataSynchronizer synchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
 		synchronizer.setForcedSynchronization(true);
 		try {
@@ -154,17 +148,12 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredSchema(String schemaPath) throws IOException {
-		InputStream in = ODataSynchronizer.class.getResourceAsStream(schemaPath);
-		try {
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(schemaPath)) {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataSchemaDefinition schemaDefinition = new ODataSchemaDefinition();
 			schemaDefinition.setLocation(schemaPath);
 			schemaDefinition.setContent(content.getBytes());
 			SCHEMAS_PREDELIVERED.put(schemaPath, schemaDefinition);
-		} finally {
-			if (in != null) {
-				in.close();
-			}
 		}
 	}
 
@@ -177,17 +166,12 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredMapping(String mappingPath) throws IOException {
-		InputStream in = ODataSynchronizer.class.getResourceAsStream(mappingPath);
-		try {
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(mappingPath)) {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataMappingDefinition mappingDefinition = new ODataMappingDefinition();
 			mappingDefinition.setLocation(mappingPath);
 			mappingDefinition.setContent(content.getBytes());
 			MAPPINGS_PREDELIVERED.put(mappingPath, mappingDefinition);
-		} finally {
-			if (in != null) {
-				in.close();
-			}
 		}
 	}
 	
@@ -205,14 +189,8 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
-		InputStream in = ODataSynchronizer.class.getResourceAsStream(modelPath);
-		try {
-			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
-			return content;
-		} finally {
-			if (in != null) {
-				in.close();
-			}
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(modelPath)) {
+			return IOUtils.toString(in, StandardCharsets.UTF_8);
 		}
 	}
 
@@ -397,8 +375,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 					}
 				}
 			}
-			
-				
+
 			List<ODataDefinition> odataModels = odataCoreService.getODatas();
 			for (ODataDefinition odataModel : odataModels) {
 				if (!ODATA_SYNCHRONIZED.contains(odataModel.getLocation())) {
@@ -414,7 +391,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	}
 	
 	
-	private void updateOData() {
+	private void updateOData() throws ODataException {
 		// Update OData
 		
 		if (ODATA_MODELS.isEmpty()) {
@@ -422,15 +399,11 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			return;
 		}
 
-		List<String> errors = new ArrayList<String>();
+		odataCoreService.handlerDefinitionTableCheck();
+		List<String> errors = new ArrayList<>();
 		try {
-			
-			List<String> sorted = new ArrayList<String>();
-			
-			if (sorted.isEmpty()) {
-				sorted.addAll(ODATA_MODELS.keySet());
-			}
-			
+			List<String> sorted = new ArrayList<>(ODATA_MODELS.keySet());
+
 			for (int i = sorted.size() - 1; i >= 0; i--) {
 				String dsName = sorted.get(i);
 				ODataDefinition model = ODATA_MODELS.get(dsName);
@@ -478,8 +451,6 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 		}
 		
 	}
-	
-	
 
 	private String[] generateODataX(ODataDefinition model) throws SQLException {
 		return odata2ODataXTransformer.transform(model);
@@ -503,7 +474,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 * @return the string
 	 */
 	private static String concatenateListOfStrings(List<String> list, String separator) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		for (String s : list) {
 			buff.append(s).append(separator);
 		}
