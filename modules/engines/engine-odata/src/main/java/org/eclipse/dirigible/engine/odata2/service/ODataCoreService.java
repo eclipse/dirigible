@@ -58,15 +58,9 @@ public class ODataCoreService implements IODataCoreService {
         odataSchemaDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataSchemaPersistenceManager.insert(connection, odataSchemaDefinition);
                 return odataSchemaDefinition;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -76,14 +70,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public ODataSchemaDefinition getSchema(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataSchemaPersistenceManager.find(connection, ODataSchemaDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -98,14 +86,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void removeSchema(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataSchemaPersistenceManager.delete(connection, ODataSchemaDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -115,16 +97,10 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void updateSchema(String location, byte[] content) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 ODataSchemaDefinition odataSchemaDefinition = getSchema(location);
                 odataSchemaDefinition.setContent(content);
                 odataSchemaPersistenceManager.update(connection, odataSchemaDefinition);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -134,14 +110,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public List<ODataSchemaDefinition> getSchemas() throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataSchemaPersistenceManager.findAll(connection, ODataSchemaDefinition.class);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -157,15 +127,9 @@ public class ODataCoreService implements IODataCoreService {
         odataMappingDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataMappingPersistenceManager.insert(connection, odataMappingDefinition);
                 return odataMappingDefinition;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -175,14 +139,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public ODataMappingDefinition getMapping(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataMappingPersistenceManager.find(connection, ODataMappingDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -197,14 +155,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void removeMapping(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataMappingPersistenceManager.delete(connection, ODataMappingDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -214,15 +166,9 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void removeMappings(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_MAPPING").where("ODATAM_LOCATION LIKE ?").toString();
                 odataMappingPersistenceManager.execute(connection, sql, location + "#%");
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -232,16 +178,10 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void updateMapping(String location, byte[] content) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 ODataMappingDefinition odataMappingDefinition = getMapping(location);
                 odataMappingDefinition.setContent(content);
                 odataMappingPersistenceManager.update(connection, odataMappingDefinition);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -251,14 +191,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public List<ODataMappingDefinition> getMappings() throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataMappingPersistenceManager.findAll(connection, ODataMappingDefinition.class);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -275,15 +209,9 @@ public class ODataCoreService implements IODataCoreService {
         odataContainerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataContainerPersistenceManager.insert(connection, odataContainerDefinition);
                 return odataContainerDefinition;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -293,14 +221,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public ODataContainerDefinition getContainer(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataContainerPersistenceManager.find(connection, ODataContainerDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -315,14 +237,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void removeContainer(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataContainerPersistenceManager.delete(connection, ODataContainerDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -332,16 +248,10 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void updateContainer(String location, byte[] content) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 ODataContainerDefinition odataContainerDefinition = getContainer(location);
                 odataContainerDefinition.setContent(content);
                 odataContainerPersistenceManager.update(connection, odataContainerDefinition);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -351,14 +261,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public List<ODataContainerDefinition> getContainers() throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataContainerPersistenceManager.findAll(connection, ODataContainerDefinition.class);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -416,15 +320,9 @@ public class ODataCoreService implements IODataCoreService {
         odataModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataPersistenceManager.insert(connection, odataModel);
                 return odataModel;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -435,14 +333,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public ODataDefinition getOData(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataPersistenceManager.find(connection, ODataDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -452,17 +344,11 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void updateOData(String location, String namespace, String hash) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 ODataDefinition odataModel = getOData(location);
                 odataModel.setNamespace(namespace);
                 odataModel.setHash(hash);
                 odataPersistenceManager.update(connection, odataModel);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -472,14 +358,8 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public List<ODataDefinition> getODatas() throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataPersistenceManager.findAll(connection, ODataDefinition.class);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -488,14 +368,8 @@ public class ODataCoreService implements IODataCoreService {
 
     public void removeOData(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataPersistenceManager.delete(connection, ODataDefinition.class, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -517,15 +391,9 @@ public class ODataCoreService implements IODataCoreService {
         odataHandlerDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 odataHandlerPersistenceManager.insert(connection, odataHandlerDefinition);
                 return odataHandlerDefinition;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -536,9 +404,7 @@ public class ODataCoreService implements IODataCoreService {
     public ODataHandlerDefinition getHandler(String location, String namespace, String name, String method, String type)
             throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA_HANDLER")
                         .where("ODATAH_LOCATION = ?")
                         .where("ODATAH_NAMESPACE = ?")
@@ -549,10 +415,6 @@ public class ODataCoreService implements IODataCoreService {
                 List<ODataHandlerDefinition> handlerModels = odataHandlerPersistenceManager.query(connection, ODataHandlerDefinition.class, sql,
                         location, namespace, name, method, type);
                 return handlerModels.size() > 0 ? handlerModels.get(0) : null;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -563,22 +425,15 @@ public class ODataCoreService implements IODataCoreService {
     public List<ODataHandlerDefinition> getHandlers(String namespace, String name, String method, String type)
             throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_ODATA_HANDLER")
                         .where("ODATAH_NAMESPACE = ?")
                         .where("ODATAH_NAME = ?")
                         .where("ODATAH_METHOD = ?")
                         .where("ODATAH_TYPE = ?")
                         .build();
-                List<ODataHandlerDefinition> handlerModels = odataHandlerPersistenceManager.query(connection, ODataHandlerDefinition.class, sql,
+                return odataHandlerPersistenceManager.query(connection, ODataHandlerDefinition.class, sql,
                         namespace, name, method, type);
-                return handlerModels;
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -594,9 +449,7 @@ public class ODataCoreService implements IODataCoreService {
     public void removeHandler(String location, String namespace, String name, String method, String type)
             throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_HANDLER")
                         .where("ODATAH_LOCATION = ?")
                         .where("ODATAH_NAMESPACE = ?")
@@ -605,10 +458,6 @@ public class ODataCoreService implements IODataCoreService {
                         .where("ODATAH_TYPE = ?")
                         .build();
                 odataHandlerPersistenceManager.execute(connection, sql, location, namespace, name, method, type);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -618,17 +467,11 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public void removeHandlers(String location) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_HANDLER")
                         .where("ODATAH_LOCATION = ?")
                         .build();
                 odataHandlerPersistenceManager.execute(connection, sql, location);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -639,9 +482,7 @@ public class ODataCoreService implements IODataCoreService {
     public void updateHandler(String location, String namespace, String name, String method, String type,
                               String handler) throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 ODataHandlerDefinition odataHandlerDefinition = getHandler(location, namespace, name, method, type);
                 odataHandlerDefinition.setLocation(location);
                 odataHandlerDefinition.setNamespace(namespace);
@@ -650,10 +491,6 @@ public class ODataCoreService implements IODataCoreService {
                 odataHandlerDefinition.setType(type);
                 odataHandlerDefinition.setHandler(handler);
                 odataHandlerPersistenceManager.update(connection, odataHandlerDefinition);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
             }
         } catch (SQLException e) {
             throw new ODataException(e);
@@ -664,14 +501,19 @@ public class ODataCoreService implements IODataCoreService {
     @Override
     public List<ODataHandlerDefinition> getAllHandlers() throws ODataException {
         try {
-            Connection connection = null;
-            try {
-                connection = dataSource.getConnection();
+            try (Connection connection = dataSource.getConnection()) {
                 return odataHandlerPersistenceManager.findAll(connection, ODataHandlerDefinition.class);
-            } finally {
-                if (connection != null) {
-                    connection.close();
-                }
+            }
+        } catch (SQLException e) {
+            throw new ODataException(e);
+        }
+    }
+
+
+    public void handlerDefinitionTableCheck() throws ODataException {
+        try {
+            try (Connection connection = dataSource.getConnection()) {
+                odataHandlerPersistenceManager.tableCheck(connection, ODataHandlerDefinition.class);
             }
         } catch (SQLException e) {
             throw new ODataException(e);
