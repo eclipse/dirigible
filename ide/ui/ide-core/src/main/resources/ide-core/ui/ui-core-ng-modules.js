@@ -274,6 +274,22 @@ angular.module('ideUiCore', ['ngResource'])
 					Layouts.manager.openView(msg.viewId);
 				});
 
+				messageHub.on('ide-core.openPerspective', function (msg) {
+					let url = msg.data.link;
+					if ('parameters' in msg.data) {
+						let urlParams = '';
+						for (const property in msg.data.parameters) {
+							urlParams += `${property}=${encodeURIComponent(msg.data.parameters[property])}&`
+						}
+						url += `?${urlParams.slice(0, -1)}`;
+					}
+					window.location.href = url;
+				});
+
+				messageHub.on('workspace.set', function (msg) {
+					localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": msg.data.workspace }));
+				});
+
 				messageHub.on('workspace.file.deleted', function (msg) {
 					Layouts.manager.closeEditor(msg.data.path);
 				});
