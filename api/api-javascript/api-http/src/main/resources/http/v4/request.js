@@ -11,6 +11,8 @@
  */
 var streams = require("io/v4/streams");
 
+let textData = null;
+
 exports.isValid = function() {
 	return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.isValid();
 };
@@ -88,15 +90,16 @@ exports.getBytes = function() {
 };
 
 var getText = exports.getText = function() {
-	return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getText();
+	if (textData === null) {
+		textData = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getText();
+	}
+	return textData;
 };
 
 exports.getJSON = function() {
-	var text = getText();
-	var json = JSON.parse(text);
-	return json;
+	let text = getText();
+	return JSON.parse(text);
 };
-
 
 exports.getParameter = function(name) {
 	return org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getParameter(name);
