@@ -70,6 +70,7 @@ public class OAuthService extends AbstractRestService implements IRestService {
 	public static final String DIRIGIBLE_OAUTH_APPLICATION_NAME = "DIRIGIBLE_OAUTH_APPLICATION_NAME";
 	public static final String DIRIGIBLE_OAUTH_APPLICATION_HOST = "DIRIGIBLE_OAUTH_APPLICATION_HOST";
 	public static final String DIRIGIBLE_OAUTH_ISSUER = "DIRIGIBLE_OAUTH_ISSUER";
+	public static final String DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED = "DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED";
 
 	/**
 	 * Clone repository.

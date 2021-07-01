@@ -189,6 +189,18 @@ public class Configuration {
 	}
 
 	/**
+	 * Setter for the property's key and value. Sets the new value, only if the key value is null.
+	 *
+	 * @param key   the key
+	 * @param value the value
+	 */
+	public static void setIfNull(String key, String value) {
+		if (get(key) == null) {
+			set(key, value);
+		}
+	}
+
+	/**
 	 * Remove property
 	 * 
 	 * @param key the key

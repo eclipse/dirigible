@@ -64,13 +64,13 @@ public class KymaModule extends AbstractDirigibleModule {
 			throw new InvalidStateException(ERROR_MESSAGE_NO_OAUTH_CONFIGURATION);
 		}
 
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_AUTHORIZE_URL, authorizeUrl);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_TOKEN_URL, tokenUrl);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_CLIENT_ID, clientId);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_CLIENT_SECRET, clientSecret);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY, verificationKey);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_NAME, applicationName);
-		Configuration.set(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_HOST, applicationHost);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_AUTHORIZE_URL, authorizeUrl);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_TOKEN_URL, tokenUrl);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_CLIENT_ID, clientId);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_CLIENT_SECRET, clientSecret);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_VERIFICATION_KEY, verificationKey);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_NAME, applicationName);
+		Configuration.setIfNull(OAuthService.DIRIGIBLE_OAUTH_APPLICATION_HOST, applicationHost);
 	}
 
 	@Override

@@ -28,12 +28,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Verification;
 import com.google.gson.annotations.SerializedName;
 
 public class JwtUtils {
@@ -484,12 +487,16 @@ public class JwtUtils {
 		String verificationKey = OAuthUtils.getOAuthVerificationKey();
 		RSAPublicKey publicKey = getPublicKeyFromString(verificationKey);
 		Algorithm algorithm = Algorithm.RSA256(publicKey, null);
-		JWTVerifier verifier = JWT.require(algorithm)
+		Verification verification = JWT.require(algorithm)
 				.acceptLeeway(1) // 1 sec for nbf and iat
 				.acceptExpiresAt(5) // 5 secs for exp
-				.withAudience(OAuthUtils.getOAuthClientId())
-				.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer())
-				.build();
+				.withAudience(OAuthUtils.getOAuthClientId());
+
+		if (Boolean.parseBoolean(Configuration.get(OAuthService.DIRIGIBLE_OAUTH_CHECK_ISSUER_ENABLED, Boolean.TRUE.toString()))) {
+			verification.withIssuer(OAuthUtils.getOAuthTokenUrl(), OAuthUtils.getOAuthIssuer());
+		}
+
+		JWTVerifier verifier = verification.build();
 		verifier.verify(token);
 	}
 
