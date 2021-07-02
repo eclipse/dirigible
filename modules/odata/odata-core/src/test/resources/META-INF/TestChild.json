@@ -1,0 +1,12 @@
+{
+	"edmType" : "TestChild",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.TestChild",
+	"sqlTable" : "TESTCHILDTABLE",
+	"ChildName" : "CHILDNAME",
+	"ChildValue" : "CHILDVALUE",
+	"_pk_" : "ID",
+    "_ref_TestRoot" : {
+    	"joinColumn" :["ROOT_ID"]
+    },
+	"Id" : "ID"
+}

@@ -1,0 +1,18 @@
+{
+	"edmType" : "TestRoot",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.TestRoot",
+	"sqlTable" : "TESTROOTTABLE",
+	"ChangeId" : "CHANGEID",
+	"StringValue" : "STRINGVALUE",
+	"TimeValue" : "TIMEVALUE",
+	"IntValue" : "INTVALUE",
+	"ConvertValue" : {
+	      "name" : "CONVERTVALUE",
+	      "sqlType" : "NUMERIC"
+	},
+	"MediaValue" : "MEDIAVALUE",
+    "_ref_TestChild" : {
+    	"joinColumn" : ["ID"]
+    },
+	"_pk_" : "ID"
+}

@@ -31,9 +31,9 @@ import org.eclipse.dirigible.api.v3.db.DatabaseFacade;
 import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.handler.ScriptingOData2EventHandler;
+import org.eclipse.dirigible.engine.odata2.mapping.DirigibleEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
-import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
 			setDefaultDataSource(ctx);
 			
-			DefaultEdmTableMappingProvider tableMappingProvider = new DefaultEdmTableMappingProvider();
+			DirigibleEdmTableMappingProvider tableMappingProvider = new DirigibleEdmTableMappingProvider();
 			
 			OData2EventHandler odata2EventHandler = StaticInjector.getInjector().getInstance(ScriptingOData2EventHandler.class);
 
