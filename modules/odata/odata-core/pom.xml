@@ -22,7 +22,7 @@
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
+					<target>1.8</target>
 					<debug>true</debug>
 					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
