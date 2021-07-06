@@ -13,23 +13,20 @@ package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.EdmTypeKind;
-import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
-import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery.EdmTarget;
 
 public final class SQLExpressionDelete implements SQLExpression {
     
@@ -108,17 +105,13 @@ public final class SQLExpressionDelete implements SQLExpression {
     }
 
     private String buildKeys(final SQLContext context) throws EdmException {
-    	StringBuilder deleteQuery = new StringBuilder();
+    	List<String> deleteKeys = new ArrayList<String>();
     	Iterator<Map.Entry<String, Object>> i = keys.entrySet().iterator();
         while (i.hasNext()) {
         	Map.Entry<String, Object> key = i.next();
-        	deleteQuery.append(" " + key.getKey() + " = ? ");
-        	
-            if (i.hasNext()) {
-                deleteQuery.append(", ");
-            }
+        	deleteKeys.add(" " + key.getKey() + " = ? ");
         }
-        return deleteQuery.toString();
+        return deleteKeys.stream().collect(Collectors.joining(","));
     }
     
     public Map<String, Object> getKeys() {

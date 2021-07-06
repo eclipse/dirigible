@@ -12,12 +12,18 @@
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.POST;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.MERGE;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PUT;
+
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -30,14 +36,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.helpers.IOUtils;
+import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
+import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
 import org.apache.olingo.odata2.api.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
@@ -45,6 +56,9 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockSupport;
+import org.eclipse.dirigible.engine.odata2.sql.test.util.MockRequestBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.Pair;
 import org.junit.AfterClass;
@@ -163,7 +177,134 @@ public class DefaultSQLProcessorTest {
         ByteArrayInputStream bais = (ByteArrayInputStream) response.getEntity();
         assertEquals("Invalid $count value", "10", IOUtils.toString(bais));
     }
+    
+	@Test
+	public void testSQLProcessorCreateEntity()
+			throws InstantiationException, IllegalAccessException, IOException, ODataException {
+		
+		String content = "{\n"
+				+ "  \"d\": {\n"
+				+ "    \"__metadata\": {\n"
+				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+				+ "    },\n"
+				+ "    \"Id\": \"123456\",\n"
+				+ "    \"ChildName\": \"Name\",\n"
+				+ "    \"ChildValue\": \"Value\"\n"
+				+ "	}\n"
+				+ "}";
+		
+	
+		Response response = modifyingRequestBuilder(content)//
+				.segments("TestChilds") //
+				.accept("application/json")
+				.content(content)
+				.param("content-type", "application/json")
+				.contentSize(content.length())
+				.executeRequest(POST);
+		validateHttpResponse(response, 201);
 
+		InputStream res = (InputStream)response.getEntity();
+		assertEquals("{\"d\":" //
+				+ "{\"__metadata\":{" //
+				+ "\"id\":\"http://localhost:8080/api/v1/TestChilds('123456')\"," //
+				+ "\"uri\":\"http://localhost:8080/api/v1/TestChilds('123456')\"," //
+				+ "\"type\":\"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"}," //
+				+ "\"Id\":\"123456\"," //
+				+ "\"ChildName\":\"Name\"," //
+				+ "\"ChildValue\":\"Value\"," //
+				+ "\"Root\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/TestChilds('123456')/Root\"}}}}",  //
+				IOUtils.toString(res));
+	}
+
+	@Test
+	public void testSQLProcessorMergeEntity()
+			throws InstantiationException, IllegalAccessException, IOException, ODataException {
+		
+		Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestChilds('1_1')") //
+                .accept("application/json").executeRequest(GET);
+        validateHttpResponse(response, 200);
+		
+		String content = "{\n"
+				+ "  \"d\": {\n"
+				+ "    \"__metadata\": {\n"
+				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+				+ "    },\n"
+				+ "    \"Id\": \"1_1\",\n"
+				+ "    \"ChildName\": \"XXXX\",\n"
+				+ "    \"ChildValue\":\"YYYYY\"" //
+				+ "	}\n"
+				+ "}";
+		
+	
+	   response = modifyingRequestBuilder(content)//
+			    .segments("TestChilds('1_1')") //
+				.accept("application/json")
+				.content(content)
+				.param("content-type", "application/json")
+				.contentSize(content.length())
+				.executeRequest(MERGE);
+		validateHttpResponse(response, 204);
+	}
+	
+	@Test
+	public void testSQLProcessorUpdateEntity()
+			throws InstantiationException, IllegalAccessException, IOException, ODataException {
+		
+		Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestChilds('1_1')") //
+                .accept("application/json").executeRequest(GET);
+        validateHttpResponse(response, 200);
+		
+		String content = "{\n"
+				+ "  \"d\": {\n"
+				+ "    \"__metadata\": {\n"
+				+ "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+				+ "    },\n"
+				+ "    \"Id\": \"1_1\",\n"
+				+ "    \"ChildValue\":\"YYYYY\"" //
+				+ "	}\n"
+				+ "}";
+		
+	
+	   response = modifyingRequestBuilder(content).segments("TestChilds('1_1')") //
+				.accept("application/json")
+				.content(content)
+				.param("content-type", "application/json")
+				.contentSize(content.length())
+				.executeRequest(PUT);
+		validateHttpResponse(response, 204);
+	}
+	
+	MockRequestBuilder modifyingRequestBuilder(String content) {
+		MockRequestBuilder builder = new MockRequestBuilder() {
+
+			@Override
+			protected ODataServiceFactory getServiceFactoryClass() {
+				DefaultSQLTestServiceFactory sf = new DefaultSQLTestServiceFactory();
+				
+				return sf;
+			}
+
+			@Override
+			protected void enrichServletRequestMock(final ServletRequest servletRequest) {
+				EasyMock.expect(servletRequest.getAttribute(DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY))
+						.andReturn(grantDatasource());
+				
+				EasyMock.expectLastCall();
+			}
+			@Override
+			protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
+		            final HttpServletRequest servletRequest) throws IOException {
+				
+				final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
+		        expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
+		    }
+
+		};
+		return builder;
+	}
+	
     @Test
     public void testSQLProcessorTop() throws InstantiationException, IllegalAccessException, IOException, ODataException {
         Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
@@ -469,5 +610,55 @@ public class DefaultSQLProcessorTest {
             System.err.println(e.getMessage());
         }
     }
+    
+    class DelegateServletInputStream extends ServletInputStream {
+
+    	private final InputStream delegate;
+
+    	private boolean finished = false;
+
+    	public DelegateServletInputStream(InputStream sourceStream) {
+    		this.delegate = sourceStream;
+    	}
+
+    	public final InputStream getSourceStream() {
+    		return this.delegate;
+    	}
+
+    	@Override
+    	public int read() throws IOException {
+    		int data = this.delegate.read();
+    		if (data == -1) {
+    			this.finished = true;
+    		}
+    		return data;
+    	}
+
+    	@Override
+    	public int available() throws IOException {
+    		return this.delegate.available();
+    	}
+
+    	@Override
+    	public void close() throws IOException {
+    		super.close();
+    		this.delegate.close();
+    	}
+
+    	@Override
+    	public boolean isFinished() {
+    		return this.finished;
+    	}
+
+    	@Override
+    	public boolean isReady() {
+    		return true;
+    	}
+
+    	@Override
+    	public void setReadListener(ReadListener readListener) {
+    	}
+
+	}
 
 }
