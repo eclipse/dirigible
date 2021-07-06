@@ -115,8 +115,53 @@
 						extension: ".odata",
 						type: "json"
 					}, {
+						extension: ".sql",
+						type: "sql"
+					}, {
+						extension: ".md",
+						type: "markdown"
+					}, {
 						extension: ".xsjs",
 						type: "javascript"
+					}, {
+						extension: ".hdbsynonym",
+						type: "json"
+					}, {
+						extension: ".hdi",
+						type: "json"
+					}, {
+						extension: ".hdiconfig",
+						type: "json"
+					}, {
+						extension: ".hdbcalculationview",
+						type: "xml"
+					}, {
+						extension: ".hdbtable",
+						type: "sql"
+					}, {
+						extension: ".hdbview",
+						type: "sql"
+					}, {
+						extension: ".hdbprocedure",
+						type: "sql"
+					}, {
+						extension: ".hdbtablefunction",
+						type: "sql"
+					}, {
+						extension: ".hdbschema",
+						type: "sql"
+					}, {
+						extension: ".hdbdd",
+						type: "sql"
+					}, {
+						extension: ".xsodata",
+						type: "sql"
+					}, {
+						extension: ".xsaccess",
+						type: "json"
+					}, {
+						extension: ".xsprivileges",
+						type: "json"
 					}];
 
 					for (var i = 0; i < mappings.length; i ++) {
@@ -537,7 +582,8 @@
 									}
 								});
 							});
-							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module (e.g. "http/v4/response") */ var require = function(moduleName) {return new Module();};', 'js:require.js');
+							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
+							monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
 							monaco.languages.registerCompletionItemProvider('javascript', {
 								triggerCharacters: ["\"", "'"],
 							    provideCompletionItems: function(model, position) {
