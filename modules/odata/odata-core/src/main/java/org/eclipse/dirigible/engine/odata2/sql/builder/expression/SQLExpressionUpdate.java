@@ -11,11 +11,15 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csv;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmException;
@@ -135,7 +139,7 @@ public final class SQLExpressionUpdate implements SQLExpression {
 
 	private String buildColumnList(final SQLContext context) throws EdmException {
 
-		StringBuilder update = new StringBuilder();
+		List<String> columns = new ArrayList<String>();
 		Iterator<Integer> i = columnMapping.keySet().iterator();
 		while (i.hasNext()) {
 			Integer column = i.next();
@@ -148,19 +152,15 @@ public final class SQLExpressionUpdate implements SQLExpression {
 						HttpStatusCodes.INTERNAL_SERVER_ERROR);
 			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
 				if (values.containsKey(p.getName()) && !keys.containsKey(p.getName())) {
+					
 					EdmProperty prop = (EdmProperty) p;
-					update.append(tableColumnForUpdate(type, prop) + " = ?");
-					if (i.hasNext()) {
-						update.append(", ");
-					}
+					columns.add(tableColumnForUpdate(type, prop) + " = ?");
 				}
-				
 			} else {
 				throw new IllegalStateException("Unable to handle property " + p);
 			}
-			
 		}
-		return update.toString();
+		return csv(columns);
 
 	}
 
@@ -177,17 +177,13 @@ public final class SQLExpressionUpdate implements SQLExpression {
 	}
 
 	private String buildKeys(final SQLContext context) throws EdmException {
-		StringBuilder updateQuery = new StringBuilder();
+		List<String> updates = new ArrayList<>();
 		Iterator<Map.Entry<String, Object>> i = keys.entrySet().iterator();
 		while (i.hasNext()) {
 			Map.Entry<String, Object> key = i.next();
-			updateQuery.append(" " + key.getKey() + " = ? ");
-
-			if (i.hasNext()) {
-				updateQuery.append(", ");
-			}
+			updates.add(" " + key.getKey() + " = ? ");
 		}
-		return updateQuery.toString();
+		return csv(updates);
 	}
 
 }

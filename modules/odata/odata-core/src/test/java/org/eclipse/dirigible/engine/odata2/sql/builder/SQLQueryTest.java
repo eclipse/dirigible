@@ -473,12 +473,12 @@ public class SQLQueryTest {
 
         SQLQuery q = builder.buildInsertEntityQuery(uriInfo, entity);
         SQLContext context = new SQLContext();
-        String expected = "INSERT INTO ENTITY4_TABLE (ID4_1, ID4_2) VALUES (?, ? )";
+        String expected = "INSERT INTO ENTITY4_TABLE (ID4_1,ID4_2) VALUES (?,?)";
         assertEquals(expected, q.buildInsert(context));
 
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
         q = builder.buildInsertEntityQuery(uriInfo, entity);
-        expected = "INSERT INTO \"ENTITY4_TABLE\" (\"ID4_1\", \"ID4_2\") VALUES (?, ? )";
+        expected = "INSERT INTO \"ENTITY4_TABLE\" (\"ID4_1\",\"ID4_2\") VALUES (?,?)";
         assertEquals(expected, q.buildInsert(context));
     }
 
