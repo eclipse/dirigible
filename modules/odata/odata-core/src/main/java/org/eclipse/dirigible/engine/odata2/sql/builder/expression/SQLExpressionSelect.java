@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import static java.util.Collections.EMPTY_LIST;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csv;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpand;
 
@@ -202,7 +203,7 @@ public final class SQLExpressionSelect implements SQLExpression {
     }
 
     private String buildFrom(final SQLContext context) throws EdmException {
-        StringBuilder from = new StringBuilder();
+        List<String> tables = new ArrayList<>();
         Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
         while (it.hasNext()) {
             String tableAlias = it.next();
@@ -210,20 +211,14 @@ public final class SQLExpressionSelect implements SQLExpression {
             if (isSelectTarget(target)) {
             	boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
             	if (caseSensitive) {
-            		from.append("\"" + query.getSQLTableName(target) + "\"").append(" AS ").append("\"" + tableAlias + "\"");
+            		tables.add("\"" + query.getSQLTableName(target) + "\"" + " AS " + "\"" + tableAlias + "\"");
             	} else {
-            		from.append(query.getSQLTableName(target)).append(" AS ").append(tableAlias);
+            		tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
             	}
-                if (it.hasNext()) {
-                    from.append(", ");
-                }
-            } else {
-                if (from.indexOf(",") > 0) {
-                    from.delete(from.lastIndexOf(","), from.length());
-                }
+               
             }
         }
-        return from.toString();
+        return csv(tables);
     }
 
     private boolean isSelectTarget(final EdmStructuralType target) {
