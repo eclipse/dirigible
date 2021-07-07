@@ -36,7 +36,7 @@ exports.debug = function(message) {
 };
 
 exports.trace = function(message) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(stringify(message));
+	exports.log(new Error(stringify(`Trace: ${message}`)).stack);
 };
 
 function stringify(message) {
