@@ -94,9 +94,11 @@ public class Console {
 	 *
 	 * @param message
 	 *            the log message
+	 * @param args
+	 *            the message arguments
 	 */
-	public void log(String message) {
-		logger.info(message);
+	public void log(String message, Object...args) {
+		logger.info(String.format(message, args));
 	}
 
 }
