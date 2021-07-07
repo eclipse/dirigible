@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.helpers;
@@ -60,6 +60,9 @@ public class ContentTypeHelper {
 	/** The Constant TEXT_CSS. */
 	public static final String TEXT_CSS = "text/css";
 
+	/** The Constant TEXT_CSV. */
+	public static final String TEXT_CSV = "text/csv";
+
 	/** The Constant APPLICATION_JAVASCRIPT. */
 	public static final String APPLICATION_JAVASCRIPT = "application/javascript";
 
@@ -68,6 +71,7 @@ public class ContentTypeHelper {
 
 	/** The Constant TEXT_XML. */
 	public static final String TEXT_XML = "text/xml";
+
 
 	/** The Constant TEXT_PLAIN. */
 	public static final String TEXT_PLAIN = "text/plain";
@@ -419,46 +423,46 @@ public class ContentTypeHelper {
 
 	/** The Constant APPLICATION_POSTSCRIPT. */
 	public static final String APPLICATION_POSTSCRIPT = "application/postscript";
-	
+
 	/** The Constant APPLICATION_BPMN. */
 	public static final String APPLICATION_BPMN = "application/bpmn+xml";
-	
+
 	/** The Constant APPLICATION_SCHEMA. */
 	public static final String APPLICATION_SCHEMA = "application/database-schema-model+xml";
-	
+
 	/** The Constant APPLICATION_ENTITY_DATA_MODEL. */
 	public static final String APPLICATION_ENTITY_DATA_MODEL = "application/entity-data-model+xml";
-	
+
 	/** The Constant APPLICATION_JSON_JOB. */
 	public static final String APPLICATION_JSON_JOB = "application/json+job";
-	
+
 	/** The Constant APPLICATION_JSON_LISTENER. */
 	public static final String APPLICATION_JSON_LISTENER = "application/json+listener";
-	
+
 	/** The Constant APPLICATION_JSON_WEBSOCKET. */
 	public static final String APPLICATION_JSON_WEBSOCKET = "application/json+websocket";
-	
+
 	/** The Constant APPLICATION_JSON_TABLE. */
 	public static final String APPLICATION_JSON_TABLE = "application/json+table";
-	
+
 	/** The Constant APPLICATION_JSON_VIEW. */
 	public static final String APPLICATION_JSON_VIEW = "application/json+view";
-	
+
 	/** The Constant APPLICATION_JSON_ACCESS. */
 	public static final String APPLICATION_JSON_ACCESS = "application/json+access";
-	
+
 	/** The Constant APPLICATION_JSON_ROLES. */
 	public static final String APPLICATION_JSON_ROLES = "application/json+roles";
-	
+
 	/** The Constant APPLICATION_JSON_EXTENSION_POINT. */
 	public static final String APPLICATION_JSON_EXTENSION_POINT = "application/json+extension-point";
-	
+
 	/** The Constant APPLICATION_JSON_EXTENSION. */
 	public static final String APPLICATION_JSON_EXTENSION = "application/json+extension";
-	
+
 	/** The Constant APPLICATION_JSON_COMMAND. */
 	public static final String APPLICATION_JSON_COMMAND = "application/json+command";
-	
+
 	/** The Constant APPLICATION_JSON_FORM. */
 	public static final String APPLICATION_JSON_FORM = "application/json+form";
 
@@ -678,6 +682,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("bas", TEXT_PLAIN); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("c", TEXT_PLAIN); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("css", TEXT_CSS); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("csv", TEXT_CSV); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("etx", TEXT_X_SETEXT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("h", TEXT_PLAIN); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("htm", TEXT_HTML); //$NON-NLS-1$
