@@ -16,6 +16,7 @@ import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateD
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
@@ -74,4 +75,14 @@ public final class SQLExpressionUtils {
             return new SQLExpressionWhere();
         }
     }
+    
+
+	public static String csvInBrackets(List<String> columnValues) {
+		return columnValues.stream().collect(Collectors.joining( ",", "(", ")"));
+	}
+	
+	public static String csv(List<String> values) {
+		return values.stream().collect(Collectors.joining(","));
+	}
+
 }

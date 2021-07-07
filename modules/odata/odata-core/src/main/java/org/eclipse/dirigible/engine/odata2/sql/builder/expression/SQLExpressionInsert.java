@@ -12,10 +12,14 @@
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csvInBrackets;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmException;
@@ -121,8 +125,7 @@ public final class SQLExpressionInsert implements SQLExpression {
 				break;
 			}
 		}
-
-		into.append(" (").append(buildColumnList(context)).append(") ");
+		into.append(" ").append(buildColumnList(context));
 
 		return into.toString();
 	}
@@ -134,8 +137,9 @@ public final class SQLExpressionInsert implements SQLExpression {
 
 	private String buildColumnList(final SQLContext context) throws EdmException {
 
-		StringBuilder insert = new StringBuilder();
 		Iterator<Integer> i = columnMapping.keySet().iterator();
+		List<String> columnNames = new ArrayList<>();
+		
 		while (i.hasNext()) {
 			Integer column = i.next();
 			EdmStructuralType type = getTargetType(column);
@@ -147,28 +151,23 @@ public final class SQLExpressionInsert implements SQLExpression {
 						HttpStatusCodes.INTERNAL_SERVER_ERROR);
 			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
 				if (values.containsKey(p.getName())) {
-					EdmProperty prop = (EdmProperty) p;
-					insert.append(tableColumnForInsert(type, prop));
 					
-					if (i.hasNext()) {
-						insert.append(", ");
-					}
+					EdmProperty prop = (EdmProperty) p;
+					columnNames.add(tableColumnForInsert(type, prop));
 				}
 			} else {
 				throw new IllegalStateException("Unable to handle property " + p);
 			}
 		}
-		return insert.toString();
-
+		return csvInBrackets(columnNames);
 	}
 
-	private Object tableColumnForInsert(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
+	private String tableColumnForInsert(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
 		return query.getSQLTableColumnNoAlias(type, prop);
 	}
 
 	private String buildValues(final SQLContext context) throws EdmException {
-		StringBuilder insert = new StringBuilder();
-		insert.append(" (");
+		List<String> columnValues = new ArrayList<>();
 		Iterator<Integer> i = columnMapping.keySet().iterator();
 		while (i.hasNext()) {
 			Integer column = i.next();
@@ -181,17 +180,13 @@ public final class SQLExpressionInsert implements SQLExpression {
 						HttpStatusCodes.INTERNAL_SERVER_ERROR);
 			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
 				if (values.containsKey(p.getName())) {
-					insert.append("?");
-					if (i.hasNext()) {
-						insert.append(", ");
-					}
+					columnValues.add("?");
 				}
 			} else {
 				throw new IllegalStateException("Unable to handle property " + p);
 			}
 		}
-		insert.append(" )");
-		return insert.toString();
+		return csvInBrackets(columnValues);
 	}
 
 	public Map<String, Object> getValues() {
