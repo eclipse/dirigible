@@ -15,28 +15,28 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.log = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message), args);
+exports.log = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message));
 };
 
-exports.error = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(stringify(message), args);
+exports.error = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(stringify(message));
 };
 
-exports.info = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(stringify(message), args);
+exports.info = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(stringify(message));
 };
 
-exports.warn = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(stringify(message), args);
+exports.warn = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(stringify(message));
 };
 
-exports.debug = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(stringify(message), args);
+exports.debug = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(stringify(message));
 };
 
-exports.trace = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(stringify(message), args);
+exports.trace = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(stringify(message));
 };
 
 function stringify(message) {
