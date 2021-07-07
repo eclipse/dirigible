@@ -50,13 +50,17 @@ public abstract class AbstractExceptionHandler<T extends Throwable> implements E
 	 */
 	@Override
 	public Response toResponse(T exception) {
-		getLogger().error(exception.getMessage(), exception);
+		logErrorMessage(getLogger(), exception);
 
 		Status status = getResponseStatus(exception);
 		String message = getResponseMessage(exception);
 		AppExceptionMessage appException = new AppExceptionMessage(status, message);
 
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(GSON.toJson(appException)).build();
+	}
+
+	protected void logErrorMessage(Logger logger, T exception) {
+		logger.error(exception.getMessage(), exception);
 	}
 
 	/**
