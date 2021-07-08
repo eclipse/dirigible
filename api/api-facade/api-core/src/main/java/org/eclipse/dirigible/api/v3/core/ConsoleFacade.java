@@ -19,13 +19,13 @@ public class ConsoleFacade {
 	private static final Console console = new Console();
 
 	/**
-	 * Prints a raw log message.
+	 * Prints a log message.
 	 *
 	 * @param message
 	 *            the message
 	 */
 	public static void log(String message) {
-		console.info(message);
+		console.log(message);
 	}
 
 	/**

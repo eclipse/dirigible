@@ -25,7 +25,7 @@ public class Console {
 	private static Logger logger = LoggerFactory.getLogger(Console.class);
 
 	/**
-	 * Prints a raw log message
+	 * Prints a log message
 	 *
 	 * @param message
 	 *            the log message
@@ -81,12 +81,7 @@ public class Console {
 	 *            the log message
 	 */
 	public void trace(String message) {
-		logger.error(message);
-		StringBuilder buff = new StringBuilder();
-		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-			buff.append(element.toString()).append(System.getProperty("line.separator"));
-		}
-		logger.error(buff.toString());
+		logger.trace(message);
 	}
 
 }
