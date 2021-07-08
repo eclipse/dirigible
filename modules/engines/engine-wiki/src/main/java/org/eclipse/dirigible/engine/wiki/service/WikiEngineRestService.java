@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.wiki.service;
@@ -92,12 +92,14 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 			IResource resource = processor.getResource(path);
 			if (resource.isBinary()) {
 				String message = "Resource found, but it is a binary file: " + path;
-				return createErrorResponseNotFound(message);
+				throw new RepositoryNotFoundException(message);
 			}
 			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
 			String html = renderContent(content);
 			return Response.ok(html).type(resource.getContentType()).build();
 		}
+
+		String errorMessage = "Resource not found: " + path;
 		try {
 			byte[] content = processor.getResourceContent(path);
 			if (content != null) {
@@ -105,10 +107,9 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 				return Response.ok().entity(html).build();
 			}
 		} catch (RepositoryNotFoundException e) {
-			String message = "Resource not found: " + path;
-			return createErrorResponseNotFound(message);
+			throw new RepositoryNotFoundException(errorMessage, e);
 		}
-		return createErrorResponseNotFound(path);
+		throw new RepositoryNotFoundException(errorMessage);
 	}
 
 	/**

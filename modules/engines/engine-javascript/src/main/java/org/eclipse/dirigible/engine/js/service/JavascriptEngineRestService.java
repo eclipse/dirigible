@@ -73,13 +73,9 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 		try {
 			processor.executeService(path);
 			return Response.ok().build();
-		} catch (ScriptingDependencyException e) {
-			logger.error(e.getMessage());
-			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
-			logger.error(message);
-			return Response.status(Response.Status.ACCEPTED).entity(message).build();	
+			throw new RepositoryNotFoundException(message, e);
 		}
 	}
 
