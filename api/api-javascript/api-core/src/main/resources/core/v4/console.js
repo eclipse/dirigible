@@ -44,7 +44,7 @@ exports.trace = function(message) {
 };
 
 function stringify(message) {
-	if (typeof message === 'object' && message !== null) {
+	if (typeof message === 'object' && message !== null && message.class === undefined) {
 		return JSON.stringify(message);
 	}
 	return "" + message;
