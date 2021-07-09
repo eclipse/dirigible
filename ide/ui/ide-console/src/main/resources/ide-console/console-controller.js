@@ -41,29 +41,36 @@ angular.module('console', [])
     };
 
     $scope.search = function() {
-        $scope.logs = $scope.allLogs.filter(e => e.message.toLowerCase().includes($scope.searchText.toLowerCase()));
+        $scope.logs = $scope.allLogs.filter(e => isLogLevelEnabled(e) && isLogContainsSearchText(e));
     };
 
     $scope.selectLogLevel = function() {
-        $scope.logs = $scope.allLogs.filter(e => {
-            switch(e.level) {
-                case "LOG":
-                    return $scope.logLevelLogEnabled;
-                case "INFO":
-                    return $scope.logLevelInfoEnabled;
-                case "WARN":
-                    return $scope.logLevelWarnEnabled;
-                case "ERROR":
-                    return $scope.logLevelErrorEnabled;
-                case "DEBUG":
-                    return $scope.logLevelDebugEnabled;
-                case "TRACE":
-                    return $scope.logLevelTraceEnabled;
-            }
-            return e.message.toLowerCase().includes($scope.searchText.toLowerCase());
-        });
+        $scope.logs = $scope.allLogs.filter(e => isLogLevelEnabled(e) && isLogContainsSearchText(e));
     };
 
+    function isLogContainsSearchText(record) {
+        if ($scope.searchText) {
+            return record.message.toLowerCase().includes($scope.searchText.toLowerCase());
+        }
+        return true;
+    }
+
+    function isLogLevelEnabled(record) {
+        switch(record.level) {
+            case "LOG":
+                return $scope.logLevelLogEnabled;
+            case "INFO":
+                return $scope.logLevelInfoEnabled;
+            case "WARN":
+                return $scope.logLevelWarnEnabled;
+            case "ERROR":
+                return $scope.logLevelErrorEnabled;
+            case "DEBUG":
+                return $scope.logLevelDebugEnabled;
+            case "TRACE":
+                return $scope.logLevelTraceEnabled;
+        }
+    }
     function connectToLog() {
         let logSocket = null;
         try {
@@ -73,36 +80,50 @@ angular.module('console', [])
                 + window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
                 + "/websockets/v4/ide/console");
         } catch(e) {
-            $("#logContent").after("<div class='console-row console-row-error' style='word-wrap: break-word;'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
+            let record = {
+                message: e.message,
+                level: "ERROR",
+                date: new Date().toISOString()
+            };
+            consoleLogMessage(record);
         }
         if (logSocket) {
             logSocket.onmessage = function (message) {
-                var record = JSON.parse(message.data);
-                
+                let record = JSON.parse(message.data);
                 record.date = new Date(record.timestamp).toISOString();
 
-                $scope.logs.push(record);
-                $scope.allLogs.push(record);
-                $scope.$apply();
+                consoleLogMessage(record);
 
-                // $(lastLogId).after("<div id='" + id + "' class='console-row console-row-" + record.level.toLowerCase() + "''>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
-                // lastLogId = "#" + id;
+                $('#logContent').animate({
+                    scrollBottom: $('#logContent').get(0).scrollHeight
+                }, 2000);
 
-                // TODO Check if message hub is used properly!
                 if (record.level === 'ERROR' || record.level === 'WARN') {
-                    $messageHub.message(record.message, 'status.error');
+                    $messageHub.message('status.error', record.message);
                 } else if (record.level === 'INFO') {
-                    $messageHub.message(record.message, 'status.message');
+                    $messageHub.message('status.message', record.message);
                 }
             };
+
             logSocket.onerror = function (error) {
-                var message = 'Connection problem! Check security roles assignments.';
-                $("#logContent").after("<div id='0' class='console-row console-row-error'>[" + new Date().toISOString() + "]" + " [ERROR] " + message + "</div>");
-                $messageHub.message(message, 'status.error');
+                let record = {
+                    message: "Connection problem! Check security roles assignments.",
+                    level: "ERROR",
+                    date: new Date().toISOString()
+                };
+                consoleLogMessage(record);
+                $messageHub.message('status.error', record.message);
             };
         }
     }
     connectToLog();
+
+    function consoleLogMessage(record) {
+        $scope.allLogs.push(record);
+        $scope.selectLogLevel();
+        $scope.$apply();
+        window.scrollBy(0, 100)
+    }
 
     $messageHub.on('workspace.file.published', function (msg) {
         this.refresh();

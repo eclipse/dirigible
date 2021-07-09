@@ -24,29 +24,25 @@
 
 	</head>
 	<body ng-app="console" ng-controller="ConsoleController" style="font-family: monospace; font-size: x-small;">
-		<div class="row">
+		<div class="row bg-default navbar navbar-fixed-top">
 			<div class="col-md-3">
-				<span class="view-toolbar console-row-log">
-					<input id="logLevelLog" type="checkbox" value="LOG" ng-model="logLevelLogEnabled" ng-click="selectLogLevel()" checked>
-					<label for="logLevelLog">LOG</label>
-				</span>
-				<span class="view-toolbar console-row-info">
+				<span class="bg-default view-toolbar console-row-info">
 					<input id="logLevelInfo" type="checkbox" value="INFO" ng-model="logLevelInfoEnabled" ng-click="selectLogLevel()" checked>
 					<label for="logLevelInfo">INFO</label>
 				</span>
-				<span class="view-toolbar console-row-warn">
+				<span class="bg-default view-toolbar console-row-warn">
 					<input id="logLevelWarning" type="checkbox" value="WARN" ng-model="logLevelWarnEnabled" ng-click="selectLogLevel()" checked>
 					<label for="logLevelWarning">WARN</label>
 				</span>
-				<span class="view-toolbar console-row-error">
+				<span class="bg-default view-toolbar console-row-error">
 					<input id="logLevelError" type="checkbox" value="ERROR" ng-model="logLevelErrorEnabled" ng-click="selectLogLevel()" checked>
 					<label for="logLevelError">ERROR</label>
 				</span>
-				<span class="view-toolbar console-row-debug">
+				<span class="bg-default view-toolbar console-row-debug">
 					<input id="logLevelDebug" type="checkbox" value="DEBUG" ng-model="logLevelDebugEnabled" ng-click="selectLogLevel()" checked>
 					<label for="logLevelDebug">DEBUG</label>
 				</span>
-				<span class="view-toolbar console-row-trace">
+				<span class="bg-default view-toolbar console-row-trace">
 					<input id="logLevelTrace" type="checkbox" value="TRACE" ng-model="logLevelTraceEnabled" ng-click="selectLogLevel()" checked>
 					<label for="logLevelTrace">TRACE</label>
 				</span>
@@ -59,7 +55,7 @@
 			</div>
     	</div>
 
-		<div id="row" style="padding-bottom: 20px">
+		<div id="row" style="padding-top: 30px; padding-bottom: 20px">
 			<div class='console-row console-row-log'>Beginning of console log ...</div>
 			<div id="logContent">
 				<div ng-repeat="next in logs" class="console-row console-row-{{next.level.toLowerCase()}}">
