@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlException;
 import org.slf4j.Logger;
@@ -30,17 +33,19 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
 
     private CreateTablePrimaryKeyBuilder primaryKey;
 
-    private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
+    private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
 
-    private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
+    private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
 
-    private List<CreateTableCheckBuilder> checks = new ArrayList<>();
+    private List<CreateTableCheckBuilder> checks = new ArrayList<CreateTableCheckBuilder>();
 
     /**
      * Instantiates a new creates the table builder.
      *
-     * @param dialect the dialect
-     * @param table   the table
+     * @param dialect
+     *            the dialect
+     * @param table
+     *            the table
      */
     public CreateTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
@@ -49,8 +54,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Primary key.
      *
-     * @param name    the name
-     * @param columns the columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
     public CreateTableBuilder primaryKey(String name, String[] columns) {
@@ -68,8 +75,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Primary key.
      *
-     * @param name    the name
-     * @param columns the columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
     public CreateTableBuilder primaryKey(String name, String columns) {
@@ -81,7 +90,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Primary key.
      *
-     * @param columns the columns
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
     public CreateTableBuilder primaryKey(String[] columns) {
@@ -92,7 +102,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Primary key.
      *
-     * @param columns the columns
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
     public CreateTableBuilder primaryKey(String columns) {
@@ -103,10 +114,14 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Foreign key.
      *
-     * @param name              the name
-     * @param columns           the columns
-     * @param referencedTable   the referenced table
-     * @param referencedColumns the referenced columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
+     * @param referencedTable
+     *            the referenced table
+     * @param referencedColumns
+     *            the referenced columns
      * @return the creates the table builder
      */
     public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
@@ -127,10 +142,14 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Foreign key.
      *
-     * @param name              the name
-     * @param columns           the columns
-     * @param referencedTable   the referenced table
-     * @param referencedColumns the referenced columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
+     * @param referencedTable
+     *            the referenced table
+     * @param referencedColumns
+     *            the referenced columns
      * @return the creates the table builder
      */
     public CreateTableBuilder foreignKey(String name, String columns, String referencedTable, String referencedColumns) {
@@ -142,10 +161,13 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Unique.
      *
-     * @param name    the name
-     * @param columns the columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
+    @Override
     public CreateTableBuilder unique(String name, String[] columns) {
         logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
@@ -159,8 +181,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Unique.
      *
-     * @param name    the name
-     * @param columns the columns
+     * @param name
+     *            the name
+     * @param columns
+     *            the columns
      * @return the creates the table builder
      */
     public CreateTableBuilder unique(String name, String columns) {
@@ -171,8 +195,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Check.
      *
-     * @param name       the name
-     * @param expression the expression
+     * @param name
+     *            the name
+     * @param expression
+     *            the expression
      * @return the creates the table builder
      */
     public CreateTableBuilder check(String name, String expression) {
@@ -227,7 +253,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate primary key.
      *
-     * @param sql the sql
+     * @param sql
+     *            the sql
      */
     protected void generatePrimaryKey(StringBuilder sql) {
         List<String[]> allPrimaryKeys = this.getColumns().stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
@@ -254,7 +281,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate foreign keys.
      *
-     * @param sql the sql
+     * @param sql
+     *            the sql
      */
     protected void generateForeignKeys(StringBuilder sql) {
         for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
@@ -265,8 +293,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate foreign key.
      *
-     * @param sql        the sql
-     * @param foreignKey the foreign key
+     * @param sql
+     *            the sql
+     * @param foreignKey
+     *            the foreign key
      */
     protected void generateForeignKey(StringBuilder sql, CreateTableForeignKeyBuilder foreignKey) {
         if (foreignKey != null) {
@@ -286,7 +316,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate unique indices.
      *
-     * @param sql the sql
+     * @param sql
+     *            the sql
      */
     protected void generateUniqueIndices(StringBuilder sql) {
         for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
@@ -297,8 +328,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate unique index.
      *
-     * @param sql         the sql
-     * @param uniqueIndex the unique index
+     * @param sql
+     *            the sql
+     * @param uniqueIndex
+     *            the unique index
      */
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
@@ -314,7 +347,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate checks.
      *
-     * @param sql the sql
+     * @param sql
+     *            the sql
      */
     protected void generateChecks(StringBuilder sql) {
         for (CreateTableCheckBuilder index : this.checks) {
@@ -325,8 +359,10 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     /**
      * Generate check.
      *
-     * @param sql   the sql
-     * @param check the check
+     * @param sql
+     *            the sql
+     * @param check
+     *            the check
      */
     protected void generateCheck(StringBuilder sql, CreateTableCheckBuilder check) {
         if (check != null) {
