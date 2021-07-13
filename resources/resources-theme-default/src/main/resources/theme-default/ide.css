@@ -556,3 +556,7 @@ th {
 .popover {
 	background: #232323;
 }
+
+.bg-default {
+	background-color: #333333;
+}

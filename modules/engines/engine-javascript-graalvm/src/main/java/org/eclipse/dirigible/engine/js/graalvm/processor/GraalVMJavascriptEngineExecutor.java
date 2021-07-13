@@ -169,13 +169,14 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
 			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
 			bindings.putMember(CONTEXT, executionContext);
-			bindings.putMember(CONSOLE, ConsoleFacade.getConsole());
 			
             context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
             if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
             
+            context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+
             beforeEval(context);
             if (isDebugEnabled) {
             	code = CODE_DEBUGGER + code;

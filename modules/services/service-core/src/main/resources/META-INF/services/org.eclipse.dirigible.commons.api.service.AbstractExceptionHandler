@@ -1,1 +1,2 @@
-org.eclipse.dirigible.runtime.core.services.GeneralExceptionHandler	# Exception Handler
+org.eclipse.dirigible.runtime.core.services.GeneralExceptionHandler	# General Exception Handler
+org.eclipse.dirigible.runtime.core.services.RepositoryNotFoundExceptionHandler # Repository Not Found Exception Handler

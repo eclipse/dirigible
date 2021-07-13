@@ -266,7 +266,6 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
   flex-wrap: wrap;
   width: 100%;
   margin: auto;
-  align-items: center;
 }
 .key {
   flex: 1 1 auto;
@@ -749,4 +748,8 @@ a.ui-button:active,
   background: #337ab7;
   font-weight: normal;
   color: #ffffff;
+}
+
+.bg-default {
+  background-color: #f5f5f5;
 }

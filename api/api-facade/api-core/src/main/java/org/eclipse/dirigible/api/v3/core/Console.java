@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.api.v3.core;
@@ -25,15 +25,13 @@ public class Console {
 	private static Logger logger = LoggerFactory.getLogger(Console.class);
 
 	/**
-	 * Prints an error message
+	 * Prints a log message
 	 *
 	 * @param message
 	 *            the log message
-	 * @param args
-	 *            the message arguments
 	 */
-	public void error(String message, Object... args) {
-		logger.error(String.format(message, args));
+	public void log(String message) {
+		logger.info(message);
 	}
 
 	/**
@@ -41,11 +39,9 @@ public class Console {
 	 *
 	 * @param message
 	 *            the log message
-	 * @param args
-	 *            the message arguments
 	 */
-	public void info(String message, Object... args) {
-		logger.info(String.format(message, args));
+	public void info(String message) {
+		logger.info(message);
 	}
 
 	/**
@@ -53,11 +49,19 @@ public class Console {
 	 *
 	 * @param message
 	 *            the log message
-	 * @param args
-	 *            the message arguments
 	 */
-	public void warn(String message, Object... args) {
-		logger.warn(String.format(message, args));
+	public void warn(String message) {
+		logger.warn(message);
+	}
+
+	/**
+	 * Prints an error message
+	 *
+	 * @param message
+	 *            the log message
+	 */
+	public void error(String message) {
+		logger.error(message);
 	}
 
 	/**
@@ -65,11 +69,9 @@ public class Console {
 	 *
 	 * @param message
 	 *            the log message
-	 * @param args
-	 *            the message arguments
 	 */
-	public void debug(String message, Object... args) {
-		logger.debug(String.format(message, args));
+	public void debug(String message) {
+		logger.debug(message);
 	}
 
 	/**
@@ -77,26 +79,9 @@ public class Console {
 	 *
 	 * @param message
 	 *            the log message
-	 * @param args
-	 *            the message arguments
 	 */
-	public void trace(String message, Object... args) {
-		logger.error(String.format(message, args));
-		StringBuilder buff = new StringBuilder();
-		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-			buff.append(element.toString()).append(System.getProperty("line.separator"));
-		}
-		logger.error(buff.toString());
-	}
-
-	/**
-	 * Prints a raw log message
-	 *
-	 * @param message
-	 *            the log message
-	 */
-	public void log(String message) {
-		logger.info(message);
+	public void trace(String message) {
+		logger.trace(message);
 	}
 
 }

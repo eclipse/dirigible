@@ -16,51 +16,57 @@
 		
 		<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
 		<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css">
+		<link href="../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+		<!-- AngularJS -->
+		<script src="../../../../services/v4/web/resources/angular/1.4.7/angular.min.js"></script>
+		<script src="../../../../services/v4/web/resources/angular/1.4.7/angular-resource.min.js"></script>
 
 	</head>
-	<body style="font-family: monospace; font-size: x-small" onload="connectToLog()">
-		<div id="console">
-			<div id="content"></div>
+	<body ng-app="console" ng-controller="ConsoleController" style="font-family: monospace; font-size: x-small;">
+		<div class="row bg-default navbar navbar-fixed-top">
+			<div class="col-md-3">
+				<span class="bg-default view-toolbar console-row-info">
+					<input id="logLevelInfo" type="checkbox" value="INFO" ng-model="logLevelInfoEnabled" ng-click="selectLogLevel()" checked>
+					<label for="logLevelInfo">INFO</label>
+				</span>
+				<span class="bg-default view-toolbar console-row-warn">
+					<input id="logLevelWarning" type="checkbox" value="WARN" ng-model="logLevelWarnEnabled" ng-click="selectLogLevel()" checked>
+					<label for="logLevelWarning">WARN</label>
+				</span>
+				<span class="bg-default view-toolbar console-row-error">
+					<input id="logLevelError" type="checkbox" value="ERROR" ng-model="logLevelErrorEnabled" ng-click="selectLogLevel()" checked>
+					<label for="logLevelError">ERROR</label>
+				</span>
+				<span class="bg-default view-toolbar console-row-debug">
+					<input id="logLevelDebug" type="checkbox" value="DEBUG" ng-model="logLevelDebugEnabled" ng-click="selectLogLevel()" checked>
+					<label for="logLevelDebug">DEBUG</label>
+				</span>
+				<span class="bg-default view-toolbar console-row-trace">
+					<input id="logLevelTrace" type="checkbox" value="TRACE" ng-model="logLevelTraceEnabled" ng-click="selectLogLevel()" checked>
+					<label for="logLevelTrace">TRACE</label>
+				</span>
+			</div>
+			<div class="col-md-8">
+				<input type="text" name="search" class="form-control" ng-model="searchText" ng-change="search()" ng-keyup="cancel($event)" placeholder="Search ...">
+			</div>
+			<div class="col-md-1">
+				<button class="btn btn-default preview-button" type="button" ng-click="clearLog()"><i class="fa fa-ban"></i></button>
+			</div>
+    	</div>
+
+		<div id="row" style="padding-top: 30px; padding-bottom: 20px">
+			<div class='console-row console-row-log'>Beginning of console log ...</div>
+			<div id="logContent">
+				<div ng-repeat="next in logs" class="console-row console-row-{{next.level.toLowerCase()}}">
+					<span ng-show="{{showDate}}">[{{next.date}}]</span>
+					<span>[{{next.level}}]</span>
+					<span style="white-space: break-spaces;">{{next.message}}</span>
+				</div>
+			</div>
 		</div>
 		<script src="../../../../services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>
 		<script src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
-		<script>
-		var clear = function() {
-			$("#console").html('<div id="content"></div>');
-			$("#content").after("<div class='console-row console-row-info'>[" + new Date().toISOString() + "][cleared]...</div>");
-		};
-		var connectToLog = function() {
-			var messageHub = new FramesMessageHub();
-			try {
-				var logSocket = new WebSocket(
-					((location.protocol === 'https:') ? "wss://" : "ws://")
-						+ window.location.host
-						+ window.location.pathname.substr(0, window.location.pathname.indexOf('/services/'))
-						+ "/websockets/v4/ide/console");
-			} catch(e) {
-				$("#content").after("<div class='console-row console-row-error'>[" + new Date().toISOString() + "][error]" + e.message + "</div>");
-				
-			}
-			logSocket.onmessage = function (message) {
-				var record = JSON.parse(message.data);
-				
-				var date = new Date(record.timestamp);
-				var id = record.timestamp;
-				$("#content").after("<div id='" + id + "' class='console-row console-row-" + record.level.toLowerCase() + "'>[" + date.toISOString() + "]" + " [" + record.level + "] " + record.message + "</div>");
-				if (record.level === 'ERROR' || record.level === 'WARN') {
-					messageHub.post({data: record.message}, 'status.error');
-				} else if (record.level === 'INFO') {
-					messageHub.post({data: record.message}, 'status.message');
-				}
-			};
-			logSocket.onerror = function (error) {
-				var message = 'Connection problem! Check security roles assignments.';
-				$("#content").after("<div id='0' class='console-row console-row-error'>[" + new Date().toISOString() + "]" + " [ERROR] " + message + "</div>");
-				messageHub.post({data: message}, 'status.error');
-			};
-			
-			setInterval(clear, 6000000);
-		};
-		</script>
+		<script src="console-controller.js"></script>
 	</body>
 </html>

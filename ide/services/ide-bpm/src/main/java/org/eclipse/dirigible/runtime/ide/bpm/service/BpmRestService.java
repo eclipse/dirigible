@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.runtime.ide.bpm.service;
@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.eclipse.dirigible.runtime.ide.bpm.processor.BpmProcessor;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
 import org.slf4j.Logger;
@@ -76,6 +77,7 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	 * @param path
 	 *            the path
 	 * @return the response
+	 * @throws JsonProcessingException exception
 	 */
 	@GET
 	@Path("models/{workspace}/{project}/{path:.*}")
@@ -85,18 +87,13 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 			@ApiResponse(code = 404, message = "Model with the requested workspace: [{workspace}], project: [{project}] and path: [{path}] does not exist") })
 	public Response getModel(@ApiParam(value = "Workspace", required = true) @PathParam("workspace") String workspace, 
 			@ApiParam(value = "Project", required = true) @PathParam("project") String project, 
-			@ApiParam(value = "Path", required = true) @PathParam("path") String path) {
+			@ApiParam(value = "Path", required = true) @PathParam("path") String path) throws JsonProcessingException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		String model = null;
-		try {
-			model = processor.getModel(workspace, project, path);
-		} catch (JsonProcessingException e) {
-			return createErrorResponseInternalServerError(e.getMessage());
-		}
+		String model = processor.getModel(workspace, project, path);
 		
 		if (model == null) {
 			String error = format("Model in workspace: {0} and project {1} with path {2} does not exist.", workspace, project, path);
@@ -117,6 +114,7 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	 * @param payload the payload
 	 * @return the response
 	 * @throws URISyntaxException in case of an error
+	 * @throws IOException exception
 	 */
 	@POST
 	@Path("models/{workspace}/{project}/{path:.*}")
@@ -127,17 +125,13 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	public Response saveModel(@ApiParam(value = "Workspace", required = true) @PathParam("workspace") String workspace, 
 			@ApiParam(value = "Project", required = true) @PathParam("project") String project, 
 			@ApiParam(value = "Path", required = true) @PathParam("path") String path, 
-			@ApiParam(value = "Model Payload", required = true) @FormParam("json_xml") String payload) throws URISyntaxException {
+			@ApiParam(value = "Model Payload", required = true) @FormParam("json_xml") String payload) throws URISyntaxException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
-		try {
-			processor.saveModel(workspace, project, path, payload);
-		} catch (IOException e) {
-			return createErrorResponseInternalServerError(e.getMessage());
-		}
+		processor.saveModel(workspace, project, path, payload);
 		
 		return Response.ok().location(workspaceProcessor.getURI(workspace, project, path)).build();
 	}
@@ -147,6 +141,7 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	 * Get the Stencil-Set
 	 *
 	 * @return the response
+	 * @throws IOException 
 	 */
 	@GET
 	@Path("stencil-sets")
@@ -154,22 +149,17 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Returns the stensil sets")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Stencil Sets", response = String.class),
 			@ApiResponse(code = 404, message = "Stencil Sets definition does not exist") })
-	public Response getStencilSet() {
+	public Response getStencilSet() throws IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		String stencilSets = null;
-		try {
-			stencilSets = processor.getStencilSet();
-		} catch (IOException e) {
-			return createErrorResponseInternalServerError(e.getMessage());
-		}
+		String stencilSets = processor.getStencilSet();
 		
 		if (stencilSets == null) {
 			String error = "Stencil Sets definition does not exist.";
-			return createErrorResponseNotFound(error);
+			throw new RepositoryNotFoundException(error);
 		}
 		return Response.ok().entity(stencilSets).build();
 	}

@@ -16,25 +16,36 @@
  */
 
 exports.log = function(message) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(message);
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message));
 };
 
-exports.error = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(message, args);
+exports.error = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(stringify(message));
 };
 
-exports.info = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(message, args);
+exports.info = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(stringify(message));
 };
 
-exports.warn = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(message, args);
+exports.warn = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(stringify(message));
 };
 
-exports.debug = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(message, args);
+exports.debug = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(stringify(message));
 };
 
-exports.trace = function(message, args) {
-	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(message, args);
+exports.trace = function(message) {
+	let traceMessage = new Error(stringify(`${message}`)).stack;
+	if (traceMessage) {
+		traceMessage = traceMessage.substring("Error: ".length, traceMessage.length);
+	}
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(traceMessage);
 };
+
+function stringify(message) {
+	if (typeof message === 'object' && message !== null && message.class === undefined) {
+		return JSON.stringify(message);
+	}
+	return "" + message;
+}

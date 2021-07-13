@@ -46,3 +46,24 @@ exports.load = function(path) {
 exports.update = function() {
 	org.eclipse.dirigible.commons.config.Configuration.update();
 };
+
+exports.getOS = function() {
+	return org.eclipse.dirigible.commons.config.Configuration.getOS();
+}
+
+exports.isOSWindows = function() {
+	return org.eclipse.dirigible.commons.config.Configuration.isOSWindows();
+}
+
+exports.isOSMac = function() {
+	return org.eclipse.dirigible.commons.config.Configuration.isOSMac();
+}
+
+exports.isOSUNIX = function() {
+	return org.eclipse.dirigible.commons.config.Configuration.isOSUNIX();
+}
+
+exports.isOSSolaris = function() {
+	return org.eclipse.dirigible.commons.config.Configuration.isOSSolaris();
+}
+

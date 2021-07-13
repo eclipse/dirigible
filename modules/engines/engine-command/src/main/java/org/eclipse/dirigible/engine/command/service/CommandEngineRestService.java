@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.command.service;
@@ -25,7 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.command.processor.CommandEngineProcessor;
@@ -63,26 +63,19 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@GET
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeCommandServiceGet(@PathParam("path") String path) {
+	public Response executeCommandServiceGet(@PathParam("path") String path) throws ScriptingException {
 		try {
 			Object result = processor.executeService(path);
 			return Response.ok(result == null ? "null" : result.toString()).type(HttpResponseFacade.getContentType()).build();
-		} catch (ScriptingDependencyException e) {
-			logger.error(e.getMessage());
-			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
-			logger.error(message);
-			return Response.status(Response.Status.ACCEPTED).entity(message).build();	
-		} catch (Throwable e) {
-			String message = e.getMessage();
-			logger.error(message, e);
-			return createErrorResponseInternalServerError(message);
+			throw new RepositoryNotFoundException(message, e);
 		}
 	}
 
@@ -92,12 +85,13 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@POST
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeCommandServicePost(@PathParam("path") String path) {
+	public Response executeCommandServicePost(@PathParam("path") String path) throws ScriptingException {
 		return executeCommandServiceGet(path);
 	}
 
@@ -107,12 +101,13 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@PUT
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeCommandServicePut(@PathParam("path") String path) {
+	public Response executeCommandServicePut(@PathParam("path") String path) throws ScriptingException {
 		return executeCommandServiceGet(path);
 	}
 
@@ -122,12 +117,13 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@DELETE
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeCommandServiceDelete(@PathParam("path") String path) {
+	public Response executeCommandServiceDelete(@PathParam("path") String path) throws ScriptingException {
 		return executeCommandServiceGet(path);
 	}
 
@@ -137,12 +133,13 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@HEAD
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeCommandServiceHead(@PathParam("path") String path) {
+	public Response executeCommandServiceHead(@PathParam("path") String path) throws ScriptingException {
 		return executeCommandServiceGet(path);
 	}
 

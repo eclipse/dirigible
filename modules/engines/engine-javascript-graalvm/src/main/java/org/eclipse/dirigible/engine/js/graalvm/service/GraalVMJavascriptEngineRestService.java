@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
@@ -24,7 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineProcessor;
@@ -61,23 +61,15 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@GET
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVmServiceGet(@PathParam("path") String path) {
-		try {
-			processor.executeService(path);
-			return Response.ok().build();
-		} catch (ScriptingDependencyException e) {
-			logger.error(e.getMessage(), e);
-			return Response.status(Response.Status.ACCEPTED).entity(e.getMessage()).build();
-		} catch (Throwable e) {
-			String message = e.getMessage();
-			logger.error(message, e);
-			return createErrorResponseInternalServerError(message);
-		}
+	public Response executeGraalVmServiceGet(@PathParam("path") String path) throws ScriptingException {
+		processor.executeService(path);
+		return Response.ok().build();
 	}
 
 	/**
@@ -86,12 +78,13 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@POST
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVMServicePost(@PathParam("path") String path) {
+	public Response executeGraalVMServicePost(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVmServiceGet(path);
 	}
 
@@ -101,12 +94,13 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@PUT
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVMServicePut(@PathParam("path") String path) {
+	public Response executeGraalVMServicePut(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVmServiceGet(path);
 	}
 
@@ -116,12 +110,13 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@DELETE
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVMServiceDelete(@PathParam("path") String path) {
+	public Response executeGraalVMServiceDelete(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVmServiceGet(path);
 	}
 
@@ -131,12 +126,13 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 * @param path
 	 *            the path
 	 * @return result of the execution of the service
+	 * @throws ScriptingException exception
 	 */
 	@HEAD
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVMServiceHead(@PathParam("path") String path) {
+	public Response executeGraalVMServiceHead(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVmServiceGet(path);
 	}
 
