@@ -19,6 +19,7 @@ import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PUT;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -300,6 +301,21 @@ public class DefaultSQLProcessorTest {
 				.executeRequest(PUT);
 		validateHttpResponse(response, 204);
 	}
+	@Test
+    public void testSQLProcessorNavigation()
+            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+        
+        Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestRoots('id_0')", "Child") //
+                .accept("application/json").executeRequest(GET);
+        
+        validateHttpResponse(response, 200);
+        InputStream res = (InputStream)response.getEntity();
+        String responseStr = IOUtils.toString(res);
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_1')"));
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_2')"));
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_3')"));
+    }
 	
 	MockRequestBuilder modifyingRequestBuilder(String content) {
 		MockRequestBuilder builder = new MockRequestBuilder() {
