@@ -216,6 +216,31 @@ public class DefaultSQLProcessorTest {
 				IOUtils.toString(res));
 	}
 
+	   @Test
+	    public void testSQLProcessorCannotCreateEntityWithoutId()
+	            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+	        
+	        String content = "{\n"
+	                + "  \"d\": {\n"
+	                + "    \"__metadata\": {\n"
+	                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+	                + "    },\n"
+	                + "    \"ChildName\": \"Name\",\n"
+	                + "    \"ChildValue\": \"Value\"\n"
+	                + " }\n"
+	                + "}";
+	        
+	    
+	        Response response = modifyingRequestBuilder(content)//
+	                .segments("TestChilds") //
+	                .accept("application/json")
+	                .content(content)
+	                .param("content-type", "application/json")
+	                .contentSize(content.length())
+	                .executeRequest(POST);
+	        validateHttpResponse(response, 500);
+	    }
+	   
 	@Test
 	public void testSQLProcessorMergeEntity()
 			throws InstantiationException, IllegalAccessException, IOException, ODataException {
