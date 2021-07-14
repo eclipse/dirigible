@@ -336,6 +336,6 @@
 
 	<properties>
 		<graalvm.version>21.0.0</graalvm.version>
-		<license.header.location>../../../license-header.txt</license.header.location>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 </project>
