@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.database.sql.test.hana;
 
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Before;
@@ -20,10 +21,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +34,9 @@ public class SynonymTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Connection mockConnection;
+
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private DatabaseMetaData mockDatabaseMetaData;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private PreparedStatement mockPrepareStatement;
@@ -75,12 +76,12 @@ public class SynonymTest {
 
     @Test
     public void checkIfSynonymExist() throws SQLException {
-        when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
-        when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
+        String synonymName = "\"MYSCHEMA\".\"namespace.path::MySynonym\"";
+        when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
+        when(mockDatabaseMetaData.getTables(null, null, synonymName, new String[]{ISqlKeywords.KEYWORD_SYNONYM})).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+                .exists(mockConnection, synonymName, DatabaseArtifactTypes.SYNONYM);
         assertTrue(exist);
     }
 
