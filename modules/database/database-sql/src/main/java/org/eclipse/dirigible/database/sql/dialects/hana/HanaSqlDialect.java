@@ -12,14 +12,13 @@
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
 import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
-import org.eclipse.dirigible.database.sql.dialects.derby.DerbyDropBranchingBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +58,12 @@ public class HanaSqlDialect extends
     private boolean isFunctionExisting(Connection connection, String function) throws SQLException {
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet funcDescription = metadata.getFunctions(null, null, function);
+        return funcDescription.next();
+    }
+
+    private boolean isSynonymExisting(Connection connection, String synonym) throws SQLException {
+        DatabaseMetaData metadata = connection.getMetaData();
+        ResultSet funcDescription = metadata.getTables(null, null, synonym, new String[]{ISqlKeywords.KEYWORD_SYNONYM});
         return funcDescription.next();
     }
 
@@ -353,8 +358,10 @@ public class HanaSqlDialect extends
             switch (type) {
                 case DatabaseArtifactTypes.TABLE:
                 case DatabaseArtifactTypes.VIEW:
-                case DatabaseArtifactTypes.SYNONYM:
                     exists = count(connection, artefact) >= 0;
+                    break;
+                case DatabaseArtifactTypes.SYNONYM:
+                    exists = isSynonymExisting(connection, artefact);
                     break;
                 case DatabaseArtifactTypes.FUNCTION:
                     exists = isFunctionExisting(connection, artefact);
