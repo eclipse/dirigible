@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2020 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.engine.command.processor;
@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -138,6 +139,21 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		
 		String commandLine = commandDefinition.getTargetCommand().getCommand();
 
+		result = executeCommandLine(commandLine, commandDefinition.getSet(), commandDefinition.getUnset(), Boolean.parseBoolean(getRepository().getParameter(REPOSITORY_FILE_BASED)));
+
+		try {
+			HttpResponseFacade.setContentType(commandDefinition.getContentType());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.trace("exiting: executeServiceModule()");
+		return result;
+	}
+
+	public String executeCommandLine(String commandLine, Map<String, String> forAdding, List<String> forRemoving, boolean isFileBasedRepository) throws ScriptingException {
+		String result = null;
+
 		String[] args = null;
 		try {
 			args = ProcessUtils.translateCommandline(commandLine);
@@ -152,15 +168,14 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		try {
 			ProcessBuilder processBuilder = ProcessUtils.createProcess(args);
 
-			ProcessUtils.addEnvironmentVariables(processBuilder, commandDefinition.getSet());
-			ProcessUtils.removeEnvironmentVariables(processBuilder, commandDefinition.getUnset());
+			ProcessUtils.addEnvironmentVariables(processBuilder, forAdding);
+			ProcessUtils.removeEnvironmentVariables(processBuilder, forRemoving);
 
-			boolean isFileBasedRepository = Boolean.parseBoolean(getRepository().getParameter(REPOSITORY_FILE_BASED));
 			if (isFileBasedRepository) {
 				String root = getRepository().getParameter(REPOSITORY_ROOT_FOLDER);
 				processBuilder.directory(new File(root + IRepositoryStructure.PATH_REGISTRY_PUBLIC));
 			}
-			
+
 			processBuilder.redirectErrorStream(true);
 
 			out = new ByteArrayOutputStream();
@@ -193,14 +208,6 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			throw new ScriptingException(e);
 		}
 		result = new String(out.toByteArray());
-
-		try {
-			HttpResponseFacade.setContentType(commandDefinition.getContentType());
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		
-		logger.trace("exiting: executeServiceModule()");
 		return result;
 	}
 
