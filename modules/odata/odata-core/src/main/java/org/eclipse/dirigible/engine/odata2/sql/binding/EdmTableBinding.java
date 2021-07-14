@@ -11,7 +11,10 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.binding;
 
-import java.util.ArrayList;
+import static java.lang.String.format;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.edm.EdmComplexType;
@@ -23,10 +26,13 @@ import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.edm.provider.Mapping;
 
 public class EdmTableBinding extends Mapping {
+    
     private static final String NO_PROPERTY_FOUND = "No sql binding configuration found in the mapping configuration for property %s."
             + " Did you map this property in the %s mapping?";
 
     private static final String PROPERTY_WRONG_CONFIGURATION = "Sql binding configuration in the mapping configuration for property %s is wrongly configured.";
+    
+    private static final String JOIN_COLUMN_UNSUPPORTED_CONFIGURATION = PROPERTY_WRONG_CONFIGURATION + " The value %s is not of expected type List and String.";
 
     private Map<String, Object> bindingData;
     private String targetFqn;
@@ -44,15 +50,22 @@ public class EdmTableBinding extends Mapping {
         return readMandatoryConfig("sqlTable", String.class);
     }
 
-    public ArrayList<String> getJoinColumnTo(EdmStructuralType target) throws EdmException {
+    @SuppressWarnings("unchecked")
+    public List<String> getJoinColumnTo(EdmStructuralType target) throws EdmException {
         String ref = "_ref_" + target.getName();
         String jk = "joinColumn";
-        @SuppressWarnings("unchecked")
         Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
-        if (refKeys.containsKey(jk)) {
-            return (ArrayList<String>) refKeys.get(jk);
+        if (refKeys.containsKey(jk)) {  
+            Object joinColumn = refKeys.get(jk);
+            if (joinColumn instanceof List) {
+                return (List<String>)joinColumn;
+            } else if (refKeys.get(jk) instanceof String) {
+                return Arrays.asList(String.valueOf(refKeys.get(jk)));
+            } else {
+                throw new IllegalArgumentException(format(format(JOIN_COLUMN_UNSUPPORTED_CONFIGURATION, ref, joinColumn)));
+            }
         } else {
-            throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, ref + "->" + jk, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, ref + "->" + jk, targetFqn));
         }
     }
 
@@ -82,7 +95,7 @@ public class EdmTableBinding extends Mapping {
             }
         }
 
-        throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, key, targetFqn));
+        throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
     }
 
     private <T> T readMandatoryConfig(String key, Class<T> clazz) {
@@ -92,7 +105,7 @@ public class EdmTableBinding extends Mapping {
                 return clazz.cast(property);
             }
         }
-        throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, key, targetFqn));
+        throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
     }
 
     public boolean hasJoinColumnTo(EdmStructuralType target) throws EdmException {
@@ -105,7 +118,7 @@ public class EdmTableBinding extends Mapping {
         return false;
     }
 
-    public ArrayList<String> getJoinColumnTo(EdmEntitySet target) throws EdmException {
+    public List<String> getJoinColumnTo(EdmEntitySet target) throws EdmException {
         return getJoinColumnTo(target.getEntityType());
     }
 
@@ -118,11 +131,11 @@ public class EdmTableBinding extends Mapping {
                 Map<String, Object> value = (Map<String, Object>) bindingData.get(propertyName);
                 return String.valueOf(value.get("name"));
             } else {
-                throw new IllegalArgumentException(String.format(PROPERTY_WRONG_CONFIGURATION, propertyName));
+                throw new IllegalArgumentException(format(PROPERTY_WRONG_CONFIGURATION, propertyName));
             }
 
         } else {
-            throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, propertyName, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, propertyName, targetFqn));
         }
     }
 
@@ -130,7 +143,7 @@ public class EdmTableBinding extends Mapping {
         try {
             return getColumnName(property.getName());
         } catch (EdmException e) {
-            throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, property, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, property, targetFqn));
         }
     }
 
@@ -149,11 +162,11 @@ public class EdmTableBinding extends Mapping {
                 String sqlType = String.valueOf(value.get("sqlType"));
                 return new ColumnInfo(name, sqlType);
             } else {
-                throw new IllegalArgumentException(String.format(PROPERTY_WRONG_CONFIGURATION, propertyName));
+                throw new IllegalArgumentException(format(PROPERTY_WRONG_CONFIGURATION, propertyName));
             }
 
         } else {
-            throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, propertyName, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, propertyName, targetFqn));
         }
 
     }
@@ -162,7 +175,7 @@ public class EdmTableBinding extends Mapping {
         try {
             return getColumnInfo(property.getName());
         } catch (EdmException e) {
-            throw new IllegalArgumentException(String.format(NO_PROPERTY_FOUND, property, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, property, targetFqn));
         }
     }
 

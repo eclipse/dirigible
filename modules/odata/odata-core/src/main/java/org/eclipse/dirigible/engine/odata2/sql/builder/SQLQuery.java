@@ -169,7 +169,7 @@ public final class SQLQuery {
         return mapping.getTableName();
     }
 
-    public ArrayList<String> getSQLJoinTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
+    public List<String> getSQLJoinTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         if (tableMappingProvider.getEdmTableBinding(from).hasJoinColumnTo(to))
             return tableMappingProvider.getEdmTableBinding(from).getJoinColumnTo(to);
         throw new IllegalArgumentException("No join column definition found from type " + from + " to type " + to);

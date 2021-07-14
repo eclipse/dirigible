@@ -77,7 +77,7 @@ public final class SQLExpressionJoin implements SQLExpression {
         join.append(csl + query.getSQLTableAlias(start) + csl);
         join.append(" ON ");
 
-        ArrayList<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
+        List<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
         for (int i = 0; i < targetKeys.size(); i++) {
             join.append(csl + query.getSQLTableAlias(start) + csl);
             join.append(".");
@@ -119,7 +119,7 @@ public final class SQLExpressionJoin implements SQLExpression {
         return query.getSQLTableName(type);
     }
 
-    private ArrayList<String> getTargetJoinKeyForEntityType(EdmStructuralType start, EdmStructuralType end) throws EdmException {
+    private List<String> getTargetJoinKeyForEntityType(EdmStructuralType start, EdmStructuralType end) throws EdmException {
         return query.getSQLJoinTableName(start, end);
     }
 

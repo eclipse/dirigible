@@ -19,6 +19,7 @@ import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PUT;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -216,6 +217,31 @@ public class DefaultSQLProcessorTest {
 				IOUtils.toString(res));
 	}
 
+	   @Test
+	    public void testSQLProcessorCannotCreateEntityWithoutId()
+	            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+	        
+	        String content = "{\n"
+	                + "  \"d\": {\n"
+	                + "    \"__metadata\": {\n"
+	                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+	                + "    },\n"
+	                + "    \"ChildName\": \"Name\",\n"
+	                + "    \"ChildValue\": \"Value\"\n"
+	                + " }\n"
+	                + "}";
+	        
+	    
+	        Response response = modifyingRequestBuilder(content)//
+	                .segments("TestChilds") //
+	                .accept("application/json")
+	                .content(content)
+	                .param("content-type", "application/json")
+	                .contentSize(content.length())
+	                .executeRequest(POST);
+	        validateHttpResponse(response, 500);
+	    }
+	   
 	@Test
 	public void testSQLProcessorMergeEntity()
 			throws InstantiationException, IllegalAccessException, IOException, ODataException {
@@ -275,6 +301,21 @@ public class DefaultSQLProcessorTest {
 				.executeRequest(PUT);
 		validateHttpResponse(response, 204);
 	}
+	@Test
+    public void testSQLProcessorNavigation()
+            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+        
+        Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestRoots('id_0')", "Child") //
+                .accept("application/json").executeRequest(GET);
+        
+        validateHttpResponse(response, 200);
+        InputStream res = (InputStream)response.getEntity();
+        String responseStr = IOUtils.toString(res);
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_1')"));
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_2')"));
+        assertTrue(responseStr.contains("\"uri\":\"http://localhost:8080/api/v1/TestChilds('0_3')"));
+    }
 	
 	MockRequestBuilder modifyingRequestBuilder(String content) {
 		MockRequestBuilder builder = new MockRequestBuilder() {

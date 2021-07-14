@@ -52,7 +52,7 @@ public class TestRoot {
     private InputStream mediaValue;
 
     @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = TestChild.class, association = "TestChilds")
-    private List<TestChild> child; // = new ArrayList<TestChild>();
+    private List<TestChild> child;
 
     public String getChangeId() {
         return changeId;
