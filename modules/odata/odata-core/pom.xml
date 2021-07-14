@@ -198,6 +198,6 @@
     <properties>
     	<!-- Required to enable usage in projects that run on java 1.8  -->
     	<custom.java.build.version>1.8</custom.java.build.version>
-        <license.header.location>../../../license-header.txt</license.header.location>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 </project>

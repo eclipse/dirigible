@@ -34,7 +34,7 @@
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
 
-		<license.header.lоcation>../../license-header.txt</license.header.lоcation>
+		<license.header.lоcation>../../licensing-header.txt</license.header.lоcation>
 	</properties>
 
 	<modules>

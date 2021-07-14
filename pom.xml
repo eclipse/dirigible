@@ -615,7 +615,7 @@
 		<mongodb.version>3.12.7</mongodb.version>
 		<org.projectlombok.version>1.18.20</org.projectlombok.version>
 
-		<license.header.location>license-header.txt</license.header.location>
+		<license.header.location>licensing-header.txt</license.header.location>
 
 		<skip.tests>true</skip.tests>
 	</properties>

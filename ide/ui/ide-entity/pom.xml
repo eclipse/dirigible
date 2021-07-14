@@ -27,7 +27,7 @@
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
 		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 
-		<license.header.location>../../../license-header.txt</license.header.location>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>
