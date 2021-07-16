@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-core-parent</artifactId>
-		<version>6.0.0-SNAPSHOT</version>
+		<version>5.12.3</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,77 +34,77 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-extensions</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-generation</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-generation-mustache</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-generation-velocity</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-generation-javascript</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-git</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-indexing</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-messaging</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-publisher</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-registry</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-scheduler</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-security</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-workspace</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-migrations</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-websockets</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>5.12.3</version>
         </dependency>
     </dependencies>
 
