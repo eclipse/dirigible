@@ -239,6 +239,15 @@ public class SqlFactory<SELECT extends SelectBuilder, INSERT extends InsertBuild
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#exists(java.sql.Connection, java.lang.String, java.lang.String, java.lang.int)
+	 */
+	@Override
+	public boolean exists(Connection connection, String schema, String name, int type) throws SQLException {
+		return this.dialect.exists(connection, schema, name, type);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.ISqlFactory#count(java.sql.Connection, java.lang.String)
 	 */
 	@Override

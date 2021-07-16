@@ -360,20 +360,17 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 	 */
 	@Override
 	public boolean exists(Connection connection, String table, int type) throws SQLException {
+		return exists(connection, null, table, type);
+	}
+
+	@Override
+	public boolean exists(Connection connection, String schema, String table, int type) throws SQLException {
 		table = normalizeTableName(table);
 		DatabaseMetaData metadata = connection.getMetaData();
-		ResultSet resultSet = metadata.getTables(null, null, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
+		ResultSet resultSet = metadata.getTables(null, schema, normalizeTableName(table), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
 		if (resultSet.next()) {
 			return true;
 		}
-//		resultSet = metadata.getTables(null, null, table.toUpperCase(), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-//		if (resultSet.next()) {
-//			return true;
-//		}
-//		resultSet = metadata.getTables(null, null, table.toLowerCase(), ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-//		if (resultSet.next()) {
-//			return true;
-//		}
 		return false;
 	}
 

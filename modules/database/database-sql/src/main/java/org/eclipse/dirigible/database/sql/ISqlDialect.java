@@ -265,6 +265,7 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
+
 	@Override
 	public boolean exists(Connection connection, String name, int type) throws SQLException;
 
