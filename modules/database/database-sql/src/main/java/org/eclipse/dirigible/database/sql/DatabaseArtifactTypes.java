@@ -22,5 +22,6 @@ public interface DatabaseArtifactTypes {
 	public static final int FUNCTION = 4;
 	public static final int SEQUENCE = 5;
 	public static final int SYNONYM = 6;
+	public static final int SCHEMA = 7;
 	
 }

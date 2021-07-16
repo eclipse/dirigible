@@ -61,9 +61,15 @@ public class HanaSqlDialect extends
         return funcDescription.next();
     }
 
-    private boolean isSynonymExisting(Connection connection, String synonym) throws SQLException {
+    private boolean isSynonymExisting(Connection connection, String schemaPattern, String synonymPattern) throws SQLException {
         DatabaseMetaData metadata = connection.getMetaData();
-        ResultSet funcDescription = metadata.getTables(null, null, synonym, new String[]{ISqlKeywords.KEYWORD_SYNONYM});
+        ResultSet funcDescription = metadata.getTables(null, schemaPattern, synonymPattern, new String[]{ISqlKeywords.KEYWORD_SYNONYM});
+        return funcDescription.next();
+    }
+
+    private boolean isSchemaExisting(Connection connection, String schema) throws SQLException {
+        DatabaseMetaData metadata = connection.getMetaData();
+        ResultSet funcDescription = metadata.getSchemas(null, schema);
         return funcDescription.next();
     }
 
@@ -353,6 +359,15 @@ public class HanaSqlDialect extends
      */
     @Override
     public boolean exists(Connection connection, String artefact, int type) throws SQLException {
+        return exists(connection, null, artefact, type);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String, java.lang.int)
+     */
+    @Override
+    public boolean exists(Connection connection,String schema, String artefact, int type) throws SQLException {
         boolean exists = false;
         try {
             switch (type) {
@@ -361,7 +376,7 @@ public class HanaSqlDialect extends
                     exists = count(connection, artefact) >= 0;
                     break;
                 case DatabaseArtifactTypes.SYNONYM:
-                    exists = isSynonymExisting(connection, artefact);
+                    exists = isSynonymExisting(connection, schema,  artefact);
                     break;
                 case DatabaseArtifactTypes.FUNCTION:
                     exists = isFunctionExisting(connection, artefact);
@@ -371,6 +386,9 @@ public class HanaSqlDialect extends
                     break;
                 case DatabaseArtifactTypes.SEQUENCE:
                     exists = isSequenceExisting(connection, artefact);
+                    break;
+                case DatabaseArtifactTypes.SCHEMA:
+                    exists = isSchemaExisting(connection, artefact);
                     break;
             }
         } catch (Exception e) {

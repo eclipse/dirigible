@@ -366,6 +366,11 @@ public interface ISqlKeywords {
     public static final String KEYWORD_IDENTITY = "IDENTITY"; //$NON-NLS-1$
 
     /**
+     * The Constant KEYWORD_SCHEMA.
+     */
+    public static final String KEYWORD_SCHEMA = "SCHEMA"; //$NON-NLS-1$
+
+    /**
      * The Constant FUNCTION_CURRENT_DATE.
      */
     public static final String FUNCTION_CURRENT_DATE = "CURRENT_DATE"; //$NON-NLS-1$
