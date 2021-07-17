@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.commons.api.helpers;
@@ -454,6 +454,9 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_JSON_ROLES. */
 	public static final String APPLICATION_JSON_ROLES = "application/json+roles";
 
+	/** The Constant APPLICATION_JSON_CSVIM. */
+	public static final String APPLICATION_JSON_CSVIM = "application/json+csvim";
+
 	/** The Constant APPLICATION_JSON_EXTENSION_POINT. */
 	public static final String APPLICATION_JSON_EXTENSION_POINT = "application/json+extension-point";
 
@@ -671,6 +674,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("extension", APPLICATION_JSON_EXTENSION); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("access", APPLICATION_JSON_ACCESS); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("roles", APPLICATION_JSON_ROLES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("csvim", APPLICATION_JSON_CSVIM); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("command", APPLICATION_JSON_COMMAND); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("form", APPLICATION_JSON_FORM); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("entity", APPLICATION_JSON); //$NON-NLS-1$
