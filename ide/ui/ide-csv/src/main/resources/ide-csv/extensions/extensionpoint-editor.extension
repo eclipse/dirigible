@@ -1,0 +1,5 @@
+{
+    "module": "ide-csv/services/extensionpoint-editor.js",
+    "extensionPoint": "ide-editor",
+    "description": "CSV Editor"
+}
