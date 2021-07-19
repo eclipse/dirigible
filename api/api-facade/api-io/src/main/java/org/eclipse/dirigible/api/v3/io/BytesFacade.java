@@ -12,6 +12,8 @@
 package org.eclipse.dirigible.api.v3.io;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class BytesFacade {
 	
@@ -24,5 +26,22 @@ public class BytesFacade {
 		byte[] bytes = text.getBytes(charset);
 		return bytes;
 	}
+
+	public static byte[] intToByteArray(int value, String byteOrder) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		ByteOrder order = byteOrder == "BIG_ENDIAN" ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+		buffer.order(order);
+		buffer.putInt(value);
+		return buffer.array();
+	}
+
+	public static int byteArrayToInt(byte[] data, String byteOrder) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		ByteOrder order = byteOrder == "BIG_ENDIAN" ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+		buffer.order(order);
+		buffer.put(data);
+		return buffer.getInt(0);
+	}
+
 
 }
