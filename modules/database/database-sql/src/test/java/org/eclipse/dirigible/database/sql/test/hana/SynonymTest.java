@@ -76,22 +76,25 @@ public class SynonymTest {
 
     @Test
     public void checkIfSynonymExist() throws SQLException {
-        String synonymName = "\"MYSCHEMA\".\"namespace.path::MySynonym\"";
+        String synonymName = "namespace.path::MySynonym";
+        String schema = "MySchema";
         when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
-        when(mockDatabaseMetaData.getTables(null, null, synonymName, new String[]{ISqlKeywords.KEYWORD_SYNONYM})).thenReturn(mockResultSet);
+        when(mockDatabaseMetaData.getTables(null, schema, synonymName, new String[]{ISqlKeywords.KEYWORD_SYNONYM})).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, synonymName, DatabaseArtifactTypes.SYNONYM);
+                .exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
         assertTrue(exist);
     }
 
     @Test
     public void checkIfSynonymDoesNotExist() throws SQLException {
+        String synonymName = "namespace.path::MySynonym";
+        String schema = "MySchema";
         when(mockConnection.prepareStatement(any())).thenReturn(mockPrepareStatement);
         when(mockPrepareStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MySynonym\"", DatabaseArtifactTypes.SYNONYM);
+                .exists(mockConnection, schema, synonymName, DatabaseArtifactTypes.SYNONYM);
         assertFalse(exist);
     }
 
