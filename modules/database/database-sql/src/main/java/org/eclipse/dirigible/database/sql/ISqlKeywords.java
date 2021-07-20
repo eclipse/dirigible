@@ -426,6 +426,11 @@ public interface ISqlKeywords {
     public static final String STAR = "*"; //$NON-NLS-1$
 
     /**
+     * The Constant SEMICOLON.
+     */
+    public static final String SEMICOLON = ";"; //$NON-NLS-1$
+
+    /**
      * The Constant ALTER.
      */
     public static final String ALTER = "ALTER"; //$NON-NLS-1$
