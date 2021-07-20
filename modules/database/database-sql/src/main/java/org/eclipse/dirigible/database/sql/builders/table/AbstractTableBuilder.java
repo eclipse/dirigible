@@ -1757,7 +1757,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
                                                     .collect(Collectors.toList());
         List<String[]> columnsToAlter = this.columns.stream()
                                                     .map(columnArr -> (Arrays.stream(columnArr).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument())))
-                                                                        ? Arrays.copyOfRange(columnArr, 0, columnArr.length -2)
+                                                                        ? Arrays.stream(columnArr).filter(x -> !x.contains(KEYWORD_PRIMARY)).toArray(String[]::new)
                                                                         : columnArr)
                                                     .collect(Collectors.toList());
         boolean isCompositeKey = allPrimaryKeys.size() > 1;

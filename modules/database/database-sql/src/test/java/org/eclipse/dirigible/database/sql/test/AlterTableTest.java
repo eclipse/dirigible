@@ -36,7 +36,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20)", sql);
+		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20)", sql);
+		assertEquals("ALTER TABLE CUSTOMERS ADD FIRST_NAME VARCHAR (20) ;", sql);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME", sql);
+		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class AlterTableTest {
 				.build();
 
 		assertNotNull(sql);
-		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME", sql);
+		assertEquals("ALTER TABLE CUSTOMERS DROP COLUMN FIRST_NAME ;", sql);
 	}
 
 }
