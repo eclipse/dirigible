@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
-
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
@@ -10,6 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
 package org.eclipse.dirigible.database.sql.builders.table;
 
 import java.util.ArrayList;
@@ -169,12 +169,12 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
 
     protected void generateForeignKeyNames(StringBuilder sql) {
         StringBuilder snippet = new StringBuilder();
-        for (CreateTableForeignKeyBuilder foreignKey : this.foreignKeys) {
-            String foreignKeyName = (isCaseSensitive()) ? encapsulate(foreignKey.getName()) : foreignKey.getName();
+        for (CreateTableForeignKeyBuilder foreignKey : this.getForeignKeys()) {
             snippet.append(SPACE)
                     .append(KEYWORD_CONSTRAINT)
                     .append(SPACE)
-                    .append(foreignKeyName)
+                    .append(foreignKey.getName())
+                    .append(SPACE)
                     .append(SPACE)
                     .append(KEYWORD_FOREIGN)
                     .append(SPACE)
@@ -182,6 +182,13 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
                     .append(SPACE)
                     .append(OPEN)
                     .append(traverseNames(foreignKey.getColumns())).append(CLOSE)
+                    .append(SPACE)
+                    .append(KEYWORD_REFERENCES)
+                    .append(SPACE)
+                    .append(foreignKey.getReferencedTable())
+                    .append(SPACE)
+                    .append(OPEN)
+                    .append(traverseNames(foreignKey.getReferencedColumns())).append(CLOSE)
                     .append(COMMA).append(SPACE);
         }
         sql.append(snippet.substring(0, snippet.length() - 2));

@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
