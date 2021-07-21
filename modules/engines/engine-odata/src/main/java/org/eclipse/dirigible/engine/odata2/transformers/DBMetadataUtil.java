@@ -17,6 +17,7 @@ import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 import javax.inject.Inject;
@@ -215,6 +216,27 @@ public class DBMetadataUtil {
         }
         while (tables.next()) {
             tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
+        }
+    }
+
+    /**
+     * Find schema of a given artifact name.
+     * The searchable artifacts are TABLE, VIEW, CALC_VIEW
+     */
+    public String getOdataArtifactTypeSchema( String artifactName) throws SQLException {
+        return getArtifactSchema(artifactName, new String[]{ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});
+    }
+
+    public String getArtifactSchema( String artifactName, String[] types) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData databaseMetadata = connection.getMetaData();
+            ResultSet rs = databaseMetadata.getTables(connection.getCatalog(), null, artifactName, types);
+            if (rs.next()) {
+                return rs.getString("TABLE_SCHEM");
+            }
+            return null;
+        } catch (SQLException e) {
+            throw e;
         }
     }
 
