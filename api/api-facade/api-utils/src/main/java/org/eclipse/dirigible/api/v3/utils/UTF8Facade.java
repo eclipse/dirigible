@@ -44,6 +44,18 @@ public class UTF8Facade {
         return new String(input, StandardCharsets.UTF_8);
     }
 
+
+    /**
+     * UTF8 bytes to string.
+     *
+     * @param bytes
+     *            the input byte array
+     * @param offset
+     *            the byte offset
+     * @param length
+     *            the length of the byte array
+     * @return the utf8 decoded output
+     */
     public static final String bytesToString(byte[] bytes, int offset, int length) throws UnsupportedEncodingException {
         return new String(bytes, offset, length, "UTF-8");
     }
