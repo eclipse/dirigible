@@ -80,13 +80,18 @@ public class DBMetadataUtil {
     }
 
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
+        return getTableMetadata(tableName, null);
+    }
+
+    public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
-            addFields(databaseMetadata, connection, tableMetadata);
-            addPrimaryKeys(databaseMetadata, connection, tableMetadata);
-            addForeignKeys(databaseMetadata, connection, tableMetadata);
-            addTableType(databaseMetadata, connection, tableMetadata);
+            addFields(databaseMetadata, connection, tableMetadata, schemaName);
+            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
+            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            tableMetadata.setSchemaName(schemaName);
         } catch (SQLException e) {
             throw e;
         }
@@ -95,11 +100,11 @@ public class DBMetadataUtil {
         return tableMetadata;
     }
 
-    private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
+    private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
+        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
         while (foreignKeys.next()) {
             PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
@@ -117,11 +122,11 @@ public class DBMetadataUtil {
         columnsMetadata.forEach(column -> column.setType(sqlToOdataEdmColumnTypes.get(column.getType().toUpperCase())));
     }
 
-    private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()));
+    private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
+        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
+            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
         while (primaryKeys.next()) {
             setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
@@ -136,11 +141,11 @@ public class DBMetadataUtil {
         });
     }
 
-    private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+    private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
+        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
         }
         while (columns.next()) {
             tableMetadata.getColumns().add(
@@ -202,11 +207,11 @@ public class DBMetadataUtil {
         return table;
     }
 
-    private void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata) throws SQLException {
-        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName()), null);
+    private void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
+        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), null, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
+            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
         }
         while (tables.next()) {
             tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
