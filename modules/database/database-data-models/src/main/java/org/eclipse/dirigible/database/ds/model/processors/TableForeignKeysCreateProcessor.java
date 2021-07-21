@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
-
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
@@ -53,9 +52,10 @@ public class TableForeignKeysCreateProcessor {
                 logger.info("Processing Alter Table Create Foreign Keys Table: " + tableName);
                 AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection).alter().table(tableName);
                 for (DataStructureTableConstraintForeignKeyModel foreignKey : tableModel.getConstraints().getForeignKeys()) {
-
+                    
                     List<String> valsToHashFKName = new ArrayList<>(Arrays.asList(foreignKey.getColumns()));
-                    String hashedFKName = "\""+ foreignKey.getReferencedTable() + DBModelUtils.generateHashedName(valsToHashFKName) + "\"";
+                    valsToHashFKName.add(foreignKey.getReferencedTable());
+                    String hashedFKName = "fk" + DBModelUtils.generateHashedName(valsToHashFKName);
                     String foreignKeyName = Objects.isNull(foreignKey.getName()) ? hashedFKName : foreignKey.getName();
                     if (caseSensitive) {
                         foreignKeyName = "\"" + foreignKeyName + "\"";
