@@ -1812,7 +1812,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
         for (String column : names) {
-            String columnName = (isCaseSensitive()) ? ("\""+column+"\"") : column;
+            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
             snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
         }
         return snippet.substring(0, snippet.length() - 2);
