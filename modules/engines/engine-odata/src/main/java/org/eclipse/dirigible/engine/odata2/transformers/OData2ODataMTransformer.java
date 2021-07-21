@@ -50,7 +50,7 @@ public class OData2ODataMTransformer {
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
             if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
@@ -154,15 +154,14 @@ public class OData2ODataMTransformer {
         return null;
     }
 
-
-
     private void validateAssociationProperties(ODataAssociationDefinition association, ODataDefinition model) throws SQLException {
         validateAssociationProperty(association.getFrom(), model);
         validateAssociationProperty(association.getTo(), model);
     }
 
     private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model) throws SQLException {
-        PersistenceTableModel dbTable = dbMetadataUtil.getTableMetadata(ODataMetadataUtil.getTableNameByEntity(model, assEndDefinition.getEntity()));
+        String tableName = ODataMetadataUtil.getTableNameByEntity(model, assEndDefinition.getEntity());
+        PersistenceTableModel dbTable = dbMetadataUtil.getTableMetadata(tableName, dbMetadataUtil.getOdataArtifactTypeSchema(tableName));
         ArrayList<String> invalidProps = new ArrayList<>();
         assEndDefinition.getProperty().forEach(assProp -> {
             List<PersistenceTableColumnModel> consistentProps = dbTable.getColumns().stream().filter(prop -> prop.getName().equals(assProp)).collect(Collectors.toList());
