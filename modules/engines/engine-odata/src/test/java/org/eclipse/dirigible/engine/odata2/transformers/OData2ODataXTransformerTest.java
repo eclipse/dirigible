@@ -52,7 +52,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         odata2ODataXTransformer.transform(definition);
     }
@@ -68,14 +68,14 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -113,7 +113,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         odata2ODataXTransformer.transform(definition);
     }
@@ -137,14 +137,14 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
         PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
-        when(dbMetadataUtil.getTableMetadata("PHONES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -193,7 +193,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -227,7 +227,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -265,7 +265,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -298,7 +298,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4, column5), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -334,7 +334,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
@@ -367,7 +367,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         odata2ODataXTransformer.transform(definition);
     }
@@ -383,7 +383,7 @@ public class OData2ODataXTransformerTest {
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_SYNONYM);
-        when(dbMetadataUtil.getTableMetadata("EMPLOYEES")).thenReturn(model);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
                 "</Schema>\n";

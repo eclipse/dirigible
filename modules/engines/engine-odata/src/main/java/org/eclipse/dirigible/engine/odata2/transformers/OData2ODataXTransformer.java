@@ -48,7 +48,7 @@ public class OData2ODataXTransformer {
         StringBuilder entitySets = new StringBuilder();
         StringBuilder associationsSets = new StringBuilder();
         for (ODataEntityDefinition entity : model.getEntities()) {
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable());
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(),dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
             if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
