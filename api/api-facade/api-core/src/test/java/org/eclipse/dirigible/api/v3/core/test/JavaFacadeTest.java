@@ -22,14 +22,12 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.api.v3.core.JavaFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,10 +38,9 @@ import com.google.gson.JsonPrimitive;
 /**
  * The Class JavaFacadeTest.
  */
-public class JavaFacadeTest extends AbstractGuiceTest {
+public class JavaFacadeTest extends AbstractDirigibleTest {
 
 	/** The extensions publisher. */
-	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
 
 	/**
@@ -54,7 +51,7 @@ public class JavaFacadeTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
+		this.extensionsPublisher = new ExtensionsSynchronizer();
 	}
 
 	/**

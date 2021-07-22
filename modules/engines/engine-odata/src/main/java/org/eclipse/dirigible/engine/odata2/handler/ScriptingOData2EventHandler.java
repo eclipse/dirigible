@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
@@ -45,8 +43,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	
 	private static final String DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT = "odata/wrappers/onEvent";
 	
-	@Inject
-	private ODataCoreService odataCoreService;
+	private ODataCoreService odataCoreService = new ODataCoreService();
 
 	@Override
 	public void beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,

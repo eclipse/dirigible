@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +39,11 @@ public class ScriptEngineExecutorFactory {
 	public static IScriptEngineExecutor getScriptEngineExecutor(String type) {
 		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {
 			if (next.getType().equals(type)) {
-				return StaticInjector.getInjector().getInstance(next.getClass());
+				try {
+					return next.getClass().newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					logger.error(e.getMessage(), e);
+				}
 			}
 		}
 		logger.error(format("Script Executor of Type {0} does not exist.", type));

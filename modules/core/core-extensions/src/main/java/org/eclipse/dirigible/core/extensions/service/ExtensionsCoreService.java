@@ -22,12 +22,11 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -38,17 +37,13 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Class ExtensionsCoreService.
  */
-@Singleton
 public class ExtensionsCoreService implements IExtensionsCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-	@Inject
-	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager;
+	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager = new PersistenceManager<ExtensionPointDefinition>();
 
-	@Inject
-	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager;
+	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager = new PersistenceManager<ExtensionDefinition>();
 
 	// Extension Points
 

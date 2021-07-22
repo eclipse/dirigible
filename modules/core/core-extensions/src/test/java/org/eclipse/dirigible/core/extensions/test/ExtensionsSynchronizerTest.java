@@ -18,14 +18,13 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.synchronizer.ExtensionsSynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
@@ -34,15 +33,12 @@ import org.junit.Test;
 /**
  * The Class ExtensionsSynchronizerTest.
  */
-public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
+public class ExtensionsSynchronizerTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IExtensionsCoreService extensionsCoreService;
 
-	@Inject
 	private ExtensionsSynchronizer extensionsPublisher;
 
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -53,9 +49,9 @@ public class ExtensionsSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
-		this.extensionsPublisher = getInjector().getInstance(ExtensionsSynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.extensionsCoreService = new ExtensionsCoreService();
+		this.extensionsPublisher = new ExtensionsSynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 
 	/**

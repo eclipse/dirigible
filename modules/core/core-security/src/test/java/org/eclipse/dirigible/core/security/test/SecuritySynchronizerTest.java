@@ -17,8 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessArtifact;
@@ -26,7 +25,7 @@ import org.eclipse.dirigible.core.security.definition.AccessArtifactConstraint;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 import org.eclipse.dirigible.core.security.synchronizer.SecuritySynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
@@ -35,18 +34,15 @@ import org.junit.Test;
 /**
  * The Class SecuritySynchronizerTest.
  */
-public class SecuritySynchronizerTest extends AbstractGuiceTest {
+public class SecuritySynchronizerTest extends AbstractDirigibleTest {
 
 	/** The security core service. */
-	@Inject
 	private ISecurityCoreService securityCoreService;
 
 	/** The security publisher. */
-	@Inject
-	private SecuritySynchronizer securityPublisher;
+	private SecuritySynchronizer securitySynchronizer;
 
 	/** The repository. */
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -56,9 +52,9 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
-		this.securityPublisher = getInjector().getInstance(SecuritySynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.securityCoreService = new SecurityCoreService();
+		this.securitySynchronizer = new SecuritySynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 
 	/**
@@ -70,7 +66,7 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Test
 	public void createAccessTest() throws SecurityException, IOException, AccessException {
-		securityPublisher.registerPredeliveredAccess("/access/test.access");
+		securitySynchronizer.registerPredeliveredAccess("/access/test.access");
 
 		AccessArtifact access = new AccessArtifact();
 		access.getConstraints().add(new AccessArtifactConstraint());
@@ -87,7 +83,7 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
 		repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/access/test.access", json.getBytes());
 
-		securityPublisher.synchronize();
+		securitySynchronizer.synchronize();
 
 		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("HTTP", "/myproject/myfolder/myartifact3.txt", "*", "myrole1");
 		assertNotNull(accessDefinition);
@@ -107,7 +103,7 @@ public class SecuritySynchronizerTest extends AbstractGuiceTest {
 
 		repository.removeResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/access/test.access");
 
-		securityPublisher.synchronize();
+		securitySynchronizer.synchronize();
 
 		AccessDefinition accessDefinition = securityCoreService.getAccessDefinition("HTTP", "/myproject/myfolder/myartifact3.txt", "GET", "myrole1");
 		assertNull(accessDefinition);

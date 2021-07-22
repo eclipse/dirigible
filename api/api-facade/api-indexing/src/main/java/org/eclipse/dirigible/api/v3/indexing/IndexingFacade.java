@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.indexing.api.IIndexingCoreService;
 import org.eclipse.dirigible.core.indexing.api.IndexingException;
@@ -30,7 +29,7 @@ public class IndexingFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(IndexingFacade.class);
 
-	private static final IIndexingCoreService indexingCoreService = StaticInjector.getInjector().getInstance(IndexingCoreService.class);
+	private static final IIndexingCoreService indexingCoreService = new IndexingCoreService();
 
 	/**
 	 * Adds an index.

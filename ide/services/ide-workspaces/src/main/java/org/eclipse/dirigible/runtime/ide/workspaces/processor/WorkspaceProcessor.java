@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -62,8 +60,7 @@ public class WorkspaceProcessor {
 
 	private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
-	@Inject
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
 	/**
 	 * Gets the workspaces core service.

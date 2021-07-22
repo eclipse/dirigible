@@ -19,15 +19,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.job.synchronizer.JobSynchronizer;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -38,21 +37,16 @@ import org.junit.Test;
 /**
  * The Class JobSynchronizerTest.
  */
-public class JobSynchronizerTest extends AbstractGuiceTest {
+public class JobSynchronizerTest extends AbstractDirigibleTest {
 
-	@Inject
 	private SchedulerInitializer schedulerInitializer;
 
-	@Inject
 	private ISchedulerCoreService schedulerCoreService;
 
-	@Inject
 	private JobSynchronizer jobSynchronizer;
 
-	@Inject
 	private SchedulerManager schedulerManager;
 
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -63,11 +57,11 @@ public class JobSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.schedulerInitializer = getInjector().getInstance(SchedulerInitializer.class);
-		this.schedulerCoreService = getInjector().getInstance(SchedulerCoreService.class);
-		this.jobSynchronizer = getInjector().getInstance(JobSynchronizer.class);
-		this.schedulerManager = getInjector().getInstance(SchedulerManager.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.schedulerInitializer = new SchedulerInitializer();
+		this.schedulerCoreService = new SchedulerCoreService();
+		this.jobSynchronizer = new JobSynchronizer();
+		this.schedulerManager = new SchedulerManager();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 		schedulerInitializer.initialize();
 	}

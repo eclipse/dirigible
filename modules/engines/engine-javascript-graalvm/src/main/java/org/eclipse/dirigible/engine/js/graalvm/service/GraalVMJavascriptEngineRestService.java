@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,7 +38,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the GraalVM based Javascript backend services.
  */
-@Singleton
 @Path("/graalvm")
 @Api(value = "JavaScript Engine - GraalVM", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -49,8 +46,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineRestService.class);
 
-	@Inject
-	private GraalVMJavascriptEngineProcessor processor;
+	private GraalVMJavascriptEngineProcessor processor = new GraalVMJavascriptEngineProcessor();
 
 	@Context
 	private HttpServletResponse response;

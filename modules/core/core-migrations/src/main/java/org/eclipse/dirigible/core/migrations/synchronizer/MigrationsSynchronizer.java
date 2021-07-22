@@ -24,13 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.ScriptEngineManager;
-import javax.sql.DataSource;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
@@ -40,7 +34,6 @@ import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
@@ -49,7 +42,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Migrations Synchronizer.
  */
-@Singleton
 public class MigrationsSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(MigrationsSynchronizer.class);
@@ -58,8 +50,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 
 	private static final Set<String> MIGRATIONS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
-	@Inject
-	private MigrationsCoreService migrationsCoreService;
+	private MigrationsCoreService migrationsCoreService = new MigrationsCoreService();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -105,7 +96,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		MigrationsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(MigrationsSynchronizer.class);
+		MigrationsSynchronizer synchronizer = new MigrationsSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

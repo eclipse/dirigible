@@ -43,6 +43,10 @@ public class KymaModule extends AbstractDirigibleModule {
 		return HIGH_PRIORITY;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.loadModuleConfig("/dirigible-kyma.properties");

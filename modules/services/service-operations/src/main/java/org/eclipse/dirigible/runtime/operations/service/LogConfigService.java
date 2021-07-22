@@ -13,11 +13,8 @@ package org.eclipse.dirigible.runtime.operations.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -44,7 +41,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Log Configurations.
  */
-@Singleton
 @Path("/ops/logconfig")
 @RolesAllowed({ "Operator" })
 @Api(value = "Operations - Log Configuration", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -54,8 +50,7 @@ public class LogConfigService extends AbstractRestService implements IRestServic
 
 	private static final Logger logger = LoggerFactory.getLogger(LogConfigService.class);
 
-	@Inject
-	private LogsProcessor processor;
+	private LogsProcessor processor = new LogsProcessor();
 	
 	@Context
 	private HttpServletResponse response;

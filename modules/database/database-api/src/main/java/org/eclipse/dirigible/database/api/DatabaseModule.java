@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
 	protected void configure() {
@@ -69,11 +70,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 	}
 
 	private void bindDatasource(IDatabase next, String dataSourceName) {
-		bind(IDatabase.class).toInstance(next);
+		StaticObjects.set(StaticObjects.DATABASE, next);
 		logger.trace(format("Binding Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		try {
 			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
-			bind(DataSource.class).toInstance(next.getDataSource(dataSourceName));
+			StaticObjects.set(StaticObjects.DATASOURCE, next.getDataSource(dataSourceName));
 			logger.info(format("Bound Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 			logger.trace(format("Done creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		} catch (Exception e) {

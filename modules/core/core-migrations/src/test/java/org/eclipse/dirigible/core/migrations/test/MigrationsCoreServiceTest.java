@@ -17,23 +17,20 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class MigrationsCoreServiceTest.
  */
-public class MigrationsCoreServiceTest extends AbstractGuiceTest {
+public class MigrationsCoreServiceTest extends AbstractDirigibleTest {
 	
 	/** The migrations core service. */
-	@Inject
 	private IMigrationsCoreService migrationsCoreService;
 	
 	/**
@@ -43,7 +40,7 @@ public class MigrationsCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.migrationsCoreService = getInjector().getInstance(MigrationsCoreService.class);
+		this.migrationsCoreService = new MigrationsCoreService();
 	}
 	
 	/**

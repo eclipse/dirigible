@@ -11,8 +11,7 @@
  */
 package org.eclipse.dirigible.runtime.registry.processor;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -27,8 +26,7 @@ public class RegistryProcessor {
 
 	private static final String REGISTRY = "/registry";
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Gets the resource.

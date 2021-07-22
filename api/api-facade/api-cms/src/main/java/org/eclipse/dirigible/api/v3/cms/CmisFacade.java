@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
@@ -34,7 +34,7 @@ public class CmisFacade {
 	public static final String VERSIONING_STATE_CHECKEDOUT = "checkedout";
 	
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
-	private static ICmsProvider cmsProvider = StaticInjector.getInjector().getInstance(ICmsProvider.class);
+	private static ICmsProvider cmsProvider = (ICmsProvider) StaticObjects.get(StaticObjects.CMS_PROVIDER);
 	
 	/**
 	 * CMIS Session
@@ -68,7 +68,7 @@ public class CmisFacade {
 		return org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE;
 	}
 	
-	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 
 	/**
 	 * Checks if the user can access the given path with the given method.

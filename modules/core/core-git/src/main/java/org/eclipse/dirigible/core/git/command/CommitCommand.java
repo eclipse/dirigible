@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
@@ -26,8 +23,6 @@ import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,21 +31,10 @@ import org.slf4j.LoggerFactory;
  */
 public class CommitCommand {
 
-	private static final String SHOULD_BE_EMPTY_REPOSITORY = "Should be empty repository: {}";
-
-//	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
-
-//	private static final String DOT_GIT = ".git"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(CommitCommand.class);
 
-//	/** The project metadata manager. */
-//	@Inject
-//	private ProjectMetadataManager projectMetadataManager;
-
 	/** The verifier. */
-	@Inject
-	private ProjectPropertiesVerifier verifier;
+	private ProjectPropertiesVerifier verifier = new ProjectPropertiesVerifier();
 
 	/**
 	 * Execute the Commit command.

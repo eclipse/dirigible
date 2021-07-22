@@ -17,6 +17,7 @@ import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.cms.db.api.CmsProviderDatabase;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ public class CmsDatabaseModule extends AbstractDirigibleModule {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
 	protected void configure() {
@@ -42,7 +43,7 @@ public class CmsDatabaseModule extends AbstractDirigibleModule {
 		if (CmsProviderDatabase.TYPE.equals(cmsProvider)) {
 			logger.trace(format("Installing CMS Provider [{0}:{1}] ...", CmsProviderDatabase.TYPE, CmsProviderDatabase.NAME));
 			CmsProviderDatabase instance = new CmsProviderDatabase();
-			bind(ICmsProvider.class).toInstance(instance);
+			StaticObjects.set(StaticObjects.CMS_PROVIDER, instance);
 			logger.trace(format("Done installing CMS Provider [{0}:{1}].", CmsProviderDatabase.TYPE, CmsProviderDatabase.NAME));
 		}
 	}

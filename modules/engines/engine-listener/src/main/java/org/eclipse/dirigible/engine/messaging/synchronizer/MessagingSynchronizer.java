@@ -22,11 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -42,7 +38,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class MessagingSynchronizer.
  */
-@Singleton
 public class MessagingSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(MessagingSynchronizer.class);
@@ -53,11 +48,9 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private static final List<String> LISTENERS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 	private static final List<String> LISTENERS_MODIFIED = Collections.synchronizedList(new ArrayList<String>());
 
-	@Inject
-	private MessagingCoreService messagingCoreService;
+	private MessagingCoreService messagingCoreService = new MessagingCoreService();
 
-	@Inject
-	private SchedulerManager messagingManager;
+	private SchedulerManager messagingManager = new SchedulerManager();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -99,7 +92,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		MessagingSynchronizer synchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
+		MessagingSynchronizer synchronizer = new MessagingSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

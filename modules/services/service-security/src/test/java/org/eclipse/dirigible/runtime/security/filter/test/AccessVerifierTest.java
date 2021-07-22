@@ -17,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 
 import org.eclipse.dirigible.core.security.api.AccessException;
@@ -25,17 +24,16 @@ import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
 import org.eclipse.dirigible.core.security.verifier.AccessVerifier;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class AccessVerifierTest.
  */
-public class AccessVerifierTest extends AbstractGuiceTest {
+public class AccessVerifierTest extends AbstractDirigibleTest {
 
 	/** The security core service. */
-	@Inject
 	private ISecurityCoreService securityCoreService;
 
 	/**
@@ -46,7 +44,7 @@ public class AccessVerifierTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
+		this.securityCoreService = new SecurityCoreService();
 	}
 
 	/**

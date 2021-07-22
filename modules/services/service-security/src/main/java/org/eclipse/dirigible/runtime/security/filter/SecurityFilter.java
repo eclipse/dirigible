@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.utils.EscapeFacade;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -91,7 +90,7 @@ public class SecurityFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
-	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 
 	private static final Set<String> SECURED_PREFIXES = new HashSet<String>();
 

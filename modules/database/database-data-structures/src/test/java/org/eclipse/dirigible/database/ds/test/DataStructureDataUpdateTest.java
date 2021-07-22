@@ -20,11 +20,11 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer;
@@ -36,14 +36,12 @@ import org.junit.Test;
 /**
  * The Class DataStructureDataReplaceTest.
  */
-public class DataStructureDataUpdateTest extends AbstractGuiceTest {
+public class DataStructureDataUpdateTest extends AbstractDirigibleTest {
 
 	/** The data structure core service. */
-	@Inject
 	private DataStructuresSynchronizer dataStructuresSynchronizer;
 
 	/** The datasource */
-	@Inject
 	private DataSource dataSource;
 
 	/**
@@ -54,8 +52,8 @@ public class DataStructureDataUpdateTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.dataStructuresSynchronizer = getInjector().getInstance(DataStructuresSynchronizer.class);
-		this.dataSource = getInjector().getInstance(DataSource.class);
+		this.dataStructuresSynchronizer = new DataStructuresSynchronizer();
+		this.dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 	}
 
 	/**

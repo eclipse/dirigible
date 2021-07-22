@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
@@ -45,8 +43,7 @@ public class BpmProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(BpmProcessor.class);
 
-	@Inject
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
 	public String getModel(String workspace, String project, String path) throws JsonProcessingException {
 		BpmnXMLConverter bpmnXMLConverter = new BpmnXMLConverter();

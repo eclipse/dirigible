@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -36,11 +35,9 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	
-	@Inject
-	private SynchronizerCoreService synchronizerCoreService;
+	private SynchronizerCoreService synchronizerCoreService = new SynchronizerCoreService();
 	
 	private final AtomicLong lastSynchronized = new AtomicLong(0);
 	

@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.messaging.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,7 +19,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class MessagingSynchronizerJob extends AbstractSynchronizerJob {
 
-	private MessagingSynchronizer messagingSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
+	private MessagingSynchronizer messagingSynchronizer = new MessagingSynchronizer();
 
 	/*
 	 * (non-Javadoc)

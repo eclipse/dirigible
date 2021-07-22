@@ -18,37 +18,33 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.ResourcesCache;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 /**
  * The PublisherCoreService implementation managing the requests for publish artifacts.
  */
-@Singleton
 public class PublisherCoreService implements IPublisherCoreService {
 
 	/** The data source. */
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
 	/** The publish request persistence manager. */
-	@Inject
-	private PersistenceManager<PublishRequestDefinition> publishRequestPersistenceManager;
+	private PersistenceManager<PublishRequestDefinition> publishRequestPersistenceManager = new PersistenceManager<PublishRequestDefinition>();
 
 	/** The publish log persistence manager. */
-	@Inject
-	private PersistenceManager<PublishLogDefinition> publishLogPersistenceManager;
+	private PersistenceManager<PublishLogDefinition> publishLogPersistenceManager = new PersistenceManager<PublishLogDefinition>();
 
 	// Publish Request
 

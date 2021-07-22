@@ -14,10 +14,10 @@ package org.eclipse.dirigible.core.workspace.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Workspaces Core Service.
  */
-@Singleton
 public class WorkspacesCoreService implements IWorkspacesCoreService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WorkspacesCoreService.class);
@@ -37,8 +36,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	/** The Constant DEFAULT_WORKSPACE_NAME. */
 	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/*
 	 * (non-Javadoc)

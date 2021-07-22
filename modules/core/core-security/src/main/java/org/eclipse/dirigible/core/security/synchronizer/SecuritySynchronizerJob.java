@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.core.security.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,8 +19,8 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
 
-	/** The extensions synchronizer. */
-	private SecuritySynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
+	/** The security synchronizer. */
+	private SecuritySynchronizer securitySynchronizer = new SecuritySynchronizer();
 
 	/*
 	 * (non-Javadoc)
@@ -29,7 +28,7 @@ public class SecuritySynchronizerJob extends AbstractSynchronizerJob {
 	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
-		return extensionsSynchronizer;
+		return securitySynchronizer;
 	}
 
 	@Override

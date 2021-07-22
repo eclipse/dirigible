@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.activemq.broker.BrokerService;
@@ -30,6 +29,7 @@ import org.apache.activemq.store.PersistenceAdapter;
 import org.apache.activemq.store.jdbc.JDBCPersistenceAdapter;
 import org.apache.activemq.store.kahadb.plist.PListStoreImpl;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -53,11 +53,9 @@ public class SchedulerManager {
 	/** The Constant LOCATION_TEMP_STORE. */
 	private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 	
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	private static BrokerService broker;
 

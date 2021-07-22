@@ -16,8 +16,6 @@ import static java.text.MessageFormat.format;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
@@ -49,7 +47,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw Repository content.
  */
-@Singleton
 @Path("/core/repository")
 @Api(value = "Core - Repository", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -58,8 +55,7 @@ public class RepositoryRestService extends AbstractRestService implements IRestS
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryRestService.class);
 
-	@Inject
-	private RepositoryProcessor processor;
+	private RepositoryProcessor processor = new RepositoryProcessor();
 
 	@Context
 	private HttpServletResponse response;

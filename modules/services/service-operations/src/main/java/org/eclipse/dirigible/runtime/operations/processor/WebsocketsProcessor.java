@@ -13,8 +13,6 @@ package org.eclipse.dirigible.runtime.operations.processor;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
@@ -22,8 +20,7 @@ import org.eclipse.dirigible.core.websockets.service.WebsocketsCoreService;
 
 public class WebsocketsProcessor {
 	
-	@Inject
-	private WebsocketsCoreService websocketsCoreService;
+	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
 	public String list() throws WebsocketsException {
 		

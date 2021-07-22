@@ -14,7 +14,6 @@ package org.eclipse.dirigible.database.ds.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresClasspathContentHandler.class);
 
-	private DataStructuresSynchronizer dataStructuresSynchronizer = StaticInjector.getInjector().getInstance(DataStructuresSynchronizer.class);
+	private DataStructuresSynchronizer dataStructuresSynchronizer = new DataStructuresSynchronizer();
 
 	/*
 	 * (non-Javadoc)

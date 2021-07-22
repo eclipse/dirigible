@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +23,7 @@ import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -41,8 +41,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMCustomTest.class);
 
 	/** The repository. */
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
@@ -54,8 +53,8 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		this.repository = getInjector().getInstance(IRepository.class);
-		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
 	}
 
 	@Override

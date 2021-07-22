@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
@@ -69,32 +67,23 @@ public class GitProcessor {
 
 	private static final String DOT_GIT = ".git";
 
-	@Inject
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
-	@Inject
-	private CloneCommand cloneCommand;
+	private CloneCommand cloneCommand = new CloneCommand();
 
-	@Inject
-	private PullCommand pullCommand;
+	private PullCommand pullCommand = new PullCommand();
 
-	@Inject
-	private PushCommand pushCommand;
+	private PushCommand pushCommand = new PushCommand();
 
-	@Inject
-	private ResetCommand resetCommand;
+	private ResetCommand resetCommand = new ResetCommand();
 
-	@Inject
-	private ShareCommand shareCommand;
+	private ShareCommand shareCommand = new ShareCommand();
 	
-	@Inject
-	private CheckoutCommand checkoutCommand;
+	private CheckoutCommand checkoutCommand = new CheckoutCommand();
 	
-	@Inject
-	private CommitCommand commitCommand;
+	private CommitCommand commitCommand = new CommitCommand();
 
-	@Inject
-	private UpdateDependenciesCommand updateDependenciesCommand;
+	private UpdateDependenciesCommand updateDependenciesCommand = new UpdateDependenciesCommand();
 
 	/**
 	 * Clone.

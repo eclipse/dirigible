@@ -12,15 +12,11 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.eclipse.dirigible.engine.odata2.definition.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Singleton
 public class OData2ODataHTransformer {
 
     public List<ODataHandlerDefinition> transform(ODataDefinition model) throws SQLException {

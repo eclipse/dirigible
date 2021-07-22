@@ -16,8 +16,6 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -50,7 +48,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the BPM related resources and operations
  */
-@Singleton
 @Path("/ide/bpm")
 @Api(value = "IDE - BPM", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
@@ -58,11 +55,9 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 
 	private static final Logger logger = LoggerFactory.getLogger(BpmRestService.class);
 
-	@Inject
-	private BpmProcessor processor;
+	private BpmProcessor processor = new BpmProcessor();
 	
-	@Inject
-	private WorkspaceProcessor workspaceProcessor;
+	private WorkspaceProcessor workspaceProcessor = new WorkspaceProcessor();
 
 	@Context
 	private HttpServletResponse response;

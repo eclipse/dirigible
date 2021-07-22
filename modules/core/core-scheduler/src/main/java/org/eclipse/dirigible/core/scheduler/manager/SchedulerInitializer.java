@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ServiceLoader;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.health.HealthStatus;
 import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
@@ -38,17 +36,13 @@ public class SchedulerInitializer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerInitializer.class);
 
-	@Inject
-	private SchedulerCoreService schedulerCoreService;
+	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
-	@Inject
-	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer;
+	private QuartzDatabaseLayoutInitializer quartzDatabaseLayoutInitializer = new QuartzDatabaseLayoutInitializer();
 	
-	@Inject
-	private SynchronizerDatabaseLayoutInitializer synchronizerDatabaseLayoutInitializer;
+	private SynchronizerDatabaseLayoutInitializer synchronizerDatabaseLayoutInitializer = new SynchronizerDatabaseLayoutInitializer();
 	
-	@Inject
-	private MasterToRepositoryInitializer masterToRepositoryInitializer;
+	private MasterToRepositoryInitializer masterToRepositoryInitializer = new MasterToRepositoryInitializer();
 
 	/**
 	 * Initialize the scheduler.

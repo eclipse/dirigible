@@ -14,8 +14,6 @@ package org.eclipse.dirigible.engine.wiki.service;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -45,7 +43,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the wiki pages.
  */
-@Singleton
 @Path("/wiki")
 @Api(value = "Core - Wiki Engine", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -54,8 +51,7 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 
 	private static final Logger logger = LoggerFactory.getLogger(WikiEngineRestService.class);
 
-	@Inject
-	private WikiEngineProcessor processor;
+	private WikiEngineProcessor processor = new WikiEngineProcessor();
 
 	@Context
 	private HttpServletResponse response;

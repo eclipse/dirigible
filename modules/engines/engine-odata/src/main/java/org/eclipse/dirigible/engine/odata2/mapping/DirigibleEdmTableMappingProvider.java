@@ -13,7 +13,6 @@ package org.eclipse.dirigible.engine.odata2.mapping;
 
 import java.util.List;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
@@ -32,7 +31,7 @@ public class DirigibleEdmTableMappingProvider extends DefaultEdmTableMappingProv
         EdmTableBindingFactory tableBindingFactory = new EdmTableBindingFactory();
 
         
-        IODataCoreService odataCoreService = StaticInjector.getInjector().getInstance(ODataCoreService.class);
+        IODataCoreService odataCoreService = new ODataCoreService();
         List<ODataMappingDefinition> mappings = odataCoreService.getMappings();
         for (ODataMappingDefinition mapping : mappings) {
              EdmTableBinding binding = loadEdmTableBinding(tableBindingFactory, new String(mapping.getContent()));

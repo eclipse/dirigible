@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +36,15 @@ public class EngineExecutorFactory {
 	 *            the type
 	 * @return the engine executor
 	 */
+	@SuppressWarnings("deprecation")
 	public static IEngineExecutor getEngineExecutor(String type) {
 		for (IEngineExecutor next : ENGINE_EXECUTORS) {
 			if (next.getType().equals(type)) {
-				return StaticInjector.getInjector().getInstance(next.getClass());
+				try {
+					return next.getClass().newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					logger.error(e.getMessage(), e);
+				}
 			}
 		}
 		logger.error(format("Executor of Type {0} does not exist.", type));

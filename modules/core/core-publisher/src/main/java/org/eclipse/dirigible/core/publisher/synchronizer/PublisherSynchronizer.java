@@ -17,10 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
@@ -37,15 +33,14 @@ import org.slf4j.LoggerFactory;
 /**
  * The PublisherSynchronizer takes the requests for publish and perform the needed actions on the artifacts assigned.
  */
-@Singleton
 public class PublisherSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 
-	@Inject
-	private PublisherCoreService publishCoreService;
+	private PublisherCoreService publishCoreService = new PublisherCoreService();
 
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
+	
 	private List<String> unpublishLocations = new ArrayList<String>();
 
 	private String currentWorkspace = null;
@@ -58,7 +53,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		PublisherSynchronizer publisherSynchronizer = StaticInjector.getInjector().getInstance(PublisherSynchronizer.class);
+		PublisherSynchronizer publisherSynchronizer = new PublisherSynchronizer();
 		publisherSynchronizer.synchronize();
 	}
 

@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.web.service;
 
-import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,7 +27,6 @@ import io.swagger.annotations.ApiResponses;
 /**
  * Front facing REST service serving the public raw web content from the registry/public space.
  */
-@Singleton
 @Path("/public")
 @Api("Core - Web Engine Public")
 public class WebEnginePublicRestService extends AbstractWebEngineRestService {

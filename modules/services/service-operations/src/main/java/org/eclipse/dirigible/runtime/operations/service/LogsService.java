@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -42,7 +40,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Logs.
  */
-@Singleton
 @Path("/ops/logs")
 @RolesAllowed({ "Operator" })
 @Api(value = "Operations - Logs", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -52,8 +49,7 @@ public class LogsService extends AbstractRestService implements IRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogsService.class);
 
-	@Inject
-	private LogsProcessor processor;
+	private LogsProcessor processor = new LogsProcessor();
 	
 	@Context
 	private HttpServletResponse response;

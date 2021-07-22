@@ -19,12 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -40,10 +38,9 @@ import org.springframework.beans.BeanUtils;
 /**
  * The Flowable Engine Test
  */
-public class HolidayRequestFlowableEngineTest extends AbstractGuiceTest {
+public class HolidayRequestFlowableEngineTest extends AbstractDirigibleTest {
 	
 	/** The flowable engine provider. */
-	@Inject
 	private BpmProviderFlowable bpmProviderFlowable;
 	
 	/**
@@ -53,7 +50,7 @@ public class HolidayRequestFlowableEngineTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.bpmProviderFlowable = getInjector().getInstance(BpmProviderFlowable.class);
+		this.bpmProviderFlowable = new BpmProviderFlowable();
 		
 		System.setProperty("DIRIGIBLE_FLOWABLE_DATABASE_DRIVER", "org.h2.Driver");
 		System.setProperty("DIRIGIBLE_FLOWABLE_DATABASE_URL", "jdbc:h2:mem:flowable;DB_CLOSE_DELAY=-1");

@@ -17,6 +17,7 @@ import java.util.ServiceLoader;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class BpmModule extends AbstractDirigibleModule {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
 	protected void configure() {
@@ -49,7 +50,7 @@ public class BpmModule extends AbstractDirigibleModule {
 		for (IBpmProvider next : BPM_PROVIDERS) {
 			logger.trace(format("Installing BPM Provider [{0}:{1}] ...", next.getType(), next.getName()));
 			if (next.getType().equals(bpmProvider)) {
-				bind(IBpmProvider.class).toInstance(next);
+				StaticObjects.set(StaticObjects.BPM_PROVIDER, next);
 				provider = next;
 				break;
 			}

@@ -18,7 +18,7 @@ import javax.ws.rs.core.Application;
 import org.eclipse.dirigible.runtime.core.listener.DirigibleServletContextListener;
 
 /**
- * Sets the singletons from Guice in the Application context.
+ * Sets the singletons from in the Application context.
  */
 public class DirigibleApplication extends Application {
 

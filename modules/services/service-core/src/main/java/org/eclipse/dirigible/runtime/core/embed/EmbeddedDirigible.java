@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -38,6 +39,7 @@ public class EmbeddedDirigible {
 	public static final String ENGINE_TYPE_JAVASCRIPT = "javascript";
 	
 	private IRepository repository;
+	
 	private DirigibleInitializer initializer;
 	
 	/**
@@ -51,7 +53,7 @@ public class EmbeddedDirigible {
 		this.initializer.initialize();
 		
 		// initialize the repository object
-		this.repository = initializer.getInjector().getInstance(IRepository.class);
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 	
 	/**

@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class BpmClasspathContentHandler extends AbstractClasspathContentHandler 
 
 	private static final Logger logger = LoggerFactory.getLogger(BpmClasspathContentHandler.class);
 
-	private BpmSynchronizer bpmnSynchronizer = StaticInjector.getInjector().getInstance(BpmSynchronizer.class);
+	private BpmSynchronizer bpmnSynchronizer = new BpmSynchronizer();
 
 	/*
 	 * (non-Javadoc)

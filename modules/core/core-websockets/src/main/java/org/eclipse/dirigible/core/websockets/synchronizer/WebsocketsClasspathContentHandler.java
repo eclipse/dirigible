@@ -14,7 +14,6 @@ package org.eclipse.dirigible.core.websockets.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class WebsocketsClasspathContentHandler extends AbstractClasspathContentH
 
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsClasspathContentHandler.class);
 
-	private WebsocketsSynchronizer websocketSynchronizer = StaticInjector.getInjector().getInstance(WebsocketsSynchronizer.class);
+	private WebsocketsSynchronizer websocketSynchronizer = new WebsocketsSynchronizer();
 
 	/*
 	 * (non-Javadoc)
