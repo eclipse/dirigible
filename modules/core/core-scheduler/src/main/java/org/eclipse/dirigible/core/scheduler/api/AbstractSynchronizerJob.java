@@ -15,10 +15,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.health.HealthStatus;
-import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
-import org.eclipse.dirigible.commons.config.timeout.TimeLimited;
+import org.eclipse.dirigible.commons.health.HealthStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.timeout.TimeLimited;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

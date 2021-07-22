@@ -9,14 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.commons.config.health;
+package org.eclipse.dirigible.commons.health;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
-import org.eclipse.dirigible.commons.config.timeout.TimeLimited;
+import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.timeout.TimeLimited;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

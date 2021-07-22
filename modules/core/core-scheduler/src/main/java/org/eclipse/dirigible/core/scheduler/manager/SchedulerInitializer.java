@@ -19,8 +19,8 @@ import java.util.ServiceLoader;
 
 import javax.inject.Inject;
 
-import org.eclipse.dirigible.commons.config.health.HealthStatus;
-import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.IJobDefinitionProvider;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.quartz.QuartzDatabaseLayoutInitializer;

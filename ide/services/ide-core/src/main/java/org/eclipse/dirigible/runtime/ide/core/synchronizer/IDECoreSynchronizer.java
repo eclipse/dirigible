@@ -13,8 +13,8 @@ package org.eclipse.dirigible.runtime.ide.core.synchronizer;
 
 import java.util.HashMap;
 
-import org.eclipse.dirigible.commons.config.health.HealthStatus;
-import org.eclipse.dirigible.commons.config.health.HealthStatus.Jobs.JobStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
