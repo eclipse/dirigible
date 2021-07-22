@@ -20,6 +20,8 @@
 		<module>commons-process</module>
 		<module>commons-test</module>
 		<module>commons-xml2json</module>
+		<module>commons-health</module>
+		<module>commons-timeout</module>
 	</modules>
 
 	<properties>

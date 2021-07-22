@@ -18,7 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.commons.config.health.HealthStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;

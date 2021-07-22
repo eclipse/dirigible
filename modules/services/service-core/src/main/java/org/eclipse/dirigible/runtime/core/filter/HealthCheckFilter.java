@@ -23,7 +23,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.dirigible.commons.config.health.HealthStatus;
+import org.eclipse.dirigible.commons.health.HealthStatus;
 
 /**
  * The HTTP Context Filter.
