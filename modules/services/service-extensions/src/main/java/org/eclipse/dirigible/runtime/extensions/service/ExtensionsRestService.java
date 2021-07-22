@@ -13,8 +13,6 @@ package org.eclipse.dirigible.runtime.extensions.service;
 
 import static java.text.MessageFormat.format;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -43,7 +41,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw repository content.
  */
-@Singleton
 @Path("/core/extensions")
 @Api(value = "Core - Extensions", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -52,8 +49,7 @@ public class ExtensionsRestService extends AbstractRestService implements IRestS
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsRestService.class);
 
-	@Inject
-	private ExtensionsProcessor processor;
+	private ExtensionsProcessor processor = new ExtensionsProcessor();
 
 	@Context
 	private HttpServletResponse response;

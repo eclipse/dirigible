@@ -17,20 +17,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.core.generation.javascript.JavascriptGenerationEngine;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-public class JavascriptGeneratorTest extends AbstractGuiceTest {
+public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 	
 	private IRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 	
 	@Test

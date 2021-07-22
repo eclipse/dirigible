@@ -14,7 +14,6 @@ package org.eclipse.dirigible.engine.job.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class JobClasspathContentHandler extends AbstractClasspathContentHandler 
 
 	private static final Logger logger = LoggerFactory.getLogger(JobClasspathContentHandler.class);
 
-	private JobSynchronizer jobSynchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
+	private JobSynchronizer jobSynchronizer = new JobSynchronizer();
 
 	/*
 	 * (non-Javadoc)

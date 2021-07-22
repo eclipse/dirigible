@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Singleton;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -42,7 +41,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Terminal Websocket Service.
  */
-@Singleton
 @ServerEndpoint(
 		value = "/websockets/v4/ide/xterminal",
 		subprotocols = {"tty"}

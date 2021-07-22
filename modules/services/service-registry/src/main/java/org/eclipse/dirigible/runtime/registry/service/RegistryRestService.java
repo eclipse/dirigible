@@ -13,8 +13,6 @@ package org.eclipse.dirigible.runtime.registry.service;
 
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -40,7 +38,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw Registry content.
  */
-@Singleton
 @Path("/core/registry")
 @Api(value = "Core - Registry", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -49,8 +46,7 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 
 	private static final Logger logger = LoggerFactory.getLogger(RegistryRestService.class);
 
-	@Inject
-	private RegistryProcessor processor;
+	private RegistryProcessor processor = new RegistryProcessor();
 
 	@Context
 	private HttpServletResponse response;

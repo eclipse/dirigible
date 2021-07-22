@@ -14,7 +14,6 @@ package org.eclipse.dirigible.core.security.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class SecurityClasspathContentHandler extends AbstractClasspathContentHan
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityClasspathContentHandler.class);
 
-	private SecuritySynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
+	private SecuritySynchronizer extensionsSynchronizer = new SecuritySynchronizer();
 
 	/*
 	 * (non-Javadoc)

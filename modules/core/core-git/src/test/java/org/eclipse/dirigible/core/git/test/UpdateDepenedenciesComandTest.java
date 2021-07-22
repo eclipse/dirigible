@@ -14,13 +14,11 @@ package org.eclipse.dirigible.core.git.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
@@ -28,22 +26,18 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UpdateDepenedenciesComandTest.
  */
-public class UpdateDepenedenciesComandTest extends AbstractGuiceTest {
+public class UpdateDepenedenciesComandTest extends AbstractDirigibleTest {
 
 	/** The clone command. */
-	@Inject
 	private CloneCommand cloneCommand;
 
 	/** The update dependencies command. */
-	@Inject
 	private UpdateDependenciesCommand updateDependenciesCommand;
 
 	/** The workspaces core service. */
-	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
 	/**
@@ -53,9 +47,9 @@ public class UpdateDepenedenciesComandTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
-		this.updateDependenciesCommand = getInjector().getInstance(UpdateDependenciesCommand.class);
-		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
+		this.cloneCommand = new CloneCommand();
+		this.updateDependenciesCommand = new UpdateDependenciesCommand();
+		this.workspacesCoreService = new WorkspacesCoreService();
 	}
 
 	/**

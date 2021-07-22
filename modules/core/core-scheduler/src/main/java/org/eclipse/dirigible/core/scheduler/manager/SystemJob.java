@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
@@ -34,7 +33,7 @@ public class SystemJob implements Job {
 
 	private static final String SYSTEM_GROUP = "dirigible-system";
 
-	private SchedulerCoreService schedulerCoreService = StaticInjector.getInjector().getInstance(SchedulerCoreService.class);
+	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
 	/*
 	 * (non-Javadoc)

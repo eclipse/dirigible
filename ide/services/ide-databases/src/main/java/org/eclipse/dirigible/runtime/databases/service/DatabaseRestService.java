@@ -18,8 +18,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -53,7 +51,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw database content.
  */
-@Singleton
 @Path("/ide/databases")
 @Api(value = "IDE - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
@@ -61,8 +58,7 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRestService.class);
 
-	@Inject
-	private DatabaseProcessor processor;
+	private DatabaseProcessor processor = new DatabaseProcessor();
 
 	@Context
 	private HttpServletResponse response;

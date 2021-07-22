@@ -17,12 +17,10 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -35,14 +33,12 @@ import org.junit.Test;
 /**
  * The Class CloneComandTest.
  */
-public class CloneComandTest extends AbstractGuiceTest {
+public class CloneComandTest extends AbstractDirigibleTest {
 
 	/** The clone command. */
-	@Inject
 	private CloneCommand cloneCommand;
 
 	/** The workspaces core service. */
-	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
 	/**
@@ -52,8 +48,8 @@ public class CloneComandTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
-		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
+		this.cloneCommand = new CloneCommand();
+		this.workspacesCoreService = new WorkspacesCoreService();
 	}
 
 	/**

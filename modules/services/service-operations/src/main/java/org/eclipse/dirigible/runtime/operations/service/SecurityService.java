@@ -12,8 +12,6 @@
 package org.eclipse.dirigible.runtime.operations.service;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,7 +36,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Jobs.
  */
-@Singleton
 @Path("/ops/security")
 @RolesAllowed({ "Operator" })
 @Api(value = "Operations - Access", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -48,8 +45,7 @@ public class SecurityService extends AbstractRestService implements IRestService
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
-	@Inject
-	private SecurityProcessor processor;
+	private SecurityProcessor processor = new SecurityProcessor();
 	
 	@Context
 	private HttpServletResponse response;

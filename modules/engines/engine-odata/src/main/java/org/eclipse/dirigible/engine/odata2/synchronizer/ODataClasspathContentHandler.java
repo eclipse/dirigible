@@ -14,7 +14,6 @@ package org.eclipse.dirigible.engine.odata2.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class ODataClasspathContentHandler extends AbstractClasspathContentHandle
 
 	private static final Logger logger = LoggerFactory.getLogger(ODataClasspathContentHandler.class);
 
-	private ODataSynchronizer odataSynchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
+	private ODataSynchronizer odataSynchronizer = new ODataSynchronizer();
 
 	/*
 	 * (non-Javadoc)

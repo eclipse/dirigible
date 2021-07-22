@@ -29,13 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -52,7 +50,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Security Synchronizer.
  */
-@Singleton
 public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
@@ -66,14 +63,11 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private static final Set<String> ACCESS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
-	@Inject
-	private SecurityCoreService securityCoreService;
+	private SecurityCoreService securityCoreService = new SecurityCoreService();
 	
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-	@Inject
-	private PersistenceManager<AccessDefinition> accessPersistenceManager;
+	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
 	private volatile boolean upgradePassed; 
 	
@@ -121,7 +115,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		SecuritySynchronizer synchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
+		SecuritySynchronizer synchronizer = new SecuritySynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

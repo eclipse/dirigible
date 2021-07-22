@@ -20,17 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.synchronizer.MigrationsSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
@@ -39,18 +38,15 @@ import org.junit.Test;
 /**
  * The Class MigrationsSynchronizerTest.
  */
-public class MigrationsSynchronizerTest extends AbstractGuiceTest {
+public class MigrationsSynchronizerTest extends AbstractDirigibleTest {
 
 	/** The migrations core service. */
-	@Inject
 	private IMigrationsCoreService migrationsCoreService;
 
 	/** The migrations publisher. */
-	@Inject
 	private MigrationsSynchronizer migrationsPublisher;
 
 	/** The repository. */
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -60,9 +56,9 @@ public class MigrationsSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.migrationsCoreService = getInjector().getInstance(MigrationsCoreService.class);
-		this.migrationsPublisher = getInjector().getInstance(MigrationsSynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.migrationsCoreService = new MigrationsCoreService();
+		this.migrationsPublisher = new MigrationsSynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 
 	/**

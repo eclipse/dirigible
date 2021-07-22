@@ -15,6 +15,7 @@ import java.util.ServiceLoader;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 
 /**
@@ -26,7 +27,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
 	protected void configure() {
@@ -38,7 +39,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALVM);
 		for (IJavascriptEngineExecutor next : javascriptEngineExecutors) {
 			if (next.getType().equals(javascriptEngineType)) {
-				bind(IJavascriptEngineExecutor.class).toInstance(next);
+				StaticObjects.set(StaticObjects.JAVASCRIPT_ENGINE, next);
 			}
 		}
 

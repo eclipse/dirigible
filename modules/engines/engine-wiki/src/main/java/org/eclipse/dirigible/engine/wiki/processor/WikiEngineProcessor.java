@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.engine.wiki.processor;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 
@@ -22,8 +20,7 @@ import org.eclipse.dirigible.repository.api.IResource;
  */
 public class WikiEngineProcessor {
 
-	@Inject
-	private WikiEngineExecutor wikiEngineExecutor;
+	private WikiEngineExecutor wikiEngineExecutor = new WikiEngineExecutor();
 
 	/**
 	 * Exist resource.

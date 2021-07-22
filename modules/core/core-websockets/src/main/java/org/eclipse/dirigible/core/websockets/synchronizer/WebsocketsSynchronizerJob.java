@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.core.websockets.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,7 +19,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class WebsocketsSynchronizerJob extends AbstractSynchronizerJob {
 
-	private WebsocketsSynchronizer websocketsSynchronizer = StaticInjector.getInjector().getInstance(WebsocketsSynchronizer.class);
+	private WebsocketsSynchronizer websocketsSynchronizer = new WebsocketsSynchronizer();
 
 	/*
 	 * (non-Javadoc)

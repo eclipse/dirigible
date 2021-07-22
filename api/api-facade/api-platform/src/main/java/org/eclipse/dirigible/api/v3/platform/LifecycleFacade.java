@@ -11,13 +11,12 @@
  */
 package org.eclipse.dirigible.api.v3.platform;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.processor.PublisherProcessor;
 
 public class LifecycleFacade {
 
-	private static PublisherProcessor processor = StaticInjector.getInjector().getInstance(PublisherProcessor.class);
+	private static PublisherProcessor processor = new PublisherProcessor();
 
 	public static boolean publish(String user, String workspace, String project) {
 		boolean isSuccessfulPublishRequest = false;

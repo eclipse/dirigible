@@ -14,7 +14,6 @@ package org.eclipse.dirigible.engine.messaging.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class MessagingClasspathContentHandler extends AbstractClasspathContentHa
 
 	private static final Logger logger = LoggerFactory.getLogger(MessagingClasspathContentHandler.class);
 
-	private MessagingSynchronizer messagingSynchronizer = StaticInjector.getInjector().getInstance(MessagingSynchronizer.class);
+	private MessagingSynchronizer messagingSynchronizer = new MessagingSynchronizer();
 
 	/*
 	 * (non-Javadoc)

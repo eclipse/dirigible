@@ -15,7 +15,6 @@ package org.eclipse.dirigible.oauth;
 import static org.eclipse.dirigible.oauth.filters.AbstractOAuthFilter.INITIAL_REQUEST_PATH_COOKIE;
 import java.io.IOException;
 
-import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +45,6 @@ import io.swagger.annotations.Api;
 /**
  * Front facing REST service serving the Git commands.
  */
-@Singleton
 @Path("/oauth")
 @Api(value = "OAuth")
 public class OAuthService extends AbstractRestService implements IRestService {

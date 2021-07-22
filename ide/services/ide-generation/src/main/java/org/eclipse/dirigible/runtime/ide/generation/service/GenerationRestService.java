@@ -18,8 +18,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
@@ -47,7 +45,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Generation content.
  */
-@Singleton
 @Path("/ide/generate")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Generation", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -57,8 +54,7 @@ public class GenerationRestService extends AbstractRestService implements IRestS
 	
 	private static final Logger logger = LoggerFactory.getLogger(GenerationRestService.class);
 
-	@Inject
-	private GenerationProcessor processor;
+	private GenerationProcessor processor = new GenerationProcessor();
 	
 	@Context
 	private HttpServletResponse response;

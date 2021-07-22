@@ -16,23 +16,20 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class JobCoreServiceTest.
  */
-public class JobCoreServiceTest extends AbstractGuiceTest {
+public class JobCoreServiceTest extends AbstractDirigibleTest {
 
 	/** The job core service. */
-	@Inject
 	private ISchedulerCoreService jobCoreService;
 
 	/**
@@ -43,7 +40,7 @@ public class JobCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.jobCoreService = getInjector().getInstance(SchedulerCoreService.class);
+		this.jobCoreService = new SchedulerCoreService();
 	}
 
 	/**

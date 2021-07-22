@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Singleton;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -36,7 +35,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Debugger Websocket Service.
  */
-@Singleton
 @ServerEndpoint(value = "/websockets/v4/ide/debugger/{path}")
 public class DebuggerWebsocketService {
 

@@ -12,8 +12,6 @@
 package org.eclipse.dirigible.runtime.operations.service;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,7 +36,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Data Structures.
  */
-@Singleton
 @Path("/ops/data-structures")
 @RolesAllowed({ "Operator" })
 @Api(value = "Operations - Data Structures", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -48,8 +45,7 @@ public class DataStructuresService extends AbstractRestService implements IRestS
 
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresService.class);
 
-	@Inject
-	private DataStructuresProcessor processor;
+	private DataStructuresProcessor processor = new DataStructuresProcessor();
 	
 	@Context
 	private HttpServletResponse response;

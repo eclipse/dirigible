@@ -13,8 +13,6 @@ package org.eclipse.dirigible.runtime.anonymous.service;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -34,7 +32,6 @@ import io.swagger.annotations.Api;
 /**
  * Front facing REST service serving the Security related content.
  */
-@Singleton
 @Path("/anonymous")
 @Api(value = "Anonymous")
 public class AnonymousRestService extends AbstractRestService implements IRestService {
@@ -45,8 +42,7 @@ public class AnonymousRestService extends AbstractRestService implements IRestSe
 
 	private static final Logger logger = LoggerFactory.getLogger(AnonymousRestService.class);
 
-	@Inject
-	private AnonymousAccess processor;
+	private AnonymousAccess processor = new AnonymousAccess();
 
 	@Context
 	private HttpServletResponse response;

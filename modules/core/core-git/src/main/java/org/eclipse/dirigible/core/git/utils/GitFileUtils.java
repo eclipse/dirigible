@@ -19,14 +19,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.common.util.StringUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.workspace.api.IFile;
@@ -56,16 +55,12 @@ public class GitFileUtils {
 
 	private static final int MINIMUM_URL_LENGTH = 25;
 
-
-//	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_"; //$NON-NLS-1$
-	
 	public static final String TEMP_DIRECTORY_PREFIX = "dirigible_git_";
 
 	private static String GIT_ROOT_FOLDER;
 
 	/** The repository. */
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	static {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {

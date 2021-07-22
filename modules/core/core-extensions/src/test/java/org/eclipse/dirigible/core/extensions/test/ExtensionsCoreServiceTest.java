@@ -18,23 +18,20 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class ExtensionsCoreServiceTest.
  */
-public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
+public class ExtensionsCoreServiceTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IExtensionsCoreService extensionsCoreService;
 
 	/**
@@ -45,7 +42,7 @@ public class ExtensionsCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
+		this.extensionsCoreService = new ExtensionsCoreService();
 	}
 
 	/**

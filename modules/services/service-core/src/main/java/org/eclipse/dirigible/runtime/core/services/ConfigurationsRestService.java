@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -34,7 +33,6 @@ import io.swagger.annotations.Authorization;
  * Front-facing service providing the version information
  *
  */
-@Singleton
 @Path("/core/configurations")
 @RolesAllowed({ "Operator" })
 @Api(value = "Version", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })

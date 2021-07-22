@@ -16,24 +16,21 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class SecurityCoreServiceTest.
  */
-public class SecurityCoreServiceTest extends AbstractGuiceTest {
+public class SecurityCoreServiceTest extends AbstractDirigibleTest {
 	
 	/** The security core service. */
-	@Inject
 	private ISecurityCoreService securityCoreService;
 	
 	/**
@@ -43,7 +40,7 @@ public class SecurityCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
+		this.securityCoreService = new SecurityCoreService();
 	}
 	
 	/**

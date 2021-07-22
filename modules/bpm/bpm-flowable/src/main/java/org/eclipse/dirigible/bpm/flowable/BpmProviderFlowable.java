@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.api.IBpmProvider;
 import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.h2.H2Database;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -73,11 +72,9 @@ public class BpmProviderFlowable implements IBpmProvider {
 
 	private static ProcessEngine processEngine;
 
-	@Inject
-	private static IDatabase database;
+	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 	
-	@Inject
-	private static IRepository repository;
+	private static IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	public BpmProviderFlowable() {
 		Configuration.loadModuleConfig("/dirigible-bpm.properties");
@@ -98,12 +95,15 @@ public class BpmProviderFlowable implements IBpmProvider {
 		synchronized (BpmProviderFlowable.class) {
 			if (processEngine == null) {
 				logger.info("Initializng the Flowable Process Engine...");
+				
 				if (database == null)
-					database = StaticInjector.getInjector().getInstance(IDatabase.class);
+					database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 				if (repository == null)
-					repository = StaticInjector.getInjector().getInstance(IRepository.class);
+					repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+				
 				ProcessEngineConfiguration cfg = null;
 				String dataSourceName = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME);
+				
 				if (dataSourceName != null) {
 					logger.info("Initializng the Flowable Process Engine with JNDI datasource name");
 					cfg = new StandaloneProcessEngineConfiguration().setDataSourceJndiName(dataSourceName);
@@ -131,6 +131,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 						}
 					}
 				}
+				
 				boolean updateSchema = Boolean
 						.parseBoolean(Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE, "true"));
 				cfg.setDatabaseSchemaUpdate(updateSchema ? ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE

@@ -23,11 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -43,7 +39,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class JobSynchronizer.
  */
-@Singleton
 public class JobSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(JobSynchronizer.class);
@@ -52,12 +47,8 @@ public class JobSynchronizer extends AbstractSynchronizer {
 
 	private static final List<String> JOBS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-	@Inject
-	private SchedulerCoreService schedulerCoreService;
+	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
-	// @Inject
-	// private SchedulerManager schedulerManager;
-	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
 	/*
@@ -98,7 +89,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		JobSynchronizer synchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
+		JobSynchronizer synchronizer = new JobSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

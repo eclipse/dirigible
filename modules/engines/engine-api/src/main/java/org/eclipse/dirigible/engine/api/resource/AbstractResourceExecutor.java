@@ -14,9 +14,8 @@ package org.eclipse.dirigible.engine.api.resource;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.api.script.AbstractScriptExecutor;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -34,8 +33,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Gets the repository.

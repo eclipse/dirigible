@@ -22,12 +22,11 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
@@ -37,14 +36,11 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Class MessagingCoreService.
  */
-@Singleton
 public class MessagingCoreService implements IMessagingCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-	@Inject
-	private PersistenceManager<ListenerDefinition> listenerPersistenceManager;
+	private PersistenceManager<ListenerDefinition> listenerPersistenceManager = new PersistenceManager<ListenerDefinition>();
 
 	// Listener
 

@@ -30,10 +30,11 @@ import org.apache.cxf.helpers.IOUtils;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -43,7 +44,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
+public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractApiSuiteTest.class);
 
@@ -55,8 +56,8 @@ public abstract class AbstractApiSuiteTest extends AbstractGuiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.extensionsCoreService = getInjector().getInstance(ExtensionsCoreService.class);
-        this.repository = getInjector().getInstance(IRepository.class);
+        this.extensionsCoreService = new ExtensionsCoreService();
+        this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
     }
 
     @Before

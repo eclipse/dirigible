@@ -19,33 +19,29 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.definition.MigrationStatusDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
  * The Migrations Core Service.
  */
-@Singleton
 public class MigrationsCoreService implements IMigrationsCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-	@Inject
-	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager;
+	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager = new PersistenceManager<MigrationDefinition>();
 	
-	@Inject
-	private PersistenceManager<MigrationStatusDefinition> migrationsStatusPersistenceManager;
+	private PersistenceManager<MigrationStatusDefinition> migrationsStatusPersistenceManager = new PersistenceManager<MigrationStatusDefinition>();
 
 	// Migrations
 

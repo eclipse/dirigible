@@ -13,27 +13,24 @@ package org.eclipse.dirigible.core.registry.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.registry.synchronizer.RegistrySynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RegistrySynchronizerTest extends AbstractGuiceTest {
+public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 
 	private static final String DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER = System.getProperty("user.dir") + "/target";
 
 	/** The synchronizer. */
-	@Inject
 	private RegistrySynchronizer synchronizer;
 
 	/** The repository. */
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -43,8 +40,8 @@ public class RegistrySynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.synchronizer = getInjector().getInstance(RegistrySynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.synchronizer = new RegistrySynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 		System.setProperty("DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER", DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER);
 		Configuration.update();

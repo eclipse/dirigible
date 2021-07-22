@@ -19,12 +19,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
@@ -58,11 +58,9 @@ public class DatabaseRepositoryDao {
 
 	static final int OBJECT_TYPE_BINARY = 2;
 
-	@Inject
-	private DatabaseRepository repository;
+	private DatabaseRepository repository = (DatabaseRepository) StaticObjects.get(StaticObjects.DATABASE_REPOSITORY);
 
-	@Inject
-	private DataSource datasource;
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
 	/**
 	 * Instantiates a new database repository dao.

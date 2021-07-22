@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.FilenameUtils;
@@ -35,6 +34,7 @@ import org.eclipse.dirigible.cms.db.CmsDatabaseRepositoryException;
 import org.eclipse.dirigible.cms.db.CmsDatabaseResource;
 import org.eclipse.dirigible.cms.db.CmsDatabaseResourceVersion;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResourceVersion;
@@ -68,11 +68,9 @@ public class CmisDatabaseRepositoryDao {
 
 	static final int OBJECT_TYPE_BINARY = 2;
 
-	@Inject
-	private CmsDatabaseRepository repository;
+	private CmsDatabaseRepository repository = (CmsDatabaseRepository) StaticObjects.get(StaticObjects.CMS_DATABASE_REPOSITORY);
 
-	@Inject
-	private DataSource datasource;
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
 	/**
 	 * Instantiates a new database repository dao.

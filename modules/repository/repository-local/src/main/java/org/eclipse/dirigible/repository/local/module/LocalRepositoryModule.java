@@ -13,6 +13,7 @@ package org.eclipse.dirigible.repository.local.module;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
@@ -30,7 +31,7 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
 	protected void configure() {
@@ -43,13 +44,13 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 
 		if (LocalRepository.TYPE.equals(repositoryProvider)) {
 			LocalRepository localRepository = createInstance();
-			bind(LocalRepository.class).toInstance(localRepository);
-			bind(IRepository.class).toInstance(localRepository);
+			StaticObjects.set(StaticObjects.LOCAL_REPOSITORY, localRepository);
+			StaticObjects.set(StaticObjects.REPOSITORY, localRepository);
 			logger.info("Bound Local Repository as the Repository for this instance.");
 
 			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
-			if (masterType == null) {				
-				bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			if (masterType == null) {
+				StaticObjects.set(StaticObjects.MASTER_REPOSITORY, new DummyMasterRepository());
 			}
 		}
 	}

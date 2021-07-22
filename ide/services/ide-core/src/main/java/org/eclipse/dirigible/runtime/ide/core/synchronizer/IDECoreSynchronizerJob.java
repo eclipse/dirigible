@@ -13,7 +13,6 @@ package org.eclipse.dirigible.runtime.ide.core.synchronizer;
 
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -25,7 +24,7 @@ public class IDECoreSynchronizerJob extends AbstractSynchronizerJob {
 	private static final int TIMEOUT_TIME = 10;
 
 	/** The extensions synchronizer. */
-	private IDECoreSynchronizer synchronizer = StaticInjector.getInjector().getInstance(IDECoreSynchronizer.class);
+	private IDECoreSynchronizer synchronizer = new IDECoreSynchronizer();
 
 	/*
 	 * (non-Javadoc)

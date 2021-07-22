@@ -14,7 +14,6 @@ package org.eclipse.dirigible.core.migrations.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class MigrationsClasspathContentHandler extends AbstractClasspathContentH
 
 	private static final Logger logger = LoggerFactory.getLogger(MigrationsClasspathContentHandler.class);
 
-	private MigrationsSynchronizer migrationsSynchronizer = StaticInjector.getInjector().getInstance(MigrationsSynchronizer.class);
+	private MigrationsSynchronizer migrationsSynchronizer = new MigrationsSynchronizer();
 
 	/*
 	 * (non-Javadoc)

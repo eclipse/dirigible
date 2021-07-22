@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
@@ -29,10 +26,7 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,21 +35,16 @@ import org.slf4j.LoggerFactory;
  */
 public class CheckoutCommand {
 
-//	private static final String CHANGES_BRANCH = "changes_branch_"; //$NON-NLS-1$
-
 	private static final Logger logger = LoggerFactory.getLogger(CheckoutCommand.class);
 
 	/** The publisher core service. */
-	@Inject
-	private PublisherCoreService publisherCoreService;
+	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
+	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
 
 	/** The verifier. */
-	@Inject
-	private ProjectPropertiesVerifier verifier;
+	private ProjectPropertiesVerifier verifier = new ProjectPropertiesVerifier();
 
 	/**
 	 * Execute a Pull command.

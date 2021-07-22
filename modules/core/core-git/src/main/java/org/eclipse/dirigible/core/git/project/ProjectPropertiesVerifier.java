@@ -14,8 +14,7 @@ package org.eclipse.dirigible.core.git.project;
 import java.io.File;
 import java.nio.file.Paths;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -26,8 +25,7 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 public class ProjectPropertiesVerifier {
 
 	/** The repository. */
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Verify.

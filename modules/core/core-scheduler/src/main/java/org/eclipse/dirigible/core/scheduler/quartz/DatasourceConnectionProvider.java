@@ -14,7 +14,7 @@ package org.eclipse.dirigible.core.scheduler.quartz;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.quartz.utils.ConnectionProvider;
 
 /**
@@ -40,7 +40,7 @@ public class DatasourceConnectionProvider implements ConnectionProvider {
 	@Override
 	public void initialize() throws SQLException {
 		if (this.datasourceProvider == null) {
-			this.datasourceProvider = StaticInjector.getInjector().getInstance(DatasourceProvider.class);
+			this.datasourceProvider = new DatasourceProvider();
 		}
 	}
 

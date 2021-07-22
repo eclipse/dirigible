@@ -18,9 +18,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.inject.Inject;
-
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
@@ -34,15 +33,12 @@ import org.junit.Test;
 /**
  * The Class ExtensionsSynchronizerTest.
  */
-public class WebsocketsSynchronizerTest extends AbstractGuiceTest {
+public class WebsocketsSynchronizerTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IWebsocketsCoreService websocketsCoreService;
 
-	@Inject
 	private WebsocketsSynchronizer websocketsSynchronizer;
 
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -53,9 +49,9 @@ public class WebsocketsSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.websocketsCoreService = getInjector().getInstance(WebsocketsCoreService.class);
-		this.websocketsSynchronizer = getInjector().getInstance(WebsocketsSynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.websocketsCoreService = new WebsocketsCoreService();
+		this.websocketsSynchronizer = new WebsocketsSynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 
 	/**

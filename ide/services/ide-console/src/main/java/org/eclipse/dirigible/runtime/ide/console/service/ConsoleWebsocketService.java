@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Singleton;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Console Websocket Service.
  */
-@Singleton
 @ServerEndpoint("/websockets/v4/ide/console")
 public class ConsoleWebsocketService {
 

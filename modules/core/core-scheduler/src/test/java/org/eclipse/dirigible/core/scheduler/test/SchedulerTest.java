@@ -19,14 +19,14 @@ import java.sql.SQLException;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class SchedulerTest.
  */
-public class SchedulerTest extends AbstractGuiceTest {
+public class SchedulerTest extends AbstractDirigibleTest {
 
 	/** The scheduler initializer. */
 	private SchedulerInitializer schedulerInitializer;
@@ -39,7 +39,7 @@ public class SchedulerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.schedulerInitializer = getInjector().getInstance(SchedulerInitializer.class);
+		this.schedulerInitializer = new SchedulerInitializer();
 	}
 
 	/**

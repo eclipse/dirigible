@@ -55,6 +55,10 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		return HIGH_PRIORITY;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
 	protected void configure() {
 		Configuration.loadModuleConfig("/dirigible-cloud-foundry.properties");

@@ -28,7 +28,6 @@ import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.core.edm.provider.EdmxProvider;
 import org.eclipse.dirigible.api.v3.db.DatabaseFacade;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.handler.ScriptingOData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.mapping.DirigibleEdmTableMappingProvider;
@@ -42,7 +41,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultSQLProcessor.class);
 	
-	private static IODataCoreService odataCoreService = StaticInjector.getInjector().getInstance(ODataCoreService.class);
+	private static IODataCoreService odataCoreService = new ODataCoreService();
 
 	@Override
 	public ODataService createService(ODataContext ctx) throws ODataException {
@@ -54,7 +53,7 @@ public class DirigibleODataServiceFactory extends ODataServiceFactory {
 			
 			DirigibleEdmTableMappingProvider tableMappingProvider = new DirigibleEdmTableMappingProvider();
 			
-			OData2EventHandler odata2EventHandler = StaticInjector.getInjector().getInstance(ScriptingOData2EventHandler.class);
+			OData2EventHandler odata2EventHandler = new ScriptingOData2EventHandler();
 
 			DefaultSQLProcessor singleProcessor = new DefaultSQLProcessor(tableMappingProvider, odata2EventHandler);
 

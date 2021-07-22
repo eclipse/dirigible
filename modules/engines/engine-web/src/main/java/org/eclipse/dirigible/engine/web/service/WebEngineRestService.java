@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.web.service;
 
-import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,7 +28,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw web content from the registry/public space.
  */
-@Singleton
 @Path("/web")
 @Api(value = "Core - Web Engine", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })

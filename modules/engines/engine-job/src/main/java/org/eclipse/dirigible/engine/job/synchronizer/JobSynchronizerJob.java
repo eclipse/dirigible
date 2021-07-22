@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.job.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,7 +19,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class JobSynchronizerJob extends AbstractSynchronizerJob {
 
-	private JobSynchronizer jobSynchronizer = StaticInjector.getInjector().getInstance(JobSynchronizer.class);
+	private JobSynchronizer jobSynchronizer = new JobSynchronizer();
 
 	/*
 	 * (non-Javadoc)

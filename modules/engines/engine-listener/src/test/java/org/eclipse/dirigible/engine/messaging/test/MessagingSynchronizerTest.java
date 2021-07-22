@@ -19,15 +19,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
 import org.eclipse.dirigible.core.messaging.service.MessagingProducer;
 import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.messaging.synchronizer.MessagingSynchronizer;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -38,18 +37,14 @@ import org.junit.Test;
 /**
  * The Class MessagingSynchronizerTest.
  */
-public class MessagingSynchronizerTest extends AbstractGuiceTest {
+public class MessagingSynchronizerTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IMessagingCoreService messagingCoreService;
 
-	@Inject
 	private MessagingSynchronizer messagingSynchronizer;
 
-	@Inject
 	private SchedulerManager messagingManager;
 
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -60,10 +55,10 @@ public class MessagingSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.messagingCoreService = getInjector().getInstance(MessagingCoreService.class);
-		this.messagingSynchronizer = getInjector().getInstance(MessagingSynchronizer.class);
-		this.messagingManager = getInjector().getInstance(SchedulerManager.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.messagingCoreService = new MessagingCoreService();
+		this.messagingSynchronizer = new MessagingSynchronizer();
+		this.messagingManager = new SchedulerManager();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 		this.messagingManager.initialize();
 	}

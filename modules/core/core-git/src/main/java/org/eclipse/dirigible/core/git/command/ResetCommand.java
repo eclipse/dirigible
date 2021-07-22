@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
@@ -34,8 +32,7 @@ public class ResetCommand {
 	private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
 
 	/** The verifier. */
-	@Inject
-	private ProjectPropertiesVerifier verifier;
+	private ProjectPropertiesVerifier verifier = new ProjectPropertiesVerifier();
 
 
 	/**

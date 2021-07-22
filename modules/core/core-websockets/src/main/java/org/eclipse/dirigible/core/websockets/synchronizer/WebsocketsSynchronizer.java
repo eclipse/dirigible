@@ -22,11 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -41,7 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class ExtensionsSynchronizer.
  */
-@Singleton
 public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsSynchronizer.class);
@@ -51,8 +46,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 
 	private static final List<String> WEBSOCKETS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-	@Inject
-	private WebsocketsCoreService websocketsCoreService;
+	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -92,7 +86,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		WebsocketsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(WebsocketsSynchronizer.class);
+		WebsocketsSynchronizer synchronizer = new WebsocketsSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

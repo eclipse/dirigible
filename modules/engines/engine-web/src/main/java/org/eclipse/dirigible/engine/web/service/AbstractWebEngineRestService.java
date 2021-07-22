@@ -13,7 +13,6 @@ package org.eclipse.dirigible.engine.web.service;
 
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
@@ -45,8 +44,7 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 
 	private static final String INDEX_HTML = "index.html";
 
-	@Inject
-	private WebEngineProcessor processor;
+	private WebEngineProcessor processor = new WebEngineProcessor();
 
 	@Context
 	private HttpServletRequest request;

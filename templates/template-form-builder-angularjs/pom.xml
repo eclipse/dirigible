@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - AngularJS Form Generator</name>
-	<artifactId>template-form-builder-angularjs</artifactId>
+	<artifactId>dirigible-template-form-builder-angularjs</artifactId>
     <packaging>jar</packaging>
 
 	<scm>

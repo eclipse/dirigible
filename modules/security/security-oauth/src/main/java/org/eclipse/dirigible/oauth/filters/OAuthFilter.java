@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
@@ -58,7 +57,7 @@ public class OAuthFilter extends AbstractOAuthFilter {
 
 	private static final String UNAUTHORIZED_MESSAGE = "No logged in user";
 
-	private static ISecurityCoreService securityCoreService = StaticInjector.getInjector().getInstance(SecurityCoreService.class);
+	private static ISecurityCoreService securityCoreService = new SecurityCoreService();
 	
 	@Override
 	protected void filter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

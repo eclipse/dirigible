@@ -15,10 +15,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
@@ -29,17 +28,13 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Synchronizer Core Service.
  */
-@Singleton
 public class SynchronizerCoreService implements ISynchronizerCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-	@Inject
-	private PersistenceManager<SynchronizerStateDefinition> synchronizerStatePersistenceManager;
+	private PersistenceManager<SynchronizerStateDefinition> synchronizerStatePersistenceManager = new PersistenceManager<SynchronizerStateDefinition>();
 	
-	@Inject
-	private PersistenceManager<SynchronizerStateLogDefinition> synchronizerStateLogPersistenceManager;
+	private PersistenceManager<SynchronizerStateLogDefinition> synchronizerStateLogPersistenceManager = new PersistenceManager<SynchronizerStateLogDefinition>();
 
 	// State
 

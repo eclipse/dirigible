@@ -13,7 +13,6 @@ package org.eclipse.dirigible.api.v3.core;
 
 import java.util.List;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
@@ -30,7 +29,7 @@ public class ExtensionsServiceFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsServiceFacade.class);
 
-	private static IExtensionsCoreService extensionsCoreService = StaticInjector.getInjector().getInstance(ExtensionsCoreService.class);
+	private static IExtensionsCoreService extensionsCoreService = new ExtensionsCoreService();
 
 	/**
 	 * Gets the extensions per extension point.

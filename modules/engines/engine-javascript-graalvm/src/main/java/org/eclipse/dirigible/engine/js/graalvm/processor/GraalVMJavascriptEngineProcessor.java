@@ -14,8 +14,6 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 
@@ -25,8 +23,7 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
 public class GraalVMJavascriptEngineProcessor implements IJavascriptEngineProcessor {
 
 	/** The GraalVM engine executor. */
-	@Inject
-	private GraalVMJavascriptEngineExecutor graalVMEngineExecutor;
+	private GraalVMJavascriptEngineExecutor graalVMEngineExecutor = new GraalVMJavascriptEngineExecutor();
 
 	/*
 	 * (non-Javadoc)

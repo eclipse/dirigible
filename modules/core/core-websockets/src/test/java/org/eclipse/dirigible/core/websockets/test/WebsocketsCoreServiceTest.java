@@ -18,9 +18,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
@@ -31,9 +29,8 @@ import org.junit.Test;
 /**
  * The Class WebsocketsCoreServiceTest.
  */
-public class WebsocketsCoreServiceTest extends AbstractGuiceTest {
+public class WebsocketsCoreServiceTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IWebsocketsCoreService websocketsCoreService;
 
 	/**
@@ -44,7 +41,7 @@ public class WebsocketsCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.websocketsCoreService = getInjector().getInstance(WebsocketsCoreService.class);
+		this.websocketsCoreService = new WebsocketsCoreService();
 	}
 
 	/**

@@ -17,24 +17,21 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class PublisherCoreServiceTest.
  */
-public class PublisherCoreServiceTest extends AbstractGuiceTest {
+public class PublisherCoreServiceTest extends AbstractDirigibleTest {
 	
 	/** The publisher core service. */
-	@Inject
 	private IPublisherCoreService publisherCoreService;
 	
 	/**
@@ -44,7 +41,7 @@ public class PublisherCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
+		this.publisherCoreService = new PublisherCoreService();
 	}
 	
 	/**
