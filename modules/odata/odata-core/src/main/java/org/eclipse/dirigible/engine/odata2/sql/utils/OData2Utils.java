@@ -33,7 +33,10 @@ import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
+import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.exception.ODataHttpException;
+import org.apache.olingo.odata2.api.exception.ODataRuntimeApplicationException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
@@ -352,5 +355,38 @@ public class OData2Utils {
                LOG.warn("Close failed", e);
             }
         }
+    }
+    
+    public static HttpStatusCodes getStatusCodeForException(Exception e) {
+        HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
+        if (e instanceof OData2Exception) {
+            codeOnFailedRequest = ((OData2Exception) e).getHttpStatus();
+        } else if (e instanceof ODataApplicationException) {
+            ODataApplicationException odae = (ODataApplicationException) e;
+            codeOnFailedRequest = odae.getHttpStatus();
+            if (codeOnFailedRequest == null) {
+                codeOnFailedRequest = determineStatusCode(odae);
+            }
+        } else if (e instanceof ODataException) {
+            codeOnFailedRequest = determineStatusCode((ODataException) e);
+        } else if (e instanceof ODataRuntimeApplicationException) {
+            codeOnFailedRequest = ((ODataRuntimeApplicationException) e).getHttpStatus();
+            if (codeOnFailedRequest == null) {
+                codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
+            }
+        }
+        return codeOnFailedRequest;
+    }
+
+    private static HttpStatusCodes determineStatusCode(ODataException ode) {
+        HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
+        if (ode.isCausedByHttpException()) {
+            codeOnFailedRequest = ((ODataHttpException) ode).getHttpStatus();
+        } else if (ode.isCausedByMessageException()) {
+            codeOnFailedRequest = HttpStatusCodes.BAD_REQUEST;
+        } else if (ode.isCausedByApplicationException()) {
+            codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
+        }
+        return codeOnFailedRequest;
     }
 }
