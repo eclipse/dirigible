@@ -520,6 +520,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				} else {
 
 					propertyDbValue = resultSet.getObject(columnName);
+					propertyDbValue = onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
 					return propertyDbValue;
 				}
 			} else {
@@ -532,6 +533,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				EdmProperty prop = (EdmProperty) complexProperty.getProperty(pn);
 				final String columnName = selectEntityQuery.getSQLTableColumnAlias(complexProperty, prop);
 				propertyDbValue = resultSet.getObject(columnName);
+				propertyDbValue = onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
 				complexPropertyData.put(pn, propertyDbValue);
 			}
 			return complexPropertyData;
