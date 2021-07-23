@@ -35,7 +35,7 @@ public class CmsInternalModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-cms-internal.properties");
 		String cmsProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, ICmsProvider.DIRIGIBLE_CMS_PROVIDER_INTERNAL);
 

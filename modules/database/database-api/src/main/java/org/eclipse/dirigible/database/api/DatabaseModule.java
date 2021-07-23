@@ -43,7 +43,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-database.properties");
 
 		boolean databaseProviderIsSelected = false;
@@ -143,6 +143,11 @@ public class DatabaseModule extends AbstractDirigibleModule {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public int getPriority() {
+		return PRIORITY_DATABASE;
 	}
 
 }

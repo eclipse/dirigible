@@ -23,7 +23,7 @@ public class GitModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-git.properties");
 	}
 

@@ -11,32 +11,36 @@
  */
 package org.eclipse.dirigible.commons.api.module;
 
-/**
- * The AbstractDirigibleModule is the parent of the Dirigible's Modules.
- */
-public abstract class AbstractDirigibleModule implements DirigibleModule {
+public interface DirigibleModule {
+	
+	int PRIORITY_CONFIGURATION = 10;
+	
+	int PRIORITY_DATABASE = 20;
+	
+	int PRIORITY_REPOSITORY = 30;
+	
+	int PRIORITY_ENGINE = 40;
+	
+	int PRIORITY_DEFAULT = 50;
+	
+	int LOW_PRIORITY = 100;
 
 	/**
 	 * Gets the name.
 	 *
 	 * @return the name
 	 */
-	@Override
-	public abstract String getName();
+	String getName();
 
 	/**
 	 * Gets the priority
 	 * @return the priority
 	 */
-	@Override
-	public int getPriority() {
-		return PRIORITY_DEFAULT;
-	}
+	int getPriority();
 	
 	/**
 	 * Runs the module initialization logic
 	 */
-	@Override
-	public abstract void configure();
-	
+	void configure();
+
 }

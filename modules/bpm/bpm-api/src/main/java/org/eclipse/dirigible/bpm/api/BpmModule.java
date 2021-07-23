@@ -40,7 +40,7 @@ public class BpmModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-bpm.properties");
 
 		String bpmProvider = Configuration.get(IBpmProvider.DIRIGIBLE_BPM_PROVIDER);

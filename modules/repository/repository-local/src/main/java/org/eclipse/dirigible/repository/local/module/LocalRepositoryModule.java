@@ -34,7 +34,7 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-repository-local.properties");
 		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER);
 
@@ -76,5 +76,10 @@ public class LocalRepositoryModule extends AbstractDirigibleModule {
 	@Override
 	public String getName() {
 		return MODULE_NAME;
+	}
+	
+	@Override
+	public int getPriority() {
+		return PRIORITY_REPOSITORY;
 	}
 }

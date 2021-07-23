@@ -36,7 +36,7 @@ public class CmsDatabaseModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-cms-database.properties");
 		String cmsProvider = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_PROVIDER);
 

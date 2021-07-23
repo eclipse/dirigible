@@ -52,7 +52,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	@Override
 	public int getPriority() {
 		// Set to higher priority, as this module will set security, database, etc. related configuration properties 
-		return HIGH_PRIORITY;
+		return PRIORITY_CONFIGURATION;
 	}
 
 	/*
@@ -60,7 +60,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-cloud-foundry.properties");
 		configureOAuth();
 		configureDatasource();

@@ -30,7 +30,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#configure()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		ServiceLoader<IJavascriptEngineExecutor> javascriptEngineExecutors = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
 		Configuration.loadModuleConfig("/dirigible-js.properties");
@@ -56,6 +56,6 @@ public class JavascriptModule extends AbstractDirigibleModule {
 
 	@Override
 	public int getPriority() {
-		return HIGH_PRIORITY;
+		return PRIORITY_ENGINE;
 	}
 }
