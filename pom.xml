@@ -577,7 +577,7 @@
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
+		<maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
 		<commons.io>2.7</commons.io>
 		<commons.codec>1.10</commons.codec>
 		<commons.lang3>3.9</commons.lang3>
