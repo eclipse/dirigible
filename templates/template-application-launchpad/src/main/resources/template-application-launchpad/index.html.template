@@ -19,18 +19,18 @@
  
     <link rel="shortcut icon" type="image/png" href="../../../../services/v4/web/resources/images/favicon.png" />
                
-                <!-- FontAwesome icon set -->
+    <!-- FontAwesome icon set -->
     <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
                                
-                <!-- Twitter Bootstrap with Theme Support -->
-                <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/bootstrap.min.css">
- 
-                <!-- GoldenLayout with Theme Support -->
-                <link type="text/css" rel="stylesheet" href="../../../../services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-                <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/goldenlayout-theme.css" />
-               
-                <!-- Custom IDE Styles -->
-                <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/ide.css" />
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/bootstrap.min.css">
+
+    <!-- GoldenLayout with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/goldenlayout-theme.css" />
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/core/theme/ide.css" />
 </head>
  
 <body ng-app="operations" ng-controller="Controller as c">
