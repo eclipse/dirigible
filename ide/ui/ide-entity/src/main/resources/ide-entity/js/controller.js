@@ -124,7 +124,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		
 		// Defines an icon for creating new connections in the connection handler.
 		// This will automatically disable the highlighting of the source vertex.
-		mxConnectionHandler.prototype.connectImage = new mxImage('../resources/mxgraph/3.9.1/images/connector.gif', 16, 16);
+		mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
 		
 		// Workaround for Internet Explorer ignoring certain CSS directives
 		if (mxClient.IS_QUIRKS) {
@@ -246,7 +246,7 @@ function main(container, outline, toolbar, sidebar, status) {
 				if (cell.value.dataPrimaryKey === 'true') {
 					label += '<i title="Primary Key" class="fa fa-key" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
-					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
+					label += '<img src="images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 										
 				if (cell.value.dataAutoIncrement === 'true') {
@@ -254,7 +254,7 @@ function main(container, outline, toolbar, sidebar, status) {
 				} else if (cell.value.dataUnique === 'true') {
 					label += '<i title="Unique" class="fa fa-check" width="16" height="16" align="top"></i>&nbsp;';
 				} else {
-					label += '<img src="../resources/mxgraph/3.9.1/images/spacer.gif" width="9" height="1">&nbsp;';
+					label += '<img src="images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 
 				var suffix = mxUtils.htmlEntities(cell.value.dataType, false)+(cell.value.dataLength ? '('+cell.value.dataLength+')' : '');

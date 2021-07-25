@@ -153,7 +153,6 @@
 		<project>dirigible-resources-jquery</project>
 		<project>dirigible-resources-jstree</project>
 		<project>dirigible-resources-flowable-libs</project>
-		<project>dirigible-resources-mxgraph</project>
 		<project>dirigible-resources-jqplot</project>
 		<project>dirigible-resources-resources</project>
 		<project>dirigible-resources-themes</project>
