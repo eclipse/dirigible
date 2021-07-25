@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <link type="text/css" rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
-	<link type="text/css" rel="stylesheet" href="../../../../../services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
 	<link type="image/png" rel="shortcut icon" href="../../../../../services/v4/web/resources/images/favicon.png" />
     <script type="text/javascript" src="../../../../../services/v4/web/resources/requirejs/2.3.6/require.js"></script>
     <script type="text/javascript" src="../../../../../services/v4/web/resources/jquery/3.4.1/jquery.min.js"></script>

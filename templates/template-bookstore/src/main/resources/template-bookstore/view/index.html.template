@@ -8,7 +8,7 @@
 	<meta name="author" content="">
 
 	<link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
-	<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
 	<link type="image/png" rel="shortcut icon" href="/services/v4/web/resources/images/favicon.png" />
 </head>
 
