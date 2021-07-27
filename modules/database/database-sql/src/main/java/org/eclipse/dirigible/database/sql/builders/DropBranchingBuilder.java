@@ -18,6 +18,7 @@ import org.eclipse.dirigible.database.sql.builders.sequence.DropSequenceBuilder;
 import org.eclipse.dirigible.database.sql.builders.synonym.DropSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropConstraintBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.DropTableBuilder;
+import org.eclipse.dirigible.database.sql.builders.tableType.DropTableTypeBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.DropViewBuilder;
 
 /**
@@ -94,13 +95,24 @@ public class DropBranchingBuilder extends AbstractSqlBuilder {
         return new DropSchemaBuilder(getDialect(), schema);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
-    @Override
-    public String generate() {
-        throw new SqlException("Invalid method invocation of generate() for Drop Branching Builder");
-    }
+	/**
+	 * Table Type branch.
+	 *
+	 * @param tableType
+	 *            the tableType
+	 * @return the drop tableType builder
+	 */
+	public DropTableTypeBuilder tableType(String tableType) {
+		return new DropTableTypeBuilder(getDialect(), tableType);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
+	@Override
+	public String generate() {
+		throw new SqlException("Invalid method invocation of generate() for Drop Branching Builder");
+	}
 
 }
