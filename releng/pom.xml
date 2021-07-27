@@ -37,6 +37,7 @@
 		<module>server-javascript</module>
 		<module>server-database</module>
 		<module>server-cms</module>
+		<module>server-minimal</module>
 	</modules>
 
 	<properties>

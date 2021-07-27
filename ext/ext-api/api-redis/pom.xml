@@ -5,18 +5,18 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-facade-parent</artifactId>
+		<artifactId>dirigible-ext-api-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Facade - Elasticsearch</name>
-	<artifactId>dirigible-api-facade-elasticsearch</artifactId>
+	<name>API - Facade - Redis</name>
+	<artifactId>dirigible-api-facade-redis</artifactId>
 	<packaging>jar</packaging>
 
 	<profiles>
 		<profile>
-			<id>elasticsearch-facade-default</id>
+			<id>api-facade-test-default</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -40,7 +40,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<excludes>
-								<exclude>**/ElasticsearchFacadeTest.java</exclude>
+								<exclude>**/RedisFacadeTest.java</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
@@ -48,10 +48,10 @@
 			</build>
 		</profile>
 		<profile>
-			<id>elasticsearch-facade-test</id>
+			<id>redis-test</id>
 			<activation>
 				<property>
-					<name>elastic-test</name>
+					<name>redis-test</name>
 				</property>
 			</activation>
 			<build>
@@ -73,7 +73,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<includes>
-								<include>**/ElasticsearchFacadeTest.java</include>
+								<include>**/RedisFacadeTest.java</include>
 							</includes>
 						</configuration>
 					</plugin>
@@ -119,28 +119,15 @@
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Elasticsearch dependencies -->
-
+		<!-- Redis dependencies -->
 		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>7.7.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.logging.log4j</groupId>
-					<artifactId>log4j-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>3.5.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>elasticsearch</artifactId>
-			<version>1.15.3</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- / Elasticsearch dependencies -->
-
+		<!-- / Redis dependencies -->
 
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -160,7 +147,18 @@
 			<version>6.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.15.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.15.3</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>

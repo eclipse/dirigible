@@ -33,14 +33,6 @@
 		<module>api-cms</module>
 		<module>api-bpm</module>
 		<module>api-net</module>
-		<module>api-kafka</module>
-		<module>api-mongodb</module>
-		<module>api-cassandra</module>
-		<module>api-elasticsearch</module>
-		<module>api-etcd</module>
-		<module>api-rabbitmq</module>
-		<module>api-redis</module>
-		<module>api-spark</module>
 	</modules>
 
 	<properties>

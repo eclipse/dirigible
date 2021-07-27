@@ -5,18 +5,18 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-facade-parent</artifactId>
+		<artifactId>dirigible-ext-api-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Facade - RabbitMQ</name>
-	<artifactId>dirigible-api-facade-rabbitmq</artifactId>
+	<name>API - Facade - Spark</name>
+	<artifactId>dirigible-api-facade-spark</artifactId>
 	<packaging>jar</packaging>
 
 	<profiles>
 		<profile>
-			<id>rabbitmq-facade-default</id>
+			<id>spark-facade-default</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -40,7 +40,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<excludes>
-								<exclude>**/RabbitMQFacadeTest.java</exclude>
+								<exclude>**/SparkFacadeTest.java</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
@@ -48,10 +48,10 @@
 			</build>
 		</profile>
 		<profile>
-			<id>rabbitmq-facade-test</id>
+			<id>spark-facade-test</id>
 			<activation>
 				<property>
-					<name>rabbitmq-test</name>
+					<name>spark-test</name>
 				</property>
 			</activation>
 			<build>
@@ -73,7 +73,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<includes>
-								<include>**/RabbitMQFacadeTest.java</include>
+								<include>**/SparkFacadeTest.java</include>
 							</includes>
 						</configuration>
 					</plugin>
@@ -118,17 +118,71 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
+
+		<!-- Spark dependencies -->
 		<dependency>
-		    <groupId>com.rabbitmq</groupId>
-		    <artifactId>amqp-client</artifactId>
-		    <version>5.11.0</version>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-sql_2.12</artifactId>
+			<version>3.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jul-to-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.30</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>1.7.30</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.19</version>
+		</dependency>
+		<!-- / Spark dependencies -->
+
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+<!-- Conflicts with other dependencies -->
+<!--		<dependency>-->
+<!--			<groupId>org.eclipse.dirigible</groupId>-->
+<!--			<artifactId>dirigible-engine-javascript-graalvm</artifactId>-->
+<!--			<version>5.11.0-SNAPSHOT</version>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
@@ -141,24 +195,7 @@
 			<version>6.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-		    <groupId>io.github.hakky54</groupId>
-		    <artifactId>logcaptor</artifactId>
-		    <version>2.5.0</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.testcontainers</groupId>
-		    <artifactId>testcontainers</artifactId>
-		    <version>1.15.3</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>rabbitmq</artifactId>
-			<version>1.15.3</version>
-			<scope>test</scope>
-		</dependency>
+
 	</dependencies>
 
 	<properties>

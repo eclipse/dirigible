@@ -5,18 +5,18 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-facade-parent</artifactId>
+		<artifactId>dirigible-ext-api-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - Facade - Cassandra</name>
-	<artifactId>dirigible-api-facade-cassandra</artifactId>
+	<name>API - Facade - RabbitMQ</name>
+	<artifactId>dirigible-api-facade-rabbitmq</artifactId>
 	<packaging>jar</packaging>
 
 	<profiles>
 		<profile>
-			<id>cassandra-default</id>
+			<id>rabbitmq-facade-default</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
@@ -40,7 +40,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<excludes>
-								<exclude>**/CassandraFacadeTest.java</exclude>
+								<exclude>**/RabbitMQFacadeTest.java</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
@@ -48,10 +48,10 @@
 			</build>
 		</profile>
 		<profile>
-			<id>cassandra-test</id>
+			<id>rabbitmq-facade-test</id>
 			<activation>
 				<property>
-					<name>cassandra-test</name>
+					<name>rabbitmq-test</name>
 				</property>
 			</activation>
 			<build>
@@ -73,7 +73,7 @@
 						<version>2.22.2</version>
 						<configuration>
 							<includes>
-								<include>**/CassandraFacadeTest.java</include>
+								<include>**/RabbitMQFacadeTest.java</include>
 							</includes>
 						</configuration>
 					</plugin>
@@ -83,12 +83,6 @@
 	</profiles>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>cassandra</artifactId>
-			<version>1.15.3</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
@@ -124,21 +118,17 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
-			<groupId>com.datastax.cassandra</groupId>
-			<artifactId>cassandra-driver-core</artifactId>
-			<version>3.11.0</version>
+		    <groupId>com.rabbitmq</groupId>
+		    <artifactId>amqp-client</artifactId>
+		    <version>5.11.0</version>
 		</dependency>
-		
-
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
@@ -151,7 +141,24 @@
 			<version>6.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+		    <groupId>io.github.hakky54</groupId>
+		    <artifactId>logcaptor</artifactId>
+		    <version>2.5.0</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.testcontainers</groupId>
+		    <artifactId>testcontainers</artifactId>
+		    <version>1.15.3</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>rabbitmq</artifactId>
+			<version>1.15.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
