@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
+import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
 
 /**
  * The HANA Create Branching Builder.
@@ -61,4 +62,7 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new HanaCreateTableBuilder(this.getDialect(), table, false);
 	}
 
+	public CreateTableTypeBuilder tableType(String tableType){
+		return new HanaCreateTableTypeBuilder(this.getDialect(), tableType);
+	}
 }
