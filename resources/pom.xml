@@ -39,21 +39,14 @@
 
 	<modules>
 		<module>resources-all</module>
-		<module>resources-angular</module>
-		<module>resources-bootstrap</module>
 		<module>resources-goldenlayout</module>
-		<module>resources-jquery</module>
-		<module>resources-jstree</module>
 		<module>resources-fonts</module>
 		<module>resources-flowable-libs</module>
 		<module>resources-dev-tools</module>
-		<module>resources-jqplot</module>
 		<module>resources-resources</module>
 		<module>resources-themes</module>
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
-		<module>resources-jquery-ui</module>
-		<module>resources-requirejs</module>
 	</modules>
 
 	<profiles>
