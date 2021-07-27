@@ -128,11 +128,11 @@
 		    <artifactId>bootstrap</artifactId>
 		    <version>3.3.7</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.webjars.npm</groupId>
 		    <artifactId>golden-layout</artifactId>
 		    <version>1.5.9</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>jqplot</artifactId>
