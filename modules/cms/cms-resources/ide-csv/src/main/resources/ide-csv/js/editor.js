@@ -314,6 +314,9 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         });
         // Unless we do this, we will not be able to use the arrow keys in the input box.
         $scope.gridOptions.navigateToNextHeader = function () { };
+        let defs = $scope.gridOptions.api.getColumnDefs();
+        defs[focusedColumnIndex].suppressMovable = true;
+        $scope.gridOptions.api.setColumnDefs(defs);
     }
 
     function hideColumnInput() {
@@ -342,6 +345,9 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
             $scope.gridOptions.api.setColumnDefs(columnDefs);
             // Unless we do this, we will not be able to use the arrow keys to navigate the grid.
             $scope.gridOptions.navigateToNextHeader = undefined;
+            let defs = $scope.gridOptions.api.getColumnDefs();
+            defs[focusedColumnIndex].suppressMovable = false;
+            $scope.gridOptions.api.setColumnDefs(defs);
             if (newTitle != columnText.text()) {
                 fileChanged();
             }
@@ -352,20 +358,20 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
     $scope.handleClick = function (event) {
         if (event.which === 3) {
             if (
-                event.originalTarget.className.includes("ag-header-cell-label") ||
-                event.originalTarget.className.includes("ag-header-cell-text") ||
-                event.originalTarget.className.includes("ag-cell-label-container")
+                event.target.className.includes("ag-header-cell-label") ||
+                event.target.className.includes("ag-header-cell-text") ||
+                event.target.className.includes("ag-cell-label-container")
             ) {
-                focusedColumnIndex = parseInt(event.originalTarget.attributes.cid.value);
+                focusedColumnIndex = parseInt(event.target.attributes.cid.value);
                 showContextMenu({ x: event.clientX, y: event.clientY, column: true });
-            } else if (event.originalTarget.className.includes("ag-cell")) {
+            } else if (event.target.className.includes("ag-cell")) {
                 focusedCellIndex = $scope.gridOptions.api.getFocusedCell().rowIndex;
                 showContextMenu({ x: event.clientX, y: event.clientY, row: true });
-            } else if (event.originalTarget.className.includes("ag-center-cols-viewport")) {
+            } else if (event.target.className.includes("ag-center-cols-viewport")) {
                 showContextMenu({ x: event.clientX, y: event.clientY, viewport: true });
             } else if (
-                !event.originalTarget.className.includes("dropdown-item") &&
-                !event.originalTarget.className.includes("header-input")
+                !event.target.className.includes("dropdown-item") &&
+                !event.target.className.includes("header-input")
             ) {
                 hideContextMenu();
                 hideColumnInput();
@@ -373,8 +379,8 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         } else {
             try {
                 if (
-                    !event.originalTarget.className.includes("dropdown-item") &&
-                    !event.originalTarget.className.includes("header-input")
+                    !event.target.className.includes("dropdown-item") &&
+                    !event.target.className.includes("header-input")
                 ) {
                     hideContextMenu();
                     hideColumnInput();
