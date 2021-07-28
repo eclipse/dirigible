@@ -183,9 +183,6 @@ jobs:
         zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT.war
         zip --junk-paths server-all releng/server-all/target/ROOT.war
         zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
-        zip --junk-paths server-cms releng/server-cms/target/ROOT.war
-        zip --junk-paths server-database releng/server-database/target/ROOT.war
-        zip --junk-paths server-javascript releng/server-javascript/target/ROOT.war
         zip --junk-paths server-runtime releng/server-runtime/target/ROOT.war
         zip --junk-paths trial-all releng/trial-all/target/ROOT.war
 
@@ -268,9 +265,6 @@ jobs:
             - [sap-cf-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-runtime.zip) - SAP Cloud Platform - Cloud Foundry environment _(runtime only)_.
             - [desktop-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/desktop-all.zip) - Desktop package.
             - [server-oauth](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-oauth.zip) - Basic package - recommended for local test & development, _**requires additional OAuth configurations.**_
-            - [server-cms](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-cms.zip) - CMS package.
-            - [server-database](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-database.zip) - Database package.
-            - [server-javascript](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-javascript.zip) - JavaScript engine package.
             - [server-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-runtime.zip) - Basic package - recommended for local test & development _(runtime only)_.
             - [trial-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/trial-all.zip) - Trial package _(guest/nickname)_.
             - [sap-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-all.zip) - SAP BTP Neo Runtime package.
@@ -350,36 +344,6 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./server-oauth.zip
         asset_name: server-oauth.zip
-        asset_content_type: application/zip
-    - name: Upload server-cms
-      id: upload-server-cms
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-cms.zip
-        asset_name: server-cms.zip
-        asset_content_type: application/zip
-    - name: Upload server-database
-      id: upload-server-database
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-database.zip
-        asset_name: server-database.zip
-        asset_content_type: application/zip
-    - name: Upload server-javascript
-      id: upload-server-javascript
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./server-javascript.zip
-        asset_name: server-javascript.zip
         asset_content_type: application/zip
     - name: Upload server-runtime
       id: upload-server-runtime
