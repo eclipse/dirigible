@@ -5,14 +5,14 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-parent</artifactId>
+		<artifactId>dirigible-cms-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Parent</name>
-	<artifactId>dirigible-api-javascript-parent</artifactId>
-	<description>Javascript API Modules</description>
+	<name>Resources - CMS - Parent</name>
+	<artifactId>dirigible-cms-resources-parent</artifactId>
+	<description>CMS Resources Plugins</description>
 	<packaging>pom</packaging>
 	
 	<scm>
@@ -22,21 +22,11 @@
 	</scm>
 
 	<modules>
-		<!-- Content - API -->
-		<module>api-all</module>
-		<module>api-core</module>
-		<module>api-http</module>
-		<module>api-utils</module>
-		<module>api-security</module>
-		<module>api-database</module>
-		<module>api-io</module>
-		<module>api-mail</module>
-		<module>api-messaging</module>
-		<module>api-indexing</module>
-		<module>api-log</module>
-		<module>api-test</module>
-		<module>api-net</module>
-		<module>api-platform</module>
+		<module>api-cms</module>
+		<module>api-documents</module>
+        <module>ide-documents</module>
+        <module>ide-documents-ext-content-type-ms</module>
+        <module>ide-csv</module>
 	</modules>
 
 	<profiles>

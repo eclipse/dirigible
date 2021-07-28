@@ -87,16 +87,6 @@
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-documents</artifactId>
-		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ide-ui-documents-ext-content-type-ms</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-	    </dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-schema</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
 		</dependency>
@@ -183,11 +173,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-ui-form-builder</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ide-ui-csv</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -26,7 +26,6 @@
 		<module>sap-kyma-all</module>
 		<module>sap-kyma-base</module>
 		<module>sap-kyma-runtime</module>
-		<module>sap-cms</module>
 		<module>sap-runtime-ephemeral</module>
 		<module>server-all</module>
 		<module>server-keycloak-all</module>
@@ -34,9 +33,6 @@
 		<module>server-runtime</module>
 		<module>server-runtime-keycloak</module>
 		<module>trial-all</module>
-		<module>server-javascript</module>
-		<module>server-database</module>
-		<module>server-cms</module>
 		<module>server-minimal</module>
 	</modules>
 
