@@ -113,19 +113,15 @@
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-api</artifactId>
+		 	<artifactId>dirigible-cms</artifactId>
 		 	<version>5.12.7</version>
+		 	<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-cms-managed</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-internal</artifactId>
-		 	<version>5.12.7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-cms-database</artifactId>
-			<version>5.12.7</version>
-	   </dependency>
 		
 		<!-- BPM -->
 		<dependency>

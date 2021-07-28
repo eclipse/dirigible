@@ -49,6 +49,16 @@
         
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-cms</artifactId>
+            <version>5.12.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-api-facade-documents</artifactId>
+            <version>5.12.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-javascript-cms</artifactId>
             <version>5.12.7</version>
         </dependency>
