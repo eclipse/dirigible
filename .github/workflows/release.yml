@@ -182,6 +182,7 @@ jobs:
         zip --junk-paths sap-cf-all releng/sap-cf-all/target/ROOT.war
         zip --junk-paths sap-cf-runtime releng/sap-cf-runtime/target/ROOT.war
         zip --junk-paths server-all releng/server-all/target/ROOT.war
+        zip --junk-paths server-minimal releng/server-minimal/target/ROOT.war
         zip --junk-paths server-oauth releng/server-oauth/target/ROOT.war
         zip --junk-paths server-runtime releng/server-runtime/target/ROOT.war
         zip --junk-paths trial-all releng/trial-all/target/ROOT.war
@@ -259,6 +260,7 @@ jobs:
 
           #### Available for download `*.war` packages:
             - _**[server-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-all.zip) - Basic package - recommended for local test & development.**_
+            - [server-minimal](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/server-minimal.zip) - Minimal package still containing the WebIDE.
             - [anonymous-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-all.zip) - Anonymous access.
             - [anonymous-runtime](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/anonymous-runtime.zip) - Anonymous access _(runtime only)_.
             - [sap-cf-all](https://github.com/eclipse/dirigible/releases/download/v${{ env.DIRIGIBLE_VERSION }}/sap-cf-all.zip) - SAP Cloud Platform - Cloud Foundry environment.
@@ -334,6 +336,16 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./server-all.zip
         asset_name: server-all.zip
+        asset_content_type: application/zip
+    - name: Upload server-minimal
+      id: upload-server-minimal 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./server-minimal.zip
+        asset_name: server-minimal.zip
         asset_content_type: application/zip
     - name: Upload server-oauth
       id: upload-server-oauth
