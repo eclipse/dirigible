@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-api-facade-parent</artifactId>
+		<artifactId>dirigible-bpm-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
@@ -46,7 +46,4 @@
 
 	</dependencies>
 
-	<properties>
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
 </project>

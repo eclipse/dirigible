@@ -79,12 +79,16 @@
 	</licenses>
 
 	<url>http://www.dirigible.io</url>
+	
 	<organization>
 		<name>Eclipse Foundation</name>
 		<url>http://www.eclipse.org</url>
 	</organization>
+	
 	<scm>
-		<url>https://github.com/eclipse/dirigible</url>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
 	</scm>
 
 	<profiles>
@@ -166,13 +170,7 @@
 								<exclude>**/src/test/resources/**</exclude>
 								<exclude>**/src/main/resources/font-awesome-4.7.0/**</exclude>
 								<exclude>**/src/main/resources/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/resources/angular/**</exclude>
-								<exclude>**/src/main/resources/resources/bootstrap/**</exclude>
 								<exclude>**/src/main/resources/resources/goldenlayout/**</exclude>
-								<exclude>**/src/main/resources/resources/jqplot/**</exclude>
-								<exclude>**/src/main/resources/resources/jquery/**</exclude>
-								<exclude>**/src/main/resources/resources/jstree/**</exclude>
-								<exclude>**/src/main/resources/resources/mxgraph/**</exclude>
 								<exclude>**/src/main/resources/ide-ace/**</exclude>
 								<exclude>**/src/main/resources/ide-bpm/**</exclude>
 								<exclude>**/src/main/resources/ide-monaco/**</exclude>
@@ -371,6 +369,70 @@
 				</plugins>
 			</build>
 		</profile>
+		
+		<!-- <profile>
+			<id>content</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${project.artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>${maven.scm.plugin.version}</version>
+						<configuration>
+							<goals>checkout</goals>
+							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
+							<server>${content.scm.server}</server>
+						</configuration>
+						<executions>
+							<execution>
+								<id>generated-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.resource.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>copy-content-resources</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${content.output.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${content.source.directory}</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile> -->
+		
 	</profiles>
 
 	<repositories>
@@ -613,8 +675,18 @@
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<org.projectlombok.version>1.18.20</org.projectlombok.version>
+		
+		<content.repository.name>dirigiblelabs</content.repository.name>
+		<content.project.name>dirigiblelabs</content.project.name>
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		<content.scm.server>github</content.scm.server>
+		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
+		<content.source.directory>target/${content.project.name}</content.source.directory>
+		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
 
-		<license.header.location>licensing-header.txt</license.header.location>
+		<license.header.location>${maven.multiModuleProjectDirectory}/licensing-header.txt</license.header.location>
 
 		<skip.tests>true</skip.tests>
 	</properties>

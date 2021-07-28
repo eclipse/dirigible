@@ -31,11 +31,7 @@
 		<module>api-indexing</module>
 		<module>api-log</module>
 		<module>api-cms</module>
-		<module>api-bpm</module>
 		<module>api-net</module>
 	</modules>
 
-	<properties>
-		<license.header.location>../../licensing-header.txt</license.header.location>
-	</properties>
 </project>

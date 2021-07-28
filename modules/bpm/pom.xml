@@ -17,9 +17,9 @@
 		<module>bpm-all</module>
 		<module>bpm-api</module>
         <module>bpm-flowable</module>
+        <module>api-facade-bpm</module>
+        <module>ide-service-bpm</module>
+        <module>bpm-resources</module>
 	</modules>
 
-	<properties>
-		<license.header.location>../../licensing-header.txt</license.header.location>
-	</properties>
 </project>
