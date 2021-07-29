@@ -26,6 +26,7 @@
 		<module>sap-kyma-all</module>
 		<module>sap-kyma-base</module>
 		<module>sap-kyma-runtime</module>
+		<module>sap-cms</module>
 		<module>sap-runtime-ephemeral</module>
 		<module>server-all</module>
 		<module>server-keycloak-all</module>
