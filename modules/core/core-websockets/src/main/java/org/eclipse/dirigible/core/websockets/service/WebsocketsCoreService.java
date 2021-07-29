@@ -36,7 +36,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class WebsocketsCoreService implements IWebsocketsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<WebsocketDefinition> websocketsPersistenceManager = new PersistenceManager<WebsocketDefinition>();
 

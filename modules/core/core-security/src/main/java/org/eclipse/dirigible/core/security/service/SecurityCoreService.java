@@ -42,7 +42,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class SecurityCoreService implements ISecurityCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<RoleDefinition> rolesPersistenceManager = new PersistenceManager<RoleDefinition>();
 

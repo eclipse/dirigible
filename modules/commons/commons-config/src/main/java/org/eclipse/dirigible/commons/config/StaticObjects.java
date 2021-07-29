@@ -24,6 +24,8 @@ public final class StaticObjects {
 	
 	public static final String DATASOURCE = "DATASOURCE"; // DataSource
 	
+	public static final String SYSTEM_DATASOURCE = "SYSTEM_DATASOURCE"; // System DataSource
+	
 	public static final String DATABASE = "DATABASE"; // IDatabase
 	
 	public static final String REPOSITORY = "REPOSITORY"; // IRepository

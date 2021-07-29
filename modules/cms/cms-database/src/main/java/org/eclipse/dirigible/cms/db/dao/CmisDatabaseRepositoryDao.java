@@ -70,7 +70,7 @@ public class CmisDatabaseRepositoryDao {
 
 	private CmsDatabaseRepository repository = (CmsDatabaseRepository) StaticObjects.get(StaticObjects.CMS_DATABASE_REPOSITORY);
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	/**
 	 * Instantiates a new database repository dao.

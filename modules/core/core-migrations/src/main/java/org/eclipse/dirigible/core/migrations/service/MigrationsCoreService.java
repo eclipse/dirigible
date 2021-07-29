@@ -30,14 +30,13 @@ import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.definition.MigrationStatusDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.repository.api.IRepository;
 
 /**
  * The Migrations Core Service.
  */
 public class MigrationsCoreService implements IMigrationsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager = new PersistenceManager<MigrationDefinition>();
 	

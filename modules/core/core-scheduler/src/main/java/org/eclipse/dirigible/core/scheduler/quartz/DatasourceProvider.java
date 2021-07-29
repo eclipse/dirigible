@@ -23,7 +23,7 @@ import org.eclipse.dirigible.database.api.DatabaseModule;
  */
 public class DatasourceProvider {
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 	
 	private DataSource runtimeDataSource;
 

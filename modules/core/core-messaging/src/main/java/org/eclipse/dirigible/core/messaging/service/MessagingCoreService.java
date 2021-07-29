@@ -38,7 +38,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class MessagingCoreService implements IMessagingCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<ListenerDefinition> listenerPersistenceManager = new PersistenceManager<ListenerDefinition>();
 

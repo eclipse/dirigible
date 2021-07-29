@@ -53,7 +53,7 @@ public class SchedulerManager {
 	/** The Constant LOCATION_TEMP_STORE. */
 	private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 	
 	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 

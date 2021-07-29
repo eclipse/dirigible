@@ -44,7 +44,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class DataStructuresCoreService implements IDataStructuresCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<DataStructureTableModel> tablePersistenceManager = new PersistenceManager<DataStructureTableModel>();
 

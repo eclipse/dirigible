@@ -65,12 +65,8 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private SecurityCoreService securityCoreService = new SecurityCoreService();
 	
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-
 	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
-	private volatile boolean upgradePassed; 
-	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
 	/*
@@ -84,9 +80,6 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 				logger.trace("Synchronizing Roles and Access artifacts...");
 				try {
 					startSynchronization(SYNCHRONIZER_NAME);
-					if (!upgradePassed) {
-						upgradePassed = checkUpgrade();
-					}
 					clearCache();
 					synchronizePredelivered();
 					synchronizeRegistry();
@@ -170,39 +163,6 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 				in.close();
 			}
 		}
-	}
-
-	private boolean checkUpgrade() throws SQLException {
-		// from 3.1.x to 3.2.x
-		try (Connection connection = dataSource.getConnection()) {
-			Statement stmt = connection.createStatement();
-			ResultSet rs;
-			try {
-				rs = stmt.executeQuery("SELECT * FROM DIRIGIBLE_SECURITY_ACCESS");
-			} catch (Exception e) {
-				logger.warn(e.getMessage());
-				return false;
-			}
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
-			
-			List<String> columnNames = new ArrayList<>();
-			for (int i = 1; i <= columnCount; i++ ) {
-			  String name = rsmd.getColumnName(i);
-			  columnNames.add(name);
-			  if ("ACCESS_URI".equals(name)) {
-				  logger.warn("Upgrading Security Access Synchronizer from 3.1.x version to 3.2.x ...");
-				  accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
-				  logger.warn("Upgrade of Security Access Synchronizer from 3.1.x version to 3.2.x passed successfully.");
-			  }
-			}
-			if (!columnNames.contains("ACCESS_HASH")) {
-				logger.warn("Upgrading Security Access Synchronizer from 3.2.1 version to 3.2.2 ...");
-				accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
-				logger.warn("Upgrade of Security Access Synchronizer from 3.2.1 version to 3.2.2 passed successfully.");
-			}
-		}
-		return true;
 	}
 
 	/**

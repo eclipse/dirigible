@@ -29,7 +29,6 @@ import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 /**
@@ -38,7 +37,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 public class PublisherCoreService implements IPublisherCoreService {
 
 	/** The data source. */
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	/** The publish request persistence manager. */
 	private PersistenceManager<PublishRequestDefinition> publishRequestPersistenceManager = new PersistenceManager<PublishRequestDefinition>();

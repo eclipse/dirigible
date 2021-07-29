@@ -39,7 +39,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class ExtensionsCoreService implements IExtensionsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager = new PersistenceManager<ExtensionPointDefinition>();
 

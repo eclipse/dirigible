@@ -32,7 +32,7 @@ public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutIniti
 
 	private static final Logger logger = LoggerFactory.getLogger(QuartzDatabaseLayoutInitializer.class);
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	/**
 	 * Initialize the database schema for Quartz.

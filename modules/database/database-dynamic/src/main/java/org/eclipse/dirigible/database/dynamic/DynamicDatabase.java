@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Dynamic Database
  */
-public class DynamicDatabase implements IDatabase {
+public class DynamicDatabase extends AbstractDatabase {
 
 	private static final Logger logger = LoggerFactory.getLogger(DynamicDatabase.class);
 
@@ -60,15 +61,6 @@ public class DynamicDatabase implements IDatabase {
 	public void initialize() {
 		//Configuration.load("/dirigible-database-dynamic.properties");
 		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
-	 */
-	@Override
-	public DataSource getDataSource() {
-		return getDataSource(getDefaultDataSourceName());
 	}
 
 	/*
@@ -128,15 +120,6 @@ public class DynamicDatabase implements IDatabase {
 	@Override
 	public String getType() {
 		return TYPE;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDefaultDataSourceName()
-	 */
-	@Override
-	public String getDefaultDataSourceName() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 	
 	/*

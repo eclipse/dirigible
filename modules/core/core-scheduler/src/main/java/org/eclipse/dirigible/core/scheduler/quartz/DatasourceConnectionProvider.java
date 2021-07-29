@@ -14,7 +14,6 @@ package org.eclipse.dirigible.core.scheduler.quartz;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.quartz.utils.ConnectionProvider;
 
 /**

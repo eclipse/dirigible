@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ODataCoreService implements IODataCoreService {
 
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
     private PersistenceManager<ODataSchemaDefinition> odataSchemaPersistenceManager = new PersistenceManager<ODataSchemaDefinition>();
 
