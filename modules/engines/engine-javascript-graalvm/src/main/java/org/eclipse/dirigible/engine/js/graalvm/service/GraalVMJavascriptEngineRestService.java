@@ -63,7 +63,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	@Path("/{path:.*}")
 	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
-	public Response executeGraalVmServiceGet(@PathParam("path") String path) throws ScriptingException {
+	public Response executeGraalVMServiceGet(@PathParam("path") String path) throws ScriptingException {
 		processor.executeService(path);
 		return Response.ok().build();
 	}
