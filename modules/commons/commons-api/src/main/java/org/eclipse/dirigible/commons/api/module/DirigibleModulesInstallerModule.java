@@ -20,9 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.ServiceLoader.Provider;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
