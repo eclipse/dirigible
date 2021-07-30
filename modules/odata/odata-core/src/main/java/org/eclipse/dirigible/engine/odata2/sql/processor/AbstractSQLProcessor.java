@@ -573,9 +573,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			try {
 				statement = createInsertStatement(query, connection);
 				try {
-
 					statement.executeUpdate();
-
 				} finally {
 					OData2Utils.closeConsumeException(resultSet);
 				}
