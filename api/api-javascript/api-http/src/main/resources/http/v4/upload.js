@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Upload
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -34,7 +34,7 @@ exports.parseRequest = function() {
  * FileItems object
  */
 function FileItems() {
-	
+
 	this.get = function(index) {
 		var fileItem = new FileItem();
 		var native = this.native.get(index);
@@ -51,7 +51,7 @@ function FileItems() {
  * FileItem object
  */
 function FileItem() {
-	
+
 	this.getInputStream = function() {
 		var inputStream = new streams.InputStream();
 		var native = this.native.getInputStream();
@@ -62,35 +62,57 @@ function FileItem() {
 	this.getContentType = function() {
 		return this.native.getContentType();
 	};
-	
+
 	this.getName = function() {
 		return this.native.getName();
 	};
-	
+
 	this.getSize = function() {
 		return this.native.getSize();
 	};
-	
+
 	this.getBytes = function() {
 		var data = this.native.get();
 		return bytes.toJavaScriptBytes(data);
 	};
-	
+
 	this.getBytesNative = function() {
 		var data = this.native.get();
 		return data;
 	};
-	
+
 	this.getText = function() {
 		return this.native.getString();
 	};
-	
+
 	this.isFormField = function() {
 		return this.native.isFormField();
 	};
-	
+
 	this.getFieldName = function() {
 		return this.native.getFieldName();
 	};
-	
+
+	this.getHeaders = function() {
+		var headers = new Headers();
+		var native = this.native.getHeaders();
+		headers.native = native;
+		return headers;
+	};
+
 }
+
+/**
+ * Headers object
+ */
+function Headers() {
+
+	this.getHeaderNames = function() {
+		return this.native.getHeaderNames();
+	};
+
+	this.getHeader = function(headerName) {
+		return this.native.getHeader(headerName);
+	}
+};
+
