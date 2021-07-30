@@ -14,19 +14,12 @@ package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csvInBrackets;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.EdmTypeKind;
-import org.apache.olingo.odata2.api.edm.EdmTyped;
+import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
@@ -34,23 +27,21 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery.EdmTarget;
+import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
 public final class SQLExpressionInsert implements SQLExpression {
 
 	private final SQLQuery query;
 
-	private final Map<Integer, EdmTarget> columnMapping;
-
-	private Map<String, Object> values;
-
 	private EdmStructuralType target;
+	private ODataEntry entry;
 
-	private int atColumn = 0;
+	private final List<String> columnNames = new ArrayList<>();
+	private final List<Object> columnData = new ArrayList<>();
+	private final List<EdmProperty> columnProperties = new ArrayList<>();
 
-	@SuppressWarnings("unchecked")
 	public SQLExpressionInsert(final SQLQuery parent) {
 		this.query = parent;
-		this.columnMapping = new TreeMap<>();
 	}
 
 	@Override
@@ -60,7 +51,6 @@ public final class SQLExpressionInsert implements SQLExpression {
 			return buildInto(context);
 		case VALUES:
 			return buildValues(context);
-
 		default:
 			throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type,
 					HttpStatusCodes.INTERNAL_SERVER_ERROR);
@@ -69,46 +59,45 @@ public final class SQLExpressionInsert implements SQLExpression {
 
 	@Override
 	public boolean isEmpty() throws EdmException {
-		return columnMapping.size() == 0 ? true : false;
-	}
-
-	public EdmStructuralType getTarget() {
-		return target;
+		return columnNames.size() == 0 ? true : false;
 	}
 
 	@SuppressWarnings("unchecked")
-	public SQLQuery into(final EdmStructuralType target) throws ODataException {
+	public SQLQuery into(final EdmEntityType target, ODataEntry entry) throws ODataException {
 		query.grantTableAliasForStructuralTypeInQuery(target);
 		this.target = target;
+		this.entry = entry;
+		Map<String, Object> entryValues = entry.getProperties();
 
-		for (EdmProperty property : EdmUtils.getProperties(target)) {
-			columnMapping.put(atColumn++, query.new EdmTarget(target, property));
+		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
+			if (entryValues.containsKey(property.getName())) {
+				String columnName = query.getSQLTableColumnNoAlias(target, property);
+				columnNames.add(query.getSQLTableColumnNoAlias(target, property));
+				columnData.add(entryValues.get(property.getName()));
+				columnProperties.add(property);
+			}
+		}
+
+		for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
+			if (entryValues.containsKey(inlineEntry.getName())) {
+					Collection<EdmProperty> inlineEntityKeys = EdmUtils.getKeyProperties(inlineEntry);
+				if (!inlineEntityKeys.isEmpty()) {
+					columnNames.addAll(query.getSQLJoinColumnNoAlias(target, inlineEntry));
+					for (EdmProperty inlineEntityKey : inlineEntityKeys) {
+						columnData.add(OData2Utils.getInlineEntryKeyValue(entryValues, inlineEntry, inlineEntityKey));
+						columnProperties.add(inlineEntityKey);
+					}
+				} else {
+					//TODO if the entry does not have ids, create the entry.
+					throw new ODataException("Deep insert not implemented yet. Please create a request if you need it");
+				}
+			}
 		}
 
 		return query;
 	}
 
-	@SuppressWarnings("unchecked")
-	public SQLQuery values(final Map<String, Object> values) throws ODataException {
-
-		this.values = values;
-
-		return query;
-	}
-
-	private String getPropertyName(final int columnIndex) throws EdmException {
-		return getProperty(columnIndex).getName();
-	}
-
-	private EdmProperty getProperty(final int columnIndex) {
-		return columnMapping.get(columnIndex).getEdmProperty();
-	}
-
-	private EdmStructuralType getTargetType(final int columnIndex) {
-		return columnMapping.get(columnIndex).getEdmTargetType();
-	}
-
-	private String buildInto(final SQLContext context) throws EdmException {
+	public String buildInto(final SQLContext context) throws EdmException {
 		StringBuilder into = new StringBuilder();
 		Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
 		while (it.hasNext()) {
@@ -126,71 +115,35 @@ public final class SQLExpressionInsert implements SQLExpression {
 			}
 		}
 		into.append(" ").append(buildColumnList(context));
-
 		return into.toString();
+	}
+
+	public EdmStructuralType getTarget(){
+		return target;
 	}
 
 	private boolean isInsertTarget(final EdmStructuralType target) {
 		// always select the entity target
-		return fqn(query.getInsertExpression().getTarget()).equals(fqn(target)) ? true : false;
+		return fqn(query.getInsertExpression().target).equals(fqn(target)) ? true : false;
 	}
 
 	private String buildColumnList(final SQLContext context) throws EdmException {
-
-		Iterator<Integer> i = columnMapping.keySet().iterator();
-		List<String> columnNames = new ArrayList<>();
-		
-		while (i.hasNext()) {
-			Integer column = i.next();
-			EdmStructuralType type = getTargetType(column);
-			String propertyName = getPropertyName(column);
-			EdmTyped p = type.getProperty(propertyName);
-			if (!(p instanceof EdmProperty))
-				throw new OData2Exception("You must map the column " + column
-						+ " to a EDM property! The current type of propery " + propertyName + " is " + p,
-						HttpStatusCodes.INTERNAL_SERVER_ERROR);
-			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
-				if (values.containsKey(p.getName())) {
-					
-					EdmProperty prop = (EdmProperty) p;
-					columnNames.add(tableColumnForInsert(type, prop));
-				}
-			} else {
-				throw new IllegalStateException("Unable to handle property " + p);
-			}
-		}
 		return csvInBrackets(columnNames);
 	}
 
-	private String tableColumnForInsert(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
-		return query.getSQLTableColumnNoAlias(type, prop);
-	}
-
 	private String buildValues(final SQLContext context) throws EdmException {
-		List<String> columnValues = new ArrayList<>();
-		Iterator<Integer> i = columnMapping.keySet().iterator();
-		while (i.hasNext()) {
-			Integer column = i.next();
-			EdmStructuralType type = getTargetType(column);
-			String propertyName = getPropertyName(column);
-			EdmTyped p = type.getProperty(propertyName);
-			if (!(p instanceof EdmProperty))
-				throw new OData2Exception("You must map the column " + column
-						+ " to a EDM property! The current type of propery " + propertyName + " is " + p,
-						HttpStatusCodes.INTERNAL_SERVER_ERROR);
-			if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
-				if (values.containsKey(p.getName())) {
-					columnValues.add("?");
-				}
-			} else {
-				throw new IllegalStateException("Unable to handle property " + p);
-			}
-		}
-		return csvInBrackets(columnValues);
+		return csvInBrackets(columnNames.stream().map(n -> "?").collect(Collectors.toList()));
 	}
 
-	public Map<String, Object> getValues() {
-		return values;
+	public List<String> getColumnNames() {
+		return columnNames;
 	}
 
+	public List<Object> getColumnData() {
+		return columnData;
+	}
+
+	public List<EdmProperty> getColumnProperties() {
+		return columnProperties;
+	}
 }
