@@ -405,20 +405,7 @@ public final class SQLQuery {
         List<Object> values = getInsertExpression().getColumnData();
         List<EdmProperty> columnProperties = getInsertExpression().getColumnProperties();
 
-        for (int i = 1; i <= values.size(); i++) {
-            Object value = values.get(i - 1);
-            EdmProperty property = columnProperties.get(i - 1);
-            EdmType type = property.getType();
-            if (type instanceof EdmTime) {
-                preparedStatement.setTime(i, asTime((Calendar) value));
-            } else if (type instanceof EdmGuid) {
-                preparedStatement.setObject(i, asGuid(value));
-            } else if (type instanceof EdmDateTime) {
-                preparedStatement.setDate(i, asSQLDate((Calendar) value));
-            } else {
-                preparedStatement.setObject(i, value);
-            }
-        }
+        setParamsOnPreparedStatement(preparedStatement, values, columnProperties);
     }
 
     private Object asGuid(Object value) {
@@ -442,30 +429,27 @@ public final class SQLQuery {
     }
 
     public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
-        List<String> propertyNames = getUpdateExpression().getTarget().getPropertyNames();
-        Map<String, Object> values = getUpdateExpression().getValues();
-        Map<String, Object> keys = getUpdateExpression().getKeys();
-        int i = 0;
-        for (String propertyName : propertyNames) {
-            if (values.containsKey(propertyName) && (!keys.containsKey(propertyName))) {
-                i++;
-                Object value = values.get(propertyName);
-                EdmTyped edmTyped = getUpdateExpression().getTarget().getProperty(propertyName);
-                if (edmTyped != null) {
-                    EdmType type = edmTyped.getType();
-                    if (type instanceof EdmTime) {
-                        preparedStatement.setTime(i, asTime((Calendar) value));
-                    } else if (type instanceof EdmDateTime) {
-                        preparedStatement.setDate(i, asSQLDate((Calendar) value));
-                    } else {
-                        preparedStatement.setObject(i, value);
-                    }
-                }
-            }
-        }
+        SQLExpressionUpdate updateExpression = getUpdateExpression();
+        List<Object> values = updateExpression.getColumnData();
+        List<EdmProperty> columnProperties = updateExpression.getColumnProperties();
 
-        for (Map.Entry<String, Object> key : keys.entrySet()) {
-            preparedStatement.setObject(++i, key.getValue());
+        setParamsOnPreparedStatement(preparedStatement, values, columnProperties);
+    }
+
+    private void setParamsOnPreparedStatement(PreparedStatement preparedStatement, List<Object> values, List<EdmProperty> columnProperties) throws EdmException, SQLException {
+        for (int i = 1; i <= values.size(); i++) {
+            Object value = values.get(i - 1);
+            EdmProperty property = columnProperties.get(i - 1);
+            EdmType type = property.getType();
+            if (type instanceof EdmTime) {
+                preparedStatement.setTime(i, asTime((Calendar) value));
+            } else if (type instanceof EdmGuid) {
+                preparedStatement.setObject(i, asGuid(value));
+            } else if (type instanceof EdmDateTime) {
+                preparedStatement.setDate(i, asSQLDate((Calendar) value));
+            } else {
+                preparedStatement.setObject(i, value);
+            }
         }
     }
 
@@ -691,13 +675,8 @@ public final class SQLQuery {
         return normalizedString(context, builder);
     }
 
-    public SQLExpressionUpdate update() {
-        updateExpression = new SQLExpressionUpdate(this);
-        return updateExpression;
-    }
-
-    public SQLExpressionUpdate with(Map<String, Object> values, Map<String, Object> keys) throws ODataException {
-        updateExpression.with(values, keys);
+    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> entryKeys) {
+        updateExpression = new SQLExpressionUpdate(this, target, entry, entryKeys);
         return updateExpression;
     }
 

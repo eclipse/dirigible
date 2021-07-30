@@ -26,7 +26,6 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery.EdmTarget;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
 public final class SQLExpressionInsert implements SQLExpression {
