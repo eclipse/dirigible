@@ -272,10 +272,7 @@ public class SQLQueryBuilder {
     public SQLQuery buildInsertEntityQuery(final UriInfo uri, ODataEntry entry) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        Map<String, Object> values = entry.getProperties();
-        
-        q.insert().into(target).values(values);
-        
+        q.insert(target, entry);
         return q;
     }
     
