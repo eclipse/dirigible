@@ -14,8 +14,6 @@ package org.eclipse.dirigible.runtime.websockets.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
@@ -24,8 +22,7 @@ import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 
 public class WebsocketHandler {
 	
-	@Inject
-	private WebsocketsCoreService websocketsCoreService;
+	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
 	/**
 	 * Process the event

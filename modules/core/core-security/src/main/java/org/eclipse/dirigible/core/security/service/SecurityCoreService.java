@@ -24,12 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessArtifact;
@@ -41,17 +40,13 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Security Core Service.
  */
-@Singleton
 public class SecurityCoreService implements ISecurityCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-	@Inject
-	private PersistenceManager<RoleDefinition> rolesPersistenceManager;
+	private PersistenceManager<RoleDefinition> rolesPersistenceManager = new PersistenceManager<RoleDefinition>();
 
-	@Inject
-	private PersistenceManager<AccessDefinition> accessPersistenceManager;
+	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
 	// used by the access security filter to minimize the performance implications on getting the whole list
 	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());

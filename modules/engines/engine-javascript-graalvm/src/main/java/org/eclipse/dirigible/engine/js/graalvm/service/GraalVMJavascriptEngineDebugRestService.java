@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -36,7 +35,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the GraalVM based Javascript backend services.
  */
-@Singleton
 @Path("/ide/debug/graalvm")
 @Api(value = "JavaScript Engine Debugger - GraalVM", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),

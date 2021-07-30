@@ -13,12 +13,11 @@ package org.eclipse.dirigible.engine.js.graalvm.service;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -38,14 +37,10 @@ import utils.TestContainerConstants;
 public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 
 	/** The repository. */
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/** The GraalVM javascript engine executor. */
 	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
-
-//	@RegisterExtension
-//	static EtcdCluster etcd;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
@@ -54,8 +49,8 @@ public class GraalVMApiSuiteTest extends AbstractApiSuiteTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		this.repository = getInjector().getInstance(IRepository.class);
-		this.graalVMJavascriptEngineExecutor = getInjector().getInstance(GraalVMJavascriptEngineExecutor.class);
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
 
 		if(Boolean.parseBoolean(Configuration.get(TestContainerConstants.CASSANDRA_POM_CONST,"false"))){
 			CassandraContainer cassandra = new CassandraContainer(TestContainerConstants.CASSANDRA_DOCKER_IMEGE);

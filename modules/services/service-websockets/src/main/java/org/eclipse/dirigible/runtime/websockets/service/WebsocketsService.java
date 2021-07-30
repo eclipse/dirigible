@@ -14,7 +14,6 @@ package org.eclipse.dirigible.runtime.websockets.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -25,7 +24,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +37,7 @@ public class WebsocketsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsService.class);
 	
-	@Inject
-	private WebsocketHandler handler = StaticInjector.getInjector().getInstance(WebsocketHandler.class);
+	private WebsocketHandler handler = (WebsocketHandler) StaticObjects.get(StaticObjects.WEBSOCKET_HANDLER);
 	
 	/**
 	 * On open callback.

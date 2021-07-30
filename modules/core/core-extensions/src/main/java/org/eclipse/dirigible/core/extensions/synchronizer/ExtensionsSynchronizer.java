@@ -22,11 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -42,7 +38,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class ExtensionsSynchronizer.
  */
-@Singleton
 public class ExtensionsSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsSynchronizer.class);
@@ -57,8 +52,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 
 	private static final List<String> EXTENSIONS_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
-	@Inject
-	private ExtensionsCoreService extensionsCoreService;
+	private ExtensionsCoreService extensionsCoreService = new ExtensionsCoreService();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -102,7 +96,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		ExtensionsSynchronizer synchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
+		ExtensionsSynchronizer synchronizer = new ExtensionsSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

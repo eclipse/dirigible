@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
@@ -26,7 +25,7 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
  */
 public class WorkspaceFacade {
 	
-	private static WorkspacesCoreService workspacesCoreService = StaticInjector.getInjector().getInstance(WorkspacesCoreService.class);
+	private static WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 	
 	/**
 	 * Creates the workspace.

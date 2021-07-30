@@ -12,8 +12,6 @@
 package org.eclipse.dirigible.runtime.core.services;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,7 +35,6 @@ import io.swagger.annotations.Authorization;
  * Front-facing service providing the version information
  *
  */
-@Singleton
 @Path("/version")
 @RolesAllowed({ "Operator" })
 @Api(value = "Version", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -47,8 +44,7 @@ public class VersionRestService  extends AbstractRestService implements IRestSer
 	
 	private static final Logger logger = LoggerFactory.getLogger(VersionRestService.class);
 	
-	@Inject
-	private VersionProcessor processor;
+	private VersionProcessor processor = new VersionProcessor();
 	
 	@Context
 	private HttpServletResponse response;

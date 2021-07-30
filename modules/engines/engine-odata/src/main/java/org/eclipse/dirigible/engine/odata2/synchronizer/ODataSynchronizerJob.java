@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,7 +19,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class ODataSynchronizerJob extends AbstractSynchronizerJob {
 
-	private ODataSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
+	private ODataSynchronizer odataSynchronizer = new ODataSynchronizer();
 
 	/*
 	 * (non-Javadoc)
@@ -28,7 +27,7 @@ public class ODataSynchronizerJob extends AbstractSynchronizerJob {
 	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
-		return extensionsSynchronizer;
+		return odataSynchronizer;
 	}
 
 	/*

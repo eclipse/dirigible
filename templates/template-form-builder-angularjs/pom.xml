@@ -10,7 +10,7 @@
 	</parent>
 
 	<name>Template - AngularJS Form Generator</name>
-	<artifactId>template-form-builder-angularjs</artifactId>
+	<artifactId>dirigible-template-form-builder-angularjs</artifactId>
     <packaging>jar</packaging>
 
 	<scm>
@@ -27,7 +27,6 @@
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
 		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 
-		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>

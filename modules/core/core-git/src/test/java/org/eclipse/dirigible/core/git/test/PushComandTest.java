@@ -16,13 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.PushCommand;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
@@ -33,7 +31,7 @@ import org.junit.Test;
 /**
  * The Class PushComandTest.
  */
-public class PushComandTest extends AbstractGuiceTest {
+public class PushComandTest extends AbstractDirigibleTest {
 
 	private static final String DIRIGIBLE_TEST_GIT_EMAIL = "DIRIGIBLE_TEST_GIT_EMAIL";
 	
@@ -42,15 +40,12 @@ public class PushComandTest extends AbstractGuiceTest {
 	private static final String DIRIGIBLE_TEST_GIT_PASSWORD = "DIRIGIBLE_TEST_GIT_PASSWORD";
 
 	/** The clone command. */
-	@Inject
 	private CloneCommand cloneCommand;
 
 	/** The push command. */
-	@Inject
 	private PushCommand pushCommand;
 
 	/** The workspaces core service. */
-	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
 	/**
@@ -60,9 +55,9 @@ public class PushComandTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
-		this.pushCommand = getInjector().getInstance(PushCommand.class);
-		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
+		this.cloneCommand = new CloneCommand();
+		this.pushCommand = new PushCommand();
+		this.workspacesCoreService = new WorkspacesCoreService();
 	}
 
 	/**

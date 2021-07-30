@@ -19,25 +19,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.indexing.api.IIndexingCoreService;
 import org.eclipse.dirigible.core.indexing.api.IndexingException;
 import org.eclipse.dirigible.core.indexing.service.IndexingCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class IndexingCoreServiceTest.
  */
-public class IndexingCoreServiceTest extends AbstractGuiceTest {
+public class IndexingCoreServiceTest extends AbstractDirigibleTest {
 
 	private static final String TEST_INDEX = "test_index";
 
-	@Inject
-	private IIndexingCoreService indexingCoreService;
+	private IIndexingCoreService indexingCoreService = new IndexingCoreService();
 
 	/**
 	 * Setup.
@@ -47,7 +44,7 @@ public class IndexingCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.indexingCoreService = getInjector().getInstance(IndexingCoreService.class);
+		this.indexingCoreService = new IndexingCoreService();
 	}
 
 	/**

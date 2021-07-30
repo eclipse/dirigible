@@ -29,13 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -52,7 +50,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Security Synchronizer.
  */
-@Singleton
 public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecuritySynchronizer.class);
@@ -66,17 +63,10 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 
 	private static final Set<String> ACCESS_SYNCHRONIZED = Collections.synchronizedSet(new HashSet<String>());
 
-	@Inject
-	private SecurityCoreService securityCoreService;
+	private SecurityCoreService securityCoreService = new SecurityCoreService();
 	
-	@Inject
-	private DataSource dataSource;
+	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
-	@Inject
-	private PersistenceManager<AccessDefinition> accessPersistenceManager;
-
-	private volatile boolean upgradePassed; 
-	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
 	/*
@@ -90,9 +80,6 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 				logger.trace("Synchronizing Roles and Access artifacts...");
 				try {
 					startSynchronization(SYNCHRONIZER_NAME);
-					if (!upgradePassed) {
-						upgradePassed = checkUpgrade();
-					}
 					clearCache();
 					synchronizePredelivered();
 					synchronizeRegistry();
@@ -121,7 +108,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		SecuritySynchronizer synchronizer = StaticInjector.getInjector().getInstance(SecuritySynchronizer.class);
+		SecuritySynchronizer synchronizer = new SecuritySynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();
@@ -176,39 +163,6 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 				in.close();
 			}
 		}
-	}
-
-	private boolean checkUpgrade() throws SQLException {
-		// from 3.1.x to 3.2.x
-		try (Connection connection = dataSource.getConnection()) {
-			Statement stmt = connection.createStatement();
-			ResultSet rs;
-			try {
-				rs = stmt.executeQuery("SELECT * FROM DIRIGIBLE_SECURITY_ACCESS");
-			} catch (Exception e) {
-				logger.warn(e.getMessage());
-				return false;
-			}
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int columnCount = rsmd.getColumnCount();
-			
-			List<String> columnNames = new ArrayList<>();
-			for (int i = 1; i <= columnCount; i++ ) {
-			  String name = rsmd.getColumnName(i);
-			  columnNames.add(name);
-			  if ("ACCESS_URI".equals(name)) {
-				  logger.warn("Upgrading Security Access Synchronizer from 3.1.x version to 3.2.x ...");
-				  accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
-				  logger.warn("Upgrade of Security Access Synchronizer from 3.1.x version to 3.2.x passed successfully.");
-			  }
-			}
-			if (!columnNames.contains("ACCESS_HASH")) {
-				logger.warn("Upgrading Security Access Synchronizer from 3.2.1 version to 3.2.2 ...");
-				accessPersistenceManager.tableDrop(connection, AccessDefinition.class);
-				logger.warn("Upgrade of Security Access Synchronizer from 3.2.1 version to 3.2.2 passed successfully.");
-			}
-		}
-		return true;
 	}
 
 	/**

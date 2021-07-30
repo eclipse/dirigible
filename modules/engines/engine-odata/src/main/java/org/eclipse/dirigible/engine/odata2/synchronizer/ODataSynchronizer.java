@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -32,8 +31,6 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +44,6 @@ import static java.text.MessageFormat.format;
 /**
  * The OData Synchronizer.
  */
-@Singleton
 public class ODataSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(ODataSynchronizer.class);
@@ -69,17 +65,13 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	
 	private static final Map<String, ODataDefinition> ODATA_MODELS = new LinkedHashMap<>();
 
-	@Inject
-	private ODataCoreService odataCoreService;
+	private ODataCoreService odataCoreService = new ODataCoreService();
 	
-	@Inject
-	private OData2ODataMTransformer odata2ODataMTransformer;
+	private OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer();
 
-	@Inject
-	private OData2ODataXTransformer odata2ODataXTransformer;
+	private OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer();
 	
-	@Inject
-	private OData2ODataHTransformer odata2ODataHTransformer;
+	private OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -130,7 +122,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static void forceSynchronization() {
-		ODataSynchronizer synchronizer = StaticInjector.getInjector().getInstance(ODataSynchronizer.class);
+		ODataSynchronizer synchronizer = new ODataSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

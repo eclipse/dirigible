@@ -13,23 +13,22 @@ package org.eclipse.dirigible.runtime.ide.core.synchronizer;
 
 import java.util.HashMap;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.commons.health.HealthStatus;
 import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
 
 public class IDECoreSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(IDECoreSynchronizer.class);
 
-	@Inject
-	private IJavascriptEngineExecutor engine;
+	private IJavascriptEngineExecutor engine  = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
 
 	@Override
 	public void synchronize() {

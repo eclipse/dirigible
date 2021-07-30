@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Singleton;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -40,7 +39,6 @@ import org.slf4j.LoggerFactory;
  * Use {@link XTerminalWebsocketService}
  */
 @Deprecated
-@Singleton
 @ServerEndpoint("/websockets/v4/ide/terminal")
 public class TerminalWebsocketService {
 

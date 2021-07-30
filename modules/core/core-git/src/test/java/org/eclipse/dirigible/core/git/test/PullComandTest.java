@@ -16,13 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.PullCommand;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
@@ -33,18 +31,15 @@ import org.junit.Test;
 /**
  * The Class PullComandTest.
  */
-public class PullComandTest extends AbstractGuiceTest {
+public class PullComandTest extends AbstractDirigibleTest {
 
 	/** The clone command. */
-	@Inject
 	private CloneCommand cloneCommand;
 
 	/** The pull command. */
-	@Inject
 	private PullCommand pullCommand;
 
 	/** The workspaces core service. */
-	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
 	/**
@@ -54,9 +49,9 @@ public class PullComandTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.cloneCommand = getInjector().getInstance(CloneCommand.class);
-		this.pullCommand = getInjector().getInstance(PullCommand.class);
-		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
+		this.cloneCommand = new CloneCommand();
+		this.pullCommand = new PullCommand();
+		this.workspacesCoreService = new WorkspacesCoreService();
 	}
 
 	/**

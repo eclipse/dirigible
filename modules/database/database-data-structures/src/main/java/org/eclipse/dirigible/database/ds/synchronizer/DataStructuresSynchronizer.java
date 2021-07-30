@@ -30,13 +30,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -75,7 +73,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Data Structures Synchronizer.
  */
-@Singleton
 public class DataStructuresSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresSynchronizer.class);
@@ -127,11 +124,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	
 	private static final Map<String, DataStructureSchemaModel> DATA_STRUCTURE_SCHEMA_MODELS = new LinkedHashMap<String, DataStructureSchemaModel>();
 
-	@Inject
-	private DataStructuresCoreService dataStructuresCoreService;
+	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -192,7 +187,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		DataStructuresSynchronizer synchronizer = StaticInjector.getInjector().getInstance(DataStructuresSynchronizer.class);
+		DataStructuresSynchronizer synchronizer = new DataStructuresSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

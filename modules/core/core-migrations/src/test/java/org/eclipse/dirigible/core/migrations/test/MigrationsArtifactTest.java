@@ -18,23 +18,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class RolesArtifactTest.
  */
-public class MigrationsArtifactTest extends AbstractGuiceTest {
+public class MigrationsArtifactTest extends AbstractDirigibleTest {
 	
 	/** The security core service. */
-	@Inject
 	private IMigrationsCoreService migrationsCoreService;
 	
 	/**
@@ -44,7 +41,7 @@ public class MigrationsArtifactTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.migrationsCoreService = getInjector().getInstance(MigrationsCoreService.class);
+		this.migrationsCoreService = new MigrationsCoreService();
 	}
 	
 	/**

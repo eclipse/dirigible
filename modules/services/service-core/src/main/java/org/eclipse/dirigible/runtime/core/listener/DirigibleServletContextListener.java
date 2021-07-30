@@ -14,19 +14,17 @@ package org.eclipse.dirigible.runtime.core.listener;
 import java.util.HashSet;
 
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
-
 /**
- * This class handles the initialization of all Guice modules and all REST API
+ * This class handles the initialization of all modules and all REST API
  * resources.
  */
-public class DirigibleServletContextListener extends GuiceServletContextListener {
+public class DirigibleServletContextListener implements ServletContextListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleServletContextListener.class);
 
@@ -34,20 +32,10 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.servlet.GuiceServletContextListener#getInjector()
-	 */
-	@Override
-	protected Injector getInjector() {
-		return initializer.getInjector();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.google.inject.servlet.GuiceServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		super.contextInitialized(servletContextEvent);
 		initializer.initialize();
 	}
 
@@ -62,12 +50,11 @@ public class DirigibleServletContextListener extends GuiceServletContextListener
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.servlet.GuiceServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		initializer.destory();
-		super.contextDestroyed(servletContextEvent);
 	}
 
 }

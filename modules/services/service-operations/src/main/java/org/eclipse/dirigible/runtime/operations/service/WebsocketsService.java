@@ -12,8 +12,6 @@
 package org.eclipse.dirigible.runtime.operations.service;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,7 +36,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Websockets.
  */
-@Singleton
 @Path("/ops/websockets")
 @RolesAllowed({ "Operator" })
 @Api(value = "Operations - Websockets", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -48,8 +45,7 @@ public class WebsocketsService extends AbstractRestService implements IRestServi
 
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsService.class);
 
-	@Inject
-	private WebsocketsProcessor processor;
+	private WebsocketsProcessor processor = new WebsocketsProcessor();
 	
 	@Context
 	private HttpServletResponse response;

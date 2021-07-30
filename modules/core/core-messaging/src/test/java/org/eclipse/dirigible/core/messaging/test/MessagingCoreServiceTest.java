@@ -17,22 +17,19 @@ import static org.junit.Assert.assertNull;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.messaging.api.IMessagingCoreService;
 import org.eclipse.dirigible.core.messaging.api.MessagingException;
 import org.eclipse.dirigible.core.messaging.definition.ListenerDefinition;
 import org.eclipse.dirigible.core.messaging.service.MessagingCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class MessagingCoreServiceTest.
  */
-public class MessagingCoreServiceTest extends AbstractGuiceTest {
+public class MessagingCoreServiceTest extends AbstractDirigibleTest {
 
-	@Inject
 	private IMessagingCoreService messagingCoreService;
 
 	/**
@@ -43,7 +40,7 @@ public class MessagingCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.messagingCoreService = getInjector().getInstance(MessagingCoreService.class);
+		this.messagingCoreService = new MessagingCoreService();
 	}
 
 	/**

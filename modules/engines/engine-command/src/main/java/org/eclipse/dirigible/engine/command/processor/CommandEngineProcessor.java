@@ -14,8 +14,6 @@ package org.eclipse.dirigible.engine.command.processor;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 
 /**
@@ -23,8 +21,7 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
  */
 public class CommandEngineProcessor {
 
-	@Inject
-	private CommandEngineExecutor engineExecutor;
+	private CommandEngineExecutor engineExecutor = new CommandEngineExecutor();
 
 	/**
 	 * Execute the command

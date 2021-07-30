@@ -15,8 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -27,7 +25,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -49,7 +46,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the transport requests for projects.
  */
-@Singleton
 @Path("/transport")
 @Api(value = "IDE - Transport - Project", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
@@ -57,8 +53,7 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	
 	private static final Logger logger = LoggerFactory.getLogger(TransportProjectRestService.class);
 
-	@Inject
-	private TransportProcessor processor;
+	private TransportProcessor processor = new TransportProcessor();
 	
 	@Context
 	private HttpServletResponse response;

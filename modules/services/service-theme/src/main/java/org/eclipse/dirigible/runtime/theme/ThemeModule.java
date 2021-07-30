@@ -30,8 +30,12 @@ public class ThemeModule extends AbstractDirigibleModule {
 
 	private static final String MODULE_NAME = "Theme Module";
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-theme.properties");
 	}
 

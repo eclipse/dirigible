@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -33,7 +32,7 @@ import org.eclipse.dirigible.runtime.repository.processor.RepositoryProcessor;
  */
 public class RepositoryFacade {
 	
-	private static RepositoryProcessor repositoryProcessor = StaticInjector.getInjector().getInstance(RepositoryProcessor.class);
+	private static RepositoryProcessor repositoryProcessor = new RepositoryProcessor();
 	
 	/**
 	 * Gets the resource.

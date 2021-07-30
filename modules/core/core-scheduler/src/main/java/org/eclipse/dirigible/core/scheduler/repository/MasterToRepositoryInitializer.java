@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntity;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
@@ -33,11 +32,9 @@ public class MasterToRepositoryInitializer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MasterToRepositoryInitializer.class);
 	
-	@Inject
-	private IMasterRepository masterRepository;
+	private IMasterRepository masterRepository = (IMasterRepository) StaticObjects.get(StaticObjects.MASTER_REPOSITORY);
 	
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	
 	/**
 	 * Initialize the Repository from the Master Repository, if configured

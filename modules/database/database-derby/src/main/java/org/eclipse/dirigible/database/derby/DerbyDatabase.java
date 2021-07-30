@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Derby Database adapter.
  */
-public class DerbyDatabase implements IDatabase {
+public class DerbyDatabase extends AbstractDatabase {
 
 	private static final Logger logger = LoggerFactory.getLogger(DerbyDatabase.class);
 
@@ -88,15 +89,6 @@ public class DerbyDatabase implements IDatabase {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
-	 */
-	@Override
-	public DataSource getDataSource() {
-		return getDataSource(getDefaultDataSourceName());
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
 	 */
 	@Override
@@ -128,15 +120,6 @@ public class DerbyDatabase implements IDatabase {
 	@Override
 	public String getType() {
 		return TYPE;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDefaultDataSourceName()
-	 */
-	@Override
-	public String getDefaultDataSourceName() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 
 	/**

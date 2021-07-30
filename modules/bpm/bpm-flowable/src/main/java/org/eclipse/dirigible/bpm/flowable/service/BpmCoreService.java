@@ -16,27 +16,23 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.bpm.api.BpmException;
 import org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService;
 import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 
 /**
  * The Class BpmCoreService.
  */
-@Singleton
 public class BpmCoreService implements IBpmCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-	@Inject
-	private PersistenceManager<BpmDefinition> bpmPersistenceManager;
+	private PersistenceManager<BpmDefinition> bpmPersistenceManager = new PersistenceManager<BpmDefinition>();
 
 	// BPM
 

@@ -19,12 +19,11 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
@@ -43,35 +42,25 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Data Structure Core Service.
  */
-@Singleton
 public class DataStructuresCoreService implements IDataStructuresCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-	@Inject
-	private PersistenceManager<DataStructureTableModel> tablePersistenceManager;
+	private PersistenceManager<DataStructureTableModel> tablePersistenceManager = new PersistenceManager<DataStructureTableModel>();
 
-	@Inject
-	private PersistenceManager<DataStructureViewModel> viewPersistenceManager;
+	private PersistenceManager<DataStructureViewModel> viewPersistenceManager = new PersistenceManager<DataStructureViewModel>();
 
-	@Inject
-	private PersistenceManager<DataStructureDataReplaceModel> replacePersistenceManager;
+	private PersistenceManager<DataStructureDataReplaceModel> replacePersistenceManager = new PersistenceManager<DataStructureDataReplaceModel>();
 
-	@Inject
-	private PersistenceManager<DataStructureDataAppendModel> appendPersistenceManager;
+	private PersistenceManager<DataStructureDataAppendModel> appendPersistenceManager = new PersistenceManager<DataStructureDataAppendModel>();
 
-	@Inject
-	private PersistenceManager<DataStructureDataDeleteModel> deletePersistenceManager;
+	private PersistenceManager<DataStructureDataDeleteModel> deletePersistenceManager = new PersistenceManager<DataStructureDataDeleteModel>();
 
-	@Inject
-	private PersistenceManager<DataStructureDataUpdateModel> updatePersistenceManager;
+	private PersistenceManager<DataStructureDataUpdateModel> updatePersistenceManager = new PersistenceManager<DataStructureDataUpdateModel>();
 	
-	@Inject
-	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager;
+	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager = new PersistenceManager<DataStructureSchemaModel>();
 	
-	@Inject
-	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager;
+	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager = new PersistenceManager<DataStructureModel>();
 
 	// Tables
 

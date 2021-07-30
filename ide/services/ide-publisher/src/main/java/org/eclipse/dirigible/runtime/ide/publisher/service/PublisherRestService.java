@@ -18,8 +18,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
@@ -51,7 +49,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the publishing requests.
  */
-@Singleton
 @Path("/ide/publisher")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Publish", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -61,8 +58,7 @@ public class PublisherRestService extends AbstractRestService implements IRestSe
 
 	private static final Logger logger = LoggerFactory.getLogger(PublisherRestService.class);
 
-	@Inject
-	private PublisherProcessor processor;
+	private PublisherProcessor processor = new PublisherProcessor();
 
 	@Context
 	private HttpServletResponse response;

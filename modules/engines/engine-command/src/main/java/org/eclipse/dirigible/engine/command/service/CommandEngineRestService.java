@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.engine.command.service;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,7 +40,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Javascript backend services.
  */
-@Singleton
 @Path("/command")
 @Api(value = "Command Engine", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
@@ -51,8 +48,7 @@ public class CommandEngineRestService extends AbstractRestService implements IRe
 
 	private static final Logger logger = LoggerFactory.getLogger(CommandEngineRestService.class.getCanonicalName());
 
-	@Inject
-	private CommandEngineProcessor processor;
+	private CommandEngineProcessor processor = new CommandEngineProcessor();
 
 	@Context
 	private HttpServletResponse response;

@@ -23,10 +23,10 @@ import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
 import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerInitializer;
@@ -36,14 +36,11 @@ import org.eclipse.dirigible.runtime.core.version.VersionProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 
 /**
- * This class handles the initialization of all Guice modules and all REST API
+ * This class handles the initialization of all modules and all REST API
  * resources.
  */
 public class DirigibleInitializer {
@@ -52,25 +49,11 @@ public class DirigibleInitializer {
 
 	private static final HashSet<Object> services = new HashSet<Object>();
 
-	private static Injector injector;
-
-	public Injector getInjector() {
-		if (injector == null) {
-			logger.trace("Initializing Guice Injector with modules for dependency injection...");
-
-			injector = Guice.createInjector(new DirigibleModulesInstallerModule());
-			StaticInjector.setInjector(injector);
-
-			logger.trace("Guice Injector with modules for dependency injection initialized.");
-		}
-		return injector;
-	}
-
-	public void initialize() {
+	public synchronized void initialize() {
 
 		logger.info("---------- Initializing Eclipse Dirigible Platform... ----------");
 
-		getInjector();
+		initializeModules();
 		
 		Configuration.loadModuleConfig("/dirigible-core.properties");
 		Configuration.loadModuleConfig("/dirigible.properties");
@@ -88,6 +71,14 @@ public class DirigibleInitializer {
 		printAllConfigurations();
 
 		logger.info("---------- Eclipse Dirigible Platform initialized. ----------");
+	}
+	
+	private void initializeModules() {
+		logger.trace("Initializing modules ...");
+
+		DirigibleModulesInstallerModule.configure();
+
+		logger.trace("Modules have been initialized.");
 	}
 
 	private void printAllConfigurations() {
@@ -151,7 +142,8 @@ public class DirigibleInitializer {
 	 */
 	private void addRestServices() {
 		for (IRestService next : ServiceLoader.load(IRestService.class)) {
-			getServices().add(injector.getInstance(next.getType()));
+			StaticObjects.set(next.getType().getCanonicalName(), next);
+			getServices().add(next);
 			logger.info("REST service registered {}.", next.getType());
 		}
 	}
@@ -161,7 +153,8 @@ public class DirigibleInitializer {
 	 */
 	private void addExceptionHandlers() {
 		for (AbstractExceptionHandler<?> next : ServiceLoader.load(AbstractExceptionHandler.class)) {
-			getServices().add(injector.getInstance(next.getType()));
+			StaticObjects.set(next.getType().getCanonicalName(), next);
+			getServices().add(next);
 			logger.info("Exception Handler registered {}.", next.getType());
 		}
 	}
@@ -203,7 +196,7 @@ public class DirigibleInitializer {
 	private void startupScheduler() {
 		logger.info("Starting Scheduler...");
 		try {
-			injector.getInstance(SchedulerInitializer.class).initialize();
+			new SchedulerInitializer().initialize();
 		} catch (SchedulerException | SQLException | IOException e) {
 			logger.error("Failed starting Scheduler", e);
 		}
@@ -229,7 +222,7 @@ public class DirigibleInitializer {
 	private void startupMessaging() {
 		logger.info("Starting Message Broker...");
 		try {
-			injector.getInstance(SchedulerManager.class).initialize();
+			new SchedulerManager().initialize();
 		} catch (Exception e) {
 			logger.error("Failed starting Messaging", e);
 		}
@@ -243,6 +236,8 @@ public class DirigibleInitializer {
 		logger.info("Starting Terminal Server...");
 		try {
 			Class.forName("org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService");
+		} catch (ClassNotFoundException e) {
+			logger.warn("Terminal Server is not available");
 		} catch (Throwable e) {
 			logger.error("Failed starting Terminal Server", e);
 		}

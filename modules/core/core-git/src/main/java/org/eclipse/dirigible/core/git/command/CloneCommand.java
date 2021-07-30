@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
@@ -48,30 +46,22 @@ import org.slf4j.LoggerFactory;
  */
 public class CloneCommand {
 
-//	private static final String REPOSITORY_GIT_EXTENSION = ".git";
-//
-//	private static final String DOT_GIT = REPOSITORY_GIT_EXTENSION;
-
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 	
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
 	/** The workspaces core service. */
-	@Inject
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
 	/** The publisher core service. */
-	@Inject
-	private PublisherCoreService publisherCoreService;
+	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	/** The project metadata manager. */
-	@Inject
-	private ProjectMetadataManager projectMetadataManager;
+	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
 
 	/** The git file utils. */
-	@Inject
-	private GitFileUtils gitFileUtils;
+	private GitFileUtils gitFileUtils = new GitFileUtils();
 
 	/**
 	 * Execute a Clone command.

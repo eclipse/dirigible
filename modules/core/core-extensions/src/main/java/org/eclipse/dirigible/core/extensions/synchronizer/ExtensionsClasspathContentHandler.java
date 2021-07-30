@@ -14,7 +14,6 @@ package org.eclipse.dirigible.core.extensions.synchronizer;
 import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.content.AbstractClasspathContentHandler;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionsClasspathContentHandler.class);
 
-	private ExtensionsSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(ExtensionsSynchronizer.class);
+	private ExtensionsSynchronizer extensionsSynchronizer = new ExtensionsSynchronizer();
 
 	/*
 	 * (non-Javadoc)

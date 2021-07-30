@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.core.migrations.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -21,7 +20,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 public class MigrationsSynchronizerJob extends AbstractSynchronizerJob {
 
 	/** The migrations synchronizer. */
-	private MigrationsSynchronizer migrationsSynchronizer = StaticInjector.getInjector().getInstance(MigrationsSynchronizer.class);
+	private MigrationsSynchronizer migrationsSynchronizer = new MigrationsSynchronizer();
 
 	/*
 	 * (non-Javadoc)

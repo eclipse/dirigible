@@ -16,8 +16,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
@@ -47,7 +45,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing RPC service serving the Workspace actions.
  */
-@Singleton
 @Path("/ide/workspace")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Workspace Manager", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -69,8 +66,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
 
-	@Inject
-	private WorkspaceProcessor processor;
+	private WorkspaceProcessor processor = new WorkspaceProcessor();
 
 	@Context
 	private HttpServletResponse response;

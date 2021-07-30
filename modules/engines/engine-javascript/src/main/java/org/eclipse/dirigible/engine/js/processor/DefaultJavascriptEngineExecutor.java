@@ -11,19 +11,25 @@
  */
 package org.eclipse.dirigible.engine.js.processor;
 
+import static java.text.MessageFormat.format;
+
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.engine.api.EngineExecutorFactory;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Default Javascript Engine Executor.
  */
 public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor implements IJavascriptEngineExecutor {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DefaultJavascriptEngineExecutor.class);
 
 	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 	
@@ -75,15 +81,25 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
 			if (next.getType().equals(javascriptEngineType)) {
-				return StaticInjector.getInjector().getInstance(next.getClass());
+				try {
+					return next.getClass().newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					logger.error(e.getMessage(), e);
+				}
 			}
 		}
 
 		// backup
 		try {
-			return (IJavascriptEngineExecutor) StaticInjector.getInjector().getInstance(Class.forName("org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor"));
+			try {
+				return (IJavascriptEngineExecutor) Class.forName("org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor").newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				logger.error(e.getMessage(), e);
+			}
 		} catch (ClassNotFoundException e) {
 			throw new ScriptingException("No Javascript Engine registered. The default GraalJS is also not available.");
 		}
+		logger.error(format("Default Javascript Engine Executor not found."));
+		return null;
 	}
 }

@@ -16,6 +16,7 @@ import java.util.ServiceLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.api.IRepository;
@@ -33,12 +34,13 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 	private static final String MODULE_NAME = "Database Repository Module";
 	private static final String DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE = "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE";
 	private static final String DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME";
+	
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-repository-database.properties");
 		String repositoryProvider = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_PROVIDER);
 
@@ -50,14 +52,14 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 			String dataSourceType = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_TYPE, IDatabase.DIRIGIBLE_DATABASE_PROVIDER_MANAGED);
 			String dataSourceName = Configuration.get(DIRIGIBLE_REPOSITORY_DATABASE_DATASOURCE_NAME, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 			DatabaseRepository databaseRepository = createInstance(dataSourceType, dataSourceName);
-			bind(DatabaseRepository.class).toInstance(databaseRepository);
-			bind(IRepository.class).toInstance(databaseRepository);
+			StaticObjects.set(StaticObjects.DATABASE_REPOSITORY, databaseRepository);
+			StaticObjects.set(StaticObjects.REPOSITORY, databaseRepository);
 			logger.info("Bound Database Repository as the Repository for this instance.");
 			
 			logger.info("No master repository provider supported in case of a database repository setup.");
 			String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
-			if (masterType == null) {				
-				bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			if (masterType == null) {
+				StaticObjects.set(StaticObjects.MASTER_REPOSITORY, new DummyMasterRepository());
 			}
 		}
 	}
@@ -95,5 +97,10 @@ public class DatabaseRepositoryModule extends AbstractDirigibleModule {
 	@Override
 	public String getName() {
 		return MODULE_NAME;
+	}
+	
+	@Override
+	public int getPriority() {
+		return PRIORITY_REPOSITORY;
 	}
 }

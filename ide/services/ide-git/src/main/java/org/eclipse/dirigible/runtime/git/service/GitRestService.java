@@ -16,8 +16,6 @@ import static java.text.MessageFormat.format;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
@@ -64,7 +62,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Git commands.
  */
-@Singleton
 @Path("/ide/git/{workspace}")
 @Api(value = "IDE - Git", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
@@ -72,8 +69,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
-	@Inject
-	private GitProcessor processor;
+	private GitProcessor processor = new GitProcessor();
 	
 	@Context
 	private HttpServletResponse response;

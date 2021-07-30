@@ -53,3 +53,17 @@ exports.byteArrayToText = function(data) {
 	var native = exports.toJavaBytes(data);
 	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(native));
 };
+
+/**
+ * Converts an integer to a byte array
+ */
+ exports.intToByteArray = function(value, byteOrder) {
+    return org.eclipse.dirigible.api.v3.io.BytesFacade.intToByteArray(value, byteOrder)
+}
+
+/**
+ * Converts a byte array to integer
+ */
+exports.byteArrayToInt = function(data, byteOrder) {
+    return org.eclipse.dirigible.api.v3.io.BytesFacade.byteArrayToInt(data, byteOrder);
+}

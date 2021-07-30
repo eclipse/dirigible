@@ -19,14 +19,10 @@
         <module>ide-all</module>
         <module>ide-javascript</module>
         <module>ide-database</module>
-		<module>ide-cms</module>
         
         <!-- Plugin Modules -->
 		<module>services</module>
 		<module>ui</module>
 	</modules>
 
-	<properties>
-		<license.header.location>../licensing-header.txt</license.header.location>
-	</properties>
 </project>

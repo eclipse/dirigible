@@ -13,8 +13,6 @@ package org.eclipse.dirigible.runtime.security.processor;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
@@ -26,8 +24,7 @@ import org.eclipse.dirigible.core.security.service.SecurityCoreService;
  */
 public class SecurityProcessor {
 
-	@Inject
-	private SecurityCoreService securityCoreService;
+	private SecurityCoreService securityCoreService = new SecurityCoreService();
 
 	/**
 	 * Render access.

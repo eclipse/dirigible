@@ -18,23 +18,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class RolesArtifactTest.
  */
-public class RolesArtifactTest extends AbstractGuiceTest {
+public class RolesArtifactTest extends AbstractDirigibleTest {
 	
 	/** The security core service. */
-	@Inject
 	private ISecurityCoreService securityCoreService;
 	
 	/**
@@ -44,7 +41,7 @@ public class RolesArtifactTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.securityCoreService = getInjector().getInstance(SecurityCoreService.class);
+		this.securityCoreService = new SecurityCoreService();
 	}
 	
 	/**

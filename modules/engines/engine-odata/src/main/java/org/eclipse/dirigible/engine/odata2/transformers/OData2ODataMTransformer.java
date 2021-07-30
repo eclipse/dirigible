@@ -20,8 +20,6 @@ import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +27,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Singleton
 public class OData2ODataMTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataMTransformer.class);
 
-    @Inject
-    private DBMetadataUtil dbMetadataUtil;
+    private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
 
     public String[] transform(ODataDefinition model) throws SQLException {
 

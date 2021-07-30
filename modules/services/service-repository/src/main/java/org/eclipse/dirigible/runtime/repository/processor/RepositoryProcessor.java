@@ -14,9 +14,8 @@ package org.eclipse.dirigible.runtime.repository.processor;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -31,8 +30,7 @@ public class RepositoryProcessor {
 
 	private static final String REPOSITORY_SERVICE_PREFIX = "core/repository";
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Gets the resource.

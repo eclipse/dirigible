@@ -16,8 +16,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
@@ -43,7 +41,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing RPC service serving the Workspace actions.
  */
-@Singleton
 @Path("/ide/workspace-find")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Workspace Find", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -53,8 +50,7 @@ public class WorkspaceFindService extends AbstractRestService implements IRestSe
 
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceFindService.class);
 
-	@Inject
-	private WorkspaceProcessor processor;
+	private WorkspaceProcessor processor = new WorkspaceProcessor();
 
 	@Context
 	private HttpServletResponse response;

@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.core.publisher.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -21,7 +20,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 public class PublisherSynchronizerJob extends AbstractSynchronizerJob {
 
 	/** The extensions synchronizer. */
-	private PublisherSynchronizer extensionsSynchronizer = StaticInjector.getInjector().getInstance(PublisherSynchronizer.class);
+	private PublisherSynchronizer publisherSynchronizer = new PublisherSynchronizer();
 
 	/*
 	 * (non-Javadoc)
@@ -29,7 +28,7 @@ public class PublisherSynchronizerJob extends AbstractSynchronizerJob {
 	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
-		return extensionsSynchronizer;
+		return publisherSynchronizer;
 	}
 
 	/*

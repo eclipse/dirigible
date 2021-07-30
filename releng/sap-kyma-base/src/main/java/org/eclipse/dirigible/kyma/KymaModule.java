@@ -40,11 +40,15 @@ public class KymaModule extends AbstractDirigibleModule {
 	@Override
 	public int getPriority() {
 		// Set to higher priority, as this module will set security, database, etc. related configuration properties 
-		return HIGH_PRIORITY;
+		return PRIORITY_CONFIGURATION;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
+	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		Configuration.loadModuleConfig("/dirigible-kyma.properties");
 		configureOAuth();
 	}

@@ -30,19 +30,18 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.eclipse.dirigible.api.v3.http.HttpClientFacade;
 import org.eclipse.dirigible.api.v3.http.client.HttpClientRequestOptions;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.js.processor.DefaultJavascriptEngineExecutor;
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class HttpClientAsyncFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientAsyncFacade.class);
-	private static DefaultJavascriptEngineExecutor defaultEngineExecutor = StaticInjector.getInjector().getInstance(DefaultJavascriptEngineExecutor.class);;
+	private static IJavascriptEngineExecutor defaultEngineExecutor = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
 
 	private int requestsCounter = 0;
 	private List<AsyncHttpRequest> asyncHttpRequests = new ArrayList<AsyncHttpRequest>();

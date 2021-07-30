@@ -16,23 +16,20 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * The Class JobCoreServiceTest.
  */
-public class SynchronizerCoreServiceTest extends AbstractGuiceTest {
+public class SynchronizerCoreServiceTest extends AbstractDirigibleTest {
 
 	/** The job core service. */
-	@Inject
 	private ISynchronizerCoreService synchronizerCoreService;
 
 	/**
@@ -43,7 +40,7 @@ public class SynchronizerCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.synchronizerCoreService = getInjector().getInstance(SynchronizerCoreService.class);
+		this.synchronizerCoreService = new SynchronizerCoreService();
 	}
 
 	/**

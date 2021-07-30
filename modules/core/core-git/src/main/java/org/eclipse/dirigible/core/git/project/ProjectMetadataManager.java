@@ -14,8 +14,6 @@ package org.eclipse.dirigible.core.git.project;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;

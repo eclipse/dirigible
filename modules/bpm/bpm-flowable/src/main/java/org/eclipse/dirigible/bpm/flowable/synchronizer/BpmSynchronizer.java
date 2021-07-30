@@ -32,9 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.api.BpmException;
@@ -42,7 +39,6 @@ import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService;
 import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
 import org.eclipse.dirigible.bpm.flowable.service.BpmCoreService;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -56,7 +52,6 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class BpmnSynchronizer.
  */
-@Singleton
 public class BpmSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BpmSynchronizer.class);
@@ -66,11 +61,9 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 
 	private static final Map<String, BpmDefinition> BPMN_SYNCHRONIZED = Collections.synchronizedMap(new HashMap<String, BpmDefinition>());
 
-	@Inject
-	private BpmCoreService bpmCoreService;
+	private BpmCoreService bpmCoreService = new BpmCoreService();
 	
-	@Inject
-	private BpmProviderFlowable bpmProviderFlowable;
+	private BpmProviderFlowable bpmProviderFlowable = new BpmProviderFlowable();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -116,7 +109,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 * Force synchronization.
 	 */
 	public static final void forceSynchronization() {
-		BpmSynchronizer synchronizer = StaticInjector.getInjector().getInstance(BpmSynchronizer.class);
+		BpmSynchronizer synchronizer = new BpmSynchronizer();
 		synchronizer.setForcedSynchronization(true);
 		try {
 			synchronizer.synchronize();

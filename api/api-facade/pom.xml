@@ -19,7 +19,6 @@
 		<module>api-security</module>
 		<module>api-core</module>
 		<module>api-database</module>
-		<module>api-documents</module>
 		<module>api-http</module>
 		<module>api-http-async</module>
 		<module>api-tests</module>
@@ -30,20 +29,7 @@
 		<module>api-platform</module>
 		<module>api-indexing</module>
 		<module>api-log</module>
-		<module>api-cms</module>
-		<module>api-bpm</module>
 		<module>api-net</module>
-		<module>api-kafka</module>
-		<module>api-mongodb</module>
-		<module>api-cassandra</module>
-		<module>api-elasticsearch</module>
-		<module>api-etcd</module>
-		<module>api-rabbitmq</module>
-		<module>api-redis</module>
-		<module>api-spark</module>
 	</modules>
 
-	<properties>
-		<license.header.location>../../licensing-header.txt</license.header.location>
-	</properties>
 </project>

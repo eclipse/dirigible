@@ -22,19 +22,15 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Singleton
 public class OData2ODataXTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataXTransformer.class);
 
-    @Inject
-    private DBMetadataUtil dbMetadataUtil;
+    private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
 
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 

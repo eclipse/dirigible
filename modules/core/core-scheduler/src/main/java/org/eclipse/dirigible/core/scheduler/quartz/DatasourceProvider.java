@@ -11,10 +11,10 @@
  */
 package org.eclipse.dirigible.core.scheduler.quartz;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 
@@ -23,8 +23,7 @@ import org.eclipse.dirigible.database.api.DatabaseModule;
  */
 public class DatasourceProvider {
 
-	@Inject
-	private DataSource datasource;
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 	
 	private DataSource runtimeDataSource;
 
@@ -46,15 +45,5 @@ public class DatasourceProvider {
 		
 		return this.runtimeDataSource;
 	}
-
-//	/**
-//	 * Sets the datasource.
-//	 *
-//	 * @param datasource
-//	 *            the new datasource
-//	 */
-//	public void setDatasource(DataSource datasource) {
-//		this.datasource = datasource;
-//	}
 
 }

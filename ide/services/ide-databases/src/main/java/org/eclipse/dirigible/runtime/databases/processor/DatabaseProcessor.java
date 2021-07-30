@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.metadata.DatabaseArtifactTypes;
@@ -50,8 +50,7 @@ public class DatabaseProcessor {
 
 	private boolean LIMITED = true;
 
-	@Inject
-	private IDatabase database;
+	private IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 
 	/**
 	 * Exists database.

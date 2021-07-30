@@ -20,12 +20,11 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
@@ -35,14 +34,11 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Class WebsocketsCoreService.
  */
-@Singleton
 public class WebsocketsCoreService implements IWebsocketsCoreService {
 
-	@Inject
-	private DataSource dataSource;
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-	@Inject
-	private PersistenceManager<WebsocketDefinition> websocketsPersistenceManager;
+	private PersistenceManager<WebsocketDefinition> websocketsPersistenceManager = new PersistenceManager<WebsocketDefinition>();
 
 	
 

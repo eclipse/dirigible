@@ -18,13 +18,13 @@ import java.util.Map;
 
 import org.eclipse.dirigible.api.v3.core.ExecFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Test;
 
 /**
  * The Class ExecFacadeTest.
  */
-public class ExecFacadeTest extends AbstractGuiceTest {
+public class ExecFacadeTest extends AbstractDirigibleTest {
 
     @Test
     public void execTest() {

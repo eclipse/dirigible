@@ -16,23 +16,19 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class WorkspacesCoreServiceTest.
  */
-public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
+public class WorkspacesCoreServiceTest extends AbstractDirigibleTest {
 
 	/** The workspaces core service. */
-	@Inject
 	private IWorkspacesCoreService workspacesCoreService;
 
 	/**
@@ -42,7 +38,7 @@ public class WorkspacesCoreServiceTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.workspacesCoreService = getInjector().getInstance(WorkspacesCoreService.class);
+		this.workspacesCoreService = new WorkspacesCoreService();
 	}
 
 	/**

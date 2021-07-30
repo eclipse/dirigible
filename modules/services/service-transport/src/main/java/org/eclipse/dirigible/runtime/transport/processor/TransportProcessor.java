@@ -11,8 +11,7 @@
  */
 package org.eclipse.dirigible.runtime.transport.processor;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
@@ -24,11 +23,9 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
  */
 public class TransportProcessor {
 
-	@Inject
-	private WorkspacesCoreService workspacesCoreService;
+	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 	
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Import project.

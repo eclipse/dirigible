@@ -15,8 +15,10 @@ import java.io.IOException;
 
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IMasterRepository;
 import org.eclipse.dirigible.repository.local.LocalRepositoryException;
+import org.eclipse.dirigible.repository.local.module.DummyMasterRepository;
 import org.eclipse.dirigible.repository.master.fs.FileSystemMasterRepository;
 import org.eclipse.dirigible.repository.master.jar.JarMasterRepository;
 import org.eclipse.dirigible.repository.master.zip.ZipMasterRepository;
@@ -34,10 +36,10 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
+	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()
 	 */
 	@Override
-	protected void configure() {
+	public void configure() {
 		
 		String masterType = Configuration.get(IMasterRepository.DIRIGIBLE_MASTER_REPOSITORY_PROVIDER);
 	
@@ -47,18 +49,18 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 
 		if (masterType.equals(FileSystemMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-fs.properties");
-			bind(IMasterRepository.class).toInstance(createFileSystemInstance());
+			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createFileSystemInstance());
 			logger.info("Bound File System Repository as the Master Repository for this instance.");
 		} else if (masterType.equals(JarMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-jar.properties");
-			bind(IMasterRepository.class).toInstance(createJarInstance());
+			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createJarInstance());
 			logger.info("Bound Jar Repository as the Master Repository for this instance.");
 		} else if (masterType.equals(ZipMasterRepository.TYPE)) {
 			Configuration.loadModuleConfig("/dirigible-repository-master-zip.properties");
-			bind(IMasterRepository.class).toInstance(createZipInstance());
+			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, createZipInstance());
 			logger.info("Bound Zip Repository as the Master Repository for this instance.");
 		} else if (masterType != null) {
-			bind(IMasterRepository.class).toInstance(new DummyMasterRepository());
+			StaticObjects.set(StaticObjects.MASTER_REPOSITORY, new DummyMasterRepository());
 			logger.error("Unknown master repository provider configured: " + masterType);
 		}
 		
@@ -116,6 +118,11 @@ public class MasterRepositoryModule extends AbstractDirigibleModule {
 	@Override
 	public String getName() {
 		return MODULE_NAME;
+	}
+	
+	@Override
+	public int getPriority() {
+		return PRIORITY_REPOSITORY;
 	}
 
 }

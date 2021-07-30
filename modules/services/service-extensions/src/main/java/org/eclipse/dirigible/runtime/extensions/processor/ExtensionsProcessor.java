@@ -14,8 +14,6 @@ package org.eclipse.dirigible.runtime.extensions.processor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
@@ -27,8 +25,7 @@ import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
  */
 public class ExtensionsProcessor {
 
-	@Inject
-	private ExtensionsCoreService extensionsCoreService;
+	private ExtensionsCoreService extensionsCoreService = new ExtensionsCoreService();
 
 	/**
 	 * Render extension points.

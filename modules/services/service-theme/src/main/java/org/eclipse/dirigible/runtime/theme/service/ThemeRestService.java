@@ -14,8 +14,6 @@ package org.eclipse.dirigible.runtime.theme.service;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +29,7 @@ import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -46,7 +45,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Theme related content.
  */
-@Singleton
 @Path("/core/theme")
 @Api(value = "Core - Theme", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
@@ -62,8 +60,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 	private static final String COOKIE_THEME = "dirigible-theme"; //$NON-NLS-1$
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	@Context
 	private HttpServletResponse response;

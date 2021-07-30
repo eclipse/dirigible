@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.bpm.flowable.synchronizer;
 
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -20,7 +19,7 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  */
 public class BpmSynchronizerJob extends AbstractSynchronizerJob {
 
-	private BpmSynchronizer bpmSynchronizer = StaticInjector.getInjector().getInstance(BpmSynchronizer.class);
+	private BpmSynchronizer bpmSynchronizer = new BpmSynchronizer();
 
 	/*
 	 * (non-Javadoc)

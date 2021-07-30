@@ -13,8 +13,7 @@ package org.eclipse.dirigible.core.publisher.processor;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
@@ -33,11 +32,9 @@ public class PublisherProcessor {
 
 	private Logger logger = LoggerFactory.getLogger(PublisherProcessor.class);
 
-	@Inject
-	private PublisherCoreService publishCoreService;
+	private PublisherCoreService publishCoreService = new PublisherCoreService();
 
-	@Inject
-	private IRepository repository;
+	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
 	/**
 	 * Request publishing.

@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -32,8 +32,7 @@ public class QuartzDatabaseLayoutInitializer extends AbstractDatabaseLayoutIniti
 
 	private static final Logger logger = LoggerFactory.getLogger(QuartzDatabaseLayoutInitializer.class);
 
-	@Inject
-	private DataSource datasource;
+	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	/**
 	 * Initialize the database schema for Quartz.

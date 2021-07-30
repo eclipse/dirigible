@@ -20,31 +20,22 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.ServiceLoader.Provider;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.AbstractModule;
-
 /**
- * The DirigibleModulesInstallerModule is the entry point of the Guice integration.
+ * The DirigibleModulesInstallerModule is the entry point of the integration.
  */
-public class DirigibleModulesInstallerModule extends AbstractModule {
+public class DirigibleModulesInstallerModule {
 
-	private Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
+	private static Logger logger = LoggerFactory.getLogger(DirigibleModulesInstallerModule.class);
 	
 	private static Set<String> modules = new HashSet<String>();
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
-	 */
-	@Override
-	protected void configure() {
+	public static synchronized void configure() {
 		logger.debug("Initializing Dirigible Modules...");
 
 		while (!Configuration.LOADED) {
@@ -78,7 +69,7 @@ public class DirigibleModulesInstallerModule extends AbstractModule {
 		for (AbstractDirigibleModule next: sortedDirigibleModules) {
 			logger.debug(format("Installing Dirigible Module [{0}] ...", next.getName()));
 			try {
-				install(next);
+				next.configure();
 			} catch (Throwable e) {
 				logger.error(format("Failed installing Dirigible Module [{0}].", next.getName()), e);
 			}

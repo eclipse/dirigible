@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.service;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
@@ -19,7 +20,6 @@ import org.eclipse.dirigible.engine.odata2.api.ODataException;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,23 +30,17 @@ import java.util.List;
 
 public class ODataCoreService implements IODataCoreService {
 
-    @Inject
-    private DataSource dataSource;
+    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-    @Inject
-    private PersistenceManager<ODataSchemaDefinition> odataSchemaPersistenceManager;
+    private PersistenceManager<ODataSchemaDefinition> odataSchemaPersistenceManager = new PersistenceManager<ODataSchemaDefinition>();
 
-    @Inject
-    private PersistenceManager<ODataMappingDefinition> odataMappingPersistenceManager;
+    private PersistenceManager<ODataMappingDefinition> odataMappingPersistenceManager = new PersistenceManager<ODataMappingDefinition>();
 
-    @Inject
-    private PersistenceManager<ODataContainerDefinition> odataContainerPersistenceManager;
+    private PersistenceManager<ODataContainerDefinition> odataContainerPersistenceManager = new PersistenceManager<ODataContainerDefinition>();
 
-    @Inject
-    private PersistenceManager<ODataDefinition> odataPersistenceManager;
+    private PersistenceManager<ODataDefinition> odataPersistenceManager = new PersistenceManager<ODataDefinition>();
 
-    @Inject
-    private PersistenceManager<ODataHandlerDefinition> odataHandlerPersistenceManager;
+    private PersistenceManager<ODataHandlerDefinition> odataHandlerPersistenceManager = new PersistenceManager<ODataHandlerDefinition>();
 
 
     @Override

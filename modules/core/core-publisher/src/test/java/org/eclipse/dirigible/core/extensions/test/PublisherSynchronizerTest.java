@@ -18,35 +18,30 @@ import static org.junit.Assert.assertTrue;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
-import javax.inject.Inject;
-
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.publisher.synchronizer.PublisherSynchronizer;
-import org.eclipse.dirigible.core.test.AbstractGuiceTest;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PublisherSynchronizerTest.
  */
-public class PublisherSynchronizerTest extends AbstractGuiceTest {
+public class PublisherSynchronizerTest extends AbstractDirigibleTest {
 
 	/** The publisher core service. */
-	@Inject
 	private IPublisherCoreService publisherCoreService;
 
 	/** The publisher synchronizer. */
-	@Inject
 	private PublisherSynchronizer publisherSynchronizer;
 
 	/** The repository. */
-	@Inject
 	private IRepository repository;
 
 	/**
@@ -56,9 +51,9 @@ public class PublisherSynchronizerTest extends AbstractGuiceTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.publisherCoreService = getInjector().getInstance(PublisherCoreService.class);
-		this.publisherSynchronizer = getInjector().getInstance(PublisherSynchronizer.class);
-		this.repository = getInjector().getInstance(IRepository.class);
+		this.publisherCoreService = new PublisherCoreService();
+		this.publisherSynchronizer = new PublisherSynchronizer();
+		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 	}
 
 	/**

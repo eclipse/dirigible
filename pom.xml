@@ -79,12 +79,16 @@
 	</licenses>
 
 	<url>http://www.dirigible.io</url>
+	
 	<organization>
 		<name>Eclipse Foundation</name>
 		<url>http://www.eclipse.org</url>
 	</organization>
+	
 	<scm>
-		<url>https://github.com/eclipse/dirigible</url>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
 	</scm>
 
 	<profiles>
@@ -166,13 +170,7 @@
 								<exclude>**/src/test/resources/**</exclude>
 								<exclude>**/src/main/resources/font-awesome-4.7.0/**</exclude>
 								<exclude>**/src/main/resources/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/resources/angular/**</exclude>
-								<exclude>**/src/main/resources/resources/bootstrap/**</exclude>
 								<exclude>**/src/main/resources/resources/goldenlayout/**</exclude>
-								<exclude>**/src/main/resources/resources/jqplot/**</exclude>
-								<exclude>**/src/main/resources/resources/jquery/**</exclude>
-								<exclude>**/src/main/resources/resources/jstree/**</exclude>
-								<exclude>**/src/main/resources/resources/mxgraph/**</exclude>
 								<exclude>**/src/main/resources/ide-ace/**</exclude>
 								<exclude>**/src/main/resources/ide-bpm/**</exclude>
 								<exclude>**/src/main/resources/ide-monaco/**</exclude>
@@ -371,6 +369,70 @@
 				</plugins>
 			</build>
 		</profile>
+		
+		<!-- <profile>
+			<id>content</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${project.artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>${maven.scm.plugin.version}</version>
+						<configuration>
+							<goals>checkout</goals>
+							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
+							<server>${content.scm.server}</server>
+						</configuration>
+						<executions>
+							<execution>
+								<id>generated-sources</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven.resource.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>copy-content-resources</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${content.output.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${content.source.directory}</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>${maven.compiler.plugin.version}</version>
+						<configuration>
+							<source>${maven.compiler.source}</source>
+							<target>${maven.compiler.target}</target>
+							<debug>true</debug>
+							<debuglevel>lines,vars,source</debuglevel>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile> -->
+		
 	</profiles>
 
 	<repositories>
@@ -388,10 +450,10 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>alfresco</id>
-			<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+			<id>sonatype-public-repository</id>
+			<url>https://oss.sonatype.org/content/groups/public</url>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 			<releases>
 				<enabled>true</enabled>
@@ -441,21 +503,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>${guice.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-servlet</artifactId>
-			<version>${guice.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-persist</artifactId>
-			<version>${guice.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
@@ -592,13 +639,13 @@
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<maven.scm.plugin.version>1.9</maven.scm.plugin.version>
+		<maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
+		<scmVersionType>branch</scmVersionType>
 		<commons.io>2.7</commons.io>
 		<commons.codec>1.10</commons.codec>
 		<commons.lang3>3.9</commons.lang3>
 		<cxf.version>3.4.2</cxf.version>
 		<gson.version>2.2.4</gson.version>
-		<guice.version>4.2.2</guice.version>
 		<mockito.version>2.23.0</mockito.version>
 		<powermock-api-mockito2.version>2.0.2</powermock-api-mockito2.version>
 		<powermock-module-junit4.version>2.0.2</powermock-module-junit4.version>
@@ -628,8 +675,18 @@
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<org.projectlombok.version>1.18.20</org.projectlombok.version>
+		
+		<content.repository.name>dirigiblelabs</content.repository.name>
+		<content.project.name>dirigiblelabs</content.project.name>
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		<content.scm.server>github</content.scm.server>
+		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
+		<content.source.directory>target/${content.project.name}</content.source.directory>
+		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
 
-		<license.header.location>licensing-header.txt</license.header.location>
+		<license.header.location>${maven.multiModuleProjectDirectory}/licensing-header.txt</license.header.location>
 
 		<skip.tests>true</skip.tests>
 	</properties>

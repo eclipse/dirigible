@@ -11,29 +11,32 @@
  */
 package org.eclipse.dirigible.commons.api.module;
 
-import com.google.inject.AbstractModule;
-
 /**
- * The AbstractDirigibleModule is the parent of the Dirigible's Guice Modules.
+ * The AbstractDirigibleModule is the parent of the Dirigible's Modules.
  */
-public abstract class AbstractDirigibleModule extends AbstractModule {
-
-	protected int HIGH_PRIORITY = 10;
-	protected int DEFAULT_PRIORITY = 30;
-	protected int LOW_PRIORITY = 100;
+public abstract class AbstractDirigibleModule implements DirigibleModule {
 
 	/**
 	 * Gets the name.
 	 *
 	 * @return the name
 	 */
+	@Override
 	public abstract String getName();
 
 	/**
 	 * Gets the priority
 	 * @return the priority
 	 */
+	@Override
 	public int getPriority() {
-		return DEFAULT_PRIORITY;
+		return PRIORITY_DEFAULT;
 	}
+	
+	/**
+	 * Runs the module initialization logic
+	 */
+	@Override
+	public abstract void configure();
+	
 }

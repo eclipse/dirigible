@@ -29,8 +29,8 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.commons.api.module.StaticInjector;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.dynamic.DynamicDatabase;
@@ -53,7 +53,7 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
-	private static IDatabase database = StaticInjector.getInjector().getInstance(IDatabase.class);
+	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 
 	/**
 	 * Gets the database types.

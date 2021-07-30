@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -58,7 +56,6 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the Workspace content.
  */
-@Singleton
 @Path("/ide/workspaces")
 @RolesAllowed({ "Developer" })
 @Api(value = "IDE - Workspace", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
@@ -67,8 +64,7 @@ public class WorkspaceRestService extends AbstractRestService implements IRestSe
 
 	private static final Logger logger = LoggerFactory.getLogger(WorkspaceRestService.class);
 
-	@Inject
-	private WorkspaceProcessor processor;
+	private WorkspaceProcessor processor = new WorkspaceProcessor();
 
 	@Context
 	private HttpServletResponse response;
