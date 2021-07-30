@@ -346,39 +346,6 @@ public class OData2Utils {
         return true;
     }
 
-    public static IOException closeConsumeException(Closeable closeable, String details) {
-        try {
-            close(closeable);
-            return null;
-        } catch (IOException e) {
-            LOG.warn("Close failed", e);
-            return e;
-        }
-    }
-
-    public static IOException closeConsumeException(Closeable closeable) {
-        return closeConsumeException(closeable, null);
-    }
-
-    public static void close(Closeable closeable) throws IOException {
-        if (closeable != null) {
-            closeable.close();
-        }
-    }
-
-    public static void closeConsumeException(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                if (closeable != null) {
-                    closeable.close();
-                }
-                return;
-            } catch (Exception e) {
-               LOG.warn("Close failed", e);
-            }
-        }
-    }
-    
     public static HttpStatusCodes getStatusCodeForException(Exception e) {
         HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
         if (e instanceof OData2Exception) {

@@ -405,7 +405,7 @@ public final class SQLQuery {
         List<Object> values = getInsertExpression().getColumnData();
         List<EdmProperty> columnProperties = getInsertExpression().getColumnProperties();
 
-        for (int i = 1; i <= values.size(); i ++) {
+        for (int i = 1; i <= values.size(); i++) {
             Object value = values.get(i - 1);
             EdmProperty property = columnProperties.get(i - 1);
             EdmType type = property.getType();
@@ -424,9 +424,9 @@ public final class SQLQuery {
     private Object asGuid(Object value) {
         if (value == null) {
             return null;
-        } else if (value instanceof String){
-            return UUID.fromString((String)value);
-        } else if (value instanceof UUID){
+        } else if (value instanceof String) {
+            return UUID.fromString((String) value);
+        } else if (value instanceof UUID) {
             return value;
         } else {
             throw new IllegalArgumentException("Unable to convert object " + value + " of type " + value.getClass() + " to GUID!");
@@ -614,7 +614,7 @@ public final class SQLQuery {
             return edmNavigationProperty;
         }
 
-        public boolean isInlineTarget(){
+        public boolean isInlineTarget() {
             return edmNavigationProperty != null;
         }
 
