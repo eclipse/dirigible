@@ -291,8 +291,7 @@ public class DefaultSQLProcessorTest {
     }
 	   
 	@Test
-	public void testSQLProcessorMergeEntity()
-			throws InstantiationException, IllegalAccessException, IOException, ODataException {
+	public void testSQLProcessorMergeEntity() throws InstantiationException, IllegalAccessException, IOException, ODataException {
 		
 		Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
                 .segments("TestChilds('1_1')") //
@@ -307,10 +306,9 @@ public class DefaultSQLProcessorTest {
 				+ "    \"Id\": \"1_1\",\n"
 				+ "    \"ChildName\": \"XXXX\",\n"
 				+ "    \"ChildValue\":\"YYYYY\"" //
-				+ "	}\n"
+                + "	}\n"
 				+ "}";
-		
-	
+
 	   response = modifyingRequestBuilder(content)//
 			    .segments("TestChilds('1_1')") //
 				.accept("application/json")
@@ -320,6 +318,38 @@ public class DefaultSQLProcessorTest {
 				.executeRequest(MERGE);
 		validateHttpResponse(response, 204);
 	}
+
+    @Test
+    public void testSQLProcessorMergeEntityChangeReferenceId()
+            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+
+        Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestChilds('1_1')") //
+                .accept("application/json").executeRequest(GET);
+        validateHttpResponse(response, 200);
+
+        String content = "{\n"
+                + "  \"d\": {\n"
+                + "    \"__metadata\": {\n"
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+                + "    },\n"
+                + "    \"Id\": \"1_1\",\n"
+                + "    \"ChildName\": \"Name2\",\n"
+                + "    \"ChildValue\": \"Value2\",\n"
+                + "    \"Root\": { \"ChangeId\" : \"1\"  }\n"
+                + " }\n"
+                + "}";
+
+
+        response = modifyingRequestBuilder(content)//
+                .segments("TestChilds('1_1')") //
+                .accept("application/json")
+                .content(content)
+                .param("content-type", "application/json")
+                .contentSize(content.length())
+                .executeRequest(MERGE);
+        validateHttpResponse(response, 204);
+    }
 	
 	@Test
 	public void testSQLProcessorUpdateEntity()
