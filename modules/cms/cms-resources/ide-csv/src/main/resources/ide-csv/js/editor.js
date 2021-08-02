@@ -84,6 +84,14 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         if (!reload) {
             let searchParams = new URLSearchParams(window.location.search);
             $scope.file = searchParams.get('file');
+            let header = (searchParams.get('header') === 'true');
+            let delimiter = searchParams.get('delimiter');
+            let quoteChar = searchParams.get('quotechar');
+            if (header != null && header != undefined && delimiter && quoteChar) {
+                $scope.papaConfig.header = header;
+                $scope.papaConfig.delimiter = delimiter;
+                $scope.papaConfig.quoteChar = quoteChar;
+            }
             contents = loadContents($scope.file);
         }
         let parsedData = Papa.parse(contents, $scope.papaConfig);
