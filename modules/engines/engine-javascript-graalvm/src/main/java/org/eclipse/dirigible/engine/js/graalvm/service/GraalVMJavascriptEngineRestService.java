@@ -78,7 +78,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 */
 	@POST
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeGraalVMServicePost(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVMServiceGet(path);
@@ -94,7 +94,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 */
 	@PUT
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeGraalVMServicePut(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVMServiceGet(path);
@@ -110,7 +110,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 */
 	@DELETE
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeGraalVMServiceDelete(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVMServiceGet(path);
@@ -126,7 +126,7 @@ public class GraalVMJavascriptEngineRestService extends AbstractRestService impl
 	 */
 	@HEAD
 	@Path("/{path:.*}")
-	@ApiOperation("Execute Server Side JavaScript Nashorn Resource")
+	@ApiOperation("Execute Server Side JavaScript GraalVM Resource")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Execution Result") })
 	public Response executeGraalVMServiceHead(@PathParam("path") String path) throws ScriptingException {
 		return executeGraalVMServiceGet(path);
