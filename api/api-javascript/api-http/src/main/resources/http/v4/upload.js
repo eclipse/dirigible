@@ -108,7 +108,7 @@ function FileItem() {
 function Headers() {
 
 	this.getHeaderNames = function() {
-		return this.native.getHeaderNames();
+		return org.eclipse.dirigible.api.v3.http.HttpUploadFacade.headerNamesToList(this.native.getHeaderNames());
 	};
 
 	this.getHeader = function(headerName) {
