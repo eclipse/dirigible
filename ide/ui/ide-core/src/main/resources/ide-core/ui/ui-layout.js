@@ -336,7 +336,7 @@ function LayoutController(viewRegistry, messageHub) {
 		}
 	};
 
-	this.openEditor = function (resourcePath, resourceLabel, contentType, editorId) {
+	this.openEditor = function (resourcePath, resourceLabel, contentType, editorId, extraArgs = null) {
 		var newItemConfig = {
 			id: resourcePath,
 			title: resourceLabel,
@@ -345,7 +345,8 @@ function LayoutController(viewRegistry, messageHub) {
 			componentState: {
 				path: resourcePath,
 				editorId: editorId,
-				contentType: contentType
+				contentType: contentType,
+				extraArgs: extraArgs
 			}
 		};
 		//is an editor available to stack new children to it?

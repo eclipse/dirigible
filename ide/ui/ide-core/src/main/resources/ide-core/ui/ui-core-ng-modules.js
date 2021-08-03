@@ -155,6 +155,12 @@ angular.module('ideUiCore', ['ngResource'])
 							src = editorPath + '?file=' + componentState.path;
 						if (componentState.contentType && componentState.editorId !== 'flowable')
 							src += "&contentType=" + componentState.contentType;
+						if (componentState.extraArgs) {
+							const extraArgs = Object.keys(componentState.extraArgs);
+							for (let i = 0; i < extraArgs.length; i++) {
+								src += `&${extraArgs[i]}=${componentState.extraArgs[extraArgs[i]]}`;
+							}
+						}
 					} else {
 						container.setTitle("Welcome");
 						var brandingInfo = {};
@@ -257,6 +263,16 @@ angular.module('ideUiCore', ['ngResource'])
 					scope.menu = $resource(url).query();
 				}
 				getBrandingInfo(scope);
+
+				messageHub.on('ide-core.openEditor', function (msg) {
+					Layouts.manager.openEditor(
+						msg.data.file.path,
+						msg.data.file.label,
+						msg.data.file.contentType,
+						msg.data.editor,
+						msg.data.extraArgs
+					);
+				});
 
 				messageHub.on('ide-core.closeEditor', function (msg) {
 					Layouts.manager.closeEditor(msg.fileName);

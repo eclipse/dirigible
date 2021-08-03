@@ -14,7 +14,7 @@
 	<artifactId>dirigible-cms-resources-parent</artifactId>
 	<description>CMS Resources Plugins</description>
 	<packaging>pom</packaging>
-	
+
 	<scm>
 		<url>${content.scm.url}</url>
 		<connection>${content.scm.connection}</connection>
@@ -27,6 +27,7 @@
         <module>ide-documents</module>
         <module>ide-documents-ext-content-type-ms</module>
         <module>ide-csv</module>
+		<module>ide-csvim</module>
 	</modules>
 
 	<profiles>
