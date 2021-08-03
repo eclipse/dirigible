@@ -9,7 +9,6 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-
 agGrid.initialiseAgGridWithAngular1(angular);
 let csvView = angular.module('csv-editor', ["agGrid"]);
 
