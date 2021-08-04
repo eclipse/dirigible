@@ -8,7 +8,7 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="csvim-editor" ng-controller="CsvimViewController" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<meta charset="utf-8" />
@@ -24,13 +24,11 @@
 	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css" />
 	<!-- Project-specific stuff -->
 	<script src="js/editor.js"></script>
-	<link type="text/css" rel="stylesheet" href="css/editor.css" />
-	<link type="text/css" rel="stylesheet" href="css/dropdown.css" />
-
+	<link type="text/css" rel="stylesheet" ng-href="{{isDarkMode() ? 'css/editor-dark.css':'css/editor-light.css'}}" />
+	<link type="text/css" rel="stylesheet" ng-href="{{isDarkMode() ? 'css/dropdown-dark.css':'css/dropdown-light.css'}}" />
 </head>
 
-<body ng-app="csvim-editor" ng-controller="CsvimViewController" class="view editor-body"
-	ng-keydown="keyDownFunc($event)">
+<body class="view editor-body" ng-keydown="keyDownFunc($event)">
 	<div class="load-screen" ng-hide="dataLoaded">
 		<p class="text-center">Loading data...</p>
 		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0"
@@ -195,10 +193,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="no-files-panel" ng-show="dataEmpty">
-		<p class="text-center">No files.</p>
-		<p class="text-center">Create a new file entry.</p>
+		<div class="no-files-panel" ng-show="dataEmpty">
+			<p class="text-center">No files.</p>
+			<p class="text-center">Create a new file entry.</p>
+		</div>
 	</div>
 	</div>
 </body>

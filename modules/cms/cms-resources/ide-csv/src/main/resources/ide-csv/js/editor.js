@@ -12,12 +12,13 @@
 agGrid.initialiseAgGridWithAngular1(angular);
 let csvView = angular.module('csv-editor', ["agGrid"]);
 
-csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, $window) {
+csvView.controller('CsvViewController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
     let messageHub = new FramesMessageHub();
     let contents;
     let csrfToken;
     let manual = false;
     let isMac = false;
+    let isDarkMode;
     let isFileChanged = false;
     $scope.menuStyle = { 'display': 'none' };
     $scope.menuContext = { // Used for context menu content visibility
@@ -34,8 +35,53 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
     };
     let ctrlDown = false;
     $scope.delimiter = ',';
-    $scope.dataLoaded = false;
+    $scope.gridLoaded = false;
     const ctrlKey = 17;
+    $scope.gridOptions = {
+        defaultColDef: {
+            sortable: true,
+            filter: true,
+            resizable: true,
+            editable: true,
+            flex: 1
+        },
+        undoRedoCellEditing: true,
+        undoRedoCellEditingLimit: 10,
+        columnDefs: undefined,
+        rowData: undefined,
+        rowDragManaged: true,
+        suppressMoveWhenRowDragging: true,
+        enableMultiRowDragging: true,
+        animateRows: false,
+        rowSelection: 'multiple',
+        suppressExcelExport: true,
+        suppressPropertyNamesCheck: true, // Because of custom properties
+        onColumnResized: function (params) {
+            if (params.finished && manual) {
+                manual = false;
+            }
+        },
+        onGridReady: function (/*$event*/) {
+            if(!$scope.gridLoaded) { // Execute this only once on first grid load
+                $scope.gridLoaded = true;
+                checkPlatform();
+                loadFileContents();
+            }
+            sizeToFit();
+        },
+        onCellValueChanged: function (/*$event*/) {
+            fileChanged();
+        },
+        onColumnMoved: function (/*$event*/) {
+            fileChanged();
+        },
+        onRowDragEnd: function (/*$event*/) {
+            fileChanged();
+        },
+        onSortChanged: function (/*$event*/) {
+            fileChanged();
+        }
+    };
     $scope.papaConfig = {
         columnIndex: 0, // Custom property, needed for duplicated column names
         delimitersToGuess: [',', '\t', '|', ';'],
@@ -61,38 +107,7 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         $scope.gridOptions.api.sizeColumnsToFit();
     }
 
-    function getResource(resourcePath) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', resourcePath, false);
-        xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-        xhr.send();
-        if (xhr.status === 200) {
-            csrfToken = xhr.getResponseHeader("x-csrf-token");
-            return xhr.responseText;
-        }
-    }
-
-    function loadContents(file) {
-        if (file) {
-            return getResource('../../../../../../services/v4/ide/workspaces' + file);
-        }
-        console.error('file parameter is not present in the URL');
-    }
-
-    function load(reload = false) {
-        if (!reload) {
-            let searchParams = new URLSearchParams(window.location.search);
-            $scope.file = searchParams.get('file');
-            let header = (searchParams.get('header') === 'true');
-            let delimiter = searchParams.get('delimiter');
-            let quoteChar = searchParams.get('quotechar');
-            if (header != null && header != undefined && delimiter && quoteChar) {
-                $scope.papaConfig.header = header;
-                $scope.papaConfig.delimiter = delimiter;
-                $scope.papaConfig.quoteChar = quoteChar;
-            }
-            contents = loadContents($scope.file);
-        }
+    function parseContent() {
         let parsedData = Papa.parse(contents, $scope.papaConfig);
         if ($scope.papaConfig.header) {
             if (parsedData.meta.fields.length == 0) {
@@ -112,8 +127,39 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
             }
             csvData.columns = columns;
         }
-        $scope.delimiter = parsedData.meta.delimiter;
-        loadGrid(reload);
+        if ($scope.papaConfig.delimiter === undefined) {
+            $scope.delimiter = parsedData.meta.delimiter;
+        }
+    }
+
+    function loadFileContents() {
+        let searchParams = new URLSearchParams(window.location.search);
+        $scope.file = searchParams.get('file');
+        let header = (searchParams.get('header') === 'true');
+        let delimiter = searchParams.get('delimiter');
+        let quoteChar = searchParams.get('quotechar');
+        if (header != null && header != undefined && delimiter && quoteChar) {
+            $scope.papaConfig.header = header;
+            $scope.papaConfig.delimiter = delimiter;
+            $scope.delimiter = delimiter;
+            $scope.papaConfig.quoteChar = quoteChar;
+        }
+        if ($scope.file) {
+            $http.get('../../../../../../services/v4/ide/workspaces' + $scope.file)
+                .then(function (response) {
+                    contents = response.data;
+                    parseContent();
+                    loadGrid();
+                }, function (response) {
+                    if (response.data) {
+                        if ("error" in response.data) {
+                            console.error("Loading file:", response.data.error.message);
+                        }
+                    }
+                });
+        } else {
+            console.error('file parameter is not present in the URL');
+        }
     }
 
     function fileChanged() {
@@ -121,7 +167,7 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         messageHub.post({ data: $scope.file }, 'editor.file.dirty');
     }
 
-    function loadGrid(reload = false) {
+    function loadGrid() {
         let columnDefs = csvData.columns.map(
             (name, index) => (
                 {
@@ -148,56 +194,11 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         );
         columnDefs[0].rowDrag = true; // Adding drag handle to first column only
         columnDefs[0].headerCheckboxSelection = true; // Adding checkbox to first column only
-        if (reload) {
-            $scope.gridOptions.api.setHeaderHeight(
-                (($scope.papaConfig.header) ? undefined : 0)
-            );
-            $scope.gridOptions.api.setColumnDefs(columnDefs);
-            $scope.gridOptions.api.setRowData(csvData.data);
-        } else {
-            $scope.gridOptions = {
-                defaultColDef: {
-                    sortable: true,
-                    filter: true,
-                    resizable: true,
-                    editable: true,
-                    flex: 1
-                },
-                undoRedoCellEditing: true,
-                undoRedoCellEditingLimit: 10,
-                headerHeight: (($scope.papaConfig.header) ? undefined : 0),
-                columnDefs: columnDefs,
-                rowData: csvData.data,
-                rowDragManaged: true,
-                suppressMoveWhenRowDragging: true,
-                enableMultiRowDragging: true,
-                animateRows: false,
-                rowSelection: 'multiple',
-                suppressExcelExport: true,
-                suppressPropertyNamesCheck: true, // Because of custom properties
-                onColumnResized: function (params) {
-                    if (params.finished && manual) {
-                        manual = false;
-                    }
-                },
-                onGridReady: function (/*$event*/) {
-                    sizeToFit();
-                    $scope.dataLoaded = true;
-                },
-                onCellValueChanged: function (/*$event*/) {
-                    fileChanged();
-                },
-                onColumnMoved: function (/*$event*/) {
-                    fileChanged();
-                },
-                onRowDragEnd: function (/*$event*/) {
-                    fileChanged();
-                },
-                onSortChanged: function (/*$event*/) {
-                    fileChanged();
-                },
-            };
-        }
+        $scope.gridOptions.api.setHeaderHeight(
+            (($scope.papaConfig.header) ? undefined : 0)
+        );
+        $scope.gridOptions.api.setColumnDefs(columnDefs);
+        $scope.gridOptions.api.setRowData(csvData.data);
     }
 
     /*
@@ -360,6 +361,22 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         }
     };
 
+    $scope.isDarkMode = function () {
+        if (isDarkMode != undefined) {
+            return isDarkMode;
+        }
+        const value = `; ${document.cookie}`;
+        const parts = value.split("; dirigible-theme=");
+        if (parts.length === 2 && parts.pop().split(';').shift() === "default") {
+            isDarkMode = true;
+            return true;
+        }
+        else {
+            isDarkMode = false;
+            return false;
+        }
+    };
+
     $scope.handleClick = function (event) {
         if (event.which === 3) {
             if (
@@ -447,7 +464,8 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
 
     $scope.hasHeader = function (enabled) {
         $scope.papaConfig.header = enabled;
-        load(true);
+        parseContent();
+        loadGrid();
     };
 
     $scope.addRowAbove = function () {
@@ -565,8 +583,5 @@ csvView.controller('CsvViewController', ['$scope', '$window', function ($scope, 
         $scope.gridOptions.api.setColumnDefs(columnDefs);
         fileChanged();
     };
-
-    checkPlatform();
-    load();
 
 }]);

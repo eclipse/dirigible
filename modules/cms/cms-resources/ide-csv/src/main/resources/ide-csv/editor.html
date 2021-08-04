@@ -8,7 +8,7 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="csv-editor" ng-controller="CsvViewController as cvc" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<meta charset="utf-8" />
@@ -40,21 +40,14 @@
 	<script src="js/papaparse.min.js"></script>
 	<script src="js/ag-grid-community.min.js"></script>
 	<script src="js/editor.js"></script>
-	<link type="text/css" rel="stylesheet" href="css/editor.css" />
+	<link type="text/css" rel="stylesheet" ng-href="{{isDarkMode() ? 'css/editor-dark.css':'css/editor-light.css'}}" />
 
 </head>
 
-<body ng-app="csv-editor" ng-controller="CsvViewController as cvc" class="view csv-editor-body"
-	ng-mousedown="handleClick($event)" oncontextmenu="return false" ng-keydown="keyDownFunc($event)">
+<body class="view csv-editor-body" ng-mousedown="handleClick($event)" oncontextmenu="return false"
+	ng-keydown="keyDownFunc($event)">
 
-	<div class="load-screen" ng-hide="dataLoaded">
-		<p class="text-center">Loading data...</p>
-		<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0"
-			aria-valuemax="100">
-		</div>
-	</div>
-
-	<div class="quick-actions-bar" ng-show="dataLoaded">
+	<div class="quick-actions-bar">
 		<input class="form-control" type="text" placeholder="Search..." ng-keyup="searchCsv()" ng-model="searchInput">
 		<div class="btn-group pull-right" role="group" aria-label="toolbar">
 			<button type="button" class="btn btn-default btn-actionbar btn-icon-left" title="Save" ng-click="save()"><i
@@ -75,7 +68,7 @@
 		</div>
 	</div>
 
-	<div ag-grid="gridOptions" class="ag-grid-editor ag-theme-alpine" ng-show="dataLoaded">
+	<div ag-grid="gridOptions" class="ag-grid-editor {{isDarkMode() ? 'ag-theme-alpine-dark':'ag-theme-alpine'}}">
 	</div>
 
 	<!-- Context menu -->

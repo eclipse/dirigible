@@ -63,11 +63,12 @@ csvimView.directive('uniqueField', () => {
     };
 });
 
-csvimView.controller('CsvimViewController', ['$scope', '$messageHub', '$window', function ($scope, $messageHub, $window) {
+csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '$window', function ($scope, $http, $messageHub, $window) {
     let isFileChanged = false;
     const ctrlKey = 17;
     let ctrlDown = false;
     let isMac = false;
+    let isDarkMode;
     var csrfToken;
     var contents;
     $scope.fileExists = true;
@@ -286,6 +287,22 @@ csvimView.controller('CsvimViewController', ['$scope', '$messageHub', '$window',
         return false;
     }
 
+    $scope.isDarkMode = function () {
+        if (isDarkMode != undefined) {
+            return isDarkMode;
+        }
+        const value = `; ${document.cookie}`;
+        const parts = value.split("; dirigible-theme=");
+        if (parts.length === 2 && parts.pop().split(';').shift() === "default") {
+            isDarkMode = true;
+            return true;
+        }
+        else {
+            isDarkMode = false;
+            return false;
+        }
+    };
+
     function getNumber(str) {
         if (typeof str != "string") return NaN;
         let strNum = parseFloat(str);
@@ -305,41 +322,33 @@ csvimView.controller('CsvimViewController', ['$scope', '$messageHub', '$window',
         return value;
     }
 
-    function getResource(resourcePath) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', resourcePath, false);
-        xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
-        xhr.send();
-        if (xhr.status === 200) {
-            csrfToken = xhr.getResponseHeader("x-csrf-token");
-            return xhr.responseText;
-        }
-    }
-
-    function loadContents(file) {
-        if (file) {
-            return getResource('../../../../../../services/v4/ide/workspaces' + file);
-        }
-        console.error('file parameter is not present in the URL');
-    }
-
-    function load() {
+    function loadFileContents() {
         let searchParams = new URLSearchParams(window.location.search);
         $scope.file = searchParams.get('file');
         if ($scope.file) {
-            contents = loadContents($scope.file);
-            $scope.csvimData = JSON.parse(contents);
-            for (let i = 0; i < $scope.csvimData.length; i++) {
-                $scope.csvimData[i]["name"] = $scope.getFileName($scope.csvimData[i].file, false);
-                $scope.csvimData[i]["visible"] = true;
-            }
-            $scope.activeItemId = 0;
-            if ($scope.csvimData.length > 0) {
-                $scope.dataEmpty = false;
-            } else {
-                $scope.dataEmpty = true;
-            }
-            $scope.dataLoaded = true;
+            $http.get('../../../../../../services/v4/ide/workspaces' + $scope.file)
+                .then(function (response) {
+                    contents = response.data;
+                    if (!contents) contents = [];
+                    $scope.csvimData = contents;
+                    for (let i = 0; i < $scope.csvimData.length; i++) {
+                        $scope.csvimData[i]["name"] = $scope.getFileName($scope.csvimData[i].file, false);
+                        $scope.csvimData[i]["visible"] = true;
+                    }
+                    $scope.activeItemId = 0;
+                    if ($scope.csvimData.length > 0) {
+                        $scope.dataEmpty = false;
+                    } else {
+                        $scope.dataEmpty = true;
+                    }
+                    $scope.dataLoaded = true;
+                }, function (response) {
+                    if (response.data) {
+                        if ("error" in response.data) {
+                            console.error("Loading file:", response.data.error.message);
+                        }
+                    }
+                });
         } else {
             console.error('file parameter is not present in the URL');
         }
@@ -374,6 +383,6 @@ csvimView.controller('CsvimViewController', ['$scope', '$messageHub', '$window',
     }
 
     checkPlatform();
-    load();
+    loadFileContents();
 
 }]);
