@@ -30,7 +30,7 @@ public class RabbitMQFacadeTest {
 	
 	@Before
 	public void setUp() {
-		RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:alpine");
+		RabbitMQContainer rabbit = new RabbitMQContainer("rabbitmq:3.8.19-alpine");
 		rabbit.start();
 		
 		String host = rabbit.getHost();
