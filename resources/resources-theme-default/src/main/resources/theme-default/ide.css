@@ -15,7 +15,7 @@ iframe {
 body {
   background-color: #343436;
   color: #f6f6f6;
-  
+
   --modeler-entity-border: #d7e6f4;
   --modeler-entity-header-background: #224f77;
   --modeler-entity-header-color: #fff;
@@ -65,7 +65,7 @@ body {
 }
 .statusbar-message {
         width: 40%;
-        flex: 1;  
+        flex: 1;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -73,10 +73,10 @@ body {
 .statusbar-error {
         color: #ed7474;
         width: 45%;
-        flex: 1;  
+        flex: 1;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;	
+        text-overflow: ellipsis;
 }
 .list-group-item {
   background: none !important;
@@ -101,8 +101,8 @@ nav.navbar a{
 nav.navbar .dropdown-menu{
   border: 0px;
 }
-.navbar-inverse .navbar-nav>.open>a, 
-.navbar-inverse .navbar-nav>.open>a:focus, 
+.navbar-inverse .navbar-nav>.open>a,
+.navbar-inverse .navbar-nav>.open>a:focus,
 .navbar-inverse .navbar-nav>.open>a:hover{
   background-color: #555;
 }
@@ -120,7 +120,7 @@ nav.navbar .dropdown-menu{
   border-top-width: 1px;
   border-top-style: solid;
 }
- 
+
 .lm_header .lm_tab {
   /*border: 1px solid #555;*/
   padding-bottom: 4px;
@@ -380,7 +380,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 	/*border: 1px solid #a5acb3;*/
 	border-radius: 0 !important;
 	background-color: #343436;
-	
+
 	border-top: none;
 	border-right: none;
 	border-left: none;
@@ -559,4 +559,11 @@ th {
 
 .bg-default {
 	background-color: #333333;
+}
+
+/* JSTree fixes */
+.jstree-rename-input {
+	background-color: #555;
+	border: 1px solid #222;
+	border-radius: 3px;
 }
