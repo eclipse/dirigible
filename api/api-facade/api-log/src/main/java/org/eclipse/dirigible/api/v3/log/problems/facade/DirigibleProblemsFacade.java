@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.api.v3.log.problems.facade;
 
 import org.eclipse.dirigible.api.v3.log.problems.api.IDirigibleProblemsCoreService;
@@ -12,7 +23,7 @@ public class DirigibleProblemsFacade implements IScriptingFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleProblemsFacade.class);
 
-    public static final void newProblem(String location, String type, String line, String column,
+    public static final void persistProblem(String location, String type, String line, String column,
                                         String category, String module, String source, String program) throws DirigibleProblemsException {
 
         IDirigibleProblemsCoreService dirigibleProblemsCoreService = new DirigibleProblemsCoreService();
