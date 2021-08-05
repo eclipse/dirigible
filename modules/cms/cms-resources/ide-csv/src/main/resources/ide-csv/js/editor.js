@@ -18,7 +18,6 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     let csrfToken;
     let manual = false;
     let isMac = false;
-    let isDarkMode;
     let isFileChanged = false;
     $scope.menuStyle = { 'display': 'none' };
     $scope.menuContext = { // Used for context menu content visibility
@@ -358,22 +357,6 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
             defs[focusedColumnIndex].suppressMovable = false;
             $scope.gridOptions.api.setColumnDefs(defs);
             headerEditMode = false;
-        }
-    };
-
-    $scope.isDarkMode = function () {
-        if (isDarkMode != undefined) {
-            return isDarkMode;
-        }
-        const value = `; ${document.cookie}`;
-        const parts = value.split("; dirigible-theme=");
-        if (parts.length === 2 && parts.pop().split(';').shift() === "default") {
-            isDarkMode = true;
-            return true;
-        }
-        else {
-            isDarkMode = false;
-            return false;
         }
     };
 

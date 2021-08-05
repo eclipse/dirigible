@@ -8,7 +8,7 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" ng-app="csv-editor" ng-controller="CsvViewController as cvc" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<meta charset="utf-8" />
@@ -38,13 +38,15 @@
 
 	<!-- Project-specific stuff -->
 	<script src="js/papaparse.min.js"></script>
-	<script src="js/ag-grid-community.min.js"></script>
+	<script src="js/ag-grid-community.min.noStyle.js"></script>
 	<script src="js/editor.js"></script>
-	<link type="text/css" rel="stylesheet" ng-href="{{isDarkMode() ? 'css/editor-dark.css':'css/editor-light.css'}}" />
+	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/csv.css" />
+	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ag-grid.min.css" />
+	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ag-theme-alpine.min.css" />
 
 </head>
 
-<body class="view csv-editor-body" ng-mousedown="handleClick($event)" oncontextmenu="return false"
+<body ng-app="csv-editor" ng-controller="CsvViewController as cvc" class="view csv-editor-body" ng-mousedown="handleClick($event)" oncontextmenu="return false"
 	ng-keydown="keyDownFunc($event)">
 
 	<div class="quick-actions-bar">
@@ -68,7 +70,7 @@
 		</div>
 	</div>
 
-	<div ag-grid="gridOptions" class="ag-grid-editor {{isDarkMode() ? 'ag-theme-alpine-dark':'ag-theme-alpine'}}">
+	<div ag-grid="gridOptions" class="ag-grid-editor ag-theme-alpine">
 	</div>
 
 	<!-- Context menu -->
