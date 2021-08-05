@@ -19,7 +19,7 @@ jobs:
         java-version: 13
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
     - name: Set Dirigible Version
-      run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr pre " " | sed 's/ //'  >> $GITHUB_ENV
+      run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr pre " " | sed 's/   //'  >> $GITHUB_ENV
 
     - name: Build Dirigible
       run: mvn clean install
