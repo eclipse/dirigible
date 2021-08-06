@@ -27,6 +27,8 @@ public interface IDataStructureModel {
 	public static final String FILE_EXTENSION_UPDATE = ".update";
 	/** File extension for *.schema files */
 	public static final String FILE_EXTENSION_SCHEMA = ".schema";
+	/** File extension for *.schema files */
+	public static final String FILE_EXTENSION_CHANGELOG = ".changelog";
 	
 	/** Type table */
 	public static final String TYPE_TABLE = "TABLE";
@@ -42,6 +44,8 @@ public interface IDataStructureModel {
 	public static final String TYPE_UPDATE = "UPDATE";
 	/** Type schema */
 	public static final String TYPE_SCHEMA = "SCHEMA";
+	/** Type changelog */
+	public static final String TYPE_CHANGELOG = "CHANGELOG";
 	
 	/** Whether or not to use case sensitive syntax for table or view names and column names */
 	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";

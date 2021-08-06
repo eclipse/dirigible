@@ -914,7 +914,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				}
 			}
 		} catch (SQLException e) {
-			logger.error(concatenateListOfStrings(errors, "\n---\n"), e);
+			logger.error(e.getMessage(), e);
+			errors.add(e.getMessage());
+		} finally {
+			logger.error(concatenateListOfStrings(errors, "\n---\n"));
 		}
 	}
 
