@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -140,6 +139,19 @@ public class DataStructureModelFactory {
 	public static DataStructureDataUpdateModel parseUpdate(String location, String content) {
 		DataStructureDataUpdateModel result = new DataStructureDataUpdateModel();
 		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_UPDATE);
+		return result;
+	}
+	
+	/**
+	 * Creates a data model from the raw content.
+	 *
+	 * @param content
+	 *            the data definition
+	 * @return the data model instance
+	 */
+	public static DataStructureChangelogModel parseChangelog(String location, String content) {
+		DataStructureChangelogModel result = new DataStructureChangelogModel();
+		setContentModelAttributes(location, content, result, IDataStructureModel.TYPE_CHANGELOG);
 		return result;
 	}
 

@@ -85,6 +85,11 @@ Nevertheless, we highly recommend building the binaries from source in order to 
  - If you want to do a fast build, with no tests and javadocs:
 
         mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+        
+> The main groups of modules can be built separately: `api`, `ext`, `ide`, `modules`, `releng`, `resources` and `templates`:
+
+        cd api
+        mvn clean install
 
 The build should pass successfully. The produced `ROOT.war` files are in `releng/<artifact-name>/target/` and are ready to be deployed. There are separate deployable artifacts (WAR files) depending on the usage type. If you are running it locally, then you need `releng/desktop-all/target/ROOT.war`. There is also an executable JAR file under the `releng/<artifact-name>/target` folder with a name like `ROOT.jar`.
 
