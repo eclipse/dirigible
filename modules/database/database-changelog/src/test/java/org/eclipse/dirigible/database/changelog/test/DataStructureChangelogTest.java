@@ -73,7 +73,7 @@ public class DataStructureChangelogTest extends AbstractDirigibleTest {
 				try {
 					connection = dataSource.getConnection();
 
-					changelogSynchronizer.executeChangelogUpdate(connection, "/person.changelog.json", data);
+					changelogSynchronizer.executeChangelogUpdate(connection, "/person.changelog", data);
 					
 					Statement statement = connection.createStatement();
 					statement.executeUpdate("INSERT INTO PERSON (firstname, lastname, country, username) VALUES ('JOHN', 'SMITH', 'US', 'JONNY')");

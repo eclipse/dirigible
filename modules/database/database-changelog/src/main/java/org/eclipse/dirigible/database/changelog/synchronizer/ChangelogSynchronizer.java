@@ -320,6 +320,9 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 
 	public void executeChangelogUpdate(Connection connection, String changelog,
 			DataStructureChangelogModel model) throws DatabaseException, URISyntaxException, LiquibaseException, IOException {
+		if (!changelog.endsWith(".json")) {
+			changelog += ".json";
+		}
 		try (InputStream stream = new ByteArrayInputStream(model.getContent().getBytes(StandardCharsets.UTF_8))) {
 			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
 			ChangelogResourceAccessor resourceAccessor = new ChangelogResourceAccessor(new URI(changelog), stream);
