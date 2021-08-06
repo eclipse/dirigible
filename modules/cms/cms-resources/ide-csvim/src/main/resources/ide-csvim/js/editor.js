@@ -68,7 +68,6 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
     const ctrlKey = 17;
     let ctrlDown = false;
     let isMac = false;
-    let isDarkMode;
     var csrfToken;
     var contents;
     $scope.fileExists = true;
@@ -285,22 +284,6 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
         }
         $scope.fileExists = false;
         return false;
-    }
-
-    $scope.isDarkMode = function () {
-        if (isDarkMode != undefined) {
-            return isDarkMode;
-        }
-        const value = `; ${document.cookie}`;
-        const parts = value.split("; dirigible-theme=");
-        if (parts.length === 2 && parts.pop().split(';').shift() === "default") {
-            isDarkMode = true;
-            return true;
-        }
-        else {
-            isDarkMode = false;
-            return false;
-        }
     };
 
     function getNumber(str) {
