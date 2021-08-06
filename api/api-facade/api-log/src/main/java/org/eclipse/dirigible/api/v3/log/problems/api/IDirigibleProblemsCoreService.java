@@ -56,6 +56,24 @@ public interface IDirigibleProblemsCoreService {
     public void updateProblem(DirigibleProblemsModel parserErrorsModel) throws DirigibleProblemsException;
 
     /**
+     * Updates the status of a Problem by the id.
+     *
+     * @param id of the problem
+     * @param status of the problem
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public void updateProblemStatusById(Long id, String status) throws DirigibleProblemsException;
+
+    /**
+     * Updates the status of multiple Problems by their id.
+     *
+     * @param ids list of problem ids
+     * @param status of the problem
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public void updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException;
+
+    /**
      * Gets the Problem.
      *
      * @param location the location of the file with the error
@@ -69,11 +87,20 @@ public interface IDirigibleProblemsCoreService {
     /**
      * Gets the Problem by id.
      *
-     * @param id the location of the file with the error
+     * @param id of the problem
      * @return the Problem model
      * @throws DirigibleProblemsException the dirigible problem exception
      */
     public DirigibleProblemsModel getProblemById(Long id) throws DirigibleProblemsException;
+
+    /**
+     * Gets all Problem by a list of ids.
+     *
+     * @param ids list of problem ids
+     * @return the Problem model
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException;
 
     /**
      * Gets all Problems
@@ -82,4 +109,27 @@ public interface IDirigibleProblemsCoreService {
      * @throws DirigibleProblemsException the dirigible problem exception
      */
     public List<DirigibleProblemsModel> getAllProblems() throws DirigibleProblemsException;
+
+    /**
+     * Deletes the Problem by id.
+     *
+     * @param id of the problem
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public void deleteProblemById(Long id) throws DirigibleProblemsException;
+
+    /**
+     * Deletes all Problems by their status.
+     *
+     * @param status of the problem
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public void deleteProblemsByStatus(String status) throws DirigibleProblemsException;
+
+    /**
+     * Deletes all Problems.
+     *
+     * @throws DirigibleProblemsException the dirigible problem exception
+     */
+    public void deleteAll() throws DirigibleProblemsException;
 }
