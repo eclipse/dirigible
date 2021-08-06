@@ -14,6 +14,7 @@ package org.eclipse.dirigible.api.v3.log.problems.service;
 import org.eclipse.dirigible.api.v3.log.problems.api.IDirigibleProblemsCoreService;
 import org.eclipse.dirigible.api.v3.log.problems.exceptions.DirigibleProblemsException;
 import org.eclipse.dirigible.api.v3.log.problems.model.DirigibleProblemsModel;
+import org.eclipse.dirigible.api.v3.log.problems.utils.ProblemsConstants;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -24,6 +25,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreService {
@@ -36,6 +38,7 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     public DirigibleProblemsModel createProblem(DirigibleProblemsModel problemsModel) throws DirigibleProblemsException {
         problemsModel.setCreatedBy(UserFacade.getName());
         problemsModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+        problemsModel.setStatus(ProblemsConstants.ACTIVE);
 
         try (Connection connection = dataSource.getConnection()) {
             persistenceManager.insert(connection, problemsModel);
@@ -76,9 +79,37 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
+    public void updateProblemStatusById(Long id, String status) throws DirigibleProblemsException {
+        DirigibleProblemsModel problemToUpdate = getProblemById(id);
+        if (problemToUpdate != null) {
+            problemToUpdate.setStatus(status);
+            try (Connection connection = dataSource.getConnection()) {
+                persistenceManager.update(connection, problemToUpdate);
+            } catch (SQLException e) {
+                throw new DirigibleProblemsException(e);
+            }
+        }
+    }
+
+    @Override
+    public void updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException {
+        List<DirigibleProblemsModel> problemsToUpdate = getAllProblemsById(ids);
+        if (problemsToUpdate != null && !problemsToUpdate.isEmpty()) {
+            try (Connection connection = dataSource.getConnection()) {
+                problemsToUpdate.forEach(problemsModel -> {
+                    problemsModel.setStatus(status);
+                    persistenceManager.update(connection, problemsModel);
+                });
+            } catch (SQLException e) {
+                throw new DirigibleProblemsException(e);
+            }
+        }
+    }
+
+    @Override
     public DirigibleProblemsModel getProblem(String location, String type, String line) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = SqlFactory.getNative(connection).select().column("*").from("XSK_PARSER_ERRORS")
+            String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
                     .where("PE_LOCATION = ? AND PE_TYPE = ? AND PE_LINE = ?").toString();
             List<DirigibleProblemsModel> result = persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Arrays.asList(location, type, line));
             return result.isEmpty()? null : result.get(0);
@@ -97,11 +128,41 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
+    public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
+                    .where("PE_ID in ?").toString();
+            return persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Collections.singletonList(ids));
+        } catch (SQLException e) {
+            throw new DirigibleProblemsException(e);
+        }
+    }
+
+    @Override
     public List<DirigibleProblemsModel> getAllProblems() throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             return persistenceManager.findAll(connection, DirigibleProblemsModel.class);
         } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
         }
+    }
+
+    @Override
+    public void deleteProblemById(Long id) throws DirigibleProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            persistenceManager.delete(connection, DirigibleProblemsModel.class, id);
+        } catch (SQLException e) {
+            throw new DirigibleProblemsException(e);
+        }
+    }
+
+    @Override
+    public void deleteProblemsByStatus(String status) throws DirigibleProblemsException {
+
+    }
+
+    @Override
+    public void deleteAll() throws DirigibleProblemsException {
+
     }
 }

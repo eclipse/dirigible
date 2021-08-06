@@ -58,6 +58,9 @@ public class DirigibleProblemsModel {
     @Column(name = "PROBLEM_PROGRAM", columnDefinition = "VARCHAR", nullable = false, length = 120)
     private String program;
 
+    @Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    private String status;
+
     public DirigibleProblemsModel() {
     }
 
@@ -77,6 +80,26 @@ public class DirigibleProblemsModel {
         this.module = module;
         this.source = source;
         this.program = program;
+    }
+
+    public DirigibleProblemsModel(String location,
+                                  String type,
+                                  String line,
+                                  String column,
+                                  String category,
+                                  String module,
+                                  String source,
+                                  String program,
+                                  String status) {
+        this.location = location;
+        this.type = type;
+        this.line = line;
+        this.column = column;
+        this.category = category;
+        this.module = module;
+        this.source = source;
+        this.program = program;
+        this.status = status;
     }
 
     public Long getId() {
@@ -161,6 +184,14 @@ public class DirigibleProblemsModel {
 
     public void setProgram(String program) {
         this.program = program;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
