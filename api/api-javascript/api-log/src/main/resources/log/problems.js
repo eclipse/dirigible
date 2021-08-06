@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.persistProblem = function(location, type, line, column, category, module, source, program) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.persistProblem(location, type, column,
+    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.persistProblem(location, type, line, column,
         category, module, source, program);
 };
 
@@ -43,6 +43,6 @@ exports.updateStatusMultiple = function(ids, status) {
 };
 
 exports.updateProblem = function(location, type, line, column, category, module, source, program, status) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.persistProblem(location, type, column,
+    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.updateProblem(location, type, line, column,
         category, module, source, program, status);
 };
