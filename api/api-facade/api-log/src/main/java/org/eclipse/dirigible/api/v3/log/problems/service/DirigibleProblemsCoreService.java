@@ -110,7 +110,7 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     public DirigibleProblemsModel getProblem(String location, String type, String line) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
-                    .where("PE_LOCATION = ? AND PE_TYPE = ? AND PE_LINE = ?").toString();
+                    .where("PROBLEM_LOCATION = ? AND PROBLEM_TYPE = ? AND PROBLEM_LINE = ?").toString();
             List<DirigibleProblemsModel> result = persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Arrays.asList(location, type, line));
             return result.isEmpty()? null : result.get(0);
         } catch (SQLException e) {
@@ -131,7 +131,7 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
-                    .where("PE_ID in ?").toString();
+                    .where("PROBLEM_ID in ?").toString();
             return persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Collections.singletonList(ids));
         } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
