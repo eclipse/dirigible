@@ -19,7 +19,6 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,7 +30,6 @@ import java.util.List;
 public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreService {
 
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-
     private PersistenceManager<DirigibleProblemsModel> persistenceManager = new PersistenceManager<DirigibleProblemsModel>();
 
     @Override
@@ -63,7 +61,8 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
                 problemsModel.setSource(problemToPersist.getSource());
                 updateProblem(problemsModel);
             }
-        }    }
+        }
+    }
 
     @Override
     public boolean existsProblem(String location, String type, String line, String column) throws DirigibleProblemsException {
@@ -94,16 +93,12 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
 
     @Override
     public void updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException {
-        List<DirigibleProblemsModel> problemsToUpdate = getAllProblemsById(ids);
-        if (problemsToUpdate != null && !problemsToUpdate.isEmpty()) {
-            try (Connection connection = dataSource.getConnection()) {
-                problemsToUpdate.forEach(problemsModel -> {
-                    problemsModel.setStatus(status);
-                    persistenceManager.update(connection, problemsModel);
-                });
-            } catch (SQLException e) {
-                throw new DirigibleProblemsException(e);
+        try {
+            for(Long id: ids) {
+                updateProblemStatusById(id, status);
             }
+        } catch (DirigibleProblemsException e) {
+            throw new DirigibleProblemsException(e);
         }
     }
 
@@ -124,22 +119,6 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     public DirigibleProblemsModel getProblemById(Long id) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             return persistenceManager.find(connection, DirigibleProblemsModel.class, id);
-        } catch (SQLException e) {
-            throw new DirigibleProblemsException(e);
-        }
-    }
-
-    @Override
-    public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
-            String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
-                    .where("PROBLEM_ID").toString();
-            StringBuilder query = new StringBuilder(sql + " IN (");
-            ids.forEach(id -> query.append("?,"));
-            //delete the last ,
-            query.deleteCharAt(query.length() - 1);
-            query.append(")");
-            return persistenceManager.query(connection, DirigibleProblemsModel.class, query.toString(), Collections.singletonList(ids));
         } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
         }

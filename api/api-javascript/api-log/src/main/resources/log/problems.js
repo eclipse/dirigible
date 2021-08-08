@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.persistProblem = function(location, type, line, column, category, module, source, program) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.persistProblem(location, type, line, column,
+exports.createOrUpdateProblem = function(location, type, line, column, category, module, source, program) {
+    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.createOrUpdateProblem(location, type, line, column,
         category, module, source, program);
 };
 
@@ -40,9 +40,4 @@ exports.updateStatus = function(id, status) {
 
 exports.updateStatusMultiple = function(ids, status) {
     org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.updateStatusMultiple(ids, status);
-};
-
-exports.updateProblem = function(location, type, line, column, category, module, source, program, status) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.updateProblem(location, type, line, column,
-        category, module, source, program, status);
 };
