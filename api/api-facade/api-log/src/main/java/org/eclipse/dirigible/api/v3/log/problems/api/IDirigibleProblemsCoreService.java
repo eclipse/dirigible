@@ -30,10 +30,10 @@ public interface IDirigibleProblemsCoreService {
     /**
      * Checks if the Problem entry exists and either creates it or updates it.
      *
-     * @param toPersist the model for persistence
+     * @param problemToPersist the model for persistence
      * @throws DirigibleProblemsException the parser errors exception
      */
-    public void createOrUpdateProblem(DirigibleProblemsModel toPersist)
+    public void createOrUpdateProblem(DirigibleProblemsModel problemToPersist)
             throws DirigibleProblemsException;
 
     /**
@@ -42,10 +42,11 @@ public interface IDirigibleProblemsCoreService {
      * @param location the location of the file with the error
      * @param type     the type of the error
      * @param line     the line of the error
+     * @param column     the column of the error
      * @return true, if successful
      * @throws DirigibleProblemsException the dirigible problem exception
      */
-    public boolean existsProblem(String location, String type, String line) throws DirigibleProblemsException;
+    public boolean existsProblem(String location, String type, String line, String column) throws DirigibleProblemsException;
 
     /**
      * Update Problem.
@@ -79,10 +80,11 @@ public interface IDirigibleProblemsCoreService {
      * @param location the location of the file with the error
      * @param type     the type of the error
      * @param line     the line of the error
+     * @param column     the column of the error
      * @return the Problems model
      * @throws DirigibleProblemsException the dirigible problem exception
      */
-    public DirigibleProblemsModel getProblem(String location, String type, String line) throws DirigibleProblemsException;
+    public DirigibleProblemsModel getProblem(String location, String type, String line, String column) throws DirigibleProblemsException;
 
     /**
      * Gets the Problem by id.
@@ -123,8 +125,9 @@ public interface IDirigibleProblemsCoreService {
      *
      * @param status of the problem
      * @throws DirigibleProblemsException the dirigible problem exception
+     * @return
      */
-    public void deleteProblemsByStatus(String status) throws DirigibleProblemsException;
+    public int deleteProblemsByStatus(String status) throws DirigibleProblemsException;
 
     /**
      * Deletes all Problems.
