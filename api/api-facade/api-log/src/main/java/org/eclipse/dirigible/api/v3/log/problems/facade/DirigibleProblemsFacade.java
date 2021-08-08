@@ -24,7 +24,7 @@ public class DirigibleProblemsFacade implements IScriptingFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleProblemsFacade.class);
 
-    public static final void persistProblem(String location, String type, String line, String column,
+    public static final void createOrUpdateProblem(String location, String type, String line, String column,
                                             String category, String module, String source, String program) throws DirigibleProblemsException {
 
         IDirigibleProblemsCoreService dirigibleProblemsCoreService = new DirigibleProblemsCoreService();
@@ -59,14 +59,5 @@ public class DirigibleProblemsFacade implements IScriptingFacade {
 
     public static final void updateStatusMultiple(List<Long> ids, String status) throws DirigibleProblemsException {
         new DirigibleProblemsCoreService().updateStatusMultipleProblems(ids, status);
-    }
-
-    public static final void updateProblem(String location, String type, String line, String column, String category,
-                                            String module, String source, String program, String status) throws DirigibleProblemsException {
-        IDirigibleProblemsCoreService dirigibleProblemsCoreService = new DirigibleProblemsCoreService();
-        DirigibleProblemsModel problemsModel =
-                new DirigibleProblemsModel(location, type, line, column, category, module, source, program, status);
-        dirigibleProblemsCoreService.createOrUpdateProblem(problemsModel);
-        LOGGER.error(problemsModel.toJson());
     }
 }

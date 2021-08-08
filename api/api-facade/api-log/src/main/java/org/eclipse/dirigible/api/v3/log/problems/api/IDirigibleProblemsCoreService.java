@@ -96,15 +96,6 @@ public interface IDirigibleProblemsCoreService {
     public DirigibleProblemsModel getProblemById(Long id) throws DirigibleProblemsException;
 
     /**
-     * Gets all Problem by a list of ids.
-     *
-     * @param ids list of problem ids
-     * @return the Problem model
-     * @throws DirigibleProblemsException the dirigible problem exception
-     */
-    public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException;
-
-    /**
      * Gets all Problems
      *
      * @return the Problem model list
