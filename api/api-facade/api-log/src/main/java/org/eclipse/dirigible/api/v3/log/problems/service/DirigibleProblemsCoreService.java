@@ -49,24 +49,25 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
-    public void createOrUpdateProblem(DirigibleProblemsModel toPersist) throws DirigibleProblemsException {
+    public void createOrUpdateProblem(DirigibleProblemsModel problemToPersist) throws DirigibleProblemsException {
 
-        DirigibleProblemsModel problemsModel = getProblem(toPersist.getLocation(), toPersist.getType(), toPersist.getLine());
+        DirigibleProblemsModel problemsModel = getProblem(problemToPersist.getLocation(), problemToPersist.getType(),
+                problemToPersist.getLine(), problemToPersist.getColumn());
         if (problemsModel == null) {
-            createProblem(toPersist);
+            createProblem(problemToPersist);
         } else {
-            if (!problemsModel.equals(toPersist)) {
-                problemsModel.setLocation(toPersist.getLocation());
-                problemsModel.setType(toPersist.getType());
-                problemsModel.setLine(toPersist.getLine());
-                problemsModel.setSource(toPersist.getSource());
+            if (!problemsModel.equals(problemToPersist)) {
+                problemsModel.setLocation(problemToPersist.getLocation());
+                problemsModel.setType(problemToPersist.getType());
+                problemsModel.setLine(problemToPersist.getLine());
+                problemsModel.setSource(problemToPersist.getSource());
                 updateProblem(problemsModel);
             }
         }    }
 
     @Override
-    public boolean existsProblem(String location, String type, String line) throws DirigibleProblemsException {
-        return getProblem(location, type, line) != null;
+    public boolean existsProblem(String location, String type, String line, String column) throws DirigibleProblemsException {
+        return getProblem(location, type, line, column) != null;
     }
 
     @Override
@@ -107,11 +108,12 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
-    public DirigibleProblemsModel getProblem(String location, String type, String line) throws DirigibleProblemsException {
+    public DirigibleProblemsModel getProblem(String location, String type, String line, String column) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
-                    .where("PROBLEM_LOCATION = ? AND PROBLEM_TYPE = ? AND PROBLEM_LINE = ?").toString();
-            List<DirigibleProblemsModel> result = persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Arrays.asList(location, type, line));
+                    .where("PROBLEM_LOCATION = ? AND PROBLEM_TYPE = ? AND PROBLEM_LINE = ? AND PROBLEM_COLUMN = ?").toString();
+            List<DirigibleProblemsModel> result = persistenceManager.query(connection, DirigibleProblemsModel.class,
+                    sql, Arrays.asList(location, type, line, column));
             return result.isEmpty()? null : result.get(0);
         } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
@@ -131,8 +133,13 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     public List<DirigibleProblemsModel> getAllProblemsById(List<Long> ids) throws DirigibleProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
-                    .where("PROBLEM_ID in ?").toString();
-            return persistenceManager.query(connection, DirigibleProblemsModel.class, sql, Collections.singletonList(ids));
+                    .where("PROBLEM_ID").toString();
+            StringBuilder query = new StringBuilder(sql + " IN (");
+            ids.forEach(id -> query.append("?,"));
+            //delete the last ,
+            query.deleteCharAt(query.length() - 1);
+            query.append(")");
+            return persistenceManager.query(connection, DirigibleProblemsModel.class, query.toString(), Collections.singletonList(ids));
         } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
         }
@@ -157,12 +164,22 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
-    public void deleteProblemsByStatus(String status) throws DirigibleProblemsException {
-
+    public int deleteProblemsByStatus(String status) throws DirigibleProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PROBLEMS")
+                    .where("PROBLEM_STATUS = ?").toString();
+            return persistenceManager.execute(connection, sql, Collections.singletonList(status));
+        } catch (SQLException e) {
+            throw new DirigibleProblemsException(e);
+        }
     }
 
     @Override
     public void deleteAll() throws DirigibleProblemsException {
-
+        try (Connection connection = dataSource.getConnection()) {
+            persistenceManager.deleteAll(connection, DirigibleProblemsModel.class);
+        } catch (SQLException e) {
+            throw new DirigibleProblemsException(e);
+        }
     }
 }

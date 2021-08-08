@@ -66,7 +66,7 @@ public class DirigibleProblemsFacade implements IScriptingFacade {
         IDirigibleProblemsCoreService dirigibleProblemsCoreService = new DirigibleProblemsCoreService();
         DirigibleProblemsModel problemsModel =
                 new DirigibleProblemsModel(location, type, line, column, category, module, source, program, status);
-        dirigibleProblemsCoreService.updateProblem(problemsModel);
+        dirigibleProblemsCoreService.createOrUpdateProblem(problemsModel);
         LOGGER.error(problemsModel.toJson());
     }
 }
