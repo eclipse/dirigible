@@ -11,15 +11,15 @@
  */
 package org.eclipse.dirigible.repository.api;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.eclipse.dirigible.commons.config.Configuration;
 
 public class RepositoryCache {
 	
-	private static Map<String, byte[]> cache;
+	private static Cache<String, byte[]> cache;
 	
 	public RepositoryCache() {
 		initialize();
@@ -28,7 +28,14 @@ public class RepositoryCache {
 	private static void initialize() {
 		if (!Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "false"))) {
 			if (cache == null) {
-				cache = Collections.synchronizedMap(new HashMap<String, byte[]>());
+				var timePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10");
+				var sizePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100");
+
+				cache = Caffeine.newBuilder()
+						.expireAfterAccess(Long.parseLong(timePolicy), TimeUnit.MINUTES)
+						.maximumWeight(Long.parseLong(sizePolicy) * 1024 * 1024)
+						.weigher((String k, byte[] v) -> v.length)
+						.build();
 			}
 		} else {
 			cache = null;
@@ -37,26 +44,26 @@ public class RepositoryCache {
 	
 	public byte[] get(String path) {
 		if (cache != null) {
-			return cache.get(path);
+			return cache.getIfPresent(path);
 		}
 		return null;
 	}
 	
 	public void put(String path, byte[] content) {
-		if (cache != null) {
+		if (cache != null && content != null) {
 			cache.put(path, content);
 		}
 	}
 	
 	public void remove(String path) {
 		if (cache != null) {
-			cache.remove(path);
+			cache.invalidate(path);
 		}
 	}
 	
 	public void clear() {
 		if (cache != null) {
-			cache.clear();
+			cache.invalidateAll();
 		}
 	}
 	
