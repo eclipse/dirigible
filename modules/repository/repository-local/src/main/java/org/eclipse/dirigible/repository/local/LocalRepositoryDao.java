@@ -92,7 +92,7 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.saveFile(workspacePath, content);
-			cache.put(path, content);
+			cache.put(workspacePath, content);
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
@@ -120,7 +120,7 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), localFile.getPath());
 			FileSystemUtils.saveFile(workspacePath, content);
-			cache.put(localFile.getPath(), content);
+			cache.put(workspacePath, content);
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
@@ -137,10 +137,10 @@ public class LocalRepositoryDao {
 	public byte[] getFileContent(LocalFile localFile) {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), localFile.getPath());
-			byte[] content = cache.get(localFile.getPath());
+			byte[] content = cache.get(workspacePath);
 			if (content == null) {
 				content = FileSystemUtils.loadFile(workspacePath);
-				cache.put(localFile.getPath(), content);
+				cache.put(workspacePath, content);
 			}
 			return content;
 		} catch (IOException e) {
@@ -161,7 +161,7 @@ public class LocalRepositoryDao {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
 			FileSystemUtils.moveFile(workspacePathOld, workspacePathNew);
-			cache.remove(path);
+			cache.remove(workspacePathOld);
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
@@ -181,7 +181,7 @@ public class LocalRepositoryDao {
 			String workspacePathOld = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			String workspacePathNew = LocalWorkspaceMapper.getMappedName(getRepository(), newPath);
 			FileSystemUtils.copyFile(workspacePathOld, workspacePathNew);
-			cache.remove(newPath);
+			cache.remove(workspacePathOld);
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
@@ -198,7 +198,7 @@ public class LocalRepositoryDao {
 		try {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(getRepository(), path);
 			FileSystemUtils.removeFile(workspacePath);
-			cache.remove(path);
+			cache.remove(workspacePath);
 			((LocalRepository) getRepository()).setLastModified(System.currentTimeMillis());
 		} catch (IOException e) {
 			throw new LocalRepositoryException(e);
