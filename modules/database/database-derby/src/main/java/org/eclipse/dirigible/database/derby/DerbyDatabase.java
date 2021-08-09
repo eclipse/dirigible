@@ -130,7 +130,7 @@ public class DerbyDatabase extends AbstractDatabase {
 	 * @return the data source
 	 */
 	protected DataSource createDataSource(String name) {
-		logger.debug("Creating an embedded Derby datasource...");
+		logger.debug(String.format("Creating an embedded Derby datasource %s ...", name));
 
 		synchronized (DerbyDatabase.class) {
 			try {
