@@ -293,6 +293,18 @@ jobs:
           helm install dirigible dirigible/dirigible --version ${{ env.DIRIGIBLE_VERSION }}
           ```
 
+          #### Cloud Native Buildpacks:
+
+          - [dirigiblelabs/buildpacks-builder-dirigible](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible) - builder for local deployments.
+          - [dirigiblelabs/buildpacks-builder-dirigible-kyma](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-kyma) - builder for Kyma ready deployments.
+          - [dirigiblelabs/buildpacks-builder-dirigible-cf](https://hub.docker.com/r/dirigiblelabs/buildpacks-builder-dirigible-cf) - builder for Cloud Foundry ready deployments
+
+          Building Docker Image with **pack**:
+          ```
+          pack build --builder dirigiblelabs/buildpacks-builder-dirigible:${{ env.DIRIGIBLE_VERSION }} <my-org>/<my-repository>
+          ```
+          > _**Note:** The command will package all sub-folders (`project1`, `project2`, etc.) into a Dirigible docker image with the application sources._
+
           #### Docker images:
             - [dirigiblelabs/dirigible-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-anonymous/tags?page=1&ordering=last_updated) - Anonymous access.
             - [dirigiblelabs/dirigible-runtime-anonymous](https://hub.docker.com/r/dirigiblelabs/dirigible-runtime-anonymous/tags?page=1&ordering=last_updated) - Anonymous access _(runtime only)_.
