@@ -20,8 +20,8 @@ public interface IDirigibleProblemsCoreService {
 
     /**
      * Creates the Problem.
-     *
      * @param parserErrorsModel the model to insert
+     * @return the Problem model
      * @throws DirigibleProblemsException the dirigible problem exception
      */
     public DirigibleProblemsModel createProblem(DirigibleProblemsModel parserErrorsModel)
@@ -33,7 +33,7 @@ public interface IDirigibleProblemsCoreService {
      * @param problemToPersist the model for persistence
      * @throws DirigibleProblemsException the parser errors exception
      */
-    public void createOrUpdateProblem(DirigibleProblemsModel problemToPersist)
+    public void save(DirigibleProblemsModel problemToPersist)
             throws DirigibleProblemsException;
 
     /**
@@ -71,8 +71,9 @@ public interface IDirigibleProblemsCoreService {
      * @param ids list of problem ids
      * @param status of the problem
      * @throws DirigibleProblemsException the dirigible problem exception
+     * @return
      */
-    public void updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException;
+    public int updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException;
 
     /**
      * Gets the Problem.

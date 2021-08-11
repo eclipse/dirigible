@@ -19,26 +19,32 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DirigibleProblemsFacade implements IScriptingFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleProblemsFacade.class);
 
-    public static final void createOrUpdateProblem(String location, String type, String line, String column,
+    public static final void save(String location, String type, String line, String column,
                                             String category, String module, String source, String program) throws DirigibleProblemsException {
 
         IDirigibleProblemsCoreService dirigibleProblemsCoreService = new DirigibleProblemsCoreService();
         DirigibleProblemsModel problemsModel = new DirigibleProblemsModel(location, type, line, column, category, module, source, program);
-        dirigibleProblemsCoreService.createOrUpdateProblem(problemsModel);
+        dirigibleProblemsCoreService.save(problemsModel);
         LOGGER.error(problemsModel.toJson());
     }
 
-    public static final DirigibleProblemsModel findProblem(Long id) throws DirigibleProblemsException {
-        return new DirigibleProblemsCoreService().getProblemById(id);
+    public static final String findProblem(Long id) throws DirigibleProblemsException {
+        return new DirigibleProblemsCoreService().getProblemById(id).toJson();
     }
 
-    public static final List<DirigibleProblemsModel> fetchAllProblems() throws DirigibleProblemsException {
-        return new DirigibleProblemsCoreService().getAllProblems();
+    public static final List<String> fetchAllProblems() throws DirigibleProblemsException {
+        List<DirigibleProblemsModel> problemsList = new DirigibleProblemsCoreService().getAllProblems();
+
+        return problemsList.stream()
+                .map(object -> Objects.toString(object, null))
+                .collect(Collectors.toList());
     }
 
     public static final void deleteProblem(Long id) throws DirigibleProblemsException {

@@ -19,11 +19,11 @@ public final class ProblemsConstants {
      */
     public static final String ACTIVE = "ACTIVE";
     /**
-     * Marked by the used as solved.
+     * Marked by the user as solved.
      */
     public static final String SOLVED = "SOLVED";
     /**
-     * Marked by the used as ignored.
+     * Marked by the user as ignored.
      */
     public static final String IGNORED = "IGNORED";
 }

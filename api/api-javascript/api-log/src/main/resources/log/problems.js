@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.createOrUpdateProblem = function(location, type, line, column, category, module, source, program) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.createOrUpdateProblem(location, type, line, column,
+exports.save = function(location, type, line, column, category, module, source, program) {
+    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.save(location, type, line, column,
         category, module, source, program);
 };
 
