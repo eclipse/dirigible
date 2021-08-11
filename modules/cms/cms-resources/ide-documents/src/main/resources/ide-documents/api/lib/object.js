@@ -19,7 +19,7 @@ exports.getObject = function(path){
 		}		
 		return cmisSession.getObjectByPath(path);
 	} catch(e) {
-		console.error('Error [%s] in getting an object by path [%s]', e.message, path);
+		console.error(`Error [${e.message}] in getting an object by path [${path}]`);
 	}
 	return null;
 };
