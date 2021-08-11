@@ -13,7 +13,7 @@ var java = require('core/v3/java');
 
 exports.list = function() {
 	var tasks = java.call('org.eclipse.dirigible.api.v3.bpm.BpmFacade', 'getTasks', []);
-	return JSON.parse(processId);
+	return JSON.parse(tasks);
 };
 
 exports.getTaskVariables = function(taskId) {
