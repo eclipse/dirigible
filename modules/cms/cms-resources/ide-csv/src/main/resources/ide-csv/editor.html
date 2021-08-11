@@ -42,12 +42,13 @@
 	<script src="js/editor.js"></script>
 	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/csv.css" />
 	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ag-grid.min.css" />
-	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ag-theme-alpine.min.css" />
+	<link type="text/css" rel="stylesheet"
+		href="../../../../services/v4/js/theme/resources.js/ag-theme-alpine.min.css" />
 
 </head>
 
-<body ng-app="csv-editor" ng-controller="CsvViewController as cvc" class="view csv-editor-body" ng-mousedown="handleClick($event)" oncontextmenu="return false"
-	ng-keydown="keyDownFunc($event)">
+<body ng-app="csv-editor" ng-controller="CsvViewController as cvc" class="view csv-editor-body"
+	ng-mousedown="handleClick($event)" oncontextmenu="return false" ng-keydown="keyDownFunc($event)">
 
 	<div class="quick-actions-bar">
 		<input class="form-control" type="text" placeholder="Search..." ng-keyup="searchCsv()" ng-model="searchInput">
@@ -62,8 +63,8 @@
 					<i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 				</button>
 				<ul class="dropdown-menu dropdown-left-manual">
-					<li class="dropdown-item" ng-click="hasHeader(true)" ng-hide="papaConfig.header">Enable header</li>
-					<li class="dropdown-item" ng-click="hasHeader(false)" ng-show="papaConfig.header">Disable header
+					<li class="dropdown-item" ng-click="hasHeader(true)" ng-hide="papaConfig.header">Enable Header</li>
+					<li class="dropdown-item" ng-click="hasHeader(false)" ng-show="papaConfig.header">Disable Header
 					</li>
 				</ul>
 			</div>
@@ -76,19 +77,19 @@
 	<!-- Context menu -->
 	<ul class="dropdown-menu" ng-style="menuStyle">
 		<span ng-show="menuContext.viewport">
-			<li class="dropdown-item" ng-click="addRow()">Add row</li>
+			<li class="dropdown-item" ng-click="addRow()">Add Row</li>
 		</span>
 		<span ng-show="menuContext.row">
-			<li class="dropdown-item" ng-click="addRowAbove()">Add row above</li>
-			<li class="dropdown-item" ng-click="addRowBelow()">Add row below</li>
+			<li class="dropdown-item" ng-click="addRowAbove()">Add Row Above</li>
+			<li class="dropdown-item" ng-click="addRowBelow()">Add Row Below</li>
 			<li class="divider"></li>
-			<li class="dropdown-item" ng-click="deleteRow()">Delete row(s)</li>
+			<li class="dropdown-item" ng-click="deleteRow()">Delete Row(s)</li>
 		</span>
 		<span ng-show="menuContext.column">
-			<li class="dropdown-item" ng-click="addColumn()">Add column</li>
-			<li class="dropdown-item" ng-click="editColumn()">Edit column</li>
+			<li class="dropdown-item" ng-click="addColumn()">Add Column</li>
+			<li class="dropdown-item" ng-click="editColumn()">Edit Column</li>
 			<li class="divider"></li>
-			<li class="dropdown-item" ng-click="deleteColumn()">Delete column</li>
+			<li class="dropdown-item" ng-click="deleteColumn()">Delete Column</li>
 		</span>
 	</ul>
 
