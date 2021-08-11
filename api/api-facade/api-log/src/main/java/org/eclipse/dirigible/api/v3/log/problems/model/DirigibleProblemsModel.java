@@ -19,8 +19,11 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-@Table(name = "DIRIGIBLE_PROBLEMS")
+// TODO issue - support for uniqueconstraint
+@Table(name = "DIRIGIBLE_PROBLEMS", uniqueConstraints=
+        @UniqueConstraint(columnNames={"PROBLEM_LOCATION", "PROBLEM_TYPE", "PROBLEM_LINE", "PROBLEM_COLUMN"}))
 public class DirigibleProblemsModel {
 
     @Id
@@ -31,13 +34,13 @@ public class DirigibleProblemsModel {
     @Column(name = "PROBLEM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String location;
 
-    @Column(name = "PROBLEM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String type;
 
-    @Column(name = "PROBLEM_LINE", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_LINE", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String line;
 
-    @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
@@ -46,19 +49,19 @@ public class DirigibleProblemsModel {
     @Column(name = "PROBLEM_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String createdBy;
 
-    @Column(name = "PROBLEM_CATEGORY", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_CATEGORY", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String category;
 
-    @Column(name = "PROBLEM_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_MODULE", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String module;
 
-    @Column(name = "PROBLEM_SOURCE", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_SOURCE", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String source;
 
-    @Column(name = "PROBLEM_PROGRAM", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_PROGRAM", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String program;
 
-    @Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 120)
+    @Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 8)
     private String status;
 
     public DirigibleProblemsModel() {
@@ -208,11 +211,21 @@ public class DirigibleProblemsModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DirigibleProblemsModel that = (DirigibleProblemsModel) o;
-        return location.equals(that.location) && type.equals(that.type) && line.equals(that.line) && column.equals(that.column);
+        return location.equals(that.location)
+                && type.equals(that.type)
+                && line.equals(that.line)
+                && column.equals(that.column)
+                && createdAt.equals(that.createdAt)
+                && createdBy.equals(that.createdBy)
+                && category.equals(that.category)
+                && module.equals(that.module)
+                && source.equals(that.source)
+                && program.equals(that.program)
+                && status.equals(that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column);
+        return Objects.hash(location, type, line, column, createdAt, createdBy, category, module, source, program, status);
     }
 }

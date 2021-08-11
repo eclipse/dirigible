@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
-    public void createOrUpdateProblem(DirigibleProblemsModel problemToPersist) throws DirigibleProblemsException {
+    public void save(DirigibleProblemsModel problemToPersist) throws DirigibleProblemsException {
 
         DirigibleProblemsModel problemsModel = getProblem(problemToPersist.getLocation(), problemToPersist.getType(),
                 problemToPersist.getLine(), problemToPersist.getColumn());
@@ -92,12 +93,16 @@ public class DirigibleProblemsCoreService implements IDirigibleProblemsCoreServi
     }
 
     @Override
-    public void updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException {
-        try {
-            for(Long id: ids) {
-                updateProblemStatusById(id, status);
-            }
-        } catch (DirigibleProblemsException e) {
+    public int updateStatusMultipleProblems(List<Long> ids, String status) throws DirigibleProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder sql = new StringBuilder("UPDATE DIRIGIBLE_PROBLEMS SET PROBLEM_STATUS = ? WHERE PROBLEM_ID IN (");
+            ids = new ArrayList<>(ids);
+            ids.forEach(id -> sql.append("?,"));
+            //delete the last ,
+            sql.deleteCharAt(sql.length() - 1);
+            sql.append(")");
+            return persistenceManager.execute(connection, sql.toString(), status, ids);
+        } catch (SQLException e) {
             throw new DirigibleProblemsException(e);
         }
     }
