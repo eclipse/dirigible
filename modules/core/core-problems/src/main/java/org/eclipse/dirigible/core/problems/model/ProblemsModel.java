@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.api.v3.log.problems.model;
+package org.eclipse.dirigible.core.problems.model;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
@@ -21,10 +21,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-// TODO issue - support for uniqueconstraint
 @Table(name = "DIRIGIBLE_PROBLEMS", uniqueConstraints=
         @UniqueConstraint(columnNames={"PROBLEM_LOCATION", "PROBLEM_TYPE", "PROBLEM_LINE", "PROBLEM_COLUMN"}))
-public class DirigibleProblemsModel {
+public class ProblemsModel {
 
     @Id
     @GeneratedValue
@@ -64,17 +63,17 @@ public class DirigibleProblemsModel {
     @Column(name = "PROBLEM_STATUS", columnDefinition = "VARCHAR", nullable = false, length = 8)
     private String status;
 
-    public DirigibleProblemsModel() {
+    public ProblemsModel() {
     }
 
-    public DirigibleProblemsModel(String location,
-                                  String type,
-                                  String line,
-                                  String column,
-                                  String category,
-                                  String module,
-                                  String source,
-                                  String program) {
+    public ProblemsModel(String location,
+                         String type,
+                         String line,
+                         String column,
+                         String category,
+                         String module,
+                         String source,
+                         String program) {
         this.location = location;
         this.type = type;
         this.line = line;
@@ -85,15 +84,15 @@ public class DirigibleProblemsModel {
         this.program = program;
     }
 
-    public DirigibleProblemsModel(String location,
-                                  String type,
-                                  String line,
-                                  String column,
-                                  String category,
-                                  String module,
-                                  String source,
-                                  String program,
-                                  String status) {
+    public ProblemsModel(String location,
+                         String type,
+                         String line,
+                         String column,
+                         String category,
+                         String module,
+                         String source,
+                         String program,
+                         String status) {
         this.location = location;
         this.type = type;
         this.line = line;
@@ -210,7 +209,7 @@ public class DirigibleProblemsModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DirigibleProblemsModel that = (DirigibleProblemsModel) o;
+        ProblemsModel that = (ProblemsModel) o;
         return location.equals(that.location)
                 && type.equals(that.type)
                 && line.equals(that.line)

@@ -23,6 +23,7 @@
         <module>core-git</module>
 		<module>core-indexing</module>
 		<module>core-messaging</module>
+		<module>core-problems</module>
 		<module>core-publisher</module>
 		<module>core-registry</module>
 		<module>core-scheduler</module>

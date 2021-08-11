@@ -9,15 +9,15 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.api.v3.log.problems.exceptions;
+package org.eclipse.dirigible.core.problems.exceptions;
 
-public class DirigibleProblemsException extends Exception {
+public class ProblemsException extends Exception {
 
-    public DirigibleProblemsException() {
+    public ProblemsException() {
         super();
     }
 
-    public DirigibleProblemsException(Throwable cause) {
+    public ProblemsException(Throwable cause) {
         super(cause);
     }
 }
