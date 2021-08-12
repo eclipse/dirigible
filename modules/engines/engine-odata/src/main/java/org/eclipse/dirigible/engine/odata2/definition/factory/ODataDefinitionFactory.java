@@ -26,6 +26,16 @@ public class ODataDefinitionFactory {
 		odataDefinition.setHash(DigestUtils.md5Hex(data));
 		odataDefinition.setCreatedBy(UserFacade.getName());
 		odataDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+		
+		odataDefinition.getAssociations().forEach(association -> {
+			if (association.getFrom().getProperty() != null) {
+				association.getFrom().getProperties().add(association.getFrom().getProperty());
+			}
+			if (association.getTo().getProperty() != null) {
+				association.getTo().getProperties().add(association.getFrom().getProperty());
+			}
+		});
+		
 		return odataDefinition;
 	}
 

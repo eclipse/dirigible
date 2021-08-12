@@ -11,10 +11,11 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -22,7 +23,9 @@ public class ODataAssociationEndDefinition {
 
     private String entity;
 
-    private ArrayList<String> property;
+    private String property;
+    
+    private List<String> properties = new ArrayList<String>();
 
     private String column;
 
