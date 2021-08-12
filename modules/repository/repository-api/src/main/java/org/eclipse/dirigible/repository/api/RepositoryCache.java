@@ -28,8 +28,8 @@ public class RepositoryCache {
 	private static void initialize() {
 		if (!Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_DISABLE_CACHE, "false"))) {
 			if (cache == null) {
-				var timePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10");
-				var sizePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100");
+				String timePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10");
+				String sizePolicy = Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100");
 
 				cache = Caffeine.newBuilder()
 						.expireAfterAccess(Long.parseLong(timePolicy), TimeUnit.MINUTES)
