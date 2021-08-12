@@ -63,7 +63,7 @@ spec:
           {{- if .Values.volume.enabled }}
           volumeMounts:
           - name: {{ include "dirigible.fullname" . }}-volume
-            mountPath: /usr/local/tomcat/target/dirigible
+            mountPath: /usr/local/tomcat/target/dirigible/repository
           {{- end }}
           env:
             {{- if .Values.kyma.enabled }}
