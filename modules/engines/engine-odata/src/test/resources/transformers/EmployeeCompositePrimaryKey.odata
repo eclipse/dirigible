@@ -34,7 +34,7 @@
 			"name": "Employees_Phones",
 			"from": {
 				"entity": "employee",
-				"property": [
+				"properties": [
 					"COMPANY_ID",
 					"EMPLOYEE_NUMBER"
 				],
@@ -42,7 +42,7 @@
 			},
 			"to": {
 				"entity": "phone",
-				"property": [
+				"properties": [
 					"FK_COMPANY_ID",
 					"FK_EMPLOYEE_NUMBER"
 				],
@@ -53,14 +53,14 @@
 			"name": "Phone_Address",
 			"from": {
 				"entity": "phone",
-				"property": [
+				"properties": [
 					"NUMBER"
 				],
 				"multiplicity": "1"
 			},
 			"to": {
 				"entity": "address",
-				"property": [
+				"properties": [
 					"FK_PHONE"
 				],
 				"multiplicity": "1"

@@ -106,7 +106,7 @@ public class OData2ODataMTransformer {
                 String toRoleEntity = association.getTo().getEntity();
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRoleEntity, association.getName());
                 String dependentEntity = toSetEntity.getName();
-                String fkElement = association.getFrom().getProperty().stream().map(x -> "\"" + x + "\"").collect(Collectors.joining(","));
+                String fkElement = association.getFrom().getProperties().stream().map(x -> "\"" + x + "\"").collect(Collectors.joining(","));
                 return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, toSetEntity, dependentEntity, fkElement);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             if (!assembleRefNav.isEmpty()) {
@@ -120,7 +120,7 @@ public class OData2ODataMTransformer {
                 String toRoleEntity = association.getFrom().getEntity();
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRoleEntity, association.getName());
                 String principleEntity = toSetEntity.getName();
-                String fkElement = association.getTo().getProperty().stream().map(x -> "\"" + x + "\"").collect(Collectors.joining(","));
+                String fkElement = association.getTo().getProperties().stream().map(x -> "\"" + x + "\"").collect(Collectors.joining(","));
                 return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, toSetEntity, principleEntity, fkElement);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             if (!assembleRefNav.isEmpty()) {
@@ -159,7 +159,7 @@ public class OData2ODataMTransformer {
         String tableName = ODataMetadataUtil.getTableNameByEntity(model, assEndDefinition.getEntity());
         PersistenceTableModel dbTable = dbMetadataUtil.getTableMetadata(tableName, dbMetadataUtil.getOdataArtifactTypeSchema(tableName));
         ArrayList<String> invalidProps = new ArrayList<>();
-        assEndDefinition.getProperty().forEach(assProp -> {
+        assEndDefinition.getProperties().forEach(assProp -> {
             List<PersistenceTableColumnModel> consistentProps = dbTable.getColumns().stream().filter(prop -> prop.getName().equals(assProp)).collect(Collectors.toList());
             if (consistentProps.isEmpty()) {
                 invalidProps.add(assProp);
@@ -168,7 +168,7 @@ public class OData2ODataMTransformer {
         if (!invalidProps.isEmpty()) {
             throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. Odata column definitions for %s do not match the DB table column definition.", assEndDefinition.getEntity(), invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
         }
-        if (assEndDefinition.getProperty().size() > dbTable.getColumns().size()) {
+        if (assEndDefinition.getProperties().size() > dbTable.getColumns().size()) {
             throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. The number of defined odata columns do not match the number of DB table columns", assEndDefinition.getEntity()));
         }
     }
