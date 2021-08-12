@@ -20,7 +20,7 @@ import java.util.List;
 public interface IProblemsCoreService extends ICoreService {
 
     /**
-     * Creates the Problem.
+     * Create Problem.
      * @param parserErrorsModel the model to insert
      * @return the Problem model
      * @throws ProblemsException the dirigible problem exception
@@ -32,9 +32,9 @@ public interface IProblemsCoreService extends ICoreService {
      * Checks if the Problem entry exists and either creates it or updates it.
      * Location, type, line and column are unique for each problem. Status is updated separately.
      *
-     * @param location the location of the file with the error
-     * @param type     the type of the error
-     * @param line     the line of the error
+     * @param location   the location of the file with the error
+     * @param type       the type of the error
+     * @param line       the line of the error
      * @param column     the column of the error
      * @param category   the category of the error, e.g. the submodule
      * @param module     the module within the program, in which the error was found
@@ -52,7 +52,7 @@ public interface IProblemsCoreService extends ICoreService {
      * @param location the location of the file with the error
      * @param type     the type of the error
      * @param line     the line of the error
-     * @param column     the column of the error
+     * @param column   the column of the error
      * @return true, if successful
      * @throws ProblemsException the dirigible problem exception
      */
@@ -69,7 +69,7 @@ public interface IProblemsCoreService extends ICoreService {
     /**
      * Updates the status of a Problem by the id.
      *
-     * @param id of the problem
+     * @param id     of the problem
      * @param status of the problem
      * @throws ProblemsException the dirigible problem exception
      */
@@ -78,10 +78,10 @@ public interface IProblemsCoreService extends ICoreService {
     /**
      * Updates the status of multiple Problems by their id.
      *
-     * @param ids list of problem ids
+     * @param ids    list of problem ids
      * @param status of the problem
+     * @return the result status of the update statement execution
      * @throws ProblemsException the dirigible problem exception
-     * @return
      */
     public int updateStatusMultipleProblems(List<Long> ids, String status) throws ProblemsException;
 
@@ -91,7 +91,7 @@ public interface IProblemsCoreService extends ICoreService {
      * @param location the location of the file with the error
      * @param type     the type of the error
      * @param line     the line of the error
-     * @param column     the column of the error
+     * @param column   the column of the error
      * @return the Problems model
      * @throws ProblemsException the dirigible problem exception
      */
@@ -109,7 +109,7 @@ public interface IProblemsCoreService extends ICoreService {
     /**
      * Gets all Problems
      *
-     * @return the Problem model list
+     * @return Problem model list
      * @throws ProblemsException the dirigible problem exception
      */
     public List<ProblemsModel> getAllProblems() throws ProblemsException;
@@ -126,8 +126,8 @@ public interface IProblemsCoreService extends ICoreService {
      * Deletes all Problems by their status.
      *
      * @param status of the problem
+     * @return the result status of the delete statement execution
      * @throws ProblemsException the dirigible problem exception
-     * @return
      */
     public int deleteProblemsByStatus(String status) throws ProblemsException;
 
