@@ -14,34 +14,34 @@ exports.SOLVED = "SOLVED";
 exports.IGNORED = "IGNORED";
 
 exports.save = function(location, type, line, column, category, module, source, program) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.save(location, type, line, column,
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.save(location, type, line, column,
         category, module, source, program);
 };
 
 exports.findProblem = function(id) {
-    return org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.findProblem(id);
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.findProblem(id);
 };
 
 exports.fetchAllProblems = function() {
-    return org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.fetchAllProblems();
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
 };
 
 exports.deleteProblem = function(id) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.deleteProblem(id);
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.deleteProblem(id);
 };
 
 exports.deleteAllByStatus = function(status) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.deleteAllByStatus(status);
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.deleteAllByStatus(status);
 };
 
 exports.clearAllProblems = function() {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.clearAllProblems();
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.clearAllProblems();
 };
 
 exports.updateStatus = function(id, status) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.updateStatus(id, status);
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.updateStatus(id, status);
 };
 
 exports.updateStatusMultiple = function(ids, status) {
-    org.eclipse.dirigible.api.v3.log.problems.facade.DirigibleProblemsFacade.updateStatusMultiple(ids, status);
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.updateStatusMultiple(ids, status);
 };
