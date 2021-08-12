@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-core-parent</artifactId>
+		<artifactId>dirigible-templating-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Generation - Mustache</name>
-	<artifactId>dirigible-core-generation-mustache</artifactId>
+	<name>Core - Templating - Mustache</name>
+	<artifactId>dirigible-core-templating-mustache</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -33,7 +33,7 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-generation</artifactId>
+			<artifactId>dirigible-core-templating</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
     	</dependency>
 

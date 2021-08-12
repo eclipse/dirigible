@@ -24,7 +24,6 @@
 		<module>ide-console</module>
 		<module>ide-core</module>
 		<module>ide-databases</module>
-		<module>ide-generation</module>
 		<module>ide-git</module>
 		<module>ide-publisher</module>
 		<module>ide-terminal</module>
