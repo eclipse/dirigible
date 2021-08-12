@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-core-parent</artifactId>
+		<artifactId>dirigible-templating-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Generation - Velocity</name>
-	<artifactId>dirigible-core-generation-velocity</artifactId>
+	<name>Core - Templating</name>
+	<artifactId>dirigible-core-templating</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -33,16 +33,9 @@
     <dependencies>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-core-generation</artifactId>
+			<artifactId>dirigible-commons-api</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
     	</dependency>
-
-    	<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
-			<type>jar</type>
-		</dependency>
     </dependencies>
 
 </project>

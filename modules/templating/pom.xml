@@ -9,23 +9,18 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Core - Parent</name>
-	<artifactId>dirigible-core-parent</artifactId>
+	<name>Templating - Parent</name>
+	<artifactId>dirigible-templating-parent</artifactId>
     <packaging>pom</packaging>
 
 	<modules>
-		<module>core-all</module>
-		<module>core-extensions</module>
-        <module>core-git</module>
-		<module>core-indexing</module>
-		<module>core-messaging</module>
-		<module>core-publisher</module>
-		<module>core-registry</module>
-		<module>core-scheduler</module>
-		<module>core-security</module>
-		<module>core-workspace</module>
-		<module>core-migrations</module>
-		<module>core-websockets</module>
+		<module>api-facade-templating</module>
+		<module>templating-all</module>
+		<module>templating-core</module>
+		<module>templating-javascript</module>
+		<module>templating-mustache</module>
+		<module>templating-velocity</module>
+		<module>ide-templating</module>
 	</modules>
 
 </project>

@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ide-service-parent</artifactId>
+		<artifactId>dirigible-templating-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Service - Generation</name>
-	<artifactId>dirigible-ide-service-generation</artifactId>
+	<name>API - Facade - Templating</name>
+	<artifactId>dirigible-api-facade-templating</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -36,52 +36,37 @@
             <artifactId>dirigible-commons-api</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-publisher</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-api-facade-core</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-service-repository</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-workspace</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+    	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-repository-api</artifactId>
+            <artifactId>dirigible-core-templating</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-workspace</artifactId>
+            <artifactId>dirigible-repository-local</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-core</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-service-repository</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ide-service-workspaces</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-api</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-engine-javascript</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-generation</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-
+        
     </dependencies>
 
 </project>

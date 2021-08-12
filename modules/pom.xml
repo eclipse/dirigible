@@ -25,6 +25,7 @@
 		<module>bpm</module>
 		<module>security</module>
 		<module>odata</module>
+		<module>templating</module>
 	</modules>
 
 </project>
