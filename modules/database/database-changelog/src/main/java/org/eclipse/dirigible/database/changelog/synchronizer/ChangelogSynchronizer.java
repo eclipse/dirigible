@@ -236,7 +236,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 		
-		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_SCHEMA)) {
+		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_CHANGELOG)) {
 			DataStructureChangelogModel schemaModel = dataStructuresCoreService.parseChangelog(registryPath, contentAsString);
 			schemaModel.setLocation(registryPath);
 			synchronizeSchema(schemaModel);
