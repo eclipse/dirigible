@@ -16,6 +16,7 @@ import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 import org.eclipse.dirigible.core.problems.service.ProblemsCoreService;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProblemsFacade implements IScriptingFacade {
 
@@ -29,8 +30,12 @@ public class ProblemsFacade implements IScriptingFacade {
         return new ProblemsCoreService().getProblemById(id).toJson();
     }
 
-    public static final List<ProblemsModel> fetchAllProblems() throws ProblemsException {
-        return new ProblemsCoreService().getAllProblems();
+    public static final List<String> fetchAllProblems() throws ProblemsException {
+        List<ProblemsModel> problemsList = new ProblemsCoreService().getAllProblems();
+
+        return problemsList.stream()
+                .map(ProblemsModel::toJson)
+                .collect(Collectors.toList());
     }
 
     public static final void deleteProblem(Long id) throws ProblemsException {
