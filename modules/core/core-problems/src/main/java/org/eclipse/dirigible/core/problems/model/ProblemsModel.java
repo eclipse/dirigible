@@ -214,8 +214,6 @@ public class ProblemsModel {
                 && type.equals(that.type)
                 && line.equals(that.line)
                 && column.equals(that.column)
-                && createdAt.equals(that.createdAt)
-                && createdBy.equals(that.createdBy)
                 && category.equals(that.category)
                 && module.equals(that.module)
                 && source.equals(that.source)
@@ -225,6 +223,6 @@ public class ProblemsModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column, createdAt, createdBy, category, module, source, program, status);
+        return Objects.hash(location, type, line, column, category, module, source, program, status);
     }
 }

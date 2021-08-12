@@ -11,28 +11,20 @@
  */
 package org.eclipse.dirigible.api.v3.problems;
 
-import org.eclipse.dirigible.core.problems.api.IProblemsCoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 import org.eclipse.dirigible.core.problems.service.ProblemsCoreService;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ProblemsFacade implements IScriptingFacade {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsFacade.class);
-
     public static final void save(String location, String type, String line, String column,
                                             String category, String module, String source, String program) throws ProblemsException {
 
-        IProblemsCoreService dirigibleProblemsCoreService = new ProblemsCoreService();
-        ProblemsModel problemsModel = new ProblemsModel(location, type, line, column, category, module, source, program);
-        dirigibleProblemsCoreService.save(problemsModel);
-        LOGGER.error(problemsModel.toJson());
+        new ProblemsCoreService().save(location, type, line, column, category, module, source, program);
     }
 
     public static final String findProblem(Long id) throws ProblemsException {

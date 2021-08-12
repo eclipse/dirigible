@@ -19,6 +19,9 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -30,6 +33,7 @@ import java.util.List;
 
 public class ProblemsCoreService implements IProblemsCoreService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
 
@@ -48,19 +52,22 @@ public class ProblemsCoreService implements IProblemsCoreService {
     }
 
     @Override
-    public void save(ProblemsModel problemToPersist) throws ProblemsException {
+    public void save(String location, String type, String line, String column,
+                     String category, String module, String source, String program) throws ProblemsException {
 
-        ProblemsModel problemsModel = getProblem(problemToPersist.getLocation(), problemToPersist.getType(),
-                problemToPersist.getLine(), problemToPersist.getColumn());
+        ProblemsModel problemToPersist = new ProblemsModel(location, type, line, column, category, module, source, program);
+        ProblemsModel problemsModel = getProblem(location, type, line, column);
         if (problemsModel == null) {
             createProblem(problemToPersist);
+            LOGGER.error("Created a new Problem: " +problemToPersist.toJson());
         } else {
             if (!problemsModel.equals(problemToPersist)) {
-                problemsModel.setLocation(problemToPersist.getLocation());
-                problemsModel.setType(problemToPersist.getType());
-                problemsModel.setLine(problemToPersist.getLine());
-                problemsModel.setSource(problemToPersist.getSource());
+                problemsModel.setCategory(category);
+                problemsModel.setModule(module);
+                problemsModel.setSource(source);
+                problemsModel.setProgram(program);
                 updateProblem(problemsModel);
+                LOGGER.error("Updated an existing Problem: " +problemsModel.toJson());
             }
         }
     }

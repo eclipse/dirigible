@@ -11,12 +11,13 @@
  */
 package org.eclipse.dirigible.core.problems.api;
 
+import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 
 import java.util.List;
 
-public interface IProblemsCoreService {
+public interface IProblemsCoreService extends ICoreService {
 
     /**
      * Creates the Problem.
@@ -29,11 +30,20 @@ public interface IProblemsCoreService {
 
     /**
      * Checks if the Problem entry exists and either creates it or updates it.
+     * Location, type, line and column are unique for each problem. Status is updated separately.
      *
-     * @param problemToPersist the model for persistence
+     * @param location the location of the file with the error
+     * @param type     the type of the error
+     * @param line     the line of the error
+     * @param column     the column of the error
+     * @param category   the category of the error, e.g. the submodule
+     * @param module     the module within the program, in which the error was found
+     * @param source     the action that produced the error
+     * @param program    the program, in which the error was found
      * @throws ProblemsException the parser errors exception
      */
-    public void save(ProblemsModel problemToPersist)
+    public void save(String location, String type, String line, String column,
+                     String category, String module, String source, String program)
             throws ProblemsException;
 
     /**
