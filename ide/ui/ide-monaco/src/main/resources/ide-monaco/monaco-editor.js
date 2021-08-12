@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  */
 
-exports.getEditor = function() {
+exports.getEditor = function () {
 	var editor = {
 		"id": "monaco",
 		"name": "Monaco",
@@ -33,6 +33,7 @@ exports.getEditor = function() {
 			"application/json+access",
 			"application/json+roles",
 			"application/json+csvim",
+			"application/hdbti",
 			"application/xml",
 			"application/bpmn+xml",
 			"application/database-schema-model+xml",
