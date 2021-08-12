@@ -12,14 +12,16 @@
 package org.eclipse.dirigible.runtime.ide.core.synchronizer;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.commons.health.HealthStatus;
 import org.eclipse.dirigible.commons.health.HealthStatus.Jobs.JobStatus;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +35,18 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void synchronize() {
 		try {
-			HealthStatus.getInstance().getJobs().setStatus(IDECoreSynchronizerJobDefinitionProvider.IDE_CORE_SYNCHRONIZER_JOB, JobStatus.Succeeded);
-			String code = new StringBuilder()
-					.append("var moduleInfoCache = require(\"ide-monaco-extensions/api/utils/moduleInfoCache\");\n")
-					.append("moduleInfoCache.refresh();").toString();
-			engine.executeServiceCode(code, new HashMap<Object, Object>());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			executor.submit(() -> {
+				HealthStatus.getInstance().getJobs().setStatus(IDECoreSynchronizerJobDefinitionProvider.IDE_CORE_SYNCHRONIZER_JOB, JobStatus.Succeeded);
+				String code = new StringBuilder()
+						.append("var moduleInfoCache = require(\"ide-monaco-extensions/api/utils/moduleInfoCache\");\n")
+						.append("moduleInfoCache.refresh();").toString();
+				try {
+					engine.executeServiceCode(code, new HashMap<Object, Object>());
+				} catch (ScriptingException e) {
+					logger.error(e.getMessage(), e);
+				}
+			});
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}
