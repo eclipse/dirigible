@@ -421,6 +421,9 @@ public class ContentTypeHelper {
 	/** The Constant AUDIO_X_AIFF. */
 	public static final String AUDIO_X_AIFF = "audio/x-aiff";
 
+	/** The Constant APPLICATION_HDBTI. */
+	public static final String APPLICATION_HDBTI = "application/hdbti";
+
 	/** The Constant APPLICATION_POSTSCRIPT. */
 	public static final String APPLICATION_POSTSCRIPT = "application/postscript";
 
@@ -674,6 +677,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("extension", APPLICATION_JSON_EXTENSION); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("access", APPLICATION_JSON_ACCESS); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("roles", APPLICATION_JSON_ROLES); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("hdbti", APPLICATION_HDBTI); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("csvim", APPLICATION_JSON_CSVIM); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("command", APPLICATION_JSON_COMMAND); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("form", APPLICATION_JSON_FORM); //$NON-NLS-1$
