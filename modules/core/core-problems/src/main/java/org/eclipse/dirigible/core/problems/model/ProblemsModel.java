@@ -217,8 +217,7 @@ public class ProblemsModel {
                 && category.equals(that.category)
                 && module.equals(that.module)
                 && source.equals(that.source)
-                && program.equals(that.program)
-                && status.equals(that.status);
+                && program.equals(that.program);
     }
 
     @Override

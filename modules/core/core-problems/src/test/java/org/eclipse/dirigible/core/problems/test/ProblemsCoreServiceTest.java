@@ -39,11 +39,11 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
         problemsCoreService.deleteAll();
         ProblemsModel problemsModel = new ProblemsModel("Test/test.xsjs", "Runtime", "1", "2",
                 "JUnit", "API", "JUnit Test", "Dirigible");
+
         problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(),
                 problemsModel.getLine(), problemsModel.getColumn(), problemsModel.getCategory(),
                 problemsModel.getModule(), problemsModel.getSource(), problemsModel.getProgram());
-        // match the insert status
-        problemsModel.setStatus(ProblemsConstants.ACTIVE);
+
         ProblemsModel result = problemsCoreService.getProblem(problemsModel.getLocation(), problemsModel.getType(),
                 problemsModel.getLine(), problemsModel.getColumn());
         assertEquals(problemsModel, result);
