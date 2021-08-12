@@ -19,11 +19,11 @@ exports.save = function(location, type, line, column, category, module, source, 
 };
 
 exports.findProblem = function(id) {
-    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.findProblem(id);
+    return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.findProblem(id);
 };
 
 exports.fetchAllProblems = function() {
-    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
+    return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
 };
 
 exports.deleteProblem = function(id) {
