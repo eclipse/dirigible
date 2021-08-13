@@ -47,7 +47,7 @@ public class PublishRequestDefinition {
 	private String registry; // null means default to IRepositoryStructure.REGISTRY_PUBLIC
 
 	/** The created by. */
-	@Column(name = "PUBREQ_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "PUBREQ_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	/** The created at. */

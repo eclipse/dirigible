@@ -47,7 +47,7 @@ public class ODataHandlerDefinition {
 	@Column(name = "ODATAH_HANDLER", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String handler;
 	
-	@Column(name = "ODATAH_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "ODATAH_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	@Column(name = "ODATAH_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
