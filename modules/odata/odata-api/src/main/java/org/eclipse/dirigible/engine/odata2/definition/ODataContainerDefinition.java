@@ -30,7 +30,7 @@ public class ODataContainerDefinition {
 	@Column(name = "ODATAC_CONTENT", columnDefinition = "BLOB", nullable = true)
 	private byte[] content;
 
-	@Column(name = "ODATAC_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "ODATAC_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	@Column(name = "ODATAC_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
