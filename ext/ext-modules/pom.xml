@@ -32,7 +32,7 @@
 		<content.scm.server>github</content.scm.server>
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
+		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 	</properties>
 	
@@ -59,6 +59,30 @@
 			<build>
 				<finalName>${project.artifactId}</finalName>
 				<plugins>
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-scm-plugin</artifactId>

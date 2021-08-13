@@ -621,7 +621,7 @@
 		<content.scm.server>github</content.scm.server>
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
+		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 		<license.header.location>${maven.multiModuleProjectDirectory}/licensing-header.txt</license.header.location>
 

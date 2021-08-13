@@ -76,7 +76,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		// try from the classloader
 		try {
 			String location = IRepository.SEPARATOR + module + (extension != null ? extension : "");
-			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
+			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible" + location);
 			try {
 				if (bundled != null) {
 					return IOUtils.toByteArray(bundled);

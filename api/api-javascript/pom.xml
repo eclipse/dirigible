@@ -48,6 +48,30 @@
 			<build>
 				<finalName>${project.artifactId}</finalName>
 				<plugins>
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-scm-plugin</artifactId>

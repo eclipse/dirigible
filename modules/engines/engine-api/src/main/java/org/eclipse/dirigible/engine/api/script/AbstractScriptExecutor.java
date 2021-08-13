@@ -111,7 +111,7 @@ public abstract class AbstractScriptExecutor extends AbstractResourceExecutor im
 		}
 		
 		String ext = extension != null ? extension : "";
-		InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(IRepository.SEPARATOR + module + ext);
+		InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible/" + module + ext);
 		return bundled != null;
 	}
 

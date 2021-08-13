@@ -1,0 +1,303 @@
+/*
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+// Bottom Up Profiling shows the entire callstack backwards:
+// The root node is a representation of each individual function called, and each child of that node represents
+// a reverse-callstack showing how many of those calls came from it. So, unlike top-down, the statistics in
+// each child still represent the root node. We have to be particularly careful of recursion with this mode
+// because a root node can represent itself AND an ancestor.
+
+import * as Platform from '../platform/platform.js';
+import * as SDK from '../sdk/sdk.js';  // eslint-disable-line no-unused-vars
+import * as UI from '../ui/ui.js';     // eslint-disable-line no-unused-vars
+
+import {Formatter, ProfileDataGridNode, ProfileDataGridTree} from './ProfileDataGrid.js';  // eslint-disable-line no-unused-vars
+import {TopDownProfileDataGridTree} from './TopDownProfileDataGrid.js';  // eslint-disable-line no-unused-vars
+
+/**
+ * @unrestricted
+ */
+export class BottomUpProfileDataGridNode extends ProfileDataGridNode {
+  /**
+   * @param {!SDK.ProfileTreeModel.ProfileNode} profileNode
+   * @param {!TopDownProfileDataGridTree} owningTree
+   */
+  constructor(profileNode, owningTree) {
+    super(profileNode, owningTree, !!profileNode.parent && !!profileNode.parent.parent);
+    this._remainingNodeInfos = [];
+  }
+
+  /**
+   * @param {!BottomUpProfileDataGridNode|!BottomUpProfileDataGridTree} container
+   */
+  static _sharedPopulate(container) {
+    const remainingNodeInfos = container._remainingNodeInfos;
+    const count = remainingNodeInfos.length;
+
+    for (let index = 0; index < count; ++index) {
+      const nodeInfo = remainingNodeInfos[index];
+      const ancestor = nodeInfo.ancestor;
+      const focusNode = nodeInfo.focusNode;
+      let child = container.findChild(ancestor);
+
+      // If we already have this child, then merge the data together.
+      if (child) {
+        const totalAccountedFor = nodeInfo.totalAccountedFor;
+
+        child.self += focusNode.self;
+
+        if (!totalAccountedFor) {
+          child.total += focusNode.total;
+        }
+      } else {
+        // If not, add it as a true ancestor.
+        // In heavy mode, we take our visual identity from ancestor node...
+        child = new BottomUpProfileDataGridNode(ancestor, /** @type {!TopDownProfileDataGridTree} */ (container.tree));
+
+        if (ancestor !== focusNode) {
+          // But the actual statistics from the "root" node (bottom of the callstack).
+          child.self = focusNode.self;
+          child.total = focusNode.total;
+        }
+
+        container.appendChild(child);
+      }
+
+      const parent = ancestor.parent;
+      if (parent && parent.parent) {
+        nodeInfo.ancestor = parent;
+        child._remainingNodeInfos.push(nodeInfo);
+      }
+    }
+
+    delete container._remainingNodeInfos;
+  }
+
+  /**
+   * @param {!ProfileDataGridNode} profileDataGridNode
+   */
+  _takePropertiesFromProfileDataGridNode(profileDataGridNode) {
+    this.save();
+    this.self = profileDataGridNode.self;
+    this.total = profileDataGridNode.total;
+  }
+
+  /**
+   * When focusing, we keep just the members of the callstack.
+   * @param {!ProfileDataGridNode} child
+   */
+  _keepOnlyChild(child) {
+    this.save();
+
+    this.removeChildren();
+    this.appendChild(child);
+  }
+
+  /**
+   * @param {string} aCallUID
+   */
+  _exclude(aCallUID) {
+    if (this._remainingNodeInfos) {
+      this.populate();
+    }
+
+    this.save();
+
+    const children = this.children;
+    let index = this.children.length;
+
+    while (index--) {
+      children[index]._exclude(aCallUID);
+    }
+
+    const child = this.childrenByCallUID.get(aCallUID);
+
+    if (child) {
+      this.merge(child, true);
+    }
+  }
+
+  /**
+   * @override
+   */
+  restore() {
+    super.restore();
+
+    if (!this.children.length) {
+      this.setHasChildren(this._willHaveChildren(this.profileNode));
+    }
+  }
+
+  /**
+   * @override
+   * @param {!ProfileDataGridNode} child
+   * @param {boolean} shouldAbsorb
+   */
+  merge(child, shouldAbsorb) {
+    this.self -= child.self;
+    super.merge(child, shouldAbsorb);
+  }
+
+  /**
+   * @override
+   */
+  populateChildren() {
+    BottomUpProfileDataGridNode._sharedPopulate(this);
+  }
+
+  _willHaveChildren(profileNode) {
+    // In bottom up mode, our parents are our children since we display an inverted tree.
+    // However, we don't want to show the very top parent since it is redundant.
+    return !!(profileNode.parent && profileNode.parent.parent);
+  }
+}
+
+/**
+ * @unrestricted
+ */
+export class BottomUpProfileDataGridTree extends ProfileDataGridTree {
+  /**
+   * @param {!Formatter} formatter
+   * @param {!UI.SearchableView.SearchableView} searchableView
+   * @param {!SDK.ProfileTreeModel.ProfileNode} rootProfileNode
+   * @param {number} total
+   */
+  constructor(formatter, searchableView, rootProfileNode, total) {
+    super(formatter, searchableView, total);
+    this.deepSearch = false;
+
+    // Iterate each node in pre-order.
+    let profileNodeUIDs = 0;
+    const profileNodeGroups = [[], [rootProfileNode]];
+    /** @type {!Map<string, !Set<number>>} */
+    const visitedProfileNodesForCallUID = new Map();
+
+    this._remainingNodeInfos = [];
+
+    for (let profileNodeGroupIndex = 0; profileNodeGroupIndex < profileNodeGroups.length; ++profileNodeGroupIndex) {
+      const parentProfileNodes = profileNodeGroups[profileNodeGroupIndex];
+      const profileNodes = profileNodeGroups[++profileNodeGroupIndex];
+      const count = profileNodes.length;
+
+      for (let index = 0; index < count; ++index) {
+        const profileNode = profileNodes[index];
+
+        if (!profileNode.UID) {
+          profileNode.UID = ++profileNodeUIDs;
+        }
+
+        if (profileNode.parent) {
+          // The total time of this ancestor is accounted for if we're in any form of recursive cycle.
+          let visitedNodes = visitedProfileNodesForCallUID.get(profileNode.callUID);
+          let totalAccountedFor = false;
+
+          if (!visitedNodes) {
+            visitedNodes = new Set();
+            visitedProfileNodesForCallUID.set(profileNode.callUID, visitedNodes);
+          } else {
+            // The total time for this node has already been accounted for iff one of it's parents has already been visited.
+            // We can do this check in this style because we are traversing the tree in pre-order.
+            const parentCount = parentProfileNodes.length;
+            for (let parentIndex = 0; parentIndex < parentCount; ++parentIndex) {
+              if (visitedNodes.has(parentProfileNodes[parentIndex].UID)) {
+                totalAccountedFor = true;
+                break;
+              }
+            }
+          }
+
+          visitedNodes.add(profileNode.UID);
+
+          this._remainingNodeInfos.push(
+              {ancestor: profileNode, focusNode: profileNode, totalAccountedFor: totalAccountedFor});
+        }
+
+        const children = profileNode.children;
+        if (children.length) {
+          profileNodeGroups.push(parentProfileNodes.concat([profileNode]));
+          profileNodeGroups.push(children);
+        }
+      }
+    }
+
+    // Populate the top level nodes.
+    ProfileDataGridNode.populate(this);
+
+    return this;
+  }
+
+  /**
+   * When focusing, we keep the entire callstack up to this ancestor.
+   * @param {!ProfileDataGridNode} profileDataGridNode
+   */
+  focus(profileDataGridNode) {
+    if (!profileDataGridNode) {
+      return;
+    }
+
+    this.save();
+
+    let currentNode = profileDataGridNode;
+    let focusNode = profileDataGridNode;
+
+    while (currentNode.parent && (currentNode instanceof ProfileDataGridNode)) {
+      currentNode._takePropertiesFromProfileDataGridNode(profileDataGridNode);
+
+      focusNode = currentNode;
+      currentNode = currentNode.parent;
+
+      if (currentNode instanceof ProfileDataGridNode) {
+        currentNode._keepOnlyChild(focusNode);
+      }
+    }
+
+    this.children = [focusNode];
+    this.total = profileDataGridNode.total;
+  }
+
+  /**
+   * @param {!ProfileDataGridNode} profileDataGridNode
+   */
+  exclude(profileDataGridNode) {
+    if (!profileDataGridNode) {
+      return;
+    }
+
+    this.save();
+
+    const excludedCallUID = profileDataGridNode.callUID;
+    const excludedTopLevelChild = this.childrenByCallUID.get(excludedCallUID);
+
+    // If we have a top level node that is excluded, get rid of it completely (not keeping children),
+    // since bottom up data relies entirely on the root node.
+    if (excludedTopLevelChild) {
+      Platform.ArrayUtilities.removeElement(this.children, excludedTopLevelChild);
+    }
+
+    const children = this.children;
+    const count = children.length;
+
+    for (let index = 0; index < count; ++index) {
+      children[index]._exclude(excludedCallUID);
+    }
+
+    if (this.lastComparator) {
+      this.sort(this.lastComparator, true);
+    }
+  }
+
+  /**
+   * @override
+   */
+  populateChildren() {
+    BottomUpProfileDataGridNode._sharedPopulate(this);
+  }
+}

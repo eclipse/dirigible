@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+var ViewContext = /** @class */ (function () {
+    function ViewContext(configuration, theme, model, privateViewEventBus) {
+        this.configuration = configuration;
+        this.theme = theme;
+        this.model = model;
+        this.viewLayout = model.viewLayout;
+        this.privateViewEventBus = privateViewEventBus;
+    }
+    ViewContext.prototype.addEventHandler = function (eventHandler) {
+        this.privateViewEventBus.addEventHandler(eventHandler);
+    };
+    ViewContext.prototype.removeEventHandler = function (eventHandler) {
+        this.privateViewEventBus.removeEventHandler(eventHandler);
+    };
+    return ViewContext;
+}());
+export { ViewContext };

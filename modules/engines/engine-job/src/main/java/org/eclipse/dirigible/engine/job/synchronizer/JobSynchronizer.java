@@ -107,7 +107,7 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredJob(String jobPath) throws IOException {
-		InputStream in = JobSynchronizer.class.getResourceAsStream(jobPath);
+		InputStream in = JobSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + jobPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			JobDefinition jobDefinition = schedulerCoreService.parseJob(json);

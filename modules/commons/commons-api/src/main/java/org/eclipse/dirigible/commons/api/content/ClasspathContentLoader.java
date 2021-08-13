@@ -30,7 +30,7 @@ public class ClasspathContentLoader {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
 
-	private static final String ROOT = "/";
+	private static final String ROOT = "/META-INF/dirigible";
 
 	private static Boolean LOADED = false;
 
@@ -59,9 +59,11 @@ public class ClasspathContentLoader {
 							while (entries.hasMoreElements()) {
 								String entry = entries.nextElement().getName();
 								for (IClasspathContentHandler contentHandler : contentHandlers) {
-									contentHandler.accept(ROOT + entry);
+									if (entry.startsWith(ROOT)) {
+										contentHandler.accept(entry.substring(ROOT.length()));
+										logger.debug("resource found: " + entry);
+									}
 								}
-								logger.trace("resource found: " + entry);
 							}
 						}
 					}

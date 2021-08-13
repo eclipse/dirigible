@@ -139,7 +139,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
-		InputStream in = ChangelogSynchronizer.class.getResourceAsStream(modelPath);
+		InputStream in = ChangelogSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath);
 		try {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			return content;

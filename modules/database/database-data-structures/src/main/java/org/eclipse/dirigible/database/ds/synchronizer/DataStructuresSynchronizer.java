@@ -297,7 +297,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
-		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(modelPath);
+		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath);
 		try {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			return content;

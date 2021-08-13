@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+import { Token, TokenizationResult, TokenizationResult2 } from '../core/token.js';
+import { LanguageIdentifier } from '../modes.js';
+var NullStateImpl = /** @class */ (function () {
+    function NullStateImpl() {
+    }
+    NullStateImpl.prototype.clone = function () {
+        return this;
+    };
+    NullStateImpl.prototype.equals = function (other) {
+        return (this === other);
+    };
+    return NullStateImpl;
+}());
+export var NULL_STATE = new NullStateImpl();
+export var NULL_MODE_ID = 'vs.editor.nullMode';
+export var NULL_LANGUAGE_IDENTIFIER = new LanguageIdentifier(NULL_MODE_ID, 0 /* Null */);
+export function nullTokenize(modeId, buffer, state, deltaOffset) {
+    return new TokenizationResult([new Token(deltaOffset, '', modeId)], state);
+}
+export function nullTokenize2(languageId, buffer, state, deltaOffset) {
+    var tokens = new Uint32Array(2);
+    tokens[0] = deltaOffset;
+    tokens[1] = ((languageId << 0 /* LANGUAGEID_OFFSET */)
+        | (0 /* Other */ << 8 /* TOKEN_TYPE_OFFSET */)
+        | (0 /* None */ << 11 /* FONT_STYLE_OFFSET */)
+        | (1 /* DefaultForeground */ << 14 /* FOREGROUND_OFFSET */)
+        | (2 /* DefaultBackground */ << 23 /* BACKGROUND_OFFSET */)) >>> 0;
+    return new TokenizationResult2(tokens, state === null ? NULL_STATE : state);
+}
