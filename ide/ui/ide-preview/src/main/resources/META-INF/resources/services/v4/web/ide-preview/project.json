@@ -1,8 +1,0 @@
-{
-	"guid": "ide-preview",
-	"repository": {
-		"type": "git",
-		"branch": "master",
-		"url": "https://github.com/dirigiblelabs/ide-preview.git"
-	}
-}

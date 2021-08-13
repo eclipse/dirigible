@@ -21,7 +21,7 @@
 	
 	<properties>
 		<content.repository.name>ext-acorn</content.repository.name>
-		<content.project.name>acorn</content.project.name>
+		<content.project.name>acornjs</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>

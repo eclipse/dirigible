@@ -30,7 +30,7 @@ public class ClasspathContentLoader {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClasspathContentLoader.class);
 
-	private static final String ROOT = "/META-INF/dirigible";
+	private static final String ROOT = "META-INF/dirigible";
 
 	private static Boolean LOADED = false;
 
