@@ -17,8 +17,6 @@
 	<modules>
 		<!-- Grouping Modules -->
 		<module>ide-group-all</module>
-		<module>ide-group-javascript</module>
-		<module>ide-group-database</module>
 		
 		<!-- Plugin Modules -->
 		<module>ide-console</module>

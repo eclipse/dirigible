@@ -17,8 +17,6 @@
 	<modules>
 		<!-- Grouping Modules -->
         <module>ide-all</module>
-        <module>ide-javascript</module>
-        <module>ide-database</module>
         
         <!-- Plugin Modules -->
 		<module>services</module>
