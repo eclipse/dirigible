@@ -35,32 +35,36 @@ public class ODataProperty {
 		return name;
 	}
 
-	public void setName(String name) {
+	public ODataProperty setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getColumn() {
 		return column;
 	}
 
-	public void setColumn(String column) {
+	public ODataProperty setColumn(String column) {
 		this.column = column;
+		return this;
 	}
 
 	public boolean isNullable() {
 		return nullable;
 	}
 
-	public void setNullable(boolean nullable) {
+	public ODataProperty setNullable(boolean nullable) {
 		this.nullable = nullable;
+		return this;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public ODataProperty setType(String type) {
 		this.type = type;
+		return this;
 	}
 
 	public Map<String, String> getAnnotationsProperty() {
