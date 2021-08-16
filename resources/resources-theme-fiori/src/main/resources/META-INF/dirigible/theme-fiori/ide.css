@@ -155,6 +155,10 @@ nav.navbar .dropdown-menu {
   background-color: #3f5161;
 }
 
+.navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-text {
+    font-weight: 400;
+}
+
 .dropdown-menu > li > a:focus,
 .dropdown-menu > li > a:hover {
   background-color: #354a5e;
