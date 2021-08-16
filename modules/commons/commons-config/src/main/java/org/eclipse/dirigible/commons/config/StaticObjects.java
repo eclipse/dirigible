@@ -65,5 +65,14 @@ public final class StaticObjects {
 		logger.info("Setting static object by key: " + key);
 		OBJECTS.put(key, object);
 	}
+	
+	public static final boolean exists(String key) {
+		logger.trace("Exists static object by key: " + key);
+		Object object = OBJECTS.get(key);
+		if (object == null) {
+			return false;
+		}
+		return true;
+	}
 
 }
