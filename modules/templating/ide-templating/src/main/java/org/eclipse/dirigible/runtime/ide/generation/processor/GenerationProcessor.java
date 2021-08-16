@@ -93,7 +93,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 					logger.trace("Generating using template from the Registry: " + sourcePath);
 					generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 				} else {
-					InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
+					InputStream in = GenerationProcessor.class.getResourceAsStream("/META-INF/dirigible" + source.getLocation());
 					try {
 						if (in != null) {
 							byte[] input = IOUtils.toByteArray(in);
@@ -311,7 +311,7 @@ public class GenerationProcessor extends WorkspaceProcessor {
 						logger.trace("Generating using template from the Registry: " + sourcePath);
 						generateWithTemplateIterable(parameters, projectObject, generatedFiles, source, input);
 					} else {
-						InputStream in = GenerationProcessor.class.getResourceAsStream(source.getLocation());
+						InputStream in = GenerationProcessor.class.getResourceAsStream("/META-INF/dirigible" + source.getLocation());
 						try {
 							if (in != null) {
 								byte[] input = IOUtils.toByteArray(in);
