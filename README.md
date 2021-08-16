@@ -70,6 +70,10 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install
 
+ - If you don't want to trigger license updates:
+
+        mvn clean install -Dlicense.skip=true
+
  - If you have a multi-core system, enable threads:
 
         mvn -T 1C clean install
@@ -82,9 +86,9 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install -Dmaven.test.skip=true -DskipTests
 
- - If you want to do a fast build, with no tests and javadocs:
+ - If you want to do a fast build, with no tests, javadocs and license updates:
 
-        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
         
 > The main groups of modules can be built separately: `api`, `ext`, `ide`, `modules`, `releng`, `resources` and `templates`:
 
