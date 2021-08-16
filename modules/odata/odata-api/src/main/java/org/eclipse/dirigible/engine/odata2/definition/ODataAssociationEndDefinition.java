@@ -14,11 +14,6 @@ package org.eclipse.dirigible.engine.odata2.definition;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class ODataAssociationEndDefinition {
 
     private String entity;
@@ -30,4 +25,46 @@ public class ODataAssociationEndDefinition {
     private String column;
 
     private String multiplicity;
+
+	public String getEntity() {
+		return entity;
+	}
+
+	public void setEntity(String entity) {
+		this.entity = entity;
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public List<String> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<String> properties) {
+		this.properties = properties;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
+	public String getMultiplicity() {
+		return multiplicity;
+	}
+
+	public void setMultiplicity(String multiplicity) {
+		this.multiplicity = multiplicity;
+	}
+    
+    
 }

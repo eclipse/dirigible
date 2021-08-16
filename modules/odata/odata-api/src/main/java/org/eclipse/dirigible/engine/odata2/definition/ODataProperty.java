@@ -11,19 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@Accessors(chain = true)
 public class ODataProperty {
 
     private String name;
@@ -40,4 +30,46 @@ public class ODataProperty {
      * <code> &lt;Property Name="SomeName" Type="Edm.String" sap:label="SomeLabel" sap:filterable="false"/&gt; </code>
      */
     private Map<String ,String> annotationsProperty = new HashMap<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
+	public boolean isNullable() {
+		return nullable;
+	}
+
+	public void setNullable(boolean nullable) {
+		this.nullable = nullable;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Map<String, String> getAnnotationsProperty() {
+		return annotationsProperty;
+	}
+
+	public void setAnnotationsProperty(Map<String, String> annotationsProperty) {
+		this.annotationsProperty = annotationsProperty;
+	}
+    
+    
 }

@@ -11,16 +11,11 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
 public class ODataEntityDefinition {
 
     private String name;
@@ -53,4 +48,77 @@ public class ODataEntityDefinition {
      * <code> &lt;EntityType Name="SomeTypeName" sap:semantics="aggregate""&gt; </code>
      */
     private Map<String, String> annotationsEntityType = new HashMap<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
+
+	public List<ODataProperty> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<ODataProperty> properties) {
+		this.properties = properties;
+	}
+
+	public List<ODataNavigation> getNavigations() {
+		return navigations;
+	}
+
+	public void setNavigations(List<ODataNavigation> navigations) {
+		this.navigations = navigations;
+	}
+
+	public List<ODataHandler> getHandlers() {
+		return handlers;
+	}
+
+	public void setHandlers(List<ODataHandler> handlers) {
+		this.handlers = handlers;
+	}
+
+	public List<String> getKeys() {
+		return keys;
+	}
+
+	public void setKeys(List<String> keys) {
+		this.keys = keys;
+	}
+
+	public Map<String, String> getAnnotationsEntitySet() {
+		return annotationsEntitySet;
+	}
+
+	public void setAnnotationsEntitySet(Map<String, String> annotationsEntitySet) {
+		this.annotationsEntitySet = annotationsEntitySet;
+	}
+
+	public Map<String, String> getAnnotationsEntityType() {
+		return annotationsEntityType;
+	}
+
+	public void setAnnotationsEntityType(Map<String, String> annotationsEntityType) {
+		this.annotationsEntityType = annotationsEntityType;
+	}
+    
 }

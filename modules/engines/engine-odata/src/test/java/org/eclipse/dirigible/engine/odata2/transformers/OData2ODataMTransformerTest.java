@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
@@ -36,7 +37,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OData2ODataMTransformerTest {
+public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DBMetadataUtil dbMetadataUtil;

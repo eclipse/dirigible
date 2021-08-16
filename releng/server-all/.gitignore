@@ -13,3 +13,5 @@ target/
 *.class
 *.jar
 derby.log
+/.apt_generated/
+/.apt_generated_tests/

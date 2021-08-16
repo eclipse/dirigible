@@ -11,14 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
 public class ODataNavigation {
 
     private String name;
@@ -31,4 +26,29 @@ public class ODataNavigation {
      * <code> &lt;NavigationProperty Name="SomeName" Relationship="SomeRel" FromRole="FromRoleName" ToRole="ToRoleName" sap:filterable="false"/&gt; </code>
      */
     private Map<String ,String> annotationsNavigationProperty = new HashMap<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAssociation() {
+		return association;
+	}
+
+	public void setAssociation(String association) {
+		this.association = association;
+	}
+
+	public Map<String, String> getAnnotationsNavigationProperty() {
+		return annotationsNavigationProperty;
+	}
+
+	public void setAnnotationsNavigationProperty(Map<String, String> annotationsNavigationProperty) {
+		this.annotationsNavigationProperty = annotationsNavigationProperty;
+	}
+    
 }
