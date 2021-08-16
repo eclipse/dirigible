@@ -39,7 +39,9 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 
 	@Override
 	public void put(String path, byte[] content) {
-		cache.put(path, content);
+		if (content != null) {
+			cache.put(path, content);
+		}
 	}
 
 	@Override
