@@ -612,6 +612,7 @@
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<org.projectlombok.version>1.18.20</org.projectlombok.version>
+		<caffeine.version>3.0.3</caffeine.version>
 		
 		<content.repository.name>dirigiblelabs</content.repository.name>
 		<content.project.name>dirigiblelabs</content.project.name>

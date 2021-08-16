@@ -47,10 +47,13 @@ public class Configuration {
 	private static final Map<String, String> DEPLOYMENT_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
 	private static final Map<String, String> MODULE_VARIABLES = Collections.synchronizedMap(new HashMap<String, String>());
 
+	private static final String CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES = "/dirigible.properties";
+	private static final String ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST = "Configuration file {0} does not exist";
+
 	public static boolean LOADED = false;
 
 	static {
-		loadDeploymentConfig("/dirigible.properties");
+		loadDeploymentConfig(CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES);
 		loadEnvironmentConfig();
 		LOADED = true;
 	}
@@ -72,31 +75,34 @@ public class Configuration {
 		try {
 			Properties custom = new Properties();
 			InputStream in = Configuration.class.getResourceAsStream(path);
-			if (in == null) {
-				throw new IOException(format("Configuration file {0} does not exist", path));
-			}
-			try {
-				custom.load(in);
-				switch (type) {
-				case RUNTIME:
-					addConfigProperties(custom, RUNTIME_VARIABLES);
-					break;
-				case ENVIRONMENT:
-					addConfigProperties(custom, ENVIRONMENT_VARIABLES);
-					break;
-				case DEPLOYMENT:
-					addConfigProperties(custom, DEPLOYMENT_VARIABLES);
-					break;
-				case MODULE:
-					addConfigProperties(custom, MODULE_VARIABLES);
-					break;
-				default:
-					break;
+			if (in != null) {
+				try {
+					custom.load(in);
+					switch (type) {
+					case RUNTIME:
+						addConfigProperties(custom, RUNTIME_VARIABLES);
+						break;
+					case ENVIRONMENT:
+						addConfigProperties(custom, ENVIRONMENT_VARIABLES);
+						break;
+					case DEPLOYMENT:
+						addConfigProperties(custom, DEPLOYMENT_VARIABLES);
+						break;
+					case MODULE:
+						addConfigProperties(custom, MODULE_VARIABLES);
+						break;
+					default:
+						break;
+					}
+				} finally {
+					in.close();
 				}
-			} finally {
-				in.close();
+				logger.debug("Configuration loaded: " + path);
+			} else if (!path.equals(CONFIG_FILE_PATH_DIRIGIBLE_PROPERTIES)) {					
+				throw new IOException(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
+			} else {
+				logger.debug(format(ERROR_MESSAGE_CONFIGURATION_DOES_NOT_EXIST, path));
 			}
-			logger.debug("Configuration loaded: " + path);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
