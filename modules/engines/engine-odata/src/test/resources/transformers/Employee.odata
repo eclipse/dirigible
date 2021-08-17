@@ -29,7 +29,28 @@
 		{
 			"name": "phone",
 			"alias": "Phones",
-			"table": "PHONES"
+			"table": "PHONES",
+			"properties": [
+				{
+					"name": "number",
+					"column": "NUMBER",
+					"nullable": false,
+					"type": "Edm.Int32"
+				},
+				{
+					"name": "fkCompanyId",
+					"column": "FK_COMPANY_ID",
+					"nullable": false,
+					"type": "Edm.Int32"
+				},
+				{
+					"name": "fkEmployeeNumber",
+					"column": "FK_EMPLOYEE_NUMBER",
+					"nullable": false,
+					"type": "Edm.Int32"
+				}
+				
+			]
 		}
 	],
 	"associations": [
@@ -38,16 +59,16 @@
 			"from": {
 				"entity": "employee",
 				"properties": [
-					"COMPANY_ID",
-					"EMPLOYEE_NUMBER"
+					"companyId",
+					"employeeNumber"
 				],
 				"multiplicity": "1"
 			},
 			"to": {
 				"entity": "phone",
 				"properties": [
-					"FK_COMPANY_ID",
-					"FK_EMPLOYEE_NUMBER"
+					"fkCompanyId",
+					"fkEmployeeNumber"
 				],
 				"multiplicity": "*"
 			}

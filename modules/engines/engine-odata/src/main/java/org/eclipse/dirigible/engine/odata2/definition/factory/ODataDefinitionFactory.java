@@ -32,7 +32,7 @@ public class ODataDefinitionFactory {
 				association.getFrom().getProperties().add(association.getFrom().getProperty());
 			}
 			if (association.getTo().getProperty() != null) {
-				association.getTo().getProperties().add(association.getFrom().getProperty());
+				association.getTo().getProperties().add(association.getTo().getProperty());
 			}
 		});
 		
