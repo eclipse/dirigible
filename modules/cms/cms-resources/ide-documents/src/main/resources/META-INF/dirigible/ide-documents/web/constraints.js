@@ -10,7 +10,36 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('page', []);
-angular.module('page').controller('PageController', function ($scope, $http) {
+angular.module('page')
+.directive('uploadDirective', function () {
+    return {
+        restrict: 'A',
+        scope: true,
+        link: function (scope, element, attr) {
+
+            element.bind('change', function () {
+				let fileReader = new FileReader();
+
+				fileReader.onloadend = function(e) {
+					try {
+						let data = JSON.parse(e.target.result);
+						if (!data.constraints) {
+							alert("Not a valid Constraints JSON!");
+							return;
+						}
+						scope.upload(data.constraints);
+					} catch (e) {
+						alert("Not a valid JSON!");
+					}
+				}
+
+				fileReader.readAsBinaryString(element[0].files[0]);
+            });
+
+        }
+    };
+})
+.controller('PageController', function ($scope, $http) {
 
 	String.prototype.replaceAll = function(find, replace) {
 		return this.replace(new RegExp(find, 'g'), replace);
@@ -59,9 +88,18 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	};
 
 	$scope.create = function () {
-		$scope.access.constraints.push($scope.entity);
-		$scope.save();
-		toggleEntityModal();
+		let exists = false;
+		$scope.access.constraints.forEach(e => {
+			if (e.path === $scope.entity.path && e.method === $scope.entity.method) {
+				alert(`Constraint with path "${e.path}" and method "${e.method}" already exists!`);
+				exists = true;
+			}
+		});
+		if (!exists) {
+			$scope.access.constraints.push($scope.entity);
+			$scope.save();
+			toggleEntityModal();
+		}
 	};
 
 	$scope.update = function () {
@@ -78,6 +116,22 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 		toggleEntityModal();
 	};
 
+	$scope.save = function () {
+		let accessContents = serializeAccess();
+		contents = JSON.stringify(accessContents);
+		saveContents(contents);
+	};
+
+	$scope.upload = (constraints) => {
+		let uniqueConstraints = {};
+		$scope.access.constraints.forEach(e => uniqueConstraints[e.path + "_" + e.method] = e);
+		constraints.forEach(e => uniqueConstraints[e.path + "_" + e.method] = e);
+
+		$scope.access.constraints = [];
+		Object.keys(uniqueConstraints).forEach(e => $scope.access.constraints.push(uniqueConstraints[e]));
+		$scope.save();
+		$scope.$apply();
+	};
 
 	function toggleEntityModal() {
 		$('#entityModal').modal('toggle');
@@ -132,11 +186,5 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 		});
 		return accessContents;
 	}
-
-	$scope.save = function () {
-		var accessContents = serializeAccess();
-		contents = JSON.stringify(accessContents);
-		saveContents(contents);
-	};
 
 });
