@@ -95,7 +95,7 @@
 #foreach ($relationProperty in $relationModel.properties)
 #if($property.relationshipEntityName == $relationModel.name)
                 "referencedTable": "${relationModel.dataName}",
-                "referencedColumns": "#foreach ($relationIdProperty in $relationModel.properties)#if ($relationIdProperty.dataPrimaryKey || $relationIdProperty.dataPrimaryKey == "true")${relationIdProperty.name}#end#end"
+                "referencedColumns": "#foreach ($relationIdProperty in $relationModel.properties)#if ($relationIdProperty.dataPrimaryKey || $relationIdProperty.dataPrimaryKey == "true")${relationIdProperty.dataName}#end#end"
 #break
 #end
 #end
