@@ -17,7 +17,7 @@ rs.service()
         .get(function (ctx, request, response) {
             if (request.isUserInRole("Operator")) {
                 let accessDefinitions = accessUtils.getAccessDefinitions();
-                response.println(JSON.stringify(accessDefinitions));
+                response.println(JSON.stringify(accessDefinitions, null, 2));
             } else {
                 response.setStatus(response.FORBIDDEN);
                 response.println("Access forbidden");
@@ -27,7 +27,7 @@ rs.service()
             if (request.isUserInRole("Operator")) {
                 let accessDefinitions = request.getJSON();
                 accessUtils.updateAccessDefinitions(accessDefinitions);
-                response.println(JSON.stringify(accessDefinitions));
+                response.println(JSON.stringify(accessDefinitions, null, 2));
             } else {
                 response.setStatus(response.FORBIDDEN);
                 response.println("Access forbidden");
