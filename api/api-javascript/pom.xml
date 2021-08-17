@@ -39,6 +39,10 @@
 		<module>api-platform</module>
 	</modules>
 
+	<properties>
+		<profile.phase>generate-sources</profile.phase>
+	</properties>
+
 	<profiles>
 		<profile>
 			<id>content</id>
@@ -84,7 +88,7 @@
 						<executions>
 							<execution>
 								<id>generated-sources</id>
-								<phase>generate-sources</phase>
+								<phase>${profile.phase}</phase>
 								<goals>
 									<goal>checkout</goal>
 								</goals>
