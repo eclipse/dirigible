@@ -21,8 +21,8 @@ var DIRIGIBLE_BRANDING_WELCOME_PAGE = 'DIRIGIBLE_BRANDING_WELCOME_PAGE';
 var DIRIGIBLE_BRANDING_NAME_DEFAULT = 'Eclipse Dirigible';
 var DIRIGIBLE_BRANDING_BRAND_DEFAULT = 'Eclipse Dirigible';
 var DIRIGIBLE_BRANDING_BRAND_URL_DEFAULT = "https://www.dirigible.io/";
-var DIRIGIBLE_BRANDING_ICON_DEFAULT = '../../../../services/v4/web/resources/images/favicon.png';
-var DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT = '../../../../services/v4/web/ide/welcome.html';
+var DIRIGIBLE_BRANDING_ICON_DEFAULT = '/services/v4/web/resources/images/favicon.png';
+var DIRIGIBLE_BRANDING_WELCOME_PAGE_DEFAULT = '/services/v4/web/ide/welcome.html';
 
 rs.service()
 	.resource('')
