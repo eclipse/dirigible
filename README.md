@@ -65,8 +65,14 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 ##### Steps
 
 1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest sources](https://github.com/eclipse/dirigible/archive/master.zip).
-2. Go to the root folder.
-3. Build the project with:
+
+  In case there is an issue with 'Filename too long in Git for Windows' then add the fllowing git confoguration 
+```
+git config --system core.longpaths true
+```
+
+3. Go to the root folder.
+4. Build the project with:
 
         mvn clean install
 
