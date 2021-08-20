@@ -254,6 +254,9 @@ th {
   border-right: 0;
   border-bottom: 0;
 }
+.values-button > .fa, .keys-button > .fa {
+  margin-right: 8px;
+}
 .table-input {
   border: none;
   background-image: none;
