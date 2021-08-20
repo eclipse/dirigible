@@ -61,7 +61,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
             }
         },
         onGridReady: function (/*$event*/) {
-            if(!$scope.gridLoaded) { // Execute this only once on first grid load
+            if (!$scope.gridLoaded) { // Execute this only once on first grid load
                 $scope.gridLoaded = true;
                 checkPlatform();
                 loadFileContents();
@@ -83,7 +83,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     };
     $scope.papaConfig = {
         columnIndex: 0, // Custom property, needed for duplicated column names
-        delimitersToGuess: [',', '\t', '|', ';'],
+        delimitersToGuess: [',', '\t', '|', ';', '#', Papa.RECORD_SEP, Papa.UNIT_SEP],
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
@@ -134,13 +134,17 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     function loadFileContents() {
         let searchParams = new URLSearchParams(window.location.search);
         $scope.file = searchParams.get('file');
-        let header = (searchParams.get('header') === 'true');
+        let header = searchParams.get('header');
         let delimiter = searchParams.get('delimiter');
         let quoteChar = searchParams.get('quotechar');
-        if (header != null && header != undefined && delimiter && quoteChar) {
-            $scope.papaConfig.header = header;
+        if (header) {
+            $scope.papaConfig.header = (header === 'true');
+        }
+        if (delimiter) {
             $scope.papaConfig.delimiter = delimiter;
             $scope.delimiter = delimiter;
+        }
+        if (quoteChar) {
             $scope.papaConfig.quoteChar = quoteChar;
         }
         if ($scope.file) {
