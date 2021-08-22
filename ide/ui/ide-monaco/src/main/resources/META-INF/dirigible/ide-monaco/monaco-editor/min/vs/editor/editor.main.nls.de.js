@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.de",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (erneut aufgetreten)","{0} ({1} mal aufgetretenen)"],"vs/base/browser/ui/findinput/findInput":["Eingabe"],"vs/base/browser/ui/findinput/findInputCheckboxes":["Groß-/Kleinschreibung beachten","Nur ganzes Wort suchen","Regulären Ausdruck verwenden"],"vs/base/browser/ui/findinput/replaceInput":["Eingabe","Groß-/Kleinschreibung beibehalten"],"vs/base/browser/ui/inputbox/inputBox":["Fehler: {0}","Warnung: {0}","Info: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["Ungebunden"],"vs/base/browser/ui/list/listWidget":["{0}. Verwenden Sie die Navigationstasten, um zu navigieren."],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["Löschen","Typfilter deaktivieren","Typfilter aktivieren","Keine Elemente gefunden","{0} von {1} Elementen stimmen überein"],
 "vs/base/common/keybindingLabels":["STRG","UMSCHALTTASTE","ALT","Windows","STRG","UMSCHALTTASTE","ALT","Super","Steuern","UMSCHALTTASTE","ALT","Befehl","Steuern","UMSCHALTTASTE","ALT","Windows","Steuern","UMSCHALTTASTE","ALT","Super"],"vs/base/common/severity":["Fehler","Warnung","Info"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}, Auswahl","Auswahl"],"vs/base/parts/quickopen/browser/quickOpenWidget":["Schnellauswahl. Nehmen Sie eine Eingabe vor, um die Ergebnisse einzugrenzen.","Schnellauswahl","{0} Ergebnisse"],"vs/editor/browser/controller/coreCommands":["&&Alles auswählen","&&Rückgängig","&&Wiederholen"],"vs/editor/browser/controller/textAreaHandler":["Der Editor ist zurzeit nicht verfügbar. Drücken Sie Alt+F1 für Optionen."],"vs/editor/browser/widget/codeEditorWidget":["Die Anzahl der Cursors wurde auf {0} beschränkt."],"vs/editor/browser/widget/diffEditorWidget":["Kann die Dateien nicht vergleichen, da eine Datei zu groß ist."],
 "vs/editor/browser/widget/diffReview":["Schließen","keine Zeilen","1 Zeile","{0} Zeilen","Unterschied von {0} zu {1}: Original: {2}, {3}, geändert: {4}, {5}","leer","Original {0}, geändert {1}: {2}","+ geändert {0}: {1}","- Original {0}: {1}","Zum nächsten Unterschied wechseln","Zum vorherigen Unterschied wechseln"],"vs/editor/browser/widget/inlineDiffMargin":["Gelöschte Zeilen kopieren","Gelöschte Zeile kopieren","Gelöschte Zeile kopieren ({0})","Diese Änderung rückgängig machen","Gelöschte Zeile kopieren ({0})"],

@@ -218,7 +218,7 @@ th {
   width: 100%;
   border: 0;
   padding: 12px;
-  background-color: #f8f8f8;
+  background-color: #f7f7f7;
   border-radius: 0;
   border-top: 1px solid #e7e7e7;
 }
@@ -237,7 +237,7 @@ th {
 }
 .keys-button {
   padding: 12px;
-  background-color: #f8f8f8;
+  background-color: #f7f7f7;
   border: 1px solid #e7e7e7;
   border-top: 0;
   width: 100%;
@@ -253,6 +253,9 @@ th {
   border-left: 0;
   border-right: 0;
   border-bottom: 0;
+}
+.values-button > .fa, .keys-button > .fa {
+  margin-right: 8px;
 }
 .table-input {
   border: none;

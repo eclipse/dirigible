@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.ru",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (произошло снова)","{0} (было {1} раз)"],"vs/base/browser/ui/findinput/findInput":["Ввод"],"vs/base/browser/ui/findinput/findInputCheckboxes":["С учетом регистра","Слово целиком","Использовать регулярное выражение"],"vs/base/browser/ui/findinput/replaceInput":["Ввод","Сохранить регистр"],"vs/base/browser/ui/inputbox/inputBox":["Ошибка: {0}","Предупреждение: {0}","Информация: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["свободный"],"vs/base/browser/ui/list/listWidget":["{0}. Для перехода используйте клавиши навигации."],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["Сброс","Отключить фильтр по типу","Включить фильтр по типу","Элементы не найдены","Сопоставлено элементов: {0} из {1}"],
 "vs/base/common/keybindingLabels":["CTRL","SHIFT","ALT","Windows","CTRL","SHIFT","ALT","Превосходно","CTRL","SHIFT","ALT","Команда","CTRL","SHIFT","ALT","Windows","CTRL","SHIFT","ALT","Превосходно"],"vs/base/common/severity":["Ошибка","Предупреждение","Информация"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}, средство выбора","средство выбора"],"vs/base/parts/quickopen/browser/quickOpenWidget":["Средство быстрого выбора. Введите, чтобы сузить результаты.","Средство быстрого выбора","Результаты: {0}"],"vs/editor/browser/controller/coreCommands":["&&Выделить все","&&Отменить","&&Повторить"],"vs/editor/browser/controller/textAreaHandler":["Редактор сейчас недоступен. Чтобы открыть список действий, нажмите ALT+F1."],"vs/editor/browser/widget/codeEditorWidget":["Количество курсоров ограничено {0}."],"vs/editor/browser/widget/diffEditorWidget":["Нельзя сравнить файлы, потому что один из файлов слишком большой."],
 "vs/editor/browser/widget/diffReview":["Закрыть","строки отсутствуют","1 строка","строк: {0}","Различие {0} из {1}; исходная версия: {2}, {3}, измененная версия: {4}, {5}","пустой","Исходная версия: {0}, измененная версия: {1}: {2}","+ измененная версия: {0}: {1}","- исходная версия: {0}: {1}","Перейти к следующему различию","Перейти к предыдущему различию"],"vs/editor/browser/widget/inlineDiffMargin":["Копировать удаленные строки","Копировать удаленную строку","Копировать удаленную строку ({0})","Отменить это изменение","Копировать удаленную строку ({0})"],

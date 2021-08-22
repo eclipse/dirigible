@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.ko",{"vs/base/browser/ui/actionbar/actionbar":["{0}({1})"],"vs/base/browser/ui/aria/aria":["{0}(다시 발생함)","{0} ({1}번 발생하다)"],"vs/base/browser/ui/findinput/findInput":["입력"],"vs/base/browser/ui/findinput/findInputCheckboxes":["대/소문자 구분","단어 단위로","정규식 사용"],"vs/base/browser/ui/findinput/replaceInput":["입력","대/소문자 보존"],"vs/base/browser/ui/inputbox/inputBox":["오류: {0}","경고: {0}","정보: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["바인딩 안 됨"],"vs/base/browser/ui/list/listWidget":["{0}. 탐색하려면 탐색 키를 사용하세요."],"vs/base/browser/ui/menu/menu":["{0}({1})"],"vs/base/browser/ui/tree/abstractTree":["지우기","형식을 기준으로 필터링 사용 안 함","형식을 기준으로 필터링 사용","찾은 요소 없음","{1}개 요소 중 {0}개 일치"],"vs/base/common/keybindingLabels":["Ctrl","<Shift>","<Alt>","Windows","Ctrl","<Shift>","<Alt>","슈퍼","제어","<Shift>","<Alt>","명령","제어","<Shift>","<Alt>","Windows","제어","<Shift>","<Alt>","슈퍼"],"vs/base/common/severity":["오류","경고","정보"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}, 선택기","선택기"],
 "vs/base/parts/quickopen/browser/quickOpenWidget":["빠른 선택기입니다. 결과의 범위를 축소하려면 입력합니다.","빠른 선택기","{0}개 결과"],"vs/editor/browser/controller/coreCommands":["모두 선택(&&S)","실행 취소(&&U)","다시 실행(&&R)"],"vs/editor/browser/controller/textAreaHandler":["지금은 편집기를 사용할 수 없습니다. Alt+F1을 눌러 옵션을 보세요."],"vs/editor/browser/widget/codeEditorWidget":["커서 수는 {0}(으)로 제한되었습니다."],"vs/editor/browser/widget/diffEditorWidget":["파일 1개가 너무 커서 파일을 비교할 수 없습니다."],"vs/editor/browser/widget/diffReview":["닫기","줄 없음","1줄","{0}줄","차이 {0}/{1}개: 원본 {2}, {3}, 수정 {4}, {5}","비어 있음","원본 {0}, 수정 {1}: {2}","+ 수정됨 {0}: {1}","- 원본 {0}: {1}","다음 다른 항목으로 이동","다음 다른 항목으로 이동"],"vs/editor/browser/widget/inlineDiffMargin":["삭제된 줄 복사","삭제된 줄 복사","삭제된 줄 복사({0})","이 변경 내용 되돌리기","삭제된 줄 복사({0})"],
 "vs/editor/common/config/commonEditorConfig":["편집기","탭 한 개에 해당하는 공백 수입니다. `#editor.detectIndentation#`이 켜져 있는 경우 이 설정은 파일 콘텐츠에 따라 재정의됩니다.","'탭' 키를 누를 때 공백을 삽입합니다. `#editor.detectIndentation#`이 켜져 있는 경우 이 설정은 파일 콘텐츠에 따라 재정의됩니다.","파일을 열 때 파일 콘텐츠를 기반으로 `#editor.tabSize#`와  `#editor.insertSpaces#`가 자동으로 검색되는지 여부를 제어합니다.","끝에 자동 삽입된 공백을 제거합니다.","큰 파일에 대한 특수 처리로, 메모리를 많이 사용하는 특정 기능을 사용하지 않도록 설정합니다.","문서 내 단어를 기반으로 완성을 계산할지 여부를 제어합니다.","Controls whether the semanticHighlighting is shown for the languages that support it.","해당 콘텐츠를 두 번 클릭하거나 'Esc' 키를 누르더라도 Peek 편집기를 열린 상태로 유지합니다.","이 길이를 초과하는 줄은 성능상의 이유로 토큰화되지 않습니다.","diff 계산이 취소된 후 밀리초 단위로 시간을 제한합니다. 제한 시간이 없는 경우 0을 사용합니다.","diff 편집기에서 diff를 나란히 표시할지 인라인으로 표시할지를 제어합니다.","diff 편집기에서 선행 공백 또는 후행 공백 변경을 diff로 표시할지 여부를 제어합니다.","diff 편집기에서 추가/제거된 변경 내용에 대해 +/- 표시기를 표시하는지 여부를 제어합니다."],

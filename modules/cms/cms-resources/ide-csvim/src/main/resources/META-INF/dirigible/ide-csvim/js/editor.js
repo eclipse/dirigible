@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let csvimView = angular.module('csvim-editor', []);
+let editorView = angular.module('csvim-editor', []);
 
-csvimView.factory('$messageHub', [function () {
+editorView.factory('$messageHub', [function () {
     let messageHub = new FramesMessageHub();
     let message = function (evtName, data) {
         messageHub.post({ data: data }, evtName);
@@ -25,45 +25,79 @@ csvimView.factory('$messageHub', [function () {
     };
 }]);
 
-csvimView.directive('uniqueField', () => {
+editorView.directive('allowedSymbols', () => {
     return {
         restrict: 'A',
         require: 'ngModel',
+        scope: {
+            regex: '@allowedSymbols'
+        },
         link: (scope, element, attrs, controller) => {
             controller.$validators.forbiddenName = value => {
-                let unique = true;
-                if ("index" in attrs) {
-                    for (let i = 0; i < scope.csvimData[scope.activeItemId].keys.length; i++) {
-                        if (i != attrs.index) {
-                            if (value === scope.csvimData[scope.activeItemId].keys[i].column) {
-                                unique = false;
-                                break;
-                            }
-                        }
-                    }
-                } else if ("kindex" in attrs && "vindex" in attrs) {
-                    for (let i = 0; i < scope.csvimData[scope.activeItemId].keys[attrs.kindex].values.length; i++) {
-                        if (i != attrs.vindex) {
-                            if (value === scope.csvimData[scope.activeItemId].keys[attrs.kindex].values[i]) {
-                                unique = false;
-                                break;
-                            }
-                        }
-                    }
+                if (!value) {
+                    return true;
                 }
-                if (unique) {
+                let correct = RegExp(scope.regex, 'gm').test(value);
+                if (correct) {
                     element.removeClass("error-input");
                 } else {
                     element.addClass('error-input');
                 }
-                scope.setSaveEnabled(unique);
+                if (attrs.hasOwnProperty("id") && attrs["id"] === "filepath") {
+                    scope.$parent.fileExists = true;
+                }
+                scope.$parent.setSaveEnabled(correct);
+                return correct;
+            };
+        }
+    };
+});
+
+editorView.directive('uniqueField', () => {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+            regex: '@uniqueField'
+        },
+        link: (scope, element, attrs, controller) => {
+            controller.$validators.forbiddenName = value => {
+                let unique = true;
+                let correct = RegExp(scope.regex, 'gm').test(value);
+                if (correct) {
+                    if ("index" in attrs) {
+                        for (let i = 0; i < scope.$parent.csvimData[scope.$parent.activeItemId].keys.length; i++) {
+                            if (i != attrs.index) {
+                                if (value === scope.$parent.csvimData[scope.$parent.activeItemId].keys[i].column) {
+                                    unique = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else if ("kindex" in attrs && "vindex" in attrs) {
+                        for (let i = 0; i < scope.$parent.csvimData[scope.$parent.activeItemId].keys[attrs.kindex].values.length; i++) {
+                            if (i != attrs.vindex) {
+                                if (value === scope.$parent.$parent.csvimData[scope.$parent.activeItemId].keys[attrs.kindex].values[i]) {
+                                    unique = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (correct && unique) {
+                    element.removeClass("error-input");
+                } else {
+                    element.addClass('error-input');
+                }
+                scope.$parent.setSaveEnabled(correct);
                 return unique;
             };
         }
     };
 });
 
-csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '$window', function ($scope, $http, $messageHub, $window) {
+editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '$window', function ($scope, $http, $messageHub, $window) {
     let isFileChanged = false;
     const ctrlKey = 17;
     let ctrlDown = false;
@@ -77,7 +111,7 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
     $scope.dataLoaded = false;
     $scope.csvimData = [];
     $scope.activeItemId = 0;
-    $scope.delimiterList = [',', '\\t', '|', ';'];
+    $scope.delimiterList = [',', '\\t', '|', ';', '#'];
     $scope.quoteCharList = ["'", "\""];
 
     $scope.openFile = function () {
@@ -149,6 +183,14 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
         $scope.setEditEnabled(false);
         $scope.fileExists = true;
         $scope.activeItemId = id;
+    };
+
+    $scope.isDelimiterSupported = function (delimiter) {
+        return $scope.delimiterList.includes(delimiter);
+    };
+
+    $scope.isQuoteCharSupported = function (quoteChar) {
+        return $scope.quoteCharList.includes(quoteChar);
     };
 
     $scope.delimiterChanged = function (delimiter) {
@@ -246,7 +288,7 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
     $scope.fileChanged = function () {
         isFileChanged = true;
         $messageHub.message('editor.file.dirty', $scope.file);
-    }
+    };
 
     $scope.keyDownFunc = function ($event) {
         if (
@@ -279,11 +321,13 @@ csvimView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', '
             if (xhr.status === 200) {
                 csrfToken = xhr.getResponseHeader("x-csrf-token");
                 $scope.fileExists = true;
-                return true;
+            } else {
+                $scope.fileExists = false;
             }
+        } else {
+            $scope.fileExists = false;
         }
-        $scope.fileExists = false;
-        return false;
+        return $scope.fileExists;
     };
 
     function getNumber(str) {

@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.es",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (ocurrió de nuevo)","{0} (ocurrido {1} veces)"],"vs/base/browser/ui/findinput/findInput":["Entrada"],"vs/base/browser/ui/findinput/findInputCheckboxes":["Coincidir mayúsculas y minúsculas","Solo palabras completas","Usar expresión regular"],"vs/base/browser/ui/findinput/replaceInput":["Entrada","Conservar may/min"],"vs/base/browser/ui/inputbox/inputBox":["Error: {0}","Advertencia: {0}","Información: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["Sin enlazar"],"vs/base/browser/ui/list/listWidget":["{0}. Para navegar utilice las teclas de navegación."],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["Borrar","Desactivar filtro en tipo","Activar filtro en el tipo","No se encontraron elementos","{0} de {1} elementos coincidentes"],
 "vs/base/common/keybindingLabels":["Ctrl","Mayús","Alt","Windows","Ctrl","Mayús","Alt","Super","Control","Mayús","Alt","Comando","Control","Mayús","Alt","Windows","Control","Mayús","Alt","Super"],"vs/base/common/severity":["Error","Advertencia","Información"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}, selector","selector"],"vs/base/parts/quickopen/browser/quickOpenWidget":["Selector rápido. Escriba para restringir los resultados.","Selector rápido","{0} resultados"],"vs/editor/browser/controller/coreCommands":["&&Seleccionar todo","&&Deshacer","&&Rehacer"],"vs/editor/browser/controller/textAreaHandler":["No se puede acceder al editor en este momento. Presione Alt+F1 para ver opciones."],"vs/editor/browser/widget/codeEditorWidget":["El número de cursores se ha limitado a {0}."],"vs/editor/browser/widget/diffEditorWidget":["Los archivos no se pueden comparar porque uno de ellos es demasiado grande."],
 "vs/editor/browser/widget/diffReview":["Cerrar","sin líneas","1 línea","{0} líneas","Diferencia {0} de {1}: original {2}, {3}, modificado {4}, {5}","vacío","original {0}, modificado {1}: {2}","+ modificado {0}: {1}","- original {0}: {1}","Ir a la siguiente diferencia","Ir a la diferencia anterior"],"vs/editor/browser/widget/inlineDiffMargin":["Copiar líneas eliminadas","Copiar línea eliminada","Copiar la línea eliminada ({0})","Revertir este cambio","Copiar la línea eliminada ({0})"],

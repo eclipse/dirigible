@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.zh-tw",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (再次出現)","{0} (出現 {1} 次)"],"vs/base/browser/ui/findinput/findInput":["輸入"],"vs/base/browser/ui/findinput/findInputCheckboxes":["大小寫須相符","全字拼寫須相符","使用規則運算式"],"vs/base/browser/ui/findinput/replaceInput":["輸入","保留案例"],"vs/base/browser/ui/inputbox/inputBox":["錯誤: {0}","警告: {0}","資訊: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["未繫結"],"vs/base/browser/ui/list/listWidget":["{0}。請使用導覽鍵來導覽。"],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["清除","在類型上停用篩選","在類型上啟用篩選","找不到任何元素","{1} 項元素中有 {0} 項相符"],"vs/base/common/keybindingLabels":["Ctrl","Shift","Alt","Windows","Ctrl","Shift","Alt","超級鍵","Control","Shift","Alt","命令","Control","Shift","Alt","Windows","Control","Shift","Alt","超級鍵"],"vs/base/common/severity":["錯誤","警告","資訊"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}，選擇器","選擇器"],
 "vs/base/parts/quickopen/browser/quickOpenWidget":["快速選擇器。輸入以縮小結果範圍。","快速選擇器","{0} 個結果"],"vs/editor/browser/controller/coreCommands":["全選(&&S)","復原(&&U)","取消復原(&&R)"],"vs/editor/browser/controller/textAreaHandler":["編輯器現在無法存取。按Alt+F1尋求選項"],"vs/editor/browser/widget/codeEditorWidget":["游標數已限制為 {0} 個。"],"vs/editor/browser/widget/diffEditorWidget":["因其中一個檔案過大而無法比較。"],"vs/editor/browser/widget/diffReview":["關閉","沒有任何行","1 個行","{0} 個行","{1} 的 {0} 不同: 原始為 {2}，{3}，修改後為 {4}，{5}","空白","原始 {0},修改後{1}: {2}","+ 修改後 {0}: {1}","- 原始 {0}: {1}","移至下一個差異","移至上一個差異"],"vs/editor/browser/widget/inlineDiffMargin":["複製已刪除的行","複製已刪除的行","複製已刪除的行 （{0}）","還原此變更","複製已刪除的行 （{0}）"],
 "vs/editor/common/config/commonEditorConfig":["編輯器","與 Tab 相等的空格數量。當 `#editor.detectIndentation#` 已開啟時，會根據檔案內容覆寫此設定。","在按 `Tab` 時插入空格。當 `#editor.detectIndentation#` 開啟時，會根據檔案內容覆寫此設定。","根據檔案內容，控制當檔案開啟時，是否自動偵測  `#editor.tabSize#` 和 `#editor.insertSpaces#`。","移除尾端自動插入的空白字元。","針對大型檔案停用部分高記憶體需求功能的特殊處理方式。","控制是否應根據文件中的單字計算自動完成。","Controls whether the semanticHighlighting is shown for the languages that support it.","即使按兩下內容或按 `Escape`，仍保持瞄孔編輯器開啟。","因效能的緣故，不會將超過此高度的行 Token 化","取消 Diff 計算前的逾時限制 (毫秒)。若無逾時，請使用 0。","控制 Diff 編輯器要並排或內嵌顯示 Diff。","控制 Diff 編輯器是否將開頭或尾端空白字元的變更顯示為 Diff。","控制 Diff 編輯器是否要為新增/移除的變更顯示 +/- 標記。"],

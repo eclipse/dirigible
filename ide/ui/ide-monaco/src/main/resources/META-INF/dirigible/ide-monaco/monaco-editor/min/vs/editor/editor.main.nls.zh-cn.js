@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.zh-cn",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (再次发生)","{0} (发生了 {1} 次)"],"vs/base/browser/ui/findinput/findInput":["输入"],"vs/base/browser/ui/findinput/findInputCheckboxes":["区分大小写","全字匹配","使用正则表达式"],"vs/base/browser/ui/findinput/replaceInput":["输入","保留大小写"],"vs/base/browser/ui/inputbox/inputBox":["错误: {0}","警告: {0}","信息: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["未绑定"],"vs/base/browser/ui/list/listWidget":["{0}. 使用导航键进行导航。"],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["清除","禁用输入时筛选","启用输入时筛选","未找到元素","已匹配 {0} 个元素(共 {1} 个)"],"vs/base/common/keybindingLabels":["Ctrl","Shift","Alt","Windows","Ctrl","Shift","Alt","Super","Control","Shift","Alt","Command","Control","Shift","Alt","Windows","Control","Shift","Alt","Super"],"vs/base/common/severity":["错误","警告","信息"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}，选取器","选取器"],
 "vs/base/parts/quickopen/browser/quickOpenWidget":["快速选取器。键入以缩小结果范围。","快速选取器","{0} 个结果"],"vs/editor/browser/controller/coreCommands":["全选(&&S)","撤消(&&U)","恢复(&&R)"],"vs/editor/browser/controller/textAreaHandler":["现在无法访问编辑器。按 Alt+F1  显示选项。"],"vs/editor/browser/widget/codeEditorWidget":["光标数量被限制为 {0}。"],"vs/editor/browser/widget/diffEditorWidget":["文件过大，无法比较。"],"vs/editor/browser/widget/diffReview":["关闭","无内容","1 行","{0} 行","差异 {0}，总共 {1}: 原始，{2}，{3}；改后，{4}，{5}","空白","未修改 {0}，已修改 {1}: {2}","+ 已修改 {0}: {1}","- 未修改 {0}: {1} ","转至下一个差异","转至上一个差异"],"vs/editor/browser/widget/inlineDiffMargin":["复制已删除的行","复制已删除的行","复制已删除的行({0})","还原此更改","复制已删除的行({0})"],
 "vs/editor/common/config/commonEditorConfig":["编辑器","一个制表符等于的空格数。在 `#editor.detectIndentation#` 启用时，根据文件内容，该设置可能会被覆盖。","按 `Tab` 键时插入空格。该设置在 `#editor.detectIndentation#` 启用时根据文件内容可能会被覆盖。","控制是否在打开文件时，基于文件内容自动检测 `#editor.tabSize#` 和 `#editor.insertSpaces#`。","删除自动插入的尾随空白符号。","对大型文件进行特殊处理，禁用某些内存密集型功能。","控制是否根据文档中的文字计算自动完成列表。","Controls whether the semanticHighlighting is shown for the languages that support it.","在速览编辑器中，即使双击其中的内容或者按 `Esc` 键，也保持其打开状态。","由于性能原因，超过这个长度的行将不会被标记","超时（以毫秒为单位），之后将取消差异计算。使用0表示没有超时。","控制差异编辑器的显示方式是并排还是内联。","控制在差异编辑器中是否把前导空格或尾随空格的改动显示为差异。","控制差异编辑器是否为添加/删除的更改显示 +/- 指示符号。"],

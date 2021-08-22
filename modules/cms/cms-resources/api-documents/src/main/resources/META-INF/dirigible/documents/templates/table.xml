@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
-
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v2.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v20.html
-
-    SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
-    SPDX-License-Identifier: EPL-2.0
-
--->
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" exclude-result-prefixes="fo">
     <xsl:template match="content">
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">

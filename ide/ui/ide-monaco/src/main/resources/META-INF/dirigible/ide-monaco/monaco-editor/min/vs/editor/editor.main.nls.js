@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (occurred again)","{0} (occurred {1} times)"],"vs/base/browser/ui/findinput/findInput":["input"],"vs/base/browser/ui/findinput/findInputCheckboxes":["Match Case","Match Whole Word","Use Regular Expression"],"vs/base/browser/ui/findinput/replaceInput":["input","Preserve Case"],"vs/base/browser/ui/inputbox/inputBox":["Error: {0}","Warning: {0}","Info: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["Unbound"],"vs/base/browser/ui/list/listWidget":["{0}. Use the navigation keys to navigate."],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["Clear","Disable Filter on Type","Enable Filter on Type","No elements found","Matched {0} out of {1} elements"],
 "vs/base/common/keybindingLabels":["Ctrl","Shift","Alt","Windows","Ctrl","Shift","Alt","Super","Control","Shift","Alt","Command","Control","Shift","Alt","Windows","Control","Shift","Alt","Super"],"vs/base/common/severity":["Error","Warning","Info"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}, picker","picker"],"vs/base/parts/quickopen/browser/quickOpenWidget":["Quick picker. Type to narrow down results.","Quick Picker","{0} Results"],"vs/editor/browser/controller/coreCommands":["&&Select All","&&Undo","&&Redo"],"vs/editor/browser/controller/textAreaHandler":["The editor is not accessible at this time. Press Alt+F1 for options."],"vs/editor/browser/widget/codeEditorWidget":["The number of cursors has been limited to {0}."],"vs/editor/browser/widget/diffEditorWidget":["Cannot compare files because one file is too large."],
 "vs/editor/browser/widget/diffReview":["Close","no lines","1 line","{0} lines","Difference {0} of {1}: original {2}, {3}, modified {4}, {5}","blank","original {0}, modified {1}: {2}","+ modified {0}: {1}","- original {0}: {1}","Go to Next Difference","Go to Previous Difference"],"vs/editor/browser/widget/inlineDiffMargin":["Copy deleted lines","Copy deleted line","Copy deleted line ({0})","Revert this change","Copy deleted line ({0})"],

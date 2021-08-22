@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
 define("vs/editor/editor.main.nls.ja",{"vs/base/browser/ui/actionbar/actionbar":["{0} ({1})"],"vs/base/browser/ui/aria/aria":["{0} (再発)","{0} (発生 {1} 回目)"],"vs/base/browser/ui/findinput/findInput":["入力"],"vs/base/browser/ui/findinput/findInputCheckboxes":["大文字と小文字を区別する","単語単位で検索する","正規表現を使用する"],"vs/base/browser/ui/findinput/replaceInput":["入力","保持する"],"vs/base/browser/ui/inputbox/inputBox":["エラー: {0}","警告: {0}","情報: {0}"],"vs/base/browser/ui/keybindingLabel/keybindingLabel":["バインドなし"],"vs/base/browser/ui/list/listWidget":["{0}。移動キーを使用して移動します。"],"vs/base/browser/ui/menu/menu":["{0} ({1})"],"vs/base/browser/ui/tree/abstractTree":["クリア","型のフィルターを無効にする","型のフィルターを有効にする","要素が見つかりません","{1} 個の要素のうち {0} 個の要素が一致しました"],"vs/base/common/keybindingLabels":["Ctrl","Shift","Alt","Windows","Ctrl","Shift","Alt","Super","Control","Shift","Alt","コマンド","Control","Shift","Alt","Windows","Control","Shift","Alt","Super"],"vs/base/common/severity":["エラー","警告","情報"],"vs/base/parts/quickopen/browser/quickOpenModel":["{0}、選択","選択"],
 "vs/base/parts/quickopen/browser/quickOpenWidget":["クイック選択。入力すると結果が絞り込まれます。","クイック選択","{0} 件の結果"],"vs/editor/browser/controller/coreCommands":["すべて選択(&&S)","元に戻す(&&U)","やり直し(&&R)"],"vs/editor/browser/controller/textAreaHandler":["現在エディターにアクセスすることはできません。 Alt + F1 キーを押してオプションを選択します。"],"vs/editor/browser/widget/codeEditorWidget":["カーソルの数は {0} 個に制限されています。"],"vs/editor/browser/widget/diffEditorWidget":["一方のファイルが大きすぎるため、ファイルを比較できません。"],"vs/editor/browser/widget/diffReview":["閉じる","行なし","1 行","{0} 行","{1} の差異 {0}: 変更前 {2}, {3}, 変更後 {4}, {5}","空白","変更前の {0}、変更後の {1}: {2}","+ 変更後の {0}: {1}","- 変更前の {0}: {1}","次の差分に移動","前の差分に移動"],"vs/editor/browser/widget/inlineDiffMargin":["削除された行のコピー","削除された行のコピー","削除された行のコピー ({0})","この変更を元に戻す","削除された行のコピー ({0})"],
 "vs/editor/common/config/commonEditorConfig":["エディター","1 つのタブに相当するスペースの数。`#editor.detectIndentation#` がオンの場合、この設定はファイル コンテンツに基づいて上書きされます。","`Tab` キーを押すとスペースが挿入されます。`#editor.detectIndentation#` がオンの場合、この設定はファイル コンテンツに基づいて上書きされます。","ファイルがファイルの内容に基づいて開かれる場合、`#editor.tabSize#` と `#editor.insertSpaces#` を自動的に検出するかどうかを制御します。","自動挿入された末尾の空白を削除します。","大きなファイルでメモリが集中する特定の機能を無効にするための特別な処理。","ドキュメント内の単語に基づいて入力候補を計算するかどうかを制御します。","Controls whether the semanticHighlighting is shown for the languages that support it.","エディターのコンテンツをダブルクリックするか、`Escape` キーを押しても、ピーク エディターを開いたままにします。","この長さを越える行は、パフォーマンス上の理由によりトークン化されません。","差分計算が取り消された後のタイムアウト (ミリ秒単位)。タイムアウトなしには 0 を使用します。","差分エディターが差分を横に並べて表示するか、行内に表示するかを制御します。","差分エディターが、先頭または末尾の空白の変更を差分として表示するかどうかを制御します。","差分エディターが追加/削除された変更に +/- インジケーターを示すかどうかを制御します。"],

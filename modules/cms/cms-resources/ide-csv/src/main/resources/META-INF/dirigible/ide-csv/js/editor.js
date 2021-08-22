@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+
 agGrid.initialiseAgGridWithAngular1(angular);
 let csvView = angular.module('csv-editor', ["agGrid"]);
 
@@ -61,7 +62,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
             }
         },
         onGridReady: function (/*$event*/) {
-            if(!$scope.gridLoaded) { // Execute this only once on first grid load
+            if (!$scope.gridLoaded) { // Execute this only once on first grid load
                 $scope.gridLoaded = true;
                 checkPlatform();
                 loadFileContents();
@@ -83,7 +84,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     };
     $scope.papaConfig = {
         columnIndex: 0, // Custom property, needed for duplicated column names
-        delimitersToGuess: [',', '\t', '|', ';'],
+        delimitersToGuess: [',', '\t', '|', ';', '#', Papa.RECORD_SEP, Papa.UNIT_SEP],
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
@@ -134,13 +135,17 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     function loadFileContents() {
         let searchParams = new URLSearchParams(window.location.search);
         $scope.file = searchParams.get('file');
-        let header = (searchParams.get('header') === 'true');
+        let header = searchParams.get('header');
         let delimiter = searchParams.get('delimiter');
         let quoteChar = searchParams.get('quotechar');
-        if (header != null && header != undefined && delimiter && quoteChar) {
-            $scope.papaConfig.header = header;
+        if (header) {
+            $scope.papaConfig.header = (header === 'true');
+        }
+        if (delimiter) {
             $scope.papaConfig.delimiter = delimiter;
             $scope.delimiter = delimiter;
+        }
+        if (quoteChar) {
             $scope.papaConfig.quoteChar = quoteChar;
         }
         if ($scope.file) {

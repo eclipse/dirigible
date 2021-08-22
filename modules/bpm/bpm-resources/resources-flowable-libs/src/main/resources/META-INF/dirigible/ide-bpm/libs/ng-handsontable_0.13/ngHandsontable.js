@@ -1,14 +1,13 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/**
+ * ng-handsontable 0.13.0
+ * 
+ * Copyright 2012-2015 Marcin Warpechowski
+ * Copyright 2015 Handsoncode sp. z o.o. <hello@handsontable.com>
+ * Licensed under the MIT license.
+ * https://github.com/handsontable/ngHandsontable
+ * Date: Wed Oct 26 2016 10:00:05 GMT+0200 (CEST)
+*/
+
 if (document.all && !document.addEventListener) { // IE 8 and lower
   document.createElement('hot-table');
   document.createElement('hot-column');

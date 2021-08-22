@@ -1,14 +1,10 @@
-/*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
- *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
- */
+/*!-----------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Version: 0.20.0(6363745c0a33c27b149b89342a7b96d354fb554c)
+ * Released under the MIT license
+ * https://github.com/Microsoft/vscode/blob/master/LICENSE.txt
+ *-----------------------------------------------------------*/
+
 (function() {
 var __m = ["require","exports","vs/editor/common/core/position","vs/base/common/errors","vs/base/common/platform","vs/editor/common/core/range","vs/base/common/diff/diff","vs/base/common/iterator","vs/base/common/lifecycle","vs/base/common/event","vs/base/common/types","vs/base/common/uint","vs/base/common/uri","vs/base/common/arrays","vs/base/common/diff/diffChange","vs/base/common/functional","vs/base/common/hash","vs/base/common/keyCodes","vs/base/common/linkedList","vs/base/common/cancellation","vs/base/common/strings","vs/editor/common/core/characterClassifier","vs/editor/common/core/selection","vs/editor/common/core/token","vs/editor/common/diff/diffComputer","vs/editor/common/model/wordHelper","vs/editor/common/modes/linkComputer","vs/editor/common/modes/supports/inplaceReplaceSupport","vs/editor/common/standalone/standaloneEnums","vs/editor/common/standalone/standaloneBase","vs/editor/common/viewModel/prefixSumComputer","vs/editor/common/model/mirrorTextModel","vs/base/common/worker/simpleWorker","vs/editor/common/standalone/promise-polyfill/polyfill","vs/editor/common/services/editorSimpleWorker"];
 var __M = function(deps) {
