@@ -90,7 +90,7 @@ editorView.directive('uniqueField', () => {
                 } else {
                     element.addClass('error-input');
                 }
-                scope.$parent.setSaveEnabled(correct);
+                scope.$parent.setSaveEnabled(correct && unique);
                 return unique;
             };
         }
