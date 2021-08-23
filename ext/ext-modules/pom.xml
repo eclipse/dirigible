@@ -22,6 +22,8 @@
 	</scm>
 	
 	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+
 		<content.repository.name>dirigiblelabs</content.repository.name>
 		<content.project.name>dirigiblelabs</content.project.name>
 
