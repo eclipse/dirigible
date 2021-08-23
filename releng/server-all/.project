@@ -98,6 +98,7 @@
 		<project>dirigible-ide-ui-swagger</project>
 		<project>dirigible-ide-ui-workspace</project>
 		<project>dirigible-ide-ui-preview</project>
+		<project>dirigible-ide-ui-problems</project>
 		<project>dirigible-ide-ui-help</project>
 		<project>dirigible-ide-ui-database</project>
 		<project>dirigible-ide-ui-git</project>
