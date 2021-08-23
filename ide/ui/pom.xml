@@ -35,6 +35,7 @@
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
+		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 	
 	<modules>
