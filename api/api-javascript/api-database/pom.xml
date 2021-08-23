@@ -21,12 +21,14 @@
 	</scm>
 	
 	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+
 		<content.repository.name>api-db</content.repository.name>
 		<content.project.name>db</content.project.name>
 
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
 		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
 	</properties>
+
 </project>
