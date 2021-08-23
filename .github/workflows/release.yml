@@ -24,7 +24,7 @@ jobs:
       run: echo '${{ secrets.MAVEN_M2_SETTINGS }}' > /home/runner/.m2/settings.xml
 
     - name: Build Dirigible
-      run: mvn clean install
+      run: mvn clean install -Dmaven.javadoc.skip=false
 
 #-----------------Publish to DockerHub-------------------#
 

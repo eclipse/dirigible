@@ -19,7 +19,7 @@ jobs:
         java-version: 13
     - name: Maven Build if Windows
       if: ${{ matrix.os == 'windows-latest' }}
-      run: mvn clean install
+      run: mvn clean install -Dmaven.javadoc.skip=false
     - name: Maven Build if not Windows
       if: ${{ matrix.os != 'windows-latest' }}
-      run: mvn clean install -Drabbitmq-test -Dredis-test -Delastic-test -Detcd-test
+      run: mvn clean install  -Dmaven.javadoc.skip=false -Drabbitmq-test -Dredis-test -Delastic-test -Detcd-test

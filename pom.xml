@@ -97,6 +97,9 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<properties>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -168,21 +171,21 @@
 								<exclude>**/logback.xml</exclude>
 								<exclude>**/logback-test.xml</exclude>
 								<exclude>**/src/test/resources/**</exclude>
-								<exclude>**/src/main/resources/font-awesome-4.7.0/**</exclude>
-								<exclude>**/src/main/resources/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/resources/goldenlayout/**</exclude>
-								<exclude>**/src/main/resources/ide-ace/**</exclude>
-								<exclude>**/src/main/resources/ide-bpm/**</exclude>
-								<exclude>**/src/main/resources/ide-monaco/**</exclude>
-								<exclude>**/src/main/resources/ide-orion/**</exclude>
-								<exclude>**/src/main/resources/ide-swagger/**</exclude>
-								<exclude>**/src/main/resources/ide-database/sql/lib/ace/**</exclude>
-								<exclude>**/src/main/resources/ide-discussions/ui/js/**</exclude>
-								<exclude>**/src/main/resources/ide-core/ui/**</exclude>
-								<exclude>**/src/main/resources/ide-terminal/js/**</exclude>
-								<exclude>**/src/main/resources/dev-tools/**</exclude>
-								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
-								<exclude>**/src/main/resources/utils/v4/jsonpath.js</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/font-awesome-4.7.0/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/font-dirigible/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/resources/goldenlayout/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-ace/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-orion/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-database/sql/lib/ace/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-discussions/ui/js/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-core/ui/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/utils/v4/jsonpath.js</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>

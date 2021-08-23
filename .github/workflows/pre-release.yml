@@ -22,7 +22,7 @@ jobs:
       run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr pre " " | sed 's/   //'  >> $GITHUB_ENV
 
     - name: Build Dirigible
-      run: mvn clean install
+      run: mvn clean install -Dmaven.javadoc.skip=false
 
 #-----------------Publish to DockerHub-------------------#
 
