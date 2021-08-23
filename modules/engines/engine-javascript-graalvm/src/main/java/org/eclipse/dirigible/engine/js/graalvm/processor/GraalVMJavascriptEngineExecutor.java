@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -22,8 +23,11 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
+import org.eclipse.dirigible.api.v3.core.ContextFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
@@ -111,6 +115,19 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
+		if (executionContext == null) {
+			executionContext = new HashMap<>();
+		}
+		try {
+			ThreadContextFacade.setUp();
+			ThreadContextFacade.set("paths", new String[]{"/", "/registry/public/"});
+		} catch (ContextException e) {
+			e.printStackTrace();
+		}
+
+
+		executionContext.put("paths", new String[]{"/"});
+
 		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
@@ -169,19 +186,28 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
 			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
 			bindings.putMember(CONTEXT, executionContext);
-			
-            context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+
             if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
-            
-            context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+			context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE);
+			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
 
-            beforeEval(context);
+//			context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+
+			beforeEval(context);
             if (isDebugEnabled) {
             	code = CODE_DEBUGGER + code;
             }
-            result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
+			if (isModule) {
+				bindings.putMember("MODULE_FILENAME", moduleOrCode);
+				result = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+			} else {
+				bindings.putMember("SCRIPT_STRING", moduleOrCode);
+				result = context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE);
+			}
+
         } catch (IOException e) {
         	logger.error(e.getMessage(), e);
         } catch (URISyntaxException e) {
@@ -189,7 +215,11 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         }
 
 		logger.trace("exiting: executeServiceModule()");
-
+		try {
+			ThreadContextFacade.tearDown();
+		} catch (ContextException e) {
+			e.printStackTrace();
+		}
 		return result;
 	}
 
