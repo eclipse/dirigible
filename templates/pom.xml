@@ -61,6 +61,7 @@
 
 	<properties>
 		<profile.phase>generate-sources</profile.phase>
+		<license.header.location>../licensing-header.txt</license.header.location>
 	</properties>
 
 	<profiles>
