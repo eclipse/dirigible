@@ -160,7 +160,7 @@ public class SQLQueryBuilder {
     }
 
     private List<SelectItem> buildSelectItemsForPrimaryKey(final EdmEntityType target) throws EdmException {
-        List<SelectItem> result = new ArrayList<SelectItem>();
+        List<SelectItem> result = new ArrayList<>();
         List<String> keyProperties = target.getKeyPropertyNames();
         for (final String prop : keyProperties) {
             SelectItem item = new SelectItem() {
@@ -272,29 +272,22 @@ public class SQLQueryBuilder {
     public SQLQuery buildInsertEntityQuery(final UriInfo uri, ODataEntry entry) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        Map<String, Object> values = entry.getProperties();
-        
-        q.insert().into(target).values(values);
-        
+        q.insert(target, entry);
         return q;
     }
     
     public SQLQuery buildDeleteEntityQuery(final UriInfo uri, Map<String, Object> keys) throws ODataException {
         EdmEntityType target = uri.getStartEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        
         q.delete().from(target).keys(keys);
         
         return q;
     }
 
-	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> keys) throws ODataException {
+	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> entryKeys) throws ODataException {
 		EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        Map<String, Object> values = entry.getProperties();
-        
-        q.update().table(target).with(values, keys);
-        
+        q.update(target, entry, entryKeys).build();
         return q;
 	}
 }

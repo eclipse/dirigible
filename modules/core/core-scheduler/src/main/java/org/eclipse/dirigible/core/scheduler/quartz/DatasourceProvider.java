@@ -23,8 +23,6 @@ import org.eclipse.dirigible.database.api.DatabaseModule;
  */
 public class DatasourceProvider {
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-	
 	private DataSource runtimeDataSource;
 
 	/**
@@ -34,7 +32,7 @@ public class DatasourceProvider {
 	 */
 	public DataSource getDatasource() {
 		if (this.runtimeDataSource == null) {
-			this.runtimeDataSource = this.datasource;
+			this.runtimeDataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 			Configuration.loadModuleConfig("/dirigible-scheduler.properties");
 			String dataSourceType = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE);
 			String dataSourceName = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);

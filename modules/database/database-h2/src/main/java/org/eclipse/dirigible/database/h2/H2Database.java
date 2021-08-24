@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * H2 Database adapter.
  */
-public class H2Database implements IDatabase {
+public class H2Database extends AbstractDatabase {
 
 	private static final Logger logger = LoggerFactory.getLogger(H2Database.class);
 
@@ -88,15 +89,6 @@ public class H2Database implements IDatabase {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource()
-	 */
-	@Override
-	public DataSource getDataSource() {
-		return getDataSource(getDefaultDataSourceName());
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.api.IDatabase#getDataSource(java.lang.String)
 	 */
 	@Override
@@ -125,15 +117,6 @@ public class H2Database implements IDatabase {
 	@Override
 	public String getType() {
 		return TYPE;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.database.api.IDatabase#getDefaultDataSourceName()
-	 */
-	@Override
-	public String getDefaultDataSourceName() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
 	}
 
 	/**

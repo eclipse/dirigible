@@ -11,11 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class ODataHandler {
 
     private String method;
@@ -23,4 +18,29 @@ public class ODataHandler {
     private String type;
 
     private String handler;
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getHandler() {
+		return handler;
+	}
+
+	public void setHandler(String handler) {
+		this.handler = handler;
+	}
+    
 }

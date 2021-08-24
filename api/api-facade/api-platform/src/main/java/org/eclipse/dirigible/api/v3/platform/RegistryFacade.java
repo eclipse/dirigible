@@ -40,7 +40,7 @@ public class RegistryFacade {
 		}
 
 		// Check in the pre-delivered content
-		InputStream in = RegistryFacade.class.getResourceAsStream(toResourcePath(path));
+		InputStream in = RegistryFacade.class.getResourceAsStream("/META-INF/dirigible" + toResourcePath(path));
 		try {
 			if (in != null) {
 				return IOUtils.toByteArray(in);

@@ -19,9 +19,13 @@
         <module>cms-internal</module>
 		<module>cms-managed</module>
 		<module>cms-database</module>
+		<module>api-cms</module>
+		<module>api-documents</module>
+		<module>cms-resources</module>
 	</modules>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
+
 </project>

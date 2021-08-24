@@ -14,6 +14,7 @@ package org.eclipse.dirigible.cf;
 import java.text.MessageFormat;
 
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaCloudDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.PostgreDbEnv;
@@ -98,6 +99,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		bindPostgreDb(CloudFoundryUtils.getPostgreDbEnv());
 		bindPostgreHyperscalerDb(CloudFoundryUtils.getPostgreHyperscalerDbEnv());
 		bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
+		bindHanaCloudDb(CloudFoundryUtils.getHanaCloudDbEnv());
 		bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
 	}
 
@@ -137,7 +139,40 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 
 		return true;
 	}
+
 	private boolean bindHanaDb(HanaDbEnv env) {
+		if (env == null) {
+			return false;
+		}
+
+		String name = DATABASE_HANA;
+		String url = env.getCredentials().getUrl();
+		String driver = DATABASE_HANA_DRIVER;
+
+		setDatabaseProperties(name, url, driver);
+
+		String maxConnectionsCount = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, "32");
+		Configuration.set(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT, maxConnectionsCount);
+		Configuration.set(DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE, "false");
+
+		// CMS properties
+		String cmsDatabaseDatasourceName = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME);
+		if (cmsDatabaseDatasourceName == null || cmsDatabaseDatasourceName.equals("")) {
+			cmsDatabaseDatasourceName = name;
+		}
+
+		String cmsDatabaseDatasourceType = Configuration.get(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE);
+		if (cmsDatabaseDatasourceType == null || cmsDatabaseDatasourceType.equals("")) {
+			cmsDatabaseDatasourceType = "custom";
+		}
+
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_PROVIDER, "database");
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_NAME, cmsDatabaseDatasourceName);
+		Configuration.set(ICmsProvider.DIRIGIBLE_CMS_DATABASE_DATASOURCE_TYPE, cmsDatabaseDatasourceType);
+		return true;
+	}
+
+	private boolean bindHanaCloudDb(HanaCloudDbEnv env) {
 		if (env == null) {
 			return false;
 		}
@@ -233,11 +268,6 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		}
 	}
 
-	private boolean haveCustomDatasourceConfiguration() {
-		return Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER, "").equals("custom")
-				&& !Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES, "").equals("")
-				&& !Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT, "").equals("");
-	}
 	@Override
 	public String getName() {
 		return MODULE_NAME;

@@ -50,16 +50,28 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		String databaseProvider = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_PROVIDER);
 		String dataSourceName = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT,
 				IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT);
+		String systemDataSourceName = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM,
+				IDatabase.DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM);
 		if (databaseProvider != null) {
 			databaseProviderIsSelected = true;
 		} else {
 			databaseProvider = IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL;
 		}
+		
+		for (IDatabase next : DATABASES) {
+			logger.trace(format("Installing System Database Provider [{0}:{1}] ...", next.getType(), next.getName()));
+			if (next.getType().equals(IDatabase.DIRIGIBLE_DATABASE_PROVIDER_LOCAL)) {
+				bindSystemDatasource(next, systemDataSourceName);
+			}
+			logger.trace(format("Done installing System Database Provider [{0}:{1}].", next.getType(), next.getName()));
+		}
+		
 		for (IDatabase next : DATABASES) {
 			logger.trace(format("Installing Database Provider [{0}:{1}] ...", next.getType(), next.getName()));
 			if (databaseProviderIsSelected && next.getType().equals(databaseProvider)) {
 				// bind the selected if any
 				bindDatasource(next, dataSourceName);
+				break;
 			} else if (!databaseProviderIsSelected) {
 				// bind the first present, because there is no selected one
 				bindDatasource(next, dataSourceName);
@@ -68,13 +80,32 @@ public class DatabaseModule extends AbstractDirigibleModule {
 			logger.trace(format("Done installing Database Provider [{0}:{1}].", next.getType(), next.getName()));
 		}
 	}
+	
+	private void bindSystemDatasource(IDatabase next, String dataSourceName) {
+		logger.trace(format("Binding System Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+		try {
+			logger.trace(format("Creating System Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
+			StaticObjects.set(StaticObjects.SYSTEM_DATASOURCE, next.getDataSource(dataSourceName));
+			logger.info(format("Bound System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+			logger.trace(format("Done creating System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+		} catch (Exception e) {
+			logger.error(format("Failed creating System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName), e);
+		}
+		logger.trace(format("Done binding System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+	}
 
 	private void bindDatasource(IDatabase next, String dataSourceName) {
 		StaticObjects.set(StaticObjects.DATABASE, next);
 		logger.trace(format("Binding Database - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		try {
 			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
-			StaticObjects.set(StaticObjects.DATASOURCE, next.getDataSource(dataSourceName));
+			DataSource dataSource = next.getDataSource(dataSourceName);
+			StaticObjects.set(StaticObjects.DATASOURCE, dataSource);
+			if (!StaticObjects.exists(StaticObjects.SYSTEM_DATASOURCE)) {
+				logger.trace(format("Reusing Datasource as a System Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
+				StaticObjects.set(StaticObjects.SYSTEM_DATASOURCE, dataSource);
+				logger.info(format("Bound System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
+			}
 			logger.info(format("Bound Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 			logger.trace(format("Done creating Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 		} catch (Exception e) {
@@ -82,7 +113,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 		}
 		logger.trace(format("Done binding Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule#getName()

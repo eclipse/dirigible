@@ -17,17 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
-import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.ds.model.DataStructureModelFactory;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableCreateProcessor;
-import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +31,7 @@ public abstract class AbstractDatabaseLayoutInitializer {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDatabaseLayoutInitializer.class);
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+//	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
 	/**
 	 * Initialize the database schema for Quartz.

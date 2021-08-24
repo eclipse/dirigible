@@ -80,13 +80,14 @@
 		<!-- CMS -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-api</artifactId>
+		 	<artifactId>dirigible-cms</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-cms-internal</artifactId>
-		 	<version>6.0.0-SNAPSHOT</version>
+		 	<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-cms-managed</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- BPM -->
@@ -103,4 +104,9 @@
 		 	<version>6.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
+
 </project>

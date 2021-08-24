@@ -110,7 +110,7 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredListener(String listenerPath) throws IOException {
-		InputStream in = MessagingSynchronizer.class.getResourceAsStream(listenerPath);
+		InputStream in = MessagingSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + listenerPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ListenerDefinition listenerDefinition = messagingCoreService.parseListener(json);

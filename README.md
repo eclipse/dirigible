@@ -65,10 +65,20 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 ##### Steps
 
 1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest sources](https://github.com/eclipse/dirigible/archive/master.zip).
-2. Go to the root folder.
-3. Build the project with:
+
+  In case there is an issue with 'Filename too long in Git for Windows' then add the fllowing git confoguration 
+```
+git config --system core.longpaths true
+```
+
+3. Go to the root folder.
+4. Build the project with:
 
         mvn clean install
+
+ - If you don't want to trigger license updates:
+
+        mvn clean install -Dlicense.skip=true
 
  - If you have a multi-core system, enable threads:
 
@@ -82,9 +92,14 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
         mvn clean install -Dmaven.test.skip=true -DskipTests
 
- - If you want to do a fast build, with no tests and javadocs:
+ - If you want to do a fast build, with no tests, javadocs and license updates:
 
-        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
+        mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
+        
+> The main groups of modules can be built separately: `api`, `ext`, `ide`, `modules`, `releng`, `resources` and `templates`:
+
+        cd api
+        mvn clean install
 
 The build should pass successfully. The produced `ROOT.war` files are in `releng/<artifact-name>/target/` and are ready to be deployed. There are separate deployable artifacts (WAR files) depending on the usage type. If you are running it locally, then you need `releng/desktop-all/target/ROOT.war`. There is also an executable JAR file under the `releng/<artifact-name>/target` folder with a name like `ROOT.jar`.
 

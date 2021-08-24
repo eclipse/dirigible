@@ -38,26 +38,6 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-generation</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-generation-mustache</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-generation-velocity</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core-generation-javascript</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-git</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
@@ -69,6 +49,11 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-messaging</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-core-problems</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -111,4 +96,5 @@
     <properties>
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
+
 </project>

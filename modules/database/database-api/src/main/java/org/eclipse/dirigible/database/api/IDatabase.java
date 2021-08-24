@@ -42,6 +42,10 @@ public interface IDatabase {
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT = "DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT"; //$NON-NLS-1$
 
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_DEFAULT = "DefaultDB"; //$NON-NLS-1$
+	
+	public static final String DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM = "DIRIGIBLE_DATABASE_DATASOURCE_NAME_SYSTEM"; //$NON-NLS-1$
+
+	public static final String DIRIGIBLE_DATABASE_DATASOURCE_SYSTEM = "SystemDB"; //$NON-NLS-1$
 
 	public static final String DIRIGIBLE_DATABASE_DATASOURCE_TEST = "target/tests/derby"; //$NON-NLS-1$
 
@@ -74,6 +78,13 @@ public interface IDatabase {
 	 * @return the default data source name
 	 */
 	public String getDefaultDataSourceName();
+	
+	/**
+	 * Gets the system data source name
+	 * 
+	 * @return the system data source name
+	 */
+	public String getSystemDataSourceName();
 
 	/**
 	 * Gets the data source.
@@ -81,6 +92,13 @@ public interface IDatabase {
 	 * @return the data source
 	 */
 	public DataSource getDataSource();
+	
+	/**
+	 * Gets the system data source.
+	 *
+	 * @return the system data source
+	 */
+	public DataSource getSystemDataSource();
 
 	/**
 	 * Gets the data source.

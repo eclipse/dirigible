@@ -39,7 +39,7 @@ public class PublishLogDefinition {
 	private String target;
 
 	/** The created by. */
-	@Column(name = "PUBLOG_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "PUBLOG_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	/** The created at. */

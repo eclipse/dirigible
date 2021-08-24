@@ -11,16 +11,12 @@
  */
 package org.eclipse.dirigible.core.workspace.service;
 
-import java.util.List;
-
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IEntityInformation;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.IResourceVersion;
 import org.eclipse.dirigible.repository.api.RepositoryReadException;
-import org.eclipse.dirigible.repository.api.RepositoryVersioningException;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 
 /**

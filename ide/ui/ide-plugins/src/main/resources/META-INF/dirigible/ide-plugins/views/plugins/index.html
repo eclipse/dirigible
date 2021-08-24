@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2018 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="plugins">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | Plugins </title>
+
+    <link rel="shortcut icon" type="image/png" href="../../../../../../services/v4/web/resources/images/favicon.png" />
+	
+	<!-- FontAwesome icon set -->
+    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/ide.css" />
+	
+</head>
+
+<body ng-controller="PluginsController">
+	<div class="container">
+			<div ng-repeat="next in depots">
+				<h4>
+					<label>Depot:</label> <a href="{{next.depot}}" title="{{next.depot}}" target="_blank">{{next.name}}</a>
+				</h4>
+				<h4>
+					<i>{{next.description}}</i>
+				</h4>
+				<hr>
+				<td>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>Version</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="plugin in next.plugins">
+								<td>{{$index + 1}}</td>
+								<td><a href="{{plugin.site}}" title="{{plugin.description}}" target="_blank">{{plugin.name}}</a></td>
+								<td>{{plugin.version}}</td>
+								<td><a class="btn btn-primary btn-xs" href="../../../../../../services/v4/web/ide-git/index.html?repository={{plugin.repository}}" title="Install {{plugin.name}}" target="_blank">install</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</div>
+	</div>
+
+	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script>
+		angular.module('plugins', []);
+		angular.module('plugins').controller('PluginsController', function ($scope, $http) {
+		
+		    var pluginsApi = 'https://www.dirigible.io/depots.json';
+		
+		    function loadPlugins() {
+		        $http.get(pluginsApi)
+		        .success(function(data) {
+		            $scope.depots = data;
+		            $scope.depots.forEach(function(depot){
+		            	$http.get(depot.depot)
+				        .success(function(data) {
+				            depot.plugins = data;
+				        });
+		            });
+		        });
+		    }
+		
+		    loadPlugins();
+		});
+	</script>
+</body>
+
+
+</html>

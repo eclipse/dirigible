@@ -12,35 +12,13 @@
 	<name>Resources</name>
 	<artifactId>dirigible-resources</artifactId>
     <packaging>jar</packaging>
-
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
 	
 	<properties>
-		<content.repository.name>dirigiblelabs</content.repository.name>
-		<content.project.name>dirigiblelabs</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-        <content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
-        <license.header.location>../../licensing-header.txt</license.header.location>
+		<profile.phase>none</profile.phase>
+		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 
 	<dependencies>
-		<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-angular</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-		<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-bootstrap</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-fonts</artifactId>
@@ -51,29 +29,9 @@
             <artifactId>dirigible-resources-goldenlayout</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
-		<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-jquery</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-		<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-jstree</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-flowable-libs</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-dev-tools</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-jqplot</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
@@ -96,16 +54,6 @@
             <artifactId>dirigible-resources-theme-fiori</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-jquery-ui</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-resources-requirejs</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
         
         <!-- WebJars -->
         <dependency>
@@ -117,6 +65,47 @@
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>fontawesome</artifactId>
 		    <version>4.7.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>angularjs</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>bootstrap</artifactId>
+		    <version>3.3.7</version>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>golden-layout</artifactId>
+		    <version>1.5.9</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jqplot</artifactId>
+		    <version>1.0.8r1250</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery</artifactId>
+		    <version>3.4.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery-ui</artifactId>
+		    <version>1.12.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jstree</artifactId>
+		    <version>3.3.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>requirejs</artifactId>
+		    <version>2.3.6</version>
+		    <scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>

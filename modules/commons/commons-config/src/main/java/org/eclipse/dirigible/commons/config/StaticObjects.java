@@ -24,6 +24,8 @@ public final class StaticObjects {
 	
 	public static final String DATASOURCE = "DATASOURCE"; // DataSource
 	
+	public static final String SYSTEM_DATASOURCE = "SYSTEM_DATASOURCE"; // System DataSource
+	
 	public static final String DATABASE = "DATABASE"; // IDatabase
 	
 	public static final String REPOSITORY = "REPOSITORY"; // IRepository
@@ -62,6 +64,15 @@ public final class StaticObjects {
 	public static final void set(String key, Object object) {
 		logger.info("Setting static object by key: " + key);
 		OBJECTS.put(key, object);
+	}
+	
+	public static final boolean exists(String key) {
+		logger.trace("Exists static object by key: " + key);
+		Object object = OBJECTS.get(key);
+		if (object == null) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -33,6 +33,7 @@ import org.apache.olingo.odata2.api.edm.EdmTyped;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.exception.ODataHttpException;
@@ -215,6 +216,27 @@ public class OData2Utils {
         }
     }
 
+    public static String getInlineEntryKeyValue(Map<String, Object> values, EdmTyped inlineEntry, EdmProperty inlinEntityKey) throws EdmException {
+        if (inlineEntry.getType() instanceof EdmEntityType) {
+            Object inlineEntryData = values.get(inlineEntry.getName());
+            if (inlineEntryData instanceof ODataEntry) {
+                Map inlineEntryDataProperties = ((ODataEntry) inlineEntryData).getProperties();
+                for (Object inlineEntityKeyName : inlineEntryDataProperties.keySet()) {
+                    Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
+                    if (inlineKeyValue instanceof String) {
+                        return (String) inlineKeyValue;
+                    } else {
+                        throw new OData2Exception("Invalid inline entity: the key " + inlinEntityKey.getName()//
+                                + " of entity " + inlineEntry.getName() + " must be of type String!", HttpStatusCodes.BAD_REQUEST);
+                    }
+                }
+            }
+            throw new OData2Exception("Invalid inline entity: missing key " + inlinEntityKey.getName() + //
+                    " of entity " + inlineEntry.getName(), HttpStatusCodes.BAD_REQUEST);
+        }
+        throw new OData2Exception("Invalid inline entity: required is EntityType for " + inlineEntry.getName(), HttpStatusCodes.BAD_REQUEST);
+    }
+
     static String percentEncodeNextLink(final String link) {
         if (link == null) {
             return null;
@@ -324,39 +346,6 @@ public class OData2Utils {
         return true;
     }
 
-    public static IOException closeConsumeException(Closeable closeable, String details) {
-        try {
-            close(closeable);
-            return null;
-        } catch (IOException e) {
-            LOG.warn("Close failed", e);
-            return e;
-        }
-    }
-
-    public static IOException closeConsumeException(Closeable closeable) {
-        return closeConsumeException(closeable, null);
-    }
-
-    public static void close(Closeable closeable) throws IOException {
-        if (closeable != null) {
-            closeable.close();
-        }
-    }
-
-    public static void closeConsumeException(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                if (closeable != null) {
-                    closeable.close();
-                }
-                return;
-            } catch (Exception e) {
-               LOG.warn("Close failed", e);
-            }
-        }
-    }
-    
     public static HttpStatusCodes getStatusCodeForException(Exception e) {
         HttpStatusCodes codeOnFailedRequest = HttpStatusCodes.INTERNAL_SERVER_ERROR;
         if (e instanceof OData2Exception) {

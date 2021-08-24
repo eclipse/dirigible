@@ -99,12 +99,13 @@
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
-		    <version>1.4.193</version>
+		    <version>${h2database.version}</version>
 		    <scope>test</scope>
 		</dependency>
     </dependencies>
 
-    <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
-    </properties>
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
+
 </project>

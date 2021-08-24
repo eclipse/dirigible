@@ -297,7 +297,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
-		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream(modelPath);
+		InputStream in = DataStructuresSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath);
 		try {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			return content;
@@ -914,7 +914,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				}
 			}
 		} catch (SQLException e) {
-			logger.error(concatenateListOfStrings(errors, "\n---\n"), e);
+			logger.error(e.getMessage(), e);
+			errors.add(e.getMessage());
+		} finally {
+			logger.error(concatenateListOfStrings(errors, "\n---\n"));
 		}
 	}
 

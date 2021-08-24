@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -55,6 +56,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BLOB, DataType.BLOB);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.DECIMAL, DataType.DECIMAL);
 		DATABASE_TYPE_TO_DATA_TYPE.put(Types.BIT, DataType.BIT);
+		DATABASE_TYPE_TO_DATA_TYPE.put(Types.ARRAY, DataType.ARRAY);
 
 		STRING_TO_DATABASE_TYPE.put("VARCHAR", Types.VARCHAR);
 		STRING_TO_DATABASE_TYPE.put("NVARCHAR", Types.NVARCHAR);
@@ -72,6 +74,7 @@ public class DataTypeUtils {
 		STRING_TO_DATABASE_TYPE.put("BLOB", Types.BLOB);
 		STRING_TO_DATABASE_TYPE.put("DECIMAL", Types.DECIMAL);
 		STRING_TO_DATABASE_TYPE.put("BIT", Types.BIT);
+		STRING_TO_DATABASE_TYPE.put("ARRAY", Types.ARRAY);
 
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.VARCHAR);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(String.class, Types.NVARCHAR);
@@ -89,6 +92,7 @@ public class DataTypeUtils {
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Time.class, Types.TIME);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(Timestamp.class, Types.TIMESTAMP);
 		JAVA_TYPE_TO_DATABASE_TYPE.put(byte[].class, Types.BLOB);
+		JAVA_TYPE_TO_DATABASE_TYPE.put(List.class, Types.ARRAY);
 
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.VARCHAR, String.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.NVARCHAR, String.class);
@@ -107,6 +111,7 @@ public class DataTypeUtils {
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BLOB, byte[].class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.DECIMAL, Double.class);
 		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.BIT, boolean.class);
+		DATABASE_TYPE_TO_JAVA_TYPE.put(Types.ARRAY, List.class);
 
 	}
 
@@ -398,4 +403,14 @@ public class DataTypeUtils {
 		return DataType.BIT.toString().equals(dataType);
 	}
 
+	/**
+	 * Checks if is array.
+	 *
+	 * @param dataType
+	 *            the data type
+	 * @return true, if is array
+	 */
+	public static boolean isArray(String dataType) {
+		return DataType.ARRAY.toString().equals(dataType);
+	}
 }

@@ -236,6 +236,8 @@ public class DirigibleInitializer {
 		logger.info("Starting Terminal Server...");
 		try {
 			Class.forName("org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService");
+		} catch (ClassNotFoundException e) {
+			logger.warn("Terminal Server is not available");
 		} catch (Throwable e) {
 			logger.error("Failed starting Terminal Server", e);
 		}

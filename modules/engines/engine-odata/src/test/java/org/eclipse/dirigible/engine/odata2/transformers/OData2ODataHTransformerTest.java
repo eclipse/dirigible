@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OData2ODataHTransformerTest {
+public class OData2ODataHTransformerTest extends AbstractDirigibleTest {
 
     @InjectMocks
     OData2ODataHTransformer odata2ODataHTransformer;

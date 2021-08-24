@@ -17,6 +17,7 @@ import org.eclipse.dirigible.database.sql.builders.schema.CreateSchemaBuilder;
 import org.eclipse.dirigible.database.sql.builders.sequence.CreateSequenceBuilder;
 import org.eclipse.dirigible.database.sql.builders.synonym.CreateSynonymBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
+import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
 import org.eclipse.dirigible.database.sql.builders.view.CreateViewBuilder;
 
 /**
@@ -83,14 +84,22 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
         return new CreateSchemaBuilder(getDialect(), schema);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
-     */
-    @Override
-    public String generate() {
-        throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
-    }
+	/**
+	 * Table Type branch.
+	 *
+	 * @param tableType
+	 *            the tableType
+	 * @return the creates the table type builder
+	 */
+	public CreateTableTypeBuilder tableType(String tableType) { return new CreateTableTypeBuilder(getDialect(), tableType); }
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.ISqlBuilder#generate()
+	 */
+	@Override
+	public String generate() {
+		throw new SqlException("Invalid method invocation of generate() for Create Branching Builder");
+	}
 
 }

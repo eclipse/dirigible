@@ -13,20 +13,8 @@
 	<artifactId>dirigible-ide-ui-group-all</artifactId>
     <packaging>jar</packaging>
 
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
-	
 	<properties>
-		<content.repository.name>dirigiblelabs</content.repository.name>
-		<content.project.name>dirigiblelabs</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
+		<profile.phase>none</profile.phase>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
@@ -84,21 +72,6 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-repository</artifactId>
-		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-documents</artifactId>
-		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ide-ui-documents-ext-content-type-ms</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-	   </dependency>
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-bpm</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -171,11 +144,11 @@
 		 	<artifactId>dirigible-ide-ui-plugins</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-discussions</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-ui-deploy-manager</artifactId>
@@ -189,11 +162,6 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-ui-form-builder</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-ide-ui-csv</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

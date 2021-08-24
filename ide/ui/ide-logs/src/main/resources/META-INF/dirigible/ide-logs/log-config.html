@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="logconfigurations">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | Log Configurations View </title>
+
+    <link rel="shortcut icon" type="image/png" href="../../../../services/v4/web/resources/images/favicon.png" />
+	
+    <!-- FontAwesome icon set -->
+    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css" />
+	
+</head>
+
+<body ng-controller="LogConfigurationsController">
+    <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Search: </label>
+        <div class="col-sm-11">
+	        <input class="form-control" ng-model="search.name" />
+        </div>
+    </div>
+    <table class="table table-striped tableFixHead">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Severity</th>
+                <th>Trace</th>
+                <th>Debug</th>
+                <th>Warning</th>
+                <th>Info</th>
+                <th>Error</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="configuration in logConfigurations | filter: {name: search.name}">
+                <td>{{$index + 1}}</td>
+                <td><div class="tdSingleLine">{{configuration.name}}</div></td>
+                <td><div class="tdSingleLine">{{configuration.severity}}</div></td>
+                <td>
+                    <div ng-show="configuration.severity === 'ALL' || configuration.severity === 'TRACE'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'TRACE')"><i class="fa fa-toggle-on" aria-hidden="true"></i></button></div>
+                    <div ng-hide="configuration.severity === 'ALL' || configuration.severity === 'TRACE'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'TRACE')"><i class="fa fa-toggle-off" aria-hidden="true"></i></button></div>
+                </td>
+                <td>
+                    <div ng-show="configuration.severity === 'DEBUG'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'DEBUG')"><i class="fa fa-toggle-on" aria-hidden="true"></i></button></div>
+                    <div ng-hide="configuration.severity === 'DEBUG'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'DEBUG')"><i class="fa fa-toggle-off" aria-hidden="true"></i></button></div>
+                </td>
+                <td>
+                    <div ng-show="configuration.severity === 'WARN'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'WARN')"><i class="fa fa-toggle-on" aria-hidden="true"></i></button></div>
+                    <div ng-hide="configuration.severity === 'WARN'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'WARN')"><i class="fa fa-toggle-off" aria-hidden="true"></i></button></div>
+                </td>
+                <td>
+                    <div ng-show="configuration.severity === 'INFO'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'INFO')"><i class="fa fa-toggle-on" aria-hidden="true"></i></button></div>
+                    <div ng-hide="configuration.severity === 'INFO'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'INFO')"><i class="fa fa-toggle-off" aria-hidden="true"></i></button></div>
+                </td>
+                <td>
+                    <div ng-show="configuration.severity === 'ERROR'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'ERROR')"><i class="fa fa-toggle-on" aria-hidden="true"></i></button></div>
+                    <div ng-hide="configuration.severity === 'ERROR'" class="tdSingleLine"><button class="btn" ng-click="setSeverity(configuration.name, 'ERROR')"><i class="fa fa-toggle-off" aria-hidden="true"></i></button></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+		
+		
+
+	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-route.min.js"></script>
+	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script>
+		angular.module('logconfigurations', ["ngRoute"]);
+		angular.module('logconfigurations').controller('LogConfigurationsController', function ($scope, $http, $route) {
+		
+		    var logConfigurationsApi = '../../../../services/v4/ops/logconfig';
+		
+		    function loadLogConfigurations() {
+		        $http.get(logConfigurationsApi)
+		        .success(function(data) {
+		            $scope.logConfigurations = data;
+		        });
+		    }
+
+            $scope.setSeverity = function(loggerName, loggerLevel) {
+		        $http.post(logConfigurationsApi + "/severity/" + loggerName, loggerLevel)
+		        .success(function(data) {
+                    var logger = (element) => element.name === loggerName;
+                    var i = $scope.logConfigurations.findIndex(logger);
+		            $scope.logConfigurations[i].severity = data;
+                    $route.reload();
+		        })
+                .error(function(data) {
+                    var logger = (element) => element.name === loggerName;
+                    var i = $scope.logConfigurations.findIndex(logger);
+		            $scope.logConfigurations[i].severity = data;
+                    $route.reload()
+		        })
+                ;
+		    }
+		
+		    loadLogConfigurations();
+		});
+	</script>
+</body>
+
+</html>

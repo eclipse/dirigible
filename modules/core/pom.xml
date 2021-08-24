@@ -16,13 +16,10 @@
 	<modules>
 		<module>core-all</module>
 		<module>core-extensions</module>
-		<module>core-generation</module>
-		<module>core-generation-mustache</module>
-		<module>core-generation-velocity</module>
-		<module>core-generation-javascript</module>
         <module>core-git</module>
 		<module>core-indexing</module>
 		<module>core-messaging</module>
+		<module>core-problems</module>
 		<module>core-publisher</module>
 		<module>core-registry</module>
 		<module>core-scheduler</module>
@@ -35,4 +32,5 @@
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
+
 </project>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Eclipse Dirigible &trade; | Properties</title>
+
+	<link rel="shortcut icon" type="image/png" href="../../../../services/v4/web/resources/images/favicon.png" />
+	
+	<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<!-- jQuery -->
+	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+	
+	<!-- Twitter Bootstrap with Theme Support -->
+	<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+	<script src="../../../../services/v4/web/resources//bootstrap/3.3.7/bootstrap.min.js"></script>
+	
+	<!-- Custom IDE Styles -->
+	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css" />
+	
+	<script src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+	
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body ng-app="properties" ng-controller="PropertiesController as propsVm">
+
+	<style>
+		body {
+		  margin: 5px;
+		}
+	</style>
+	
+	<div class="striped-container">
+	  <div class="row striped-item" ng-repeat="(key, value) in propsVm.properties">
+		<div class="key">{{key}}</div><div class="value">{{value}}</div>
+	  </div>
+	</div>
+	
+	<script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+	<script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+	
+	<script>
+		angular.module('properties', [])
+		.factory('$messageHub', [function(){
+			var messageHub = new FramesMessageHub();	
+			var message = function(evtName, data){
+				messageHub.post({data: data}, 'properties.' + evtName);
+			};
+			var on = function(topic, callback){
+				messageHub.subscribe(callback, topic);
+			};
+			return {
+				message: message,
+				on: on
+			};
+		}])
+		.controller('PropertiesController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
+			this.properties;
+			$messageHub.on('workspace.file.selected', function(f){
+				this.properties = f.data;
+				for(var prop in f.data){
+					if(Array.isArray(f.data[prop])){
+						f.data[prop] = f.data[prop].length;
+					}
+				}
+				$scope.$apply();
+			}.bind(this));
+			$messageHub.on('workbench.theme.changed', function(msg){
+				var themeUrl = msg.data;
+				$('#theme-stylesheet').remove();
+				$('<link id="theme-stylesheet" href="'+themeUrl +'" rel="stylesheet" />').appendTo('head');
+			}.bind(this));
+		}]);
+	</script>
+</body>
+</html>

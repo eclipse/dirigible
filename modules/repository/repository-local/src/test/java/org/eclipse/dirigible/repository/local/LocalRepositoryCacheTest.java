@@ -21,6 +21,8 @@ import java.io.FileWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryCache;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -81,7 +83,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertEquals("cached file", content);
 			
 			try {
-				RepositoryCache.disable();
+				new RepositoryCache().disable();
 				resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
 				assertNotNull(resource2);
 				assertTrue(resource2.exists());
@@ -96,10 +98,10 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 				
 				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
 				content = new String(resource1.getContent());
-				assertEquals("cached file changed 2", content);
+				assertEquals("cached file changed", content);
 				
 			} finally {
-				RepositoryCache.enable();
+				Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString());
 			}
 			
 

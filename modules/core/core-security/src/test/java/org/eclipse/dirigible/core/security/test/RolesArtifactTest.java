@@ -66,7 +66,7 @@ public class RolesArtifactTest extends AbstractDirigibleTest {
 	 */
 	@Test
 	public void parseTest() throws IOException {
-		InputStream in = RolesArtifactTest.class.getResourceAsStream("/access/test.roles");
+		InputStream in = RolesArtifactTest.class.getResourceAsStream("/META-INF/dirigible/access/test.roles");
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			RoleDefinition[] roles = securityCoreService.parseRoles(json);

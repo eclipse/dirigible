@@ -27,6 +27,7 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 	
 	private static final String IGNORE_ERROR_MESSAGE = "ReferenceError: \"exports\" is not defined";
 	private static final String RESPONSE_ERROR_MESSAGE = "It is not an executable JavaScript module";
+	private static final String NULL_EXCEPTION_ERROR_MESSAGE = "Exception message is null";
 
 	/*
 	 * (non-Javadoc)
@@ -61,7 +62,9 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 	 */
 	@Override
 	protected String getResponseMessage(PolyglotException exception) {
-		if (!exception.getMessage().equals(IGNORE_ERROR_MESSAGE)) {
+		if (exception.getMessage() == null) {
+			return NULL_EXCEPTION_ERROR_MESSAGE;
+		} else if (!exception.getMessage().equals(IGNORE_ERROR_MESSAGE)) {
 			return exception.getMessage();
 		}
 		return RESPONSE_ERROR_MESSAGE;
@@ -73,9 +76,8 @@ public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<
 	 */
 	@Override
 	protected void logErrorMessage(Logger logger, PolyglotException exception) {
-		if (!exception.getMessage().equals(IGNORE_ERROR_MESSAGE)) {
+		if (exception.getMessage() == null || !exception.getMessage().equals(IGNORE_ERROR_MESSAGE)) {
 			super.logErrorMessage(logger, exception);
 		}
-		
 	}
 }

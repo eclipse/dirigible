@@ -45,10 +45,10 @@
 		    <artifactId>commons-codec</artifactId>
 		    <version>${commons.codec}</version>
 		</dependency>
-		
     </dependencies>
 
 	<properties>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
+
 </project>

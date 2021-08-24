@@ -30,7 +30,7 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
  */
 public class BpmCoreService implements IBpmCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<BpmDefinition> bpmPersistenceManager = new PersistenceManager<BpmDefinition>();
 

@@ -31,7 +31,7 @@
 	Do a fast build:
 		mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true
 
-	Synchronize WebJars content:
+	Synchronize WebJars like content:
 		mvn clean install -DskipTests -P content
 		mvn clean install -DskipTests
 
@@ -79,12 +79,16 @@
 	</licenses>
 
 	<url>http://www.dirigible.io</url>
+	
 	<organization>
 		<name>Eclipse Foundation</name>
 		<url>http://www.eclipse.org</url>
 	</organization>
+	
 	<scm>
-		<url>https://github.com/eclipse/dirigible</url>
+		<url>${content.scm.url}</url>
+		<connection>${content.scm.connection}</connection>
+		<developerConnection>${content.scm.developerConnection}</developerConnection>
 	</scm>
 
 	<profiles>
@@ -93,6 +97,9 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<properties>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -164,27 +171,21 @@
 								<exclude>**/logback.xml</exclude>
 								<exclude>**/logback-test.xml</exclude>
 								<exclude>**/src/test/resources/**</exclude>
-								<exclude>**/src/main/resources/font-awesome-4.7.0/**</exclude>
-								<exclude>**/src/main/resources/font-dirigible/**</exclude>
-								<exclude>**/src/main/resources/resources/angular/**</exclude>
-								<exclude>**/src/main/resources/resources/bootstrap/**</exclude>
-								<exclude>**/src/main/resources/resources/goldenlayout/**</exclude>
-								<exclude>**/src/main/resources/resources/jqplot/**</exclude>
-								<exclude>**/src/main/resources/resources/jquery/**</exclude>
-								<exclude>**/src/main/resources/resources/jstree/**</exclude>
-								<exclude>**/src/main/resources/resources/mxgraph/**</exclude>
-								<exclude>**/src/main/resources/ide-ace/**</exclude>
-								<exclude>**/src/main/resources/ide-bpm/**</exclude>
-								<exclude>**/src/main/resources/ide-monaco/**</exclude>
-								<exclude>**/src/main/resources/ide-orion/**</exclude>
-								<exclude>**/src/main/resources/ide-swagger/**</exclude>
-								<exclude>**/src/main/resources/ide-database/sql/lib/ace/**</exclude>
-								<exclude>**/src/main/resources/ide-discussions/ui/js/**</exclude>
-								<exclude>**/src/main/resources/ide-core/ui/**</exclude>
-								<exclude>**/src/main/resources/ide-terminal/js/**</exclude>
-								<exclude>**/src/main/resources/dev-tools/**</exclude>
-								<exclude>**/src/main/resources/template-mobile-hello-world/node_modules/**</exclude>
-								<exclude>**/src/main/resources/utils/v4/jsonpath.js</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/font-awesome-4.7.0/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/font-dirigible/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/resources/goldenlayout/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-ace/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-orion/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-database/sql/lib/ace/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-discussions/ui/js/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-core/ui/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/ide-terminal/js/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/dev-tools/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/template-mobile-hello-world/node_modules/**</exclude>
+								<exclude>**/src/main/resources/META-INF/dirigible/utils/v4/jsonpath.js</exclude>
 							</excludes>
 						</configuration>
 						<dependencies>
@@ -371,6 +372,7 @@
 				</plugins>
 			</build>
 		</profile>
+		
 	</profiles>
 
 	<repositories>
@@ -594,7 +596,7 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
 		<logback.version>1.2.3</logback.version>
-		<com.h2database.version>1.4.193</com.h2database.version>
+		<h2database.version>1.4.200</h2database.version>
 		<derby.version>10.12.1.1</derby.version>
 		<activemq.version>5.16.0</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
@@ -612,7 +614,17 @@
 		<kafka.version>2.6.0</kafka.version>
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
-		<org.projectlombok.version>1.18.20</org.projectlombok.version>
+		<caffeine.version>3.0.3</caffeine.version>
+		
+		<content.repository.name>dirigiblelabs</content.repository.name>
+		<content.project.name>dirigiblelabs</content.project.name>
+		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
+		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
+		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		<content.scm.server>github</content.scm.server>
+		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
+		<content.source.directory>target/${content.project.name}</content.source.directory>
+		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
 
 		<license.header.location>licensing-header.txt</license.header.location>
 
@@ -621,21 +633,11 @@
 
 	<modules>
 		<module>api</module>
+		<module>modules</module>
 		<module>ide</module>
 		<module>templates</module>
 		<module>resources</module>
 		<module>ext</module>
-
-		<module>modules/engines</module>
-		<module>modules/services</module>
-		<module>modules/repository</module>
-		<module>modules/core</module>
-		<module>modules/database</module>
-		<module>modules/commons</module>
-		<module>modules/cms</module>
-		<module>modules/bpm</module>
-		<module>modules/security</module>
-		<module>modules/odata</module>
 
 		<module>groups/runtime-all</module>
 		<module>groups/runtime-javascript</module>

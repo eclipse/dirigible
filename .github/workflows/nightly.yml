@@ -5,7 +5,10 @@ on:
   - cron: "0 22 * * *"
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -14,5 +17,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 13
-    - name: Maven Build
-      run: mvn clean install -Drabbitmq-test -Dredis-test -Delastic-test -Detcd-test
+    - name: Maven Build if Windows
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: mvn clean install
+    - name: Maven Build if not Windows
+      if: ${{ matrix.os != 'windows-latest' }}
+      run: mvn clean install -Dmaven.javadoc.skip=false -Drabbitmq-test -Dredis-test -Delastic-test -Detcd-test

@@ -34,7 +34,7 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
  */
 public class SchedulerCoreService implements ISchedulerCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<JobDefinition> jobPersistenceManager = new PersistenceManager<JobDefinition>();
 

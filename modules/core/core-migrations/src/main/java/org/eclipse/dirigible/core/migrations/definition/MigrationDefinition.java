@@ -48,7 +48,7 @@ public class MigrationDefinition {
 	@Column(name = "MIGRATION_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	@Column(name = "MIGRATION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "MIGRATION_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	@Column(name = "MIGRATION_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)

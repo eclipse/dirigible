@@ -34,12 +34,11 @@
 		<module>server-runtime</module>
 		<module>server-runtime-keycloak</module>
 		<module>trial-all</module>
-		<module>server-javascript</module>
-		<module>server-database</module>
-		<module>server-cms</module>
+		<module>server-minimal</module>
 	</modules>
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>
 	</properties>
+
 </project>

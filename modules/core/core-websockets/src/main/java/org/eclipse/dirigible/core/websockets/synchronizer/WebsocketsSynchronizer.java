@@ -104,7 +104,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredWebsocket(String websocketPath) throws IOException {
-		InputStream in = WebsocketsSynchronizer.class.getResourceAsStream(websocketPath);
+		InputStream in = WebsocketsSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + websocketPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			WebsocketDefinition websocketDefinition = websocketsCoreService.parseWebsocket(json);

@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -217,34 +219,79 @@ public class DefaultSQLProcessorTest {
 				IOUtils.toString(res));
 	}
 
-	   @Test
-	    public void testSQLProcessorCannotCreateEntityWithoutId()
-	            throws InstantiationException, IllegalAccessException, IOException, ODataException {
-	        
-	        String content = "{\n"
-	                + "  \"d\": {\n"
-	                + "    \"__metadata\": {\n"
-	                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
-	                + "    },\n"
-	                + "    \"ChildName\": \"Name\",\n"
-	                + "    \"ChildValue\": \"Value\"\n"
-	                + " }\n"
-	                + "}";
-	        
-	    
-	        Response response = modifyingRequestBuilder(content)//
-	                .segments("TestChilds") //
-	                .accept("application/json")
-	                .content(content)
-	                .param("content-type", "application/json")
-	                .contentSize(content.length())
-	                .executeRequest(POST);
-	        validateHttpResponse(response, 500);
-	    }
+    @Test
+    public void testSQLProcessorCannotCreateEntityWithoutId()
+            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+
+        String content = "{\n"
+                + "  \"d\": {\n"
+                + "    \"__metadata\": {\n"
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+                + "    },\n"
+                + "    \"ChildName\": \"Name\",\n"
+                + "    \"ChildValue\": \"Value\"\n"
+                + " }\n"
+                + "}";
+
+
+        Response response = modifyingRequestBuilder(content)//
+                .segments("TestChilds") //
+                .accept("application/json")
+                .content(content)
+                .param("content-type", "application/json")
+                .contentSize(content.length())
+                .executeRequest(POST);
+        validateHttpResponse(response, 500);
+    }
+
+    @Test
+    public void testCreateEntityWithReferenceID() throws InstantiationException, IllegalAccessException, IOException, ODataException {
+        Response getResponse = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestRoots('id_1')") //
+                .accept("application/json").executeRequest(GET);
+        validateHttpResponse(getResponse, 200);
+
+
+        String content = "{\n"
+                + "  \"d\": {\n"
+                + "    \"__metadata\": {\n"
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+                + "    },\n"
+                + "    \"Id\": \"99999\",\n"
+                + "    \"ChildName\": \"Name\",\n"
+                + "    \"ChildValue\": \"Value\",\n"
+                + "    \"Root\": { \"ChangeId\" : \"1\"  }\n"
+                + " }\n"
+                + "}";
+        System.out.println(content);
+        Response response = modifyingRequestBuilder(content).segments("TestChilds") //
+                .accept("application/json")//
+                 .content(content)//
+                .param("content-type", "application/json") //
+                .contentSize(content.length())
+                .executeRequest(POST);
+
+        validateHttpResponse(response, 201);
+        String responseStr = IOUtils.toString((InputStream) response.getEntity());
+        System.out.println(responseStr);
+        Pattern p = Pattern.compile(".*TestChilds\\('(.+)'\\)\\\"");
+        Matcher m = p.matcher(responseStr);
+        if (m.find()) {
+            String id = m.group(1);
+            Response getResponseCreatedEntity = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                    .segments("TestChild('" + id + "')") //
+                    .accept("application/json").executeRequest(GET);
+            validateHttpResponse(getResponse, 200);
+
+            String newEntity = IOUtils.toString((InputStream) getResponseCreatedEntity.getEntity());
+            System.out.println(newEntity);
+        } else {
+            fail();
+        }
+    }
 	   
 	@Test
-	public void testSQLProcessorMergeEntity()
-			throws InstantiationException, IllegalAccessException, IOException, ODataException {
+	public void testSQLProcessorMergeEntity() throws InstantiationException, IllegalAccessException, IOException, ODataException {
 		
 		Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
                 .segments("TestChilds('1_1')") //
@@ -259,10 +306,9 @@ public class DefaultSQLProcessorTest {
 				+ "    \"Id\": \"1_1\",\n"
 				+ "    \"ChildName\": \"XXXX\",\n"
 				+ "    \"ChildValue\":\"YYYYY\"" //
-				+ "	}\n"
+                + "	}\n"
 				+ "}";
-		
-	
+
 	   response = modifyingRequestBuilder(content)//
 			    .segments("TestChilds('1_1')") //
 				.accept("application/json")
@@ -272,6 +318,38 @@ public class DefaultSQLProcessorTest {
 				.executeRequest(MERGE);
 		validateHttpResponse(response, 204);
 	}
+
+    @Test
+    public void testSQLProcessorMergeEntityChangeReferenceId()
+            throws InstantiationException, IllegalAccessException, IOException, ODataException {
+
+        Response response = DefaultMockRequestBuilder.createRequest(grantDatasource()) //
+                .segments("TestChilds('1_1')") //
+                .accept("application/json").executeRequest(GET);
+        validateHttpResponse(response, 200);
+
+        String content = "{\n"
+                + "  \"d\": {\n"
+                + "    \"__metadata\": {\n"
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.edm.TestChild\"\n"
+                + "    },\n"
+                + "    \"Id\": \"1_1\",\n"
+                + "    \"ChildName\": \"Name2\",\n"
+                + "    \"ChildValue\": \"Value2\",\n"
+                + "    \"Root\": { \"ChangeId\" : \"1\"  }\n"
+                + " }\n"
+                + "}";
+
+
+        response = modifyingRequestBuilder(content)//
+                .segments("TestChilds('1_1')") //
+                .accept("application/json")
+                .content(content)
+                .param("content-type", "application/json")
+                .contentSize(content.length())
+                .executeRequest(MERGE);
+        validateHttpResponse(response, 204);
+    }
 	
 	@Test
 	public void testSQLProcessorUpdateEntity()

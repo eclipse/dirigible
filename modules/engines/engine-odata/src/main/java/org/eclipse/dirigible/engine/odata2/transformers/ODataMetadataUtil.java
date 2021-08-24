@@ -47,6 +47,23 @@ public class ODataMetadataUtil {
         }
         throw new IllegalArgumentException(String.format("There is no entity with name: %s defined in the model", entityName));
     }
+    
+    public static String getEntityPropertyColumnByPropertyName(ODataDefinition model, String entityName, String propertyName) {
+        for (ODataEntityDefinition entity : model.getEntities()) {
+            if (entityName.equals(entity.getName())) {
+            	if (!entity.getProperties().isEmpty()) {
+	            	for (ODataProperty property : entity.getProperties()) {
+	            		if (property.getName().equals(propertyName)) {
+	            			return property.getColumn();
+	            		}
+	            	}
+            	} else {
+            		return propertyName;
+            	}
+            }
+        }
+        throw new IllegalArgumentException(String.format("There is no entity with name: %s and property with name: %s defined in the model", entityName, propertyName));
+    }
 
     public static ODataAssociationDefinition getAssociation(ODataDefinition model, String name, String navigation) {
         for (ODataAssociationDefinition association : model.getAssociations()) {

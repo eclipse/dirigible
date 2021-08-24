@@ -14,47 +14,28 @@
 	<artifactId>dirigible-resources-parent</artifactId>
 	<description>Resources Plugins</description>
 	<packaging>pom</packaging>
-
+	
 	<scm>
 		<url>${content.scm.url}</url>
 		<connection>${content.scm.connection}</connection>
 		<developerConnection>${content.scm.developerConnection}</developerConnection>
 	</scm>
 
-	<properties>
-		<content.repository.name>dirigiblelabs</content.repository.name>
-		<content.project.name>dirigiblelabs</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
-		<content.scm.server>github</content.scm.server>
-		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
-		<content.source.directory>target/${content.project.name}</content.source.directory>
-		<content.output.directory>${basedir}/src/main/resources/${content.project.name}</content.output.directory>
-
-		<license.header.location>../licensing-header.txt</license.header.location>
-	</properties>
-
 	<modules>
 		<module>resources-all</module>
-		<module>resources-angular</module>
-		<module>resources-bootstrap</module>
 		<module>resources-goldenlayout</module>
-		<module>resources-jquery</module>
-		<module>resources-jstree</module>
 		<module>resources-fonts</module>
-		<module>resources-flowable-libs</module>
 		<module>resources-dev-tools</module>
-		<module>resources-jqplot</module>
 		<module>resources-resources</module>
 		<module>resources-themes</module>
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
-		<module>resources-jquery-ui</module>
-		<module>resources-requirejs</module>
 	</modules>
+
+	<properties>
+		<profile.phase>generate-sources</profile.phase>
+		<license.header.location>../licensing-header.txt</license.header.location>
+	</properties>
 
 	<profiles>
 		<profile>
@@ -65,6 +46,18 @@
 			<build>
 				<finalName>${project.artifactId}</finalName>
 				<plugins>
+				    <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven.clean.plugin.version}</version>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/resources</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-scm-plugin</artifactId>
@@ -77,7 +70,7 @@
 						<executions>
 							<execution>
 								<id>generated-sources</id>
-								<phase>generate-sources</phase>
+								<phase>${profile.phase}</phase>
 								<goals>
 									<goal>checkout</goal>
 								</goals>
@@ -120,4 +113,5 @@
 			</build>
 		</profile>
 	</profiles>
+	
 </project>

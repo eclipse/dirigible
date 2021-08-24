@@ -140,7 +140,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredSchema(String schemaPath) throws IOException {
-		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(schemaPath)) {
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + schemaPath)) {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataSchemaDefinition schemaDefinition = new ODataSchemaDefinition();
 			schemaDefinition.setLocation(schemaPath);
@@ -158,7 +158,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredMapping(String mappingPath) throws IOException {
-		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(mappingPath)) {
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + mappingPath)) {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ODataMappingDefinition mappingDefinition = new ODataMappingDefinition();
 			mappingDefinition.setLocation(mappingPath);
@@ -181,7 +181,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	}
 
 	private String loadResourceContent(String modelPath) throws IOException {
-		try (InputStream in = ODataSynchronizer.class.getResourceAsStream(modelPath)) {
+		try (InputStream in = ODataSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + modelPath)) {
 			return IOUtils.toString(in, StandardCharsets.UTF_8);
 		}
 	}
