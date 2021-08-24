@@ -13,18 +13,24 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.builders.table.CreateTablePrimaryKeyBuilder;
 import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableTypeBuilder.class);
 
     private String tableType;
     private List<String[]> columns = new ArrayList<>();
+    private CreateTablePrimaryKeyBuilder primaryKey;
 
     /**
      * Instantiates a new hana create table builder.
@@ -50,8 +56,15 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         // TABLE TYPE
         generateTableType(sql);
 
+        sql.append(SPACE).append(OPEN);
+
         // COLUMNS
         generateStructureColumns(sql);
+
+        // PRIMARY KEY
+        generatePrimaryKey(sql);
+
+        sql.append(CLOSE);
 
         String generated = sql.toString();
 
@@ -68,7 +81,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      */
     private void generateStructureColumns(StringBuilder sql) {
         if (!this.getColumns().isEmpty()) {
-            sql.append(SPACE).append(OPEN).append(iterateColumns()).append(CLOSE);
+            sql.append(iterateColumns());
         }
     }
 
@@ -78,6 +91,10 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      * @return the string
      */
     private String iterateColumns() {
+
+        List<String[]> allPrimaryKeys = this.columns.stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
+        boolean isCompositeKey = allPrimaryKeys.size() > 1;
+
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
 
@@ -90,7 +107,10 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
                     isColumnName = false;
                     continue;
                 }
-                snippet.append(arg);
+                if (isCompositeKey && arg.equals(getDialect().getPrimaryKeyArgument())) {
+                    continue;
+                }
+                snippet.append(arg).append(SPACE);
             }
             snippet.append(COMMA).append(SPACE);
         }
@@ -115,6 +135,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      * @param type         the type
      * @return the creates the table type builder
      */
+    @Override
     public CreateTableTypeBuilder column(String name, DataType type) {
         String[] definition = new String[] { name, getDialect().getDataTypeName(type) };
         this.columns.add(definition);
@@ -129,12 +150,79 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
      * @param length       the length
      * @return the creates the table type builder
      */
-    public CreateTableTypeBuilder column(String name, DataType type, int length) {
+    @Override
+    public CreateTableTypeBuilder column(String name, DataType type, String length) {
         if(type == DataType.VARCHAR || type==DataType.NVARCHAR || type==DataType.CHAR) {
             String[] definition = new String[] { name, String.valueOf(type), OPEN + length + CLOSE };
             this.columns.add(definition);
         }
         return this;
+    }
+
+    /**
+     * Column.
+     *
+     * @param name         the name
+     * @param type         the type
+     * @param isPrimaryKey the is primary key
+     * @param isNullable   the is nullable
+     * @param args         the args
+     * @return the creates the table type builder
+     */
+    @Override
+    public CreateTableTypeBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, String args) {
+        logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
+                + isNullable + OPEN + args + CLOSE );
+        String[] definition;
+
+        if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)
+                || type.name().equalsIgnoreCase("NVARCHAR")
+                || type.name().equalsIgnoreCase("ALPHANUM")
+                || type.name().equalsIgnoreCase("SHORTTEXT") || type.equals(DataType.DECIMAL)) {
+            args = OPEN + args + CLOSE;
+            definition = new String[]{name, getDialect().getDataTypeName(type), args};
+        } else {
+            definition = new String[]{name, getDialect().getDataTypeName(type)};
+        }
+
+
+        if (!isNullable) {
+            definition = Stream.of(definition, new String[]{getDialect().getNotNullArgument()}).flatMap(Stream::of).toArray(String[]::new);
+        }
+        if (isPrimaryKey) {
+            definition = Stream.of(definition, new String[]{getDialect().getPrimaryKeyArgument()}).flatMap(Stream::of).toArray(String[]::new);
+        }
+
+        this.columns.add(definition);
+        return this;
+    }
+
+    /**
+     * Generate primary key.
+     *
+     * @param sql
+     *            the sql
+     */
+    protected void generatePrimaryKey(StringBuilder sql) {
+        List<String[]> allPrimaryKeys = this.getColumns().stream().filter(el -> Arrays.stream(el).anyMatch(x -> x.equals(getDialect().getPrimaryKeyArgument()))).collect(Collectors.toList());
+        boolean isCompositeKey = allPrimaryKeys.size() > 1;
+
+        if ((this.primaryKey != null) && allPrimaryKeys.size() == 0 && !this.primaryKey.getColumns().isEmpty()) {
+            sql.append(COMMA).append(SPACE);
+            if (this.primaryKey.getName() != null) {
+                String primaryKeyName = (isCaseSensitive()) ? encapsulate(this.primaryKey.getName()) : this.primaryKey.getName();
+                sql.append(KEYWORD_CONSTRAINT).append(SPACE).append(primaryKeyName).append(SPACE);
+            }
+            sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(SPACE).append(OPEN)
+                    .append(traverseColumnNames(this.primaryKey.getColumns())).append(CLOSE);
+        } else {
+            if (isCompositeKey) {
+                sql.append(COMMA).append(SPACE);
+                ArrayList<String> keys = new ArrayList<>();
+                allPrimaryKeys.forEach(el -> keys.add(el[0]));
+                sql.append(KEYWORD_PRIMARY).append(SPACE).append(KEYWORD_KEY).append(OPEN).append(String.join(" , ", keys)).append(CLOSE).append(SPACE);
+            }
+        }
     }
 
     /**
@@ -154,4 +242,21 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
     public List<String[]> getColumns() {
         return columns;
     }
+
+    /**
+     * Traverse column names.
+     *
+     * @param names the columns
+     * @return the string
+     */
+    protected String traverseColumnNames(Set<String> names) {
+        StringBuilder snippet = new StringBuilder();
+        snippet.append(SPACE);
+        for (String column : names) {
+            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+            snippet.append(columnName).append(SPACE).append(COMMA).append(SPACE);
+        }
+        return snippet.substring(0, snippet.length() - 2);
+    }
+
 }

@@ -41,7 +41,11 @@ public class CreateTableTypeBuilder extends AbstractCreateSqlBuilder {
         throw new IllegalStateException("Table Type is not supported for this dialect!");
     }
 
-    public CreateTableTypeBuilder column(String name, DataType type, int length) {
+    public CreateTableTypeBuilder column(String name, DataType type, String length) {
+        throw new IllegalStateException("Table Type is not supported for this dialect!");
+    }
+
+    public CreateTableTypeBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, String args) {
         throw new IllegalStateException("Table Type is not supported for this dialect!");
     }
 }
