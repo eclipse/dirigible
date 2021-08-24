@@ -103,5 +103,9 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
+
 </project>
