@@ -34,7 +34,8 @@ public class CreateTableTypeTest {
                 .create()
                 .tableType("CUSTOMERS_STRUCTURE")
                 .column("CATEGORY_ID" , DataType.INTEGER)
-                .column("NAME" , DataType.VARCHAR, 255)
+                .column("NAME", DataType.VARCHAR, "255")
+                .column("TYPES", DataType.VARCHAR, true, false, "220")
                 .build();
     }
 }

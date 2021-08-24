@@ -13,7 +13,6 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 
 import org.eclipse.dirigible.database.sql.DatabaseArtifactTypes;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
@@ -71,6 +70,21 @@ public class HanaSqlDialect extends
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet funcDescription = metadata.getSchemas(null, schema);
         return funcDescription.next();
+    }
+
+    private boolean isTableTypeExisting(Connection connection, String tableType) throws SQLException {
+        String sql = "SELECT IS_USER_DEFINED_TYPE FROM SYS.\"" + "TABLES" +"\" WHERE TABLE_NAME like '" + tableType + "' AND IS_USER_DEFINED_TYPE like" + "'TRUE'";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        String value = null;
+        try {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                value = resultSet.getString(1);
+            }
+            return value.equals("TRUE");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[]{
@@ -394,6 +408,9 @@ public class HanaSqlDialect extends
                     break;
                 case DatabaseArtifactTypes.SCHEMA:
                     exists = isSchemaExisting(connection, artefact);
+                    break;
+                case DatabaseArtifactTypes.TABLE_TYPE:
+                    exists = isTableTypeExisting(connection,artefact);
                     break;
             }
         } catch (Exception e) {
