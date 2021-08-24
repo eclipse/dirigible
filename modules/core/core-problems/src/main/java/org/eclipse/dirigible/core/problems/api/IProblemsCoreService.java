@@ -36,13 +36,14 @@ public interface IProblemsCoreService extends ICoreService {
      * @param type       the type of the error
      * @param line       the line of the error
      * @param column     the column of the error
+     * @param symbol     the problematic symbol
      * @param category   the category of the error, e.g. the submodule
      * @param module     the module within the program, in which the error was found
      * @param source     the action that produced the error
      * @param program    the program, in which the error was found
      * @throws ProblemsException the parser errors exception
      */
-    public void save(String location, String type, String line, String column,
+    public void save(String location, String type, String line, String column, String symbol,
                      String category, String module, String source, String program)
             throws ProblemsException;
 

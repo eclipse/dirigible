@@ -52,10 +52,10 @@ public class ProblemsCoreService implements IProblemsCoreService {
     }
 
     @Override
-    public void save(String location, String type, String line, String column,
+    public void save(String location, String type, String line, String column, String symbol,
                      String category, String module, String source, String program) throws ProblemsException {
 
-        ProblemsModel problemToPersist = new ProblemsModel(location, type, line, column, category, module, source, program);
+        ProblemsModel problemToPersist = new ProblemsModel(location, type, line, column, symbol, category, module, source, program);
         ProblemsModel problemsModel = getProblem(location, type, line, column);
         if (problemsModel == null) {
             createProblem(problemToPersist);

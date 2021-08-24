@@ -42,6 +42,9 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
+    @Column(name = "PROBLEM_SYMBOL", columnDefinition = "VARCHAR", nullable = false, length = 11)
+    private String symbol;
+
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp createdAt;
 
@@ -70,6 +73,7 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
+                         String symbol,
                          String category,
                          String module,
                          String source,
@@ -78,6 +82,7 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
+        this.symbol = symbol;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -88,6 +93,7 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
+                         String symbol,
                          String category,
                          String module,
                          String source,
@@ -97,6 +103,7 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
+        this.symbol = symbol;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -138,6 +145,14 @@ public class ProblemsModel {
 
     public void setColumn(String column) {
         this.column = column;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public Timestamp getCreatedAt() {
@@ -214,6 +229,7 @@ public class ProblemsModel {
                 && type.equals(that.type)
                 && line.equals(that.line)
                 && column.equals(that.column)
+                && symbol.equals(that.symbol)
                 && category.equals(that.category)
                 && module.equals(that.module)
                 && source.equals(that.source)
@@ -222,6 +238,6 @@ public class ProblemsModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column, category, module, source, program, status);
+        return Objects.hash(location, type, line, column, symbol, category, module, source, program, status);
     }
 }

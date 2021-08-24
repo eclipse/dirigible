@@ -11,31 +11,26 @@
  */
 package org.eclipse.dirigible.api.v3.problems;
 
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
-import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 import org.eclipse.dirigible.core.problems.service.ProblemsCoreService;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProblemsFacade implements IScriptingFacade {
 
-    public static final void save(String location, String type, String line, String column,
+    public static final void save(String location, String type, String line, String column, String symbol,
                                             String category, String module, String source, String program) throws ProblemsException {
 
-        new ProblemsCoreService().save(location, type, line, column, category, module, source, program);
+        new ProblemsCoreService().save(location, type, line, column, symbol, category, module, source, program);
     }
 
     public static final String findProblem(Long id) throws ProblemsException {
         return new ProblemsCoreService().getProblemById(id).toJson();
     }
 
-    public static final List<String> fetchAllProblems() throws ProblemsException {
-        List<ProblemsModel> problemsList = new ProblemsCoreService().getAllProblems();
-
-        return problemsList.stream()
-                .map(ProblemsModel::toJson)
-                .collect(Collectors.toList());
+    public static final String fetchAllProblems() throws ProblemsException {
+        return GsonHelper.GSON.toJson(new ProblemsCoreService().getAllProblems());
     }
 
     public static final void deleteProblem(Long id) throws ProblemsException {

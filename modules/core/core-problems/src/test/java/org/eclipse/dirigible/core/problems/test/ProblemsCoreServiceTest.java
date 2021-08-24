@@ -38,10 +38,10 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
     public void saveProblemTest() throws ProblemsException {
         problemsCoreService.deleteAll();
         ProblemsModel problemsModel = new ProblemsModel("Test/test.xsjs", "Runtime", "1", "2",
-                "JUnit", "API", "JUnit Test", "Dirigible");
+                ";", "JUnit", "API", "JUnit Test", "Dirigible");
 
-        problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(),
-                problemsModel.getLine(), problemsModel.getColumn(), problemsModel.getCategory(),
+        problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(), problemsModel.getLine(),
+                problemsModel.getColumn(), problemsModel.getSymbol(), problemsModel.getCategory(),
                 problemsModel.getModule(), problemsModel.getSource(), problemsModel.getProgram());
 
         ProblemsModel result = problemsCoreService.getProblem(problemsModel.getLocation(), problemsModel.getType(),
@@ -50,8 +50,8 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
 
         // test if the problem gets updated
         problemsModel.setSource("Manual Update");
-        problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(),
-                problemsModel.getLine(), problemsModel.getColumn(), problemsModel.getCategory(),
+        problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(), problemsModel.getLine(),
+                problemsModel.getColumn(), problemsModel.getSymbol(), problemsModel.getCategory(),
                 problemsModel.getModule(), problemsModel.getSource(), problemsModel.getProgram());
         ProblemsModel resultUpdated = problemsCoreService.getProblem(problemsModel.getLocation(), problemsModel.getType(),
                 problemsModel.getLine(), problemsModel.getColumn());
@@ -63,7 +63,7 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
     public void updateProblemStatusTest() throws ProblemsException {
         problemsCoreService.deleteAll();
         ProblemsModel problemsModel = new ProblemsModel("Test/test.xsjs", "Runtime", "1", "2",
-                "JUnit", "API", "JUnit Test", "Dirigible");
+                ";", "JUnit", "API", "JUnit Test", "Dirigible");
         List<Long> ids = new ArrayList<>();
         // create problems and save their ids
         ids.add(problemsCoreService.createProblem(problemsModel).getId());
@@ -86,7 +86,7 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
     public void deleteProblemsByStatusTest() throws ProblemsException {
         problemsCoreService.deleteAll();
         ProblemsModel problemsModel = new ProblemsModel("Test/test.xsjs", "Runtime", "1", "2",
-                "JUnit", "API", "JUnit Test", "Dirigible");
+                ";", "JUnit", "API", "JUnit Test", "Dirigible");
         problemsCoreService.createProblem(problemsModel);
         // create a second problem
         problemsModel.setLocation("Demo/demo.xsjs");
