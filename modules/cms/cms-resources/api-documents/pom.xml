@@ -21,6 +21,8 @@
 	</scm>
 	
 	<properties>
+		<license.header.location>../../../../licensing-header.txt</license.header.location>
+
 		<content.repository.name>api-documents</content.repository.name>
 		<content.project.name>documents</content.project.name>
 
