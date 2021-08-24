@@ -13,19 +13,10 @@
 	<artifactId>dirigible-ide-ui-form-builder</artifactId>
     <packaging>jar</packaging>
 
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
-	
 	<properties>
+		<profile.content.phase>generate-sources</profile.content.phase> 
 		<content.repository.name>ide-form-builder</content.repository.name>
 		<content.project.name>ide-form-builder</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>

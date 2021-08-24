@@ -15,7 +15,6 @@
     <packaging>jar</packaging>
 
 	<properties>
-        <profile.phase>none</profile.phase>
         <license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
