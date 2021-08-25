@@ -13,22 +13,13 @@
 	<artifactId>dirigible-api-javascript-test</artifactId>
 	<description>Test Control Modules</description>
     <packaging>jar</packaging>
-
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
 	
 	<properties>
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-
+		<profile.content.phase>generate-sources</profile.content.phase>		
 		<content.repository.name>api-test</content.repository.name>
 		<content.project.name>test</content.project.name>
-
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
+		
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>
