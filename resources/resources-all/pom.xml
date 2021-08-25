@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-resources-parent</artifactId>
-		<version>5.12.14</version>
+		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -21,37 +21,37 @@
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-fonts</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-goldenlayout</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-dev-tools</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-resources</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-themes</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-default</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
          <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-fiori</artifactId>
-            <version>5.12.14</version>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
         
         <!-- WebJars -->
