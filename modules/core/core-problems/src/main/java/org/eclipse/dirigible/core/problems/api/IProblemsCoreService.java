@@ -37,13 +37,14 @@ public interface IProblemsCoreService extends ICoreService {
      * @param line       the line of the error
      * @param column     the column of the error
      * @param symbol     the problematic symbol
+     * @param expected   the expected symbol
      * @param category   the category of the error, e.g. the submodule
      * @param module     the module within the program, in which the error was found
      * @param source     the action that produced the error
      * @param program    the program, in which the error was found
      * @throws ProblemsException the parser errors exception
      */
-    public void save(String location, String type, String line, String column, String symbol,
+    public void save(String location, String type, String line, String column, String symbol, String expected,
                      String category, String module, String source, String program)
             throws ProblemsException;
 
@@ -122,6 +123,15 @@ public interface IProblemsCoreService extends ICoreService {
      * @throws ProblemsException the dirigible problem exception
      */
     public void deleteProblemById(Long id) throws ProblemsException;
+
+    /**
+     * Deletes all Problems by their ids.
+     *
+     * @param ids list of problem ids
+     * @return the result status of the delete statement execution
+     * @throws ProblemsException the dirigible problem exception
+     */
+    public int deleteMultipleProblemsById(List<Long> ids) throws ProblemsException;
 
     /**
      * Deletes all Problems by their status.

@@ -19,10 +19,10 @@ import java.util.List;
 
 public class ProblemsFacade implements IScriptingFacade {
 
-    public static final void save(String location, String type, String line, String column, String symbol,
-                                            String category, String module, String source, String program) throws ProblemsException {
+    public static final void save(String location, String type, String line, String column, String symbol, String expected,
+                                  String category, String module, String source, String program) throws ProblemsException {
 
-        new ProblemsCoreService().save(location, type, line, column, symbol, category, module, source, program);
+        new ProblemsCoreService().save(location, type, line, column, symbol, expected, category, module, source, program);
     }
 
     public static final String findProblem(Long id) throws ProblemsException {
@@ -35,6 +35,10 @@ public class ProblemsFacade implements IScriptingFacade {
 
     public static final void deleteProblem(Long id) throws ProblemsException {
         new ProblemsCoreService().deleteProblemById(id);
+    }
+
+    public static final void deleteMultipleProblemsById(List<Long> id) throws ProblemsException {
+        new ProblemsCoreService().deleteMultipleProblemsById(id);
     }
 
     public static final void deleteAllByStatus(String status) throws ProblemsException {

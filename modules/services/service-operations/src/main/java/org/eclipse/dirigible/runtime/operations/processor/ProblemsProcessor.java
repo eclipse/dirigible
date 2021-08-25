@@ -13,8 +13,8 @@ package org.eclipse.dirigible.runtime.operations.processor;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
-import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 import org.eclipse.dirigible.core.problems.service.ProblemsCoreService;
+
 import java.util.List;
 
 public class ProblemsProcessor {
@@ -22,9 +22,22 @@ public class ProblemsProcessor {
     private ProblemsCoreService problemsCoreService = new ProblemsCoreService();
 
     public String list() throws ProblemsException {
+        return GsonHelper.GSON.toJson(problemsCoreService.getAllProblems());
+    }
 
-        List<ProblemsModel> jobs = problemsCoreService.getAllProblems();
+    public void updateStatus(List<Long> ids, String status) throws ProblemsException {
+        problemsCoreService.updateStatusMultipleProblems(ids, status);
+    }
 
-        return GsonHelper.GSON.toJson(jobs);
+    public void deleteProblemsByStatus(String status) throws ProblemsException {
+        problemsCoreService.deleteProblemsByStatus(status);
+    }
+
+    public void clear() throws ProblemsException {
+        problemsCoreService.deleteAll();
+    }
+
+    public void deleteMultipleProblemsById(List<Long> ids) throws ProblemsException {
+        problemsCoreService.deleteMultipleProblemsById(ids);
     }
 }

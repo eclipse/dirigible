@@ -25,12 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Front facing REST service serving the Problems.
@@ -75,6 +74,86 @@ public class ProblemsService extends AbstractRestService implements IRestService
         }
 
         return Response.ok().entity(processor.list()).build();
+    }
+
+    /**
+     * Updates the status of all selected problems.
+     *
+     * @return the response
+     * @throws ProblemsException the scheduler exception
+     */
+    @POST
+    @Path("/update/status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateStatus(List<Long> ids, String status)
+            throws ProblemsException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        processor.updateStatus(ids, status);
+        return Response.ok().entity(processor.list()).build();
+    }
+
+    /**
+     * Deletes all problems by status.
+     *s
+     * @return the response
+     * @throws ProblemsException the scheduler exception
+     */
+    @DELETE
+    @Path("/delete/status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProblemsByStatus(String status)
+            throws ProblemsException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        processor.deleteProblemsByStatus(status);
+        return Response.ok().build();
+    }
+
+    /**
+     * Deletes all problems.
+     *s
+     * @return the response
+     * @throws ProblemsException the scheduler exception
+     */
+    @DELETE
+    @Path("/clear")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response clearProblems()
+            throws ProblemsException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        processor.clear();
+        return Response.ok().build();
+    }
+
+    /**
+     * Deletes all problems.
+     *s
+     * @return the response
+     * @throws ProblemsException the scheduler exception
+     */
+    @DELETE
+    @Path("/delete/selected")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteMultipleProblems(List<Long> ids)
+            throws ProblemsException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        processor.deleteMultipleProblemsById(ids);
+        return Response.ok().build();
     }
 
     /*

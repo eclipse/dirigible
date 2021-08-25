@@ -16,7 +16,41 @@ angular.module('problems', [])
             $scope.problemsList = response.data;
         });
 
+        $scope.updateStatus = function(status) {
+            let ids = [];
+            $scope.problemsList.filter(
+                function (problem) {
+                    if (problem.checked) {
+                        ids.push(problem.id)
+                    }
+                }
+            );
+            $http.get('../../../ops/problems/update/status', {ids, status}).then(function(response) {
+                $scope.problemsList = response.data;
+            });
+        };
 
+        $scope.deleteByStatus = function(status) {
+            $http.get('../../../ops/problems/delete/status', {status});
+        }
+
+        $scope.deleteSelected = function() {
+            let ids = [];
+            $scope.problemsList.filter(
+                function (problem) {
+                    if (problem.checked) {
+                        ids.push(problem.id)
+                    }
+                }
+            );
+            $http.get('../../../ops/problems/delete/selected', {ids}).then(function(response) {
+                $scope.problemsList = response.data;
+            });
+        }
+
+        $scope.clear = function() {
+            $http.get('../../../ops/problems/clear');
+        }
     }]).config(function($sceProvider) {
     $sceProvider.enabled(false);
 });

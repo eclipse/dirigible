@@ -42,8 +42,11 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
-    @Column(name = "PROBLEM_SYMBOL", columnDefinition = "VARCHAR", nullable = false, length = 11)
+    @Column(name = "PROBLEM_SYMBOL", columnDefinition = "VARCHAR", nullable = false, length = 32)
     private String symbol;
+
+    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 32)
+    private String expected;
 
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp createdAt;
@@ -74,6 +77,7 @@ public class ProblemsModel {
                          String line,
                          String column,
                          String symbol,
+                         String expected,
                          String category,
                          String module,
                          String source,
@@ -83,6 +87,7 @@ public class ProblemsModel {
         this.line = line;
         this.column = column;
         this.symbol = symbol;
+        this.expected = expected;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -94,6 +99,7 @@ public class ProblemsModel {
                          String line,
                          String column,
                          String symbol,
+                         String expected,
                          String category,
                          String module,
                          String source,
@@ -104,6 +110,7 @@ public class ProblemsModel {
         this.line = line;
         this.column = column;
         this.symbol = symbol;
+        this.expected = expected;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -153,6 +160,14 @@ public class ProblemsModel {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getExpected() {
+        return expected;
+    }
+
+    public void setExpected(String expected) {
+        this.expected = expected;
     }
 
     public Timestamp getCreatedAt() {
@@ -230,6 +245,7 @@ public class ProblemsModel {
                 && line.equals(that.line)
                 && column.equals(that.column)
                 && symbol.equals(that.symbol)
+                && expected.equals(that.expected)
                 && category.equals(that.category)
                 && module.equals(that.module)
                 && source.equals(that.source)
@@ -238,6 +254,6 @@ public class ProblemsModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column, symbol, category, module, source, program, status);
+        return Objects.hash(location, type, line, column, symbol, expected, category, module, source, program, status);
     }
 }

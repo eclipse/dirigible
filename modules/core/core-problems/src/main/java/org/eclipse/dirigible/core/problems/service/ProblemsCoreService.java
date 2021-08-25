@@ -52,10 +52,11 @@ public class ProblemsCoreService implements IProblemsCoreService {
     }
 
     @Override
-    public void save(String location, String type, String line, String column, String symbol,
+    public void save(String location, String type, String line, String column, String symbol, String expected,
                      String category, String module, String source, String program) throws ProblemsException {
 
-        ProblemsModel problemToPersist = new ProblemsModel(location, type, line, column, symbol, category, module, source, program);
+        ProblemsModel problemToPersist = new ProblemsModel(location, type, line, column, symbol, expected, category,
+                module, source, program);
         ProblemsModel problemsModel = getProblem(location, type, line, column);
         if (problemsModel == null) {
             createProblem(problemToPersist);
@@ -149,6 +150,21 @@ public class ProblemsCoreService implements IProblemsCoreService {
     public void deleteProblemById(Long id) throws ProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             persistenceManager.delete(connection, ProblemsModel.class, id);
+        } catch (SQLException e) {
+            throw new ProblemsException(e);
+        }
+    }
+
+    @Override
+    public int deleteMultipleProblemsById(List<Long> ids) throws ProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder sql = new StringBuilder("DELETE DIRIGIBLE_PROBLEMS WHERE PROBLEM_ID IN (");
+            ids = new ArrayList<>(ids);
+            ids.forEach(id -> sql.append("?,"));
+            //delete the last ,
+            sql.deleteCharAt(sql.length() - 1);
+            sql.append(")");
+            return persistenceManager.execute(connection, sql.toString(), ids);
         } catch (SQLException e) {
             throw new ProblemsException(e);
         }
