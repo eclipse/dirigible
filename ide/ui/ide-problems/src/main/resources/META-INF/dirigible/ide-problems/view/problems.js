@@ -11,16 +11,22 @@
  */
 angular.module('problems', [])
     .controller('ProblemsController', ['$scope', '$http', function ($scope, $http) {
+        $scope.allProblems = [];
+        $scope.selectAll = false;
+        $scope.searchText = null;
+        $scope.problemsList = [];
 
-        $http.get('../../../ops/problems').then(function(response) {
-            $scope.problemsList = response.data;
-        });
-
-        this.refresh = function () {
-            $route.reload()
+        function refreshList() {
+            $http.get('../../../ops/problems').then(function(response) {
+                $scope.allProblems = response.data;
+                $scope.problemsList = $scope.allProblems;
+            });
+            $scope.selectAll = false;
         }
 
-        $scope.updateStatus = function(status) {
+        refreshList();
+
+        function filterSelectedIds() {
             let selectedIds = [];
             $scope.problemsList.filter(
                 function (problem) {
@@ -29,31 +35,68 @@ angular.module('problems', [])
                     }
                 }
             );
-            $http.post('../../../ops/problems/update/' + status, selectedIds).then(function(response) {
-                $scope.problemsList = response.data;
+            return selectedIds;
+        }
+
+        function containsSearchText(problem) {
+            if ($scope.searchText) {
+                return problem.location.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.type.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.line.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.column.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.symbol.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.expected.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.createdAt.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.createdBy.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.category.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.module.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.source.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.program.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.status.toLowerCase().includes($scope.searchText.toLowerCase());
+            }
+            return true;
+        }
+
+        this.refresh = function () {
+            refreshList();
+        }
+
+        $scope.search = function() {
+            $scope.problemsList = $scope.allProblems.filter(e => containsSearchText(e));
+        };
+
+        $scope.checkAll = function() {
+            angular.forEach($scope.problemsList, function (problem) {
+                problem.checked = $scope.selectAll;
+            });
+        };
+
+        $scope.updateStatus = function(status) {
+            $http.post('../../../ops/problems/update/' + status, filterSelectedIds()).then(function(response) {
+                $scope.allProblems = response.data;
+                $scope.problemsList = $scope.allProblems;
+                $scope.selectAll = false;
             });
         };
 
         $scope.deleteByStatus = function(status) {
-            $http.delete('../../../ops/problems/delete/' + status);
+            $http.delete('../../../ops/problems/delete/' + status).success(function () {
+                refreshList();
+            });
         }
 
         $scope.deleteSelected = function() {
-            let selectedIds = [];
-            $scope.problemsList.filter(
-                function (problem) {
-                    if (problem.checked) {
-                        selectedIds.push(problem.id)
-                    }
-                }
-            );
-            $http.post('../../../ops/problems/delete/selected', selectedIds).then(function(response) {
-                $scope.problemsList = response.data;
+            $http.post('../../../ops/problems/delete/selected', filterSelectedIds()).success(function () {
+                refreshList();
             });
         }
 
         $scope.clear = function() {
-            $http.delete('../../../ops/problems/clear');
+            $http.delete('../../../ops/problems/clear').success(function () {
+                $scope.allProblems = [];
+                $scope.problemsList = [];
+                $scope.selectAll = false;
+            });
         }
     }]).config(function($sceProvider) {
     $sceProvider.enabled(false);

@@ -38,27 +38,31 @@
 <body ng-app="problems" ng-controller="ProblemsController as problems" class="view">
 <div class="tableFixHead">
     <div class="row bg-default navbar navbar-fixed-top">
-        <div class="col-md-1">
-            <button class="btn btn-default preview-button" type="button" ng-click="$apply()">
-                <i class="fa fa-refresh"></i></button>
+        <div class="col">
+            <button class="btn btn-default preview-button" type="button" ng-click="problems.refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-5">
+            <input type="text" name="search" class="form-control" ng-model="searchText" ng-change="search()" ng-keyup="cancel($event)" placeholder="Search ...">
+        </div>
+        <div class="col">
             <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('IGNORED')">Mark as Ignored</button>
         </div>
-        <div class="col-md-1">
+        <div class="col">
             <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('SOLVED')">Mark as Solved</button>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteSelected()">Delete selected</button>
+        <div class="col">
+            <button class="btn btn-default preview-button" type="button" ng-click="deleteSelected()">Delete Selected</button>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('SOLVED')">Delete solved</button>
+        <div class="col">
+            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('SOLVED')">Delete Solved</button>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('IGNORED')">Delete ignored</button>
+        <div class="col">
+            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('IGNORED')">Delete Ignored</button>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete all</button>
+        <div class="col">
+            <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
         </div>
     </div>
     <div id="row" style="padding-top: 30px; padding-bottom: 20px">
@@ -78,6 +82,7 @@
                 <th>Source</th>
                 <th>Program</th>
                 <th>Status</th>
+                <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
             </tr>
             </thead>
             <tbody>
