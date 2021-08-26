@@ -50,7 +50,6 @@ exports.isSameFile = function(path1, path2) {
 	return org.eclipse.dirigible.api.v3.io.FilesFacade.isSameFile(path1, path2);
 };
 
-
 exports.getCanonicalPath = function(path) {
 	return org.eclipse.dirigible.api.v3.io.FilesFacade.getCanonicalPath(path);
 };
@@ -69,6 +68,10 @@ exports.readBytes = function(path){
 	return data;
 };
 
+exports.readBytesNative = function(path){
+	return org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
+};
+
 exports.readText = function(path){
 	return org.eclipse.dirigible.api.v3.io.FilesFacade.readText(path);
 };
@@ -76,6 +79,10 @@ exports.readText = function(path){
 exports.writeBytes = function(path, data){
 	var native = bytes.toJavaBytes(data);
 	org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, native);
+};
+
+exports.writeBytesNative = function(path, data){
+	org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, data);
 };
 
 exports.writeText = function(path, text) {
@@ -111,11 +118,11 @@ exports.size = function(path) {
 };
 
 exports.createFile = function(path) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.createFile(path, permissions);
+	org.eclipse.dirigible.api.v3.io.FilesFacade.createFile(path);
 };
 
 exports.createDirectory = function(path) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.createDirectory(path, permissions);
+	org.eclipse.dirigible.api.v3.io.FilesFacade.createDirectory(path);
 };
 
 exports.copy = function(source, target) {

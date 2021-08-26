@@ -19,12 +19,12 @@ var streams = require("io/v4/streams");
 var bytes = require("io/v4/bytes");
 
 exports.createZipInputStream = function(inputStream) {
-	
+
 	/**
 	 * ZipInputStream object
 	 */
 	var ZipInputStream = function () {
-	
+
 		this.getNextEntry = function() {
 			var zipEntry = new ZipEntry();
 			var native = this.native.getNextEntry();
@@ -32,24 +32,29 @@ exports.createZipInputStream = function(inputStream) {
 			zipEntry.input = this;
 			return zipEntry;
 		};
-		
-		this.read = function(zipEntry) {
+
+		this.read = function() {
 			var native = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
 			var data = bytes.toJavaScriptBytes(native);
 			return data;
 		};
-		
-		this.readText = function(zipEntry) {
+
+		this.readNative = function() {
+			let data = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
+			return data;
+		};
+
+		this.readText = function() {
 			var text = org.eclipse.dirigible.api.v3.io.ZipFacade.readText(this.native);
 			return text;
 		};
-		
+
 		this.close = function() {
 			this.native.close();
 		};
-	
+
 	};
-	
+
 	var zipInputStream = new ZipInputStream();
 	var native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
 	zipInputStream.native = native;
@@ -75,11 +80,15 @@ exports.createZipOutputStream = function(outputStream) {
 			var native = bytes.toJavaBytes(data);
 			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, native);
 		};
-		
+
+		this.writeNative = function(data) {
+			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, data);
+		};
+
 		this.writeText = function(text) {
 			org.eclipse.dirigible.api.v3.io.ZipFacade.writeText(this.native, text);
 		};
-		
+
 		this.closeEntry = function() {
 			this.native.closeEntry();
 		};
@@ -98,9 +107,6 @@ exports.createZipOutputStream = function(outputStream) {
 	return zipOutputStream;
 };
 
-
-
-
 /**
  * ZipEntry object
  */
@@ -109,31 +115,31 @@ function ZipEntry() {
 	this.getName = function() {
 		return this.native.getName();
 	};
-	
+
 	this.getSize = function() {
 		return this.native.getSize();
 	};
-	
+
 	this.getCompressedSize = function() {
 		return this.native.getCompressedSize();
 	};
-	
+
 	this.getTime = function() {
 		return this.native.getTime();
 	};
-	
+
 	this.getCrc = function() {
 		return this.native.getCrc();
 	};
-	
+
 	this.getComment = function() {
 		return this.native.getComment();
 	};
-	
+
 	this.isDirectory = function() {
 		return this.native.isDirectory();
 	};
-	
+
 	this.isValid = function() {
 		return this.native !== null;
 	};
