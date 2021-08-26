@@ -158,7 +158,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
     @Override
     public int deleteMultipleProblemsById(List<Long> ids) throws ProblemsException {
         try (Connection connection = dataSource.getConnection()) {
-            StringBuilder sql = new StringBuilder("DELETE DIRIGIBLE_PROBLEMS WHERE PROBLEM_ID IN (");
+            StringBuilder sql = new StringBuilder("DELETE FROM DIRIGIBLE_PROBLEMS WHERE PROBLEM_ID IN (");
             ids = new ArrayList<>(ids);
             ids.forEach(id -> sql.append("?,"));
             //delete the last ,
