@@ -20,6 +20,7 @@
 	<properties>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
 	<dependencies>
@@ -72,7 +73,7 @@
 			<version>7.07.138.26368</version>
 			<scope>test</scope>
 		</dependency> -->
-
 	</dependencies>
 
+	
 </project>

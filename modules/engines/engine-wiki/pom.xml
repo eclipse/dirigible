@@ -62,7 +62,10 @@
 		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
 		    <version>3.0.18</version>
 		</dependency>
-
     </dependencies>
+
+    <properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>
