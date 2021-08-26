@@ -19,10 +19,10 @@ import java.util.List;
 
 public class ProblemsFacade implements IScriptingFacade {
 
-    public static final void save(String location, String type, String line, String column, String symbol, String expected,
+    public static final void save(String location, String type, String line, String column, String cause, String expected,
                                   String category, String module, String source, String program) throws ProblemsException {
 
-        new ProblemsCoreService().save(location, type, line, column, symbol, expected, category, module, source, program);
+        new ProblemsCoreService().save(location, type, line, column, cause, expected, category, module, source, program);
     }
 
     public static final String findProblem(Long id) throws ProblemsException {

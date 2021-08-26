@@ -42,10 +42,10 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
-    @Column(name = "PROBLEM_SYMBOL", columnDefinition = "VARCHAR", nullable = false, length = 32)
-    private String symbol;
+    @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    private String cause;
 
-    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 32)
+    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 96)
     private String expected;
 
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
@@ -76,7 +76,7 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
-                         String symbol,
+                         String cause,
                          String expected,
                          String category,
                          String module,
@@ -86,7 +86,7 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
-        this.symbol = symbol;
+        this.cause = cause;
         this.expected = expected;
         this.category = category;
         this.module = module;
@@ -98,7 +98,7 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
-                         String symbol,
+                         String cause,
                          String expected,
                          String category,
                          String module,
@@ -109,7 +109,7 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
-        this.symbol = symbol;
+        this.cause = cause;
         this.expected = expected;
         this.category = category;
         this.module = module;
@@ -154,12 +154,12 @@ public class ProblemsModel {
         this.column = column;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getCause() {
+        return cause;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setCause(String cause) {
+        this.cause = cause;
     }
 
     public String getExpected() {
@@ -244,7 +244,7 @@ public class ProblemsModel {
                 && type.equals(that.type)
                 && line.equals(that.line)
                 && column.equals(that.column)
-                && symbol.equals(that.symbol)
+                && cause.equals(that.cause)
                 && expected.equals(that.expected)
                 && category.equals(that.category)
                 && module.equals(that.module)
@@ -254,6 +254,6 @@ public class ProblemsModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column, symbol, expected, category, module, source, program, status);
+        return Objects.hash(location, type, line, column, cause, expected, category, module, source, program, status);
     }
 }

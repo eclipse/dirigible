@@ -79,7 +79,7 @@ public class ProblemsService extends AbstractRestService implements IRestService
     /**
      * Updates the status of all selected problems.
      *
-     * @return the response
+     * @return the complete list of problems after the update
      * @throws ProblemsException the scheduler exception
      */
     @POST
@@ -137,7 +137,7 @@ public class ProblemsService extends AbstractRestService implements IRestService
     }
 
     /**
-     * Deletes all problems.
+     * Deletes all selected problems.
      *s
      * @return the response
      * @throws ProblemsException the scheduler exception

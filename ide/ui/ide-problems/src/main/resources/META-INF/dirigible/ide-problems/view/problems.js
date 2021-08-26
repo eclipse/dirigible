@@ -44,7 +44,7 @@ angular.module('problems', [])
                     problem.type.toLowerCase().includes($scope.searchText.toLowerCase()) ||
                     problem.line.toLowerCase().includes($scope.searchText.toLowerCase()) ||
                     problem.column.toLowerCase().includes($scope.searchText.toLowerCase()) ||
-                    problem.symbol.toLowerCase().includes($scope.searchText.toLowerCase()) ||
+                    problem.cause.toLowerCase().includes($scope.searchText.toLowerCase()) ||
                     problem.expected.toLowerCase().includes($scope.searchText.toLowerCase()) ||
                     problem.createdAt.toLowerCase().includes($scope.searchText.toLowerCase()) ||
                     problem.createdBy.toLowerCase().includes($scope.searchText.toLowerCase()) ||

@@ -69,38 +69,38 @@
         <table class="table table-striped" ng-cloak>
             <thead>
             <tr>
+                <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
+                <th>Status</th>
                 <th>Location</th>
                 <th>Type</th>
+                <th>Cause</th>
+                <th>Module</th>
+                <th>Category</th>
                 <th>Line</th>
                 <th>Column</th>
-                <th>Symbol</th>
                 <th>Expected</th>
-                <th>Created</th>
-                <th>Creator</th>
-                <th>Category</th>
-                <th>Module</th>
                 <th>Source</th>
+                <th>Creator</th>
+                <th>Created</th>
                 <th>Program</th>
-                <th>Status</th>
-                <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="next in problemsList">
+                <td><input type="checkbox" ng-model="next.checked"></td>
+                <td><div class="tdSingleLine">{{next.status}}</div></td>
                 <td><div class="tdSingleLine">{{next.location}}</div></td>
                 <td><div class="tdSingleLine">{{next.type}}</div></td>
+                <td><div class="tdSingleLine">{{next.cause}}</div></td>
+                <td><div class="tdSingleLine">{{next.module}}</div></td>
+                <td><div class="tdSingleLine">{{next.category}}</div></td>
                 <td><div class="tdSingleLine">{{next.line}}</div></td>
                 <td><div class="tdSingleLine">{{next.column}}</div></td>
-                <td><div class="tdSingleLine">{{next.symbol}}</div></td>
                 <td><div class="tdSingleLine">{{next.expected}}</div></td>
-                <td><div class="tdSingleLine">{{next.createdAt}}</div></td>
-                <td><div class="tdSingleLine">{{next.createdBy}}</div></td>
-                <td><div class="tdSingleLine">{{next.category}}</div></td>
-                <td><div class="tdSingleLine">{{next.module}}</div></td>
                 <td><div class="tdSingleLine">{{next.source}}</div></td>
+                <td><div class="tdSingleLine">{{next.createdBy}}</div></td>
+                <td><div class="tdSingleLine">{{next.createdAt}}</div></td>
                 <td><div class="tdSingleLine">{{next.program}}</div></td>
-                <td><div class="tdSingleLine">{{next.status}}</div></td>
-                <td><input type="checkbox" ng-model="next.checked"></td>
             </tr>
             </tbody>
         </table>

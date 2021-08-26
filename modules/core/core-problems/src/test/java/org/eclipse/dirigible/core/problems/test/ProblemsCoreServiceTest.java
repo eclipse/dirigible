@@ -41,7 +41,7 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
                 ";", ")", "JUnit", "API", "JUnit Test", "Dirigible");
 
         problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(), problemsModel.getLine(),
-                problemsModel.getColumn(), problemsModel.getSymbol(), problemsModel.getExpected(),
+                problemsModel.getColumn(), problemsModel.getCause(), problemsModel.getExpected(),
                 problemsModel.getCategory(), problemsModel.getModule(), problemsModel.getSource(), problemsModel.getProgram());
 
         ProblemsModel result = problemsCoreService.getProblem(problemsModel.getLocation(), problemsModel.getType(),
@@ -51,7 +51,7 @@ public class ProblemsCoreServiceTest extends AbstractDirigibleTest {
         // test if the problem gets updated
         problemsModel.setSource("Manual Update");
         problemsCoreService.save(problemsModel.getLocation(), problemsModel.getType(), problemsModel.getLine(),
-                problemsModel.getColumn(), problemsModel.getSymbol(), problemsModel.getExpected(),
+                problemsModel.getColumn(), problemsModel.getCause(), problemsModel.getExpected(),
                 problemsModel.getCategory(), problemsModel.getModule(), problemsModel.getSource(), problemsModel.getProgram());
         ProblemsModel resultUpdated = problemsCoreService.getProblem(problemsModel.getLocation(), problemsModel.getType(),
                 problemsModel.getLine(), problemsModel.getColumn());

@@ -13,8 +13,8 @@ exports.ACTIVE = "ACTIVE";
 exports.SOLVED = "SOLVED";
 exports.IGNORED = "IGNORED";
 
-exports.save = function(location, type, line, column, symbol, expected, category, module, source, program) {
-    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.save(location, type, line, column, symbol, expected,
+exports.save = function(location, type, line, column, cause, expected, category, module, source, program) {
+    org.eclipse.dirigible.api.v3.problems.ProblemsFacade.save(location, type, line, column, cause, expected,
         category, module, source, program);
 };
 
