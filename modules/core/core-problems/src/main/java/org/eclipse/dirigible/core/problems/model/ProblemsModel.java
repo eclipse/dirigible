@@ -42,6 +42,12 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
+    @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    private String cause;
+
+    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 96)
+    private String expected;
+
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
     private Timestamp createdAt;
 
@@ -70,6 +76,8 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
+                         String cause,
+                         String expected,
                          String category,
                          String module,
                          String source,
@@ -78,6 +86,8 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
+        this.cause = cause;
+        this.expected = expected;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -88,6 +98,8 @@ public class ProblemsModel {
                          String type,
                          String line,
                          String column,
+                         String cause,
+                         String expected,
                          String category,
                          String module,
                          String source,
@@ -97,6 +109,8 @@ public class ProblemsModel {
         this.type = type;
         this.line = line;
         this.column = column;
+        this.cause = cause;
+        this.expected = expected;
         this.category = category;
         this.module = module;
         this.source = source;
@@ -138,6 +152,22 @@ public class ProblemsModel {
 
     public void setColumn(String column) {
         this.column = column;
+    }
+
+    public String getCause() {
+        return cause;
+    }
+
+    public void setCause(String cause) {
+        this.cause = cause;
+    }
+
+    public String getExpected() {
+        return expected;
+    }
+
+    public void setExpected(String expected) {
+        this.expected = expected;
     }
 
     public Timestamp getCreatedAt() {
@@ -214,6 +244,8 @@ public class ProblemsModel {
                 && type.equals(that.type)
                 && line.equals(that.line)
                 && column.equals(that.column)
+                && cause.equals(that.cause)
+                && expected.equals(that.expected)
                 && category.equals(that.category)
                 && module.equals(that.module)
                 && source.equals(that.source)
@@ -222,6 +254,6 @@ public class ProblemsModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, type, line, column, category, module, source, program, status);
+        return Objects.hash(location, type, line, column, cause, expected, category, module, source, program, status);
     }
 }

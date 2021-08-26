@@ -27,6 +27,7 @@
 		<module>ide-deploy-manager</module>
 		<module>ide-git</module>
 		<module>ide-preview</module>
+		<module>ide-problems</module>
 		<module>ide-repository</module>
 		<module>ide-swagger</module>
 		<module>ide-terminal</module>
