@@ -168,7 +168,7 @@ exports.traverse = function(path) {
 };
 
 exports.list = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.list(path);
+	return JSON.parse(org.eclipse.dirigible.api.v3.io.FilesFacade.list(path)).map(e => e.path);
 };
 
 exports.find = function(path, pattern) {
