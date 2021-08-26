@@ -83,29 +83,29 @@ public class ProblemsService extends AbstractRestService implements IRestService
      * @throws ProblemsException the scheduler exception
      */
     @POST
-    @Path("/update/status")
+    @Path("/update/{status}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStatus(List<Long> ids, String status)
+    public Response updateStatus(@PathParam("status") String status, List<Long> selectedIds)
             throws ProblemsException {
         String user = UserFacade.getName();
         if (user == null) {
             return createErrorResponseForbidden(NO_LOGGED_IN_USER);
         }
 
-        processor.updateStatus(ids, status);
+        processor.updateStatus(selectedIds, status);
         return Response.ok().entity(processor.list()).build();
     }
 
     /**
-     * Deletes all problems by status.
+     * Deletes all problems by their status.
      *s
      * @return the response
      * @throws ProblemsException the scheduler exception
      */
     @DELETE
-    @Path("/delete/status")
+    @Path("/delete/{status}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProblemsByStatus(String status)
+    public Response deleteProblemsByStatus(@PathParam("status") String status)
             throws ProblemsException {
         String user = UserFacade.getName();
         if (user == null) {
@@ -142,17 +142,17 @@ public class ProblemsService extends AbstractRestService implements IRestService
      * @return the response
      * @throws ProblemsException the scheduler exception
      */
-    @DELETE
+    @POST
     @Path("/delete/selected")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMultipleProblems(List<Long> ids)
+    public Response deleteMultipleProblems(List<Long> selectedIds)
             throws ProblemsException {
         String user = UserFacade.getName();
         if (user == null) {
             return createErrorResponseForbidden(NO_LOGGED_IN_USER);
         }
 
-        processor.deleteMultipleProblemsById(ids);
+        processor.deleteMultipleProblemsById(selectedIds);
         return Response.ok().build();
     }
 

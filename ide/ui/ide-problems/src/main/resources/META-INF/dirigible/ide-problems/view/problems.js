@@ -16,40 +16,44 @@ angular.module('problems', [])
             $scope.problemsList = response.data;
         });
 
+        this.refresh = function () {
+            $route.reload()
+        }
+
         $scope.updateStatus = function(status) {
-            let ids = [];
+            let selectedIds = [];
             $scope.problemsList.filter(
                 function (problem) {
                     if (problem.checked) {
-                        ids.push(problem.id)
+                        selectedIds.push(problem.id)
                     }
                 }
             );
-            $http.get('../../../ops/problems/update/status', {ids, status}).then(function(response) {
+            $http.post('../../../ops/problems/update/' + status, selectedIds).then(function(response) {
                 $scope.problemsList = response.data;
             });
         };
 
         $scope.deleteByStatus = function(status) {
-            $http.get('../../../ops/problems/delete/status', {status});
+            $http.delete('../../../ops/problems/delete/' + status);
         }
 
         $scope.deleteSelected = function() {
-            let ids = [];
+            let selectedIds = [];
             $scope.problemsList.filter(
                 function (problem) {
                     if (problem.checked) {
-                        ids.push(problem.id)
+                        selectedIds.push(problem.id)
                     }
                 }
             );
-            $http.get('../../../ops/problems/delete/selected', {ids}).then(function(response) {
+            $http.post('../../../ops/problems/delete/selected', selectedIds).then(function(response) {
                 $scope.problemsList = response.data;
             });
         }
 
         $scope.clear = function() {
-            $http.get('../../../ops/problems/clear');
+            $http.delete('../../../ops/problems/clear');
         }
     }]).config(function($sceProvider) {
     $sceProvider.enabled(false);
