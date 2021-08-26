@@ -180,7 +180,7 @@
 						job.status = value;
 						jobs.push(job);
 					}
-		        	$scope.jobs = jobs;
+		        	$scope.jobs = jobs.sort((x, y) => x.name > y.name ? 1 : -1);
 		        }).error(function(e){
 		            console.error("Error retreiving the health status", e);
 		        });
