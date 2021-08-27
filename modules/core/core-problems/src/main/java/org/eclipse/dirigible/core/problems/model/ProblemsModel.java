@@ -45,7 +45,7 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String cause;
 
-    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 96)
+    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 255)
     private String expected;
 
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
