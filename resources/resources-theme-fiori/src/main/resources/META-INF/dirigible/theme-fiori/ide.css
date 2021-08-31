@@ -488,10 +488,15 @@ h6 {
   border-bottom: 1px solid;
   margin-top: 2px;
 }
+.workspace-body {
+  display: flex;
+  flex-direction: column;
+  overflow: none;
+}
 .workspace {
   font-weight: 300;
-  margin-top: 0.4em;
-  position: relative;
+  flex-grow: 1;
+  overflow: auto;
 }
 .search {
   border-top: 2px solid #edeff0;
@@ -691,4 +696,12 @@ a.ui-button:active,
 }
 .bg-default {
   background-color: #f5f5f5;
+}
+
+/* JSTree fixes */
+.jstree-default > .jstree-striped {
+  margin-top: 6px;
+  border-bottom: none;
+  /* For context menu */
+  margin-bottom: 32px;
 }
