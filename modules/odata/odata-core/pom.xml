@@ -11,13 +11,13 @@
 
 	<name>OData - Core</name>
 	<artifactId>dirigible-odata-core</artifactId>
-    <packaging>jar</packaging>
-    
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-        	
-            <plugin>
+	<packaging>jar</packaging>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
@@ -28,7 +28,7 @@
 					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
 			</plugin>
-			<!-- Required when the java build version is 1.8  -->
+			<!-- Required when the java build version is 1.8 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -37,32 +37,32 @@
 					<detectJavaApiLink>false</detectJavaApiLink>
 				</configuration>
 			</plugin>
-        </plugins>
-    </build>
-    
-    <dependencies>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-config</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-    	</dependency>
-    	 <dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-odata-api</artifactId>
-			<version>6.0.0-SNAPSHOT</version>
-    	</dependency>
-    	<dependency>
-	    	<groupId>org.eclipse.dirigible</groupId>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
-    	</dependency>
-    	
-    	<!-- Apache Olingo Library dependencies -->
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-odata-api</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-config</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Apache Olingo Library dependencies -->
 		<dependency>
 			<groupId>org.apache.olingo</groupId>
 			<artifactId>olingo-odata2-core</artifactId>
@@ -90,19 +90,33 @@
 			<version>${cxf.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.eclipse.persistence</groupId>
-		    <artifactId>jakarta.persistence</artifactId>
-		    <version>${persistence.api.version}</version>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>jakarta.persistence</artifactId>
+			<version>${persistence.api.version}</version>
 		</dependency>
-		
-		
+
+
 		<!-- Test -->
-	
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
+			<scope>test</scope>
+			
+		</dependency>
+
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<version>3.2</version>
+			<version>3.5.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			<version>1.4.200</version>
 		</dependency>
 
 		<dependency>
@@ -142,12 +156,8 @@
 			<version>2.7.4</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>3.3.3</version>
-			<scope>test</scope>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.apache.cxf</groupId> <artifactId>cxf-rt-frontend-jaxrs</artifactId> <version>3.3.3</version> 
+			<scope>test</scope> </dependency> -->
 		<dependency>
 			<groupId>jakarta.ws.rs</groupId>
 			<artifactId>jakarta.ws.rs-api</artifactId>
@@ -191,13 +201,13 @@
 			<version>10.8.2.2</version>
 			<scope>test</scope>
 		</dependency>
-		
-    </dependencies>
 
-    <properties>
-    	<!-- Required to enable usage in projects that run on java 1.8  -->
-    	<custom.java.build.version>1.8</custom.java.build.version>
+	</dependencies>
+
+	<properties>
+		<!-- Required to enable usage in projects that run on java 1.8 -->
+		<custom.java.build.version>1.8</custom.java.build.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
-    </properties>
-
+		<liquibase.version>3.8.1</liquibase.version>
+	</properties>
 </project>

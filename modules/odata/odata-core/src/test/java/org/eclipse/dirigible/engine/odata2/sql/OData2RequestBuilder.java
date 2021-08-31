@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.odata2.sql.test.util;
+package org.eclipse.dirigible.engine.odata2.sql;
 
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.POST;
@@ -43,18 +43,26 @@ import org.apache.cxf.jaxrs.utils.HttpUtils;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.processor.ODataRequest.ODataRequestBuilder;
 import org.apache.olingo.odata2.core.rest.ODataSubLocator;
 import org.apache.olingo.odata2.core.rest.SubLocatorParameter;
 import org.easymock.Capture;
+import org.easymock.CaptureType;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.easymock.IAnswer;
 
+
 /**
  * Base class for OData API tests, which can be used to simulate calls to the OData API without having to use a servlet.
  * 
+ * In order to use the class, inherit from it and overwrite the {@link ODataRequestBuilder#getServiceFactoryClass()} method. You can use
+ * this method also to provide mock data to your API. If you API retrieves handles to data sources via the servlet context or the servlet
+ * request, use the {@link ODataRequestBuilder#enrichServletContextMock(ServletContext)} and
+ * {@link ODataRequestBuilder#enrichServletRequestMock(ServletRequest)} methods to provide the handles to you mock data.
+ * 
  */
-public abstract class MockRequestBuilder {
+public class OData2RequestBuilder {
 
     private static final String PROTOCOL = "http";
     private static final String HOST = "localhost";
@@ -64,25 +72,26 @@ public abstract class MockRequestBuilder {
     //
     private final List<String> pathSegmentStringList = new ArrayList<>();
     private final MultivaluedMap<String, String> queryParams = new MetadataMap<>();
-    private String accept = "*/*";
+    private String accept = "*/*"; // Default value; Maybe overruled by constructor
     private int contentSize = 1024 * 4;
+    private ODataServiceFactory serviceFactory;
 
-    public MockRequestBuilder segments(final String... pathSegmentStrings) {
+    public OData2RequestBuilder segments(final String... pathSegmentStrings) {
         pathSegmentStringList.addAll(Arrays.asList(pathSegmentStrings));
         return this;
     }
 
-    public MockRequestBuilder param(final String name, final String value) {
+    public OData2RequestBuilder param(final String name, final String value) {
         queryParams.add(name, value);
         return this;
     }
 
-    public MockRequestBuilder accept(final String accept) {
+    public OData2RequestBuilder accept(final String accept) {
         this.accept = accept;
         return this;
     }
 
-    public MockRequestBuilder contentSize(final int contentSize) {
+    public OData2RequestBuilder contentSize(final int contentSize) {
         this.contentSize = contentSize;
         return this;
     }
@@ -91,13 +100,38 @@ public abstract class MockRequestBuilder {
         return executeRequest(GET);
     }
 
+    public OData2RequestBuilder serviceFactory(ODataServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
+        return this;
+    }
+
+    public static OData2RequestBuilder createRequest(ODataServiceFactory sf) {
+        final OData2RequestBuilder request = new OData2RequestBuilder();
+        return request.serviceFactory(sf);
+    }
+
+    /**
+     * This methods executes an OData Request based on applied parameters and mocked REST layer
+     * 
+     * @param method
+     *            Mandatory parameter defining Http Method to be used for the request. Expected values are: GET, PUT, POST, DELETE, PATCH,
+     *            MERGE
+     * @return OData Response
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IOException
+     * @throws ODataException
+     */
     public Response executeRequest(final ODataHttpMethod method) throws IOException, ODataException {
 
         final EasyMockSupport easyMockSupport = new EasyMockSupport();
 
         final SubLocatorParameter subLocatorParam = new SubLocatorParameter();
-        subLocatorParam.setServiceFactory(getServiceFactoryClass());
+        // Instantiate ServiceFactory
+        subLocatorParam.setServiceFactory(serviceFactory);
+        // Create PathSegments
         subLocatorParam.setPathSegments(createPathSegments(pathSegmentStringList));
+        // Mock HttpHeaders
         final HttpHeaders httpHeaders = easyMockSupport.createMock(HttpHeaders.class);
         expect(httpHeaders.getAcceptableLanguages()).andReturn(Collections.singletonList(Locale.US));
         final MultivaluedMap<String, String> headersMap = new MetadataMap<>();
@@ -111,7 +145,8 @@ public abstract class MockRequestBuilder {
         headersMap.add("host", HOST + "" + PORT);
         headersMap.add("user-agent", "Mozilla/5.0");
         expect(httpHeaders.getRequestHeaders()).andReturn(headersMap);
-        final Capture<String> nameCapture = new Capture<>();
+        final Capture<String> nameCapture = Capture.newInstance(CaptureType.LAST);
+        //
         final IAnswer<List<String>> getRequestHeaderAnswer = new IAnswer<List<String>>() {
             @Override
             public List<String> answer() throws Throwable {
@@ -122,9 +157,11 @@ public abstract class MockRequestBuilder {
         expect(httpHeaders.getRequestHeader(capture(nameCapture))).andAnswer(getRequestHeaderAnswer).anyTimes();
         subLocatorParam.setHttpHeaders(httpHeaders);
 
+        // Mock ServletContext
         ServletContext servletContext = easyMockSupport.createMock(ServletContext.class);
         enrichServletContextMock(servletContext);
 
+        // Mock HttpServletRequest
         final HttpServletRequest servletRequest = easyMockSupport.createMock(HttpServletRequest.class);
 
         expect(servletRequest.getMethod()).andReturn(method.name());
@@ -132,7 +169,7 @@ public abstract class MockRequestBuilder {
         expect(servletRequest.getServerPort()).andReturn(PORT);
         expect(servletRequest.getScheme()).andReturn(PROTOCOL);
         expect(servletRequest.getRemoteUser()).andReturn("RemoteUser").anyTimes();
-
+        // needed for tests in it-op
         expect(servletRequest.getHeader("x-forwarded-for")).andReturn("127.0.0.1").anyTimes();
         StringBuilder pathSegmentsString = new StringBuilder();
         for (String pathSegment : pathSegmentStringList) {
@@ -146,6 +183,7 @@ public abstract class MockRequestBuilder {
         enrichServletRequestMock(servletRequest);
         subLocatorParam.setServletRequest(servletRequest);
 
+        // Mock UriInfo
         final UriInfo uriInfo = easyMockSupport.createMock(UriInfo.class);
         expect(uriInfo.getBaseUri()).andReturn(URI.create(absoluteServiceRoot()));
         expect(uriInfo.getQueryParameters()).andReturn(queryParams);
@@ -185,7 +223,8 @@ public abstract class MockRequestBuilder {
 
     protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
             final HttpServletRequest servletRequest) throws IOException {
-        final ServletInputStream contentInputStream = easyMockSupport.createMock(ServletInputStream.class);
+        @SuppressWarnings("resource")
+        final ServletInputStream contentInputStream = easyMockSupport.createMock(ServletInputStream.class); //NOSONAR mock doesn't have to be closed
         if (method.equals(POST) || method.equals(PUT)) {
             expect(contentInputStream.available()).andReturn(0).anyTimes();
             if (contentSize > 0) {
@@ -198,17 +237,33 @@ public abstract class MockRequestBuilder {
         expect(servletRequest.getInputStream()).andReturn(contentInputStream).atLeastOnce();
     }
 
-    public MockRequestBuilder content(final String content) {
+    public OData2RequestBuilder content(@SuppressWarnings("unused") final String content) { //NOSONAR to be overridden by subclasses
         return this;
     }
 
+    /**
+     * Callback to add entries to the servletContext needed for the respective test context. EasyMock is used for the tests, so you can add
+     * data by using {@link EasyMock#expect(Object)} in the passed {@link ServletContext} reference, for instance.
+     * 
+     * @param servletContext
+     *            the EasyMock instance of the {@link ServletContext}.
+     * @throws Exception
+     */
     protected void enrichServletContextMock(final ServletContext servletContext) throws ODataException {
+        // default implementation is empty
     }
 
+    /**
+     * Callback to add entries to the servletRequest needed for the test request. EasyMock is used for the tests, so you can add data by
+     * using {@link EasyMock#expect(Object)} in the passed {@link ServletContext} reference, for instance.
+     * 
+     * @param servletRequest
+     *            the EasyMock instance of the {@link ServletRequest}.
+     * 
+     */
     protected void enrichServletRequestMock(final ServletRequest servletRequest) {
+        // default implementation is empty
     }
-
-    protected abstract ODataServiceFactory getServiceFactoryClass();
 
     private String createQueryString(final MultivaluedMap<String, String> queryParams) {
         StringBuilder queryString = new StringBuilder();
