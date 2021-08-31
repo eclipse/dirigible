@@ -9,18 +9,17 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getMenu = function() {
+exports.getMenu = function () {
 	return {
-			'name': 'Documents',
-			'link': '#',
-			'order': '150',
-			'items':[
-				{
-					'name': 'Properties',
-					'link': '#',
-					'order': '160'
-				}
-			]
-		};
-	return menu;
+		name: "Documents",
+		link: "#",
+		order: "150",
+		items: [
+			{
+				name: "Properties",
+				link: "#",
+				order: "160"
+			}
+		]
+	};
 }
