@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+  <changeSet author="dirigible" id="cars-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM CARS
+      </sqlCheck>
+    </preConditions>
+    <loadData encoding="UTF-8"
+      file="data/Cars.csv"
+      separator=";" tableName="CARS">
+    </loadData>
+  </changeSet>
+
+ 
+  <changeSet author="dirigible" id="drivers-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM DRIVERS
+      </sqlCheck>
+    </preConditions>
+    <loadData encoding="UTF-8"
+      file="data/Drivers.csv"
+      separator=";" tableName="DRIVERS">
+    </loadData>
+  </changeSet>
+</databaseChangeLog> 
