@@ -20,6 +20,7 @@
 	<properties>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
 	<dependencies>
@@ -56,7 +57,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.193</version>
+			<version>${h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -72,7 +73,7 @@
 			<version>7.07.138.26368</version>
 			<scope>test</scope>
 		</dependency> -->
-
 	</dependencies>
 
+	
 </project>

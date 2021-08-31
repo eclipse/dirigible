@@ -67,6 +67,12 @@ public class CloudFoundryUtils {
 		return vcapServicesEnv.getHanaDbEnv() != null ? vcapServicesEnv.getHanaDbEnv().get(0) : null;
 	}
 
+	public static HanaCloudDbEnv getHanaCloudDbEnv() {
+		String envJson = EnvFacade.get(VCAP_SERVICES);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		return vcapServicesEnv.getHanaCloudDbEnv() != null ? vcapServicesEnv.getHanaCloudDbEnv().get(0) : null;
+	}
+
 	public static HanaSchemaEnv getHanaSchemaEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
@@ -153,6 +159,9 @@ public class CloudFoundryUtils {
 		@SerializedName("hana-db")
 		private List<HanaDbEnv> hanaDbEnv;
 
+		@SerializedName("hana-cloud")
+		private List<HanaCloudDbEnv> hanaCloudDbEnv;
+
 		@SerializedName("hana")
 		private List<HanaSchemaEnv> hanaSchemaEnv;
 
@@ -182,6 +191,10 @@ public class CloudFoundryUtils {
 
 		public List<HanaDbEnv> getHanaDbEnv() {
 			return hanaDbEnv;
+		}
+
+		public List<HanaCloudDbEnv> getHanaCloudDbEnv() {
+			return hanaCloudDbEnv;
 		}
 
 		public void setHanaDbEnv(List<HanaDbEnv> hanaDbEnv) {
@@ -498,6 +511,32 @@ public class CloudFoundryUtils {
 		}
 
 		public static class HanaDbCredentialsEnv {
+
+			private String url;
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+		}
+	}
+
+	public static class HanaCloudDbEnv {
+
+		private HanaCloudDbCredentialsEnv credentials;
+
+		public HanaCloudDbCredentialsEnv getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(HanaCloudDbCredentialsEnv credentials) {
+			this.credentials = credentials;
+		}
+
+		public static class HanaCloudDbCredentialsEnv {
 
 			private String url;
 

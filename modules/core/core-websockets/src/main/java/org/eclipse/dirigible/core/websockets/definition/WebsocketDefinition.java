@@ -41,7 +41,7 @@ public class WebsocketDefinition {
 	@Column(name = "WEBSOCKET_DESCRIPTION", columnDefinition = "VARCHAR", nullable = true, length = 1024)
 	private String description;
 
-	@Column(name = "WEBSOCKET_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 32)
+	@Column(name = "WEBSOCKET_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
 
 	@Column(name = "WEBSOCKET_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)

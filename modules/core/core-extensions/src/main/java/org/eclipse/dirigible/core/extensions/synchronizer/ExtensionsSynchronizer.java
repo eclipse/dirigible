@@ -114,7 +114,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredExtensionPoint(String extensionPointPath) throws IOException {
-		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPointPath);
+		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + extensionPointPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ExtensionPointDefinition extensionPointDefinition = extensionsCoreService.parseExtensionPoint(json);
@@ -136,7 +136,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredExtension(String extensionPath) throws IOException {
-		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream(extensionPath);
+		InputStream in = ExtensionsSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + extensionPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			ExtensionDefinition extensionDefinition = extensionsCoreService.parseExtension(json);

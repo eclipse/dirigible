@@ -46,7 +46,7 @@
             <artifactId>dirigible-cms-managed</artifactId>
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-cms</artifactId>
@@ -68,6 +68,11 @@
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-core</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ide-ui-documents</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
@@ -82,6 +87,15 @@
 			<artifactId>dirigible-ide-ui-csv</artifactId>
 			<version>6.0.0-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-ide-ui-csvim</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+		</dependency>
     </dependencies>
+
+    <properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

@@ -40,11 +40,12 @@ public class CreateTableTypeTest {
                     .create()
                     .tableType("CUSTOMERS_STRUCTURE")
                     .column("CATEGORY_ID", DataType.INTEGER)
-                    .column("NAME", DataType.VARCHAR, 255)
+                    .column("NAME", DataType.VARCHAR, "255")
+                    .column("TYPES", DataType.VARCHAR, true, false, "220")
                     .build();
 
             assertNotNull(sql);
-            assertEquals("CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER, \"NAME\" VARCHAR(255))", sql);
+            assertEquals("CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) , \"TYPES\" VARCHAR (220) NOT NULL PRIMARY KEY )", sql);
         } finally {
             Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         }
@@ -59,11 +60,34 @@ public class CreateTableTypeTest {
                 .create()
                 .tableType("CUSTOMERS_STRUCTURE")
                 .column("CATEGORY_ID" , DataType.INTEGER)
-                .column("NAME" , DataType.VARCHAR, 255)
+                .column("NAME" , DataType.VARCHAR, "255")
+                .column("TYPES", DataType.VARCHAR, true, false, "220")
                 .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TYPE CUSTOMERS_STRUCTURE AS TABLE ( CATEGORY_ID INTEGER, NAME VARCHAR(255))", sql);
+        assertEquals("CREATE TYPE CUSTOMERS_STRUCTURE AS TABLE ( CATEGORY_ID INTEGER , NAME VARCHAR (255) , TYPES VARCHAR (220) NOT NULL PRIMARY KEY )", sql);
+    }
+
+    /**
+     * Create table type with composite primary key.
+     */
+    @Test
+    public void executeCreateTableTypeWithCompositePrimaryKey() {
+        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+        try {
+            String sql = SqlFactory.getNative(new HanaSqlDialect())
+                    .create()
+                    .tableType("CUSTOMERS_STRUCTURE")
+                    .column("CATEGORY_ID", DataType.INTEGER)
+                    .column("NAME", DataType.VARCHAR, true, false, "255")
+                    .column("TYPES", DataType.VARCHAR, true, false, "220")
+                    .build();
+
+            assertNotNull(sql);
+            assertEquals("CREATE TYPE \"CUSTOMERS_STRUCTURE\" AS TABLE ( \"CATEGORY_ID\" INTEGER , \"NAME\" VARCHAR (255) NOT NULL , \"TYPES\" VARCHAR (220) NOT NULL , PRIMARY KEY(NAME , TYPES) )", sql);
+        } finally {
+            Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
+        }
     }
 
 }

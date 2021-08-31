@@ -410,7 +410,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
     protected Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
 
         try {
-            InputStream in = AbstractApiSuiteTest.class.getResourceAsStream(IRepositoryStructure.SEPARATOR + testModule);
+            InputStream in = AbstractApiSuiteTest.class.getResourceAsStream("/META-INF/dirigible/" + testModule);
             try {
                 if (in == null) {
                     throw new IOException(IRepositoryStructure.SEPARATOR + testModule + " does not exist");

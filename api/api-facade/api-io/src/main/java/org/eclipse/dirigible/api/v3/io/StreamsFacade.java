@@ -190,7 +190,7 @@ public class StreamsFacade {
 	public static final ByteArrayInputStream getResourceAsByteArrayInputStream(String path) throws IOException {
 		InputStream in = null;
 		try {
-			in = StreamsFacade.class.getResourceAsStream(path);
+			in = StreamsFacade.class.getResourceAsStream("/META-INF/dirigible" + path);
 			if (in != null) {
 				return new ByteArrayInputStream(IOUtils.toByteArray(in));
 			}

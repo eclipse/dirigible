@@ -5,3 +5,4 @@ org.eclipse.dirigible.runtime.operations.service.SecurityService	# Security Serv
 org.eclipse.dirigible.runtime.operations.service.ListenersService	# Listeners Service
 org.eclipse.dirigible.runtime.operations.service.DataStructuresService	# Data Structures Service
 org.eclipse.dirigible.runtime.operations.service.WebsocketsService	# Websockets Service
+org.eclipse.dirigible.runtime.operations.service.ProblemsService	# Problems Service

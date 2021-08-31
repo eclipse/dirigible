@@ -12,21 +12,12 @@
 	<name>Template - OpenUI5 Planning Calendar</name>
 	<artifactId>dirigible-template-openui5-planning-calendar</artifactId>
     <packaging>jar</packaging>
-
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
-
 	<properties>
+		<profile.content.phase>generate-sources</profile.content.phase> 
 		<content.repository.name>template-openui5-planning-calendar</content.repository.name>
 		<content.project.name>template-openui5-planning-calendar</content.project.name>
 
-		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
-		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
-		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
-
+		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>

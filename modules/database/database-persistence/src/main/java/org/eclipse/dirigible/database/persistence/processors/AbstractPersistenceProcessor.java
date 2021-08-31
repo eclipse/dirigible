@@ -304,6 +304,10 @@ public abstract class AbstractPersistenceProcessor implements IPersistenceProces
 				throw new PersistenceException(
 						format("Database type [{0}] cannot be set as [{1}]", dataType, value.getClass().getName()));
 			}
+		} else if (DataTypeUtils.isArray(dataType) && value instanceof List) {
+			for (Object element: ((List<?>)value)) {
+				setValue(preparedStatement, i++, element);
+			}
 		}
 
 		else {

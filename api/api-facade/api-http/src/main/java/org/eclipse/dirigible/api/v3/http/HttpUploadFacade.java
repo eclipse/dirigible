@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.api.v3.http;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +65,20 @@ public class HttpUploadFacade implements IScriptingFacade {
 		}
 		List<FileItem> fileItems = servletFileUpload.parseRequest(request);
 		return fileItems;
+	}
+
+	/**
+	 * Converts header names iterator object to list object.
+	 *
+	 * @param headerNames header names iterator
+	 * @return A list of String elements which represent the name of the multipart request headers.
+	 */
+	public static final List<String> headerNamesToList(Iterator<String> headerNames) {
+		List<String> headerNamesList = new ArrayList<String>();
+		while (headerNames.hasNext()) {
+			headerNamesList.add(headerNames.next());
+		}
+		return headerNamesList;
 	}
 
 }

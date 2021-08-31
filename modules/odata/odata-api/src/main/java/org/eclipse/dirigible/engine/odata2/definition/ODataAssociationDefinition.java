@@ -11,14 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.definition;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
 public class ODataAssociationDefinition {
 
     private String name;
@@ -32,5 +27,40 @@ public class ODataAssociationDefinition {
      * For example:
      * <code> &lt;AssociationSet Name="someName" Association="someName" sap:creatable="true" sap:updatable="true" sap:deletable="true"&gt; </code>
      */
-    private Map<String ,String> annotationsAssociationSet = new HashMap<>();
+    private Map<String, String> annotationsAssociationSet = new HashMap<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ODataAssociationEndDefinition getFrom() {
+		return from;
+	}
+
+	public void setFrom(ODataAssociationEndDefinition from) {
+		this.from = from;
+	}
+
+	public ODataAssociationEndDefinition getTo() {
+		return to;
+	}
+
+	public void setTo(ODataAssociationEndDefinition to) {
+		this.to = to;
+	}
+
+	public Map<String, String> getAnnotationsAssociationSet() {
+		return annotationsAssociationSet;
+	}
+
+	public void setAnnotationsAssociationSet(Map<String, String> annotationsAssociationSet) {
+		this.annotationsAssociationSet = annotationsAssociationSet;
+	}
+    
+    
+    
 }

@@ -61,6 +61,21 @@ public class RepositoryFacade {
 	}
 
 	/**
+	 * Creates the resource.
+	 *
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @param contentType
+	 *            the content type
+	 * @return the i resource
+	 */
+	public static IResource createResourceNative(String path, byte[] content, String contentType) {
+		return repositoryProcessor.createResource(path, content, contentType);
+	}
+
+	/**
 	 * Update resource.
 	 *
 	 * @param path
@@ -71,6 +86,19 @@ public class RepositoryFacade {
 	 */
 	public static IResource updateResource(String path, String content) {
 		return repositoryProcessor.updateResource(path, content.getBytes());
+	}
+
+	/**
+	 * Update resource.
+	 *
+	 * @param path
+	 *            the path
+	 * @param content
+	 *            the content
+	 * @return the i resource
+	 */
+	public static IResource updateResourceNative(String path, byte[] content) {
+		return repositoryProcessor.updateResource(path, content);
 	}
 
 	/**

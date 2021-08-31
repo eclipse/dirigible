@@ -57,7 +57,7 @@ public class AccessArtifactTest {
 	 */
 	@Test
 	public void parseTest() throws IOException {
-		InputStream in = AccessArtifactTest.class.getResourceAsStream("/access/test.access");
+		InputStream in = AccessArtifactTest.class.getResourceAsStream("/META-INF/dirigible/access/test.access");
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			AccessArtifact access = AccessArtifact.parse(json);
@@ -112,7 +112,7 @@ public class AccessArtifactTest {
 	 */
 	@Test
 	public void divideTest() throws IOException {
-		String json = IOUtils.toString(AccessArtifactTest.class.getResourceAsStream("/access/test.access"), StandardCharsets.UTF_8);
+		String json = IOUtils.toString(AccessArtifactTest.class.getResourceAsStream("/META-INF/dirigible/access/test.access"), StandardCharsets.UTF_8);
 		AccessArtifact access = AccessArtifact.parse(json);
 		List<AccessDefinition> accessDefinitions = access.divide();
 		assertEquals("*", accessDefinitions.get(1).getMethod());

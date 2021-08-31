@@ -127,7 +127,7 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredBpmnFiles(String bpmnPath) throws IOException {
-		InputStream in = BpmSynchronizer.class.getResourceAsStream(bpmnPath);
+		InputStream in = BpmSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + bpmnPath);
 		try {
 			String content = IOUtils.toString(in, StandardCharsets.UTF_8);
 			BpmDefinition bpmDefinition = new BpmDefinition();

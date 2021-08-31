@@ -14,12 +14,6 @@
 	<artifactId>dirigible-cms-resources-parent</artifactId>
 	<description>CMS Resources Plugins</description>
 	<packaging>pom</packaging>
-	
-	<scm>
-		<url>${content.scm.url}</url>
-		<connection>${content.scm.connection}</connection>
-		<developerConnection>${content.scm.developerConnection}</developerConnection>
-	</scm>
 
 	<modules>
 		<module>api-cms</module>
@@ -27,70 +21,11 @@
         <module>ide-documents</module>
         <module>ide-documents-ext-content-type-ms</module>
         <module>ide-csv</module>
+		<module>ide-csvim</module>
 	</modules>
 
-	<profiles>
-		<profile>
-			<id>content</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<finalName>${project.artifactId}</finalName>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-scm-plugin</artifactId>
-						<version>${maven.scm.plugin.version}</version>
-						<configuration>
-							<goals>checkout</goals>
-							<checkoutDirectory>${content.scm.checkoutDirectory}</checkoutDirectory>
-							<server>${content.scm.server}</server>
-						</configuration>
-						<executions>
-							<execution>
-								<id>generated-sources</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>checkout</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven.resource.plugin.version}</version>
-						<executions>
-							<execution>
-								<id>copy-content-resources</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${content.output.directory}</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${content.source.directory}</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>${maven.compiler.plugin.version}</version>
-						<configuration>
-							<source>${maven.compiler.source}</source>
-							<target>${maven.compiler.target}</target>
-							<debug>true</debug>
-							<debuglevel>lines,vars,source</debuglevel>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
+
 </project>

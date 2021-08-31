@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.ds.api;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.database.ds.model.DataStructureChangelogModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
@@ -671,4 +672,87 @@ public interface IDataStructuresCoreService extends ICoreService {
 	 */
 	public List<DataStructureModel> getDataStructures() throws DataStructuresException;
 
+	
+	// Changelog
+
+	/**
+	 * Creates the changelog.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @return the data structure changelog model
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureChangelogModel createChangelog(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the changelog.
+	 *
+	 * @param location
+	 *            the location
+	 * @return the changelog
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public DataStructureChangelogModel getChangelog(String location) throws DataStructuresException;
+
+	/**
+	 * Exists changelog.
+	 *
+	 * @param location
+	 *            the location
+	 * @return true, if successful
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public boolean existsChangelog(String location) throws DataStructuresException;
+
+	/**
+	 * Removes the changelog.
+	 *
+	 * @param location
+	 *            the location
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void removeChangelog(String location) throws DataStructuresException;
+
+	/**
+	 * Update changelog.
+	 *
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param hash
+	 *            the hash
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public void updateChangelog(String location, String name, String hash) throws DataStructuresException;
+
+	/**
+	 * Gets the changelogs.
+	 *
+	 * @return the changelogs
+	 * @throws DataStructuresException
+	 *             the data structures exception
+	 */
+	public List<DataStructureChangelogModel> getChangelogs() throws DataStructuresException;
+
+	/**
+	 * Parses the changelog data.
+	 *
+	 * @param location
+	 *            the location
+	 * @param data
+	 *            the data
+	 * @return the data structure changelog model
+	 */
+	public DataStructureChangelogModel parseChangelog(String location, String data);
 }

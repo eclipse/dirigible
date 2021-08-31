@@ -101,7 +101,7 @@ public class DatabaseModule extends AbstractDirigibleModule {
 			logger.trace(format("Creating Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
 			DataSource dataSource = next.getDataSource(dataSourceName);
 			StaticObjects.set(StaticObjects.DATASOURCE, dataSource);
-			if (StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE) == null) {
+			if (!StaticObjects.exists(StaticObjects.SYSTEM_DATASOURCE)) {
 				logger.trace(format("Reusing Datasource as a System Datasource - [{0}:{1}:{2}] ...", next.getType(), next.getName(), dataSourceName));
 				StaticObjects.set(StaticObjects.SYSTEM_DATASOURCE, dataSource);
 				logger.info(format("Bound System Datasource - [{0}:{1}:{2}].", next.getType(), next.getName(), dataSourceName));

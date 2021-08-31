@@ -1,0 +1,289 @@
+<html ng-app="ui.schema.modeler">
+<head>
+<title>Schema Modeler</title>
+
+<!-- FontAwesome icon set -->
+<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+<!-- Sets the basepath for the library if not in same directory -->
+<script type="text/javascript">
+	mxBasePath = '/webjars/mxgraph/3.9.8/javascript';
+</script>
+<!-- Loads and initializes the library -->
+<script type="text/javascript" src="/webjars/mxgraph/3.9.8/javascript/mxClient.js"></script>
+
+<script type="text/javascript" src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+
+<!-- jQuery -->
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- AngularJS -->
+<script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+<script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+<script src="/webjars/angularjs/1.4.7/angular-animate.min.js"></script>
+<script src="/webjars/angularjs/1.4.7/angular-sanitize.min.js"></script>
+
+<link rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="../../../../services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
+<!-- Custom IDE Styles -->
+<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css" />
+
+<script type="text/javascript" src="js/model.js"></script>
+<script type="text/javascript" src="js/dialogs.js"></script>
+<script type="text/javascript" src="js/widgets.js"></script>
+<script type="text/javascript" src="js/serializer.js"></script>
+<script type="text/javascript" src="js/sql.js"></script>
+<script type="text/javascript" src="js/angular-dialogs.js"></script>
+<script type="text/javascript" src="js/clipboard.js"></script>
+<script type="text/javascript" src="js/controller.js"></script>
+
+<style>
+	.button:hover {
+		background: #333333 !important;
+	} 
+</style>
+
+<!-- Page passes the container for the graph to the program -->
+<body id="ModelerCtrl" ng-controller="ModelerCtrl as ctrl">
+
+	<!-- Creates a container for the splash screen -->
+	<div id="splash"
+		style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background: white; z-index: 1;">
+		<center id="splash" style="padding-top: 230px;">
+			<img src="images/loading.gif">
+		</center>
+	</div>
+
+	<!-- Creates a container for the sidebar -->
+	<div id="toolbarContainer" class="toolbarContainer"></div>
+
+	<!-- Creates a container for the toolboox -->
+	<div id="sidebarContainer" class="sidebarContainer"></div>
+
+	<!-- Creates a container for the graph -->
+	<div id="graphContainer" class="graphContainer"></div>
+
+	<!-- Creates a container for the outline -->
+	<div id="outlineContainer" class="outlineContainer"></div>
+
+	<!-- Creates a container for the statusbar -->
+	<div id="statusContainer" class="statusContainer">
+	</div>
+	
+	
+	
+	<!-- Triggers -->
+	<button type="button" id="tablePropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogTableProperties"></button>
+	<button type="button" id="columnPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogColumnProperties"></button>
+	<button type="button" id="columnSQLPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogSQLColumnProperties"></button>
+	<!-- button type="button" id="connectorPropertiesOpen" ng-show=false data-toggle="modal" data-target="#dialogConnectorProperties"></button -->
+	<button type="button" id="alertOpen" ng-show=false data-toggle="modal" data-target="#dialogAlert"></button>
+	<button type="button" id="infoOpen" ng-show=false data-toggle="modal" data-target="#dialogInfo"></button>
+	
+	<!-- Table Properties -->
+	<div class="dirigible-modal modal fade" id="dialogTableProperties" tabindex="-1" role="dialog" aria-labelledby="dialogTablePropertiesLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>Table Details</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+	    	<ul class="nav nav-pills">
+			    <li class="active"><a data-toggle="pill" href="#generalTable">General</a></li>
+			</ul>
+	    
+	    	<div class="tab-content">
+			    <div id="generalTable" class="tab-pane fade in active">
+			      <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+						<label class="col-xs-3 col-form-label">Name: </label>
+						<div class="col-xs-5">
+							<input class="form-control" type="text" placeholder="table name" ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
+						</div>
+					</div>
+				  </div>
+			    </div>
+			</div>
+	    
+	        
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="ctrl.okTableProperties()" data-toggle="modal" data-target="#dialogTableProperties">OK</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	
+	<!-- Column Properties -->
+	<div class="dirigible-modal modal fade" id="dialogColumnProperties" tabindex="-1" role="dialog" aria-labelledby="dialogColumnPropertiesLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>Column Details</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+	    	<ul class="nav nav-pills">
+			    <li class="active"><a data-toggle="pill" href="#generalColumn">General</a></li>
+			</ul>
+	    
+	    	<div class="tab-content">
+			    <div id="generalColumn" class="tab-pane fade in active">
+			  	  <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+						<label class="col-xs-3 col-form-label">Database Name: </label>
+						<div class="col-xs-6">
+							<input class="form-control" type="text" placeholder="data name" ng-model="ctrl.$scope.$parent.cell.value.name" required="required">
+						</div>
+					</div>
+					<div class="row">
+					    <label class="col-xs-3 col-form-label" for="dataType">Data Type: </label>
+					    <div class="col-xs-4">
+						    <select class="form-control" name="d" id="dataType" ng-model="ctrl.$scope.$parent.cell.value.type">
+						    	<option ng-repeat="option in ctrl.dataTypes" value="{{option.key}}">{{option.label}}</option>
+						    </select>
+					    </div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Length: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="20" ng-model="ctrl.$scope.$parent.cell.value.columnLength" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Is Primary Key: </label>
+						<div class="col-xs-9">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.primaryKey" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Is Auto Increment: </label>
+						<div class="col-xs-9">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.autoIncrement" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Is Not Null: </label>
+						<div class="col-xs-9">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.notNull" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Is Unique: </label>
+						<div class="col-xs-9">
+							<input class="form-control" type="checkbox" ng-model="ctrl.$scope.$parent.cell.value.unique" required="required" data-ng-true-value="'true'" data-ng-false-value="'false'">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Precision: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="0" ng-model="ctrl.$scope.$parent.cell.value.precision" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Scale: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="0" ng-model="ctrl.$scope.$parent.cell.value.scale" required="required">
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-xs-3 col-form-label">Default Value: </label>
+						<div class="col-xs-3">
+							<input class="form-control" type="text" placeholder="default value" ng-model="ctrl.$scope.$parent.cell.value.defaultValue" required="required">
+						</div>
+					</div>
+				  </div>
+			    </div>
+			</div>
+	    
+	        
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="ctrl.okColumnProperties()" data-toggle="modal" data-target="#dialogColumnProperties">OK</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+	
+	<!-- SQL Column Properties -->
+	<div class="dirigible-modal modal fade" id="dialogSQLColumnProperties" tabindex="-1" role="dialog" aria-labelledby="dialogSQLColumnPropertiesLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>SQL Details</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+	    	<ul class="nav nav-pills">
+			    <li class="active"><a data-toggle="pill" href="#generalSQLColumn">General</a></li>
+			</ul>
+	    
+	    	<div class="tab-content">
+			    <div id="generalSQLProperty" class="tab-pane fade in active">
+			  	  <br><br>
+			      <div class="form-group row">
+			      	<div class="row">
+						<label class="col-xs-3 col-form-label">SQL: </label>
+						<div class="col-xs-6">
+							<textarea class="form-control" cols='20' rows='10' ng-model="ctrl.$scope.$parent.cell.value.name" required="required"></textarea>
+						</div>
+					</div>
+				  </div>
+			    </div>
+			</div>
+	    
+	        
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="ctrl.okSQLColumnProperties()" data-toggle="modal" data-target="#dialogSQLColumnProperties">OK</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+
+	<!-- Alert Dialog -->
+	<div class="dirigible-modal modal fade" id="dialogAlert" tabindex="-1" role="dialog" aria-labelledby="dialogAlertLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>{{$parent.alertTitle}}</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+    	      <br><br>
+		      <div class="form-group row">
+		      	<div class="row">
+					<label class="col-xs-3 col-form-label"><i class="fa fa-{{$parent.alertStatus}} fa-4x"></i></label>
+					<div class="col-xs-5">
+						<h3>{{$parent.alertMessage}}</h3>
+					</div>
+				</div>
+			  </div>
+		   	    
+	        
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-default" data-dismiss="modal">Close</button>
+	    </div>
+	</div>
+	
+	<!-- Info Dialog -->
+	<div class="dirigible-modal modal fade" id="dialogInfo" tabindex="-1" role="dialog" aria-labelledby="dialogInfoLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h3>{{$parent.infoTitle}}</h3>
+	    </div>
+	    <div class="modal-body">
+	    
+    	      <br><br>
+		      <div class="form-group row">
+		      	<div class="row">
+					<div class="col-xs-12">
+						<textarea cols='60', rows='20' class="form-control">{{$parent.infoMessage}}</textarea>
+					</div>
+				</div>
+			  </div>
+		   	    
+	        
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-default" data-dismiss="modal">Close</button>
+	    </div>
+	</div>
+	
+</body>
+</html>

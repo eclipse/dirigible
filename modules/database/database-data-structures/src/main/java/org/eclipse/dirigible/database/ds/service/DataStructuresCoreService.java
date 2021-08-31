@@ -26,6 +26,7 @@ import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService;
+import org.eclipse.dirigible.database.ds.model.DataStructureChangelogModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
@@ -59,6 +60,8 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	private PersistenceManager<DataStructureDataUpdateModel> updatePersistenceManager = new PersistenceManager<DataStructureDataUpdateModel>();
 	
 	private PersistenceManager<DataStructureSchemaModel> schemaPersistenceManager = new PersistenceManager<DataStructureSchemaModel>();
+	
+	private PersistenceManager<DataStructureChangelogModel> changelogPersistenceManager = new PersistenceManager<DataStructureChangelogModel>();
 	
 	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager = new PersistenceManager<DataStructureModel>();
 
@@ -1199,5 +1202,150 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			throw new DataStructuresException(e);
 		}
 	}
+	
+	
+	
+	// Changelogs
+	
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#createChangelog(java.lang.String,
+		 * java.lang.String, java.lang.String)
+		 */
+		@Override
+		public DataStructureChangelogModel createChangelog(String location, String name, String hash) throws DataStructuresException {
+			DataStructureChangelogModel dataModel = new DataStructureChangelogModel();
+			dataModel.setLocation(location);
+			dataModel.setName(name);
+			dataModel.setType(IDataStructureModel.TYPE_CHANGELOG);
+			dataModel.setHash(hash);
+			dataModel.setCreatedBy(UserFacade.getName());
+			dataModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+
+			try {
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
+					changelogPersistenceManager.insert(connection, dataModel);
+					return dataModel;
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				}
+			} catch (SQLException e) {
+				throw new DataStructuresException(e);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getChangelog(java.lang.String)
+		 */
+		@Override
+		public DataStructureChangelogModel getChangelog(String location) throws DataStructuresException {
+			try {
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
+					return changelogPersistenceManager.find(connection, DataStructureChangelogModel.class, location);
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				}
+			} catch (SQLException e) {
+				throw new DataStructuresException(e);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#removeChangelog(java.lang.String)
+		 */
+		@Override
+		public void removeChangelog(String location) throws DataStructuresException {
+			try {
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
+					changelogPersistenceManager.delete(connection, DataStructureChangelogModel.class, location);
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				}
+			} catch (SQLException e) {
+				throw new DataStructuresException(e);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#ChangelogChangelog(java.lang.String,
+		 * java.lang.String, java.lang.String)
+		 */
+		@Override
+		public void updateChangelog(String location, String name, String hash) throws DataStructuresException {
+			try {
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
+					DataStructureChangelogModel dataModel = getChangelog(location);
+					dataModel.setName(name);
+					dataModel.setHash(hash);
+					changelogPersistenceManager.update(connection, dataModel);
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				}
+			} catch (SQLException e) {
+				throw new DataStructuresException(e);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#getChangelogs()
+		 */
+		@Override
+		public List<DataStructureChangelogModel> getChangelogs() throws DataStructuresException {
+			try {
+				Connection connection = null;
+				try {
+					connection = dataSource.getConnection();
+					String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
+					List<DataStructureChangelogModel> dataModels = changelogPersistenceManager.query(connection, DataStructureChangelogModel.class, sql,
+							Arrays.asList(IDataStructureModel.TYPE_CHANGELOG));
+					return dataModels;
+				} finally {
+					if (connection != null) {
+						connection.close();
+					}
+				}
+			} catch (SQLException e) {
+				throw new DataStructuresException(e);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#existsChangelog(java.lang.String)
+		 */
+		@Override
+		public boolean existsChangelog(String location) throws DataStructuresException {
+			return getChangelog(location) != null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * org.eclipse.dirigible.database.ds.api.IDataStructuresCoreService#parseChangelog(java.lang.String, java.lang.String)
+		 */
+		@Override
+		public DataStructureChangelogModel parseChangelog(String location, String data) {
+			return DataStructureModelFactory.parseChangelog(location, data);
+		}
 
 }

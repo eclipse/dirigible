@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 13
     - name: Maven Build
-      run: mvn clean install -Dmaven.javadoc.skip=true
+      run: mvn clean install -Dmaven.javadoc.skip=false
     - name: Docker Login
       run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
     - name: Push Anonymous
@@ -152,3 +152,53 @@ jobs:
         docker push dirigiblelabs/dirigible-runtime-keycloak
         docker image prune -a -f
         cd ../../
+    - uses: buildpacks/github-actions/setup-pack@v4.1.0
+    - name: Eclipse Dirigible Buildpack
+      run: |
+        cd releng/buildpacks/server/
+        docker build -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
+        docker push dirigiblelabs/buildpacks-stack-base-dirigible
+        docker build -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
+        docker push dirigiblelabs/buildpacks-stack-run-dirigible
+        docker build -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
+        docker push dirigiblelabs/buildpacks-stack-build-dirigible
+        cd buildpack/
+        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+        pack buildpack package dirigiblelabs/buildpacks-dirigible --config ./package.toml
+        docker push dirigiblelabs/buildpacks-dirigible
+        pack builder create dirigiblelabs/buildpacks-builder-dirigible --config ./builder.toml
+        docker push dirigiblelabs/buildpacks-builder-dirigible
+        cd ../../../../
+    - name: Eclipse Dirigible Kyma Buildpack
+      run: |
+        cd releng/buildpacks/sap-kyma/
+        docker build -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
+        docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma
+        docker build -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
+        docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma
+        docker build -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
+        docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma
+        cd buildpack/
+        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+        pack buildpack package dirigiblelabs/buildpacks-dirigible-kyma --config ./package.toml
+        docker push dirigiblelabs/buildpacks-dirigible-kyma
+        pack builder create dirigiblelabs/buildpacks-builder-dirigible-kyma --config ./builder.toml
+        docker push dirigiblelabs/buildpacks-builder-dirigible-kyma
+        cd ../../../../
+    - name: Eclipse Dirigible Cloud Foundry Buildpack
+      run: |
+        cd releng/buildpacks/sap-cf/
+        docker build -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
+        docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf
+        docker build -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
+        docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf
+        docker build -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
+        docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf
+        cd buildpack/
+        find *.toml -type f -exec sed -i ''s/#{DirigibleVersion}#/latest/g'' {} \;
+        pack buildpack package dirigiblelabs/buildpacks-dirigible-cf --config ./package.toml
+        docker push dirigiblelabs/buildpacks-dirigible-cf
+        pack builder create dirigiblelabs/buildpacks-builder-dirigible-cf --config ./builder.toml
+        docker push dirigiblelabs/buildpacks-builder-dirigible-cf
+        cd ../../../../
+

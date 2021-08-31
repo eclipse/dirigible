@@ -158,7 +158,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 					.addBytes(location + EXTENSION_BPMN20_XML, resource.getContent())
 					.deploy();
 		} else {
-			InputStream in = BpmProviderFlowable.class.getResourceAsStream(location);
+			InputStream in = BpmProviderFlowable.class.getResourceAsStream("/META-INF/dirigible" + location);
 			try {
 				if (in != null) {
 					try {

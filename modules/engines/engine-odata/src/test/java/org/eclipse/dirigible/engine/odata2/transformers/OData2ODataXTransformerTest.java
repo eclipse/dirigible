@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
@@ -36,7 +37,8 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OData2ODataXTransformerTest {
+public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
+	
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DBMetadataUtil dbMetadataUtil;
 
@@ -159,11 +161,11 @@ public class OData2ODataXTransformerTest {
                 "\t</EntityType>\n" +
                 "\t<EntityType Name=\"phoneType\">\n" +
                 "\t\t<Key>\n" +
-                "\t\t\t<PropertyRef Name=\"Number\" />\n" +
+                "\t\t\t<PropertyRef Name=\"number\" />\n" +
                 "\t\t</Key>\n" +
-                "\t\t<Property Name=\"Number\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"FkCompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"FkEmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"number\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"fkCompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"fkEmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
                 "\t</EntityType>\n" +
                 "\t<Association Name=\"Employees_PhonesType\">\n" +
                 "\t\t<End Type=\"np.employeeType\" Role=\"employeePrincipal\" Multiplicity=\"1\"/>\n" +

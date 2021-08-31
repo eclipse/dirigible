@@ -13,6 +13,9 @@ package org.eclipse.dirigible.engine.api.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -34,6 +37,8 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
 	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	
+	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
 
 	/**
 	 * Gets the repository.
@@ -76,10 +81,16 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		// try from the classloader
 		try {
 			String location = IRepository.SEPARATOR + module + (extension != null ? extension : "");
-			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(location);
+			byte[] content = PREDELIVERED.get(location);
+			if (content != null) {
+				return content;
+			}
+			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible" + location);
 			try {
 				if (bundled != null) {
-					return IOUtils.toByteArray(bundled);
+					content = IOUtils.toByteArray(bundled);
+					PREDELIVERED.put(location, content);
+					return content;
 				} 
 			} finally {
 				if (bundled != null) {
@@ -186,6 +197,10 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		}
 		String resourcePath = buff.toString();
 		return resourcePath;
+	}
+	
+	protected byte[] getLoadedPredeliveredContent(String location) {
+		return PREDELIVERED.get(location);
 	}
 
 }

@@ -32,6 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
 				<configuration>
 					<detectJavaApiLink>false</detectJavaApiLink>
 				</configuration>
@@ -177,8 +178,6 @@
 			<version>${olingo.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
-		
 
 		<dependency>
 			<groupId>org.apache.derby</groupId>
@@ -198,5 +197,7 @@
     <properties>
     	<!-- Required to enable usage in projects that run on java 1.8  -->
     	<custom.java.build.version>1.8</custom.java.build.version>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
+
 </project>

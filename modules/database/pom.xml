@@ -25,6 +25,11 @@
 		<module>database-sql</module>
 		<module>database-h2</module>
 		<module>database-dynamic</module>
+		<module>database-changelog</module>
 	</modules>
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

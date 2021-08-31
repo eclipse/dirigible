@@ -126,7 +126,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredRoles(String rolesPath) throws IOException {
-		InputStream in = SecuritySynchronizer.class.getResourceAsStream(rolesPath);
+		InputStream in = SecuritySynchronizer.class.getResourceAsStream("/META-INF/dirigible" + rolesPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			RoleDefinition[] roleDefinitions = securityCoreService.parseRoles(json);
@@ -150,7 +150,7 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredAccess(String accessPath) throws IOException {
-		InputStream in = SecuritySynchronizer.class.getResourceAsStream(accessPath);
+		InputStream in = SecuritySynchronizer.class.getResourceAsStream("/META-INF/dirigible" + accessPath);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			List<AccessDefinition> accessDefinitions = securityCoreService.parseAccessDefinitions(json);

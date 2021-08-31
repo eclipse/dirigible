@@ -26,7 +26,7 @@ public class CreateTablePrimaryKeyBuilder extends AbstractCreateTableConstraintB
 	 * @param name
 	 *            the name
 	 */
-	CreateTablePrimaryKeyBuilder(ISqlDialect dialect, String name) {
+	public CreateTablePrimaryKeyBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}
 

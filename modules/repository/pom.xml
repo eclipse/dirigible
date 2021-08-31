@@ -17,11 +17,16 @@
         <module>repository-all</module>
 		<module>repository-api</module>
 		<module>repository-api-test</module>
+		<module>repository-cache</module>
 		<module>repository-database</module>
 		<module>repository-local</module>
 		<module>repository-master</module>
 		<module>repository-search</module>
 		<module>repository-zip</module>
 	</modules>
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

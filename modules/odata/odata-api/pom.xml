@@ -74,12 +74,10 @@
 		    <artifactId>jakarta.persistence</artifactId>
 		    <version>${persistence.api.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${org.projectlombok.version}</version>
-		</dependency>
-		
     </dependencies>
+
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

@@ -3,9 +3,9 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-parent</artifactId>
+		<artifactId>dirigible-releng-parent</artifactId>
 		<version>6.0.0-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<name>Releng - Desktop - All</name>
@@ -254,6 +254,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- Templating Core -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-templating-all</artifactId>
+			<version>6.0.0-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Templates Plugins -->
 		<dependency>
@@ -295,5 +302,9 @@
 			<version>${jetty.version}</version>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

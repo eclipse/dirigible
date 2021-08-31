@@ -364,6 +364,23 @@ public class PersistenceManager<T> {
 	}
 
 	/**
+	 * Deletes all records representing the POJO instance.
+	 *
+	 * @param connection
+	 *            the database connection
+	 * @param clazz
+	 *            the POJO's Class
+	 * @return the result status of the delete statement execution
+	 */
+	public int deleteAll(Connection connection, Class<T> clazz) {
+		logger.trace("delete all -> connection: " + connection.hashCode() + ", class: " + clazz.getCanonicalName());
+		tableCheck(connection, clazz);
+		PersistenceTableModel tableModel = PersistenceFactory.createModel(clazz);
+		PersistenceDeleteProcessor<T> deleteProcessor = new PersistenceDeleteProcessor<>(getEntityManagerInterceptor());
+		return deleteProcessor.deleteAll(connection, tableModel, clazz);
+	}
+
+	/**
 	 * Update.
 	 *
 	 * @param connection

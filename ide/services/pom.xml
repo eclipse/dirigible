@@ -17,18 +17,18 @@
 	<modules>
 		<!-- Grouping Modules -->
 		<module>ide-group-all</module>
-		<module>ide-group-javascript</module>
-		<module>ide-group-database</module>
 		
 		<!-- Plugin Modules -->
 		<module>ide-console</module>
 		<module>ide-core</module>
 		<module>ide-databases</module>
-		<module>ide-generation</module>
 		<module>ide-git</module>
 		<module>ide-publisher</module>
 		<module>ide-terminal</module>
 		<module>ide-workspaces</module>
 	</modules>
 
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+	</properties>
 </project>

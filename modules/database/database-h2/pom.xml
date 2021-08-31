@@ -44,7 +44,7 @@
         <dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
-		    <version>1.3.176</version>
+		    <version>${h2database.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
@@ -52,5 +52,9 @@
 		    <version>2.2.0</version>
 		</dependency>
     </dependencies>
+
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

@@ -114,7 +114,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredMigrations(String location) throws IOException {
-		InputStream in = MigrationsSynchronizer.class.getResourceAsStream(location);
+		InputStream in = MigrationsSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + location);
 		try {
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			MigrationDefinition migrationDefinition = migrationsCoreService.parseMigration(json);

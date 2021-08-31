@@ -23,7 +23,7 @@
 			"name": "Employees_Phones",
 			"from": {
 				"entity": "employee",
-				"property": [
+				"properties": [
 					"COMPANY_ID_wrong",
 					"EMPLOYEE_NUMBER_wrong"
 				],
@@ -31,7 +31,7 @@
 			},
 			"to": {
 				"entity": "phone",
-				"property": [
+				"properties": [
 					"FK_COMPANY_ID",
 					"FK_EMPLOYEE_NUMBER"
 				],

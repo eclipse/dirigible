@@ -171,7 +171,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 		// try from the classloader
 		try {
-			InputStream bundled = ThemeRestService.class.getResourceAsStream(THEMES_PATH + cookieValue + IRepository.SEPARATOR + path);
+			InputStream bundled = ThemeRestService.class.getResourceAsStream("/META-INF/dirigible" + THEMES_PATH + cookieValue + IRepository.SEPARATOR + path);
 			if (bundled != null) {
 				try {
 					return Response.ok().entity(IOUtils.toByteArray(bundled)).type(ContentTypeHelper.TEXT_CSS)
