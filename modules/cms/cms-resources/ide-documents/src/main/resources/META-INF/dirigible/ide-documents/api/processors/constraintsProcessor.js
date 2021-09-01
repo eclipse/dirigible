@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var repositoryManager = require("platform/v4/repository");
-var documentsApi = require("ide-documents/api/lib/document");
-var folderApi = require("ide-documents/api/lib/folder");
-var cmisObjectApi = require("ide-documents/api/lib/object");
+var documentsUtils = require("ide-documents/utils/cmis/document");
+var folderUtils = require("ide-documents/utils/cmis/folder");
+var objectUtils = require("ide-documents/utils/cmis/object");
 var bytes = require("io/v4/bytes");
 var streams = require("io/v4/streams");
 
@@ -22,11 +22,11 @@ const ACCESS_CONSTRAINTS_FILE = "roles-access.json";
 const ACCESS_CONSTRAINTS_FILE_LOCATION = "/" + INTERNAL_FOLDER + "/" + ACCESS_CONSTRAINTS_FILE;
 
 function updateAccessDefinitionsInCMS(data) {
-    let folder = folderApi.getFolder(INTERNAL_FOLDER_LOCATION);
+    let folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
     if (!folder) {
-        let rootFolder = folderApi.getFolderOrRoot("/");
-        folderApi.createFolder(rootFolder, INTERNAL_FOLDER);
-        folder = folderApi.getFolder(INTERNAL_FOLDER_LOCATION);
+        let rootFolder = folderUtils.getFolderOrRoot("/");
+        folderUtils.createFolder(rootFolder, INTERNAL_FOLDER);
+        folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
     }
     let document = {
         getName: function() {
@@ -44,21 +44,21 @@ function updateAccessDefinitionsInCMS(data) {
         }
     }
 
-    let object = cmisObjectApi.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
+    let object = objectUtils.getObject(ACCESS_CONSTRAINTS_FILE_LOCATION);
     if (object) {
-        cmisObjectApi.deleteObject(object);
+        objectUtils.deleteObject(object);
     }
-    documentsApi.uploadDocument(folder, document);
+    documentsUtils.uploadDocument(folder, document);
 }
 
 exports.getAccessDefinitions = function () {
-    let document = documentsApi.getDocument(ACCESS_CONSTRAINTS_FILE_LOCATION);
+    let document = documentsUtils.getDocument(ACCESS_CONSTRAINTS_FILE_LOCATION);
     let content = {
         constraints: []
     };
 
     try {
-        let inputStream = documentsApi.getDocumentStream(document);
+        let inputStream = documentsUtils.getDocumentStream(document);
         let data = inputStream.getStream().readBytes();
         content = JSON.parse(bytes.byteArrayToText(data));
     } catch (e) {

@@ -10,13 +10,13 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var rs = require("http/v4/rs");
-var accessUtils = require("ide-documents/security/accessUtils");
+var constraintsProcessor = require("ide-documents/api/processors/constraintsProcessor");
 
 rs.service()
     .resource("")
         .get(function (ctx, request, response) {
             if (request.isUserInRole("Operator")) {
-                let accessDefinitions = accessUtils.getAccessDefinitions();
+                let accessDefinitions = constraintsProcessor.getAccessDefinitions();
                 response.println(JSON.stringify(accessDefinitions, null, 2));
             } else {
                 response.setStatus(response.FORBIDDEN);
@@ -26,7 +26,7 @@ rs.service()
         .put(function(ctx, request, response) {
             if (request.isUserInRole("Operator")) {
                 let accessDefinitions = request.getJSON();
-                accessUtils.updateAccessDefinitions(accessDefinitions);
+                constraintsProcessor.updateAccessDefinitions(accessDefinitions);
                 response.println(JSON.stringify(accessDefinitions, null, 2));
             } else {
                 response.setStatus(response.FORBIDDEN);

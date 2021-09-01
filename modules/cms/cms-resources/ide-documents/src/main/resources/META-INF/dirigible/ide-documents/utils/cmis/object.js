@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var cmis = require('cms/v4/cmis');
+var cmis = require("cms/v4/cmis");
 var cmisSession = cmis.getSession();
 
 exports.getObject = function(path){

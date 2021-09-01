@@ -9,26 +9,25 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var streams = require('io/v4/streams');
-var imageIO = require('io/v4/image');
-var documentLib = require("ide-documents/api/lib/document");
- 
- 
+var streams = require("io/v4/streams");
+var imageIO = require("io/v4/image");
+var documentUtils = require("ide-documents/utils/cmis/document");
+
+
 exports.uploadImageWithResize = function(folder, name, image, width, height) {
-	
-    var fileName = name;
-    var mimetype = image.getContentType();
-    var originalInputStream = image.getInputStream();
-    var inputStream = new streams.InputStream();
+    let fileName = name;
+    let mimetype = image.getContentType();
+    let originalInputStream = image.getInputStream();
+    let inputStream = new streams.InputStream();
     inputStream.uuid = originalInputStream.uuid;
-               
-    var imageType = mimetype.split('/')[1];
-    
-    var resizedInputStream = imageIO.resize(inputStream, imageType, width, height);
-    
-    image.getInputStream = function(){
-    	return resizedInputStream;//new streams.InputStream(fis);
+
+    let imageType = mimetype.split('/')[1];
+
+    let resizedInputStream = imageIO.resize(inputStream, imageType, width, height);
+
+    image.getInputStream = function () {
+        return resizedInputStream;//new streams.InputStream(fis);
     }
-    
-    documentLib.uploadDocument(folder, image);
+
+    documentUtils.uploadDocument(folder, image);
 }

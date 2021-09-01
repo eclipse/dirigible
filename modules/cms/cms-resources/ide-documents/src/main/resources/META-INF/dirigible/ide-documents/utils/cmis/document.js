@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var cmis = require('cms/v4/cmis');
-var streams = require('io/v4/streams');
-var cmisObjectLib = require("ide-documents/api/lib/object");
+var cmis = require("cms/v4/cmis");
+var streams = require("io/v4/streams");
+var objectUtils = require("ide-documents/utils/cmis/object");
 
 var cmisSession = cmis.getSession();
 
@@ -43,14 +43,14 @@ exports.uploadDocumentOverwrite = function(folder, document){
 	exports.uploadDocument(folder, document);
 	
 	try {
-		var oldDoc = cmisObjectLib.getObject(folder.getPath() + "/" + oldName);
-		cmisObjectLib.deleteObject(oldDoc);	
+		var oldDoc = objectUtils.getObject(folder.getPath() + "/" + oldName);
+		objectUtils.deleteObject(oldDoc);	
  	} catch(e){
  		//do nothing
  	}
 	
-	var newDoc = cmisObjectLib.getObject(folder.getPath() + "/" + newName);
-	cmisObjectLib.renameObject(newDoc, oldName);
+	var newDoc = objectUtils.getObject(folder.getPath() + "/" + newName);
+	objectUtils.renameObject(newDoc, oldName);
 };
 
 function craeteDocument(folder, fileName, size, mimetype, inputStream){
@@ -75,7 +75,7 @@ exports.getDocNameAndStream = function(document){
 };
 
 exports.getDocument = function(path){
-	return cmisObjectLib.getObject(path);
+	return objectUtils.getObject(path);
 }
 
 exports.createFromBytes = function(folder, fileName, bytes){

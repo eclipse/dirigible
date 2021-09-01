@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var streams = require('io/v4/streams');
-var zipAPI = require('io/v4/zip');
-var folderLib = require("ide-documents/api/lib/folder");
-var documentLib = require("ide-documents/api/lib/document");
-var objectLib = require("ide-documents/api/lib/object");
+var streams = require("io/v4/streams");
+var zip = require("io/v4/zip");
+var folderUtils = require("ide-documents/utils/cmis/folder");
+var documentUtils = require("ide-documents/utils/cmis/document");
+var objectUtils = require("ide-documents/utils/cmis/object");
 
 const SEPARATOR = '/';
 
@@ -21,11 +21,11 @@ exports.unpackZip = function(folderPath, zip){
 	var inputStream = zip.getInputStream();
 	createEntries(inputStream, folderPath);
 	
-	return folderLib.readFolder(folderLib.getFolder(folderPath));
+	return folderUtils.readFolder(folderUtils.getFolder(folderPath));
 };
 
 function createEntries(inputStream, rootPath){
-	var zipInputStream = zipAPI.createZipInputStream(inputStream);
+	var zipInputStream = zip.createZipInputStream(inputStream);
 	try {
 		var zipEntry = zipInputStream.getNextEntry();
 		while (zipEntry.isValid()) {
@@ -47,30 +47,30 @@ function createFolder(rootPath, zipEntry, zipInputStream){
 	var path = pathAndName[0];
 	var name = pathAndName[1];
 	console.log('Creating folder with path:' + path + ' and name: ' + name + ' ...');
-	var parent = folderLib.getFolder(path);
+	var parent = folderUtils.getFolder(path);
 	if (parent === null) {
 		createParentFolder(path);
 	}
-	var parent = folderLib.getFolder(path);
-	folderLib.createFolder(parent, name);
+	var parent = folderUtils.getFolder(path);
+	folderUtils.createFolder(parent, name);
 }
 
 function createParentFolder(path){
 	var upperPath = path.substring(0, path.lastIndexOf(SEPARATOR));
-	var upper = folderLib.getFolder(upperPath);
+	var upper = folderUtils.getFolder(upperPath);
 	var upperName = path.substring(path.lastIndexOf(SEPARATOR) + 1);
 	
 	console.warn('Creating the parent folder first with path: ' + upperPath + ' and name: ' + upperName + ' ...');
 	try {
-		var parentFolder = folderLib.createFolder(upper, upperName);
+		var parentFolder = folderUtils.createFolder(upper, upperName);
 		if (parentFolder === null) {
 			createParentFolder(upperPath);
-			folderLib.createFolder(upper, upperName);
+			folderUtils.createFolder(upper, upperName);
 		}
 	} catch(e) {
 		console.error(e.message);
 		createParentFolder(upperPath);
-		folderLib.createFolder(upper, upperName);
+		folderUtils.createFolder(upper, upperName);
 	}
 	
 }
@@ -83,7 +83,7 @@ function createFile(rootPath, zipEntry, zipInputStream){
 	
 	var parent = null;
 	try {
-		parent = folderLib.getFolder(path);
+		parent = folderUtils.getFolder(path);
 		if (parent === null) {
 			createParentFolder(path);
 		}
@@ -91,10 +91,10 @@ function createFile(rootPath, zipEntry, zipInputStream){
 		console.error(e.message);
 		createParentFolder(path);
 	}
-	parent = folderLib.getFolder(path);
+	parent = folderUtils.getFolder(path);
 
 	var bytes = zipInputStream.read();
-	documentLib.createFromBytes(parent, name, bytes);
+	documentUtils.createFromBytes(parent, name, bytes);
 }
 
 function getFullPathAndName(rootPath, fileFullName){
@@ -109,10 +109,10 @@ function getFullPathAndName(rootPath, fileFullName){
 }
 
 exports.makeZip = function(folderPath, outputStream) {
-	var folder = folderLib.getFolder(folderPath);
+	var folder = folderUtils.getFolder(folderPath);
 	console.info("Creating zip for folder: " + folderPath);
 
-	var zipOutputStream = zipAPI.createZipOutputStream(outputStream);
+	var zipOutputStream = zip.createZipOutputStream(outputStream);
 	try {
 		traverseFolder(folder, folder.getName(), zipOutputStream);
 	} finally {
@@ -128,7 +128,7 @@ function traverseFolder(folder, path, zipOutputStream) {
 		console.info("Folder: " + folder.getName() + " Path: " + path + " Child: " + child.getName());
 		var entryPath = path.lenght === 0 ? '' : path + SEPARATOR;
 		entryPath += child.getName();
-		var childObject = objectLib.getById(child.getId());
+		var childObject = objectUtils.getById(child.getId());
 		var zipEntry;
 		if (isFolder(child)) {
 			zipEntry = zipOutputStream.createZipEntry(entryPath + SEPARATOR);
