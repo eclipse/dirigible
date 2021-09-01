@@ -12,7 +12,9 @@
 package org.eclipse.dirigible.api.v3.cms;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -91,7 +93,7 @@ public class CmisFacade {
 			return true;
 		}
 		try {
-			List<AccessDefinition> accessDefinitions = getAccessDefinition(path, method);
+			Set<AccessDefinition> accessDefinitions = getAccessDefinitions(path, method);
 			if (!accessDefinitions.isEmpty()) {
 				String user = HttpRequestFacade.getRemoteUser();
 				if (user == null) {
@@ -116,8 +118,8 @@ public class CmisFacade {
 		return true;
 	}
 
-	private static List<AccessDefinition> getAccessDefinition(String path, String method) throws ServletException, AccessException {
-		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
+	public static Set<AccessDefinition> getAccessDefinitions(String path, String method) throws ServletException, AccessException {
+		Set<AccessDefinition> accessDefinitions = new HashSet<AccessDefinition>();
 		int indexOf = 0;
 		do {
 			String accessPath = path;

@@ -15,16 +15,21 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-var streams = require('io/v4/streams');
+var streams = require("io/v4/streams");
 
-var CMIS_METHOD_READ = 'READ';
-var CMIS_METHOD_WRITE = 'WRITE';
+var CMIS_METHOD_READ = "READ";
+var CMIS_METHOD_WRITE = "WRITE";
 
 exports.getSession = function() {
 	var session = new Session();
 	var native = org.eclipse.dirigible.api.v3.cms.CmisFacade.getSession();
 	session.native = native;
 	return session;
+};
+
+exports.getAccessDefinitions = function(path, method) {
+	let accessDefinitions = org.eclipse.dirigible.api.v3.cms.CmisFacade.getAccessDefinitions(path, method);
+	return JSON.parse(new com.google.gson.Gson().toJson(accessDefinitions));
 };
 
 /**
@@ -254,9 +259,9 @@ function CmisObject() {
 function ObjectFactory() {
 
 	this.createContentStream = function(filename, length, mimetype, inputStream) {
-		console.info('File name: ' + filename);
-		console.info('Length: ' + length);
-		console.info('Mime Type: ' + mimetype);
+		console.info("File name: " + filename);
+		console.info("Length: " + length);
+		console.info("Mime Type: " + mimetype);
 		var contentStream = new ContentStream();
 		var native = this.native.createContentStream(filename, length, mimetype, inputStream.native);
 		contentStream.native = native;
@@ -331,6 +336,9 @@ function TypeDefinition() {
 	};
 }
 // CONSTANTS
+
+exports.METHOD_READ = CMIS_METHOD_READ;
+exports.METHOD_WRITE = CMIS_METHOD_WRITE;
 
 // ---- Base ----
 exports.NAME = "cmis:name";

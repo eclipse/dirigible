@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var cmis = require("cms/v4/cmis");
+var user = require("security/v4/user");
 var objectUtils = require("ide-documents/utils/cmis/object");
 
 var cmisSession = cmis.getSession();
@@ -18,6 +19,51 @@ function ChildSerializer(cmisObject){
 	this.name = cmisObject.getName();
 	this.type = cmisObject.getType().getId();
 	this.id = cmisObject.getId();
+
+	let readAccessDefinitions = getReadAccessDefinitions(this.id);
+	let writeAccessDefinitions = getWriteAccessDefinitions(this.id);
+
+	if (readAccessDefinitions.length > 0 || writeAccessDefinitions.length > 0) {
+		this.restrictedAccess = true;
+	}
+	let readOnly;
+	let writeOnly;
+	let pathReadAccessDefinitionFound = false;
+	let pathWriteAccessDefinitionFound = false;
+	if (readAccessDefinitions.length > 0) {
+		for (let i = 0; i < readAccessDefinitions.length; i ++) {
+			if (readAccessDefinitions[i].path === this.id) {
+				readOnly = hasAccess([readAccessDefinitions[i]]);
+				pathReadAccessDefinitionFound = true;
+				break;
+			}
+		}
+	}
+	if (writeAccessDefinitions.length > 0) {
+		for (let i = 0; i < writeAccessDefinitions.length; i ++) {
+			if (writeAccessDefinitions[i].path === this.id) {
+				writeOnly = hasAccess([writeAccessDefinitions[i]]);
+				pathWriteAccessDefinitionFound = true;
+				break;
+			}
+		}
+	}
+
+	if (!pathReadAccessDefinitionFound && !pathWriteAccessDefinitionFound) {
+		let readOnlyAccessDefinitions = readAccessDefinitions.filter(e => e.method === cmis.METHOD_READ);
+		let writeOnlyAccessDefinitions = writeAccessDefinitions.filter(e => e.method === cmis.METHOD_WRITE);
+		if (readOnlyAccessDefinitions.length > 0) {
+			readOnly = hasAccess(readOnlyAccessDefinitions);
+		}
+		if (writeOnlyAccessDefinitions.length > 0) {
+			writeOnly = hasAccess(writeOnlyAccessDefinitions);
+		}
+	}
+
+	if (readOnly && !writeOnly || !readOnly && writeOnly) {
+		this.readOnly = readOnly;
+		this.writeOnly = writeOnly;
+	}
 }
 
 function FolderSerializer(cmisFolder){
@@ -27,6 +73,7 @@ function FolderSerializer(cmisFolder){
 	this.path = cmisFolder.getPath();
 	this.parentId = null;
 	this.children = [];
+
 
 	if (!cmisFolder.isRootFolder())	{
 		var parent = cmisFolder.getFolderParent();
@@ -40,6 +87,7 @@ function FolderSerializer(cmisFolder){
 		var child = new ChildSerializer(children[i]);
 		this.children.push(child);
 	}
+	this.children = this.children.sort((x, y) => x.path > y.path ? 1 : -1);
 }
 
 exports.readFolder = function(folder){
@@ -76,3 +124,20 @@ exports.getFolder = function(path){
 exports.deleteTree = function(folder){
 	folder.deleteTree();
 };
+
+function getReadAccessDefinitions(path) {
+	return cmis.getAccessDefinitions(path, cmis.METHOD_READ);
+}
+
+function getWriteAccessDefinitions(path) {
+	return cmis.getAccessDefinitions(path, cmis.METHOD_WRITE);
+}
+
+function hasAccess(accessDefinitions) {
+	for (let i = 0; i < accessDefinitions.length; i ++) {
+		if (!user.isInRole(accessDefinitions[i].role)) {
+			return false;
+		}
+	}
+	return true;
+}

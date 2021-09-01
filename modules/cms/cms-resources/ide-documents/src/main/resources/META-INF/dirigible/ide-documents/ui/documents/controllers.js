@@ -101,7 +101,15 @@ angular
 			});
 		}
 	};
-	
+
+	$scope.readAccessAllowed = function(document) {
+		return !document.restrictedAccess || (document.restrictedAccess && (document.readOnly || document.readOnly));
+	};
+
+	$scope.writeAccessAllowed = function(document) {
+		return !document.restrictedAccess || (document.restrictedAccess && document.readOnly === undefined);
+	};
+
 	$scope.crumbsChanged = function(entry){
 		getFolder(entry.path)
 		.success(function(data){
