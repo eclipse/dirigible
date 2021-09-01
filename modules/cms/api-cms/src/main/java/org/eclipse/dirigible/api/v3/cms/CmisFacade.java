@@ -83,7 +83,7 @@ public class CmisFacade {
 		if (Configuration.isAnonymousModeEnabled()) {
 			return true;
 		}
-		if (!Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_ROLES_ENABLED, "false"))) {
+		if (!Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_ROLES_ENABLED, Boolean.TRUE.toString()))) {
 			return true;
 		}
 		try {
@@ -94,10 +94,10 @@ public class CmisFacade {
 					logger.error("No logged in user accessing path: " + path);
 					return false;
 				}
-				boolean isInRole = false;
+				boolean isInRole = true;
 				for (AccessDefinition accessDefinition : accessDefinitions) {
-					if (HttpRequestFacade.isUserInRole(accessDefinition.getRole())) {
-						isInRole = true;
+					if (!HttpRequestFacade.isUserInRole(accessDefinition.getRole())) {
+						isInRole = false;
 						break;
 					}
 				}
