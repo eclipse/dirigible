@@ -11,12 +11,17 @@
  */
 package org.eclipse.dirigible.api.v3.cms;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import javax.servlet.ServletException;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.cms.api.ICmsProvider;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
@@ -87,7 +92,7 @@ public class CmisFacade {
 			return true;
 		}
 		try {
-			List<AccessDefinition> accessDefinitions = AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_CMIS, path, method);
+			List<AccessDefinition> accessDefinitions = getAccessDefinition(path, method);
 			if (!accessDefinitions.isEmpty()) {
 				String user = HttpRequestFacade.getRemoteUser();
 				if (user == null) {
@@ -112,4 +117,17 @@ public class CmisFacade {
 		return true;
 	}
 
+	private static List<AccessDefinition> getAccessDefinition(String path, String method) throws ServletException, AccessException {
+		List<AccessDefinition> accessDefinitions = new ArrayList<AccessDefinition>();
+		int indexOf = 0;
+		do {
+			String accessPath = path;
+			indexOf = path.indexOf("/", indexOf + 1);
+			if (indexOf > 0) {
+				accessPath = path.substring(0, indexOf);
+			}
+			accessDefinitions.addAll(AccessVerifier.getMatchingAccessDefinitions(securityCoreService, ISecurityCoreService.CONSTRAINT_SCOPE_CMIS, accessPath, method));
+		} while (indexOf > 0);
+		return accessDefinitions;
+	}
 }
