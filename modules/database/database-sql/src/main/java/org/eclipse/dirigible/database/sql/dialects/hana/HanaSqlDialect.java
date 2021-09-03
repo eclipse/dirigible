@@ -72,13 +72,18 @@ public class HanaSqlDialect extends
         return funcDescription.next();
     }
 
-    private boolean isTableTypeExisting(Connection connection, String tableType) throws SQLException {
-        String sql = "SELECT IS_USER_DEFINED_TYPE FROM SYS.\"" + "TABLES" +"\" WHERE TABLE_NAME like '" + tableType + "' AND IS_USER_DEFINED_TYPE like" + "'TRUE'";
+    private boolean isTableTypeExisting(Connection connection, String schema, String tableType) throws SQLException {
+        String sql;
+        if (schema != null) {
+            sql = "SELECT IS_USER_DEFINED_TYPE FROM SYS.\"" + "TABLES" + "\" WHERE TABLE_NAME LIKE '" + tableType + "' AND IS_USER_DEFINED_TYPE LIKE " + "'TRUE' AND SCHEMA_NAME LIKE '" + schema + "'";
+        } else {
+            sql = "SELECT IS_USER_DEFINED_TYPE FROM SYS.\"" + "TABLES" + "\" WHERE TABLE_NAME LIKE '" + tableType + "' AND IS_USER_DEFINED_TYPE LIKE " + "'TRUE'";
+        }
         PreparedStatement statement = connection.prepareStatement(sql);
         String value = null;
         try {
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 value = resultSet.getString(1);
             }
             return value.equals("TRUE");
@@ -386,7 +391,7 @@ public class HanaSqlDialect extends
      * @see org.eclipse.dirigible.database.sql.ISqlDialect#exists(java.sql.Connection, java.lang.String, java.lang.int)
      */
     @Override
-    public boolean exists(Connection connection,String schema, String artefact, int type) throws SQLException {
+    public boolean exists(Connection connection, String schema, String artefact, int type) throws SQLException {
         boolean exists = false;
         try {
             switch (type) {
@@ -395,7 +400,7 @@ public class HanaSqlDialect extends
                     exists = count(connection, artefact) >= 0;
                     break;
                 case DatabaseArtifactTypes.SYNONYM:
-                    exists = isSynonymExisting(connection, schema,  artefact);
+                    exists = isSynonymExisting(connection, schema, artefact);
                     break;
                 case DatabaseArtifactTypes.FUNCTION:
                     exists = isFunctionExisting(connection, artefact);
@@ -410,7 +415,7 @@ public class HanaSqlDialect extends
                     exists = isSchemaExisting(connection, artefact);
                     break;
                 case DatabaseArtifactTypes.TABLE_TYPE:
-                    exists = isTableTypeExisting(connection,artefact);
+                    exists = isTableTypeExisting(connection, schema, artefact);
                     break;
             }
         } catch (Exception e) {
