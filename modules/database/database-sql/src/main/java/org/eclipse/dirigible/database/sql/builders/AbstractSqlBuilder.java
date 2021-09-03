@@ -11,13 +11,13 @@
  */
 package org.eclipse.dirigible.database.sql.builders;
 
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.ISqlBuilder;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.mysql.MySQLSqlDialect;
+
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * The Abstract SQL Builder.
@@ -82,12 +82,13 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	 * @return the encapsulated name
 	 */
 	protected String encapsulate(String name) {
+		String escapeSymbol = getEscapeSymbol();
 		if ("*".equals(name.trim())) {
 			return name;
 		}
-		if (!name.startsWith("\"")) {
+		if (!name.startsWith(escapeSymbol)) {
 			if (isColumn(name.trim())) {
-				name = "\"" + name + "\"";
+				name = escapeSymbol + name + escapeSymbol;
 			} else {
 				name = encapsulateMany(name);
 			}
@@ -96,7 +97,13 @@ public abstract class AbstractSqlBuilder implements ISqlBuilder {
 	}
 	
 	private Pattern columnPattern = Pattern.compile("^(?![0-9]*$)[a-zA-Z0-9_#$]+$");
-	
+
+	public String getEscapeSymbol() {
+		return (getDialect().getClass().equals(MySQLSqlDialect.class))
+				? "`"
+				: "\"";
+	}
+
 	/**
 	 * Check whether the name is a column (one word) or it is complex expression containing functions, etc. (count(*))
 	 * @param name the name of the eventual column
