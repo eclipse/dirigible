@@ -37,11 +37,11 @@ public class OData2TestUtils {
 
     /**
      * Helper method to retrieve the {@link ODataEntry} from the response object
-     * returned by {@link MockRequestBuilder#executeRequest()}.
+     * returned by {@link ODataRequestBuilder#executeRequest()}.
      * 
      * @param response
      *            the response returned by
-     *            {@link MockRequestBuilder#executeRequest()}
+     *            {@link ODataRequestBuilder#executeRequest()}
      * @param entitySet
      *            the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataEntry}
@@ -60,11 +60,11 @@ public class OData2TestUtils {
 
     /**
      * Helper method to retrieve the {@link ODataFeed} from the response object
-     * returned by {@link MockRequestBuilder#executeRequest()}.
+     * returned by {@link ODataRequestBuilder#executeRequest()}.
      * 
      * @param response
      *            the response returned by
-     *            {@link MockRequestBuilder#executeRequest()}
+     *            {@link ODataRequestBuilder#executeRequest()}
      * @param entitySet
      *            the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataFeed}
@@ -84,7 +84,7 @@ public class OData2TestUtils {
     /**
      * Helper method to retrieve the {@link ODataErrorContext} representing the
      * error response to a failed call to an OData API from the response object
-     * returned by {@link MockRequestBuilder#executeRequest()}.
+     * returned by {@link ODataRequestBuilder#executeRequest()}.
      * 
      * @param response
      *            the object containing the error response

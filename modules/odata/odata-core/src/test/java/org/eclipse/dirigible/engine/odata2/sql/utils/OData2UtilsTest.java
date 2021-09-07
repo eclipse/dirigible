@@ -26,8 +26,6 @@ import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.easymock.EasyMock;
-import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Constants;
-import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import org.junit.Test;
 
 public class OData2UtilsTest {

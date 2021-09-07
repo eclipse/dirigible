@@ -1,6 +1,6 @@
 /*
-* Default Dark Theme
-*/
+ * Default Dark Theme
+ */
 
 html,
 body {
@@ -217,7 +217,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .striped-item:nth-of-type(odd):hover .value {
   background: rgba(41, 41, 41, 0.85);
 }
-.modal {
+.dirigible-modal {
   color: #ccc;
 }
 .modal-backdrop.in {

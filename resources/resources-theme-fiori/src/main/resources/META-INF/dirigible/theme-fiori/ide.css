@@ -1,6 +1,6 @@
 /*
-* Fiori Light Theme
-*/
+ * Fiori Light Theme
+ */
 
 html,
 body {
@@ -284,7 +284,7 @@ ul.vakata-context.jstree-contextmenu span.vakata-contextmenu-shortcut {
 .striped-item:nth-of-type(odd):hover .value {
   background: rgba(200, 200, 200, 0.85);
 }
-.modal {
+.dirigible-modal {
   color: #aaa;
   /*letter-spacing: 1px;*/
   font-size: 1.2em;

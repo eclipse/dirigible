@@ -25,11 +25,25 @@ exports.createResource = function(path, content, contentType) {
 	return resource;
 };
 
+exports.createResourceNative = function(path, content, contentType) {
+	var resourceInstance = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.createResourceNative(path, content, contentType);
+	var resource = new Resource();
+	resource.native = resourceInstance;
+	return resource;
+};
+
 exports.updateResource = function(path, content) {
 	var resourceInstance = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.updateResource(path, content);
 	var resource = new Resource();
 	resource.native = resourceInstance;
-	return resource;	
+	return resource;
+};
+
+exports.updateResourceNative = function(path, content) {
+	var resourceInstance = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.updateResourceNative(path, content);
+	var resource = new Resource();
+	resource.native = resourceInstance;
+	return resource;
 };
 
 exports.deleteResource = function(path) {
@@ -115,10 +129,25 @@ function Resource() {
 	};
 
 	this.getContent = function() {
+		let nativeContent = this.native.getContent();
+		return bytes.toJavaScriptBytes(nativeContent);
+	};
+
+	this.getContentNative = function() {
 		return this.native.getContent();
 	};
 
+	this.setText = function(text) {
+		let content = bytes.textToByteArray(text);
+		this.setContent(content);
+	};
+
 	this.setContent = function(content) {
+		let nativeContent = bytes.toJavaBytes(content);
+		this.native.setContent(nativeContent);
+	};
+
+	this.setContentNative = function(content) {
 		this.native.setContent(content);
 	};
 

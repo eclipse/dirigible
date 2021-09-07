@@ -11,14 +11,14 @@
  */
 package org.eclipse.dirigible.database.sql.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.Modifiers;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -179,6 +179,34 @@ public class CreateTableTest {
 
 		assertNotNull(sql);
 		assertEquals("CREATE TABLE CUSTOMERS ( ID BIGINT IDENTITY , FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
+				sql);
+	}
+
+	@Test
+	public void createTableWithEscapedTableName() {
+		String sql = SqlFactory.getDefault().create()
+				.table("\"CUSTOMER\"")
+				.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+				.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+				.build();
+
+		assertNotNull(sql);
+		assertEquals(
+				"CREATE TABLE \"CUSTOMER\" ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
+				sql);
+	}
+
+	@Test
+	public void createTableWithEscapedTableNameAndSchema() {
+		String sql = SqlFactory.getDefault().create()
+				.table("\"DBADMIN\".\"hdbtable-itest::incompatible-column-type-change-hana\"")
+				.column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
+				.column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
+				.build();
+
+		assertNotNull(sql);
+		assertEquals(
+				"CREATE TABLE \"DBADMIN\".\"hdbtable-itest::incompatible-column-type-change-hana\" ( FIRST_NAME VARCHAR (20) , LAST_NAME VARCHAR (30) )",
 				sql);
 	}
 

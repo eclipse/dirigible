@@ -16,6 +16,10 @@ exports.getContent = function(path) {
 	return bytes.toJavaScriptBytes(nativeContent);
 };
 
+exports.getContentNative = function(path) {
+	return org.eclipse.dirigible.api.v3.platform.RegistryFacade.getContent(path);
+};
+
 exports.getText = function(path) {
 	return org.eclipse.dirigible.api.v3.platform.RegistryFacade.getText(path);
 };
@@ -23,5 +27,3 @@ exports.getText = function(path) {
 exports.find = function(path, pattern) {
 	return JSON.parse(org.eclipse.dirigible.api.v3.platform.RegistryFacade.find(path, pattern));
 };
-
-
