@@ -118,13 +118,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		if (executionContext == null) {
 			executionContext = new HashMap<>();
 		}
-		try {
-			ThreadContextFacade.setUp();
-			ThreadContextFacade.set("paths", new String[]{"/", "/registry/public/"});
-		} catch (ContextException e) {
-			e.printStackTrace();
-		}
-
 
 		executionContext.put("paths", new String[]{"/"});
 
@@ -144,8 +137,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 
 		boolean isDebugEnabled = isDebugEnabled();
-
-//		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
 		
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 		Bindings engineBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -194,8 +185,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE);
 			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
 
-//			context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
-
 			beforeEval(context);
             if (isDebugEnabled) {
             	code = CODE_DEBUGGER + code;
@@ -215,11 +204,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         }
 
 		logger.trace("exiting: executeServiceModule()");
-		try {
-			ThreadContextFacade.tearDown();
-		} catch (ContextException e) {
-			e.printStackTrace();
-		}
+
 		return result;
 	}
 

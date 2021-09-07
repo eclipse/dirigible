@@ -62,6 +62,10 @@ public class RegistryFacade {
 		return new String(content);
 	}
 
+	public static Boolean exists(String path) throws IOException, ScriptingException {
+		return getContent(path) == null;
+	}
+
 	private static String toRepositoryPath(String path) {
 		return new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(path).build();
 	}
