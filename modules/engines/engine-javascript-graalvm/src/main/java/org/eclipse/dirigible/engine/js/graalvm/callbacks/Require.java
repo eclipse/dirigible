@@ -183,9 +183,7 @@ public class Require {
 			"  var locations = [\n" +
 			"    path.join(dir, id),\n" +
 			"    path.join(dir, id + \".js\"),\n" +
-			"  //   path.join(dir, id + \".node\"),\n" +
-			"    path.join(dir, id, \"index.js\"),\n" +
-			"  //   path.join(dir, id, \"index.addon\")\n" +
+			"    path.join(dir, id, \"index.js\")\n" +
 			"  ];\n" +
 			"\n" +
 			"  \n" +
@@ -195,21 +193,20 @@ public class Require {
 			"          return findModulePath(id, rest);\n" +
 			"      }\n" +
 			"\n" +
-			"      var resource = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.getResource(\"/registry/public/\" + location)\n" +
+			"      var resource = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.getResource(\"/registry/public\" + location)\n" +
 			"      if (resource.exists()) {\n" +
 			"          return location;\n" +
 			"      }  else {\n" +
-			"        var registry = org.eclipse.dirigible.api.v3.platform.RegistryFacade;\n" +
-			"\n" +
+			"   \n" +
 			"          try {\n" +
-			"            resource = registry.getText(location)\n" +
+			"            var registry = org.eclipse.dirigible.api.v3.platform.RegistryFacade;\n" +
+			"            resource = registry.getText(location);\n" +
 			"            if (resource && resource.length && resource.length > 0) {\n" +
 			"                return location;\n" +
 			"            }\n" +
 			"          } catch (error) {\n" +
 			"            return searchLocations();\n" +
-			"          }\n" +
-			"          \n" +
+			"          }    \n" +
 			"\n" +
 			"      }\n" +
 			"      return searchLocations();\n" +
@@ -220,15 +217,12 @@ public class Require {
 			"\n" +
 			"function loadModule (request, parent) {\n" +
 			"\n" +
-			"  debug(\"loadModule REQUEST  \" + (request) + \" parent: \" + JSON.stringify(parent));\n" +
 			"\n" +
 			"  var id, paths;\n" +
 			"  if (request.charAt(0) == \".\" && (request.charAt(1) == \"/\" || request.charAt(1) == \".\")) {\n" +
-			"    // Relative request\n" +
 			"    var parentIdPath = path.dirname(parent.id +\n" +
 			"      (path.basename(parent.filename).match(/^index\\.(js|addon)$/) ? \"/\" : \"\"));\n" +
 			"    id = path.join(parentIdPath, request);\n" +
-			"    debug(\"RELATIVE: requested:\"+request+\" set ID to: \"+id+\" from \"+parent.id+\"(\"+parentIdPath+\")\");;\n" +
 			"    paths = [path.dirname(parent.filename)];\n" +
 			"  } else {\n" +
 			"    id = request;\n" +
@@ -267,8 +261,6 @@ public class Require {
 			"\n" +
 			"Module.prototype.loadScript = function (filename) {\n" +
 			"      var self = this;\n" +
-			"\n" +
-			"\n" +
 			"      let content = SourceProvider.loadSource(filename);\n" +
 			"      content = content.replace(/^\\#\\!.*/, '');\n" +
 			"  \n" +
@@ -278,7 +270,6 @@ public class Require {
 			"  \n" +
 			"      // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get(\"paths\");\n" +
 			"      require.paths = [\"/\"];\n" +
-			"      //   require.async = requireAsync;\n" +
 			"      require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get(\"main_module\");\n" +
 			"      // create wrapper function\n" +
 			"      var wrapper = \"var __wrap__ = function (exports, require, module, __filename, __dirname) { \"\n" +
@@ -309,7 +300,6 @@ public class Require {
 			"  \n" +
 			"      // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get(\"paths\");\n" +
 			"      require.paths = [\"/\"];\n" +
-			"      //   require.async = requireAsync;\n" +
 			"      require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get(\"main_module\");\n" +
 			"      // create wrapper function\n" +
 			"      var wrapper = \"var __wrap__ = function (exports, require, module, __filename, __dirname) { \"\n" +
