@@ -415,13 +415,38 @@ public class WorkspaceProcessor {
     /**
      * Copy project.
      *
-     * @param workspace     the workspace
-     * @param sourceProject the source project
-     * @param targetProject the target project
+     * @param sourceWorkspace the source workspace
+     * @param targetWorkspace the target workspace
+     * @param sourceProject   the source project
+     * @param targetProject   the target project
      */
-    public void copyProject(String workspace, String sourceProject, String targetProject) {
-        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-        workspaceObject.copyProject(sourceProject, targetProject);
+    public void copyProject(String sourceWorkspace, String targetWorkspace, String sourceProject, String targetProject) {
+        if (sourceWorkspace.equals(targetWorkspace)) {
+            IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            workspaceObject.copyProject(sourceProject, targetProject);
+        } else { // This is a temporary workaround
+            IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
+            IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
+            IProject targetProjectObject = createProject(targetWorkspace, targetProject);
+            String basePath = sourceProjectObject.getPath();
+            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject);
+            for (Pair<String, String> path : allFilesFolders) {
+                if (path.getKey().equals("file")) {
+                    String filePath = path.getValue().replace(basePath, "");
+                    IFile sourceFile = sourceProjectObject.getFile(filePath);
+                    targetProjectObject.createFile(
+                            filePath,
+                            sourceFile.getContent(),
+                            sourceFile.isBinary(),
+                            sourceFile.getContentType()
+                    );
+                } else {
+                    targetProjectObject.createFolder(
+                            path.getValue().replace(basePath + IRepository.SEPARATOR, "") + IRepository.SEPARATOR
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -438,11 +463,11 @@ public class WorkspaceProcessor {
         if (sourceWorkspace.equals(targetWorkspace)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
-        } else {
+        } else { // This is a temporary workaround
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
-            IProject targetProjectObject = targetWorkspaceObject.getProject(targetProject);
             IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
+            IProject targetProjectObject = targetWorkspaceObject.getProject(targetProject);
             IFolder baseFolder = sourceProjectObject.getFolder(sourceFolderPath);
             String basePath = baseFolder.getPath();
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder);
@@ -465,22 +490,6 @@ public class WorkspaceProcessor {
         }
     }
 
-    public List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder) {
-        List<Pair<String, String>> allFilesFolders = new ArrayList<>();
-        List<IFile> files = baseFolder.getFiles();
-        List<IFolder> folders = baseFolder.getFolders();
-        if (files.size() == 0) {
-            allFilesFolders.add(Pair.of("folder", baseFolder.getPath()));
-        }
-        for (IFile file : files) {
-            allFilesFolders.add(Pair.of("file", file.getPath()));
-        }
-        for (IFolder folder : folders) {
-            allFilesFolders.addAll(getAllFilesFolders(folder));
-        }
-        return allFilesFolders;
-    }
-
     /**
      * Copy file.
      *
@@ -495,7 +504,7 @@ public class WorkspaceProcessor {
         if (sourceWorkspace.equals(targetWorkspace)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
-        } else {
+        } else { // This is a temporary workaround
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             IFile sourceFile = sourceWorkspaceObject.getProject(sourceProject).getFile(sourceFilePath);
@@ -631,4 +640,21 @@ public class WorkspaceProcessor {
         workspaceObject.linkProject(sourceProject, targetPath);
     }
 
+    // Other
+
+    private List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder) {
+        List<Pair<String, String>> allFilesFolders = new ArrayList<>();
+        List<IFile> files = baseFolder.getFiles();
+        List<IFolder> folders = baseFolder.getFolders();
+        if (files.size() == 0) {
+            allFilesFolders.add(Pair.of("folder", baseFolder.getPath()));
+        }
+        for (IFile file : files) {
+            allFilesFolders.add(Pair.of("file", file.getPath()));
+        }
+        for (IFolder folder : folders) {
+            allFilesFolders.addAll(getAllFilesFolders(folder));
+        }
+        return allFilesFolders;
+    }
 }

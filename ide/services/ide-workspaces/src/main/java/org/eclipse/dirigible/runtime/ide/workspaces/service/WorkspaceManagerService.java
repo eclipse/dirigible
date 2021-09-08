@@ -131,7 +131,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
         String targetProject = targetPath.getSegments()[0];
         if (sourcePath.getSegments().length == 1) {
             // a project is selected as a source
-            processor.copyProject(targetWorkspace, sourceProject, targetProject);
+            processor.copyProject(sourceWorkspace, targetWorkspace, sourceProject, targetProject);
             return Response.created(processor.getURI(targetWorkspace, targetProject, null)).build();
         }
 
