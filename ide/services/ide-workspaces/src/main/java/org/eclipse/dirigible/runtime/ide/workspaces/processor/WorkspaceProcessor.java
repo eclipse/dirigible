@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -39,6 +39,7 @@ import org.eclipse.dirigible.core.workspace.json.WorkspaceDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceJsonHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,619 +48,673 @@ import org.slf4j.LoggerFactory;
  * Processing the Workspace Service incoming requests.
  */
 public class WorkspaceProcessor {
-	
-	private static final String EXTENSION_PARAMETER_PATH = "path";
 
-	private static final String EXTENSION_PARAMETER_PROJECT = "project";
+    private static final String EXTENSION_PARAMETER_PATH = "path";
 
-	private static final String EXTENSION_PARAMETER_WORKSPACE = "workspace";
+    private static final String EXTENSION_PARAMETER_PROJECT = "project";
 
-	private static final String EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE = "ide-workspace-on-save";
+    private static final String EXTENSION_PARAMETER_WORKSPACE = "workspace";
 
-	private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
+    private static final String EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE = "ide-workspace-on-save";
 
-	private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
+    private static final Logger logger = LoggerFactory.getLogger(WorkspaceProcessor.class);
 
-	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
+    private static final String WORKSPACES_SERVICE_PREFIX = "ide/workspaces";
 
-	/**
-	 * Gets the workspaces core service.
-	 *
-	 * @return the workspaces core service
-	 */
-	public WorkspacesCoreService getWorkspacesCoreService() {
-		return workspacesCoreService;
-	}
+    private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
-	// Workspace
+    /**
+     * Gets the workspaces core service.
+     *
+     * @return the workspaces core service
+     */
+    public WorkspacesCoreService getWorkspacesCoreService() {
+        return workspacesCoreService;
+    }
 
-	/**
-	 * List workspaces.
-	 *
-	 * @return the list
-	 */
-	public List<IWorkspace> listWorkspaces() {
-		return workspacesCoreService.getWorkspaces();
-	}
+    // Workspace
 
-	/**
-	 * Gets the workspace.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @return the workspace
-	 */
-	public IWorkspace getWorkspace(String workspace) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		return workspaceObject;
-	}
+    /**
+     * List workspaces.
+     *
+     * @return the list
+     */
+    public List<IWorkspace> listWorkspaces() {
+        return workspacesCoreService.getWorkspaces();
+    }
 
-	/**
-	 * Creates the workspace.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @return the i workspace
-	 */
-	public IWorkspace createWorkspace(String workspace) {
-		IWorkspace workspaceObject = workspacesCoreService.createWorkspace(workspace);
-		return workspaceObject;
-	}
+    /**
+     * Gets the workspace.
+     *
+     * @param workspace the workspace
+     * @return the workspace
+     */
+    public IWorkspace getWorkspace(String workspace) {
+        return workspacesCoreService.getWorkspace(workspace);
+    }
 
-	/**
-	 * Delete workspace.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 */
-	public void deleteWorkspace(String workspace) {
-		workspacesCoreService.deleteWorkspace(workspace);
-	}
+    /**
+     * Creates the workspace.
+     *
+     * @param workspace the workspace
+     * @return the i workspace
+     */
+    public IWorkspace createWorkspace(String workspace) {
+        return workspacesCoreService.createWorkspace(workspace);
+    }
 
-	/**
-	 * Exists workspace.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @return true, if successful
-	 */
-	public boolean existsWorkspace(String workspace) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		return workspaceObject.exists();
-	}
+    /**
+     * Delete workspace.
+     *
+     * @param workspace the workspace
+     */
+    public void deleteWorkspace(String workspace) {
+        workspacesCoreService.deleteWorkspace(workspace);
+    }
 
-	// Project
+    /**
+     * Exists workspace.
+     *
+     * @param workspace the workspace
+     * @return true, if successful
+     */
+    public boolean existsWorkspace(String workspace) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        return workspaceObject.exists();
+    }
 
-	/**
-	 * Gets the project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @return the project
-	 */
-	public IProject getProject(String workspace, String project) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		return projectObject;
-	}
+    // Project
 
-	/**
-	 * Creates the project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @return the i project
-	 */
-	public IProject createProject(String workspace, String project) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.createProject(project);
-		return projectObject;
-	}
+    /**
+     * Gets the project.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @return the project
+     */
+    public IProject getProject(String workspace, String project) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        return workspaceObject.getProject(project);
+    }
 
-	/**
-	 * Delete project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @throws IOException 
-	 */
-	public void deleteProject(String workspace, String project) throws IOException {
-		String user = UserFacade.getName();
-		List<String> gitRepositories = FileSystemUtils.getGitRepositories(user, workspace);
-		List<String> gitProjects = new ArrayList<String>();
-		for (String repositoryName : gitRepositories) {
-			gitProjects.addAll(FileSystemUtils.getGitRepositoryProjects(user, workspace, repositoryName));
-		}
-		boolean isGitProject = gitProjects.contains(project);
+    /**
+     * Creates the project.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @return the i project
+     */
+    public IProject createProject(String workspace, String project) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        return workspaceObject.createProject(project);
+    }
 
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject workspaceProject = workspaceObject.getProject(project);
-		String repositoryRootFolder = workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
+    /**
+     * Delete project.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @throws IOException
+     */
+    public void deleteProject(String workspace, String project) throws IOException {
+        String user = UserFacade.getName();
+        List<String> gitRepositories = FileSystemUtils.getGitRepositories(user, workspace);
+        List<String> gitProjects = new ArrayList<String>();
+        for (String repositoryName : gitRepositories) {
+            gitProjects.addAll(FileSystemUtils.getGitRepositoryProjects(user, workspace, repositoryName));
+        }
+        boolean isGitProject = gitProjects.contains(project);
 
-		File projectFile = null;		
-		if (isGitProject && repositoryRootFolder != null && workspaceProject.exists()) {
-			projectFile = new File(repositoryRootFolder + workspaceProject.getPath());
-			isGitProject = projectFile.exists() && FileUtils.isSymlink(projectFile);
-		}
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject workspaceProject = workspaceObject.getProject(project);
+        String repositoryRootFolder = workspaceObject.getRepository().getParameter("REPOSITORY_ROOT_FOLDER");
 
-		if (isGitProject) {
-			FileUtils.forceDelete(projectFile);
-		} else {			
-			workspaceObject.deleteProject(project);
-		}
-	}
+        File projectFile = null;
+        if (isGitProject && repositoryRootFolder != null && workspaceProject.exists()) {
+            projectFile = new File(repositoryRootFolder + workspaceProject.getPath());
+            isGitProject = projectFile.exists() && FileUtils.isSymlink(projectFile);
+        }
 
-	/**
-	 * Exists project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @return true, if successful
-	 */
-	public boolean existsProject(String workspace, String project) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		return projectObject.exists();
-	}
+        if (isGitProject) {
+            FileUtils.forceDelete(projectFile);
+        } else {
+            workspaceObject.deleteProject(project);
+        }
+    }
 
-	// Folder
+    /**
+     * Exists project.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @return true, if successful
+     */
+    public boolean existsProject(String workspace, String project) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.exists();
+    }
 
-	/**
-	 * Gets the folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return the folder
-	 */
-	public IFolder getFolder(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		IFolder folderObject = projectObject.getFolder(path);
-		return folderObject;
-	}
+    // Folder
 
-	/**
-	 * Exists folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return true, if successful
-	 */
-	public boolean existsFolder(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		return projectObject.existsFolder(path);
-	}
+    /**
+     * Gets the folder.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return the folder
+     */
+    public IFolder getFolder(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.getFolder(path);
+    }
 
-	/**
-	 * Creates the folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return the i folder
-	 */
-	public IFolder createFolder(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		IFolder folderObject = projectObject.createFolder(path);
-		return folderObject;
-	}
+    /**
+     * Exists folder.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return true, if successful
+     */
+    public boolean existsFolder(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.existsFolder(path);
+    }
 
-	/**
-	 * Delete folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 */
-	public void deleteFolder(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		projectObject.deleteFolder(path);
-	}
+    /**
+     * Creates the folder.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return the i folder
+     */
+    public IFolder createFolder(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.createFolder(path);
+    }
 
-	// File
+    /**
+     * Delete folder.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     */
+    public void deleteFolder(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        projectObject.deleteFolder(path);
+    }
 
-	/**
-	 * Gets the file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return the file
-	 */
-	public IFile getFile(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		IFile fileObject = projectObject.getFile(path);
-		return fileObject;
-	}
+    // File
 
-	/**
-	 * Exists file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return true, if successful
-	 */
-	public boolean existsFile(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		return projectObject.existsFile(path);
-	}
+    /**
+     * Gets the file.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return the file
+     */
+    public IFile getFile(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.getFile(path);
+    }
 
-	/**
-	 * Creates the file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @param content
-	 *            the content
-	 * @param contentType
-	 *            the content type
-	 * @return the i file
-	 */
-	public IFile createFile(String workspace, String project, String path, byte[] content, String contentType) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		if (contentType == null) {
-			contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(path));
-		}
-		boolean isBinary = ContentTypeHelper.isBinary(contentType);
-		IFile fileObject = projectObject.createFile(path, content, isBinary, contentType);
-		triggerOnSaveExtensions(workspace, project, path);
-		return fileObject;
-	}
+    /**
+     * Exists file.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return true, if successful
+     */
+    public boolean existsFile(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        return projectObject.existsFile(path);
+    }
 
-	/**
-	 * Update file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @param content
-	 *            the content
-	 * @return the i file
-	 */
-	public IFile updateFile(String workspace, String project, String path, byte[] content) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		IFile fileObject = projectObject.getFile(path);
-		fileObject.getInternal().setContent(content);
-		triggerOnSaveExtensions(workspace, project, path);
-		return fileObject;
-	}
+    /**
+     * Creates the file.
+     *
+     * @param workspace   the workspace
+     * @param project     the project
+     * @param path        the path
+     * @param content     the content
+     * @param contentType the content type
+     * @return the i file
+     */
+    public IFile createFile(String workspace, String project, String path, byte[] content, String contentType) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        if (contentType == null) {
+            contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(path));
+        }
+        boolean isBinary = ContentTypeHelper.isBinary(contentType);
+        IFile fileObject = projectObject.createFile(path, content, isBinary, contentType);
+        triggerOnSaveExtensions(workspace, project, path);
+        return fileObject;
+    }
 
-	/**
-	 * Delete file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 */
-	public void deleteFile(String workspace, String project, String path) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		IProject projectObject = workspaceObject.getProject(project);
-		projectObject.deleteFile(path);
-	}
+    /**
+     * Update file.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @param content   the content
+     * @return the i file
+     */
+    public IFile updateFile(String workspace, String project, String path, byte[] content) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        IFile fileObject = projectObject.getFile(path);
+        fileObject.getInternal().setContent(content);
+        triggerOnSaveExtensions(workspace, project, path);
+        return fileObject;
+    }
 
-	/**
-	 * Gets the uri.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param project
-	 *            the project
-	 * @param path
-	 *            the path
-	 * @return the uri
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
-	 */
-	public URI getURI(String workspace, String project, String path) throws URISyntaxException {
-		StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
-		if (project != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
-		}
-		if (path != null) {
-			relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
-		}
-		return new URI(UrlFacade.escape(relativePath.toString()));
-	}
+    /**
+     * Delete file.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     */
+    public void deleteFile(String workspace, String project, String path) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        IProject projectObject = workspaceObject.getProject(project);
+        projectObject.deleteFile(path);
+    }
 
-	/**
-	 * Render workspace tree.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @return the workspace descriptor
-	 */
-	public WorkspaceDescriptor renderWorkspaceTree(IWorkspace workspace) {
-		return WorkspaceJsonHelper.describeWorkspace(workspace,
-				IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
-	}
+    /**
+     * Gets the uri.
+     *
+     * @param workspace the workspace
+     * @param project   the project
+     * @param path      the path
+     * @return the uri
+     * @throws URISyntaxException the URI syntax exception
+     */
+    public URI getURI(String workspace, String project, String path) throws URISyntaxException {
+        StringBuilder relativePath = new StringBuilder(WORKSPACES_SERVICE_PREFIX).append(IRepositoryStructure.SEPARATOR).append(workspace);
+        if (project != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR).append(project);
+        }
+        if (path != null) {
+            relativePath.append(IRepositoryStructure.SEPARATOR).append(path);
+        }
+        return new URI(UrlFacade.escape(relativePath.toString()));
+    }
 
-	/**
-	 * Render project tree.
-	 *
-	 * @param project
-	 *            the project
-	 * @return the project descriptor
-	 */
-	public ProjectDescriptor renderProjectTree(IProject project) {
-		return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
-				"");
-	}
+    /**
+     * Render workspace tree.
+     *
+     * @param workspace the workspace
+     * @return the workspace descriptor
+     */
+    public WorkspaceDescriptor renderWorkspaceTree(IWorkspace workspace) {
+        return WorkspaceJsonHelper.describeWorkspace(workspace,
+                IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+    }
 
-	/**
-	 * Render folder tree.
-	 *
-	 * @param folder
-	 *            the folder
-	 * @return the folder descriptor
-	 */
-	public FolderDescriptor renderFolderTree(IFolder folder) {
-		return WorkspaceJsonHelper.describeFolder(folder, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
-				"");
-	}
+    /**
+     * Render project tree.
+     *
+     * @param project the project
+     * @return the project descriptor
+     */
+    public ProjectDescriptor renderProjectTree(IProject project) {
+        return WorkspaceJsonHelper.describeProject(project, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+                "");
+    }
 
-	/**
-	 * Render file description.
-	 *
-	 * @param file
-	 *            the file
-	 * @return the file descriptor
-	 */
-	public FileDescriptor renderFileDescription(IFile file) {
-		return WorkspaceJsonHelper.describeFile(file, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
-	}
+    /**
+     * Render folder tree.
+     *
+     * @param folder the folder
+     * @return the folder descriptor
+     */
+    public FolderDescriptor renderFolderTree(IFolder folder) {
+        return WorkspaceJsonHelper.describeFolder(folder, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(),
+                "");
+    }
 
-	/**
-	 * Render file descriptions.
-	 *
-	 * @param files
-	 *            the files
-	 * @return the file descriptors
-	 */
-	public List<FileDescriptor> renderFileDescriptions(List<IFile> files) {
-		List<FileDescriptor> fileDescriptors = new ArrayList<>();
-		for (IFile file : files) {
-			fileDescriptors.add(renderFileDescription(file));
-		}
-		return fileDescriptors;
-	}
+    /**
+     * Render file description.
+     *
+     * @param file the file
+     * @return the file descriptor
+     */
+    public FileDescriptor renderFileDescription(IFile file) {
+        return WorkspaceJsonHelper.describeFile(file, IRepositoryStructure.PATH_USERS + IRepositoryStructure.SEPARATOR + UserFacade.getName(), "");
+    }
 
-	/**
-	 * Copy project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param targetProject
-	 *            the target project
-	 */
-	public void copyProject(String workspace, String sourceProject, String targetProject) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.copyProject(sourceProject, targetProject);
-	}
+    /**
+     * Render file descriptions.
+     *
+     * @param files the files
+     * @return the file descriptors
+     */
+    public List<FileDescriptor> renderFileDescriptions(List<IFile> files) {
+        List<FileDescriptor> fileDescriptors = new ArrayList<>();
+        for (IFile file : files) {
+            fileDescriptors.add(renderFileDescription(file));
+        }
+        return fileDescriptors;
+    }
 
-	/**
-	 * Copy folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param sourceFolderPath
-	 *            the source folder path
-	 * @param targetProject
-	 *            the target project
-	 * @param targetFolderPath
-	 *            the target folder path
-	 */
-	public void copyFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
-	}
+    /**
+     * Copy project.
+     *
+     * @param sourceWorkspace the source workspace
+     * @param targetWorkspace the target workspace
+     * @param sourceProject   the source project
+     * @param targetProject   the target project
+     */
+    public void copyProject(String sourceWorkspace, String targetWorkspace, String sourceProject, String targetProject) {
+        if (sourceWorkspace.equals(targetWorkspace)) {
+            IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            workspaceObject.copyProject(sourceProject, targetProject);
+        } else { // This is a temporary workaround
+            IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
+            IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
+            String basePath = sourceProjectObject.getPath();
+            if (existsProject(targetWorkspace, targetProject)) {
+                int inc = 1;
+                String projectName = targetProject + " (copy " + inc + ")";
+                while (
+                        existsProject(
+                                targetWorkspace,
+                                projectName
+                        )
+                ) {
+                    projectName = targetProject + " (copy " + ++inc + ")";
+                }
+                targetProject = projectName;
+            }
+            IProject targetProjectObject = createProject(targetWorkspace, targetProject);
+            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject, false);
+            for (Pair<String, String> path : allFilesFolders) {
+                if (path.getKey().equals("file")) {
+                    String filePath = path.getValue().replace(basePath, "");
+                    IFile sourceFile = sourceProjectObject.getFile(filePath);
+                    targetProjectObject.createFile(
+                            filePath,
+                            sourceFile.getContent(),
+                            sourceFile.isBinary(),
+                            sourceFile.getContentType()
+                    );
+                } else {
+                    targetProjectObject.createFolder(
+                            path.getValue().replace(
+                                    basePath + IRepository.SEPARATOR, ""
+                            ) + IRepository.SEPARATOR
+                    );
+                }
+            }
+        }
+    }
 
-	/**
-	 * Copy file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param sourceFilePath
-	 *            the source file path
-	 * @param targetProject
-	 *            the target project
-	 * @param targetFilePath
-	 *            the target file path
-	 */
-	public void copyFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
-	}
+    /**
+     * Copy folder.
+     *
+     * @param sourceWorkspace  the source workspace
+     * @param targetWorkspace  the target workspace
+     * @param sourceProject    the source project
+     * @param sourceFolderPath the source folder path
+     * @param targetProject    the target project
+     * @param targetBasePath   the target folder path
+     * @param targetFolderName the target folder name
+     */
+    public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath, String targetProject, String targetBasePath, String targetFolderName) {
+        if (sourceWorkspace.equals(targetWorkspace)) {
+            IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetBasePath + targetFolderName);
+        } else { // This is a temporary workaround
+            IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
+            IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
+            IProject targetProjectObject = targetWorkspaceObject.getProject(targetProject);
+            IFolder baseFolder = sourceProjectObject.getFolder(sourceFolderPath);
+            String basePath = baseFolder.getPath();
+            String targetFolderPath = targetBasePath + targetFolderName;
+            if (existsFolder(targetWorkspace, targetProject, targetFolderPath)) {
+                int inc = 1;
+                String folderName = targetFolderName + " (copy " + inc + ")";
+                while (
+                        existsFolder(
+                                targetWorkspace,
+                                targetProject,
+                                targetBasePath + folderName
+                        )
+                ) {
+                    folderName = targetFolderName + " (copy " + ++inc + ")";
+                }
+                targetFolderPath = targetBasePath + folderName;
+            }
+            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder, false);
+            targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR);
+            for (Pair<String, String> path : allFilesFolders) {
+                if (path.getKey().equals("file")) {
+                    String filePath = path.getValue().replace(basePath, "");
+                    IFile sourceFile = baseFolder.getFile(filePath);
+                    targetProjectObject.createFile(
+                            targetFolderPath + filePath,
+                            sourceFile.getContent(),
+                            sourceFile.isBinary(),
+                            sourceFile.getContentType()
+                    );
+                } else {
+                    targetProjectObject.createFolder(
+                            targetFolderPath + IRepository.SEPARATOR + path.getValue().replace(
+                                    basePath + IRepository.SEPARATOR, ""
+                            ) + IRepository.SEPARATOR
+                    );
+                }
+            }
+        }
+    }
 
-	/**
-	 * Move project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param targetProject
-	 *            the target project
-	 */
-	public void moveProject(String workspace, String sourceProject, String targetProject) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.moveProject(sourceProject, targetProject);
-	}
+    /**
+     * Copy file.
+     *
+     * @param sourceWorkspace the source workspace
+     * @param targetWorkspace the target workspace
+     * @param sourceProject   the source project
+     * @param sourceFilePath  the source file path
+     * @param targetProject   the target project
+     * @param targetFilePath  the target file path
+     */
+    public void copyFile(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
+        if (sourceWorkspace.equals(targetWorkspace)) {
+            IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
+        } else { // This is a temporary workaround
+            IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
+            IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
+            IFile sourceFile = sourceWorkspaceObject.getProject(sourceProject).getFile(sourceFilePath);
+            String baseTargetPath = "";
+            if (targetFilePath.endsWith(IRepository.SEPARATOR)) {
+                baseTargetPath = targetFilePath;
+                targetFilePath += sourceFile.getName();
+            } else {
+                baseTargetPath = IRepository.SEPARATOR + targetFilePath;
+                targetFilePath += IRepository.SEPARATOR + sourceFile.getName();
+            }
+            if (existsFile(targetWorkspace, targetProject, targetFilePath)) {
+                String fileName = sourceFile.getName();
+                String fileTitle = "";
+                String fileExt = "";
+                if (fileName.indexOf('.') != -1) {
+                    fileTitle = fileName.substring(0, fileName.lastIndexOf("."));
+                    fileExt = fileName.substring(fileName.lastIndexOf("."));
+                } else {
+                    fileTitle = fileName;
+                }
+                int inc = 1;
+                fileName = fileTitle + " (copy " + inc + ")" + fileExt;
+                while (
+                        existsFile(
+                                targetWorkspace,
+                                targetProject,
+                                baseTargetPath + fileName
+                        )
+                ) {
+                    fileName = fileTitle + " (copy " + ++inc + ")" + fileExt;
+                }
+                targetFilePath = baseTargetPath + fileName;
+            }
+            targetWorkspaceObject.getProject(targetProject).createFile(
+                    targetFilePath,
+                    sourceFile.getContent(),
+                    sourceFile.isBinary(),
+                    sourceFile.getContentType()
+            );
+        }
+    }
 
-	/**
-	 * Move folder.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param sourceFolderPath
-	 *            the source folder path
-	 * @param targetProject
-	 *            the target project
-	 * @param targetFolderPath
-	 *            the target folder path
-	 */
-	public void moveFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.moveFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
-	}
+    /**
+     * Move project.
+     *
+     * @param workspace     the workspace
+     * @param sourceProject the source project
+     * @param targetProject the target project
+     */
+    public void moveProject(String workspace, String sourceProject, String targetProject) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        workspaceObject.moveProject(sourceProject, targetProject);
+    }
 
-	/**
-	 * Move file.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param sourceProject
-	 *            the source project
-	 * @param sourceFilePath
-	 *            the source file path
-	 * @param targetProject
-	 *            the target project
-	 * @param targetFilePath
-	 *            the target file path
-	 */
-	public void moveFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.moveFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
-	}
+    /**
+     * Move folder.
+     *
+     * @param workspace        the workspace
+     * @param sourceProject    the source project
+     * @param sourceFolderPath the source folder path
+     * @param targetProject    the target project
+     * @param targetFolderPath the target folder path
+     */
+    public void moveFolder(String workspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        workspaceObject.moveFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
+    }
 
-	// Search
+    /**
+     * Move file.
+     *
+     * @param workspace      the workspace
+     * @param sourceProject  the source project
+     * @param sourceFilePath the source file path
+     * @param targetProject  the target project
+     * @param targetFilePath the target file path
+     */
+    public void moveFile(String workspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        workspaceObject.moveFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
+    }
 
-	/**
-	 * Free-text search in the files content.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param term
-	 *            the term
-	 * @return the files list
-	 */
-	public List<IFile> search(String workspace, String term) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		List<IFile> files = workspaceObject.search(term);
-		return files;
-	}
-	
-	// Find
-	
-	/**
-	 * Find files by pattern
-	 *
-	 * @param pattern
-	 *            the pattern
-	 * @return the files list
-	 */
-	public List<IFile> find(String pattern) {
-		List<IFile> allFiles = new ArrayList<IFile>();
-		List<IWorkspace> workspaces = workspacesCoreService.getWorkspaces();
-		for (IWorkspace workspace : workspaces) {
-			IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace.getName());
-			List<IFile> files = workspaceObject.find(pattern);
-			allFiles.addAll(files);
-		}
-		return allFiles;
-	}
+    // Search
 
-	/**
-	 * Find files by pattern within a given workspace
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param pattern
-	 *            the pattern
-	 * @return the files list
-	 */
-	public List<IFile> find(String workspace, String pattern) {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		List<IFile> files = workspaceObject.find(pattern);
-		return files;
-	}
-	
-	/**
-	 * Triggers the post save file extensions
-	 * 
-	 * @param workspace the workspace
-	 * @param project the project name
-	 * @param path the file path
-	 */
-	private void triggerOnSaveExtensions(String workspace, String project, String path) {
-		try {
-			Map<Object, Object> context = new HashMap<Object, Object>();
-			context.put(EXTENSION_PARAMETER_WORKSPACE, workspace);
-			context.put(EXTENSION_PARAMETER_PROJECT, project);
-			context.put(EXTENSION_PARAMETER_PATH, path);
-			String[] modules = ExtensionsServiceFacade.getExtensions(EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE);
-			for (String module : modules) {
-				try {
-					logger.trace("Workspace On Save Extension: {} triggered...", module);
-					ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
-					logger.trace("Workspace On Save Extension: {} finshed.", module);
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				} catch (Error e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		} catch (ExtensionsException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+    /**
+     * Free-text search in the files content.
+     *
+     * @param workspace the workspace
+     * @param term      the term
+     * @return the files list
+     */
+    public List<IFile> search(String workspace, String term) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        return workspaceObject.search(term);
+    }
 
-	public void linkProject(String workspace, String sourceProject, String targetPath) throws IOException {
-		IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
-		workspaceObject.linkProject(sourceProject, targetPath);
-	}
+    // Find
 
+    /**
+     * Find files by pattern
+     *
+     * @param pattern the pattern
+     * @return the files list
+     */
+    public List<IFile> find(String pattern) {
+        List<IFile> allFiles = new ArrayList<IFile>();
+        List<IWorkspace> workspaces = workspacesCoreService.getWorkspaces();
+        for (IWorkspace workspace : workspaces) {
+            IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace.getName());
+            List<IFile> files = workspaceObject.find(pattern);
+            allFiles.addAll(files);
+        }
+        return allFiles;
+    }
+
+    /**
+     * Find files by pattern within a given workspace
+     *
+     * @param workspace the workspace
+     * @param pattern   the pattern
+     * @return the files list
+     */
+    public List<IFile> find(String workspace, String pattern) {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        return workspaceObject.find(pattern);
+    }
+
+    /**
+     * Triggers the post save file extensions
+     *
+     * @param workspace the workspace
+     * @param project   the project name
+     * @param path      the file path
+     */
+    private void triggerOnSaveExtensions(String workspace, String project, String path) {
+        try {
+            Map<Object, Object> context = new HashMap<Object, Object>();
+            context.put(EXTENSION_PARAMETER_WORKSPACE, workspace);
+            context.put(EXTENSION_PARAMETER_PROJECT, project);
+            context.put(EXTENSION_PARAMETER_PATH, path);
+            String[] modules = ExtensionsServiceFacade.getExtensions(EXTENSION_POINT_IDE_WORKSPACE_ON_SAVE);
+            for (String module : modules) {
+                try {
+                    logger.trace("Workspace On Save Extension: {} triggered...", module);
+                    ScriptEngineExecutorsManager.executeServiceModule("javascript", module, context);
+                    logger.trace("Workspace On Save Extension: {} finshed.", module);
+                } catch (Exception | Error e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        } catch (ExtensionsException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    public void linkProject(String workspace, String sourceProject, String targetPath) throws IOException {
+        IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspace);
+        workspaceObject.linkProject(sourceProject, targetPath);
+    }
+
+    // Other
+
+    private List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder, Boolean includeBaseFolder) {
+        List<Pair<String, String>> allFilesFolders = new ArrayList<>();
+        List<IFile> files = baseFolder.getFiles();
+        List<IFolder> folders = baseFolder.getFolders();
+        if (files.size() == 0 && includeBaseFolder) {
+            allFilesFolders.add(Pair.of("folder", baseFolder.getPath()));
+        }
+        for (IFile file : files) {
+            allFilesFolders.add(Pair.of("file", file.getPath()));
+        }
+        for (IFolder folder : folders) {
+            allFilesFolders.addAll(getAllFilesFolders(folder, true));
+        }
+        return allFilesFolders;
+    }
 }

@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -50,7 +51,7 @@ public class FileSystemUtils {
 
 	private static String GIT_ROOT_FOLDER;
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
-	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$ 
+	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
 	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + DOT_GIT; //$NON-NLS-1$
 
 	static {
@@ -138,8 +139,27 @@ public class FileSystemUtils {
 	 */
 	public static void copyFile(String srcPath, String destPath) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(destPath);
-		Path srcFile = FileSystems.getDefault().getPath(srcPath);
-		Path destFile = FileSystems.getDefault().getPath(destPath);
+		FileSystem fileSystem = FileSystems.getDefault();
+		Path srcFile = fileSystem.getPath(srcPath);
+		Path destFile = fileSystem.getPath(destPath);
+		if (fileExists(destFile.toString())) {
+			String fileName = destFile.getFileName().toString();
+			String destFilePath = destPath.substring(0, destPath.lastIndexOf(fileName));
+			String fileTitle = "";
+			String fileExt = "";
+			if (fileName.indexOf('.') != -1) {
+				fileTitle = fileName.substring(0, fileName.lastIndexOf("."));
+				fileExt = fileName.substring(fileName.lastIndexOf("."));
+			} else {
+				fileTitle = fileName;
+			}
+			int inc = 1;
+			fileName = fileTitle + " (copy " + inc + ")" + fileExt;
+			while (fileExists(destFilePath + fileName)) {
+				fileName = fileTitle + " (copy " + ++inc + ")" + fileExt;
+			}
+			destFile = fileSystem.getPath(destFilePath + fileName);
+		}
 		FileUtils.copyFile(srcFile.toFile(), destFile.toFile());
 	}
 
@@ -157,8 +177,22 @@ public class FileSystemUtils {
 	 */
 	public static void copyFolder(String srcPath, String destPath) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(destPath);
-		Path srcDir = FileSystems.getDefault().getPath(srcPath);
-		Path destDir = FileSystems.getDefault().getPath(destPath);
+		FileSystem fileSystem = FileSystems.getDefault();
+		if (destPath.substring(destPath.length() - 1) == fileSystem.getSeparator()) {
+			destPath = destPath.substring(0, destPath.length() - 1);
+		}
+		Path srcDir = fileSystem.getPath(srcPath);
+		Path destDir = fileSystem.getPath(destPath);
+		if (directoryExists(destDir.toString())) {
+			String dirName = destDir.getFileName().toString();
+			String destDirPath = destPath.substring(0, destPath.lastIndexOf(dirName));
+			int inc = 1;
+			String newDirName = dirName + " (copy " + inc + ")";
+			while (directoryExists(destDirPath + newDirName)) {
+				newDirName = dirName + " (copy " + ++inc + ")";
+			}
+			destDir = fileSystem.getPath(destDirPath + newDirName);
+		}
 		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), true);
 	}
 
@@ -374,7 +408,7 @@ public class FileSystemUtils {
 			logger.warn(e.getMessage());
 			return false;
 		}
-		
+
 		// return Files.exists(path);
 	}
 
@@ -418,10 +452,10 @@ public class FileSystemUtils {
 		return path.toFile().isDirectory();
 		// return Files.isDirectory(path);
 	}
-	
+
 	/**
 	 * List files including symbolic links
-	 * 
+	 *
 	 * @param directory the source directory
 	 * @return the list of files
 	 * @throws IOException IO error
@@ -440,10 +474,10 @@ public class FileSystemUtils {
 			filesStream.close();
 		}
 	}
-	
+
 	/**
 	 * Force create directory and all its parents
-	 * 
+	 *
 	 * @param firstSegment the first segment
 	 * @param segments the rest segments
 	 * @return the resulting path
@@ -456,10 +490,10 @@ public class FileSystemUtils {
 		}
 		return Files.createDirectories(dir).toFile();
 	}
-	
+
 	/**
 	 * Returns the directory by segments
-	 * 
+	 *
 	 * @param firstSegment the first segment
 	 * @param segments the rest segments
 	 * @return the resulting path
@@ -474,7 +508,7 @@ public class FileSystemUtils {
 
 	/**
 	 * Generate the local repository name
-	 * 
+	 *
 	 * @param repositoryURI the URI odf the repository
 	 * @return the generated local name
 	 */
@@ -490,7 +524,7 @@ public class FileSystemUtils {
 
 	/**
 	 * Get the directory for git
-	 * 
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @return the directory
@@ -512,7 +546,7 @@ public class FileSystemUtils {
 	}
 	/**
 	 * Get the directory for git
-	 * 
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryURI the repository URI
@@ -525,7 +559,7 @@ public class FileSystemUtils {
 
 	/**
 	 * Get the directory for git
-	 * 
+	 *
 	 * @param user logged-in user
 	 * @param workspace the workspace
 	 * @param repositoryName the repository URI
@@ -545,52 +579,52 @@ public class FileSystemUtils {
 
 		return projects;
 	}
-	
+
 	private static class Finder extends SimpleFileVisitor<Path> {
-	
+
 	    private final PathMatcher matcher;
 	    private List<String> files = new ArrayList<String>();
-	
+
 	    Finder(String pattern) {
 	        matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
 	    }
-	
+
 	    void find(Path file) {
 	        Path name = file.getFileName();
 	        if (name != null && matcher.matches(name)) {
 	        	files.add(file.toString());
 	        }
 	    }
-	
+
 	    void done() {
 	    }
-	
+
 	    @Override
 	    public FileVisitResult visitFile(Path file,
 	            BasicFileAttributes attrs) {
 	        find(file);
 	        return CONTINUE;
 	    }
-	
+
 	    @Override
 	    public FileVisitResult preVisitDirectory(Path dir,
 	            BasicFileAttributes attrs) {
 	        find(dir);
 	        return CONTINUE;
 	    }
-	
+
 	    @Override
 	    public FileVisitResult visitFileFailed(Path file,
 	            IOException exc) {
 	        System.err.println(exc);
 	        return CONTINUE;
 	    }
-	    
+
 	    public List<String> getFiles() {
 			return files;
 		}
 	}
-	
+
 	public static final List<String> find(String root, String pattern) throws IOException {
 		 Path startingDir = Paths.get(root);
 		 Finder finder = new Finder(pattern);

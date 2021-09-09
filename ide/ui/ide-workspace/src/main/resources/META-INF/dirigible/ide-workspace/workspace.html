@@ -44,7 +44,7 @@
 	<script src="../../../../services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 </head>
 
-<body border="1px" ng-app="workspace" ng-controller="WorkspaceController as workspace">
+<body ng-app="workspace" ng-controller="WorkspaceController as workspace" class="workspace-body">
 
 	<div class="view-fixed-top">
 	  <div class="btn-toolbar-top">
@@ -95,9 +95,7 @@
 	  </div>
 	</div>
 	
-	<div>
-		<div class="workspace"></div>
-	</div>
+	<div class="workspace"></div>
 	
 	<!-- Create Workspace -->
 	<div class="dirigible-modal modal fade" id="dialogCreateWorkspace" tabindex="-1" role="dialog" aria-labelledby="dialogCreateWorkspaceLabel" aria-hidden="true">
