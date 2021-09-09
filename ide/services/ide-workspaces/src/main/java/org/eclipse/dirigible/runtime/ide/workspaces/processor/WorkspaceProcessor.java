@@ -442,7 +442,7 @@ public class WorkspaceProcessor {
                 targetProject = projectName;
             }
             IProject targetProjectObject = createProject(targetWorkspace, targetProject);
-            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject);
+            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject, false);
             for (Pair<String, String> path : allFilesFolders) {
                 if (path.getKey().equals("file")) {
                     String filePath = path.getValue().replace(basePath, "");
@@ -455,7 +455,9 @@ public class WorkspaceProcessor {
                     );
                 } else {
                     targetProjectObject.createFolder(
-                            path.getValue().replace(basePath + IRepository.SEPARATOR, "") + IRepository.SEPARATOR
+                            path.getValue().replace(
+                                    basePath + IRepository.SEPARATOR, ""
+                            ) + IRepository.SEPARATOR
                     );
                 }
             }
@@ -499,7 +501,8 @@ public class WorkspaceProcessor {
                 }
                 targetFolderPath = targetBasePath + folderName;
             }
-            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder);
+            List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder, false);
+            targetProjectObject.createFolder(targetFolderPath + IRepository.SEPARATOR);
             for (Pair<String, String> path : allFilesFolders) {
                 if (path.getKey().equals("file")) {
                     String filePath = path.getValue().replace(basePath, "");
@@ -699,18 +702,18 @@ public class WorkspaceProcessor {
 
     // Other
 
-    private List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder) {
+    private List<Pair<String, String>> getAllFilesFolders(IFolder baseFolder, Boolean includeBaseFolder) {
         List<Pair<String, String>> allFilesFolders = new ArrayList<>();
         List<IFile> files = baseFolder.getFiles();
         List<IFolder> folders = baseFolder.getFolders();
-        if (files.size() == 0) {
+        if (files.size() == 0 && includeBaseFolder) {
             allFilesFolders.add(Pair.of("folder", baseFolder.getPath()));
         }
         for (IFile file : files) {
             allFilesFolders.add(Pair.of("file", file.getPath()));
         }
         for (IFolder folder : folders) {
-            allFilesFolders.addAll(getAllFilesFolders(folder));
+            allFilesFolders.addAll(getAllFilesFolders(folder, true));
         }
         return allFilesFolders;
     }
