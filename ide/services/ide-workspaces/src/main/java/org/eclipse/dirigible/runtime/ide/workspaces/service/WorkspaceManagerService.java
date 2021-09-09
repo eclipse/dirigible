@@ -148,7 +148,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
             processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
         } else {
             processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject,
-                    targetFilePath + IRepositoryStructure.SEPARATOR + sourcePath.getLastSegment());
+                    targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
         }
 
         return Response.created(processor.getURI(targetWorkspace, null, content.getTarget())).build();

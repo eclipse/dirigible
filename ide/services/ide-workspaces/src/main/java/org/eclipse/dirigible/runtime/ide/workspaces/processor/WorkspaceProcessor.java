@@ -427,8 +427,21 @@ public class WorkspaceProcessor {
         } else { // This is a temporary workaround
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
-            IProject targetProjectObject = createProject(targetWorkspace, targetProject);
             String basePath = sourceProjectObject.getPath();
+            if (existsProject(targetWorkspace, targetProject)) {
+                int inc = 1;
+                String projectName = targetProject + " (copy " + inc + ")";
+                while (
+                        existsProject(
+                                targetWorkspace,
+                                projectName
+                        )
+                ) {
+                    projectName = targetProject + " (copy " + ++inc + ")";
+                }
+                targetProject = projectName;
+            }
+            IProject targetProjectObject = createProject(targetWorkspace, targetProject);
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject);
             for (Pair<String, String> path : allFilesFolders) {
                 if (path.getKey().equals("file")) {
@@ -457,12 +470,13 @@ public class WorkspaceProcessor {
      * @param sourceProject    the source project
      * @param sourceFolderPath the source folder path
      * @param targetProject    the target project
-     * @param targetFolderPath the target folder path
+     * @param targetBasePath   the target folder path
+     * @param targetFolderName the target folder name
      */
-    public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath, String targetProject, String targetFolderPath) {
+    public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath, String targetProject, String targetBasePath, String targetFolderName) {
         if (sourceWorkspace.equals(targetWorkspace)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
-            workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetFolderPath);
+            workspaceObject.copyFolder(sourceProject, sourceFolderPath, targetProject, targetBasePath + targetFolderName);
         } else { // This is a temporary workaround
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
@@ -470,6 +484,21 @@ public class WorkspaceProcessor {
             IProject targetProjectObject = targetWorkspaceObject.getProject(targetProject);
             IFolder baseFolder = sourceProjectObject.getFolder(sourceFolderPath);
             String basePath = baseFolder.getPath();
+            String targetFolderPath = targetBasePath + targetFolderName;
+            if (existsFolder(targetWorkspace, targetProject, targetFolderPath)) {
+                int inc = 1;
+                String folderName = targetFolderName + " (copy " + inc + ")";
+                while (
+                        existsFolder(
+                                targetWorkspace,
+                                targetProject,
+                                targetBasePath + folderName
+                        )
+                ) {
+                    folderName = targetFolderName + " (copy " + ++inc + ")";
+                }
+                targetFolderPath = targetBasePath + folderName;
+            }
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(baseFolder);
             for (Pair<String, String> path : allFilesFolders) {
                 if (path.getKey().equals("file")) {
@@ -483,7 +512,9 @@ public class WorkspaceProcessor {
                     );
                 } else {
                     targetProjectObject.createFolder(
-                            targetFolderPath + IRepository.SEPARATOR + path.getValue().replace(basePath + IRepository.SEPARATOR, "") + IRepository.SEPARATOR
+                            targetFolderPath + IRepository.SEPARATOR + path.getValue().replace(
+                                    basePath + IRepository.SEPARATOR, ""
+                            ) + IRepository.SEPARATOR
                     );
                 }
             }
@@ -508,10 +539,36 @@ public class WorkspaceProcessor {
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IWorkspace targetWorkspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             IFile sourceFile = sourceWorkspaceObject.getProject(sourceProject).getFile(sourceFilePath);
+            String baseTargetPath = "";
             if (targetFilePath.endsWith(IRepository.SEPARATOR)) {
+                baseTargetPath = targetFilePath;
                 targetFilePath += sourceFile.getName();
             } else {
+                baseTargetPath = IRepository.SEPARATOR + targetFilePath;
                 targetFilePath += IRepository.SEPARATOR + sourceFile.getName();
+            }
+            if (existsFile(targetWorkspace, targetProject, targetFilePath)) {
+                String fileName = sourceFile.getName();
+                String fileTitle = "";
+                String fileExt = "";
+                if (fileName.indexOf('.') != -1) {
+                    fileTitle = fileName.substring(0, fileName.lastIndexOf("."));
+                    fileExt = fileName.substring(fileName.lastIndexOf("."));
+                } else {
+                    fileTitle = fileName;
+                }
+                int inc = 1;
+                fileName = fileTitle + " (copy " + inc + ")" + fileExt;
+                while (
+                        existsFile(
+                                targetWorkspace,
+                                targetProject,
+                                baseTargetPath + fileName
+                        )
+                ) {
+                    fileName = fileTitle + " (copy " + ++inc + ")" + fileExt;
+                }
+                targetFilePath = baseTargetPath + fileName;
             }
             targetWorkspaceObject.getProject(targetProject).createFile(
                     targetFilePath,
