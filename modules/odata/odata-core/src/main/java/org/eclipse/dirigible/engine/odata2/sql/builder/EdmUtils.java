@@ -60,7 +60,6 @@ public final class EdmUtils {
     /**
      * Get all the properties from the Entity Type
      * 
-     * @param entityProperties the properties coming from the entity
      * @param entityType the type of the entity
      * @return the properties types list
      * @throws EdmException in case of EDM error

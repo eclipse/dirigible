@@ -320,10 +320,16 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		return idsOfLeadingEntities;
 	}
 
+	
 	/**
 	 * Generates the next link for server-side paging. The next-link is based on the
 	 * URI of the current request, except that {@code $skip} or {@code $skiptoken}
 	 * will be removed.
+	 * 
+	 * @param query the query
+	 * @param targetEntityType the target entity type
+	 * @return the link
+	 * @throws ODataException in case of an error
 	 */
 	protected String generateNextLink(SQLQuery query, EdmEntityType targetEntityType) throws ODataException {
 		int top = query.getSelectExpression().getTop();
