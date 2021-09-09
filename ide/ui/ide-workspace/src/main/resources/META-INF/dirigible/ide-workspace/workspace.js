@@ -243,13 +243,13 @@ WorkspaceService.prototype.move = function (filename, sourcepath, targetpath, wo
         target: targetpath + '/' + filename,
     });
 };
-WorkspaceService.prototype.copy = function (filename, sourcepath, targetpath, workspaceName) {
-    let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('copy').build();
-    //NOTE: The third argument is a temporary fix for the REST API issue that sending header  content-type: 'application/json' fails the move operation
+WorkspaceService.prototype.copy = function (sourcePath, targetPath, sourceWorkspace, targetWorkspace) {
+    let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(targetWorkspace).path('copy').build();
     return this.$http.post(url, {
-        //source: sourcepath + '/' + filename,
-        source: sourcepath,
-        target: targetpath + '/',
+        sourceWorkspace: sourceWorkspace,
+        source: sourcePath,
+        targetWorkspace: targetWorkspace,
+        target: targetPath + '/',
     });
 };
 WorkspaceService.prototype.load = function (wsResourcePath) {
@@ -552,21 +552,21 @@ WorkspaceTreeAdapter.prototype.moveNode = function (sourceParentNode, node) {
         }.bind(this));
 };
 WorkspaceTreeAdapter.prototype.copyNode = function (sourceParentNode, node) {
-    //strip the "/{workspace}" segment from paths and the file segment from source path (for consistency) 
-    let sourcepath = sourceParentNode.original._file.path.substring(this.workspaceName.length + 1);
-    //var tagetParentNode = this.jstree.get_node(node.parent);
-    let targetpath = "";
+    //strip the "/{workspace}" segment from paths and the file segment from source path (for consistency)
+    let sourceWorkspace = sourceParentNode.original._file.path.split('/')[1];
+    let sourcePath = sourceParentNode.original._file.path.substring(sourceWorkspace.length + 1);
+    let targetPath;
     if ("original" in node) {
-        targetpath = node.original._file.path.substring(this.workspaceName.length + 1);
+        targetPath = node.original._file.path.substring(this.workspaceName.length + 1);
     } else {
-        targetpath = sourcepath;
+        targetPath = sourcePath;
     }
     let self = this;
-    return this.workspaceService.copy(node.text, sourcepath, targetpath, this.workspaceName)
+    return this.workspaceService.copy(sourcePath, targetPath, sourceWorkspace, this.workspaceName)
         .then(function (sourceParentNode) {
             self.refresh(sourceParentNode, true);
             self.refresh(node, true).then(function () {
-                self.messageHub.announceFileCopied(targetpath + '/' + node.text, sourcepath, targetpath);
+                self.messageHub.announceFileCopied(targetPath + '/' + node.text, sourcePath, targetPath);
             });
         }.bind(this, sourceParentNode, node))
         .finally(function () {
@@ -1055,8 +1055,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                     };
 
                     /*
-                    Paste menu shouldn't be visible if there is nothing to paste.
-                    Paste menu shouldn't be visible if the copied node is of type project and another node is selected.
+                    Paste shouldn't be visible if there is nothing to paste.
+                    Paste shouldn't be visible if the copied node is of type project and another node is selected.
                     Pasting projects is handled by the context menu defined in 'WorkspaceTreeAdapter.prototype.init'
                     */
                     if (this.get_type(node) !== "file" && pasteObject.type !== "project") {
