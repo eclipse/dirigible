@@ -481,10 +481,17 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			ArrayList<KeyPredicate> keyPredicates = new ArrayList<KeyPredicate>();
 			if (!keyProperties.isEmpty()) {
 				for (EdmProperty keyProperty : keyProperties) {
-					keyPredicates.add(new KeyPredicateImpl(
-							entry.getProperties().get(keyProperty.getName()).toString(),
-							keyProperty));
+					if (entry.getProperties().get(keyProperty.getName()) != null) {
+						keyPredicates.add(new KeyPredicateImpl(
+								entry.getProperties().get(keyProperty.getName()).toString(),
+								keyProperty));
+					} else {
+						String msg = "Cannot create entity without key(s)";
+						LOG.error(msg);
+						throw new ODataException(msg);
+					}
 				}
+				
 				((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
 				
 				// Re-read the inserted entity to get the auto-generated properties

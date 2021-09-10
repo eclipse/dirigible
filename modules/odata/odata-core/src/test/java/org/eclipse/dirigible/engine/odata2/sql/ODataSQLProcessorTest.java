@@ -36,6 +36,8 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
@@ -54,6 +56,10 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
 
@@ -243,46 +249,29 @@ public class ODataSQLProcessorTest {
 
         modifyingRequestBuilder(sf, content)//
                 .segments("Cars") //
-                .accept("application/json")//
+//                .accept("application/json")//
                 .content(content).param("content-type", "application/json")//
                 .contentSize(content.length()).executeRequest(POST);
-
+        
         Response response = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars('3ab18d92-a574-45bb-a5e5-bcce38b7af11')") //
                 .accept("application/atom+xml").executeRequest(GET);
         assertEquals(200, response.getStatus());
 
         String res = IOUtils.toString((InputStream) response.getEntity());
-//        assertEquals("<?xml version='1.0' encoding='utf-8'?>\n"
-//        		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\"\n"
-//        		+ "	xmlns:m=\"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\"\n"
-//        		+ "	xmlns:d=\"http://schemas.microsoft.com/ado/2007/08/dataservices\"\n"
-//        		+ "	xml:base=\"http://localhost:8080/api/v1/\">\n"
-//        		+ "	<id>http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7af11')\n"
-//        		+ "	</id>\n"
-//        		+ "	<title type=\"text\">Cars</title>\n"
-//        		+ "	<updated>2021-09-09T11:24:11.101+03:00</updated>\n"
-//        		+ "	<category\n"
-//        		+ "		term=\"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"\n"
-//        		+ "		scheme=\"http://schemas.microsoft.com/ado/2007/08/dataservices/scheme\" />\n"
-//        		+ "	<link href=\"Cars('3ab18d92-a574-45bb-a5e5-bcce38b7af11')\"\n"
-//        		+ "		rel=\"edit\" title=\"Car\" />\n"
-//        		+ "	<link href=\"Cars('3ab18d92-a574-45bb-a5e5-bcce38b7af11')/Drivers\"\n"
-//        		+ "		rel=\"http://schemas.microsoft.com/ado/2007/08/dataservices/related/Drivers\"\n"
-//        		+ "		title=\"Drivers\" type=\"application/atom+xml;type=feed\" />\n"
-//        		+ "	<content type=\"application/xml\">\n"
-//        		+ "		<m:properties>\n"
-//        		+ "			<d:Id>3ab18d92-a574-45bb-a5e5-bcce38b7af11</d:Id>\n"
-//        		+ "			<d:Make>BMW</d:Make>\n"
-//        		+ "			<d:Model>320i</d:Model>\n"
-//        		+ "			<d:Year>2021</d:Year>\n"
-//        		+ "			<d:Price>30000</d:Price>\n"
-//        		+ "			<d:Updated>2021-09-09T08:24:11.098108</d:Updated>\n"
-//        		+ "		</m:properties>\n"
-//        		+ "	</content>\n"
-//        		+ "</entry>", //
-//                res);
-
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new ByteArrayInputStream(res.getBytes()));
+        String idValue = null;
+		NodeList nList = document.getElementsByTagName("d:Id");
+		for (int i = 0; i < nList.getLength(); i++) {
+			Node node = nList.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Element eElement = (Element) node;
+				idValue = eElement.getTextContent();
+			}
+		}
+		assertEquals("3ab18d92-a574-45bb-a5e5-bcce38b7af11", idValue);
     }
 
     @Test
