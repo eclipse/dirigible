@@ -78,6 +78,15 @@ public class WorkspaceDescriptor {
 	public List<ProjectDescriptor> getProjects() {
 		return projects;
 	}
+	
+	/**
+	 * Get the type
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
 
 	/**
 	 * Sets the.

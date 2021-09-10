@@ -61,6 +61,15 @@ public class FileDescriptor {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	/**
+	 * Get the type
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
 
 	/**
 	 * Gets the content type.
