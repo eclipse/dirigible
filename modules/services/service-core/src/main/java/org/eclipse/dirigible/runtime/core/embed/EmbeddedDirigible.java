@@ -45,7 +45,7 @@ public class EmbeddedDirigible {
 	/**
 	 * Initialize the Dirigible instance
 	 */
-	public void initialize() {
+	public DirigibleInitializer initialize() {
 		
 		this.initializer = new DirigibleInitializer();
 		
@@ -54,6 +54,8 @@ public class EmbeddedDirigible {
 		
 		// initialize the repository object
 		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		
+		return this.initializer;
 	}
 	
 	/**
