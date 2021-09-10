@@ -178,21 +178,8 @@ public class FileSystemUtils {
 	public static void copyFolder(String srcPath, String destPath) throws FileNotFoundException, IOException {
 		createFoldersIfNecessary(destPath);
 		FileSystem fileSystem = FileSystems.getDefault();
-		if (destPath.substring(destPath.length() - 1) == fileSystem.getSeparator()) {
-			destPath = destPath.substring(0, destPath.length() - 1);
-		}
 		Path srcDir = fileSystem.getPath(srcPath);
 		Path destDir = fileSystem.getPath(destPath);
-		if (directoryExists(destDir.toString())) {
-			String dirName = destDir.getFileName().toString();
-			String destDirPath = destPath.substring(0, destPath.lastIndexOf(dirName));
-			int inc = 1;
-			String newDirName = dirName + " (copy " + inc + ")";
-			while (directoryExists(destDirPath + newDirName)) {
-				newDirName = dirName + " (copy " + ++inc + ")";
-			}
-			destDir = fileSystem.getPath(destDirPath + newDirName);
-		}
 		FileUtils.copyDirectory(srcDir.toFile(), destDir.toFile(), true);
 	}
 
@@ -364,7 +351,9 @@ public class FileSystemUtils {
 		int lastIndexOf = normalizedPath.lastIndexOf(File.separator);
 		if (lastIndexOf > 0) {
 			String directory = normalizedPath.substring(0, lastIndexOf);
-			createFolder(directory);
+			if (!directoryExists(directory)) {
+				createFolder(directory);
+			}
 		}
 	}
 
