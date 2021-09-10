@@ -491,10 +491,15 @@ h6 {
   border-radius: 0;
   margin-top: 0px;
 }
+.workspace-body {
+  display: flex;
+  flex-direction: column;
+  overflow: none;
+}
 .workspace {
   font-weight: 300;
-  margin-top: 0.4em;
-  position: relative;
+  flex-grow: 1;
+  overflow: auto;
 }
 .database {
   font-weight: 300;
@@ -581,6 +586,12 @@ a.ui-button:active,
 }
 
 /* JSTree fixes */
+.jstree-default > .jstree-striped {
+  margin-top: 6px;
+  border-bottom: none;
+  /* For context menu */
+  margin-bottom: 32px;
+}
 .jstree-rename-input {
   background-color: #555;
   border: 1px solid #222;

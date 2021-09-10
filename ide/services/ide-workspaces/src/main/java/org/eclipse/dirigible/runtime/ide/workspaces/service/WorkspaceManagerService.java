@@ -46,249 +46,238 @@ import io.swagger.annotations.Authorization;
  * Front facing RPC service serving the Workspace actions.
  */
 @Path("/ide/workspace")
-@RolesAllowed({ "Developer" })
-@Api(value = "IDE - Workspace Manager", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
-@ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
-		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
+@RolesAllowed({"Developer"})
+@Api(value = "IDE - Workspace Manager", authorizations = {@Authorization(value = "basicAuth", scopes = {})})
+@ApiResponses({@ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error")})
 public class WorkspaceManagerService extends AbstractRestService implements IRestService {
 
-	private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
-	
-	private static final String ERROR_INVALID_PROJECT_NAME = "Invalid project name";
+    private static final String ERROR_PATH_DOES_NOT_EXISTS = "Path does not exists.";
 
-	private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
+    private static final String ERROR_INVALID_PROJECT_NAME = "Invalid project name";
 
-	private static final String ERROR_TARGET_PATH_IS_EMPTY = "Target path is empty";
+    private static final String ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER = "Target path points to a non-existing folder";
 
-	private static final String ERROR_SOURCE_PATH_IS_EMPTY = "Source path is empty";
+    private static final String ERROR_TARGET_WORKSPACE_IS_EMPTY = "Target workspace is empty";
 
-	private static final String ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST = "Source and Target paths have to be present in the body of the request";
+    private static final String ERROR_TARGET_PATH_IS_EMPTY = "Target path is empty";
 
-	private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
+    private static final String ERROR_SOURCE_WORKSPACE_IS_EMPTY = "Source workspace is empty";
 
-	private WorkspaceProcessor processor = new WorkspaceProcessor();
+    private static final String ERROR_SOURCE_PATH_IS_EMPTY = "Source path is empty";
 
-	@Context
-	private HttpServletResponse response;
+    private static final String ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST = "Source and Target paths and workspaces have to be present in the body of the request";
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
-	 */
-	@Override
-	public Class<? extends IRestService> getType() {
-		return WorkspaceManagerService.class;
-	}
+    private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
 
-	/**
-	 * Copy.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param content
-	 *            the content
-	 * @param request
-	 *            the request
-	 * @return the response
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
-	 * @throws DecoderException
-	 *             the decoder exception
-	 */
-	@POST
-	@Path("{workspace}/copy")
-	public Response copy(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
+    private WorkspaceProcessor processor = new WorkspaceProcessor();
 
-		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-		}
+    @Context
+    private HttpServletResponse response;
 
-		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
-		if (sourcePath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
-		}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
+     */
+    @Override
+    public Class<? extends IRestService> getType() {
+        return WorkspaceManagerService.class;
+    }
 
-		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
-		if (targetPath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
-		}
+    /**
+     * Copy.
+     *
+     * @param currentWorkspace the current workspace
+     * @param content          the content
+     * @param request          the request
+     * @return the response
+     * @throws URISyntaxException           the URI syntax exception
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws DecoderException             the decoder exception
+     */
+    @POST
+    @Path("{workspace}/copy")
+    public Response copy(@PathParam("workspace") String currentWorkspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
 
-		String sourceProject = sourcePath.getSegments()[0];
-		String targetProject = targetPath.getSegments()[0];
-		if (sourcePath.getSegments().length == 1) {
-			// a project is selected as a source
-			processor.copyProject(workspace, sourceProject, targetProject);
-			return Response.created(processor.getURI(workspace, targetProject, null)).build();
-		}
+        if ((content.getSource() == null) || (content.getTarget() == null) || (content.getSourceWorkspace() == null) || (content.getTargetWorkspace() == null)) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
+        }
 
-		String targetFilePath = targetPath.constructPathFrom(1);
-		if (targetFilePath.equals(targetPath.build())) {
-			targetFilePath = IRepository.SEPARATOR;
-		}
-		if (!processor.existsFolder(workspace, targetProject, targetFilePath)) {
-			return createErrorResponseBadRequest(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
-		}
+        RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
+        if (sourcePath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
+        }
 
-		String sourceFilePath = sourcePath.constructPathFrom(1);
-		if (processor.existsFile(workspace, sourceProject, sourceFilePath)) {
-			processor.copyFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-		} else {
-			processor.copyFolder(workspace, sourceProject, sourceFilePath, targetProject,
-					targetFilePath + IRepositoryStructure.SEPARATOR + sourcePath.getLastSegment());
-		}
+        RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
+        if (targetPath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
+        }
 
-		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
-	}
+        String sourceWorkspace = content.getSourceWorkspace();
+        if (sourceWorkspace.length() == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_WORKSPACE_IS_EMPTY);
+        }
+        String targetWorkspace = content.getTargetWorkspace();
+        if (targetWorkspace.length() == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_WORKSPACE_IS_EMPTY);
+        }
 
-	/**
-	 * Move.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param content
-	 *            the content
-	 * @param request
-	 *            the request
-	 * @return the response
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
-	 * @throws DecoderException
-	 *             the decoder exception
-	 */
-	@POST
-	@Path("{workspace}/move")
-	public Response move(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
+        String sourceProject = sourcePath.getSegments()[0];
+        String targetProject = targetPath.getSegments()[0];
+        if (sourcePath.getSegments().length == 1) {
+            // a project is selected as a source
+            processor.copyProject(sourceWorkspace, targetWorkspace, sourceProject, targetProject);
+            return Response.created(processor.getURI(targetWorkspace, targetProject, null)).build();
+        }
 
-		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-		}
+        String targetFilePath = targetPath.constructPathFrom(1);
+        if (targetFilePath.equals(targetPath.build())) {
+            targetFilePath = IRepository.SEPARATOR;
+        }
+        if (!processor.existsFolder(targetWorkspace, targetProject, targetFilePath)) {
+            return createErrorResponseBadRequest(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
+        }
 
-		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
-		if (sourcePath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
-		}
+        String sourceFilePath = sourcePath.constructPathFrom(1);
+        if (processor.existsFile(sourceWorkspace, sourceProject, sourceFilePath)) {
+            processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+        } else {
+            processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject,
+                    targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
+        }
 
-		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
-		if (targetPath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
-		}
+        return Response.created(processor.getURI(targetWorkspace, null, content.getTarget())).build();
+    }
 
-		String sourceProject = sourcePath.getSegments()[0];
-		String targetProject = targetPath.getSegments()[0];
-		if (sourcePath.getSegments().length == 1) {
-			// a project is selected as a source
-			processor.moveProject(workspace, sourceProject, targetProject);
-			return Response.created(processor.getURI(workspace, targetProject, null)).build();
-		}
+    /**
+     * Move.
+     *
+     * @param workspace the workspace
+     * @param content   the content
+     * @param request   the request
+     * @return the response
+     * @throws URISyntaxException           the URI syntax exception
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws DecoderException             the decoder exception
+     */
+    @POST
+    @Path("{workspace}/move")
+    public Response move(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
 
-		String sourceFilePath = sourcePath.constructPathFrom(1);
-		String targetFilePath = targetPath.constructPathFrom(1);
-		if (processor.existsFile(workspace, sourceProject, sourceFilePath)) {
-			processor.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-		} else if (processor.existsFolder(workspace, sourceProject, sourceFilePath)) {
-			processor.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-		} else {
-			return createErrorResponseNotFound(ERROR_PATH_DOES_NOT_EXISTS);
-		}
+        if ((content.getSource() == null) || (content.getTarget() == null)) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
+        }
 
-		return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
-	}
+        RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
+        if (sourcePath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
+        }
 
-	/**
-	 * Rename.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param content
-	 *            the content
-	 * @param request
-	 *            the request
-	 * @return the response
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
-	 * @throws UnsupportedEncodingException
-	 *             the unsupported encoding exception
-	 * @throws DecoderException
-	 *             the decoder exception
-	 */
-	@POST
-	@Path("{workspace}/rename")
-	public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, UnsupportedEncodingException, DecoderException {
-		return move(workspace, content, request);
-	}
-	
-	/**
-	 * Link project.
-	 *
-	 * @param workspace
-	 *            the workspace
-	 * @param content
-	 *            the content
-	 * @param request
-	 *            the request
-	 * @return the response
-	 * @throws URISyntaxException
-	 *             the URI syntax exception
-	 * @throws DecoderException
-	 *             the decoder exception
-	 * @throws IOException
-	 *             IO error
-	 */
-	@POST
-	@Path("{workspace}/linkProject")
-	public Response link(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-			throws URISyntaxException, DecoderException, IOException {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
+        RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
+        if (targetPath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
+        }
 
-		if ((content.getSource() == null) || (content.getTarget() == null)) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
-		}
+        String sourceProject = sourcePath.getSegments()[0];
+        String targetProject = targetPath.getSegments()[0];
+        if (sourcePath.getSegments().length == 1) {
+            // a project is selected as a source
+            processor.moveProject(workspace, sourceProject, targetProject);
+            return Response.created(processor.getURI(workspace, targetProject, null)).build();
+        }
 
-		RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
-		if (sourcePath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
-		}
+        String sourceFilePath = sourcePath.constructPathFrom(1);
+        String targetFilePath = targetPath.constructPathFrom(1);
+        if (processor.existsFile(workspace, sourceProject, sourceFilePath)) {
+            processor.moveFile(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+        } else if (processor.existsFolder(workspace, sourceProject, sourceFilePath)) {
+            processor.moveFolder(workspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+        } else {
+            return createErrorResponseNotFound(ERROR_PATH_DOES_NOT_EXISTS);
+        }
 
-		RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
-		if (targetPath.getSegments().length == 0) {
-			return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
-		}
+        return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
+    }
 
-		String sourceProject = sourcePath.getSegments()[0];
-		String targetProject = targetPath.getPath();
-		if (sourcePath.getSegments().length == 1) {
-			// a project is selected as a source
-			processor.linkProject(workspace, sourceProject, targetProject);
-			return Response.created(processor.getURI(workspace, sourceProject, null)).build();
-		}
-		return createErrorResponseBadRequest(ERROR_INVALID_PROJECT_NAME);
-	}
+    /**
+     * Rename.
+     *
+     * @param workspace the workspace
+     * @param content   the content
+     * @param request   the request
+     * @return the response
+     * @throws URISyntaxException           the URI syntax exception
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws DecoderException             the decoder exception
+     */
+    @POST
+    @Path("{workspace}/rename")
+    public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        return move(workspace, content, request);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
-	 */
-	@Override
-	protected Logger getLogger() {
-		return logger;
-	}
+    /**
+     * Link project.
+     *
+     * @param workspace the workspace
+     * @param content   the content
+     * @param request   the request
+     * @return the response
+     * @throws URISyntaxException the URI syntax exception
+     * @throws DecoderException   the decoder exception
+     * @throws IOException        IO error
+     */
+    @POST
+    @Path("{workspace}/linkProject")
+    public Response link(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
+            throws URISyntaxException, DecoderException, IOException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        if ((content.getSource() == null) || (content.getTarget() == null)) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
+        }
+
+        RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(content.getSource()));
+        if (sourcePath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
+        }
+
+        RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
+        if (targetPath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
+        }
+
+        String sourceProject = sourcePath.getSegments()[0];
+        String targetProject = targetPath.getPath();
+        if (sourcePath.getSegments().length == 1) {
+            // a project is selected as a source
+            processor.linkProject(workspace, sourceProject, targetProject);
+            return Response.created(processor.getURI(workspace, sourceProject, null)).build();
+        }
+        return createErrorResponseBadRequest(ERROR_INVALID_PROJECT_NAME);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
+     */
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 
 }
