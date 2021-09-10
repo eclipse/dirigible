@@ -584,6 +584,24 @@ a.ui-button:active,
 .bg-default {
   background-color: #333333;
 }
+.checkered {
+  background-image:
+    linear-gradient(45deg, #232323 25%, transparent 25%),
+    linear-gradient(135deg, #232323 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #232323 75%),
+    linear-gradient(135deg, transparent 75%, #232323 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 0, 8px -8px, 0px 8px;
+}
+.contain-image {
+  object-fit: contain;
+  margin: auto;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* JSTree fixes */
 .jstree-default > .jstree-striped {

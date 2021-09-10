@@ -120,6 +120,7 @@
 		<project>dirigible-ide-ui-registry</project>
 		<project>dirigible-ide-ui-plugins</project>
 		<project>dirigible-ide-ui-discussions</project>
+		<project>dirigible-ide-ui-image</project>
 		<project>dirigible-ide-services-group-all</project>
 		<project>dirigible-ide-service-console</project>
 		<project>dirigible-ide-service-databases</project>
