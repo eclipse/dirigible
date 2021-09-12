@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.catalina.filters.CorsFilter;
 import org.apache.cxf.Bus;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
@@ -87,6 +88,19 @@ public class DirigibleRestServiceApplication {
             
         registrationBean.setFilter(new HealthCheckFilter());
         registrationBean.addUrlPatterns("/services/v3/*", "/public/v3/*", "/services/v4/*", "/public/v4/*");
+            
+        return registrationBean;    
+    }
+    
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilter(){
+        FilterRegistrationBean<CorsFilter> registrationBean 
+          = new FilterRegistrationBean<>();
+            
+        registrationBean.setFilter(new CorsFilter());
+        registrationBean.addInitParameter("cors.allowed.origins", "*");
+        registrationBean.addInitParameter("cors.allowed.methods", "GET,PUT,PATCH,POST,DELETE,HEAD,OPTIONS,CONNECT,TRACE");
+        registrationBean.addUrlPatterns("/*");
             
         return registrationBean;    
     }
