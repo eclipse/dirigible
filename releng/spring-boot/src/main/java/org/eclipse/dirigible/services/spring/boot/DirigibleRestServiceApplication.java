@@ -20,6 +20,7 @@ import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.openapi.OpenApiFeature;
 import org.apache.cxf.jaxrs.swagger.ui.SwaggerUiConfig;
+import org.apache.olingo.odata2.core.servlet.ODataServlet;
 import org.eclipse.dirigible.runtime.core.embed.EmbeddedDirigible;
 import org.eclipse.dirigible.runtime.core.filter.HealthCheckFilter;
 import org.eclipse.dirigible.runtime.core.filter.HttpContextFilter;
@@ -145,6 +146,15 @@ public class DirigibleRestServiceApplication {
     @Bean
     public ServletRegistrationBean delegateLogoutServlet() {
         return new ServletRegistrationBean(new LogoutServlet(), "/logout");
+    }
+    
+    @Bean
+    public ServletRegistrationBean olingoServlet() {
+    	ServletRegistrationBean bean = new ServletRegistrationBean(new ODataServlet(), "/odata/v2/*");
+    	bean.addInitParameter("javax.ws.rs.Application", "org.apache.olingo.odata2.core.rest.app.ODataApplication");
+    	bean.addInitParameter("org.apache.olingo.odata2.service.factory", "org.eclipse.dirigible.engine.odata2.factory.DirigibleODataServiceFactory");
+    	bean.setLoadOnStartup(1);
+        return bean;
     }
 
     @Bean
