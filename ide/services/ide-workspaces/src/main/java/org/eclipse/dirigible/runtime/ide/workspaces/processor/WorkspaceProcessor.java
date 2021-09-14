@@ -421,6 +421,19 @@ public class WorkspaceProcessor {
      * @param targetProject   the target project
      */
     public void copyProject(String sourceWorkspace, String targetWorkspace, String sourceProject, String targetProject) {
+        if (existsProject(targetWorkspace, targetProject)) {
+            int inc = 1;
+            String projectName = targetProject + " (copy " + inc + ")";
+            while (
+                    existsProject(
+                            targetWorkspace,
+                            projectName
+                    )
+            ) {
+                projectName = targetProject + " (copy " + ++inc + ")";
+            }
+            targetProject = projectName;
+        }
         if (sourceWorkspace.equals(targetWorkspace)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             workspaceObject.copyProject(sourceProject, targetProject);
@@ -428,19 +441,6 @@ public class WorkspaceProcessor {
             IWorkspace sourceWorkspaceObject = workspacesCoreService.getWorkspace(sourceWorkspace);
             IProject sourceProjectObject = sourceWorkspaceObject.getProject(sourceProject);
             String basePath = sourceProjectObject.getPath();
-            if (existsProject(targetWorkspace, targetProject)) {
-                int inc = 1;
-                String projectName = targetProject + " (copy " + inc + ")";
-                while (
-                        existsProject(
-                                targetWorkspace,
-                                projectName
-                        )
-                ) {
-                    projectName = targetProject + " (copy " + ++inc + ")";
-                }
-                targetProject = projectName;
-            }
             IProject targetProjectObject = createProject(targetWorkspace, targetProject);
             List<Pair<String, String>> allFilesFolders = getAllFilesFolders(sourceProjectObject, false);
             for (Pair<String, String> path : allFilesFolders) {
