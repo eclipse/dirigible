@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var database = require('db/v4/database');
+var assertTrue = require('utils/assert').assertTrue;
 
 console.log(JSON.stringify(database.getDatabaseTypes()));
 
-database.getDatabaseTypes().includes("local");
+assertTrue(database.getDatabaseTypes().includes("local"));

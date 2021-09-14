@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var streams = require('io/v3/streams');
+var assertTrue = require('utils/assert').assertTrue;
 
 var baos = streams.createByteArrayOutputStream();
 baos.writeText("some text");
@@ -17,4 +18,4 @@ var result = baos.getBytes();
 var bais = streams.createByteArrayInputStream(result);
 result = bais.readText();
 
-result == "some text";
+assertTrue(result == "some text");

@@ -10,9 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var repositoryManager = require("platform/v4/repository");
+var assertTrue = require('utils/assert').assertTrue;
 
 repositoryManager.createResource("/registry/public/test/file.js", "console.log('Hello World');", "application/json");
 var resource = repositoryManager.getResource("/registry/public/test/file.js");
 var content = resource.getText();
 
-content !== undefined && content !== null;
+assertTrue(content !== undefined && content !== null);

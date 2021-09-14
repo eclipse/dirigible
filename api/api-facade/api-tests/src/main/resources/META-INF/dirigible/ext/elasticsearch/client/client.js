@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var elasticsearch = require("elasticsearch/client");
+var assertTrue = require('utils/assert').assertTrue;
 
 var client = elasticsearch.getClient();
 
@@ -65,10 +66,10 @@ testDeleteIndex = function() {
 
 before();
 
-testCreateIndex()
+assertTrue(testCreateIndex()
     && testIndexDocument()
     && testGetIndexedDocument()
     && testGetNonIndexedDocument()
     && testDeleteDocument()
     && testDeleteIndex()
-    && after();
+    && after());

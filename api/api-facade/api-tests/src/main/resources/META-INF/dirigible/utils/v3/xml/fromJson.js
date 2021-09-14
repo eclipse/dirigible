@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var xml = require('utils/v3/xml');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = '{"a":{"b":"text_b","c":"text_c","d":{"e":"text_e"}}}';
 var result = xml.fromJson(input);
 
-result === '<a><b>text_b</b><c>text_c</c><d><e>text_e</e></d></a>';
+assertTrue(result === '<a><b>text_b</b><c>text_c</c><d><e>text_e</e></d></a>');

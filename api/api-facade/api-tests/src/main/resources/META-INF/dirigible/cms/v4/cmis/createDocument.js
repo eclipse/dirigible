@@ -11,6 +11,7 @@
  */
 var cmis = require('cms/v4/cmis');
 var streams = require('io/v4/streams');
+var assertTrue = require('utils/assert').assertTrue;
 
 var session = cmis.getSession();
 
@@ -24,4 +25,4 @@ properties[cmis.NAME] = 'test1.txt';
 
 var result = rootFolder.createDocument(properties, contentStream, cmis.VERSIONING_STATE_MAJOR);
 
-result !== null && result !== undefined;
+assertTrue(result !== null && result !== undefined);

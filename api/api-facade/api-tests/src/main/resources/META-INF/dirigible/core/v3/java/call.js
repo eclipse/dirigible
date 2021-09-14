@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var java = require('core/v3/java');
+var assertNotNull = require('utils/assert').assertNotNull;
 
 var uuid = java.call('org.eclipse.dirigible.api.v3.utils.UuidFacade', 'random', []);
 
-uuid !== null;
+assertNotNull(uuid);

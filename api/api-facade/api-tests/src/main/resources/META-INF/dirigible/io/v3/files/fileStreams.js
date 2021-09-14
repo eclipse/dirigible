@@ -11,6 +11,7 @@
  */
 var files = require('io/v3/files');
 var streams = require('io/v3/streams');
+var assertTrue = require('utils/assert').assertTrue;
 
 var tempFile1 = files.createTempFile("dirigible", ".txt");
 console.log('Temp file 1: ' + tempFile1);
@@ -29,4 +30,4 @@ var result = files.readText(tempFile2);
 files.deleteFile(tempFile1);
 files.deleteFile(tempFile2);
 
-result == "Eclipse Dirigible";
+assertTrue(result == "Eclipse Dirigible");

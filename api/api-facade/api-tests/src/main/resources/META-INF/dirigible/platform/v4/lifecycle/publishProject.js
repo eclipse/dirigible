@@ -12,6 +12,7 @@
 var workspace = require("platform/v4/workspace");
 var lifecycle = require("platform/v4/lifecycle");
 var bytes = require("io/v4/bytes");
+var assertTrue = require('utils/assert').assertTrue;
 
 var user = "dirigible";
 var workspaceName = "workspace";
@@ -25,4 +26,5 @@ myFile.setContent(bytes.textToByteArray("console.log('Hello World!');"));
 var publishResult = lifecycle.publish(user, workspaceName, projectName);
 var unpublishResult = lifecycle.unpublish(user, workspaceName, projectName);
 
-publishResult === true && unpublishResult === true;
+assertTrue(publishResult);
+assertTrue(unpublishResult);

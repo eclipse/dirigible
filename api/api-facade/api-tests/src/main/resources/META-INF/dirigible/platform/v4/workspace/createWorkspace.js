@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var manager = require('platform/v4/workspace');
+var assertTrue = require('utils/assert').assertTrue;
 
 manager.createWorkspace('testworkspace');
 var workspace = manager.getWorkspace('testworkspace');
 
-workspace.exists();
+assertTrue(workspace.exists());

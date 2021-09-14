@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var cmis = require('cms/v4/cmis');
+var assertTrue = require('utils/assert').assertTrue;
 
 var session = cmis.getSession();
 
@@ -20,4 +21,4 @@ properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_FOLDER;
 properties[cmis.NAME] = 'test1';
 var result = rootFolder.createFolder(properties);
 
-result !== null && result !== undefined;
+assertTrue(result !== null && result !== undefined);

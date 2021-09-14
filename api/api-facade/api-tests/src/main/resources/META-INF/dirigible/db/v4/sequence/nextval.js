@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var sequence = require('db/v4/sequence');
+var assertTrue = require('utils/assert').assertTrue;
 
 sequence.create('mysequence');
 var zero = sequence.nextval('mysequence');
 var one = sequence.nextval('mysequence');
 sequence.drop('mysequence');
 
-zero === 0 && one === 1
+assertTrue(zero === 0 && one === 1);

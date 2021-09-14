@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var cassandra = require("cassandra/client");
+var assertTrue = require('utils/assert').assertTrue;
 
 var cassandraSession = cassandra.getSession("127.0.0.1", 9042);
 
@@ -26,6 +27,8 @@ java.lang.Thread.sleep(500);
 var resultSet = cassandraSession.getDBResults(cassandraSession,"test", "select*from test_table");
 var stringResult = resultSet.getRowAsString();
 
-stringResult !== null && stringResult !== undefined && stringResult === "[Row[1, test_user, 18]]";
+console.log("EXECUTING ASSERT")
+assertTrue(false);
+assertTrue(stringResult !== null && stringResult !== undefined && stringResult === "[Row[1, test_user, 18]]");
 
 

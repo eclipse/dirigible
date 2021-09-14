@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var engines = require('platform/v4/engines');
+var assertTrue = require('utils/assert').assertTrue;
 
 var result = engines.getTypes();
 
-result !== undefined && result !== null;
+assertTrue(result !== undefined && result !== null);

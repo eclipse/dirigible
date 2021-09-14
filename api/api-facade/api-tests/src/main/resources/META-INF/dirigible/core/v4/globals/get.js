@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var globals = require('core/v4/globals');
+var assertTrue = require('utils/assert').assertTrue;
 
 globals.set("name1", "value1");
 var result = globals.get('name1');
 
-result === 'value1';
+assertTrue(result === 'value1');

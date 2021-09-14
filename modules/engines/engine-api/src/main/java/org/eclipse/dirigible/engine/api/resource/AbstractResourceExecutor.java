@@ -80,7 +80,8 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 		// try from the classloader
 		try {
-			String location = IRepository.SEPARATOR + module + (extension != null ? extension : "");
+			String prefix = Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
+			String location = prefix + module + (extension != null ? extension : "");
 			byte[] content = PREDELIVERED.get(location);
 			if (content != null) {
 				return content;
@@ -191,7 +192,11 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	 */
 	@Override
 	public String createResourcePath(String root, String module, String extension) {
-		StringBuilder buff = new StringBuilder().append(root).append(IRepository.SEPARATOR).append(module);
+		StringBuilder buff = new StringBuilder().append(root);
+		if (!Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR)) {
+			buff.append(IRepository.SEPARATOR);
+		}
+		buff.append(module);
 		if (extension != null) {
 			buff.append(extension);
 		}

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
@@ -65,6 +66,7 @@ public class HelloFlowableEngineTest extends AbstractDirigibleTest {
 		
 		InputStream in = HelloFlowableEngineTest.class.getResourceAsStream("/hello.bpmn20.xml");
 		try {
+			ThreadContextFacade.setUp();
 			byte[] bytes = IOUtils.toByteArray(in);
 			RepositoryService repositoryService = processEngine.getRepositoryService();
 			Deployment deployment = repositoryService.createDeployment().addBytes("hello.bpmn20.xml", bytes) // must ends with *.bpmn20.xml
@@ -82,6 +84,7 @@ public class HelloFlowableEngineTest extends AbstractDirigibleTest {
 					.singleResult();
 			assertNull(processDefinition);
 		} finally {
+			ThreadContextFacade.tearDown();
 			if (in != null) {
 				in.close();
 			}

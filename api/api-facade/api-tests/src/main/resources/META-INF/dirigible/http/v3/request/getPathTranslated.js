@@ -10,5 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var request = require('http/v3/request');
+var assertTrue = require('utils/assert').assertTrue;
 
-request.getPathTranslated() === '/translated';
+assertTrue(request.getPathTranslated() === '/translated');

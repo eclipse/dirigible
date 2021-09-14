@@ -80,12 +80,8 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 			ThreadContextFacade.setUp();
 
 			logger.info("API test starting... " + testModule);
-			
-			Object result = null;
-			result = runTest(graalVMJavascriptEngineExecutor, repository, testModule);
-			
-			assertNotNull(result);
-			assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+
+			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 			logger.info("API test passed successfully: " + testModule);
 				 
 		} finally {
@@ -113,10 +109,8 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 			logger.info("API test starting... " + testModule);
 			
 			Object result = null;
-			result = runTest(graalVMJavascriptEngineExecutor, repository, testModule);
-			
-			assertNotNull(result);
-			assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+
 			logger.info("API test passed successfully: " + testModule);
 				 
 		} finally {
