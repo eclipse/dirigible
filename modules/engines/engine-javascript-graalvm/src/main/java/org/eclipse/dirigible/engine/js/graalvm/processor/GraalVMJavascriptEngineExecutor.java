@@ -111,15 +111,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 *             the scripting exception
 	 */
 	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
-
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
-
-		if (executionContext == null) {
-			executionContext = new HashMap<>();
-		}
-
-		executionContext.put("paths", new String[]{"/"});
 
 		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
@@ -132,10 +125,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, resourcePath.getPath());
 			}
 		}
-
-		Object result = null;
-
-
 		boolean isDebugEnabled = isDebugEnabled();
 		
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -172,7 +161,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		}
 
 		try (Context context = contextBuilder.build()) {
-			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 			Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
 			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
 			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
@@ -181,31 +169,27 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
-			context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
-			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE);
-			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
 
 			beforeEval(context);
-            if (isDebugEnabled) {
-            	code = CODE_DEBUGGER + code;
-            }
+
+			context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
+
 			if (isModule) {
 				bindings.putMember("MODULE_FILENAME", moduleOrCode);
-				result = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE).as(Object.class);
 			} else {
 				bindings.putMember("SCRIPT_STRING", moduleOrCode);
-				result = context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
 			}
 
         } catch (IOException e) {
         	logger.error(e.getMessage(), e);
-        } catch (URISyntaxException e) {
-        	logger.error(e.getMessage(), e);
         }
 
 		logger.trace("exiting: executeServiceModule()");
-
-		return result;
+		return null;
 	}
 
 	protected String loadSource(String module) throws IOException, URISyntaxException {

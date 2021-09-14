@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var redis = require("redis/client");
+var assertTrue = require('utils/assert').assertTrue;
 var redisClient = redis.getClient();
 
 redisClient.set("name", "Alice");
 
 var result = redisClient.get("name");
 
-result !== null && result !== undefined && result == "Alice";
+assertTrue(result !== null && result !== undefined && result == "Alice");

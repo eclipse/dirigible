@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var cmis = require('cms/v3/cmis');
+var assertTrue = require('utils/assert').assertTrue;
 
 var result = cmis.getSession();
 
-result !== null && result !== undefined;
+assertTrue(result !== null && result !== undefined);

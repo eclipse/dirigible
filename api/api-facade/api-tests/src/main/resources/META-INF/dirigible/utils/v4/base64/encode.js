@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var base64 = require('utils/v4/base64');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = [61, 62, 63];
 var result = base64.encode(input);
 
-result === 'PT4/';
+assertTrue(result === 'PT4/');

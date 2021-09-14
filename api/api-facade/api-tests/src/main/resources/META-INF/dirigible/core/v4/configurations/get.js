@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var configurations = require('core/v4/configurations');
+var assertTrue = require('utils/assert').assertTrue;
 
 configurations.set('name1', 'value1');
 var result = configurations.get('name1');
 
-result === 'value1';
+assertTrue(result === 'value1');

@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var digest = require('utils/v4/digest');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = [41, 42, 43];
 var result = digest.sha1(input);
 
 console.log(JSON.stringify(result));
 
-result.length === 20 && result[0] === 77;
+assertTrue(result.length === 20 && result[0] === 77);

@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var _java = require('core/v3/java');
+var assertTrue = require('utils/assert').assertTrue;
 
 var arrayList = _java.instantiate('java.util.ArrayList', []);
 
@@ -19,4 +20,4 @@ var result = _java.invoke(arrayList.uuid, 'get', [0]);
 
 console.log(result);
 
-result == 'some text';
+assertTrue(result == 'some text');

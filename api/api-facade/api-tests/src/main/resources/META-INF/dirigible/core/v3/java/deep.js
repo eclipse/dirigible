@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var _java = require('core/v3/java');
+var assertTrue = require('utils/assert').assertTrue;
 
 var process = _java.instantiate('org.eclipse.dirigible.api.v3.test.Process', []);
 
@@ -29,4 +30,4 @@ var exists = _java.invoke(process.uuid, 'existsTask', [task.uuid]);
 
 console.log('Task exists?: ' + exists);
 
-result == 'task1';
+assertTrue(result == 'task1');

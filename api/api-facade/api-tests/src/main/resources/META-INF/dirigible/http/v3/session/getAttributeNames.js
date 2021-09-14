@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var session = require('http/v3/session');
+var assertTrue = require('utils/assert').assertTrue;
 
 session.setAttribute('attr1', 'value1');
 
-JSON.stringify(session.getAttributeNames()) === '["attr1"]';
+assertTrue(JSON.stringify(session.getAttributeNames()) === '["attr1"]');
 

@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var escape = require('utils/v4/escape');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = '"<>';
 var result = escape.escapeHtml3(input);
 
-result === '&quot;&lt;&gt;';
+assertTrue(result === '&quot;&lt;&gt;');

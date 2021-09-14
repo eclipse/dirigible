@@ -363,11 +363,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
 
                     logger.info("API test starting... " + testModule);
 
-                    Object result = null;
-                    result = runTest(executor, repository, testModule);
-
-                    assertNotNull(result);
-                    assertTrue("API test failed: " + testModule, Boolean.parseBoolean(result.toString()));
+                    runTest(executor, repository, testModule);
                     logger.info("API test passed successfully: " + testModule);
 
                 } finally {
@@ -407,7 +403,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
     }
 
-    protected Object runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
+    protected void runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
 
         try {
             InputStream in = AbstractApiSuiteTest.class.getResourceAsStream("/META-INF/dirigible/" + testModule);
@@ -428,10 +424,9 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         }
         Object result = null;
         long start = System.currentTimeMillis();
-        result = executor.executeServiceModule(testModule, null);
+        executor.executeServiceModule(testModule, null);
         long time = System.currentTimeMillis() - start;
         System.out.println(String.format("API test [%s] on engine [%s] passed for: %d ms", testModule,
                 executor.getType(), time));
-        return result;
     }
 }

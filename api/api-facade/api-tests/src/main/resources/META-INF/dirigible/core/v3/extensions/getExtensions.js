@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var extensions = require('core/v3/extensions');
+var assertTrue = require('utils/assert').assertTrue;
 
 var result = extensions.getExtensions('test_extpoint1');
 
-result[0] == "/test_ext_module1";
+assertTrue(result[0] == "/test_ext_module1");

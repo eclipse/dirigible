@@ -10,11 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var uuid = require('utils/v3/uuid');
+var assertTrue = require('utils/assert').assertTrue;
 
 var generated = uuid.random();
 
 console.log(generated);
 
-uuid.validate(generated);
+assertTrue(uuid.validate(generated));
 
 

@@ -9,7 +9,16 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var request = require('http/v4/request');
-var assertTrue = require('utils/assert').assertTrue;
 
-assertTrue(request.getAttribute('attr1') === 'val1');
+
+exports.assertTrue = function (condition, message) {
+    if (!condition) {
+        throw(message || "Assertion failed");
+    }
+}
+
+exports.assertNotNull = function (condition, message) {
+    if (condition === null) {
+        throw(message || "Assertion failed");
+    }
+}
