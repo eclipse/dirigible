@@ -88,9 +88,9 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"_pk_\" : \"Id\"\n" +
                 "}";
         String[] transformed = odata2ODataMTransformer.transform(definition);
-		assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
+        assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
-    
+
     @Test
     public void testTransformOrdersCaseSensitive() throws IOException, SQLException {
         String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/orderscs/Orders.odata"), Charset.defaultCharset());
@@ -134,36 +134,21 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"_pk_\" : \"ITEM_ID\"\n" +
                 "}";
         String[] transformed = odata2ODataMTransformer.transform(definition);
-		assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
+        assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
-    
+
     @Test
     public void testTransformEntityProperty() throws IOException, SQLException {
-        String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/entityproperty/Entities.odata"), Charset.defaultCharset());
-        ODataDefinition definition = ODataDefinitionFactory.parseOData("/entityproperty/Entities.odata", orders);
+        ODataDefinition definition  = OData2ODataTransformerTestUtil.loadData_testTransformEntityProperty(dbMetadataUtil);
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ENTITY1ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("PROPERTY2", "Edm.String", false);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("PROPERTY3", "Edm.String", false);
-        PersistenceTableModel model = new PersistenceTableModel("ENTITY1", Arrays.asList(column1, column2, column3), new ArrayList<>());
-        when(dbMetadataUtil.getTableMetadata("ENTITY1", null)).thenReturn(model);
-
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ENTITY2ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("PROPERTY2", "Edm.Int32", false);
-        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("PROPERTY3", "Edm.Int32", false);
-        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("PROPERTY4_5", "Edm.Int32", false);
-        PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("ENTITY1ENTITY1ID", "Edm.Int32", false);
-        PersistenceTableRelationModel rel = new PersistenceTableRelationModel("ENTITY2ID", "ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", "fkName", "PRIMARY_KEY_8B");
-        model = new PersistenceTableModel("ENTITY2", Arrays.asList(column3, column4, column5, column6, column7, column8), Collections.singletonList(rel));
-        when(dbMetadataUtil.getTableMetadata("ENTITY2", null)).thenReturn(model);
-
-        String entityOrder = "{\n" +
+        String entity1 = "{\n" +
                 "\t\"edmType\": \"Entity1Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity1Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY1\",\n" +
                 "\t\"entity1Id\": \"ENTITY1ID\",\n" +
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
+                "\t\"Country_Id\": \"Country.Id\",\n" +
                 "\t\"_ref_Entity2Type\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ENTITY1ID\"\n" +
@@ -171,7 +156,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ENTITY1ID\"\n" +
                 "}";
-        String entityItem = "{\n" +
+        String entity2 = "{\n" +
                 "\t\"edmType\": \"Entity2Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity2Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY2\",\n" +
@@ -187,55 +172,64 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ENTITY2ID\"\n" +
                 "}";
+        String entity3 = "{\n" +
+                "\t\"edmType\": \"Entity3Type\",\n" +
+                "\t\"edmTypeFqn\": \"mytest.Entity3Type\",\n" +
+                "\t\"sqlTable\": \"ENTITY3\",\n" +
+                "\t\"Entity3_id\": \"ENTITY3.ID\",\n" +
+                "\t\"Name_id\": \"NAME.ID\",\n" +
+                "\t\"_pk_\" : \"ENTITY3.ID\"\n" +
+                "}";
+
         String[] transformed = odata2ODataMTransformer.transform(definition);
-		assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
+        assertArrayEquals(new String[]{entity1, entity2, entity3}, transformed);
     }
-    
+
     @Test
     public void testTransformWithCompositePrimaryKeyAndProperties() throws IOException, SQLException {
-	  String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/Employee.odata"), Charset.defaultCharset());
-	  ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/Employee.odata", employee);
-	
-	  PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-	  PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-	  PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
-	  when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
-	
-	  PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
-	  PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
-	  PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
-	  model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
-	  when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
-	
-	  String entityEmployee = "{\n" +
-	      "\t\"edmType\": \"employeeType\",\n" +
-	      "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
-	      "\t\"sqlTable\": \"EMPLOYEES\",\n" +
-	      "\t\"companyId\": \"COMPANY_ID\",\n" +
-	      "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
-	      "\t\"_ref_phoneType\": {\n" +
-	  	  "\t\t\"joinColumn\" : [\n" +
-	  	  "\t\t\t\"COMPANY_ID\",\"EMPLOYEE_NUMBER\"\n" +
-	  	  "\t\t]\n"+
-	  	  "\t},\n" +
-	  	  "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
-	      "}";
-	  String phoneEntity = "{\n" +
-	      "\t\"edmType\": \"phoneType\",\n" +
-	      "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
-	      "\t\"sqlTable\": \"PHONES\",\n" +
-	      "\t\"number\": \"NUMBER\",\n" +
-	      "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
-	      "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
-	      "\t\"_ref_employeeType\": {\n" +
-	  	  "\t\t\"joinColumn\" : [\n" +
-	  	  "\t\t\t\"FK_COMPANY_ID\",\"FK_EMPLOYEE_NUMBER\"\n" +
-	  	  "\t\t]\n"+
-	  	  "\t},\n" +
-	  	  "\t\"_pk_\" : \"NUMBER\"\n" +
-	      "}";
-	  String[] actualResult = odata2ODataMTransformer.transform(definition);
-	  assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
+        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/Employee.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/Employee.odata", employee);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
+
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
+        model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
+
+        String entityEmployee = "{\n" +
+                "\t\"edmType\": \"employeeType\",\n" +
+                "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
+                "\t\"sqlTable\": \"EMPLOYEES\",\n" +
+                "\t\"companyId\": \"COMPANY_ID\",\n" +
+                "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
+                "\t\"_ref_phoneType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"COMPANY_ID\",\"EMPLOYEE_NUMBER\"\n" +
+                "\t\t]\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
+                "}";
+        String phoneEntity = "{\n" +
+                "\t\"edmType\": \"phoneType\",\n" +
+                "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
+                "\t\"sqlTable\": \"PHONES\",\n" +
+                "\t\"number\": \"NUMBER\",\n" +
+                "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
+                "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
+                "\t\"_ref_employeeType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"FK_COMPANY_ID\",\"FK_EMPLOYEE_NUMBER\"\n" +
+                "\t\t]\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"NUMBER\"\n" +
+                "}";
+        String[] actualResult = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
 //    @Test

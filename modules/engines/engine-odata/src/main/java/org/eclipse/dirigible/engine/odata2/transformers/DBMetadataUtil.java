@@ -20,7 +20,6 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
-import org.eclipse.dirigible.repository.api.IRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -220,6 +219,12 @@ public class DBMetadataUtil {
     /**
      * Find schema of a given artifact name.
      * The searchable artifacts are TABLE, VIEW, CALC_VIEW
+     *
+     * @param artifactName
+     *              name of the artifact
+     * @return  of a given artifact name
+     * @throws SQLException SQLException
+     *
      */
     public String getOdataArtifactTypeSchema( String artifactName) throws SQLException {
         return getArtifactSchema(artifactName, new String[]{ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});

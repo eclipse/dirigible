@@ -69,13 +69,13 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
-                + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0,"
-                + " T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0,"
-                + " T0.MESSAGEGUID AS MESSAGEGUID_T0, T1.ID AS ID_T1, T1.NAME AS NAME_T1, T1.VALUE AS VALUE_T1" //
-                + " FROM MPLHEADER AS T0" // the primary entity
-                + " LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON T1.HEADER_ID = T0.ID" + // added by the expand
-                " FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", " +
+                "T0.LOGEND AS \"LOGEND_T0\", T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", " +
+                "T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T1.ID AS \"ID_T1\", " +
+                "T1.NAME AS \"NAME_T1\", T1.VALUE AS \"VALUE_T1\" " +
+                "FROM MPLHEADER AS T0 " +
+                "LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON T1.HEADER_ID = T0.ID " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -89,10 +89,11 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID4_1 AS ID4_1_T0, T0.ID4_2 AS ID4_2_T0, T1.ID5 AS ID5_T1, T1.FK_ID4_1 AS FK_ID4_1_T1, T1.FK_ID4_2 AS FK_ID4_2_T1"
-                + " FROM ENTITY4_TABLE AS T0"
-                + " LEFT JOIN ENTITY5_TABLE AS T1 ON T1.FK_ID4_1 = T0.ID4_1 AND T1.FK_ID4_2 = T0.ID4_2"
-                + " FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\", T1.ID5 AS \"ID5_T1\", " +
+                "T1.FK_ID4_1 AS \"FK_ID4_1_T1\", T1.FK_ID4_2 AS \"FK_ID4_2_T1\" " +
+                "FROM ENTITY4_TABLE AS T0 " +
+                "LEFT JOIN ENTITY5_TABLE AS T1 ON T1.FK_ID4_1 = T0.ID4_1 AND T1.FK_ID4_2 = T0.ID4_2 " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -107,10 +108,11 @@ public class SQLQueryExpandTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
 
-        String expected = "SELECT T0.ID5 AS ID5_T0, T0.FK_ID4_1 AS FK_ID4_1_T0, T0.FK_ID4_2 AS FK_ID4_2_T0, T1.ID4_1 AS ID4_1_T1, T1.ID4_2 AS ID4_2_T1"
-                + " FROM ENTITY5_TABLE AS T0"
-                + " LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2"
-                + " FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", T0.FK_ID4_2 AS \"FK_ID4_2_T0\", " +
+                "T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\" " +
+                "FROM ENTITY5_TABLE AS T0 " +
+                "LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2 " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -125,11 +127,10 @@ public class SQLQueryExpandTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
 
-        String expected = "SELECT T0.ID AS ID_T0, T0.NAME AS NAME_T0, T0.VALUE AS VALUE_T0, "
-                + "T1.MESSAGEGUID AS MESSAGEGUID_T1, T1.LOGSTART AS LOGSTART_T1, T1.LOGEND AS LOGEND_T1, "
-                + "T1.SENDER AS SENDER_T1, T1.RECEIVER AS RECEIVER_T1, " + "T1.STATUS AS STATUS_T1, T1.MESSAGEGUID AS MESSAGEGUID_T1 "
-                + "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 "
-                + "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\", T1.LOGSTART AS \"LOGSTART_T1\", T1.LOGEND AS \"LOGEND_T1\", T1.SENDER AS \"SENDER_T1\", T1.RECEIVER AS \"RECEIVER_T1\", T1.STATUS AS \"STATUS_T1\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\" " +
+                "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
+                "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -144,13 +145,11 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS ID_T0, T0.NAME AS NAME_T0, T0.VALUE AS VALUE_T0, "
-                + "T1.MESSAGEGUID AS MESSAGEGUID_T1, T1.LOGSTART AS LOGSTART_T1, T1.LOGEND AS LOGEND_T1, "
-                + "T1.SENDER AS SENDER_T1, T1.RECEIVER AS RECEIVER_T1, " + "T1.STATUS AS STATUS_T1, T1.MESSAGEGUID AS MESSAGEGUID_T1 "
-                + "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " //
-                + "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID "//
-                + "WHERE T1.MESSAGEGUID = ? "//
-                + "FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\", T1.LOGSTART AS \"LOGSTART_T1\", T1.LOGEND AS \"LOGEND_T1\", T1.SENDER AS \"SENDER_T1\", T1.RECEIVER AS \"RECEIVER_T1\", T1.STATUS AS \"STATUS_T1\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\" " +
+                "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
+                "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID " +
+                "WHERE T1.MESSAGEGUID = ? " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -165,10 +164,11 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID5 AS ID5_T0, T0.FK_ID4_1 AS FK_ID4_1_T0, T0.FK_ID4_2 AS FK_ID4_2_T0, T1.ID4_1 AS ID4_1_T1, T1.ID4_2 AS ID4_2_T1"
-                + " FROM ENTITY5_TABLE AS T0"
-                + " LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2"
-                + " WHERE T1.ID4_1 = ? AND T1.ID4_2 = ? FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", T0.FK_ID4_2 AS \"FK_ID4_2_T0\", T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\" " +
+                "FROM ENTITY5_TABLE AS T0 " +
+                "LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2 " +
+                "WHERE T1.ID4_1 = ? AND T1.ID4_2 = ? " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 

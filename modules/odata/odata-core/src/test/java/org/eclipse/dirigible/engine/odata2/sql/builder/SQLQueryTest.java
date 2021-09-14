@@ -11,18 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static java.util.Collections.EMPTY_MAP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmLiteralKind;
@@ -44,15 +32,18 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity4;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity5;
+import org.eclipse.dirigible.engine.odata2.sql.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.sql.ResultSet;
+import java.util.*;
+
+import static java.util.Collections.EMPTY_MAP;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SQLQueryTest {
 
@@ -132,9 +123,10 @@ public class SQLQueryTest {
         assertTrue(q.getParams().get(1).getValue() instanceof Calendar);
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
         assertEquals(
-                "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, " + "T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, "
-                        + "T0.RECEIVER AS RECEIVER_T0, " + "T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 "
-                        + "FROM MPLHEADER AS T0 WHERE T0.STATUS = ? AND T0.LOGEND < ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
+                "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
+                        "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                        "FROM MPLHEADER AS T0 " +
+                        "WHERE T0.STATUS = ? AND T0.LOGEND < ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
 
@@ -154,14 +146,17 @@ public class SQLQueryTest {
         assertTrue(q.getParams().get(1).getValue() instanceof Calendar);
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
         assertEquals(
-                "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, " + "T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, "
-                        + "T0.RECEIVER AS RECEIVER_T0, " + "T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 "
-                        + "FROM MPLHEADER AS T0 WHERE T0.STATUS = ? AND T0.LOGEND < ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
+                "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
+                        "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
+                        "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                        "FROM MPLHEADER AS T0 " +
+                        "WHERE T0.STATUS = ? AND T0.LOGEND < ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
         q.clearFilter(uriInfo.getTargetEntitySet());
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, "
-                        + "T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, " + "T0.RECEIVER AS RECEIVER_T0, "
-                        + "T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 " + "FROM MPLHEADER AS T0" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
+                        "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
+                        "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                        "FROM MPLHEADER AS T0" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
 
@@ -175,9 +170,10 @@ public class SQLQueryTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, T0.LOGSTART AS LOGSTART_T0,"
-                + " T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0, "
-                + "T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
+                "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                "FROM MPLHEADER AS T0 " +
+                "ORDER BY T0.STATUS, T0.LOGSTART DESC"
                 + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
@@ -190,9 +186,11 @@ public class SQLQueryTest {
         params.put("$top", "10");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
-                        + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, T0.RECEIVER AS RECEIVER_T0"
-                        + ", T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0" + " FROM MPLHEADER AS T0 " + "FETCH FIRST 10 ROWS ONLY",
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
+                        "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
+                        "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                        "FROM MPLHEADER AS T0 " +
+                        "FETCH FIRST 10 ROWS ONLY",
                 q.buildSelect(context));
     }
 
@@ -208,7 +206,9 @@ public class SQLQueryTest {
 
         //The primary key is always selected in addition
         assertEquals(
-                "SELECT T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+                "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                        "FROM MPLHEADER AS T0 " +
+                        "ORDER BY T0.STATUS, T0.LOGSTART DESC"
                         + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
@@ -224,7 +224,7 @@ public class SQLQueryTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //The primary key is always selected in addition
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
                 + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
@@ -240,7 +240,7 @@ public class SQLQueryTest {
 
         //The primary key is always selected in addition
         assertEquals(
-                "SELECT T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+                "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
                         + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
@@ -257,8 +257,9 @@ public class SQLQueryTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //We expect to have FETCH FIRST expression with derby
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
-                + " FETCH FIRST 2 ROWS ONLY", q.buildSelect(context));
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                "FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART " +
+                "DESC FETCH FIRST 2 ROWS ONLY", q.buildSelect(context));
     }
 
     @Test
@@ -274,7 +275,7 @@ public class SQLQueryTest {
         SQLContext context = new SQLContext(DatabaseProduct.POSTGRE_SQL);
 
         //We expect to have FETCH FIRST expression with derby
-        assertEquals("SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0 FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC" + " LIMIT 2",
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC LIMIT 2",
                 q.buildSelect(context));
     }
 
@@ -439,9 +440,10 @@ public class SQLQueryTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID4_1 AS ID4_1_T0, T0.ID4_2 AS ID4_2_T0"
-                + " FROM ENTITY4_TABLE AS T0"
-                + " WHERE T0.ID4_1 = ? AND T0.ID4_2 = ? FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\" " +
+                "FROM ENTITY4_TABLE AS T0 " +
+                "WHERE T0.ID4_1 = ? AND T0.ID4_2 = ? " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
