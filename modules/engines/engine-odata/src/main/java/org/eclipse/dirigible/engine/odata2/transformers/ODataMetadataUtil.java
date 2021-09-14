@@ -100,6 +100,13 @@ public class ODataMetadataUtil {
 
     /**
      * Check if the provided ODataProperty column is the same as the one defined in the DB for the given entity
+     *
+     * @param dbColumnNames
+     *          db artifact column name
+     * @param entityProperties
+     *          list of entity properties
+     * @param entityName
+     *           name of entity
      */
     public static void validateODataPropertyName(List<PersistenceTableColumnModel> dbColumnNames, List<ODataProperty> entityProperties, String entityName) {
         if (!entityProperties.isEmpty()) {
@@ -124,8 +131,9 @@ public class ODataMetadataUtil {
      * The olingo do not allow dot symbol to be part of the property name.
      *
      * @param propName
+     *          entity property name
      * @return replaced string
-     * @link org.apache.olingo.odata2.core.edm.provider.EdmNamedImplProv.getValidatedName
+     * @see  org.apache.olingo.odata2.core.edm.provider.EdmNamedImplProv
      */
     public static String replaceUnSupportedPropOlingoSymbols(String propName) {
         return propName.replace('.', '_');

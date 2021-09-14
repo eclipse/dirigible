@@ -172,7 +172,8 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *
 	 * @param contentPath
 	 *            the data path
-	 * @throws Exception 
+	 * @throws Exception
+	 *             Exception during loading of resources.
 	 */
 	public void registerPredeliveredOData(String contentPath) throws Exception {
 		String data = loadResourceContent(contentPath);
