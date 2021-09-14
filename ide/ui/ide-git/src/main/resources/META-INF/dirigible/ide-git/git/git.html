@@ -309,6 +309,10 @@
 	    <div class="modal-body">
 	        <div class="form-group row">
 				<label class="col-xs-12 col-form-label">Do you want to Delete the selected Git Repository?</label>
+				<div class="small col-xs-12 checkbox">
+					<label><input type="checkbox" value="" ng-model="unpublishOnDelete">Unpublish</label>
+				</div>
+				<label class="col-xs-12 small">If you don't unpublish the repository, it will remain active but you will not be able to see or change it.</label>
 			</div>
 	    </div>
 	    <div class="modal-footer">

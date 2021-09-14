@@ -71,7 +71,12 @@
 		.controller('GitController', ['Layouts', function (Layouts) {
 			
 			this.layoutModel = {
-				views: ['git', 'editor', 'diff', 'console', 'staging', 'history'],
+				views: ['git', 'editor', 'staging', 'history', 'console'],
+				viewSettings: {
+					'git': { isClosable: false },
+					'staging': { isClosable: false },
+					'history': { isClosable: false }
+				},
 				events: {
 					'git.staging.file.diff': function(msg) {
 						var project = msg.data.project;
