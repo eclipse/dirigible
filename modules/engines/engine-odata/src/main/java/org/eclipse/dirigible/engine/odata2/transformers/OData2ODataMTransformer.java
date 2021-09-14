@@ -60,13 +60,13 @@ public class OData2ODataMTransformer {
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\"").append(columnValue).append("\": \"").append(column.getName()).append("\",\n");
+                    buff.append("\t\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\": \"").append(column.getName()).append("\",\n");
                 });
             } else {
                 //in case entity props are defined expose only them
                 entityProperties.forEach(prop -> {
                     List<PersistenceTableColumnModel> dbColumnName = tableMetadata.getColumns().stream().filter(x -> x.getName().equals(prop.getColumn())).collect(Collectors.toList());
-                    buff.append("\t\"").append(prop.getName()).append("\": \"").append(dbColumnName.get(0).getName()).append("\",\n");
+                    buff.append("\t\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(prop.getName())).append("\": \"").append(dbColumnName.get(0).getName()).append("\",\n");
                 });
             }
 
@@ -103,7 +103,7 @@ public class OData2ODataMTransformer {
                 validateAssociationProperties(oDataAssociationDefinition, model);
             }
             List<String> assembleRefNav = assWhereEntityIsFROMRole.stream().map(association -> {
-            	String fromRoleEntity = association.getFrom().getEntity();
+                String fromRoleEntity = association.getFrom().getEntity();
                 String toRoleEntity = association.getTo().getEntity();
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRoleEntity, association.getName());
                 String dependentEntity = toSetEntity.getName();
@@ -160,19 +160,19 @@ public class OData2ODataMTransformer {
     private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model, ODataAssociationDefinition association) throws SQLException {
         ODataEntityDefinition entity = ODataMetadataUtil.getEntity(model, assEndDefinition.getEntity(), association.getName());
         if (!entity.getProperties().isEmpty()) {
-	        ArrayList<String> invalidProps = new ArrayList<>();
-	        assEndDefinition.getProperties().forEach(assProp -> {
-	            List<ODataProperty> consistentProps = entity.getProperties().stream().filter(prop -> prop.getName().equals(assProp)).collect(Collectors.toList());
-	            if (consistentProps.isEmpty()) {
-	                invalidProps.add(assProp);
-	            }
-	        });
-	        if (!invalidProps.isEmpty()) {
-	            throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. OData entity properties definitions for %s do not match the association properties definition.", assEndDefinition.getEntity(), invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
-	        }
-	        if (assEndDefinition.getProperties().size() > entity.getProperties().size()) {
-	            throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. The number of defined OData properties do not match the number of the association properties definition", assEndDefinition.getEntity()));
-	        }
+            ArrayList<String> invalidProps = new ArrayList<>();
+            assEndDefinition.getProperties().forEach(assProp -> {
+                List<ODataProperty> consistentProps = entity.getProperties().stream().filter(prop -> prop.getName().equals(assProp)).collect(Collectors.toList());
+                if (consistentProps.isEmpty()) {
+                    invalidProps.add(assProp);
+                }
+            });
+            if (!invalidProps.isEmpty()) {
+                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. OData entity properties definitions for %s do not match the association properties definition.", assEndDefinition.getEntity(), invalidProps.stream().map(String::valueOf).collect(Collectors.joining(","))));
+            }
+            if (assEndDefinition.getProperties().size() > entity.getProperties().size()) {
+                throw new OData2TransformerException(String.format("There is inconsistency for entity '%s'. The number of defined OData properties do not match the number of the association properties definition", assEndDefinition.getEntity()));
+            }
         }
     }
 
@@ -180,6 +180,8 @@ public class OData2ODataMTransformer {
         return "\t\"_ref_" + dependentEntity + "Type" + "\": {\n\t\t\"joinColumn\" : " + "[\n\t\t\t" +
                 fkElements + "\n\t\t]" + "\n\t}";
     }
+
+
 }
 
 

@@ -394,4 +394,54 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         String[] actualResult = odata2ODataXTransformer.transform(definition);
         assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
+
+    @Test
+    public void testTransformEntityProperty() throws IOException, SQLException {
+        ODataDefinition definition = OData2ODataTransformerTestUtil.loadData_testTransformEntityProperty(dbMetadataUtil);
+
+        String entitySchema = "<Schema Namespace=\"mytest\"\n" +
+                "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
+                "\t<EntityType Name=\"Entity1Type\">\n" +
+                "\t\t<Key>\n" +
+                "\t\t\t<PropertyRef Name=\"entity1Id\" />\n" +
+                "\t\t</Key>\n" +
+                "\t\t<Property Name=\"entity1Id\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"property2\" Nullable=\"true\" Type=\"Edm.String\"/>\n" +
+                "\t\t<Property Name=\"property3\" Nullable=\"true\" Type=\"Edm.String\"/>\n" +
+                "\t\t<Property Name=\"Country.Id\" Nullable=\"true\" Type=\"Edm.String\"/>\n" +
+                "\t\t<NavigationProperty Name=\"Entity2\" Relationship=\"mytest.Entity1Entity2Type\" FromRole=\"Entity1Principal\" ToRole=\"Entity2Dependent\"/>\n" +
+                "\t</EntityType>\n" +
+                "\t<EntityType Name=\"Entity2Type\">\n" +
+                "\t\t<Key>\n" +
+                "\t\t\t<PropertyRef Name=\"entity2Id\" />\n" +
+                "\t\t</Key>\n" +
+                "\t\t<Property Name=\"entity2Id\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"property2\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"property3\" Nullable=\"true\" Type=\"Edm.String\"/>\n" +
+                "\t\t<Property Name=\"property4_5\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"Entity1entity1Id\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t</EntityType>\n" +
+                "\t<EntityType Name=\"Entity3Type\">\n" +
+                "\t\t<Key>\n" +
+                "\t\t\t<PropertyRef Name=\"Entity3_id\" />\n" +
+                "\t\t</Key>\n" +
+                "\t\t<Property Name=\"Entity3_id\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"Name_id\" Nullable=\"false\" Type=\"Edm.String\"/>\n" +
+                "\t</EntityType>\n" +
+                "\t<Association Name=\"Entity1Entity2Type\">\n" +
+                "\t\t<End Type=\"mytest.Entity1Type\" Role=\"Entity1Principal\" Multiplicity=\"1\"/>\n" +
+                "\t\t<End Type=\"mytest.Entity2Type\" Role=\"Entity2Dependent\" Multiplicity=\"*\"/>\n" +
+                " \t</Association>\n" +
+                "</Schema>\n";
+        String entitySet = "\t\t<EntitySet Name=\"Entity1\" EntityType=\"mytest.Entity1Type\"/>\n" +
+                "\t\t<EntitySet Name=\"Entity2\" EntityType=\"mytest.Entity2Type\"/>\n" +
+                "\t\t<EntitySet Name=\"Entity3\" EntityType=\"mytest.Entity3Type\"/>\n" +
+                "\t<AssociationSet Name=\"Entity1Entity2\" Association=\"mytest.Entity1Entity2Type\">\n" +
+                "\t\t\t<End Role=\"Entity1Principal\" EntitySet=\"Entity1\"/>\n" +
+                " \t\t\t<End Role=\"Entity2Dependent\" EntitySet=\"Entity2\"/>\n" +
+                "\t\t\t</AssociationSet>\n";
+
+        String[] actualResult = odata2ODataXTransformer.transform(definition);
+        assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
+    }
 }

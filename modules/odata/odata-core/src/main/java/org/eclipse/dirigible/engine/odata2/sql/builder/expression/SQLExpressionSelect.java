@@ -271,7 +271,7 @@ public final class SQLExpressionSelect implements SQLExpression {
     }
 
     private Object tableColumnForSelect(final EdmStructuralType type, final EdmProperty prop) throws EdmException {
-        return query.getSQLTableColumn(type, prop) + " AS " + query.getSQLTableColumnAlias(type, prop);
+        return query.getSQLTableColumn(type, prop) + " AS \"" + query.getSQLTableColumnAlias(type, prop)+"\"";
     }
 
     private String buildSelectPredicate(final SQLContext context) {
