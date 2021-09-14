@@ -64,6 +64,7 @@
 			
 			<button type="button" id="createWorkspace" ng-show=false data-toggle="modal" data-target="#dialogCreateWorkspace"></button>
 			<button type="button" id="createProject" ng-show=false data-toggle="modal" data-target="#dialogCreateProject"></button>
+			<button type="button" id="deleteProject" ng-show="false" data-toggle="modal" data-target="#dialogDelete"></button>
 			<button type="button" id="linkProject" ng-show=false data-toggle="modal" data-target="#dialogLinkProject"></button>
 			<button type="button" id="generateFromTemplate" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromTemplate"></button>
 			<button type="button" id="generateFromModel" ng-show=false data-toggle="modal" data-target="#dialogGenerateFromModel"></button>
@@ -273,6 +274,26 @@
 	    </div>
 	</div>
 	
+	<!-- Delete -->
+	<div class="dirigible-modal modal fade" id="dialogDelete" tabindex="-1" role="dialog" aria-labelledby="dialogDeleteLabel" aria-hidden="true">
+	    <div class="modal-header">
+	        <h4>Delete project</h4>
+	    </div>
+	    <div class="modal-body">
+	        <div class="form-group row">
+				<label class="col-xs-12 col-form-label">Do you want to delete the selected {{selectedNodeType}}?</label>
+				<div class="small col-xs-12 checkbox">
+					<label><input type="checkbox" value="" ng-model="workspace.unpublishOnDelete">Unpublish</label>
+				</div>
+				<label class="col-xs-12 small">If you don't unpublish the {{selectedNodeType}}, it will remain active but you will not be able to see or change it.</label>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+	      <button class="btn btn-primary" ng-click="workspace.okDelete()" data-toggle="modal" data-target="#dialogDelete">Delete</button>
+	      <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+	    </div>
+	</div>
+
 	<script src="workspace.js"></script>
 </body>
 </html>

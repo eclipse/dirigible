@@ -40,9 +40,10 @@ UriBuilder.prototype.path = function (_pathSegments) {
     this.pathSegments = this.pathSegments.concat(_pathSegments);
     return this;
 };
-UriBuilder.prototype.build = function () {
+UriBuilder.prototype.build = function (isBasePath = true) {
+    if (isBasePath) return '/' + this.pathSegments.join('/');
     return this.pathSegments.join('/');
-};
+}
 
 /**
  * Workspace Service API delegate
@@ -281,6 +282,14 @@ WorkspaceService.prototype.createProject = function (workspace, project, wsTree)
             return response.data;
         });
 };
+WorkspaceService.prototype.deleteProject = function (workspace, project, wsTree) {
+    let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
+    return this.$http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
+        .then(function (response) {
+            wsTree.refresh();
+            return response.data;
+        });
+};
 WorkspaceService.prototype.linkProject = function (workspace, project, path, wsTree) {
     let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('linkProject').build();
     return this.$http.post(url, {
@@ -392,22 +401,15 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             if (data.node.type !== 'project') {
                 data.instance.set_icon(data.node, 'fa fa-folder-open-o');
             }
-            //		else {
-            //			data.instance.set_icon(data.node, 'fa fa-folder-open');
-            //		}
         })
         .on('close_node.jstree', function (evt, data) {
             if (data.node.type !== 'project') {
                 data.instance.set_icon(data.node, 'fa fa-folder-o');
             }
-            //		else {
-            //			data.instance.set_icon(data.node, 'fa fa-folder');
-            //		}
-
         })
-        .on('delete_node.jstree', function (e, data) {
-            this.deleteNode(data.node);
-        }.bind(this))
+        // .on('delete_node.jstree', function (e, data) {
+        //     // this.deleteNode(data.node);
+        // }.bind(this))
         .on('create_node.jstree', function (e, data) {
             data.node.name = data.node.text;
             data.node.icon = getIcon(data.node);
@@ -451,6 +453,10 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
         .on('jstree.workspace.paste', function (e, data) {
             this.paste(data);
         }.bind(this))
+        .on('jstree.workspace.delete', function (e, data) {
+            this.workspaceController.selectedNodeData = data;
+            this.workspaceController.showDeleteDialog(data.type);
+        }.bind(this))
         //	.on('jstree.workspace.file.properties', function (e, data) {
         //	 	var url = data.path + '/' + data.name;
         // 		this.openNodeProperties(url);
@@ -482,30 +488,24 @@ WorkspaceTreeAdapter.prototype.createNode = function (parentNode, type, defaultN
         text: this.workspaceService.newFileName(defaultName, type, filenames)
     };
 
-    let ctxPath = parentNode.original._file.path;
-
     let self = this;
     this.jstree.create_node(parentNode, node_tmpl, "last",
         function (new_node) {
-            let name = node_tmpl.text;
             self.jstree.edit(new_node);
         });
 };
-WorkspaceTreeAdapter.prototype.deleteNode = function (node) {
-    if (node.original && node.original._file) {
-        let path = node.original._file.path;
-        let self = this;
-        return this.workspaceService.remove.apply(this.workspaceService, [path])
-            .then(function () {
-                self.messageHub.announceFileDeleted(node.original._file);
-            })
-            .finally(function () {
-                self.refresh();
-            });
-    }
+WorkspaceTreeAdapter.prototype.deleteNode = function (data) {
+    let path = data.path;
+    let self = this;
+    return this.workspaceService.remove.apply(this.workspaceService, [path])
+        .then(function () {
+            self.messageHub.announceFileDeleted(data);
+        })
+        .finally(function () {
+            self.refresh();
+        });
 };
 WorkspaceTreeAdapter.prototype.renameNode = function (node, oldName, newName) {
-    let fpath;
     if (!node.original._file) {
         let parentNode = this.jstree.get_node(node.parent);
         let fpath = parentNode.original._file.path;
@@ -516,7 +516,6 @@ WorkspaceTreeAdapter.prototype.renameNode = function (node, oldName, newName) {
                 this.messageHub.announceFileCreated(f);
             }.bind(this))
             .catch(function (node, err) {
-                //this.jstree.delete_node(node);
                 this.refresh();
                 throw err;
             }.bind(this, node))
@@ -691,12 +690,12 @@ TemplatesService.prototype.listTemplates = function () {
 };
 
 angular.module('workspace.config', [])
-    .constant('WS_SVC_URL', '../../../../services/v4/ide/workspaces')
-    .constant('WS_SVC_MANAGER_URL', '../../../../services/v4/ide/workspace')
-    .constant('PUBLISH_SVC_URL', '../../../../services/v4/ide/publisher/request')
-    .constant('EXPORT_SVC_URL', '../../../../services/v4/transport/project')
-    .constant('TEMPLATES_SVC_URL', '../../../../services/v4/js/ide-core/services/templates.js')
-    .constant('GENERATION_SVC_URL', '../../../../services/v4/ide/generate');
+    .constant('WS_SVC_URL', '/services/v4/ide/workspaces')
+    .constant('WS_SVC_MANAGER_URL', '/services/v4/ide/workspace')
+    .constant('PUBLISH_SVC_URL', '/services/v4/ide/publisher/request')
+    .constant('EXPORT_SVC_URL', '/services/v4/transport/project')
+    .constant('TEMPLATES_SVC_URL', '/services/v4/js/ide-core/services/templates.js')
+    .constant('GENERATION_SVC_URL', '/services/v4/ide/generate');
 
 angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
     .factory('httpRequestInterceptor', function () {
@@ -870,7 +869,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get the new by template extensions
         let templates = $.ajax({
             type: "GET",
-            url: '../../../../services/v4/js/ide-workspace/services/workspace-menu-new-templates.js',
+            url: '/services/v4/js/ide-workspace/services/workspace-menu-new-templates.js',
             cache: false,
             async: false
         }).responseText;
@@ -878,7 +877,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // get file extensions with available generation templates
         let fileExtensions = $.ajax({
             type: "GET",
-            url: '../../../../services/v4/js/ide-core/services/templates.js/extensions',
+            url: '/services/v4/js/ide-core/services/templates.js/extensions',
             cache: false,
             async: false
         }).responseText;
@@ -902,9 +901,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         if (this.get_node(n).parent === this.get_node(p).id) { return false; }
                     }
                     if (o === 'delete_node') {
-                        if (!confirmRemove(n.text)) {
-                            return false;
-                        }
+                        return false;
                     }
                     return true;
                 }
@@ -1083,6 +1080,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                     ctxmenu.remove = _ctxmenu.remove;
                     ctxmenu.remove.shortcut = 46;
                     ctxmenu.remove.shortcut_label = 'Del';
+                    ctxmenu.remove.action = function (data) {
+                        let tree = $.jstree.reference(data.reference);
+                        let node = tree.get_node(data.reference);
+                        tree.element.trigger('jstree.workspace.delete', [node.original._file]);
+                    }.bind(this)
 
                     if (this.get_type(node) !== "file") {
                         /*Generate*/
@@ -1212,11 +1214,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         return new WorkspaceTreeAdapter($treeConfig, WorkspaceService, publishService, exportService, messageHub);
     }])
     .controller('WorkspaceController', ['workspaceService', 'workspaceTreeAdapter', 'publishService', 'exportService', 'templatesService', 'generationService', 'messageHub', '$scope', function (workspaceService, workspaceTreeAdapter, publishService, exportService, templatesService, generationService, messageHub, $scope) {
-
+        $scope.selectedNodeType = "";
         this.wsTree;
         this.workspaces;
         this.selectedWorkspace;
         this.selectedTemplate;
+        this.unpublishOnDelete = true;
+
+        this.showDeleteDialog = function (type) {
+            this.unpublishOnDelete = true;
+            $scope.selectedNodeType = type;
+            $scope.$apply(); // Because of JQuery and the bootstrap modal
+            $('#deleteProject').click();
+        };
 
         this.refreshTemplates = function () {
             templatesService.listTemplates()
@@ -1295,6 +1305,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         this.okCreateProject = function () {
             if (this.projectName) {
                 workspaceService.createProject(this.selectedWorkspace, this.projectName, this.wsTree);
+            }
+        };
+        this.okDelete = function () {
+            if (this.unpublishOnDelete) {
+                publishService.unpublish(this.selectedNodeData.path)
+                    .then(function () {
+                        return messageHub.announceUnpublish(this.selectedNodeData);
+                    }.bind(this));
+            }
+            if (this.selectedNodeData.type === "project") {
+                workspaceService.deleteProject(this.selectedWorkspace, this.selectedNodeData.name, this.wsTree);
+            } else {
+                workspaceTreeAdapter.deleteNode(this.selectedNodeData);
             }
         };
 
@@ -1435,10 +1458,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         //$.jstree.defaults.unique.case_sensitive = true;
 
     }]);
-
-function confirmRemove(name) {
-    return confirm("Do you really want to delete: " + name);//$confirmDialog.dialog('open');
-}
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
 const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];

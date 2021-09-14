@@ -256,8 +256,10 @@ function LayoutController(viewRegistry, messageHub) {
 			//reconstruct (ignore previously saved state)
 			var views = {};
 			this.viewNames.forEach(function (viewName) {
-				if (this.viewSettings)
+				if (this.viewSettings) {
+					// If this fails with undefined, then there is no view with the name of 'viewName'
 					views[viewName] = Object.assign(this.viewRegistry.view(viewName), this.viewSettings[viewName]);
+				}
 				else views[viewName] = this.viewRegistry.view(viewName)
 			}.bind(this));
 			// Default settings
