@@ -25,14 +25,17 @@
 }
 .dropdown-btn {
     border: none;
-    background: none;
+    background-color: transparent;
+    color:white;
     margin: none;
     outline: none;
     width: 100%;
-    color: white;
     text-align: left;
-    padding: 8px 12px 8px 12px;
+    padding: 12px 16px;
     font-size: 12px;
+}
+.fa_margin{
+    margin: 0 12px 0 0
 }
 
 .dropdown-container .dropdown-item:hover {
