@@ -1166,11 +1166,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         return {
             publish: function (resourcePath) {
                 let url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
-                return $http.post(url, {});
+                return $http.post(url, {}, {
+                    headers: {
+                        "Dirigible-Editor": "Publish"
+                    }
+                });
             },
             unpublish: function (resourcePath) {
                 let url = new UriBuilder().path(PUBLISH_SVC_URL.split('/')).path(resourcePath.split('/')).build();
-                return $http.delete(url, {});
+                return $http.delete(url, {
+                    headers: {
+                        "Dirigible-Editor": "Publish"
+                    }
+                });
             }
         };
     }])
