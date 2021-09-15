@@ -23,6 +23,18 @@
     display: block;
     cursor: pointer;
 }
+.dropdown-btn {
+    border: none;
+    background: none;
+    margin: none;
+    outline: none;
+    width: 100%;
+    color: white;
+    text-align: left;
+    padding: 8px 12px 8px 12px;
+    font-size: 12px;
+}
+
 .dropdown-container .dropdown-item:hover {
     background-color: #676767;
 }
