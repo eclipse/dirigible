@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.api.script;
 
 import static java.text.MessageFormat.format;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -40,8 +41,8 @@ public class ScriptEngineExecutorFactory {
 		for (IScriptEngineExecutor next : SCRIPT_ENGINE_EXECUTORS) {
 			if (next.getType().equals(type)) {
 				try {
-					return next.getClass().newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
+					return next.getClass().getDeclaredConstructor().newInstance();
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					logger.error(e.getMessage(), e);
 				}
 			}
