@@ -511,6 +511,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 						}
 					}
 					ODataResponse response = OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
+					this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry);
 					return response;
 				} catch (Exception e) {
 					LOG.error("Unable to serve request", e);
