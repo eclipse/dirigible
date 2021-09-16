@@ -116,6 +116,10 @@ html, body {
 .btn-big {
     padding: 8px 12px;
 }
+.btn-marginLeft {
+    padding: 1px 2px;
+    margin-left: 10px !important;
+}
 label {
     margin-top: 14px;
     margin-bottom: 10px;
