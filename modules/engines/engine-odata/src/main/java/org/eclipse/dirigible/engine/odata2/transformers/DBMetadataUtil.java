@@ -38,7 +38,7 @@ public class DBMetadataUtil {
 
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
