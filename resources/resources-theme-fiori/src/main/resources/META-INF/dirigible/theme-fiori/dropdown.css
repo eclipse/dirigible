@@ -25,13 +25,16 @@
 }
 .dropdown-btn {
     border: none;
-    background: none;
+    background-color: transparent;
     margin: none;
     outline: none;
     width: 100%;
     text-align: left;
-    padding: 8px 12px 8px 12px;
+    padding: 12px 14px;
     font-size: 12px;
+}
+.fa_margin{
+    margin: 0px 8px 0px 0px;
 }
 .dropdown-container .dropdown-item:hover {
     background-color: #f2f2f2;
