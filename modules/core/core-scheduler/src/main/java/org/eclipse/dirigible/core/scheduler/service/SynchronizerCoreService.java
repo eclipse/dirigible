@@ -14,6 +14,7 @@ package org.eclipse.dirigible.core.scheduler.service;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
@@ -35,6 +36,8 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	private PersistenceManager<SynchronizerStateDefinition> synchronizerStatePersistenceManager = new PersistenceManager<SynchronizerStateDefinition>();
 	
 	private PersistenceManager<SynchronizerStateLogDefinition> synchronizerStateLogPersistenceManager = new PersistenceManager<SynchronizerStateLogDefinition>();
+	
+	private static AtomicBoolean SYNCHRONIZATION_ENABLED = new AtomicBoolean(true);
 
 	// State
 
@@ -251,6 +254,36 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	@Override
 	public boolean existsSynchronizerState(String name) throws SchedulerException {
 		return getSynchronizerState(name) != null;
+	}
+
+	@Override
+	public void initializeSynchronizersStates() throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE").build();
+				synchronizerStatePersistenceManager.execute(connection, sql);
+				sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE_LOG").build();
+				synchronizerStateLogPersistenceManager.execute(connection, sql);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	@Override
+	public void disableSynchronization() throws SchedulerException {
+		SYNCHRONIZATION_ENABLED.set(false);
+	}
+
+	@Override
+	public void enableSynchronization() throws SchedulerException {
+		SYNCHRONIZATION_ENABLED.set(true);
 	}
 
 }

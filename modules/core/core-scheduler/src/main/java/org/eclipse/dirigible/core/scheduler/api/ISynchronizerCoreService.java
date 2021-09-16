@@ -137,5 +137,26 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 * @throws SchedulerException the scheduler exception
 	 */
 	public void deleteOldSynchronizerStateLogs() throws SchedulerException;
+	
+	/**
+	 * Delete all the State Logs data for synchronizers
+	 * 
+	 * @throws SchedulerException
+	 */
+	public void initializeSynchronizersStates() throws SchedulerException;
+	
+	/**
+	 * Disable synchronization
+	 * 
+	 * @throws SchedulerException
+	 */
+	public void disableSynchronization() throws SchedulerException;
+	
+	/**
+	 * Enable synchronization
+	 * 
+	 * @throws SchedulerException
+	 */
+	public void enableSynchronization() throws SchedulerException;
 
 }

@@ -22,7 +22,9 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -38,6 +40,8 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	private static final Logger logger = LoggerFactory.getLogger(PublisherSynchronizer.class);
 
 	private PublisherCoreService publishCoreService = new PublisherCoreService();
+	
+	private SynchronizerCoreService synchronizerCoreService = new SynchronizerCoreService();
 
 	private Map<String, String> resourceLocations = new HashMap<String, String>();
 	
@@ -165,18 +169,34 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 *             the synchronization exception
 	 */
 	private void publishResources() throws SynchronizationException {
-		for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
-
-			// pre publish handlers
-
+		if (!resourceLocations.isEmpty()) {
 			try {
-				// publish
-				publishResource(entry);
-			} catch (SynchronizationException e) {
-				logger.error("Failed to publish: " + entry.getKey(), e);
+				synchronizerCoreService.disableSynchronization();
+				
+				synchronizerCoreService.initializeSynchronizersStates();
+				
+				for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
+		
+					// pre publish handlers
+		
+					try {
+						// publish
+						publishResource(entry);
+					} catch (SynchronizationException e) {
+						logger.error("Failed to publish: " + entry.getKey(), e);
+					}
+		
+					// post publish handlers
+				}
+			} catch (SchedulerException e) {
+				throw new SynchronizationException(e);
+			} finally {
+				try {
+					synchronizerCoreService.enableSynchronization();
+				} catch (SchedulerException e) {
+					throw new SynchronizationException(e);
+				}
 			}
-
-			// post publish handlers
 		}
 	}
 
@@ -229,18 +249,34 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 	 *             the synchronization exception
 	 */
 	private void unpublishResources() throws SynchronizationException {
-		for (String entry : unpublishLocations) {
-
-			// pre unpublish handlers
-
+		if (!unpublishLocations.isEmpty()) {
 			try {
-				// unpublish
-				unpublishResource(entry);
-			} catch (SynchronizationException e) {
-				logger.error("Failed to unpublish: " + entry, e);
+				synchronizerCoreService.disableSynchronization();
+				
+				synchronizerCoreService.initializeSynchronizersStates();
+				
+				for (String entry : unpublishLocations) {
+		
+					// TODO: pre unpublish handlers
+		
+					try {
+						// unpublish
+						unpublishResource(entry);
+					} catch (SynchronizationException e) {
+						logger.error("Failed to unpublish: " + entry, e);
+					}
+		
+					// TODO: post unpublish handlers
+				}
+			} catch (SchedulerException e) {
+				throw new SynchronizationException(e);
+			} finally {
+				try {
+					synchronizerCoreService.enableSynchronization();
+				} catch (SchedulerException e) {
+					throw new SynchronizationException(e);
+				}
 			}
-
-			// post unpublish handlers
 		}
 	}
 	
