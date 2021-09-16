@@ -86,6 +86,14 @@ public interface IPublisherCoreService extends ICoreService {
 	 *             the publisher exception
 	 */
 	public void removePublishRequest(long id) throws PublisherException;
+	
+	/**
+	 * Removes all the publish request.
+	 *
+	 * @throws PublisherException
+	 *             the publisher exception
+	 */
+	public void removeAllPublishRequests() throws PublisherException;
 
 	/**
 	 * Gets the publish requests.
