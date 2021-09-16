@@ -12,7 +12,7 @@
 /**
  * Utility URL builder
  */
-var UriBuilder = function UriBuilder() {
+let UriBuilder = function UriBuilder() {
 	this.pathSegments = [];
 	return this;
 }
@@ -33,26 +33,27 @@ UriBuilder.prototype.path = function (_pathSegments) {
 	this.pathSegments = this.pathSegments.concat(_pathSegments);
 	return this;
 }
-UriBuilder.prototype.build = function () {
+UriBuilder.prototype.build = function (isBasePath = true) {
+	if (isBasePath) return '/' + this.pathSegments.join('/');
 	return this.pathSegments.join('/');
 }
 
 angular.module('git.config', [])
-	.constant('GIT_SVC_URL', '../../../../../services/v4/ide/git');
+	.constant('GIT_SVC_URL', '/services/v4/ide/git');
 
 
 /**
  * Git Service API delegate
  */
-var GitService = function ($http, $messageHub, gitServiceUrl) {
+let GitService = function ($http, $messageHub, gitServiceUrl) {
 	this.gitServiceUrl = gitServiceUrl;
 	this.$http = $http;
 	this.$messageHub = $messageHub;
 }
 
 GitService.prototype.commit = function (workspace, project, commitMessage, username, password, email, branch) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("commit").build();
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("commit").build();
 	return this.$http.post(url, {
 		"commitMessage": commitMessage,
 		"username": username,
@@ -70,8 +71,8 @@ GitService.prototype.commit = function (workspace, project, commitMessage, usern
 		});
 }
 GitService.prototype.push = function (workspace, project, commitMessage, username, password, email, branch) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("push").build();
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("push").build();
 
 	return this.$http.post(url, {
 		"commitMessage": commitMessage,
@@ -89,8 +90,8 @@ GitService.prototype.push = function (workspace, project, commitMessage, usernam
 	});
 }
 GitService.prototype.getUnstagedFiles = function (workspace, project) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("unstaged").build();
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("unstaged").build();
 
 	return this.$http.get(url, {})
 		.then(function (response) {
@@ -101,8 +102,8 @@ GitService.prototype.getUnstagedFiles = function (workspace, project) {
 		});
 }
 GitService.prototype.getStagedFiles = function (workspace, project) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("staged").build();
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("staged").build();
 
 	return this.$http.get(url, {})
 		.then(function (response) {
@@ -113,9 +114,9 @@ GitService.prototype.getStagedFiles = function (workspace, project) {
 		});
 }
 GitService.prototype.addFiles = function (workspace, project, files) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("add").build();
-	var list = files.join(",");
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("add").build();
+	let list = files.join(",");
 
 	return this.$http.post(url, JSON.stringify(list))
 		.then(function (response) {
@@ -126,9 +127,9 @@ GitService.prototype.addFiles = function (workspace, project, files) {
 		});
 }
 GitService.prototype.revertFiles = function (workspace, project, files) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("revert").build();
-	var list = files.join(",");
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("revert").build();
+	let list = files.join(",");
 
 	return this.$http.post(url, JSON.stringify(list))
 		.then(function (response) {
@@ -139,9 +140,9 @@ GitService.prototype.revertFiles = function (workspace, project, files) {
 		});
 }
 GitService.prototype.removeFiles = function (workspace, project, files) {
-	var messageHub = this.$messageHub;
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("remove").build();
-	var list = files.join(",");
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("remove").build();
+	let list = files.join(",");
 
 	return this.$http.post(url, JSON.stringify(list))
 		.then(function (response) {
@@ -152,9 +153,9 @@ GitService.prototype.removeFiles = function (workspace, project, files) {
 		});
 }
 
-var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+let stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 	.factory('httpRequestInterceptor', function () {
-		var csrfToken = null;
+		let csrfToken = null;
 		return {
 			request: function (config) {
 				config.headers['X-Requested-With'] = 'Fetch';
@@ -162,7 +163,7 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 				return config;
 			},
 			response: function (response) {
-				var token = response.headers()['x-csrf-token'];
+				let token = response.headers()['x-csrf-token'];
 				if (token) {
 					csrfToken = token;
 				}
@@ -184,14 +185,14 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		$httpProvider.interceptors.push('httpRequestInterceptor');
 	}])
 	.factory('$messageHub', [function () {
-		var messageHub = new FramesMessageHub();
-		var message = function (evtName, data) {
+		let messageHub = new FramesMessageHub();
+		let message = function (evtName, data) {
 			messageHub.post({ data: data }, 'git.' + evtName);
 		};
-		var announceFileDiff = function (fileDescriptor) {
+		let announceFileDiff = function (fileDescriptor) {
 			this.message('staging.file.diff', fileDescriptor);
 		};
-		var announceAlert = function (title, message, type) {
+		let announceAlert = function (title, message, type) {
 			messageHub.post({
 				data: {
 					title: title,
@@ -200,16 +201,16 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 				}
 			}, 'ide.alert');
 		};
-		var announceAlertSuccess = function (title, message) {
+		let announceAlertSuccess = function (title, message) {
 			announceAlert(title, message, "success");
 		};
-		var announceAlertInfo = function (title, message) {
+		let announceAlertInfo = function (title, message) {
 			announceAlert(title, message, "info");
 		};
-		var announceAlertWarning = function (title, message) {
+		let announceAlertWarning = function (title, message) {
 			announceAlert(title, message, "warning");
 		};
-		var announceAlertError = function (title, message) {
+		let announceAlertError = function (title, message) {
 			announceAlert(title, message, "error");
 		};
 		return {
@@ -229,133 +230,21 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		return new GitService($http, $messageHub, GIT_SVC_URL);
 	}])
 	.controller('StagingContoller', ['gitService', '$messageHub', '$scope', function (gitService, $messageHub, $scope) {
-
-		this.gitService = gitService;
-		this.scope = $scope;
 		let revertWarnAccepted = false;
 
-		this.okCommitAndPushClicked = function () {
-			if (this.commitMessage === undefined || this.commitMessage === "") {
-				this.commitMessage = null;
-			}
-			gitService.commit(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
-				.then(function () {
-					gitService.push(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
-						.then(function () {
-							this.commitMessage = "";
-							this.refresh();
-						}.bind(this));
-				}.bind(this));
+		$scope.unstagedFiles = [];
+		$scope.selectedUnstagedFiles = [];
+		$scope.stagedFiles = [];
+		$scope.selectedStagedFiles = [];
+		$scope.commitMessage;
+		$scope.selectedProject;
+		$scope.selectedWorkspace;
+		$scope.username;
+		$scope.password;
+		$scope.email;
+		$scope.branch;
 
-		};
-
-		this.okCommitClicked = function () {
-			if (this.commitMessage === undefined || this.commitMessage === "") {
-				this.commitMessage = null;
-			}
-			gitService.commit(this.selectedWorkspace, this.selectedProject, this.commitMessage, this.username, this.password, this.email, this.branch)
-				.then(function () {
-					this.commitMessage = "";
-					this.refresh();
-				}.bind(this));
-		};
-
-		this.refresh = function () {
-			if (!this.selectedWorkspace || !this.selectedProject) {
-				this.unstagedFiles = [];
-				this.stagedFiles = [];
-				this.scope.$apply();
-				return;
-			}
-			gitService.getUnstagedFiles(this.selectedWorkspace, this.selectedProject)
-				.then(function (files) {
-					this.unstagedFiles = files;
-					this.unstagedFiles.map(e => { e.label = this.typeIcon(e.type) + ' ' + e.path });
-					try {
-						this.scope.$apply();
-					} catch (e) {
-						//
-					}
-				}.bind(this));
-			gitService.getStagedFiles(this.selectedWorkspace, this.selectedProject)
-				.then(function (files) {
-					this.stagedFiles = files;
-					this.stagedFiles.map(e => { e.label = this.typeIcon(e.type) + ' ' + e.path });
-					try {
-						this.scope.$apply();
-					} catch (e) {
-						//
-					}
-				}.bind(this));
-		};
-
-		this.unstagedFiles = [];
-
-		this.selectedUnstagedFiles = [];
-
-		this.stagedFiles = [];
-
-		this.selectedStagedFiles = [];
-
-
-		this.downClicked = function () {
-			gitService.addFiles(this.selectedWorkspace, this.selectedProject, this.selectedUnstagedFiles)
-				.then(function () {
-					this.refresh();
-				}.bind(this));
-		}
-
-		this.upClicked = function () {
-			gitService.removeFiles(this.selectedWorkspace, this.selectedProject, this.selectedStagedFiles)
-				.then(function () {
-					this.refresh();
-				}.bind(this));
-		}
-
-		this.diffClicked = function (file) {
-			if (file) {
-				$messageHub.announceFileDiff({
-					project: this.selectedWorkspace + "/" + this.selectedProject,
-					file: file.path
-				});
-			} else if (this.selectedUnstagedFiles && this.selectedUnstagedFiles.length > 0) {
-				this.selectedUnstagedFiles.forEach(function (file) {
-					$messageHub.announceFileDiff({
-						project: this.selectedWorkspace + "/" + this.selectedProject,
-						file: file
-					});
-				}.bind(this));
-			}
-		}
-
-		this.confirmRevert = function () {
-			revertWarnAccepted = true;
-			this.revertClicked();
-		}
-
-		this.revertClicked = function () {
-			if (revertWarnAccepted) {
-				gitService.revertFiles(this.selectedWorkspace, this.selectedProject, this.selectedUnstagedFiles)
-					.then(function () {
-						this.refresh();
-					}.bind(this));
-			}
-			else {
-				$('#revertModal').modal('show');
-			}
-		}
-
-		$messageHub.on('git.repository.selected', function (msg) {
-			if (msg.data.isGitProject) {
-				this.selectedWorkspace = msg.data.workspace;
-				this.selectedProject = msg.data.project;
-			} else {
-				this.selectedProject = null;
-			}
-			this.refresh();
-		}.bind(this));
-
-		types = {};
+		let types = [];
 		types[0] = "&#xf071;"; //"conflicting";
 		types[1] = "&#xf055;"; //"plus-circle";//"added"; // staged
 		types[2] = "&#xf058;"; //"check-circle"//"changed"; // staged
@@ -363,8 +252,113 @@ var stagingApp = angular.module('stagingApp', ['git.config', 'ngAnimate', 'ngSan
 		types[4] = "&#xf05d;"; //"check-circle-o"//"modified"; // unstaged
 		types[5] = "&#xf057;"; //"times-circle"//"removed"; // staged
 		types[6] = "&#xf10c;"; //"question-circle-o"//"untracked"; // unstaged
-		this.typeIcon = function (i) {
+
+		function typeIcon(i) {
 			return types[i];
 		}
+
+		$scope.okCommitAndPushClicked = function () {
+			if ($scope.commitMessage === undefined || $scope.commitMessage === "") {
+				$scope.commitMessage = null;
+			}
+			gitService.commit($scope.selectedWorkspace, $scope.selectedProject, $scope.commitMessage, $scope.username, $scope.password, $scope.email, $scope.branch)
+				.then(function () {
+					gitService.push($scope.selectedWorkspace, $scope.selectedProject, $scope.commitMessage, $scope.username, $scope.password, $scope.email, $scope.branch)
+						.then(function () {
+							$scope.commitMessage = "";
+							$messageHub.message("diff.view.clear");
+							$scope.refresh();
+						}.bind(this));
+				}.bind(this));
+
+		};
+
+		$scope.okCommitClicked = function () {
+			if ($scope.commitMessage === undefined || $scope.commitMessage === "") {
+				$scope.commitMessage = null;
+			}
+			gitService.commit($scope.selectedWorkspace, $scope.selectedProject, $scope.commitMessage, $scope.username, $scope.password, $scope.email, $scope.branch)
+				.then(function () {
+					$scope.commitMessage = "";
+					$messageHub.message("diff.view.clear");
+					$scope.refresh();
+				}.bind(this));
+		};
+
+		$scope.refresh = function () {
+			if (!$scope.selectedWorkspace || !$scope.selectedProject) {
+				$scope.unstagedFiles = [];
+				$scope.stagedFiles = [];
+				return;
+			}
+			gitService.getUnstagedFiles($scope.selectedWorkspace, $scope.selectedProject)
+				.then(function (files) {
+					$scope.unstagedFiles = files;
+					$scope.unstagedFiles.map(e => { e.label = typeIcon(e.type) + ' ' + e.path });
+				}.bind(this));
+			gitService.getStagedFiles($scope.selectedWorkspace, $scope.selectedProject)
+				.then(function (files) {
+					$scope.stagedFiles = files;
+					$scope.stagedFiles.map(e => { e.label = typeIcon(e.type) + ' ' + e.path });
+				}.bind(this));
+		};
+
+		$scope.downClicked = function () {
+			if ($scope.selectedUnstagedFiles.length > 0) {
+				gitService.addFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedUnstagedFiles)
+					.then(function () {
+						$scope.refresh();
+					}.bind(this));
+			}
+		};
+
+		$scope.upClicked = function () {
+			if ($scope.selectedStagedFiles.length > 0) {
+				gitService.removeFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedStagedFiles)
+					.then(function () {
+						$scope.refresh();
+					}.bind(this));
+			}
+		};
+
+		$scope.diffClicked = function (file) {
+			if (!file) {
+				if ($scope.selectedUnstagedFiles.length > 0) file = $scope.selectedUnstagedFiles[0];
+				else return;
+			}
+			$messageHub.announceFileDiff({
+				project: $scope.selectedWorkspace + "/" + $scope.selectedProject,
+				file: file.path
+			});
+		};
+
+		$scope.confirmRevert = function () {
+			revertWarnAccepted = true;
+			$scope.revertClicked();
+		};
+
+		$scope.revertClicked = function () {
+			if ($scope.selectedUnstagedFiles.length > 0) {
+				if (revertWarnAccepted) {
+					gitService.revertFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedUnstagedFiles)
+						.then(function () {
+							$scope.refresh();
+						}.bind(this));
+				}
+				else {
+					$('#revertModal').modal('show');
+				}
+			}
+		};
+
+		$messageHub.on('git.repository.selected', function (msg) {
+			if (msg.data.isGitProject) {
+				$scope.selectedWorkspace = msg.data.workspace;
+				$scope.selectedProject = msg.data.project;
+			} else {
+				$scope.selectedProject = null;
+			}
+			$scope.refresh();
+		}.bind(this));
 
 	}]);
