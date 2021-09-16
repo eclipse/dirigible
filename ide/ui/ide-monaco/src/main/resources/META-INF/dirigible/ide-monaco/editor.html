@@ -20,11 +20,11 @@
             right: 0;
         }
 		</style>
-	    <script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+	    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
     </head>
     <body id="monaco-browser" spellcheck="false">
     
-    	<script src="../../../../services/v4/js/theme/resources.js/monaco.js"></script>
+    	<script src="/services/v4/js/theme/resources.js/monaco.js"></script>
         
 		<div  id="embeddedEditor"></div>
 		
@@ -49,7 +49,7 @@
 
 			function FileIO(){
 				var __URL = URL;
-				this.workspaceApiUrl = '../../../../services/v4/ide/workspaces';
+				this.workspaceApiUrl = '/services/v4/ide/workspaces';
 				this.resolveFileName = function() {
 					var url = new __URL(window.location.href);
 					var fileName = url.searchParams.get('file');
@@ -446,7 +446,7 @@
 
 			function loadModuleSuggestions(modulesSuggestions) {
 				var xhrModules = new XMLHttpRequest();
-				xhrModules.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/modules.js');
+				xhrModules.open('GET', '/services/v4/js/ide-monaco-extensions/api/modules.js');
 				xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
 				xhrModules.onload = function(xhrModules) {
 					var modules = JSON.parse(xhrModules.target.responseText);
@@ -465,7 +465,7 @@
 				}
 
 				var xhr = new XMLHttpRequest();
-				xhr.open('GET', '../../../../services/v4/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
+				xhr.open('GET', '/services/v4/js/ide-monaco-extensions/api/suggestions.js?moduleName=' + moduleName);
 				xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 				xhr.onload = function(xhr) {
 					if (xhr.target.status === 200) {
