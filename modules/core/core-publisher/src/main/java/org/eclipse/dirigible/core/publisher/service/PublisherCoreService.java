@@ -173,6 +173,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 			try {
 				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS").toString();
+				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
 				publishRequestPersistenceManager.execute(connection, sql);
 			} finally {
 				if (connection != null) {

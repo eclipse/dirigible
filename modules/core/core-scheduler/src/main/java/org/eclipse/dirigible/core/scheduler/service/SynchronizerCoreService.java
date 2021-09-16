@@ -263,7 +263,9 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 			try {
 				connection = dataSource.getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE").build();
+				synchronizerStatePersistenceManager.tableCheck(connection, SynchronizerStateDefinition.class);
 				synchronizerStatePersistenceManager.execute(connection, sql);
+				synchronizerStatePersistenceManager.tableCheck(connection, SynchronizerStateLogDefinition.class);
 				sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE_LOG").build();
 				synchronizerStateLogPersistenceManager.execute(connection, sql);
 			} finally {
