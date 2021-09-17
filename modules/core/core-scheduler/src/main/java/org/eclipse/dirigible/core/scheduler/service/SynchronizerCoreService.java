@@ -287,5 +287,9 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	public void enableSynchronization() throws SchedulerException {
 		SYNCHRONIZATION_ENABLED.set(true);
 	}
+	
+	public static boolean isSynchronizationEnabled() {
+		return SYNCHRONIZATION_ENABLED.get();
+	}
 
 }

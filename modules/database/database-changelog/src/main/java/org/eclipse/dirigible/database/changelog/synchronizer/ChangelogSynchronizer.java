@@ -82,21 +82,25 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Changelogs...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					updateChangelogs();
-					int immutableSchemaCount = CHANGELOG_PREDELIVERED.size();
-					
-					int mutableSchemaCount = DATA_STRUCTURE_CHANGELOG_MODELS.size();
-					
-					cleanup(); // TODO drop tables and views for non-existing models
-					clearCache();
-					
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Changelog: {1}], "
-							+ "Mutable: [Changelog: {9}]", 
-							immutableSchemaCount, mutableSchemaCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						updateChangelogs();
+						int immutableSchemaCount = CHANGELOG_PREDELIVERED.size();
+						
+						int mutableSchemaCount = DATA_STRUCTURE_CHANGELOG_MODELS.size();
+						
+						cleanup(); // TODO drop tables and views for non-existing models
+						clearCache();
+						
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Changelog: {1}], "
+								+ "Mutable: [Changelog: {9}]", 
+								immutableSchemaCount, mutableSchemaCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Changelogs failed.", e);
 					try {

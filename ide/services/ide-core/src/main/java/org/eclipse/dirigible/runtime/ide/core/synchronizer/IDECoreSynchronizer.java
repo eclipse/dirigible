@@ -35,18 +35,22 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 	@Override
 	public void synchronize() {
 		try {
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			executor.submit(() -> {
-				HealthStatus.getInstance().getJobs().setStatus(IDECoreSynchronizerJobDefinitionProvider.IDE_CORE_SYNCHRONIZER_JOB, JobStatus.Succeeded);
-				String code = new StringBuilder()
-						.append("var moduleInfoCache = require(\"ide-monaco-extensions/api/utils/moduleInfoCache\");\n")
-						.append("moduleInfoCache.refresh();").toString();
-				try {
-					engine.executeServiceCode(code, new HashMap<Object, Object>());
-				} catch (ScriptingException e) {
-					logger.error(e.getMessage(), e);
-				}
-			});
+			if (isSynchronizationEnabled()) {
+				ExecutorService executor = Executors.newSingleThreadExecutor();
+				executor.submit(() -> {
+					HealthStatus.getInstance().getJobs().setStatus(IDECoreSynchronizerJobDefinitionProvider.IDE_CORE_SYNCHRONIZER_JOB, JobStatus.Succeeded);
+					String code = new StringBuilder()
+							.append("var moduleInfoCache = require(\"ide-monaco-extensions/api/utils/moduleInfoCache\");\n")
+							.append("moduleInfoCache.refresh();").toString();
+					try {
+						engine.executeServiceCode(code, new HashMap<Object, Object>());
+					} catch (ScriptingException e) {
+						logger.error(e.getMessage(), e);
+					}
+				});
+			} else {
+				logger.debug("Synchronization has been disabled");
+			}
 		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 		}

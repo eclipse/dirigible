@@ -77,19 +77,23 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing BPMN files...");
 				try {
-					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-						startSynchronization(SYNCHRONIZER_NAME);
-						clearCache();
-						synchronizePredelivered();
-						synchronizeRegistry();
-						updateProcessEngine();
-						int immutableCount = BPMN_PREDELIVERED.size();
-						int mutableCount = BPMN_SYNCHRONIZED.size();
-						cleanup();
-						clearCache();
-						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					if (isSynchronizationEnabled()) {
+						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+							startSynchronization(SYNCHRONIZER_NAME);
+							clearCache();
+							synchronizePredelivered();
+							synchronizeRegistry();
+							updateProcessEngine();
+							int immutableCount = BPMN_PREDELIVERED.size();
+							int mutableCount = BPMN_SYNCHRONIZED.size();
+							cleanup();
+							clearCache();
+							successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+						} else {
+							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						}
 					} else {
-						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						logger.debug("Synchronization has been disabled");
 					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for BPMN files failed.", e);

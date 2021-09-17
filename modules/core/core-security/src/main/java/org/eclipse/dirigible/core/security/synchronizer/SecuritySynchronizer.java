@@ -79,18 +79,22 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Roles and Access artifacts...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					int immutableRolesCount = ROLES_PREDELIVERED.size();
-					int immutableAccessCount = ACCESS_PREDELIVERED.size();
-					int mutableRolesCount = ROLES_SYNCHRONIZED.size();
-					int mutableAccessCount = ACCESS_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Roles: {0}, Immutable Accesses: {1}, Mutable Roles: {2}, Mutable Accesses: {3}", 
-							immutableRolesCount, immutableAccessCount, mutableRolesCount, mutableAccessCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						int immutableRolesCount = ROLES_PREDELIVERED.size();
+						int immutableAccessCount = ACCESS_PREDELIVERED.size();
+						int mutableRolesCount = ROLES_SYNCHRONIZED.size();
+						int mutableAccessCount = ACCESS_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Roles: {0}, Immutable Accesses: {1}, Mutable Roles: {2}, Mutable Accesses: {3}", 
+								immutableRolesCount, immutableAccessCount, mutableRolesCount, mutableAccessCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Roles and Access artifacts failed.", e);
 					try {

@@ -230,5 +230,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 				&& synchronizerStateDefinition.getFirstTimeTriggered() != 0 && synchronizerStateDefinition.getFirstTimeFinished() != 0
 				&& synchronizerStateDefinition.getState() != ISynchronizerCoreService.STATE_FAILED;
 	}
+	
+	@Override
+	public boolean isSynchronizationEnabled() {
+		return SynchronizerCoreService.isSynchronizationEnabled();
+	}
 
 }
