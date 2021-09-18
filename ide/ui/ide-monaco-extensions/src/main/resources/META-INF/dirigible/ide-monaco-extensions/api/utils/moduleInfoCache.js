@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var repository = require("platform/v4/repository");
-var config = require("core/v4/configurations");
-var modulesParser = require("ide-monaco-extensions/api/utils/modulesParser");
-var suggestionsParser = require("ide-monaco-extensions/api/utils/suggestionsParser");
+let repository = require("platform/v4/repository");
+let config = require("core/v4/configurations");
+let modulesParser = require("ide-monaco-extensions/api/utils/modulesParser");
+let suggestionsParser = require("ide-monaco-extensions/api/utils/suggestionsParser");
 
 const PATH_REGISTRY_PUBLIC = "/registry/public";
 const MODULE_INFO_PREFIX = "MODULE_INFO_";
@@ -28,7 +28,7 @@ const PRIORITY_MODULES = [
     "security/v4/user"
 ];
 
-exports.get = function(moduleName) {
+exports.get = function (moduleName) {
     let moduleInfo = loadModuleInfo(moduleName);
     try {
         let resource = repository.getResource(`${PATH_REGISTRY_PUBLIC}/${moduleName}.js`);
@@ -48,7 +48,7 @@ exports.get = function(moduleName) {
     return moduleInfo;
 };
 
-exports.refresh = function() {
+exports.refresh = function () {
     modulesParser.getModules()
         .sort((a, b) => {
             let isPriorityModuleA = PRIORITY_MODULES.includes(a.name);
@@ -67,7 +67,7 @@ exports.refresh = function() {
     console.log("Refreshing ModuleInfo Finished");
 };
 
-exports.clear = function() {
+exports.clear = function () {
     let keys = config.getKeys().filter(e => e.startsWith(MODULE_INFO_PREFIX));
     keys.forEach(key => config.remove(key));
 };

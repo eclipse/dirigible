@@ -1,12 +1,12 @@
 <div class="statusbar row">
-	<div class="col-md-5 statusbar-message pull-left" ng-class="visible: message, invisible: !message">
+	<div class="col-md-5 statusbar-message pull-left" ng-class="{true:'visible', false:'invisible'}[message]">
 		<i class="fa fa-info" ng-show="message"></i>
-		 {{message}} 
+		{{message}}
 		<i class="btn fa fa-eraser" ng-click="cleanStatusMessages()" ng-show="message"></i>
 	</div>
-	<div class="col-md-5 statusbar-error pull-left" ng-class="visible: error, invisible: !error">
+	<div class="col-md-5 statusbar-error pull-left" ng-class="{true:'visible', false:'invisible'}[error]">
 		<i class="fa fa-exclamation" ng-show="error"></i>
-		 {{error}} 
+		{{error}}
 		<i class="btn fa fa-eraser" ng-click="cleanErrorMessages()" ng-show="error"></i>
 	</div>
 	<div class="col-md-2 pull-right">

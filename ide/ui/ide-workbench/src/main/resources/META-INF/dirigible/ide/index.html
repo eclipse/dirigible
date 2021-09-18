@@ -13,114 +13,109 @@
 
 <head>
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link brandicon />
 
-	<title brandtitle perspective-name="Workspace"></title>
+    <title brandtitle perspective-name="Workspace"></title>
 
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-	<!-- GoldenLayout with Theme Support -->
-	<link type="text/css" rel="stylesheet"
-		href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-	<link type="text/css" rel="stylesheet"
-		href="../../../../services/v4/js/theme/resources.js/goldenlayout-theme.css" />
+    <!-- GoldenLayout with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
 
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="../../../../services/v4/js/theme/resources.js/ide.css" />
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-	<!-- FontAwesome icon set -->
-	<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- FontAwesome icon set -->
+    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-	<link brandicon />
+    <!-- jQuery -->
+    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Twitter Bootstrap with Theme Support -->
+    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js">
+    </script>
+
+    <!-- AngularJS -->
+    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js">
+    </script>
+
+    <!-- GoldenLayout with Theme Support -->
+    <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js">
+    </script>
+
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 </head>
 
 <body>
 
-	<div menu menu-data-url="../../../../services/v4/js/ide-core/services/menu.js"></div>
+    <div menu menu-data-url="/services/v4/js/ide-core/services/menu.js"></div>
 
-	<div class="shell">
-		<div class="sidebar list-group" sidebar active="Workbench"></div>
-		<div id="workbench" class="plane" views-layout views-layout-model="wb.layoutModel"></div>
-	</div>
-	<div class="statusbar" status-bar>{{message}}</div>
+    <div class="shell">
+        <div class="sidebar list-group" sidebar active="Workbench"></div>
+        <div id="workbench" class="plane" views-layout views-layout-model="wb.layoutModel"></div>
+    </div>
+    <div class="statusbar" status-bar>{{message}}</div>
 
-	<!-- jQuery -->
-	<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        let dirtyFiles = [];
 
-	<!-- Twitter Bootstrap with Theme Support -->
-	<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async>
-	</script>
+        angular.module('workbench', ['ngResource', 'ideUiCore'])
+            .config(["messageHubProvider", function (messageHubProvider) {
+                messageHubProvider.evtNamePrefix = 'workbench';
+            }])
+            .controller('WorkbenchController', ['Layouts', function (Layouts) {
 
-	<!-- AngularJS -->
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js">
-	</script>
+                this.layoutModel = {
+                    views: ['workspace', 'import', 'editor', 'properties', 'console', 'preview', 'problems'],
+                    viewSettings: {
+                        'workspace': { isClosable: false },
+                        'import': { isClosable: false }
+                    },
+                    events: {
+                        'workspace.file.open': function (msg) {
+                            Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
+                        },
+                        'workspace.file.deleted': function (msg) {
+                            //TODO: check if deleted file is currently open in editor and close the editor window
+                            console.log('file deleted recieved:' + msg);
+                        },
+                        'ide.perspective.views.open': function (msg) {
+                            Layouts.manager.open(msg.data.viewId, msg.data.regionId);
+                        },
+                        'workbench.open': function (msg) {
+                            window.open(msg.data, '_blank');
+                        },
+                        'workbench.alert': function (msg) {
+                            alert(msg.data);
+                        },
+                        'editor.file.dirty': function (msg) {
+                            dirtyFiles.push(msg.data);
+                            Layouts.manager.setEditorDirty(msg.data, true);
+                        },
+                        'editor.file.saved': function (msg) {
+                            dirtyFiles = dirtyFiles.filter(e => e !== msg.data);
+                            Layouts.manager.setEditorDirty(msg.data, false);
+                        }
+                    }
+                };
 
-	<!-- GoldenLayout with Theme Support -->
-	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js">
-	</script>
+            }]);
 
-	<script type="text/javascript" src="../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
-	<script type="text/javascript" src="../../../../services/v4/web/ide-core/ui/ui-layout.js"></script>
-	<script type="text/javascript" src="../../../../services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
-
-	<script type="text/javascript">
-		var dirtyFiles = [];
-
-		angular.module('workbench', ['ngResource', 'ideUiCore'])
-			.config(["messageHubProvider", function (messageHubProvider) {
-				messageHubProvider.evtNamePrefix = 'workbench';
-			}])
-			.controller('WorkbenchController', ['Layouts', function (Layouts) {
-
-				this.layoutModel = {
-					views: ['workspace', 'import', 'editor', 'properties', 'console', 'preview', 'problems'],
-					viewSettings: {
-						'workspace': { isClosable: false },
-						'import': { isClosable: false }
-					},
-					events: {
-						'workspace.file.open': function (msg) {
-							Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
-						},
-						'workspace.file.deleted': function (msg) {
-							//TODO: check if deleted file is currently open in editor and close the editor window
-							console.log('file deleted recieved:' + msg);
-						},
-						'ide.perspective.views.open': function (msg) {
-							var viewId = msg.data.viewId;
-							var regionId = msg.data.regionId;
-							Layouts.manager.open(viewId, regionId);
-						},
-						'workbench.open': function (msg) {
-							window.open(msg.data, '_blank');
-						},
-						'workbench.alert': function (msg) {
-							alert(msg.data);
-						},
-						'editor.file.dirty': function (msg) {
-							dirtyFiles.push(msg.data);
-							Layouts.manager.setEditorDirty(msg.data, true);
-						},
-						'editor.file.saved': function (msg) {
-							dirtyFiles = dirtyFiles.filter(e => e !== msg.data);
-							Layouts.manager.setEditorDirty(msg.data, false);
-						}
-					}
-				};
-
-			}]);
-
-		window.addEventListener('beforeunload', function (e) {
-			if (dirtyFiles.length > 0) {
-				e.preventDefault();
-				e.returnValue = '';
-			}
-		});
-	</script>
+        window.addEventListener('beforeunload', function (e) {
+            if (dirtyFiles.length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
 
 </body>
 

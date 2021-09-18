@@ -10,13 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('dataStructures', [])
-.controller('DataStructuresController', ['$scope', '$http', function ($scope, $http) {
+	.controller('DataStructuresController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../services/v4/ops/data-structures').then(function(response) {
-		$scope.dataStructuresList = response.data;
+		$http.get('/services/v4/ops/data-structures').then(function (response) {
+			$scope.dataStructuresList = response.data;
+		});
+
+	}]).config(function ($sceProvider) {
+		$sceProvider.enabled(false);
 	});
-
-
-}]).config(function($sceProvider) {
-    $sceProvider.enabled(false);
-});

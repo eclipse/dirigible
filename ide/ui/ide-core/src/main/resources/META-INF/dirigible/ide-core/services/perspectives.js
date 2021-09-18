@@ -9,26 +9,25 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var extensions = require('core/v4/extensions');
-var response = require('http/v4/response');
+let extensions = require('core/v4/extensions');
+let response = require('http/v4/response');
 
-var perspectives = [];
-var perspectiveExtensions = extensions.getExtensions('ide-perspective');
+let perspectives = [];
+let perspectiveExtensions = extensions.getExtensions('ide-perspective');
 
-for (var i = 0; i < perspectiveExtensions.length; i++) {
-    var module = perspectiveExtensions[i];
-    try {
-    	var perspectiveExtension = require(module);
-    	var perspective = perspectiveExtension.getPerspective();
-    	perspectives.push(perspective);
-    } catch(error) {
-    	console.error('Error occured while loading metadata for the perspective: ' + module);
-    	console.error(error);
-    }
-    
+for (let i = 0; i < perspectiveExtensions.length; i++) {
+	let module = perspectiveExtensions[i];
+	try {
+		let perspectiveExtension = require(module);
+		let perspective = perspectiveExtension.getPerspective();
+		perspectives.push(perspective);
+	} catch (error) {
+		console.error('Error occured while loading metadata for the perspective: ' + module);
+		console.error(error);
+	}
 }
 
-perspectives.sort(function(p, n) {
+perspectives.sort(function (p, n) {
 	return (parseInt(p.order) - parseInt(n.order));
 });
 

@@ -1,46 +1,48 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="debugger">
+
 <head>
-	<meta charset="utf-8" />
-	
-	<title>Eclipse Dirigible - Debugger</title>
-	
-	<script src="../../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
-	
-	<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
 
-	<!-- jQuery -->
-	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-	
-	<!-- AngularJS -->
-	<script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-	<script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
-	<script src="/webjars/angularjs/1.4.7/angular-animate.min.js"></script>
-	<script src="/webjars/angularjs/1.4.7/angular-sanitize.min.js"></script>
-	
-	<!-- jsTree -->
-	<link href="../../../../../../services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
-	<script src="/webjars/jstree/3.3.5/jstree.min.js"></script>
-	
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
-	
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/ide.css" />
-	
-	<script src="../../../../../../services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <title>Eclipse Dirigible - Debugger</title>
 
-	<script src="controller.js"></script>
+    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
 
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/ide.css" />
-	<link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- AngularJS -->
+    <script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+    <script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+    <script src="/webjars/angularjs/1.4.7/angular-animate.min.js"></script>
+    <script src="/webjars/angularjs/1.4.7/angular-sanitize.min.js"></script>
+
+    <!-- jsTree -->
+    <link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
+    <script src="/webjars/jstree/3.3.5/jstree.min.js"></script>
+
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+
+    <script src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
+    <script src="controller.js"></script>
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+    <link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
 </head>
 
-<body border="1px" ng-controller="DebuggerController">
+<body ng-controller="DebuggerController">
 
-	<div class="responsive-container">
-	    <iframe class="responsive-iframe" ng-src="{{previewUrl}}" frameborder="0"> </iframe>
-	</div>
+    <div class="responsive-container">
+        <iframe class="responsive-iframe" ng-src="{{previewUrl}}" frameborder="0"> </iframe>
+    </div>
 </body>
+
 </html>

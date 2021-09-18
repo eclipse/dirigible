@@ -9,14 +9,13 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function() {
-	var view = {
-			"id":"logconfig",
-			"name":"LogConfig",
-			"factory":"frame",
-			"region":"center-bottom",
-			"label":"Log Config",
-			"link":"../ide-logs/log-config.html"
+exports.getView = function () {
+	return {
+		"id": "logconfig",
+		"name": "LogConfig",
+		"factory": "frame",
+		"region": "center-bottom",
+		"label": "Log Config",
+		"link": "../ide-logs/log-config.html"
 	};
-	return view;
 }

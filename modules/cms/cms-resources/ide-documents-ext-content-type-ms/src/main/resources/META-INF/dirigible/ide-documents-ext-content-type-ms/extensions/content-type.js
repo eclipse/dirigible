@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var config = require("core/v4/configurations");
+let config = require("core/v4/configurations");
 
-var DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED = "DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED";
+let DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED = "DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED";
 
 function getContentType(fileName, contentType) {
 	let enabled = JSON.parse(config.get(DIRIGIBLE_DOCUMENTS_EXT_CONTENT_TYPE_MS_ENABLED, "false"));
@@ -24,13 +24,13 @@ function getContentType(fileName, contentType) {
 			return "application/vnd.ms-excel";
 		}
 	}
-	return contentType;	
+	return contentType;
 }
 
-exports.getContentTypeBeforeUpload = function(fileName, contentType) {
+exports.getContentTypeBeforeUpload = function (fileName, contentType) {
 	return getContentType(fileName, contentType);
 };
 
-exports.getContentTypeBeforeDownload = function(fileName, contentType) {
+exports.getContentTypeBeforeDownload = function (fileName, contentType) {
 	return getContentType(fileName, contentType);
 };

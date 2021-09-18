@@ -24,7 +24,7 @@ Column.prototype.unique = 'false';
 Column.prototype.precision = null;
 Column.prototype.scale = null;
 
-Column.prototype.clone = function() {
+Column.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 
@@ -33,7 +33,7 @@ function Table(name) {
 	this.name = name;
 };
 
-Table.prototype.clone = function() {
+Table.prototype.clone = function () {
 	return mxUtils.clone(this);
 };
 // Defines the view user object
@@ -41,6 +41,6 @@ function View(name) {
 	this.name = name;
 };
 
-View.prototype.clone = function() {
+View.prototype.clone = function () {
 	return mxUtils.clone(this);
 };

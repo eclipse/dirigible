@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 "use strict";
-var rsdata = require('http/v4/rs-data'); 
-var tagsORMDef = require("ide-discussions/lib/tags_dao").tagsORMDef;
-var svc = rsdata.service().dao(tagsORMDef);
+let rsdata = require('http/v4/rs-data');
+let tagsORMDef = require("ide-discussions/lib/tags_dao").tagsORMDef;
+let svc = rsdata.service().dao(tagsORMDef);
 svc.execute();

@@ -9,13 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"javascript",
-			"label":"Javascript Service",
-			"extension":"js",
-			"data":'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();',
-			"order": 0
+exports.getTemplate = function () {
+	return {
+		"name": "javascript",
+		"label": "Javascript Service",
+		"extension": "js",
+		"data": 'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();',
+		"order": 0
 	};
-	return view;
 };

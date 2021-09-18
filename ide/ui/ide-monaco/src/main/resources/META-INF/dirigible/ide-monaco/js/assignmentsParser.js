@@ -17,7 +17,7 @@ function parseAssignments(acorn, fileContent) {
             assignments = getAssignments(assignments, parsed);
             passedObjectKeys = passedObjectKeys.concat(Object.keys(assignments));
             allAssignments = Object.assign(allAssignments, assignments);
-            loopCounter ++;
+            loopCounter++;
         } while (!isEmptyObject(assignments) && loopCounter < MAX_ASSIGNMENTS_COUNT);
 
     } catch (e) {
@@ -31,10 +31,10 @@ function getAssignments(requires, parsed) {
     let assignments = {};
     parsed.body.filter(e => {
         let isAssignments = false;
-        
+
         if (e.type === "VariableDeclaration") {
             isAssignments = e.declarations.filter(declaration => {
-                return declaration  && declaration.init && declaration.init.callee
+                return declaration && declaration.init && declaration.init.callee
                     && declaration.init.callee.type && declaration.init.callee.object
                     && declaration.type === "VariableDeclarator"
                     && declaration.init.type === "CallExpression"
@@ -60,10 +60,10 @@ function getRequires(parsed) {
     let requires = {};
     parsed.body.filter(e => {
         let isRequire = false;
-        
+
         if (e.type === "VariableDeclaration") {
             isRequire = e.declarations.filter(declaration => {
-                return declaration  && declaration.init && declaration.init.callee
+                return declaration && declaration.init && declaration.init.callee
                     && declaration.type === "VariableDeclarator"
                     && declaration.init.type === "CallExpression"
                     && declaration.init.callee.name === "require";
@@ -81,20 +81,20 @@ function getRequires(parsed) {
 function flatParsedBody(parsed) {
     flatTryStatement(parsed);
     parsed.body.filter(e => e.type === "FunctionDeclaration")
-    .forEach(e => {
-        parsed.body = parsed.body.concat(e.body.body);
-        flatTryStatement(e.body);
-        parsed.body = parsed.body.concat(e.body.body);
-    });
+        .forEach(e => {
+            parsed.body = parsed.body.concat(e.body.body);
+            flatTryStatement(e.body);
+            parsed.body = parsed.body.concat(e.body.body);
+        });
 }
 
 function flatTryStatement(parsed) {
     parsed.body.filter(e => e.type === "TryStatement")
-    .forEach(e => {
-        parsed.body = parsed.body.concat(e.block.body);
-        parsed.body = parsed.body.concat(e.handler.body);
-        parsed.body = parsed.body.concat(e.finalizer.body);
-    });
+        .forEach(e => {
+            parsed.body = parsed.body.concat(e.block.body);
+            parsed.body = parsed.body.concat(e.handler.body);
+            parsed.body = parsed.body.concat(e.finalizer.body);
+        });
 }
 
 

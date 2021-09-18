@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var constraintsProcessor = require("ide-documents/api/processors/constraintsProcessor");
+let constraintsProcessor = require("ide-documents/api/processors/constraintsProcessor");
 
 let accessDefinitions = constraintsProcessor.getAccessDefinitions();
 constraintsProcessor.updateAccessDefinitions(accessDefinitions);

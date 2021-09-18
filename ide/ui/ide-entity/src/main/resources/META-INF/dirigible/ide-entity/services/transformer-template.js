@@ -9,19 +9,19 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	    var template = {
-            "name":"Entity Data to JSON Model Transformer",
-            "description":"Model transformer template",
-            "extension":"edm",
-            "sources": [
-                   {
-                       "location": "/ide-entity/template/source.model.template", 
-                       "action": "generate",
-                       "rename": "{{fileNameBase}}.model",
-                       "engine": "javascript",
-                       "handler": "/ide-entity/template/transformer.js"
-		    }]
-        };
-        return template;
+exports.getTemplate = function () {
+    let template = {
+        "name": "Entity Data to JSON Model Transformer",
+        "description": "Model transformer template",
+        "extension": "edm",
+        "sources": [
+            {
+                "location": "/ide-entity/template/source.model.template",
+                "action": "generate",
+                "rename": "{{fileNameBase}}.model",
+                "engine": "javascript",
+                "handler": "/ide-entity/template/transformer.js"
+            }]
+    };
+    return template;
 }

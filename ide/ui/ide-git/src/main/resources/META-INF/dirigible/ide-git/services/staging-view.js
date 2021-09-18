@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getView = function () {
-	var view = {
+	return {
 		"id": "staging",
 		"name": "Staging",
 		"factory": "frame",
@@ -18,5 +18,4 @@ exports.getView = function () {
 		"label": "Staging",
 		"link": "../ide-git/git/staging.html"
 	};
-	return view;
 }

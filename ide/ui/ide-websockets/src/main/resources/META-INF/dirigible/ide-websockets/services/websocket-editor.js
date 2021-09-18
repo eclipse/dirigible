@@ -9,15 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function() {
-	var editor = {
-			"id":"websocket",
-			"name":"Websocket",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Websocket",
-			"link":"../ide-websockets/editor/editor.html",
-			"contentTypes":["application/json+websocket"]
+exports.getEditor = function () {
+	return {
+		"id": "websocket",
+		"name": "Websocket",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Websocket",
+		"link": "../ide-websockets/editor/editor.html",
+		"contentTypes": ["application/json+websocket"]
 	};
-	return editor;
 };

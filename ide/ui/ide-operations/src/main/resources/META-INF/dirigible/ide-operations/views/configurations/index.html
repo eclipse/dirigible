@@ -10,6 +10,7 @@
   -->
 
 <html lang="en" ng-app="configurations">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,21 +18,24 @@
 
     <title>Eclipse Dirigible &trade; | View </title>
 
-    <link rel="shortcut icon" type="image/png" href="../../../../../../services/v4/web/resources/images/favicon.png" />
-	
-	<!-- FontAwesome icon set -->
-        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
-	
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="../../../../../../services/v4/js/theme/resources.js/ide.css" />
-	
+    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
+
+    <!-- FontAwesome icon set -->
+    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+
+    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+
 </head>
 
 <body ng-controller="ConfigurationsController">
-	
+
     <table class="table table-striped tableFixHead">
         <thead>
             <tr>
@@ -46,35 +50,41 @@
         <tbody>
             <tr ng-repeat="configuration in configurations">
                 <td>{{$index + 1}}</td>
-                <td><div class="tdSingleLine">{{configuration[0]}}</div></td>
-                <td><div class="tdSingleLine">{{configuration[1]}}</div></td>
-                <td><div class="tdSingleLine">{{configuration[2]}}</div></td>
-                <td><div class="tdSingleLine">{{configuration[3]}}</div></td>
-                <td><div class="tdSingleLine">{{configuration[4]}}</div></td>
+                <td>
+                    <div class="tdSingleLine">{{configuration[0]}}</div>
+                </td>
+                <td>
+                    <div class="tdSingleLine">{{configuration[1]}}</div>
+                </td>
+                <td>
+                    <div class="tdSingleLine">{{configuration[2]}}</div>
+                </td>
+                <td>
+                    <div class="tdSingleLine">{{configuration[3]}}</div>
+                </td>
+                <td>
+                    <div class="tdSingleLine">{{configuration[4]}}</div>
+                </td>
             </tr>
         </tbody>
     </table>
-		
-		
 
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
-	<script>
-		angular.module('configurations', []);
-		angular.module('configurations').controller('ConfigurationsController', function ($scope, $http) {
-		
-		    var configurationsApi = '../../../../../../services/v4/core/configurations';
-		
-		    function loadConfigurations() {
-		        $http.get(configurationsApi)
-		        .success(function(data) {
-		            $scope.configurations = data;
-		        });
-		    }
-		
-		    loadConfigurations();
-		});
-	</script>
+    <script>
+        angular.module('configurations', [])
+            .controller('ConfigurationsController', function ($scope, $http) {
+
+                let configurationsApi = '/services/v4/core/configurations';
+
+                function loadConfigurations() {
+                    $http.get(configurationsApi)
+                        .success(function (data) {
+                            $scope.configurations = data;
+                        });
+                }
+
+                loadConfigurations();
+            });
+    </script>
 </body>
 
 </html>

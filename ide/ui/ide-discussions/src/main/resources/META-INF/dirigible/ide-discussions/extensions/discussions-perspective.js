@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getPerspective = function() {
+exports.getPerspective = function () {
 	return {
-			'name': 'Discussions',
-			'link': '../ide-discussions/index.html',
-			'order': '160',
-			'image': 'comments-o'
+		'name': 'Discussions',
+		'link': '../ide-discussions/index.html',
+		'order': '160',
+		'image': 'comments-o'
 	};
 };

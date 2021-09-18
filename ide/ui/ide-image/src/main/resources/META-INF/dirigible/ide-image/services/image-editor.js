@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getEditor = function () {
-	var editor = {
+	return {
 		"id": "Image Viewer",
 		"name": "Image Viewer",
 		"factory": "frame",
@@ -27,5 +27,4 @@ exports.getEditor = function () {
 			"image/bmp"
 		]
 	};
-	return editor;
 }
