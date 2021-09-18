@@ -9,12 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"listener",
-			"label":"Message Listener",
-			"extension":"listener",
-			"data":JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)
+exports.getTemplate = function () {
+	return {
+		"name": "listener",
+		"label": "Message Listener",
+		"extension": "listener",
+		"data": JSON.stringify(JSON.parse('{"name":"/myproject/mylistener","type":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'), null, 2)
 	};
-	return view;
 };

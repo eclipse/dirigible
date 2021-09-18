@@ -19,7 +19,7 @@ editorView.controller('ImageViewController', ['$scope', '$http', function ($scop
         let searchParams = new URLSearchParams(window.location.search);
         $scope.file = searchParams.get('file');
         if ($scope.file) {
-            $scope.imageLink = '../../../../../../services/v4/ide/workspaces' + $scope.file;
+            $scope.imageLink = '/services/v4/ide/workspaces' + $scope.file;
             $scope.dataLoaded = true;
         } else {
             console.error('file parameter is not present in the URL');

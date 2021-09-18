@@ -9,18 +9,18 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var extensions = require('core/v4/extensions');
+let extensions = require('core/v4/extensions');
 
-exports.getContentTypeBeforeUpload = function(fileName, contentType) {
-	var extension = getContentTypeExtension();
+exports.getContentTypeBeforeUpload = function (fileName, contentType) {
+	let extension = getContentTypeExtension();
 	if (extension !== null) {
 		return extension.getContentTypeBeforeUpload(fileName, contentType);
 	}
 	return contentType;
 };
 
-exports.getContentTypeBeforeDownload = function(fileName, contentType) {
-	var extension = getContentTypeExtension();
+exports.getContentTypeBeforeDownload = function (fileName, contentType) {
+	let extension = getContentTypeExtension();
 	if (extension !== null) {
 		return extension.getContentTypeBeforeDownload(fileName, contentType);
 	}
@@ -28,7 +28,7 @@ exports.getContentTypeBeforeDownload = function(fileName, contentType) {
 };
 
 function getContentTypeExtension() {
-	var contentTypeExtensions = extensions.getExtensions('ide-documents-content-type');
+	let contentTypeExtensions = extensions.getExtensions('ide-documents-content-type');
 	if (contentTypeExtensions !== null && contentTypeExtensions.length > 0) {
 		return require(contentTypeExtensions[0]);
 	}

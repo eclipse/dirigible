@@ -9,14 +9,13 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function() {
-	var view = {
-			"id":"access",
-			"name":"Access",
-			"factory":"frame",
-			"region":"center-middle",
-			"label":"Access",
-			"link":"../ide-security/views/access/index.html"
+exports.getView = function () {
+	return {
+		"id": "access",
+		"name": "Access",
+		"factory": "frame",
+		"region": "center-middle",
+		"label": "Access",
+		"link": "../ide-security/views/access/index.html"
 	};
-	return view;
 }

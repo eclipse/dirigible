@@ -7,14 +7,13 @@
  * Contributors:
  * SAP - initial API and implementation
  */
-exports.getView = function() {
-	var view = {
-			"id":"diff",
-			"name":"Diff viewer",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Difference",
-			"link":"../ide-monaco/diff-view.html"
+exports.getView = function () {
+	return {
+		"id": "diff",
+		"name": "Diff viewer",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Difference",
+		"link": "../ide-monaco/diff-view.html"
 	};
-	return view;
 }

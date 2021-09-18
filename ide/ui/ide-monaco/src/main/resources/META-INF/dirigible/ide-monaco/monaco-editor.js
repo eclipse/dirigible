@@ -9,7 +9,7 @@
  */
 
 exports.getEditor = function () {
-	var editor = {
+	return {
 		"id": "monaco",
 		"name": "Monaco",
 		"factory": "frame",
@@ -42,5 +42,4 @@ exports.getEditor = function () {
 			"application/json+form"
 		]
 	};
-	return editor;
 }

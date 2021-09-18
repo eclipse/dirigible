@@ -10,14 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 function createModel(graph) {
-	var model = [];
+	let model = [];
 	model.push('<model>\n');
 	model.push(' <entities>\n');
-	var parent = graph.getDefaultParent();
-	var childCount = graph.model.getChildCount(parent);
+	let parent = graph.getDefaultParent();
+	let childCount = graph.model.getChildCount(parent);
 
-	for (var i = 0; i < childCount; i++) {
-		var child = graph.model.getChildAt(parent, i);
+	for (let i = 0; i < childCount; i++) {
+		let child = graph.model.getChildAt(parent, i);
 
 		if (!graph.model.isEdge(child)) {
 			child.value.dataName = child.value.dataName ? child.value.dataName : JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase();
@@ -26,7 +26,7 @@ function createModel(graph) {
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
-			var entityContent = '  <entity name="' + _.escape(child.value.name) +
+			let entityContent = '  <entity name="' + _.escape(child.value.name) +
 				'" dataName="' + _.escape(child.value.dataName) +
 				'" dataCount="' + _.escape(child.value.dataCount) +
 				'" dataQuery="' + _.escape(child.value.dataQuery) +
@@ -76,10 +76,10 @@ function createModel(graph) {
 			entityContent += '>\n';
 			model.push(entityContent);
 
-			var propertyCount = graph.model.getChildCount(child);
+			let propertyCount = graph.model.getChildCount(child);
 			if (propertyCount > 0) {
-				for (var j = 0; j < propertyCount; j++) {
-					var property = graph.model.getChildAt(child, j).value;
+				for (let j = 0; j < propertyCount; j++) {
+					let property = graph.model.getChildAt(child, j).value;
 
 					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
@@ -182,7 +182,7 @@ function createModel(graph) {
 			}
 			model.push('  </entity>\n');
 		} else {
-			var relationName = child.name ? child.name : child.source.parent.value.name + '_' + child.target.parent.value.name;
+			let relationName = child.name ? child.name : child.source.parent.value.name + '_' + child.target.parent.value.name;
 			model.push('  <relation name="' + _.escape(child.source.parent.value.name) + '_'
 				+ _.escape(child.target.parent.value.name) + '" type="relation" ');
 			model.push('entity="' + _.escape(child.source.parent.value.name) + '" ');
@@ -195,23 +195,23 @@ function createModel(graph) {
 		}
 	}
 	model.push(' </entities>\n');
-	
+
 	if (graph.getModel().sidebar) {
 		model.push(' <sidebar>\n');
-		for (var i=0; i<graph.getModel().sidebar.length; i++) {
+		for (let i = 0; i < graph.getModel().sidebar.length; i++) {
 			model.push('  <item><path>' + _.escape(graph.getModel().sidebar[i].path) + '</path><label>' + _.escape(graph.getModel().sidebar[i].label) + '</label><icon>' + _.escape(graph.getModel().sidebar[i].icon) + '</icon><url>' + _.escape(graph.getModel().sidebar[i].url) + '</url></item>\n');
 		}
 		model.push(' </sidebar>\n');
 	}
 
-	var enc = new mxCodec(mxUtils.createXmlDocument());
-	var node = enc.encode(graph.getModel());
-	var mxGraph = mxUtils.getXml(node);
+	let enc = new mxCodec(mxUtils.createXmlDocument());
+	let node = enc.encode(graph.getModel());
+	let mxGraph = mxUtils.getXml(node);
 	model.push(' ' + mxGraph);
 	model.push('\n</model>');
 
-	for (var i = 0; i < childCount; i++) {
-		var child = graph.model.getChildAt(parent, i);
+	for (let i = 0; i < childCount; i++) {
+		let child = graph.model.getChildAt(parent, i);
 
 		if (!graph.model.isEdge(child)) {
 

@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getEditor = function () {
-	var editor = {
+	return {
 		"id": "CSVIM Editor",
 		"name": "CSVIM Editor",
 		"factory": "frame",
@@ -20,5 +20,4 @@ exports.getEditor = function () {
 		"defaultEditor": true,
 		"contentTypes": ["application/json+csvim"]
 	};
-	return editor;
 }

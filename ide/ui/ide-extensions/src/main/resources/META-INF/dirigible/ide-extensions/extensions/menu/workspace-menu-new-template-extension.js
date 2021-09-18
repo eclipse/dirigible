@@ -9,12 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var template = {
-			"name":"extension",
-			"label":"Extension",
-			"extension":"extension",
-			"data":'{"module":"/myproject/my-extension.js","extensionPoint":"my-extension-point","description":"My Extension"}'
+exports.getTemplate = function () {
+	return {
+		"name": "extension",
+		"label": "Extension",
+		"extension": "extension",
+		"data": '{"module":"/myproject/my-extension.js","extensionPoint":"my-extension-point","description":"My Extension"}'
 	};
-	return template;
 };

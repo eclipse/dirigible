@@ -9,13 +9,13 @@
  *   SAP - initial API and implementation
  */
 (function (name, context, definition) {
-  // AMD -> CommonJS -> Globals
-  if (typeof module != 'undefined' && module.exports)
-    module.exports = definition();
-  else if (typeof define == 'function' && define.amd)
-    define(name, definition);
-  else
-    context[name] = definition();
+	// AMD -> CommonJS -> Globals
+	if (typeof module != 'undefined' && module.exports)
+		module.exports = definition();
+	else if (typeof define == 'function' && define.amd)
+		define(name, definition);
+	else
+		context[name] = definition();
 }('FramesMessageHub', this, function () {
 	/**
 	 * @class FramesMessageHub A Publish-Subscribe mechanism for secure cross-domain message exchange between browser windows/iframes entirely clientside, built on the HTML5 postMessage
@@ -29,7 +29,7 @@
 	 */
 	function FramesMessageHub(settings) {
 		this.settings = settings || {};
-		var current = window;
+		let current = window;
 		if (!window.GoldenLayout) {
 			while (current !== top) {
 				current = current.parent;
@@ -38,7 +38,7 @@
 				}
 			}
 		}
-			
+
 		this.settings.hubWindow = this.settings.hubWindow || current || top;
 		this.settings.allowedOrigins = this.settings.allowedOrigins || [location.origin];
 		this.settings.targetOrigin = this.settings.targetOrigin || this.settings.hubWindow.location.origin;
@@ -51,65 +51,64 @@
 	 * @param {Object} message.data - the message payload.
 	 * @param {string} [message.defaultTopic] - (optional) the message topic. Instead of provisioning a second argument to this method for a topic, the message object parameter topic can be supplied with the same purpose. In case both are present, the  method argument will take precedence.
 	 */
-	FramesMessageHub.prototype.post = function(msg, topic){
-		if(msg === undefined)
-			msg = {};
+	FramesMessageHub.prototype.post = function (msg = {}, topic) {
 		// make it easy for simple string messages
-		if(typeof msg === 'string'){
+		if (typeof msg === 'string') {
 			msg = {
 				data: msg
 			};
 		}
-		topic = topic || this.settings.defaultTopic;//in case this client has been setup with a fixed topic and none overriding topic argument has been provided to the method.
-		if(topic!==undefined){
+		topic = topic || this.settings.defaultTopic; //in case this client has been setup with a fixed topic and none overriding topic argument has been provided to the method.
+		if (topic !== undefined) {
 			//inject the topic, if any, into the message.
-			msg.topic = topic;	
+			msg.topic = topic;
 		}
 		this.settings.hubWindow.postMessage(msg, this.settings.targetOrigin);
 	};
-	
-	var onMessageReceived = function(messageHandler, topic, e){
+
+	let onMessageReceived = function (messageHandler, topic, e) {
 		//check if this message origin is whitelisted
-		if(this.settings.allowedOrigins===undefined || this.settings.allowedOrigins.length==0)
+		if (this.settings.allowedOrigins === undefined || this.settings.allowedOrigins.length == 0)
 			console.warn('[FramesMessageHub] settings.allowedOrigins is not used. This may impose security risks.');
 		else {
-			if(this.settings.allowedOrigins.indexOf(e.origin)<0){
+			if (this.settings.allowedOrigins.indexOf(e.origin) < 0) {
 				console.warn('[FramesMessageHub] message blocked from non-whitelisted origin: ' + e.origin);
-				return; 
-			}	
+				return;
+			}
 		}
 		//ensure that the handler will be invoked only for messages posted in the topic it was subscribed to
-		if(topic!==this.settings.defaultTopic && e.data && e.data.topic !== topic){
+		if (topic !== this.settings.defaultTopic && e.data && e.data.topic !== topic) {
 			//console.warn('[FramesMessageHub] message is not for this subscription topic: ' + e.data.topic);
-			return; 
+			return;
 		}
-		var message = e.data;
+		let message = e.data;
 		messageHandler.apply(this, [message, e]);
 	}
-	
+
 	/**
 	 * Subscribes a handler function invoked upon posting messages in a topic.
 	 *
 	 * @param {FramesMessageHub~messageHandler} messageHandler - a function processing messages received in the subscribed topic.
 	 * @returns - a reference to the function subscirbed as event listener. Note that to unsubscribe you need to use this reference instead of the messageHandler provided as argument to this method.
 	 */
-	FramesMessageHub.prototype.subscribe = function(messageHandler, topic){
+	FramesMessageHub.prototype.subscribe = function (messageHandler, topic) {
 		//TODO: use stadnard jsonschema and json schema validation
 		//settings.dataSchema = settings.dataSchema;
 		//if we expect messages delegate them to message handler
-		if(messageHandler && (typeof messageHandler === 'function')){
+		let handler;
+		if (messageHandler && (typeof messageHandler === 'function')) {
 			topic = topic || this.settings.defaultTopic;
-			if(topic === undefined)
+			if (topic === undefined)
 				throw Error('[FramesMessageHub] Invallid argument: cannot subscribe without topic. Either specifi topic as argument to the subscribe method or specify a default sink topic in settings parameter of the FramesMessageHub constructor');
 			//ensure a unique function instance per handler to support single handler per multiple topics (controller-like pattern)
-			var handler = function(messageHandler, topic, evt){
+			handler = function (messageHandler, topic, evt) {
 				onMessageReceived.call(this, messageHandler, topic, evt);
 			}.bind(this, messageHandler, topic);
 			this.settings.hubWindow.addEventListener("message", handler, false);
 		}
 		return handler;
 	};
-	
+
 	/**
 	 * A handler function processing messages posted in a topic, to which it has been subscribed to with subscribe method.
 	 *
@@ -119,15 +118,15 @@
 	 * @param {string} message.topic - the message topic.
 	 * @param {Object} event - the original 'message' event that invoked this handler.
 	 */
-	
+
 	/**
 	 * Unsubscribes a handler function that was subscribed previously with the subscribe method from listening for messages in a topic. 
 	 *
 	 * @callback {FramesMessageHub~messageHandler} - The handler to be unsubscribed. Must be the function returned by the subscribe mehtod.
 	 */
-	FramesMessageHub.prototype.unsubscribe = function(messageHandler){
+	FramesMessageHub.prototype.unsubscribe = function (messageHandler) {
 		this.settings.hubWindow.removeEventListener("message", messageHandler, false);
 	}
-	
+
 	return FramesMessageHub;
 }));

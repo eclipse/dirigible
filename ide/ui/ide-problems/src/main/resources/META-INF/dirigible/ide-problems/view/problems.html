@@ -10,6 +10,7 @@
   -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
 
@@ -25,86 +26,119 @@
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
+    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
     <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
     <script src="problems.js"></script>
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/ide.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 </head>
 
 <body ng-app="problems" ng-controller="ProblemsController as problems" class="view">
-<div class="tableFixHead">
-    <div class="row bg-default navbar navbar-fixed-top">
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="problems.refresh()">
-                <i class="fa fa-refresh"></i>
-            </button>
+    <div class="tableFixHead">
+        <div class="row bg-default navbar navbar-fixed-top">
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="problems.refresh()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="search" class="form-control" ng-model="searchText" ng-change="search()"
+                    ng-keyup="cancel($event)" placeholder="Search ...">
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('IGNORED')">Mark as
+                    Ignored</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('SOLVED')">Mark as
+                    Solved</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="deleteSelected()">Delete
+                    Selected</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('SOLVED')">Delete
+                    Solved</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('IGNORED')">Delete
+                    Ignored</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
+            </div>
         </div>
-        <div class="col-md-5">
-            <input type="text" name="search" class="form-control" ng-model="searchText" ng-change="search()" ng-keyup="cancel($event)" placeholder="Search ...">
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('IGNORED')">Mark as Ignored</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('SOLVED')">Mark as Solved</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteSelected()">Delete Selected</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('SOLVED')">Delete Solved</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('IGNORED')">Delete Ignored</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
+        <div id="row" style="padding-top: 30px; padding-bottom: 20px">
+            <table class="table table-striped" ng-cloak>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Cause</th>
+                        <th>Module</th>
+                        <th>Category</th>
+                        <th>Line</th>
+                        <th>Column</th>
+                        <th>Expected</th>
+                        <th>Source</th>
+                        <th>Creator</th>
+                        <th>Created</th>
+                        <th>Program</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="next in problemsList">
+                        <td><input type="checkbox" ng-model="next.checked"></td>
+                        <td>
+                            <div class="tdSingleLine">{{next.status}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.location}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.type}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.cause}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.module}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.category}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.line}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.column}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.expected}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.source}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.createdBy}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.createdAt}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.program}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div id="row" style="padding-top: 30px; padding-bottom: 20px">
-        <table class="table table-striped" ng-cloak>
-            <thead>
-            <tr>
-                <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
-                <th>Status</th>
-                <th>Location</th>
-                <th>Type</th>
-                <th>Cause</th>
-                <th>Module</th>
-                <th>Category</th>
-                <th>Line</th>
-                <th>Column</th>
-                <th>Expected</th>
-                <th>Source</th>
-                <th>Creator</th>
-                <th>Created</th>
-                <th>Program</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="next in problemsList">
-                <td><input type="checkbox" ng-model="next.checked"></td>
-                <td><div class="tdSingleLine">{{next.status}}</div></td>
-                <td><div class="tdSingleLine">{{next.location}}</div></td>
-                <td><div class="tdSingleLine">{{next.type}}</div></td>
-                <td><div class="tdSingleLine">{{next.cause}}</div></td>
-                <td><div class="tdSingleLine">{{next.module}}</div></td>
-                <td><div class="tdSingleLine">{{next.category}}</div></td>
-                <td><div class="tdSingleLine">{{next.line}}</div></td>
-                <td><div class="tdSingleLine">{{next.column}}</div></td>
-                <td><div class="tdSingleLine">{{next.expected}}</div></td>
-                <td><div class="tdSingleLine">{{next.source}}</div></td>
-                <td><div class="tdSingleLine">{{next.createdBy}}</div></td>
-                <td><div class="tdSingleLine">{{next.createdAt}}</div></td>
-                <td><div class="tdSingleLine">{{next.program}}</div></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
 </body>
+
 </html>

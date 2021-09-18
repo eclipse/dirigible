@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"edm",
-			"label":"Entity Data Model",
-			"extension":"edm",
-			"data":'<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
-			"order": 10
+exports.getTemplate = function () {
+	let view = {
+		"name": "edm",
+		"label": "Entity Data Model",
+		"extension": "edm",
+		"data": '<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
+		"order": 10
 	};
 	return view;
 };

@@ -9,12 +9,26 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"access",
-			"label":"Access Constraints",
-			"extension":"access",
-			"data":JSON.stringify(JSON.parse('{"constraints":[{"path":"/myproject/myfolder/myservice.js","method":"GET","roles":["administrator","operator"]}]}'), null, 2)
+exports.getTemplate = function () {
+	return {
+		"name": "access",
+		"label": "Access Constraints",
+		"extension": "access",
+		"data": JSON.stringify(
+			{
+				"constraints": [
+					{
+						"path": "/myproject/myfolder/myservice.js",
+						"method": "GET",
+						"roles": [
+							"administrator",
+							"operator"
+						]
+					}
+				]
+			},
+			null,
+			2
+		)
 	};
-	return view;
 };

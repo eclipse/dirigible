@@ -10,33 +10,32 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('about', [])
-.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
+	.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../../services/v4/version').then(function(response) {
-		$scope.version = response.data;
+		$http.get('/services/v4/version').then(function (response) {
+			$scope.version = response.data;
+		});
+
+		setInterval(function () {
+
+			$http({
+				method: 'GET',
+				url: '/services/v4/healthcheck'
+			}).success(function (healthStatus) {
+				let jobs = [];
+				for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+					let job = new Object();
+					job.name = key;
+					job.status = value;
+					jobs.push(job);
+				}
+				$scope.jobs = jobs;
+			}).error(function (e) {
+				console.error("Error retreiving the health status", e);
+			});
+
+		}, 10000);
+
+	}]).config(function ($sceProvider) {
+		$sceProvider.enabled(false);
 	});
-
-	setInterval(function() {
-				
-				$http({
-		            method: 'GET',
-		            url: '../../../../../services/v4/healthcheck'
-		        }).success(function(healthStatus){
-					var jobs = [];
-					for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
-						var job = new Object();
-						job.name = key;
-						job.status = value;
-						jobs.push(job);
-					}
-		        	$scope.jobs = jobs;
-		        }).error(function(e){
-		            console.error("Error retreiving the health status", e);
-		        });
-
-			}, 10000);
-
-
-}]).config(function($sceProvider) {
-    $sceProvider.enabled(false);
-});

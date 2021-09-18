@@ -174,4 +174,3 @@ let historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 			$scope.refresh();
 		}.bind(this));
 	}]);
-
