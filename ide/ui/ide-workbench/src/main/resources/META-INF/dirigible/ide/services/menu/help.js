@@ -52,10 +52,10 @@ const defaultMenuItems = [
 	}
 ];
 
-var config = require("core/v4/configurations");
+let config = require("core/v4/configurations");
 
 exports.getMenu = function () {
-	var menu = {
+	let menu = {
 		name: "Help",
 		link: "#",
 		order: 900,

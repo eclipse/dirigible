@@ -68,11 +68,46 @@
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
 			<version>${cxf.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.spec.javax.rmi</groupId>
+					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.geronimo.specs</groupId>
+					<artifactId>geronimo-javamail_1.4_spec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>wsdl4j</groupId>
+					<artifactId>wsdl4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
 		    <artifactId>jakarta.persistence</artifactId>
 		    <version>${persistence.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>
+				cxf-rt-rs-service-description-swagger
+			</artifactId>
+			<version>${cxf.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.spec.javax.rmi</groupId>
+					<artifactId>jboss-rmi-api_1.0_spec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
     </dependencies>
 

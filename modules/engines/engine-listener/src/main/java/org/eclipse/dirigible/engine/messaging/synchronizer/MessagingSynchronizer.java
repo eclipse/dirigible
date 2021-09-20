@@ -64,16 +64,20 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Listeners...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					startListeners();
-					int immutableCount = LISTENERS_PREDELIVERED.size();
-					int mutableCount = LISTENERS_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						startListeners();
+						int immutableCount = LISTENERS_PREDELIVERED.size();
+						int mutableCount = LISTENERS_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Listeners failed.", e);
 					try {

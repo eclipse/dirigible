@@ -66,18 +66,22 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Extension Points and Extensions...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					int immutableExtensionPointsCount = EXTENSION_POINTS_PREDELIVERED.size();
-					int immutableExtensionsCount = EXTENSIONS_PREDELIVERED.size();
-					int mutableExtensionPointsCount = EXTENSION_POINTS_SYNCHRONIZED.size();
-					int mutableExtensionsCount = EXTENSIONS_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Extension Points: {0}, Immutable Extensions: {1}, Mutable Extension Points: {2}, Mutable Extensions: {3}", 
-							immutableExtensionPointsCount, immutableExtensionsCount, mutableExtensionPointsCount, mutableExtensionsCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						int immutableExtensionPointsCount = EXTENSION_POINTS_PREDELIVERED.size();
+						int immutableExtensionsCount = EXTENSIONS_PREDELIVERED.size();
+						int mutableExtensionPointsCount = EXTENSION_POINTS_SYNCHRONIZED.size();
+						int mutableExtensionsCount = EXTENSIONS_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable Extension Points: {0}, Immutable Extensions: {1}, Mutable Extension Points: {2}, Mutable Extensions: {3}", 
+								immutableExtensionPointsCount, immutableExtensionsCount, mutableExtensionPointsCount, mutableExtensionsCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Extension Points and Extensions failed.", e);
 					try {

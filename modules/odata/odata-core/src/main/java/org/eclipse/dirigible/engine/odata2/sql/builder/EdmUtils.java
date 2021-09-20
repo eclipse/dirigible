@@ -56,7 +56,15 @@ public final class EdmUtils {
         }
         return result;
     }
-
+    
+    /**
+     * Get all the properties from the Entity Type
+     * 
+     * @param entityType the type of the entity
+     * @return the properties types list
+     * @throws EdmException in case of EDM error
+     * @throws ODataNotImplementedException in case not implemented
+     */
     @SuppressWarnings("unchecked")
     public static Collection<EdmProperty> getProperties(EdmStructuralType entityType) throws EdmException, ODataNotImplementedException {
         Collection<String> propertyNames = getSelectedPropertyNames(Collections.EMPTY_LIST, entityType);

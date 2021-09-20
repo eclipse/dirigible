@@ -9,47 +9,47 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var extensions = require('core/v4/extensions');
-var response = require('http/v4/response');
+let extensions = require('core/v4/extensions');
+let response = require('http/v4/response');
 
-var rs = require("http/v4/rs");
+let rs = require("http/v4/rs");
 
 rs.service()
-    .resource("")
-        .get(function(ctx, request, response) {
-            var templates = getTemplates();
-			templates = sortTemplates(templates);
-			response.println(JSON.stringify(templates));
-        })
-    .resource("extensions")
-        .get(function(ctx, request, response) {
-    	    var templates = getTemplates();
-    	    var fileExtensions = [];
-    	    templates.forEach(template => {if (template.extension) fileExtensions.push(template.extension);});
-			response.println(JSON.stringify(fileExtensions));
-    })
-.execute();
+	.resource("")
+	.get(function (ctx, request, response) {
+		let templates = getTemplates();
+		templates = sortTemplates(templates);
+		response.println(JSON.stringify(templates));
+	})
+	.resource("extensions")
+	.get(function (ctx, request, response) {
+		let templates = getTemplates();
+		let fileExtensions = [];
+		templates.forEach(template => { if (template.extension) fileExtensions.push(template.extension); });
+		response.println(JSON.stringify(fileExtensions));
+	})
+	.execute();
 
 function getTemplates() {
-	var templates = [];
-	var templateExtensions = extensions.getExtensions('ide-template');
-	for (var i = 0; i < templateExtensions.length; i++) {
-	    var module = templateExtensions[i];
-	    try {
-	    	var templateExtension = require(module);
-	    	var template = templateExtension.getTemplate();
-	    	template.id = module;
-	    	templates.push(template);	
-	    } catch(error) {
-	    	console.error('Error occured while loading metadata for the template: ' + module);
-	    	console.error(error);
-	    }
+	let templates = [];
+	let templateExtensions = extensions.getExtensions('ide-template');
+	for (let i = 0; i < templateExtensions.length; i++) {
+		let module = templateExtensions[i];
+		try {
+			let templateExtension = require(module);
+			let template = templateExtension.getTemplate();
+			template.id = module;
+			templates.push(template);
+		} catch (error) {
+			console.error('Error occured while loading metadata for the template: ' + module);
+			console.error(error);
+		}
 	}
 	return templates;
 }
 
 function sortTemplates(templates) {
-	return templates.sort(function(a, b) {
+	return templates.sort(function (a, b) {
 		if (a.order && b.order) {
 			if (a.order - b.order != 0) {
 				return a.order - b.order;

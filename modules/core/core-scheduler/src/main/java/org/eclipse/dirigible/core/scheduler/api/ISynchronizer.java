@@ -35,5 +35,11 @@ public interface ISynchronizer {
 
 	/** Set the flag whether the synchronization is forced or not*/
 	void setForcedSynchronization(boolean forced);
+	
+	/**
+	 * Is synchronization enabled globally
+	 * @return
+	 */
+	public boolean isSynchronizationEnabled();
 
 }

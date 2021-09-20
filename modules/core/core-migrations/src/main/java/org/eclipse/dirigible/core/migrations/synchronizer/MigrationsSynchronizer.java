@@ -64,19 +64,23 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Migrations artifacts...");
 				try {
-					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-						startSynchronization(SYNCHRONIZER_NAME);
-						clearCache();
-						synchronizePredelivered();
-						synchronizeRegistry();
-						startMigrations();
-						int immutableCount = MIGRATIONS_PREDELIVERED.size();
-						int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
-						cleanup();
-						clearCache();
-						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					if (isSynchronizationEnabled()) {
+						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+							startSynchronization(SYNCHRONIZER_NAME);
+							clearCache();
+							synchronizePredelivered();
+							synchronizeRegistry();
+							startMigrations();
+							int immutableCount = MIGRATIONS_PREDELIVERED.size();
+							int mutableCount = MIGRATIONS_SYNCHRONIZED.size();
+							cleanup();
+							clearCache();
+							successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+						} else {
+							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						}
 					} else {
-						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						logger.debug("Synchronization has been disabled");
 					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Migrations artifacts failed.", e);

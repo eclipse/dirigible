@@ -10,12 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 function addToolbarButton(editor, toolbar, action, label, image, isTransparent) {
-	var button = document.createElement('button');
+	let button = document.createElement('button');
 	button.title = label;
 	// button.style.fontSize = '10';
 	if (image !== null) {
-		var img = document.createElement('i');
-		img.setAttribute('class', 'fa fa-'+image+' fa-2x');
+		let img = document.createElement('i');
+		img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
 		// img.style.width = '16px';
 		// img.style.height = '16px';
 		img.style.verticalAlign = 'middle';
@@ -29,7 +29,7 @@ function addToolbarButton(editor, toolbar, action, label, image, isTransparent) 
 		button.setAttribute('class', 'button');
 		button.setAttribute('style', 'background: transparent; color: white; border: none');
 	}
-	mxEvent.addListener(button, 'click', function(evt) {
+	mxEvent.addListener(button, 'click', function (evt) {
 		editor.execute(action);
 	});
 	//mxUtils.write(button, label);
@@ -40,105 +40,105 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 	// Function that is executed when the image is dropped on
 	// the graph. The cell argument points to the cell under
 	// the mousepointer if there is one.
-	var funct = function(graph, evt, cell) {
+	let funct = function (graph, evt, cell) {
 		graph.stopEditing(false);
 
-		var pt = graph.getPointForEvent(evt);
-		
-		var parent = graph.getDefaultParent();
-		var model = graph.getModel();
+		let pt = graph.getPointForEvent(evt);
 
-		var isTable = graph.isSwimlane(prototype);
-		var name = null;				
+		let parent = graph.getDefaultParent();
+		let model = graph.getModel();
+
+		let isTable = graph.isSwimlane(prototype);
+		let name = null;
 
 		if (!isTable) {
 			parent = cell;
-			var pstate = graph.getView().getState(parent);
-			
+			let pstate = graph.getView().getState(parent);
+
 			if (parent === null || pstate === null) {
 				showAlert('Drop', 'Drop target must be a table', $scope);
 				return;
 			}
-			
+
 			if (pstate.cell.value.type === "VIEW") {
 				showAlert('Drop', 'Drop target must be a table not a view', $scope);
 				return;
 			}
-			
+
 			pt.x -= pstate.x;
 			pt.y -= pstate.y;
 
-			var columnCount = graph.model.getChildCount(parent)+1;
+			let columnCount = graph.model.getChildCount(parent) + 1;
 			//name = mxUtils.prompt('Enter name for new column', 'COLUMN'+columnCount);
 			//showPrompt('Enter name for new column', 'COLUMN'+columnCount, createNode);
-			createNode('COLUMN'+columnCount);
+			createNode('COLUMN' + columnCount);
 		} else {
-			var tableCount = 0;
-			var childCount = graph.model.getChildCount(parent);
-			
-			for (var i=0; i<childCount; i++) {
+			let tableCount = 0;
+			let childCount = graph.model.getChildCount(parent);
+
+			for (let i = 0; i < childCount; i++) {
 				if (!graph.model.isEdge(graph.model.getChildAt(parent, i))) {
 					tableCount++;
 				}
 			}
-			var prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
+			let prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
 			//showPrompt('Enter name for new table', prefix+(tableCount+1), createNode);
-			createNode(prefix+(tableCount+1));
+			createNode(prefix + (tableCount + 1));
 		}
-		
+
 		function createNode(name) {
 			if (name !== null) {
-				var v1 = model.cloneCell(prototype);
+				let v1 = model.cloneCell(prototype);
 
 				model.beginUpdate();
 				try {
 					v1.value.name = name;
 					v1.geometry.x = pt.x;
 					v1.geometry.y = pt.y;
-					
+
 					graph.addCell(v1, parent);
-					
+
 					if (isTable) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
 						if (!v1.children[0].value.isSQL) {
-							v1.children[0].value.name = name+'_ID';
+							v1.children[0].value.name = name + '_ID';
 						}
 						v1.value.type = prefix;
 					}
 				} finally {
 					model.endUpdate();
 				}
-				
+
 				graph.setSelectionCell(v1);
 			}
 		}
 
 	};
-	
-	var img = document.createElement('i');
-	img.setAttribute('class', 'fa fa-'+image+' fa-2x');
+
+	let img = document.createElement('i');
+	img.setAttribute('class', 'fa fa-' + image + ' fa-2x');
 	img.setAttribute('style', 'color: #8ba8c1');
-//	img.color = '#337ab7';
+	//	img.color = '#337ab7';
 	img.title = hint;
 	sidebar.appendChild(img);
-	  					
+
 	// Creates the image which is used as the drag icon (preview)
-	var dragImage = img.cloneNode(true);
-	var ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
+	let dragImage = img.cloneNode(true);
+	let ds = mxUtils.makeDraggable(img, graph, funct, dragImage);
 
 	// Adds highlight of target tables for columns
 	ds.highlightDropTargets = true;
-	ds.getDropTarget = function(graph, x, y) {
+	ds.getDropTarget = function (graph, x, y) {
 		if (graph.isSwimlane(prototype)) {
 			return null;
-		} 
-		var cell = graph.getCellAt(x, y);
-		
+		}
+		let cell = graph.getCellAt(x, y);
+
 		if (graph.isSwimlane(cell)) {
 			return cell;
-		} 
-		var parent = graph.getModel().getParent(cell);
-		
+		}
+		let parent = graph.getModel().getParent(cell);
+
 		if (graph.isSwimlane(parent)) {
 			return parent;
 		}
@@ -146,7 +146,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 }
 
 function configureStylesheet(graph) {
-	var style = new Object();
+	let style = new Object();
 	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
 	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
 	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
@@ -192,39 +192,39 @@ function configureStylesheet(graph) {
 // Function to create the entries in the popupmenu
 function createPopupMenu(editor, graph, menu, cell, evt) {
 	if (cell !== null) {
-			menu.addItem('Properties', 'list-ul', function() {
-				editor.execute('properties', cell);
-			});
-	
-		menu.addItem('Copy', 'copy', function() {
+		menu.addItem('Properties', 'list-ul', function () {
+			editor.execute('properties', cell);
+		});
+
+		menu.addItem('Copy', 'copy', function () {
 			editor.execute('copy', cell);
 		});
-		
+
 	}
-	
-	menu.addItem('Paste', 'paste', function() {
-			editor.execute('paste', cell);
+
+	menu.addItem('Paste', 'paste', function () {
+		editor.execute('paste', cell);
 	});
 
-	menu.addItem('Undo', 'undo', function() {
+	menu.addItem('Undo', 'undo', function () {
 		editor.execute('undo', cell);
 	});
-	
-	menu.addItem('Redo', 'repeat', function() {
+
+	menu.addItem('Redo', 'repeat', function () {
 		editor.execute('redo', cell);
 	});
-	
+
 	if (cell !== null) {
 
-		menu.addItem('Delete', 'times', function() {
+		menu.addItem('Delete', 'times', function () {
 			editor.execute('delete', cell);
 		});
-	
+
 	}
-	
+
 	menu.addSeparator();
-	
-	menu.addItem('Show SQL', 'database', function() {
+
+	menu.addItem('Show SQL', 'database', function () {
 		editor.execute('showSql', cell);
-	});	
+	});
 };

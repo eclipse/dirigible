@@ -71,6 +71,12 @@ public class OData2Utils {
      * Generates the next link for server-side paging. The next-link is based on
      * the URI of the current request, except that {@code $skip} or
      * {@code $skiptoken} will be removed.
+     * 
+     * @param context the context
+     * @param top the top param
+     * @param pagingSize the page size
+     * @return the link
+     * @throws ODataException in case of an error
      */
     public static String generateNextLink(ODataContext context, int top, int pagingSize) throws ODataException {
         String nextLink;
@@ -196,10 +202,14 @@ public class OData2Utils {
     }
 
     /**
-     * returns map of navigation property name to a callback.
+     * Returns map of navigation property name to a callback.
      * 
-     * @throws ODataException
-     * @throws EntityProviderException
+     * @param context the context
+     * @param feedData the feed data
+     * @param entityType the entity type
+     * @return map of navigation property name to a callback
+     * @throws ODataException in case of an error
+     * @throws EntityProviderException in case of an error
      */
     public static Map<String, ODataCallback> getNavigationPropertiesWriteCallbacks(ODataContext context,
             final List<OData2ResultSetEntity> feedData, final EdmEntityType entityType) throws ODataException, EntityProviderException {

@@ -161,6 +161,29 @@ public class PublisherCoreService implements IPublisherCoreService {
 			throw new PublisherException(e);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#removeAllPublishRequests()
+	 */
+	@Override
+	public void removeAllPublishRequests() throws PublisherException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS").toString();
+				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
+				publishRequestPersistenceManager.execute(connection, sql);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new PublisherException(e);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

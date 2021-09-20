@@ -8,11 +8,11 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-var ViewRegistry = function () {
+let ViewRegistry = function () {
 
-	var _views = {};
+	let _views = {};
 
-	var _factories = {};
+	let _factories = {};
 
 	this.factory = function (name, func) {
 		if (arguments.length == 1)
@@ -37,7 +37,7 @@ var ViewRegistry = function () {
 		//set view
 		if (factory === undefined)
 			throw Error('Illegal argument for factory ' + factory);
-		var componentName;
+		let componentName;
 		if (typeof factory === 'string')
 			componentName = factory;
 		else if (typeof factory === 'function') {
@@ -139,9 +139,9 @@ function LayoutController(viewRegistry, messageHub) {
 		}
 	}
 
-	var parentIds = function (node, regionId, arr) {
+	let parentIds = function (node, regionId, arr) {
 		arr = arr || [];
-		var _parentId = regionId || node.defaultRegionId;
+		let _parentId = regionId || node.defaultRegionId;
 		if (!_parentId)
 			return arr;
 		if (this.regions[_parentId]) {
@@ -151,32 +151,32 @@ function LayoutController(viewRegistry, messageHub) {
 		return arr;
 	};
 
-	var copy = function (src) {
+	let copy = function (src) {
 		return JSON.parse(JSON.stringify(src));
 	};
 
-	var gridItem = function (top, id) {
+	let gridItem = function (top, id) {
 		if (top.id === id)
 			return top;
 		if (top.content) {
-			var item = top.content.find(function (_item) {
+			let item = top.content.find(function (_item) {
 				return gridItem(_item, id);
 			});
 			return item && gridItem(item, id)
 		}
 	};
 
-	var addView = function (views, view, grid) {
-		var node;
-		var path = [view.id].concat(parentIds.call(this, view));
+	let addView = function (views, view, grid) {
+		let node;
+		let path = [view.id].concat(parentIds.call(this, view));
 		//build branches top-bottom
 		path.reverse().forEach(function (compId, idx, arr) {
-			var _gridNode = gridItem(grid, compId);
+			let _gridNode = gridItem(grid, compId);
 			if (_gridNode) {
 				node = _gridNode;
 				return;//next
 			} else {
-				var child = this.regions[compId] || views[compId];
+				let child = this.regions[compId] || views[compId];
 				if (child) {
 					child = copy(child);
 					if (!node.content)
@@ -190,7 +190,7 @@ function LayoutController(viewRegistry, messageHub) {
 	}.bind(this);
 
 	this.layoutViews = function (views) {
-		var grid = copy(this.regions.main);
+		let grid = copy(this.regions.main);
 		if (views) {
 			Object.values(views).map(function (view) {
 				if (view) {
@@ -211,9 +211,9 @@ function LayoutController(viewRegistry, messageHub) {
 		if (!this.listeners[eventType]) {
 			this.listeners[eventType] = [];
 		}
-		var subscriber = this.messageHub.subscribe(callback.bind(this), eventType);
+		let subscriber = this.messageHub.subscribe(callback.bind(this), eventType);
 
-		var entry = {
+		let entry = {
 			id: uuidv4(),
 			handler: subscriber
 		};
@@ -223,9 +223,9 @@ function LayoutController(viewRegistry, messageHub) {
 	this.removeListener = function (id, eventType) {
 		if (!this.listeners[eventType])
 			return;
-		for (var i = this.listeners[eventType].length - 1; i >= 0; i--) {
+		for (let i = this.listeners[eventType].length - 1; i >= 0; i--) {
 			if (this.listeners[eventType][i].id == id) {
-				var subscriber = this.listeners[eventType][i].handler;
+				let subscriber = this.listeners[eventType][i].handler;
 				this.messageHub.unsibscribe(subscriber);
 				this.listeners[eventType].splice(i, 1);
 			}
@@ -246,7 +246,7 @@ function LayoutController(viewRegistry, messageHub) {
 		if (id) {
 			if (!reconstruct) {
 				//load from localStorage
-				var savedState = localStorage.getItem('DIRIGIBLE.IDE.GL.state.' + id);
+				let savedState = localStorage.getItem('DIRIGIBLE.IDE.GL.state.' + id);
 				if (savedState !== null) {
 					this.config = JSON.parse(savedState);
 				}
@@ -254,10 +254,12 @@ function LayoutController(viewRegistry, messageHub) {
 		}
 		if (!id || reconstruct || !this.config) {
 			//reconstruct (ignore previously saved state)
-			var views = {};
+			let views = {};
 			this.viewNames.forEach(function (viewName) {
-				if (this.viewSettings)
+				if (this.viewSettings) {
+					// If this fails with undefined, then there is no view with the name of 'viewName'
 					views[viewName] = Object.assign(this.viewRegistry.view(viewName), this.viewSettings[viewName]);
+				}
 				else views[viewName] = this.viewRegistry.view(viewName)
 			}.bind(this));
 			// Default settings
@@ -287,7 +289,7 @@ function LayoutController(viewRegistry, messageHub) {
 		if (id) {
 			this.layout.on('stateChanged', function () {
 				//TODO: debounce or do that only with save button! This fires a lot
-				var state = JSON.stringify(this.layout.toConfig());
+				let state = JSON.stringify(this.layout.toConfig());
 				localStorage.setItem('DIRIGIBLE.IDE.GL.state.' + id, state);
 			}.bind(this));
 		}
@@ -317,17 +319,17 @@ function LayoutController(viewRegistry, messageHub) {
 	};
 
 	this.openView = function (viewId/*, region*/) {
-		var viewDef = this.viewRegistry.view(viewId);
+		let viewDef = this.viewRegistry.view(viewId);
 		if (viewDef) {
-			var node;
-			var defaultPath = [viewId];
+			let node;
+			let defaultPath = [viewId];
 			defaultPath = defaultPath.concat(parentIds.call(this, viewDef/*, region*/));//TODO: consider custom region
 			defaultPath.reverse().forEach(function (compId) {
 				if (!node)
 					node = this.layout.root;
 				else
 					node = this.layout.root.getItemsById(node.id || node.config.id)[0];
-				var child = node.getItemsById(compId)[0] || this.regions[compId] || this.viewRegistry.view(compId);
+				let child = node.getItemsById(compId)[0] || this.regions[compId] || this.viewRegistry.view(compId);
 				if (!node.isRoot && child && this.layout.root.getItemsById(child.id || child.config.id).length < 1) {
 					node.addChild(child);
 				}
@@ -337,7 +339,7 @@ function LayoutController(viewRegistry, messageHub) {
 	};
 
 	this.openEditor = function (resourcePath, resourceLabel, contentType, editorId, extraArgs = null) {
-		var newItemConfig = {
+		let newItemConfig = {
 			id: resourcePath,
 			title: resourceLabel,
 			type: 'component',
@@ -354,7 +356,7 @@ function LayoutController(viewRegistry, messageHub) {
 			//is already open?
 			if (this.layout.root.getItemsById(newItemConfig.id).length) {
 				//replace content
-				var panel = this.layout.root.getItemsById(newItemConfig.id)[0];
+				let panel = this.layout.root.getItemsById(newItemConfig.id)[0];
 				//panel.instance.setContent(newItemConfig.id);
 				panel.parent.setActiveContentItem(panel);
 			} else {
@@ -368,7 +370,7 @@ function LayoutController(viewRegistry, messageHub) {
 	};
 
 	function closeEditor(editor, layoutManager) {
-		var title = editor.config.title;
+		let title = editor.config.title;
 		if (title.startsWith("*")) {
 			if (confirm('You have unsaved changes, are you sure you want to close ' + title.substring(1))) {
 				layoutManager.getItemsById('editor')[0].parent.removeChild(editor);
@@ -379,28 +381,28 @@ function LayoutController(viewRegistry, messageHub) {
 	}
 
 	this.closeEditor = function (editorId) {
-		var editor = this.layout.root.getItemsById(editorId)[0];
+		let editor = this.layout.root.getItemsById(editorId)[0];
 		closeEditor(editor, this.layout.root);
 	};
 
 	this.closeOtherEditors = function (editorId) {
-		var editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
+		let editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
 			.filter(e => e.id !== "editor" && e.id !== editorId)
 			.map(e => e.id);
-		var editors = [];
+		let editors = [];
 		editorIds.forEach(e => editors.push(this.layout.root.getItemsById(e)[0]))
-		for (var i = 0; i < editors.length; i++) {
+		for (let i = 0; i < editors.length; i++) {
 			closeEditor(editors[i], this.layout.root);
 		}
 	};
 
 	this.closeAllEditors = function () {
-		var editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
+		let editorIds = this.layout.root.getItemsById('editor')[0].parent.config.content
 			.filter(e => e.id !== "editor")
 			.map(e => e.id);
-		var editors = [];
+		let editors = [];
 		editorIds.forEach(e => editors.push(this.layout.root.getItemsById(e)[0]))
-		for (var i = 0; i < editors.length; i++) {
+		for (let i = 0; i < editors.length; i++) {
 			closeEditor(editors[i], this.layout.root);
 		}
 	};
@@ -410,8 +412,8 @@ function LayoutController(viewRegistry, messageHub) {
 		if (this.layout.root.getItemsById('editor')[0]) {
 			//is already open?
 			if (this.layout.root.getItemsById(resourcePath).length) {
-				var panel = this.layout.root.getItemsById(resourcePath)[0];
-				var title = panel.container.tab.titleElement.text();
+				let panel = this.layout.root.getItemsById(resourcePath)[0];
+				let title = panel.container.tab.titleElement.text();
 				if (!title.startsWith('*') && dirty) {
 					panel.setTitle('*' + title);
 				} else {

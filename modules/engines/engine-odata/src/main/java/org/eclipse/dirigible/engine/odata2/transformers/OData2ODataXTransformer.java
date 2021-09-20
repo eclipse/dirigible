@@ -74,16 +74,16 @@ public class OData2ODataXTransformer {
                 if (entityOrigKeys.size() > 0) {
                     entityOrigKeys.forEach(key -> {
                         String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(key.getName(), entityProperties, isPretty);
-                        buff.append("\t\t\t<PropertyRef Name=\"").append(columnValue).append("\" />\n");
+                        buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\" />\n");
                     });
                 } else {
                     //local key was generated
-                    entity.getKeys().forEach(key -> buff.append("\t\t\t<PropertyRef Name=\"").append(key).append("\" />\n"));
+                    entity.getKeys().forEach(key -> buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(key)).append("\" />\n"));
                 }
             } else {
                 idColumns.forEach(column -> {
                     String nameValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\t\t<PropertyRef Name=\"").append(nameValue).append("\" />\n");
+                    buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(nameValue)).append("\" />\n");
                 });
             }
             buff.append("\t\t</Key>\n");
@@ -99,7 +99,7 @@ public class OData2ODataXTransformer {
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\t<Property Name=\"").append(columnValue).append("\"")
+                    buff.append("\t\t<Property Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\"")
                             .append(" Nullable=\"").append(DBMetadataUtil.isNullable(column, entityProperties)).append("\"").append(" Type=\"").append(DBMetadataUtil.getType(column, entityProperties)).append("\"");
                     buff.append("/>\n");
                 });

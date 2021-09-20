@@ -16,46 +16,84 @@ package org.eclipse.dirigible.runtime.ide.workspaces.processor;
  */
 public class WorkspaceSourceTargetPair {
 
-	private String source;
+    private String sourceWorkspace;
 
-	private String target;
+    private String source;
 
-	/**
-	 * Gets the source.
-	 *
-	 * @return the source
-	 */
-	public String getSource() {
-		return source;
-	}
+    private String targetWorkspace;
 
-	/**
-	 * Sets the source.
-	 *
-	 * @param source
-	 *            the new source
-	 */
-	public void setSource(String source) {
-		this.source = source;
-	}
+    private String target;
 
-	/**
-	 * Gets the target.
-	 *
-	 * @return the target
-	 */
-	public String getTarget() {
-		return target;
-	}
+    /**
+     * Gets the source workspace.
+     *
+     * @return the sourceWorkspace
+     */
+    public String getSourceWorkspace() {
+        return sourceWorkspace;
+    }
 
-	/**
-	 * Sets the target.
-	 *
-	 * @param target
-	 *            the new target
-	 */
-	public void setTarget(String target) {
-		this.target = target;
-	}
+    /**
+     * Sets the source.
+     *
+     * @param sourceWorkspace the new source workspace
+     */
+    public void setSourceWorkspace(String sourceWorkspace) {
+        this.sourceWorkspace = sourceWorkspace;
+    }
+
+    /**
+     * Gets the source.
+     *
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * Sets the source.
+     *
+     * @param source the new source
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
+     * Gets the target workspace.
+     *
+     * @return the targetWorkspace
+     */
+    public String getTargetWorkspace() {
+        return targetWorkspace;
+    }
+
+    /**
+     * Sets the target workspace.
+     *
+     * @param targetWorkspace the new target workspace
+     */
+    public void setTargetWorkspace(String targetWorkspace) {
+        this.targetWorkspace = targetWorkspace;
+    }
+
+    /**
+     * Gets the target.
+     *
+     * @return the target
+     */
+    public String getTarget() {
+        return target;
+    }
+
+    /**
+     * Sets the target.
+     *
+     * @param target the new target
+     */
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
 }

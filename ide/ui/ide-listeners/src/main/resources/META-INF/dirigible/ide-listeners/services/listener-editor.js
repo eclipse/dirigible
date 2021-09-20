@@ -9,15 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function() {
-	var editor = {
-			"id":"listener",
-			"name":"Listener",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Listener",
-			"link":"../ide-listeners/editor/editor.html",
-			"contentTypes":["application/json+listener"]
+exports.getEditor = function () {
+	return {
+		"id": "listener",
+		"name": "Listener",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Listener",
+		"link": "../ide-listeners/editor/editor.html",
+		"contentTypes": ["application/json+listener"]
 	};
-	return editor;
 };

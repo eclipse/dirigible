@@ -9,15 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function() {
-	var editor = {
-			"id":"dsm",
-			"name":"DSM",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Database Schema Modeler",
-			"link":"../ide-schema/modeler.html",
-			"contentTypes":["application/database-schema-model+xml"]
+exports.getEditor = function () {
+	return {
+		"id": "dsm",
+		"name": "DSM",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Database Schema Modeler",
+		"link": "../ide-schema/modeler.html",
+		"contentTypes": ["application/database-schema-model+xml"]
 	};
-	return editor;
 }

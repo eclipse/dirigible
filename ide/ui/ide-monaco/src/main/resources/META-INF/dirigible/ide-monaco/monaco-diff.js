@@ -8,8 +8,8 @@
  * SAP - initial API and implementation
  */
 
-exports.getEditor = function() {
-	var editor = {
+exports.getEditor = function () {
+	return {
 		"id": "monaco-diff",
 		"name": "Diff",
 		"factory": "frame",
@@ -18,5 +18,4 @@ exports.getEditor = function() {
 		"link": "../ide-monaco/diff.html",
 		"contentTypes": []
 	};
-	return editor;
 }

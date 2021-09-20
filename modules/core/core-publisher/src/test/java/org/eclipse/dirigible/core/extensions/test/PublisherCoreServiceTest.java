@@ -51,6 +51,7 @@ public class PublisherCoreServiceTest extends AbstractDirigibleTest {
 	 */
 	@Test
 	public void createPublishRequestTest() throws PublisherException {
+		publisherCoreService.removeAllPublishRequests();
 		publisherCoreService.createPublishRequest("workspace1", "path1", "registry1");
 		List<PublishRequestDefinition> list = publisherCoreService.getPublishRequests();
 		assertEquals(1, list.size());

@@ -11,14 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.uri.PathSegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
@@ -35,6 +27,10 @@ import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingPro
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class SQLQueryNavigationPropertiesTest {
 
@@ -62,7 +58,7 @@ public class SQLQueryNavigationPropertiesTest {
     }
 
     private ODataPathSegmentImpl createPathSegment(final String path) {
-        return new ODataPathSegmentImpl(path, Collections.<String, List<String>> emptyMap());
+        return new ODataPathSegmentImpl(path, Collections.<String, List<String>>emptyMap());
     }
 
     @Test
@@ -73,9 +69,10 @@ public class SQLQueryNavigationPropertiesTest {
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("SELECT T0.ID AS ID_T0, T0.NAME AS NAME_T0, T0.VALUE AS VALUE_T0 " //
-                + "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID " //
-                + "WHERE T1.STATUS = ? AND T0.VALUE = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+        assertEquals("SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\" " +
+                "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
+                "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID WHERE T1.STATUS = ? " +
+                "AND T0.VALUE = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
     //    @Test
@@ -135,12 +132,12 @@ public class SQLQueryNavigationPropertiesTest {
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, T2.CT_ID AS CT_ID_T2, T2.CT_DETAIL AS CT_DETAIL_T2 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " //
-                + "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "WHERE T1.STATUS = ? AND T0.DESCRIPTION = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+        assertEquals("SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T2.CT_ID AS \"CT_ID_T2\", " +
+                "T2.CT_DETAIL AS \"CT_DETAIL_T2\" " +
+                "FROM ENTITY3_TABLE AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " +
+                "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "WHERE T1.STATUS = ? AND T0.DESCRIPTION = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
     @Test
@@ -151,12 +148,13 @@ public class SQLQueryNavigationPropertiesTest {
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, T2.CT_ID AS CT_ID_T2, T2.CT_DETAIL AS CT_DETAIL_T2 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " //
-                + "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "WHERE T1.STATUS = ? AND T2.CT_DETAIL = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+        assertEquals("SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T2.CT_ID AS \"CT_ID_T2\", " +
+                "T2.CT_DETAIL AS \"CT_DETAIL_T2\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " +
+                "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "WHERE T1.STATUS = ? AND T2.CT_DETAIL = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
 }

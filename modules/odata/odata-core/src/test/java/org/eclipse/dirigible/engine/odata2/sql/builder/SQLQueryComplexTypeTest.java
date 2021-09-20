@@ -11,14 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static java.util.Collections.EMPTY_MAP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.uri.PathSegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
@@ -35,6 +27,14 @@ import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingPro
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Collections.EMPTY_MAP;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SQLQueryComplexTypeTest {
 
@@ -66,11 +66,10 @@ public class SQLQueryComplexTypeTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, " //
-                + "T1.CT_ID AS CT_ID_T1, T1.CT_DETAIL AS CT_DETAIL_T1 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -84,12 +83,10 @@ public class SQLQueryComplexTypeTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, " //
-                + "T1.CT_ID AS CT_ID_T1, T1.CT_DETAIL AS CT_DETAIL_T1 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN "//
-                + "WHERE T1.CT_ID = ? "//
-                + "FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "WHERE T1.CT_ID = ? FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 
@@ -103,11 +100,10 @@ public class SQLQueryComplexTypeTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, " //
-                + "T1.CT_ID AS CT_ID_T1, T1.CT_DETAIL AS CT_DETAIL_T1 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "WHERE T1.CT_ID = ? AND T0.ID = ? " + //
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "WHERE T1.CT_ID = ? AND T0.ID = ? " +
                 "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
@@ -122,11 +118,10 @@ public class SQLQueryComplexTypeTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID AS ID_T0, T0.DESCRIPTION AS DESCRIPTION_T0, " //
-                + "T1.CT_ID AS CT_ID_T1, T1.CT_DETAIL AS CT_DETAIL_T1 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "WHERE (T1.CT_ID = ? OR T0.ID = ?) AND T0.ID = ? " + //
+        String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "WHERE (T1.CT_ID = ? OR T0.ID = ?) AND T0.ID = ? " +
                 "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
@@ -141,10 +136,10 @@ public class SQLQueryComplexTypeTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T1.CT_ID AS CT_ID_T1, T1.CT_DETAIL AS CT_DETAIL_T1, T0.ID AS ID_T0 " //
-                + "FROM ENTITY3_TABLE AS T0 " //
-                + "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " //
-                + "FETCH FIRST 1000 ROWS ONLY";
+        String expected = "SELECT T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\", T0.ID AS \"ID_T0\" " +
+                "FROM ENTITY3_TABLE AS T0 " +
+                "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T1 ON T1.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
+                "FETCH FIRST 1000 ROWS ONLY";
         assertEquals(expected, q.buildSelect(context));
     }
 

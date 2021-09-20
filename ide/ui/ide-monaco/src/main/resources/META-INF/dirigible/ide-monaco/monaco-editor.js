@@ -9,7 +9,7 @@
  */
 
 exports.getEditor = function () {
-	var editor = {
+	return {
 		"id": "monaco",
 		"name": "Monaco",
 		"factory": "frame",
@@ -18,11 +18,12 @@ exports.getEditor = function () {
 		"link": "../ide-monaco/editor.html",
 		"defaultEditor": true,
 		"contentTypes": [
-			"application/javascript",
-			"application/json",
+			"image/svg+xml",
 			"text/plain",
 			"text/html",
 			"text/csv",
+			"application/javascript",
+			"application/json",
 			"application/json+extension-point",
 			"application/json+extension",
 			"application/json+table",
@@ -41,5 +42,4 @@ exports.getEditor = function () {
 			"application/json+form"
 		]
 	};
-	return editor;
 }

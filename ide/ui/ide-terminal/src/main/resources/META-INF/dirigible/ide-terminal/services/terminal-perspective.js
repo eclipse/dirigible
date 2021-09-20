@@ -9,12 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getPerspective = function() {
-	var perspective = {
-			"name":"Terminal",
-			"link":"../ide-terminal/index.html",
-			"order":"120",
-			"image":"terminal"
+exports.getPerspective = function () {
+	return {
+		"name": "Terminal",
+		"link": "../ide-terminal/index.html",
+		"order": "120",
+		"image": "terminal"
 	};
-	return perspective;
 }

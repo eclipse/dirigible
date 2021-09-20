@@ -34,7 +34,7 @@ import java.util.List;
 public class ProblemsCoreService implements IProblemsCoreService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
 
     @Override

@@ -10,58 +10,73 @@
   -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-	<meta charset="utf-8" />
-	
-	<title>Eclipse Dirigible - Listeners</title>
+    <meta charset="utf-8" />
 
-	<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-	
-	<!-- AngularJS -->
-	<script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-	<script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
-	
-	<!-- jQuery -->
-	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-	
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/bootstrap.min.css">
-	<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	
-	<script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
-	<script src="listeners.js"></script>
+    <title>Eclipse Dirigible - Listeners</title>
 
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="../../../../../services/v4/js/theme/resources.js/ide.css" />
-	
+    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+    <!-- AngularJS -->
+    <script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
+    <script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script src="listeners.js"></script>
+
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+
 </head>
 
 <body ng-app="listeners" ng-controller="ListenersController as listeners" class="view">
-	<div class="tableFixHead">
-		<table class="table table-striped" ng-cloak>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Location</th>
-					<th>Handler</th>
-					<th>Description</th>
-					<th width="50px">Type</th>
-					<th width="180px">Created</th>
-					<th width="150px">Creator</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="next in listenersList">
-					<td><div class="tdSingleLine">{{next.name}}</div></td>
-					<td><div class="tdSingleLine">{{next.location}}</div></td>
-					<td><div class="tdSingleLine">{{next.handler}}</div></td>
-					<td><div class="tdSingleLine">{{next.description}}</div></td>
-					<td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.type === 'Q'}}"></i><i class="fa fa-mail-reply-all" ng-hide="{{next.type === 'T'}}"></i></td>
-					<td width="180px"><div class="tdSingleLine">{{next.createdAt}}</div></td>
-					<td width="150px"><div class="tdSingleLine">{{next.createdBy}}</div></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <div class="tableFixHead">
+        <table class="table table-striped" ng-cloak>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Handler</th>
+                    <th>Description</th>
+                    <th width="50px">Type</th>
+                    <th width="180px">Created</th>
+                    <th width="150px">Creator</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="next in listenersList">
+                    <td>
+                        <div class="tdSingleLine">{{next.name}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{next.location}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{next.handler}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{next.description}}</div>
+                    </td>
+                    <td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.type === 'Q'}}"></i><i
+                            class="fa fa-mail-reply-all" ng-hide="{{next.type === 'T'}}"></i></td>
+                    <td width="180px">
+                        <div class="tdSingleLine">{{next.createdAt}}</div>
+                    </td>
+                    <td width="150px">
+                        <div class="tdSingleLine">{{next.createdBy}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
+
 </html>

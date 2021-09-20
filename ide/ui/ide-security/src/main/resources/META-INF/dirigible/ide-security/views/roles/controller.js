@@ -10,13 +10,13 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('roles', [])
-.controller('RolesController', ['$scope', '$http', function ($scope, $http) {
+	.controller('RolesController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../../../services/v4/ops/security/roles').then(function(response) {
-		$scope.rolesList = response.data;
+		$http.get('/services/v4/ops/security/roles').then(function (response) {
+			$scope.rolesList = response.data;
+		});
+
+
+	}]).config(function ($sceProvider) {
+		$sceProvider.enabled(false);
 	});
-
-
-}]).config(function($sceProvider) {
-    $sceProvider.enabled(false);
-});

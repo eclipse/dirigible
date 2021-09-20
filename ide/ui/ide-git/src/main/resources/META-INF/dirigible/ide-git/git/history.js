@@ -12,7 +12,7 @@
 /**
  * Utility URL builder
  */
-var UriBuilder = function UriBuilder() {
+let UriBuilder = function UriBuilder() {
 	this.pathSegments = [];
 	return this;
 }
@@ -33,34 +33,34 @@ UriBuilder.prototype.path = function (_pathSegments) {
 	this.pathSegments = this.pathSegments.concat(_pathSegments);
 	return this;
 }
-UriBuilder.prototype.build = function () {
+UriBuilder.prototype.build = function (isBasePath = true) {
+	if (isBasePath) return '/' + this.pathSegments.join('/');
 	return this.pathSegments.join('/');
 }
 
-angular.module('git.config', [])
-	.constant('GIT_SVC_URL', '../../../../../services/v4/ide/git');
+angular.module('git.config', []).constant('GIT_SVC_URL', '/services/v4/ide/git');
 
 
 /**
  * Git Service API delegate
  */
-var GitService = function ($http, gitServiceUrl) {
+let GitService = function ($http, gitServiceUrl) {
 	this.gitServiceUrl = gitServiceUrl;
 	this.$http = $http;
 }
 
 GitService.prototype.history = function (workspace, project, file) {
-	var url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("history").build();
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path("history").build();
 	if (file) {
 		url += "?path=" + file;
 	}
 	return this.$http.get(url);
 }
 
-var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+let historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 
 	.factory('httpRequestInterceptor', function () {
-		var csrfToken = null;
+		let csrfToken = null;
 		return {
 			request: function (config) {
 				config.headers['X-Requested-With'] = 'Fetch';
@@ -68,7 +68,7 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 				return config;
 			},
 			response: function (response) {
-				var token = response.headers()['x-csrf-token'];
+				let token = response.headers()['x-csrf-token'];
 				if (token) {
 					csrfToken = token;
 				}
@@ -90,8 +90,8 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 		$httpProvider.interceptors.push('httpRequestInterceptor');
 	}])
 	.factory('$messageHub', [function () {
-		var messageHub = new FramesMessageHub();
-		var announceAlert = function(title, message, type) {
+		let messageHub = new FramesMessageHub();
+		let announceAlert = function (title, message, type) {
 			messageHub.post({
 				data: {
 					title: title,
@@ -100,16 +100,16 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 				}
 			}, 'ide.alert');
 		};
-		var announceAlertSuccess = function(title, message) {
+		let announceAlertSuccess = function (title, message) {
 			announceAlert(title, message, "success");
 		};
-		var announceAlertInfo = function(title, message) {
+		let announceAlertInfo = function (title, message) {
 			announceAlert(title, message, "info");
 		};
-		var announceAlertWarning = function(title, message) {
+		let announceAlertWarning = function (title, message) {
 			announceAlert(title, message, "warning");
 		};
-		var announceAlertError = function(title, message) {
+		let announceAlertError = function (title, message) {
 			announceAlert(title, message, "error");
 		};
 		return {
@@ -126,59 +126,51 @@ var historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 	.factory('gitService', ['$http', 'GIT_SVC_URL', function ($http, GIT_SVC_URL) {
 		return new GitService($http, GIT_SVC_URL);
 	}])
-	.controller('HistoryContoller', ['gitService', '$messageHub', '$http', '$scope', function (gitService, $messageHub, $http, $scope) {
+	.controller('HistoryContoller', ['gitService', '$messageHub', '$scope', function (gitService, $messageHub, $scope) {
 
-		this.gitService = gitService;
-		this.http = $http;
-		this.scope = $scope;
+		$scope.selectedWorkspace;
+		$scope.selectedProject;
+		$scope.selectedFile;
 
-		this.refreshRepository = function () {
-			this.selectedFile = null;
-			this.refresh();
+		$scope.refreshRepository = function () {
+			$scope.selectedFile = null;
+			$scope.refresh();
 		}
 
-		this.refresh = function () {
-			var messageHub = $messageHub;
-			if (!this.selectedWorkspace || !this.selectedProject) {
-				this.history = [];
-				this.scope.$apply();
+		$scope.refresh = function () {
+			if (!$scope.selectedWorkspace || !$scope.selectedProject) {
+				$scope.history = [];
 				return;
 			}
-			gitService.history(this.selectedWorkspace, this.selectedProject, this.selectedFile)
+			gitService.history($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedFile)
 				.then(function (response) {
-					this.history = response.data;
-					this.history.map(e => e.shortId = e.id.substring(0, 7));
-					try {
-						this.scope.$apply();
-					} catch (e) {
-						//
-					}
+					$scope.history = response.data;
+					$scope.history.map(e => e.shortId = e.id.substring(0, 7));
 				}.bind(this), function (response) {
 					let errorMessage = JSON.parse(response.data.error).message;
-					messageHub.announceAlertError("Loading Git Repository History Error", errorMessage);
+					$messageHub.announceAlertError("Loading Git Repository History Error", errorMessage);
 				});
 		};
 
 		$messageHub.on('git.repository.selected', function (msg) {
 			if (msg.data.isGitProject) {
-				this.selectedWorkspace = msg.data.workspace;
-				this.selectedProject = msg.data.project;
-				this.selectedFile = null;
+				$scope.selectedWorkspace = msg.data.workspace;
+				$scope.selectedProject = msg.data.project;
+				$scope.selectedFile = null;
 			} else {
-				this.selectedProject = null;
+				$scope.selectedProject = null;
 			}
-			this.refresh();
+			$scope.refresh();
 		}.bind(this));
 
 		$messageHub.on('git.repository.file.selected', function (msg) {
 			if (msg.data.isGitProject) {
-				this.selectedWorkspace = msg.data.workspace;
-				this.selectedProject = msg.data.project;
-				this.selectedFile = msg.data.file;
+				$scope.selectedWorkspace = msg.data.workspace;
+				$scope.selectedProject = msg.data.project;
+				$scope.selectedFile = msg.data.file;
 			} else {
-				this.selectedProject = null;
+				$scope.selectedProject = null;
 			}
-			this.refresh();
+			$scope.refresh();
 		}.bind(this));
 	}]);
-

@@ -28,6 +28,8 @@ import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.info.*;
+import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
+import org.apache.olingo.odata2.core.uri.UriInfoImpl;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
@@ -48,6 +50,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getSelectedProperties;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpand;
 
@@ -317,10 +320,16 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		return idsOfLeadingEntities;
 	}
 
+	
 	/**
 	 * Generates the next link for server-side paging. The next-link is based on the
 	 * URI of the current request, except that {@code $skip} or {@code $skiptoken}
 	 * will be removed.
+	 * 
+	 * @param query the query
+	 * @param targetEntityType the target entity type
+	 * @return the link
+	 * @throws ODataException in case of an error
 	 */
 	protected String generateNextLink(SQLQuery query, EdmEntityType targetEntityType) throws ODataException {
 		int top = query.getSelectExpression().getTop();
@@ -452,6 +461,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		}
 
 		final EdmEntitySet entitySet = uriInfo.getTargetEntitySet();
+		final EdmEntityType entityType = entitySet.getEntityType();
 		ODataEntry entry = parseEntry(entitySet, content, requestContentType, false);
 		this.odata2EventHandler.beforeCreateEntity(uriInfo,
 				requestContentType, contentType, entry);
@@ -465,14 +475,59 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			LOG.error("Unable to serve request", e);
 			throw new ODataException(e);
 		}
+		
+		try {
+			List<EdmProperty> keyProperties = entityType.getKeyProperties();
+			ArrayList<KeyPredicate> keyPredicates = new ArrayList<KeyPredicate>();
+			if (!keyProperties.isEmpty()) {
+				for (EdmProperty keyProperty : keyProperties) {
+					if (entry.getProperties().get(keyProperty.getName()) != null) {
+						keyPredicates.add(new KeyPredicateImpl(
+								entry.getProperties().get(keyProperty.getName()).toString(),
+								keyProperty));
+					} else {
+						String msg = "Cannot create entity without key(s)";
+						LOG.error(msg);
+						throw new ODataException(msg);
+					}
+				}
+				
+				((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
+				
+				// Re-read the inserted entity to get the auto-generated properties
+				query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+				OData2ResultSetEntity resultEntity = null;
+				Collection<EdmProperty> properties = getProperties(entityType);
+				try (Connection connection = getDataSource().getConnection()){
+					try (PreparedStatement statement = createSelectStatement(query, connection)){
+						try (ResultSet resultSet = statement.executeQuery()){
+							query.setOffset(resultSet);
+							while (query.next(resultSet)) {
+								if (resultEntity == null) {
+									Map<String, Object> data = readResultSet(query, entityType, properties, resultSet);
+									resultEntity = new OData2ResultSetEntity(data);
+								}
+							}
+						}
+					}
+					ODataResponse response = OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
+					this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry);
+					return response;
+				} catch (Exception e) {
+					LOG.error("Unable to serve request", e);
+					throw new ODataException(e);
+				}
+			}
+		} catch (Throwable t) {
+			LOG.error("Unable to get back the created entity", t);
+		}
+		
 		ODataContext context = getContext();
 		EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties
 				.serviceRoot(context.getPathInfo().getServiceRoot()).expandSelectTree(entry.getExpandSelectTree())
 				.build();
-		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(),
-				writeProperties);
-		this.odata2EventHandler.afterCreateEntity(uriInfo,
-				requestContentType, contentType, entry);
+		final ODataResponse response = EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(), writeProperties);
+		this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry);
 		return response;
 	}
 

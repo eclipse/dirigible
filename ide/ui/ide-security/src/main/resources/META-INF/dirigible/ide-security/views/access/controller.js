@@ -10,13 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('access', [])
-.controller('AccessController', ['$scope', '$http', function ($scope, $http) {
+	.controller('AccessController', ['$scope', '$http', function ($scope, $http) {
 
-	$http.get('../../../../../../services/v4/ops/security/access').then(function(response) {
-		$scope.accessList = response.data;
+		$http.get('/services/v4/ops/security/access').then(function (response) {
+			$scope.accessList = response.data;
+		});
+
+	}]).config(function ($sceProvider) {
+		$sceProvider.enabled(false);
 	});
-
-
-}]).config(function($sceProvider) {
-    $sceProvider.enabled(false);
-});

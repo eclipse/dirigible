@@ -61,16 +61,20 @@ public class JobSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Jobs...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					startJobs();
-					int immutableCount = JOBS_PREDELIVERED.size();
-					int mutableCount = JOBS_SYNCHRONIZED.size();
-					cleanup();
-					clearCache();
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						startJobs();
+						int immutableCount = JOBS_PREDELIVERED.size();
+						int mutableCount = JOBS_SYNCHRONIZED.size();
+						cleanup();
+						clearCache();
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: {0}, Mutable: {1}", immutableCount, mutableCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Jobs failed.", e);
 					try {

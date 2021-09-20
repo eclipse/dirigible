@@ -9,14 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function() {
-	var view = {
-			"id":"debugger",
-			"name":"Debugger",
-			"factory":"frame",
-			"region":"center-top",
-			"label":"Debugger",
-			"link":"../ide-debugger/views/debugger/index.html"
+exports.getView = function () {
+	let view = {
+		"id": "debugger",
+		"name": "Debugger",
+		"factory": "frame",
+		"region": "center-top",
+		"label": "Debugger",
+		"link": "../ide-debugger/views/debugger/index.html"
 	};
 	return view;
 };

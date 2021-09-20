@@ -75,6 +75,15 @@ public class FolderDescriptor {
 	public List<FolderDescriptor> getFolders() {
 		return folders;
 	}
+	
+	/**
+	 * Get the type
+	 * 
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
 
 	/**
 	 * Sets the.

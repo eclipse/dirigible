@@ -9,14 +9,14 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var registry = require("platform/v4/registry");
-var extensions = require("core/v4/extensions");
+let registry = require("platform/v4/registry");
+let extensions = require("core/v4/extensions");
 
-exports.getModules = function() {
+exports.getModules = function () {
     let modules = [];
     let javaScriptFiles = registry.find("/", "*.js");
 
-    for (let i = 0; i < javaScriptFiles.length; i ++) {
+    for (let i = 0; i < javaScriptFiles.length; i++) {
         let path = javaScriptFiles[i];
         if (isModule(path)) {
             modules.push({
@@ -26,8 +26,8 @@ exports.getModules = function() {
     }
 
     let apiModulesExtensions = extensions.getExtensions("api-modules");
-    apiModulesExtensions.forEach(function(apiModule) {
-        var module = require(apiModule);
+    apiModulesExtensions.forEach(function (apiModule) {
+        let module = require(apiModule);
         modules = modules.concat(module.getContent());
     });
     return modules;

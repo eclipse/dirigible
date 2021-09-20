@@ -239,20 +239,40 @@ public final class SQLQuery {
 
     /**
      * Use the table column alias to read result set
+     * 
+     * @param targetEnitityType the target entity type
+     * @param property the property
+     * @return the alias
+     * @throws EdmException in case of an error
      */
-    public String getSQLTableColumnAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
-        if (p.isSimple())
-            return tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(p) + "_" + getSQLTableAlias(targetEnitityType);
+    public String getSQLTableColumnAlias(final EdmStructuralType targetEnitityType, final EdmProperty property) throws EdmException {
+        if (property.isSimple())
+            return tableMappingProvider.getEdmTableBinding(targetEnitityType).getColumnName(property) + "_" + getSQLTableAlias(targetEnitityType);
         else
-            throw new IllegalArgumentException("Unable to get the table column name of complex property " + p);
+            throw new IllegalArgumentException("Unable to get the table column name of complex property " + property);
     }
 
-    public boolean isTransientType(final EdmStructuralType targetEnitityType, final EdmProperty p) {
-        if (tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(p))
+    /**
+     * Check whether it is transient type
+     * 
+     * @param targetEnitityType the target entity type
+     * @param property the property
+     * @return true if it is transient and false otherwise
+     */
+    public boolean isTransientType(final EdmStructuralType targetEnitityType, final EdmProperty property) {
+        if (tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(property))
             return false;
         return true;
     }
 
+    /**
+     * Generate join expression
+     * 
+     * @param from from segment
+     * @param to to segment
+     * @return the generated expression
+     * @throws EdmException in case of an error
+     */
     public SQLExpressionJoin join(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {
         SQLExpressionJoin join = new SQLExpressionJoin(this, from, to);
         if (!join.isEmpty()) {
@@ -265,6 +285,15 @@ public final class SQLQuery {
         return join;
     }
 
+    /**
+     * Generate join expression
+     * 
+     * @param start start segment
+     * @param target target segment
+     * @param expands expands segment
+     * @return the generated expression
+     * @throws ODataException in case of an error
+     */
     public SQLExpressionJoin join(final EdmEntitySet start, final EdmEntitySet target, final List<NavigationSegment> expands)
             throws ODataException {
         return this.join(start.getEntityType(), target.getEntityType());
@@ -294,6 +323,12 @@ public final class SQLQuery {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     // It will be hidden in future without further mitigation
     // TODO Refactor this method to private area
+    /**
+     * Get table alias
+     * 
+     * @param type the type
+     * @return the alias
+     */
     public String getSQLTableAlias(final EdmType type) {
         if (type instanceof EdmStructuralType)
             return getTableAliasForType((EdmStructuralType) type);
@@ -318,6 +353,11 @@ public final class SQLQuery {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     // It will be hidden in future without further mitigation
     // TODO Refactor this method to private area
+    /**
+     * Get table aliases
+     * 
+     * @return the aliases
+     */
     public Iterator<String> getTablesAliasesForEntitiesInQuery() {
         return tableAliasesForEntitiesInQuery.keySet().iterator();
     }
@@ -325,6 +365,11 @@ public final class SQLQuery {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     // It will be hidden in future without further mitigation
     // TODO Refactor this method to private area
+    /**
+     * Get entity for alias
+     * @param tableAlias the table alias
+     * @return the type
+     */
     public EdmStructuralType getEntityInQueryForAlias(final String tableAlias) {
         return tableAliasesForEntitiesInQuery.get(tableAlias);
     }
@@ -332,6 +377,11 @@ public final class SQLQuery {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     // It will be hidden in future without further mitigation
     // TODO Refactor this method to private area
+    /**
+     * Get table alias for structural type
+     * @param entity the entity
+     * @return the alias
+     */
     public String grantTableAliasForStructuralTypeInQuery(final EdmStructuralType entity) {
         try {
             Collection<EdmStructuralType> targets = tableAliasesForEntitiesInQuery.values();
@@ -401,6 +451,13 @@ public final class SQLQuery {
         preparedStatement.setObject(i + 1, value);
     }
 
+    /**
+     * Setter for values on statement
+     * 
+     * @param preparedStatement the statement
+     * @throws SQLException in case of an error
+     * @throws EdmException in case of an error
+     */
     public void setValuesOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         List<Object> values = getInsertExpression().getColumnData();
         List<EdmProperty> columnProperties = getInsertExpression().getColumnProperties();
@@ -420,6 +477,13 @@ public final class SQLQuery {
         }
     }
 
+    /**
+     * Setter for keys on statement
+     * 
+     * @param preparedStatement the statement
+     * @throws SQLException in case of an error
+     * @throws EdmException in case of an error
+     */
     public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         Map<String, Object> keys = getDeleteExpression().getKeys();
         int i = 0;
@@ -428,6 +492,13 @@ public final class SQLQuery {
         }
     }
 
+    /**
+     * Setter for values and keys for statement
+     * 
+     * @param preparedStatement the statement
+     * @throws SQLException in case of an error
+     * @throws EdmException in case of an error
+     */
     public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         SQLExpressionUpdate updateExpression = getUpdateExpression();
         List<Object> values = updateExpression.getColumnData();
@@ -490,13 +561,26 @@ public final class SQLQuery {
         return new Date(calendar.getTime().getTime());
     }
 
-    public boolean next(final ResultSet rs) throws SQLException {
+    /**
+     * Next row
+     * 
+     * @param resultSet the result set
+     * @return true if there is a next row
+     * @throws SQLException in case of an error
+     */
+    public boolean next(final ResultSet resultSet) throws SQLException {
         int top = selectExpression.getTop();
         if (top > 0 && ++row > top)
             return false;
-        return rs.next();
+        return resultSet.next();
     }
 
+    /**
+     * Set an offset
+     * 
+     * @param resultSet the result set
+     * @throws SQLException in case of an error
+     */
     public void setOffset(final ResultSet resultSet) throws SQLException {
         if (selectExpression != null && selectExpression.getSkip() >= 1) {
             // observation: next() needs to be invoked to get an entry as expected by relative()
@@ -534,6 +618,14 @@ public final class SQLQuery {
         }
     }
 
+    /**
+     * Build select expression
+     * 
+     * @param context the context
+     * @return the expression
+     * @throws EdmException in case of an error
+     * @throws ODataException in case of an error
+     */
     public String buildSelect(final SQLContext context) throws EdmException, ODataException {
         StringBuilder builder = new StringBuilder();
         if (selectExpression == null)
@@ -569,6 +661,10 @@ public final class SQLQuery {
         return sql;
     }
 
+    /**
+     * Check if server side paging is enabled
+     * @return true if it is enabled
+     */
     public boolean isServersidePaging() {
         return serversidePaging;
     }

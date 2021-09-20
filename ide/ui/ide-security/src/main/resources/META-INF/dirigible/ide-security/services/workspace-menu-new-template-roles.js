@@ -9,12 +9,24 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"roles",
-			"label":"Roles Definitions",
-			"extension":"roles",
-			"data":JSON.stringify(JSON.parse('[{"name":"administrator","description":"Administrator Role"},{"name":"Operator","description":"Operator Role"}]'), null, 2)
+exports.getTemplate = function () {
+	return {
+		"name": "roles",
+		"label": "Roles Definitions",
+		"extension": "roles",
+		"data": JSON.stringify(
+			[
+				{
+					"name": "administrator",
+					"description": "Administrator Role"
+				},
+				{
+					"name": "Operator",
+					"description": "Operator Role"
+				}
+			],
+			null,
+			2
+		)
 	};
-	return view;
 };

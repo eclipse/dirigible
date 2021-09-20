@@ -85,25 +85,29 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing OData Schemas and Mappings...");
 				try {
-					if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
-						startSynchronization(SYNCHRONIZER_NAME);
-						clearCache();
-						synchronizePredelivered();
-						synchronizeRegistry();
-						updateOData();
-						int immutableSchemasCount = SCHEMAS_PREDELIVERED.size();
-						int immutableMappingsCount = MAPPINGS_PREDELIVERED.size();
-						int immutableODataCount = ODATA_PREDELIVERED.size();
-						int mutableSchemasCount = SCHEMAS_SYNCHRONIZED.size();
-						int mutableMappingsCount = MAPPINGS_SYNCHRONIZED.size();
-						int mutableODataCount = ODATA_MODELS.size();
-						cleanup();
-						clearCache();
-						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Schemas: {0}, Mappings: {1}, OData: {2}], "
-								+ "Mutable: [Schemas: {3}, Mappings: {4}, OData: {5}]", 
-								immutableSchemasCount, immutableMappingsCount, immutableODataCount, mutableSchemasCount, mutableMappingsCount, mutableODataCount));
+					if (isSynchronizationEnabled()) {
+						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+							startSynchronization(SYNCHRONIZER_NAME);
+							clearCache();
+							synchronizePredelivered();
+							synchronizeRegistry();
+							updateOData();
+							int immutableSchemasCount = SCHEMAS_PREDELIVERED.size();
+							int immutableMappingsCount = MAPPINGS_PREDELIVERED.size();
+							int immutableODataCount = ODATA_PREDELIVERED.size();
+							int mutableSchemasCount = SCHEMAS_SYNCHRONIZED.size();
+							int mutableMappingsCount = MAPPINGS_SYNCHRONIZED.size();
+							int mutableODataCount = ODATA_MODELS.size();
+							cleanup();
+							clearCache();
+							successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Schemas: {0}, Mappings: {1}, OData: {2}], "
+									+ "Mutable: [Schemas: {3}, Mappings: {4}, OData: {5}]", 
+									immutableSchemasCount, immutableMappingsCount, immutableODataCount, mutableSchemasCount, mutableMappingsCount, mutableODataCount));
+						} else {
+							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						}
 					} else {
-						failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+						logger.debug("Synchronization has been disabled");
 					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for OData Schemas and Mappings failed.", e);
@@ -172,7 +176,8 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	 *
 	 * @param contentPath
 	 *            the data path
-	 * @throws Exception 
+	 * @throws Exception
+	 *             Exception during loading of resources.
 	 */
 	public void registerPredeliveredOData(String contentPath) throws Exception {
 		String data = loadResourceContent(contentPath);

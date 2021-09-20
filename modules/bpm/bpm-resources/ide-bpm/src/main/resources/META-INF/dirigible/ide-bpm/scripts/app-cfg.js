@@ -15,11 +15,11 @@
 
 'use strict';
 
-var FLOWABLE = FLOWABLE || {};
+let FLOWABLE = FLOWABLE || {};
 
 FLOWABLE.CONFIG = {
-	'onPremise' : true,
-	'contextRoot' : '../../../../services/v4/ide/bpm',
-	'webContextRoot' : '../../../../services/v4/web/ide-bpm',
-	'datesLocalization' : false
+	'onPremise': true,
+	'contextRoot': '/services/v4/ide/bpm',
+	'webContextRoot': '/services/v4/web/ide-bpm',
+	'datesLocalization': false
 };

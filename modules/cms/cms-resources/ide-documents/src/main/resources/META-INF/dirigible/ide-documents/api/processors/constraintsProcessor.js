@@ -9,12 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var repositoryManager = require("platform/v4/repository");
-var documentsUtils = require("ide-documents/utils/cmis/document");
-var folderUtils = require("ide-documents/utils/cmis/folder");
-var objectUtils = require("ide-documents/utils/cmis/object");
-var bytes = require("io/v4/bytes");
-var streams = require("io/v4/streams");
+let repositoryManager = require("platform/v4/repository");
+let documentsUtils = require("ide-documents/utils/cmis/document");
+let folderUtils = require("ide-documents/utils/cmis/folder");
+let objectUtils = require("ide-documents/utils/cmis/object");
+let bytes = require("io/v4/bytes");
+let streams = require("io/v4/streams");
 
 const INTERNAL_FOLDER = "__internal";
 const INTERNAL_FOLDER_LOCATION = "/" + INTERNAL_FOLDER;
@@ -29,16 +29,16 @@ function updateAccessDefinitionsInCMS(data) {
         folder = folderUtils.getFolder(INTERNAL_FOLDER_LOCATION);
     }
     let document = {
-        getName: function() {
+        getName: function () {
             return ACCESS_CONSTRAINTS_FILE;
         },
-        getContentType: function() {
+        getContentType: function () {
             return "application/json";
         },
-        getSize: function() {
+        getSize: function () {
             return data.length;
         },
-        getInputStream: function() {
+        getInputStream: function () {
             let contentBytes = bytes.textToByteArray(data);
             return streams.createByteArrayInputStream(contentBytes);
         }
@@ -67,12 +67,12 @@ exports.getAccessDefinitions = function () {
     return content;
 };
 
-exports.updateAccessDefinitions = function(accessDefinitions) {
+exports.updateAccessDefinitions = function (accessDefinitions) {
     let path = "/registry/public/ide-documents/security/roles.access";
     let content = JSON.stringify(accessDefinitions);
     let resource = repositoryManager.getResource(path);
-    if (resource.exists()) {    	
-    	repositoryManager.deleteResource(path);
+    if (resource.exists()) {
+        repositoryManager.deleteResource(path);
     }
     repositoryManager.createResource(path, content);
     updateAccessDefinitionsInCMS(content);

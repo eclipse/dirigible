@@ -61,7 +61,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD = "DIRIGIBLE_FLOWABLE_DATABASE_PASSWORD";
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME = "DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME";
 	private static final String DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE = "DIRIGIBLE_FLOWABLE_DATABASE_SCHEMA_UPDATE";
-	private static final String DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE = "DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE";
+	private static final String DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE = "DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE";
 	
 
 	/** The Constant NAME. */
@@ -71,10 +71,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public static final String TYPE = "internal"; //$NON-NLS-1$
 
 	private static ProcessEngine processEngine;
-
-	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 	
-	private static IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private static IRepository repository;
 
 	public BpmProviderFlowable() {
 		Configuration.loadModuleConfig("/dirigible-bpm.properties");
@@ -95,15 +93,14 @@ public class BpmProviderFlowable implements IBpmProvider {
 		synchronized (BpmProviderFlowable.class) {
 			if (processEngine == null) {
 				logger.info("Initializng the Flowable Process Engine...");
-				
-				if (database == null)
-					database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
-				if (repository == null)
+
+				if (repository == null) {
 					repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-				
+				}
+
 				ProcessEngineConfiguration cfg = null;
 				String dataSourceName = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME);
-				
+
 				if (dataSourceName != null) {
 					logger.info("Initializng the Flowable Process Engine with JNDI datasource name");
 					cfg = new StandaloneProcessEngineConfiguration().setDataSourceJndiName(dataSourceName);
@@ -118,17 +115,16 @@ public class BpmProviderFlowable implements IBpmProvider {
 						cfg = new StandaloneProcessEngineConfiguration().setJdbcUrl(url).setJdbcUsername(user)
 								.setJdbcPassword(password).setJdbcDriver(driver);
 					} else {
-						String useDefault = Configuration.get(DIRIGIBLE_FLOWABLE_USE_DEFAULT_DATABASE, "true");
+						String useDefault = Configuration.get(DIRIGIBLE_FLOWABLE_USE_SYSTEM_DATASOURCE, "true");
+						DataSource dataSource = null;
 						if (Boolean.parseBoolean(useDefault)) {
-							logger.info("Initializng the Flowable Process Engine with the default datasource");
-							cfg = new StandaloneProcessEngineConfiguration().setDataSource(database.getDataSource());
+							logger.info("Initializng the Flowable Process Engine with the System DataSource (SystemDB)");
+							dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 						} else {
-							H2Database h2Database = new H2Database();
-							h2Database.initialize();
-							DataSource flowableDataSource = h2Database.getDataSource("flowable");
-							logger.info("Initializng the Flowable Process Engine with the built-in H2 datasource");
-							cfg = new StandaloneProcessEngineConfiguration().setDataSource(flowableDataSource);
+							logger.info("Initializng the Flowable Process Engine with the Default DataSource (DefaultDB)");
+							dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 						}
+						cfg = new StandaloneProcessEngineConfiguration().setDataSource(dataSource);
 					}
 				}
 				

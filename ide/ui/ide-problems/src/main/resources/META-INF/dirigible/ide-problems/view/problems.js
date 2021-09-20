@@ -17,7 +17,7 @@ angular.module('problems', [])
         $scope.problemsList = [];
 
         function refreshList() {
-            $http.get('../../../ops/problems').then(function(response) {
+            $http.get('/services/v4/ops/problems').then(function (response) {
                 $scope.allProblems = response.data;
                 $scope.problemsList = $scope.allProblems;
             });
@@ -61,43 +61,43 @@ angular.module('problems', [])
             refreshList();
         }
 
-        $scope.search = function() {
+        $scope.search = function () {
             $scope.problemsList = $scope.allProblems.filter(e => containsSearchText(e));
         };
 
-        $scope.checkAll = function() {
+        $scope.checkAll = function () {
             angular.forEach($scope.problemsList, function (problem) {
                 problem.checked = $scope.selectAll;
             });
         };
 
-        $scope.updateStatus = function(status) {
-            $http.post('../../../ops/problems/update/' + status, filterSelectedIds()).then(function(response) {
+        $scope.updateStatus = function (status) {
+            $http.post('/services/v4/ops/problems/update/' + status, filterSelectedIds()).then(function (response) {
                 $scope.allProblems = response.data;
                 $scope.problemsList = $scope.allProblems;
                 $scope.selectAll = false;
             });
         };
 
-        $scope.deleteByStatus = function(status) {
-            $http.delete('../../../ops/problems/delete/' + status).success(function () {
+        $scope.deleteByStatus = function (status) {
+            $http.delete('/services/v4/ops/problems/delete/' + status).success(function () {
                 refreshList();
             });
         }
 
-        $scope.deleteSelected = function() {
-            $http.post('../../../ops/problems/delete/selected', filterSelectedIds()).success(function () {
+        $scope.deleteSelected = function () {
+            $http.post('/services/v4/ops/problems/delete/selected', filterSelectedIds()).success(function () {
                 refreshList();
             });
         }
 
-        $scope.clear = function() {
-            $http.delete('../../../ops/problems/clear').success(function () {
+        $scope.clear = function () {
+            $http.delete('/services/v4/ops/problems/clear').success(function () {
                 $scope.allProblems = [];
                 $scope.problemsList = [];
                 $scope.selectAll = false;
             });
         }
-    }]).config(function($sceProvider) {
-    $sceProvider.enabled(false);
-});
+    }]).config(function ($sceProvider) {
+        $sceProvider.enabled(false);
+    });

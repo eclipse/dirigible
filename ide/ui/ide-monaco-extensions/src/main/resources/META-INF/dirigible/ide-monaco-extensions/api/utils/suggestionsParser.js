@@ -9,19 +9,19 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var contentManager = require("platform/v4/registry");
-var acorn = require("acornjs/acorn");
+let contentManager = require("platform/v4/registry");
+let acorn = require("acornjs/acorn");
 
 const COMMENTS_OFFSET_LENGTH = 12;
 
-String.prototype.replaceAll = function(search, replacement) {
+String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
 
-exports.parse = function(moduleName) {
-    var content = contentManager.getText(moduleName + ".js");
-    var comments = [];
-    var nodes = acorn.parse(content, {
+exports.parse = function (moduleName) {
+    let content = contentManager.getText(moduleName + ".js");
+    let comments = [];
+    let nodes = acorn.parse(content, {
         onComment: comments,
         ranges: true
     });
@@ -30,12 +30,12 @@ exports.parse = function(moduleName) {
     let functions = getFunctions(nodes.body);
     let transformedFunctions = {};
 
-    for (let i = 0; i < functions.length; i ++) {
+    for (let i = 0; i < functions.length; i++) {
         let func = transformFunction(functions[i], comments);
         addTransformedFunction(transformedFunctions, "exports", func);
     }
 
-    for (let i = 0; i < objects.length; i ++) {
+    for (let i = 0; i < objects.length; i++) {
         getFunctions(objects[i].body.body).forEach(next => {
             let func = transformFunction(next, comments);
             addTransformedFunction(transformedFunctions, objects[i].id.name, func);
@@ -103,7 +103,7 @@ function getDocumentation(func, comments) {
         let matches = false;
         if (e.type === "Block") {
             matches = e.start > 0 // skip the first "Header/License" comment
-                && e.end < func.expression.start 
+                && e.end < func.expression.start
                 && e.end + COMMENTS_OFFSET_LENGTH >= func.expression.start;
         }
         return matches;
@@ -116,7 +116,7 @@ function getReturnType(func) {
         let returnType = "void";
         let returnStatement = func.expression.right.body.body.filter(e => e.type === "ReturnStatement")[0];
         if (returnStatement && returnStatement.argument) {
-            switch(returnStatement.argument.type) {
+            switch (returnStatement.argument.type) {
                 case "NewExpression":
                     returnType = returnStatement.argument.callee.name;
                     break;

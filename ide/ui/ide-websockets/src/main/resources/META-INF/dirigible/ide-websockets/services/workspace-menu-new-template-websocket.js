@@ -9,12 +9,19 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
-	var view = {
-			"name":"websocket",
-			"label":"Websocket",
-			"extension":"websocket",
-			"data":JSON.stringify(JSON.parse('{"handler":"myproject/myhandler.js","endpoint":"myendpoint","description":"My Websocket"}'), null, 2)
+exports.getTemplate = function () {
+	return {
+		"name": "websocket",
+		"label": "Websocket",
+		"extension": "websocket",
+		"data": JSON.stringify(
+			{
+				"handler": "myproject/myhandler.js",
+				"endpoint": "myendpoint",
+				"description": "My Websocket"
+			},
+			null,
+			2
+		)
 	};
-	return view;
 };

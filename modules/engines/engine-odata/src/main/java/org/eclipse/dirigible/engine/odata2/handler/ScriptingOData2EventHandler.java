@@ -25,6 +25,7 @@ import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
 import org.eclipse.dirigible.engine.js.api.IJavascriptEngineExecutor;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
@@ -39,6 +40,9 @@ import org.slf4j.LoggerFactory;
 
 public class ScriptingOData2EventHandler implements OData2EventHandler {
 	
+	private static final String DIRIGIBLE_ODATA_HANDLER_EXECUTOR_TYPE = "DIRIGIBLE_ODATA_HANDLER_EXECUTOR_TYPE";
+	private static final String DIRIGIBLE_ODATA_HANDLER_EXECUTOR_ON_EVENT = "DIRIGIBLE_ODATA_HANDLER_EXECUTOR_ON_EVENT";
+
 	private static final Logger logger = LoggerFactory.getLogger(DefaultSQLProcessor.class);
 	
 	private static final String DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT = "odata/wrappers/onEvent";
@@ -326,8 +330,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		handlers.forEach(handler -> {
 			setHandlerParametersInContext(context, handler);
 			try {
-				ScriptEngineExecutorsManager.executeServiceModule(
-						IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT, context);
+				executeHandlerByExecutor(context);
 			} catch (ScriptingException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -339,14 +342,26 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 			ODataHandlerDefinition handler = handlers.get(0);
 			setHandlerParametersInContext(context, handler);
 			try {
-				Object response = ScriptEngineExecutorsManager.executeServiceModule(
-						IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT, context);
+				Object response = executeHandlerByExecutor(context);
 				return response != null ? response.toString() : "Empty response.";
 			} catch (ScriptingException e) {
 				logger.error(e.getMessage(), e);
 			}
 		};
 		return "No response.";
+	}
+
+	private Object executeHandlerByExecutor(Map<Object, Object> context) throws ScriptingException {
+		String odataHandlerExecutorType = Configuration.get(DIRIGIBLE_ODATA_HANDLER_EXECUTOR_TYPE);
+		String odataHandlerExecutorOnEvent = Configuration.get(DIRIGIBLE_ODATA_HANDLER_EXECUTOR_ON_EVENT);
+		if (odataHandlerExecutorType != null && odataHandlerExecutorOnEvent != null) {
+			Object response = ScriptEngineExecutorsManager.executeServiceModule(
+					odataHandlerExecutorType, odataHandlerExecutorOnEvent, context);
+			return response;
+		}
+		Object response = ScriptEngineExecutorsManager.executeServiceModule(
+				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT, context);
+		return response;
 	}
 	
 	private void setHandlerParametersInContext(Map<Object, Object> context, ODataHandlerDefinition handler) {

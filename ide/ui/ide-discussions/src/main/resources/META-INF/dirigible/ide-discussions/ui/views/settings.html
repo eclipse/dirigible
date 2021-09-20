@@ -1,16 +1,18 @@
 <div>
-	<h3 class="title" ng-bind="settingsVm.i18n.format('settings.title')"></h3>
-	<div class="form-group">
-		<label ng-bind="settingsVm.i18n.format('settings.username_label')"></label>
-		<div class="form-control">
-			<span ng-bind="settingsVm.user.username" title="{{settingsVm.i18n.format('settings.username_label')}}"></span>
-	     </div>
-  	</div>	
-	<div class="form-group">
-		<label ng-bind="settingsVm.i18n.format('settings.avatar_label')"></label>
-		<div class="form-control" style="height:initial">
-			<input type="file" nv-file-select uploader="settingsVm.uploader" style="display:inline-block"/>
-			<img ng-src="../../../js/ide-discussions/svc/user/avatar.js" class="user-pic" title="{{settingsVm.i18n.format('settings.avatar_label')}}"/>
-	     </div>
-  	</div>
+    <h3 class="title" ng-bind="settingsVm.i18n.format('settings.title')"></h3>
+    <div class="form-group">
+        <label ng-bind="settingsVm.i18n.format('settings.username_label')"></label>
+        <div class="form-control">
+            <span ng-bind="settingsVm.user.username"
+                title="{{settingsVm.i18n.format('settings.username_label')}}"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label ng-bind="settingsVm.i18n.format('settings.avatar_label')"></label>
+        <div class="form-control" style="height:initial">
+            <input type="file" nv-file-select uploader="settingsVm.uploader" style="display:inline-block" />
+            <img ng-src="/services/v4/js/ide-discussions/svc/user/avatar.js" class="user-pic"
+                title="{{settingsVm.i18n.format('settings.avatar_label')}}" />
+        </div>
+    </div>
 </div>

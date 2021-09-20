@@ -140,35 +140,39 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			if (beforeSynchronizing()) {
 				logger.trace("Synchronizing Data Structures...");
 				try {
-					startSynchronization(SYNCHRONIZER_NAME);
-					clearCache();
-					synchronizePredelivered();
-					synchronizeRegistry();
-					updateDatabaseSchema();
-					updateDatabaseContent();
-					int immutableTablesCount = TABLES_PREDELIVERED.size();
-					int immutableViewsCount = VIEWS_PREDELIVERED.size();
-					int immutableSchemaCount = SCHEMA_PREDELIVERED.size();
-					int immutableReplaceCount = REPLACE_PREDELIVERED.size();
-					int immutableAppendCount = APPEND_PREDELIVERED.size();
-					int immutableDeleteCount = DELETE_PREDELIVERED.size();
-					int immutableUpdateCount = UPDATE_PREDELIVERED.size();
-					
-					int mutableTablesCount = TABLES_SYNCHRONIZED.size();
-					int mutableViewsCount = VIEWS_SYNCHRONIZED.size();
-					int mutableSchemaCount = DATA_STRUCTURE_SCHEMA_MODELS.size();
-					int mutableReplaceCount = DATA_STRUCTURE_REPLACE_MODELS.size();
-					int mutableAppendCount = DATA_STRUCTURE_APPEND_MODELS.size();
-					int mutableDeleteCount = DATA_STRUCTURE_DELETE_MODELS.size();
-					int mutableUpdateCount = DATA_STRUCTURE_UPDATE_MODELS.size();
-					
-					cleanup(); // TODO drop tables and views for non-existing models
-					clearCache();
-					
-					successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Tables: {0}, Views: {1}, Schema: {2}, Replace: {3}, Append: {4}, Delete: {5}, Update: {6}], "
-							+ "Mutable: [Tables: {7}, Views: {8}, Schema: {9}, Replace: {10}, Append: {11}, Delete: {12}, Update: {13}]", 
-							immutableTablesCount, immutableViewsCount, immutableSchemaCount, immutableReplaceCount, immutableAppendCount, immutableDeleteCount, immutableUpdateCount,
-							mutableTablesCount, mutableViewsCount, mutableSchemaCount, mutableReplaceCount, mutableAppendCount, mutableDeleteCount, mutableUpdateCount));
+					if (isSynchronizationEnabled()) {
+						startSynchronization(SYNCHRONIZER_NAME);
+						clearCache();
+						synchronizePredelivered();
+						synchronizeRegistry();
+						updateDatabaseSchema();
+						updateDatabaseContent();
+						int immutableTablesCount = TABLES_PREDELIVERED.size();
+						int immutableViewsCount = VIEWS_PREDELIVERED.size();
+						int immutableSchemaCount = SCHEMA_PREDELIVERED.size();
+						int immutableReplaceCount = REPLACE_PREDELIVERED.size();
+						int immutableAppendCount = APPEND_PREDELIVERED.size();
+						int immutableDeleteCount = DELETE_PREDELIVERED.size();
+						int immutableUpdateCount = UPDATE_PREDELIVERED.size();
+						
+						int mutableTablesCount = TABLES_SYNCHRONIZED.size();
+						int mutableViewsCount = VIEWS_SYNCHRONIZED.size();
+						int mutableSchemaCount = DATA_STRUCTURE_SCHEMA_MODELS.size();
+						int mutableReplaceCount = DATA_STRUCTURE_REPLACE_MODELS.size();
+						int mutableAppendCount = DATA_STRUCTURE_APPEND_MODELS.size();
+						int mutableDeleteCount = DATA_STRUCTURE_DELETE_MODELS.size();
+						int mutableUpdateCount = DATA_STRUCTURE_UPDATE_MODELS.size();
+						
+						cleanup(); // TODO drop tables and views for non-existing models
+						clearCache();
+						
+						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Tables: {0}, Views: {1}, Schema: {2}, Replace: {3}, Append: {4}, Delete: {5}, Update: {6}], "
+								+ "Mutable: [Tables: {7}, Views: {8}, Schema: {9}, Replace: {10}, Append: {11}, Delete: {12}, Update: {13}]", 
+								immutableTablesCount, immutableViewsCount, immutableSchemaCount, immutableReplaceCount, immutableAppendCount, immutableDeleteCount, immutableUpdateCount,
+								mutableTablesCount, mutableViewsCount, mutableSchemaCount, mutableReplaceCount, mutableAppendCount, mutableDeleteCount, mutableUpdateCount));
+					} else {
+						logger.debug("Synchronization has been disabled");
+					}
 				} catch (Exception e) {
 					logger.error("Synchronizing process for Data Structures failed.", e);
 					try {
