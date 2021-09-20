@@ -218,7 +218,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		List<OData2ResultSetEntity> targetEntitiesResult = new ArrayList<>();
 
 		Integer count;
-		String nextLink = null;
+		String nextLink;
 		try (Connection connection = getDataSource().getConnection()) {
 			if (inlineCountType == InlineCount.ALLPAGES) {
 				SQLQuery countEntitySet = this.getSQLQueryBuilder().buildSelectCountQuery((UriInfo) uriInfo);
@@ -478,7 +478,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		
 		try {
 			List<EdmProperty> keyProperties = entityType.getKeyProperties();
-			ArrayList<KeyPredicate> keyPredicates = new ArrayList<KeyPredicate>();
+			List<KeyPredicate> keyPredicates = new ArrayList<>();
 			if (!keyProperties.isEmpty()) {
 				for (EdmProperty keyProperty : keyProperties) {
 					if (entry.getProperties().get(keyProperty.getName()) != null) {
@@ -595,11 +595,13 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	@Override
 	public ODataResponse updateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final boolean merge, final String contentType) throws ODataException {
-		
-		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
-			throw new ODataException(String.format("Update operation on entity: %s is forbidden.", OData2Utils.fqn(uriInfo.getTargetType())));
+		if (uriInfo.getFilter() != null) {
+			throw new ODataException("Update operation is not allowed with filter.");
 		}
-		
+		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
+			throw new ODataException(String.format("Update operation forbidden on entity: %s", OData2Utils.fqn(uriInfo.getTargetType())));
+		}
+
 		if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
 			return this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType);
 		}

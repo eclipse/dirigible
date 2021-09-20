@@ -74,7 +74,7 @@ public class ODataSQLProcessorTest {
     ODataServiceFactory sf;
 
     @Before
-    public void setup() throws LiquibaseException, ODataException, SQLException {
+    public void setup() throws ODataException, SQLException {
         ds = createDataSource();
         edm = new AnnotationEdmProvider(Arrays.asList(Car.class, Driver.class));
         edm.getSchemas();
@@ -83,7 +83,7 @@ public class ODataSQLProcessorTest {
     }
 
     @After
-    public void clearDb() throws Exception {
+    public void clearDb() {
         try (Connection c = ds.getConnection()) {
             try (PreparedStatement s = c.prepareStatement("DROP ALL OBJECTS")) {
                 s.execute();
@@ -296,7 +296,7 @@ public class ODataSQLProcessorTest {
     }
 
     @Test
-    public void testCreateEntityWithReferenceID() throws InstantiationException, IllegalAccessException, IOException, ODataException {
+    public void testCreateEntityWithReferenceID() throws IOException, ODataException {
         String existingCarId = "639cac17-4cfd-4d94-b5d0-111fd5488423";
         String newDriverId = "11111111-1111-1111-1111-111111111111";
         String content = "{" //
@@ -334,7 +334,6 @@ public class ODataSQLProcessorTest {
 
     @Test
     public void testMergeEntity() throws Exception {
-
         Response existingCar = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
                 .accept("application/json").executeRequest(GET);
@@ -427,8 +426,31 @@ public class ODataSQLProcessorTest {
         assertEquals(50000.0d, properties.get("Price"));
     }
 
+
     @Test
-    public void testNavigation() throws InstantiationException, IllegalAccessException, IOException, ODataException {
+    public void testPutEntityWithFilterNotAllowed() throws Exception {
+        String content = "{" //
+                + "  \"d\": {" //
+                + "    \"__metadata\": {" //
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+                + "    }," //
+                + "    \"Id\": \"639cac17-4cfd-4d94-b5d0-111fd5488423\"," //
+                + "    \"Price\": 50000.0" //
+                + " }" + "}";
+
+        Response response = modifyingRequestBuilder(sf, content)//
+                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+
+                .accept("application/json")//
+                .content(content)//
+                .param("$filter", "Year eq 1982 or endswith(Make,'W')") //
+                .param("content-type", "application/json")//
+                .contentSize(content.length()).executeRequest(PUT);
+        assertEquals(500, response.getStatus());
+    }
+
+    @Test
+    public void testNavigation() throws IOException, ODataException {
 
         Response response = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars('7990d49f-cfaf-48ab-8c6f-adbe7aaa069e')", "Drivers") //
@@ -534,6 +556,22 @@ public class ODataSQLProcessorTest {
         assertEquals(67000.0, entries.get(0).getProperties().get("Price"));
         assertEquals(4000.0, entries.get(1).getProperties().get("Price"));
 
+    }
+
+    @Test
+    public void tesFilterTwoConditionsAnd() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$orderby", "Price desc") //
+                .param("$filter", "Year eq 1982 and startswith(Make,'Mos')") //
+                .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(200, response.getStatus());
+
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        List<ODataEntry> entries = resultFeed.getEntries();
+        assertEquals(1, entries.size());
+        assertEquals(4000.0, entries.get(0).getProperties().get("Price"));
+        assertEquals("Moskvitch", entries.get(0).getProperties().get("Make"));
     }
 
     @Test
