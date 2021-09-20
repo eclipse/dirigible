@@ -377,30 +377,30 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
     }
 
     protected void mockRequest(HttpServletRequest mockedRequest) {
-        when(mockedRequest.getMethod()).thenReturn("GET");
-        when(mockedRequest.getRemoteUser()).thenReturn("tester");
-        when(mockedRequest.getPathInfo()).thenReturn("/path");
-        when(mockedRequest.getPathTranslated()).thenReturn("/translated");
-        when(mockedRequest.getHeader("header1")).thenReturn("header1");
-        when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(Arrays.asList("header1", "header2")));
-        when(mockedRequest.getServerName()).thenReturn("server1");
-        when(mockedRequest.getHeader("header1")).thenReturn("header1");
-        when(mockedRequest.isUserInRole("role1")).thenReturn(true);
-        when(mockedRequest.getAttribute("attr1")).thenReturn("val1");
-        when(mockedRequest.getAuthType()).thenReturn("Basic");
+        Mockito.lenient().when(mockedRequest.getMethod()).thenReturn("GET");
+        Mockito.lenient().when(mockedRequest.getRemoteUser()).thenReturn("tester");
+        Mockito.lenient().when(mockedRequest.getPathInfo()).thenReturn("/path");
+        Mockito.lenient().when(mockedRequest.getPathTranslated()).thenReturn("/translated");
+        Mockito.lenient().when(mockedRequest.getHeader("header1")).thenReturn("header1");
+        Mockito.lenient().when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(Arrays.asList("header1", "header2")));
+        Mockito.lenient().when(mockedRequest.getServerName()).thenReturn("server1");
+        Mockito.lenient().when(mockedRequest.getHeader("header1")).thenReturn("header1");
+        Mockito.lenient().when(mockedRequest.isUserInRole("role1")).thenReturn(true);
+        Mockito.lenient().when(mockedRequest.getAttribute("attr1")).thenReturn("val1");
+        Mockito.lenient().when(mockedRequest.getAuthType()).thenReturn("Basic");
 
         HttpSession mockedSession = Mockito.mock(HttpSession.class);
         //when(mockedRequest.getSession()).thenReturn(mockedSession);
-        when(mockedRequest.getSession(true)).thenReturn(mockedSession);
+        Mockito.lenient().when(mockedRequest.getSession(true)).thenReturn(mockedSession);
         mockSession(mockedSession);
     }
 
     protected void mockSession(HttpSession mockedSession) {
-        when(mockedSession.getAttributeNames()).thenReturn(Collections.enumeration(Arrays.asList("attr1")));
+        Mockito.lenient().when(mockedSession.getAttributeNames()).thenReturn(Collections.enumeration(Arrays.asList("attr1")));
     }
 
     protected void mockResponse(HttpServletResponse mockedResponse) {
-        when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
+        Mockito.lenient().when(mockedResponse.getHeaderNames()).thenReturn(Arrays.asList("header1", "header2"));
     }
 
     protected void runTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {

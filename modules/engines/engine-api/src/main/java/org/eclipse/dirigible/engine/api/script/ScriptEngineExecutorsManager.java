@@ -47,6 +47,16 @@ public class ScriptEngineExecutorsManager {
 				format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
 	}
 
+	public static Object evalModule(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor("javascript");
+		if (scriptEngineExecutor != null) {
+			return scriptEngineExecutor.evalModule(code, executionContext);
+		}
+
+		throw new ScriptingException(
+				format("Script Executor of Type [{0}] does not exist, hence the Script [{1}] cannot be processed", "javascript", code));
+	}
+
 	/**
 	 * Execute service code.
 	 *

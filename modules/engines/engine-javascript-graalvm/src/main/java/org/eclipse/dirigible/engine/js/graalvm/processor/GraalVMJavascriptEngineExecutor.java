@@ -36,11 +36,8 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
-import org.graalvm.polyglot.EnvironmentAccess;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +81,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(module, executionContext, true);
+		return executeService(module, executionContext, true, true);
 	}
 
 	/*
@@ -94,7 +91,17 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(code, executionContext, false);
+		return executeService(code, executionContext, false, true);
+	}
+
+	@Override
+	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false, false);
+	}
+
+	@Override
+	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true, false);
 	}
 
 	/**
@@ -110,7 +117,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 * @throws ScriptingException
 	 *             the scripting exception
 	 */
-	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
+	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
@@ -160,6 +167,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			contextBuilder.option(BUILDER_OPTION_INSPECT_PATH, moduleOrCode);
 		}
 
+		Object result = null;
 		try (Context context = contextBuilder.build()) {
 			Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
 			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
@@ -172,24 +180,43 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 			beforeEval(context);
 
-			context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
-			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
-			context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
+            if (commonJSModule) {
+				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
 
-			if (isModule) {
-				bindings.putMember("MODULE_FILENAME", moduleOrCode);
-				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE).as(Object.class);
+				if (isModule) {
+					bindings.putMember("MODULE_FILENAME", moduleOrCode);
+					result = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE).as(Object.class);
+				} else {
+					bindings.putMember("SCRIPT_STRING", moduleOrCode);
+					context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+				}
 			} else {
-				bindings.putMember("SCRIPT_STRING", moduleOrCode);
-				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+				context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+				String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+				if (isDebugEnabled) {
+					code = CODE_DEBUGGER + code;
+				}
+				result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
 			}
+
 
         } catch (IOException e) {
         	logger.error(e.getMessage(), e);
-        }
+        } catch (ClassCastException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (PolyglotException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		logger.trace("exiting: executeServiceModule()");
-		return null;
+		return result;
 	}
 
 	protected String loadSource(String module) throws IOException, URISyntaxException {

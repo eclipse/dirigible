@@ -45,8 +45,8 @@ public class JavascriptGenerationEngine implements IGenerationEngine {
 			Map<Object, Object> context = new HashMap<Object, Object>();
 	        BiConsumer<Object, Object> action = new ContextBiConsumer(context);
 			parameters.forEach(action);
-			ScriptEngineExecutorsManager.executeServiceModule("javascript", (String) parameters.get("handler"), context);
-			return "".getBytes(StandardCharsets.UTF_8);
+			String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"), context).toString();
+			return result.getBytes(StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new IOException("Could not evaluate template by Javascript: " + location, ex);

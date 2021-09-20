@@ -43,9 +43,9 @@ public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 			IGenerationEngine generationEngine = new JavascriptGenerationEngine();
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("handler", "my-handler.js");
-			parameters.put("testParameter", "true");
-			//byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
-			assertEquals("test testValue", "test testValue");
+			parameters.put("testParameter", "testValue");
+			byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
+			assertEquals("test testValue", new String(result));
 		} finally {
 			ThreadContextFacade.tearDown();
 		}
