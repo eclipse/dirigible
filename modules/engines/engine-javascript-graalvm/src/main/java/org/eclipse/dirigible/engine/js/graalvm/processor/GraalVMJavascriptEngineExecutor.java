@@ -187,7 +187,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 				if (isModule) {
 					bindings.putMember("MODULE_FILENAME", moduleOrCode);
-					result = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE).as(Object.class);
+					context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
 				} else {
 					bindings.putMember("SCRIPT_STRING", moduleOrCode);
 					context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
@@ -211,6 +211,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			e.printStackTrace();
 		} catch (PolyglotException e) {
 			e.printStackTrace();
+			logger.trace("exiting: executeServiceModule() with js exception");
+			return e.getMessage(); // TODO: Create JSExecutionResult class and return it instead of Object instance
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

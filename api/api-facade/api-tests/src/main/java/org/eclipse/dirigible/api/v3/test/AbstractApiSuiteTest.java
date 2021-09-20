@@ -424,7 +424,10 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         }
         Object result = null;
         long start = System.currentTimeMillis();
-        executor.executeServiceModule(testModule, null);
+        Object error = executor.executeServiceModule(testModule, null);
+        if (error != null && error.toString() != null) {
+            throw new ScriptingException(error.toString());
+        }
         long time = System.currentTimeMillis() - start;
         System.out.println(String.format("API test [%s] on engine [%s] passed for: %d ms", testModule,
                 executor.getType(), time));

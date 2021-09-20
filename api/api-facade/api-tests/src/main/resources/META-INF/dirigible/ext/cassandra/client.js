@@ -27,8 +27,6 @@ java.lang.Thread.sleep(500);
 var resultSet = cassandraSession.getDBResults(cassandraSession,"test", "select*from test_table");
 var stringResult = resultSet.getRowAsString();
 
-console.log("EXECUTING ASSERT")
-assertTrue(false);
 assertTrue(stringResult !== null && stringResult !== undefined && stringResult === "[Row[1, test_user, 18]]");
 
 
