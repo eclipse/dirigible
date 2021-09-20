@@ -284,10 +284,10 @@ public class SQLQueryBuilder {
         return q;
     }
 
-	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> entryKeys) throws ODataException {
+	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> uriKeys) throws ODataException {
 		EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        q.update(target, entry, entryKeys).build();
+        q.update(target, entry, uriKeys).build();
         return q;
 	}
 }
