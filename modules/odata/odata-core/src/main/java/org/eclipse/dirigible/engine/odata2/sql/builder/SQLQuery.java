@@ -502,7 +502,7 @@ public final class SQLQuery {
     public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         SQLExpressionUpdate updateExpression = getUpdateExpression();
         List<Object> values = updateExpression.getColumnData();
-        List<EdmProperty> columnProperties = updateExpression.getColumnProperties();
+        List<EdmProperty> columnProperties = updateExpression.getNonKeyColumnOdataProperties();
 
         setParamsOnPreparedStatement(preparedStatement, values, columnProperties);
     }
@@ -771,8 +771,8 @@ public final class SQLQuery {
         return normalizedString(context, builder);
     }
 
-    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> entryKeys) {
-        updateExpression = new SQLExpressionUpdate(this, target, entry, entryKeys);
+    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> uriKeys) {
+        updateExpression = new SQLExpressionUpdate(this, target, entry, uriKeys);
         return updateExpression;
     }
 

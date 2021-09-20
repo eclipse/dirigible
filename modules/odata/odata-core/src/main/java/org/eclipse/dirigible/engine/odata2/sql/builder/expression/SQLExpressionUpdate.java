@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csv;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.join;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.csvInBrackets;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
@@ -29,21 +30,21 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
-public final class SQLExpressionUpdate implements SQLExpression {
+public class SQLExpressionUpdate implements SQLExpression {
 
 	private final SQLQuery query;
 	private EdmEntityType target;
-	private ODataEntry entry;
-	private final List<String> columnNames = new ArrayList<>();
+	private ODataEntry requestEntry;
+	private final List<String> nonKeyColumnNames = new ArrayList<>();
 	private final List<Object> columnData = new ArrayList<>();
-	private final List<EdmProperty> columnProperties = new ArrayList<>();
-	private Map<String, Object> entryKeys;
+	private final List<EdmProperty> nonKeyColumnOdataProperties = new ArrayList<>();
+	private Map<String, Object> uriKeyProperties;
 	@SuppressWarnings("unchecked")
-	public SQLExpressionUpdate(final SQLQuery parent, EdmEntityType target, ODataEntry entry, Map<String, Object> entryKeys) {
+	public SQLExpressionUpdate(final SQLQuery parent, EdmEntityType target, ODataEntry requestEntry, Map<String, Object> uriKeys) {
 		this.query = parent;
 		this.target = target;
-		this.entry = entry;
-		this.entryKeys = entryKeys;
+		this.requestEntry = requestEntry;
+		this.uriKeyProperties = uriKeys;
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public final class SQLExpressionUpdate implements SQLExpression {
 
 	@Override
 	public boolean isEmpty() throws EdmException {
-		return columnNames.size() == 0 ? true : false;
+		return nonKeyColumnNames.size() == 0 ? true : false;
 	}
 
 	public EdmStructuralType getTarget() {
@@ -79,15 +80,15 @@ public final class SQLExpressionUpdate implements SQLExpression {
 
 	public SQLQuery build() throws ODataException {
 		query.grantTableAliasForStructuralTypeInQuery(target);
-		Map<String, Object> entryValues = entry.getProperties();
+		Map<String, Object> entryValues = requestEntry.getProperties();
 
 
 		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
 			if (entryValues.containsKey(property.getName()) && !isKeyProperty(target, property)) {
 				String columnName = query.getSQLTableColumnNoAlias(target, property);
-				columnNames.add(query.getSQLTableColumnNoAlias(target, property));
+				nonKeyColumnNames.add(query.getSQLTableColumnNoAlias(target, property));
+				nonKeyColumnOdataProperties.add(property);
 				columnData.add(entryValues.get(property.getName()));
-				columnProperties.add(property);
 			}
 		}
 
@@ -95,23 +96,34 @@ public final class SQLExpressionUpdate implements SQLExpression {
 			if (entryValues.containsKey(inlineEntry.getName())) {
 				Collection<EdmProperty> inlineEntityKeys = EdmUtils.getKeyProperties(inlineEntry);
 				if (!inlineEntityKeys.isEmpty()) {
-					columnNames.addAll(query.getSQLJoinColumnNoAlias(target, inlineEntry));
+					nonKeyColumnNames.addAll(query.getSQLJoinColumnNoAlias(target, inlineEntry));
 					for (EdmProperty inlineEntityKey : inlineEntityKeys) {
+						nonKeyColumnOdataProperties.add(inlineEntityKey);
 						columnData.add(OData2Utils.getInlineEntryKeyValue(entryValues, inlineEntry, inlineEntityKey));
-						columnProperties.add(inlineEntityKey);
 					}
 				} else {
 					throw new ODataException("Deep update not implemented yet. Please split the update requests!");
 				}
 			}
 		}
-		//add the properties in the end
-		for (String name : entryKeys.keySet()){
-			columnProperties.add((EdmProperty) target.getProperty(name));
-			columnData.add(entryKeys.get(name));
+		//Add the key values in the end. The syntax is update table set (col=val) where key1=val1,key2=val2
+		for (String key : target.getKeyPropertyNames()){ //the order matters
+			Object value = uriKeyProperties.get(key);
+			if (!isValidKey(value)){
+				throw new OData2Exception("Invalid key property" + key, HttpStatusCodes.BAD_REQUEST);
+			}
+			columnData.add(uriKeyProperties.get(key));
 		}
-
 		return query;
+	}
+
+	//Basic validity check for the values. Prevents that someone deletes an entity with an invalid request
+	//in short a composite key makes sense if all elements are not-null (otherwise the non-null element suffices)
+	protected boolean isValidKey(Object value){
+		if (value == null){
+			return false;
+		}
+		return true;
 	}
 
 	private String buildStatement(final SQLContext context) throws EdmException {
@@ -135,41 +147,39 @@ public final class SQLExpressionUpdate implements SQLExpression {
 		return into.toString();
 	}
 
-	private boolean isUpdateTarget(final EdmStructuralType target) {
+	protected boolean isUpdateTarget(final EdmStructuralType target) {
 		// always select the entity target
 		return fqn(query.getUpdateExpression().getTarget()).equals(fqn(target)) ? true : false;
 	}
 
-	private String buildColumnList(final SQLContext context) throws EdmException {
-		return csv(columnNames.stream().map(n -> n + " = ?").collect(Collectors.toList()));
+	protected String buildColumnList(final SQLContext context) throws EdmException {
+		return csv(nonKeyColumnNames.stream().map(n -> n + "=?").collect(Collectors.toList()));
 	}
 
-	private String buildValues(final SQLContext context) throws EdmException {
-		return csvInBrackets(columnNames.stream().map(n -> "?").collect(Collectors.toList()));
+	protected String buildValues(final SQLContext context) throws EdmException {
+		return csvInBrackets(nonKeyColumnNames.stream().map(n -> "?").collect(Collectors.toList()));
 	}
 
-	public List<String> getColumnNames() {
-		return columnNames;
+	public List<String> getNonKeyColumnNames() {
+		return nonKeyColumnNames;
 	}
 
 	public List<Object> getColumnData() {
 		return columnData;
 	}
 
-	public List<EdmProperty> getColumnProperties() {
-		return columnProperties;
+	public List<EdmProperty> getNonKeyColumnOdataProperties() {
+		return nonKeyColumnOdataProperties;
 	}
 
-	private String buildWhereClauseForKeys(final SQLContext context) throws EdmException {
-		List<String> updates = new ArrayList<>();
-		Iterator<Map.Entry<String, Object>> i = entryKeys.entrySet().iterator();
-		while (i.hasNext()) {
-			Map.Entry<String, Object> key = i.next();
-			EdmProperty property = (EdmProperty) target.getProperty(key.getKey());
-			String columnName = query.getSQLTableColumnNoAlias(target, property);
-			updates.add(" " + columnName + " = ? ");
+	protected String buildWhereClauseForKeys(final SQLContext context) throws EdmException {
+		List<String> keyConditions = new ArrayList<>();
+		for (String key : target.getKeyPropertyNames()){
+			EdmProperty keyProperty = (EdmProperty) target.getProperty(key);
+			String keyColumnName = query.getSQLTableColumnNoAlias(target, keyProperty);
+			keyConditions.add(String.format("%s=?", keyColumnName));
 		}
-		return csv(updates);
+		return join(keyConditions, " AND "); //this plays a role when we are dealing with composite IDs
 	}
 
 }

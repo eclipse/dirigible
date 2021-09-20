@@ -82,7 +82,11 @@ public final class SQLExpressionUtils {
 	}
 	
 	public static String csv(List<String> values) {
-		return values.stream().collect(Collectors.joining(","));
+		return join(values,",");
 	}
+
+    public static String join(List<String> values, String delimiter) {
+        return values.stream().collect(Collectors.joining(delimiter));
+    }
 
 }

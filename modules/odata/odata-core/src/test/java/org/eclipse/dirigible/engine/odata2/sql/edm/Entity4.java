@@ -29,6 +29,9 @@ public class Entity4 {
     @EdmProperty
     private Long id4_2;
 
+    @EdmProperty
+    private String id4_3;
+
     @EdmNavigationProperty(toMultiplicity = Multiplicity.MANY, toType = Entity5.class, association = "Entities4OfEntity5")
     private List<Entity5> entity5 = new ArrayList<>();
 }
