@@ -173,7 +173,7 @@ public class SQLQueryTest {
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
                 "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
                 "FROM MPLHEADER AS T0 " +
-                "ORDER BY T0.STATUS, T0.LOGSTART DESC"
+                "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
                 + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
@@ -208,7 +208,7 @@ public class SQLQueryTest {
         assertEquals(
                 "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
                         "FROM MPLHEADER AS T0 " +
-                        "ORDER BY T0.STATUS, T0.LOGSTART DESC"
+                        "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
                         + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
@@ -224,7 +224,7 @@ public class SQLQueryTest {
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //The primary key is always selected in addition
-        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
                 + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
@@ -240,7 +240,7 @@ public class SQLQueryTest {
 
         //The primary key is always selected in addition
         assertEquals(
-                "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC"
+                "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
                         + SERVER_SIDE_PAGING_DEFAULT_SUFFIX,
                 q.buildSelect(context));
     }
@@ -258,7 +258,7 @@ public class SQLQueryTest {
 
         //We expect to have FETCH FIRST expression with derby
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
-                "FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART " +
+                "FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART " +
                 "DESC FETCH FIRST 2 ROWS ONLY", q.buildSelect(context));
     }
 
@@ -275,7 +275,7 @@ public class SQLQueryTest {
         SQLContext context = new SQLContext(DatabaseProduct.POSTGRE_SQL);
 
         //We expect to have FETCH FIRST expression with derby
-        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS, T0.LOGSTART DESC LIMIT 2",
+        assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC LIMIT 2",
                 q.buildSelect(context));
     }
 
