@@ -140,7 +140,7 @@ function findModulePath (id, dirs) {
           return findModulePath(id, rest);
       }
 
-      var resource = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.getResource("/registry/public/" + location)
+      var resource = org.eclipse.dirigible.api.v3.platform.RepositoryFacade.getResource("/registry/public" + location)
       if (resource.exists()) {
           return location;
       }  else {
