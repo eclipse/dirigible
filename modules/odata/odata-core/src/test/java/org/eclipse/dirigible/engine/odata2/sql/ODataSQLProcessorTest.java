@@ -624,7 +624,7 @@ public class ODataSQLProcessorTest {
         List<ODataEntry> entries = resultFeed.getEntries();
         assertEquals(6, entries.size());
     }
-
+    
     @Test
     public void testExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -652,7 +652,94 @@ public class ODataSQLProcessorTest {
         Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
         assertEquals("Natalie", secondDriverProperties.get("FirstName"));
     }
+    
+    
+    @Test
+    public void testOrderByExpandedEntityWithoutExpand() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$top", "3") //
+                .param("$orderby", "Drivers/FirstName desc") //
+                //expand missing
+                .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(500, response.getStatus()); //TODO refine the error codes, here it should be a bad request
+        
+    }
 
+    @Test
+    public void testOrderByExpandedEntityProperty() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$top", "3") //
+                .param("$orderby", "Drivers/FirstName desc") //
+                .param("$expand", "Drivers") //
+                .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(200, response.getStatus());
+        
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        List<ODataEntry> entries = resultFeed.getEntries();
+        assertEquals("The limit must work with expand", 3, entries.size());
+        Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
+        assertEquals(1982, firstEntryProperties.get("Year"));
+        assertEquals("Moskvitch", firstEntryProperties.get("Make"));
+        assertEquals("412", firstEntryProperties.get("Model"));
+
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (firstEntryProperties.get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+        Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+        assertEquals("Natalie", firstDriverProperties.get("FirstName"));
+        Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+        assertEquals("Johnny", secondDriverProperties.get("FirstName"));
+        
+        
+        
+        Response responseAsc = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$top", "3") //
+                .param("$orderby", "Drivers/FirstName asc") //
+                .param("$expand", "Drivers") //
+                .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(200, responseAsc.getStatus());
+        
+        ODataFeed resultFeedAsc = retrieveODataFeed(responseAsc, "Cars");
+        List<ODataEntry> entriesAsc = resultFeedAsc.getEntries();
+        assertEquals("The limit must work with expand", 3, entriesAsc.size());
+        Map<String, Object> firstEntryPropertiesAsc = entriesAsc.get(0).getProperties();
+        assertEquals(2015, firstEntryPropertiesAsc.get("Year"));
+        assertEquals("Ford", firstEntryPropertiesAsc.get("Make"));
+        assertEquals("S-Max", firstEntryPropertiesAsc.get("Model"));
+
+        List<ODataEntry> driversAsc = ((ODataDeltaFeedImpl) (firstEntryPropertiesAsc.get("Drivers"))).getEntries();
+        assertEquals(0, driversAsc.size());
+    }
+    
+    @Test
+    public void testOrderByExpandedEntityProperties() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$top", "3") //
+                .param("$orderby", "Drivers/FirstName desc,Drivers/LastName asc") //
+                .param("$expand", "Drivers") //
+                .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(200, response.getStatus());
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        List<ODataEntry> entries = resultFeed.getEntries();
+        assertEquals("The limit must work with expand", 3, entries.size());
+        Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
+        assertEquals(1982, firstEntryProperties.get("Year"));
+        assertEquals("Moskvitch", firstEntryProperties.get("Make"));
+        assertEquals("412", firstEntryProperties.get("Model"));
+
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (firstEntryProperties.get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+        Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+        assertEquals("Natalie", firstDriverProperties.get("FirstName"));
+        Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+        assertEquals("Johnny", secondDriverProperties.get("FirstName"));
+
+    }
+    
+    
     OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
         OData2RequestBuilder builder = new OData2RequestBuilder() {
             @Override

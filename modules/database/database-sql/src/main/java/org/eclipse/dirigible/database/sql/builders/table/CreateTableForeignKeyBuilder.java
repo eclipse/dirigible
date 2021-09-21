@@ -11,12 +11,12 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * The Create Table Foreign Key Builder.
@@ -27,7 +27,10 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 
 	private String referencedTable;
 
+	private String referencedTableSchema;
+
 	private Set<String> referencedColumns = new TreeSet<String>();
+
 
 	/**
 	 * Instantiates a new creates the table foreign key builder.
@@ -64,7 +67,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 *
 	 * @param referencedTable
 	 *            the referenced table
-	 * @return the creates the table foreign key builder
+	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedTable(String referencedTable) {
 		logger.trace("referencedTable: " + referencedTable);
@@ -77,7 +80,7 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 	 *
 	 * @param referencedColumn
 	 *            the referenced column
-	 * @return the creates the table foreign key builder
+	 * @return created table foreign key builder
 	 */
 	public CreateTableForeignKeyBuilder referencedColumn(String referencedColumn) {
 		logger.trace("referencedColumn: " + referencedColumn);
@@ -85,4 +88,24 @@ public class CreateTableForeignKeyBuilder extends AbstractCreateTableConstraintB
 		return this;
 	}
 
+	/**
+	 * Gets the referenced table schema.
+	 *
+	 * @return the referenced table schema
+	 */
+	public String getReferencedTableSchema() {
+		return referencedTableSchema;
+	}
+
+	/**
+	 *
+	 * @param referencedTableSchema
+	 * 			  the schema name of the reference table
+	 * @return created table foreign key builder
+	 */
+	public CreateTableForeignKeyBuilder referencedTableSchema(String referencedTableSchema) {
+		logger.trace("setReferencedTableSchema: " + referencedTableSchema);
+		this.referencedTableSchema = referencedTableSchema;
+		return this;
+	}
 }

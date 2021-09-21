@@ -13,12 +13,16 @@ package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
+import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.apache.olingo.odata2.api.uri.expression.PropertyExpression;
@@ -26,18 +30,20 @@ import org.apache.olingo.odata2.api.uri.expression.SortOrder;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class SQLExpressionOrderBy implements SQLExpression {
 
     private final OrderByExpression orderByExpression;
     private final SQLQuery query;
-    private final EdmEntityType orderByEnitityType;
+    private final EdmEntityType entityType;
+    private final Logger LOG = LoggerFactory.getLogger(SQLExpressionOrderBy.class);
 
     public SQLExpressionOrderBy(final SQLQuery query, final EdmEntityType orderByEnitityType, final OrderByExpression orderByExpression) {
-        //TODO extract the target enttiy from the orderByExpression
         this.orderByExpression = orderByExpression;
         this.query = query;
-        this.orderByEnitityType = orderByEnitityType;
+        this.entityType  = orderByEnitityType;
     }
 
     @Override
@@ -63,6 +69,7 @@ public final class SQLExpressionOrderBy implements SQLExpression {
 
     /**
      * This method parses the order by condition in the query.
+     * 
      * @param context
      * 
      * @param orderByExpression
@@ -70,40 +77,51 @@ public final class SQLExpressionOrderBy implements SQLExpression {
      * @throws ODataJPARuntimeException
      */
     private String parseExpression(SQLContext context) throws EdmException {
-        StringBuilder result = new StringBuilder();
+        List<String> orderByClauses = new ArrayList<>();
         if (!isEmpty()) {
             List<OrderExpression> orderBys = orderByExpression.getOrders();
-            String orderByField = null;
-            String orderByDirection = null;
-
             Iterator<OrderExpression> it = orderBys.iterator();
             while (it.hasNext()) {
                 OrderExpression orderBy = it.next();
-                try {
-                    EdmProperty prop = ((EdmProperty) ((PropertyExpression) orderBy.getExpression()).getEdmProperty());
-                    if (query.isTransientType(orderByEnitityType, prop)) {
-                        //unable to sort with a transient property in the list. This changes the semantic of order by and the result of the select
-                        throw new OData2Exception(
-                                "Unmapped property " + prop.getName()
-                                        + "! Unable to use an order by expresson for properties that are not mapped to the DB.",
-                                INTERNAL_SERVER_ERROR);
-                    }
-
-                    if (context == null || context.getDatabaseProduct() != null)
-                    	orderByField = query.getSQLTableColumn(orderByEnitityType, prop);
-                    else
-                    	orderByField = query.getSQLTableColumnAlias(orderByEnitityType, prop); // this gives the correct "order by" column name for Open SQL // TODO: add new enum type DatabaseProduct for OpenSQL
-
-                    orderByDirection = (orderBy.getSortOrder() == SortOrder.asc) ? "" : " DESC"; //$NON-NLS-1$
-                    result.append(orderByField).append(orderByDirection);
-                    if (it.hasNext()) {
-                        result.append(", ");
-                    }
-                } catch (EdmException e) {
-                    throw new OData2Exception("Unable to create ORDER BY clause: " + e.getMessage(), INTERNAL_SERVER_ERROR, e);
-                }
+                orderByClauses.add(orderByClause(context, orderBy));
             }
         }
-        return result.toString();
+        return SQLExpressionUtils.csv(orderByClauses);
+    }
+
+    protected String orderByClause(SQLContext context, OrderExpression orderBy) throws EdmException {
+        CommonExpression expression = orderBy.getExpression();
+        EdmStructuralType entityType = null;
+        EdmProperty prop = null;
+        StringBuilder orderByClause = new StringBuilder();
+
+        if (expression instanceof MemberExpression) {
+            MemberExpression memberExpression = (MemberExpression) expression;
+            CommonExpression pathExpression = memberExpression.getPath();
+            entityType = (EdmStructuralType) pathExpression.getEdmType();
+            PropertyExpression propertyExpression = (PropertyExpression) memberExpression.getProperty();
+            prop = (EdmProperty) propertyExpression.getEdmProperty();
+            
+        } else if (expression instanceof PropertyExpression) {
+            PropertyExpression propertyExpression = (PropertyExpression) expression;
+            prop = (EdmProperty) propertyExpression.getEdmProperty();
+            entityType = this.entityType;
+        } else {
+            throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
+        }
+        if (query.isTransientType(entityType, prop)) {
+            //unable to sort with a transient property in the list. This changes the semantic of order by and the result of the select
+            LOG.error("Unmapped property {}! Unable to use an order by expresson for properties that are not mapped to the DB.",
+                    prop.getName());
+            throw new OData2Exception(INTERNAL_SERVER_ERROR);
+        }
+
+        if (context == null || context.getDatabaseProduct() != null) {
+            orderByClause.append(query.getSQLTableColumn(entityType, prop));
+        } else {
+            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "order by" column name for Open SQL // TODO: add new enum type DatabaseProduct for OpenSQL
+        }
+        orderByClause.append(" ").append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
+        return orderByClause.toString();
     }
 }

@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,12 +43,12 @@ import org.apache.olingo.odata2.api.uri.ExpandSelectTreeNode;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.UriParser;
+import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
+import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
+import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class OData2Utils {
-    private static final Logger LOG = LoggerFactory.getLogger(OData2Utils.class);
 
     private OData2Utils() {
     }
@@ -280,6 +278,25 @@ public class OData2Utils {
             return false;
         }
         return true;
+    }
+
+
+    public static boolean isOrderByEntityInExpand(OrderExpression orderExpression, UriInfo uriInfo) throws EdmException {
+        MemberExpression memberExpression = (MemberExpression)orderExpression.getExpression();
+        CommonExpression pathExpression = memberExpression.getPath();
+        EdmType  entityType = pathExpression.getEdmType();
+        if (!hasExpand(uriInfo.getExpand())) {
+            return false;
+        }
+        for (List<NavigationPropertySegment> expand: uriInfo.getExpand()) {
+            for (NavigationPropertySegment segment: expand) {
+                EdmEntitySet epxandEntity = segment.getTargetEntitySet();
+                if (epxandEntity.getEntityType().getName().equals(entityType.getName())) {
+                    return true;
+                }
+             }
+        }
+        return false;
     }
 
 
