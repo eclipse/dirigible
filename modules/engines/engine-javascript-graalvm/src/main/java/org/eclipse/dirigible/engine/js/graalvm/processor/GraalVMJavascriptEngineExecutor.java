@@ -125,6 +125,10 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			throw new ScriptingException("JavaScript module name cannot be null");
 		}
 
+		if (executionContext == null) {
+			executionContext = new HashMap<Object, Object>();
+		}
+
 		if (isModule) {
 			ResourcePath resourcePath = getResourcePath(moduleOrCode, MODULE_EXT_JS, MODULE_EXT_GRAALVM);
 			moduleOrCode = resourcePath.getModule();
@@ -181,6 +185,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			beforeEval(context);
 
             if (commonJSModule) {
+
 				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);

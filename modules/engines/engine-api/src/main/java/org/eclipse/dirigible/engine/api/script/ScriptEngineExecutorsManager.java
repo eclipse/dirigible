@@ -73,7 +73,7 @@ public class ScriptEngineExecutorsManager {
 	public static Object executeServiceCode(String engineType, String code, Map<Object, Object> executionContext) throws ScriptingException {
 		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
 		if (scriptEngineExecutor != null) {
-			return scriptEngineExecutor.executeServiceCode(code, executionContext);
+			return scriptEngineExecutor.evalCode(code, executionContext);
 		}
 
 		throw new ScriptingException(

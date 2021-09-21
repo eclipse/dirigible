@@ -174,7 +174,6 @@
    } else {
      id = request;
      // debug("ABSOLUTE: id="+id);
-     // paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths")
      paths = ["/"];
    }
 
@@ -215,9 +214,8 @@
            return loadModule(url, self);
        }
 
-       // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths");
        require.paths = ["/"];
-       require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get("main_module");
+       require.main = __context.get("main_module");
        // create wrapper function
        var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
                    + content
@@ -245,9 +243,8 @@
            return loadModule(url, self);
        }
 
-       // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths");
        require.paths = ["/"];
-       require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get("main_module");
+       require.main = __context.get("main_module");
        // create wrapper function
        var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
                    + content

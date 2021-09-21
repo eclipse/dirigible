@@ -174,7 +174,6 @@ function loadModule (request, parent) {
   } else {
     id = request;
     // debug("ABSOLUTE: id="+id);
-    // paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths")
     paths = ["/"];
   }
 
@@ -215,9 +214,8 @@ Module.prototype.loadScript = function (filename) {
           return loadModule(url, self);
       }
 
-      // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths");
       require.paths = ["/"];
-      require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get("main_module");
+      require.main = __context.get("main_module");
       // create wrapper function
       var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
                   + "\ndebugger;\n\n" +
@@ -246,9 +244,8 @@ Module.prototype.loadScriptString = function (script) {
           return loadModule(url, self);
       }
 
-      // require.paths = org.eclipse.dirigible.api.v3.core.ContextFacade.get("paths");
       require.paths = ["/"];
-      require.main = org.eclipse.dirigible.api.v3.core.ContextFacade.get("main_module");
+      require.main = __context.get("main_module");
       // create wrapper function
       var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
                   + "\ndebugger;\n\n" +
