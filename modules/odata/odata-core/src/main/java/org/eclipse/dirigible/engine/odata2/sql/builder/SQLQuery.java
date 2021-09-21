@@ -11,59 +11,16 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.FROM;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.INTO;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.JOIN;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.KEYS;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.ORDERBY;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_COLUMN_LIST;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_PREFIX;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_SUFFIX;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.TABLE;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.VALUES;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.WHERE;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isOrderByEntityInExpand;
-
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.EdmType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.api.exception.ODataHttpException;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.NavigationSegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
 import org.apache.olingo.odata2.api.uri.UriInfo;
-import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
-import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.apache.olingo.odata2.core.edm.EdmDateTime;
@@ -74,19 +31,23 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionDelete;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionInsert;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionJoin;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionOrderBy;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.*;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect.SQLSelectBuilder;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUpdate;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere.Param;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere.TemporalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Date;
+import java.sql.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.*;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isOrderByEntityInExpand;
 
 public final class SQLQuery {
 
@@ -136,8 +97,7 @@ public final class SQLQuery {
         return this;
     }
 
-    public SQLQuery orderBy(final OrderByExpression orderBy, final EdmEntityType entityType)
-            throws EdmException, ODataNotImplementedException {
+    public SQLQuery orderBy(final OrderByExpression orderBy, final EdmEntityType entityType) throws ODataNotImplementedException {
         if (orderBy != null && orderBy.getOrders() != null) {
             for (OrderExpression order : orderBy.getOrders()) {
                 switch (order.getExpression().getKind()) {
@@ -187,7 +147,7 @@ public final class SQLQuery {
         return this;
     }
 
-    public SQLQuery clearFilter(final EdmEntitySet filterTarget) throws ODataException {
+    public SQLQuery clearFilter(final EdmEntitySet filterTarget) {
         whereExpression = new SQLExpressionWhere();
         return this;
     }
@@ -196,7 +156,7 @@ public final class SQLQuery {
             throws ODataException {
         //String column = getSQLTableColumn(filterTarget.getEntityType(), keyProperty);
         ColumnInfo column = getSQLTableColumnInfo(filterTarget.getEntityType(), keyProperty);
-        List<Param> params = new ArrayList<Param>();
+        List<Param> params = new ArrayList<>();
         StringBuilder query = new StringBuilder(column.getColumnName() + " IN (");
         for (String leadingEntityId : idsOfLeadingEntities) {
             params.add(new Param(leadingEntityId, column.getSqlType()));
@@ -264,7 +224,7 @@ public final class SQLQuery {
         }
     }
 
-    public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
+    public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) {
         if (p.isSimple()) {
             boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
             if (caseSensitive) {
@@ -328,9 +288,7 @@ public final class SQLQuery {
      * @return true if it is transient and false otherwise
      */
     public boolean isTransientType(final EdmStructuralType targetEnitityType, final EdmProperty property) {
-        if (tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(property))
-            return false;
-        return true;
+        return !tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(property);
     }
 
     /**
@@ -376,10 +334,9 @@ public final class SQLQuery {
         return whereExpression.getParams();
     }
 
-    private String evaluateJoins(final SQLContext context) throws EdmException, ODataException {
+    private String evaluateJoins(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
-        for (Iterator<SQLExpressionJoin> it = joinExpressions.iterator(); it.hasNext(); ) {
-            SQLExpressionJoin join = it.next();
+        for (SQLExpressionJoin join : joinExpressions) {
             if (join.isEmpty()) {
                 continue;
             }
@@ -469,13 +426,13 @@ public final class SQLQuery {
                 TemporalType type = param.getTemporalType();
                 switch (type) {
                     case DATE:
-                        preparedStatement.setDate(i + 1, asSQLDate((Calendar) param.getValue()));
+                        preparedStatement.setDate(i + 1, asSQLDate(param.getValue()));
                         break;
                     case TIMESTAMP:
-                        preparedStatement.setTimestamp(i + 1, asTimeStamp((Calendar) param.getValue()));
+                        preparedStatement.setTimestamp(i + 1, asTimeStamp(param.getValue()));
                         break;
                     case TIME:
-                        preparedStatement.setTime(i + 1, asTime((Calendar) param.getValue()));
+                        preparedStatement.setTime(i + 1, asTime(param.getValue()));
                 }
 
             } else {
@@ -539,14 +496,7 @@ public final class SQLQuery {
         }
     }
 
-    /**
-     * Setter for keys on statement
-     * 
-     * @param preparedStatement the statement
-     * @throws SQLException in case of an error
-     * @throws EdmException in case of an error
-     */
-    public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
+    public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException {
         Map<String, Object> keys = getDeleteExpression().getKeys();
         int i = 0;
         for (Map.Entry<String, Object> key : keys.entrySet()) {
@@ -554,18 +504,10 @@ public final class SQLQuery {
         }
     }
 
-    /**
-     * Setter for values and keys for statement
-     * 
-     * @param preparedStatement the statement
-     * @throws SQLException in case of an error
-     * @throws EdmException in case of an error
-     */
     public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         SQLExpressionUpdate updateExpression = getUpdateExpression();
-        List<Object> values = updateExpression.getColumnData();
-        List<EdmProperty> columnProperties = updateExpression.getColumnProperties();
-
+        List<Object> values = updateExpression.getQueryData();
+        List<EdmProperty> columnProperties = updateExpression.getQueryOdataProperties();
         setParamsOnPreparedStatement(preparedStatement, values, columnProperties);
     }
 
@@ -597,7 +539,7 @@ public final class SQLQuery {
         } else {//do conversion 
             try {
                 if ("NUMERIC".equals(targetSqlType)) {
-                    return new Long(String.valueOf(actualValue));
+                    return Long.valueOf(String.valueOf(actualValue));
                 } else {
                     throw new OData2Exception("Conversion to specified SQL Type " + targetSqlType + " not implemented!", BAD_REQUEST);
                 }
@@ -796,7 +738,7 @@ public final class SQLQuery {
         return insertExpression;
     }
 
-    public String buildInsert(final SQLContext context) throws EdmException, ODataException {
+    public String buildInsert(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
         if (insertExpression == null)
             throw new IllegalStateException("Please initialize the insert clause!");
@@ -832,8 +774,8 @@ public final class SQLQuery {
         return normalizedString(context, builder);
     }
 
-    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> entryKeys) {
-        updateExpression = new SQLExpressionUpdate(this, target, entry, entryKeys);
+    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> uriKeys) {
+        updateExpression = new SQLExpressionUpdate(this, target, entry, uriKeys);
         return updateExpression;
     }
 
