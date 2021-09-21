@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var escape = require('utils/v4/escape');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = 'json \t characters \n';
 var result = escape.escapeJavascript(input);
 
-result === 'json \\t characters \\n';
+assertTrue(result === 'json \\t characters \\n');

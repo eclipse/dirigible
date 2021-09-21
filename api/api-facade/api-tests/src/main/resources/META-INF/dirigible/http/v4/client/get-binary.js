@@ -10,9 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var client = require('http/v4/client');
+var assertTrue = require('utils/assert').assertTrue;
 
 var result = client.get('https://raw.githubusercontent.com/eclipse/dirigible/master/NOTICE.txt', {'binary': true});
 
 console.log(JSON.stringify(result));
 
-((result !== null) && (result !== undefined));
+assertTrue((result !== null) && (result !== undefined));

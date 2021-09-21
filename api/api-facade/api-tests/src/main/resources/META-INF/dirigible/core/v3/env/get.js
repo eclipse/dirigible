@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var env = require('core/v3/env');
+var assertTrue = require('utils/assert').assertTrue;
 
 var obj = JSON.parse(env.list());
 var key = Object.keys(obj)[0];
 
 var result = env.get(key);
 
-result !== undefined && result !== null;
+assertTrue(result !== undefined && result !== null);

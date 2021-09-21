@@ -51,19 +51,19 @@ public class SQLExpressionOrderByTest {
     @Test
     public void testSimpleOrderBy() throws Exception {
         SQLExpressionOrderBy sqlOrderBy = createOrderByExpression("Status");
-        assertEquals("T0.STATUS", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
+        assertEquals("T0.STATUS ASC", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
     }
 
     @Test
     public void testOrderByWith2Cols() throws Exception {
         SQLExpressionOrderBy sqlOrderBy = createOrderByExpression("Status, LogStart desc");
-        assertEquals("T0.STATUS, T0.LOGSTART DESC", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
+        assertEquals("T0.STATUS ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
     }
 
     @Test
     public void testOrderByWith3Cols() throws Exception {
         SQLExpressionOrderBy sqlOrderBy = createOrderByExpression("Status desc, LogEnd, LogStart desc");
-        assertEquals("T0.STATUS DESC, T0.LOGEND, T0.LOGSTART DESC", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
+        assertEquals("T0.STATUS DESC, T0.LOGEND ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null, ExpressionType.ORDERBY));
     }
 
     private SQLExpressionOrderBy createOrderByExpression(final String expression) {

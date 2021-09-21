@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var digest = require('utils/v4/digest');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = 'ABC';
 var result = digest.md5Hex(input);
 
 console.log(result);
 
-result === '902fbdd2b1df0c4f70b4a5d23525e932';
+assertTrue(result === '902fbdd2b1df0c4f70b4a5d23525e932');

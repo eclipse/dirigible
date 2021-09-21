@@ -45,7 +45,7 @@ public class RegistryFacade {
 			if (in != null) {
 				return IOUtils.toByteArray(in);
 			} else {
-				throw new ScriptingException(format("Resource [{0}] does not exist", path));
+				return null;
 			} 
 		} finally {
 			if (in != null) {
@@ -55,7 +55,15 @@ public class RegistryFacade {
 	}
 
 	public static String getText(String path) throws IOException, ScriptingException {
-		return new String(getContent(path));
+		byte[] content = getContent(path);
+		if (content == null) {
+			return null;
+		}
+		return new String(content);
+	}
+
+	public static Boolean exists(String path) throws IOException, ScriptingException {
+		return getContent(path) == null;
 	}
 
 	private static String toRepositoryPath(String path) {

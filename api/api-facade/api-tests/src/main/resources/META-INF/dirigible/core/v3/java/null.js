@@ -20,5 +20,3 @@ var result = _java.invoke(arrayList.uuid, 'get', [0]);
 console.log(result);
 
 result == null;
-
-true;

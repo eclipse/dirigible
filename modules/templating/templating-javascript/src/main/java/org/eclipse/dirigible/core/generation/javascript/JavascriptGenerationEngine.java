@@ -45,7 +45,7 @@ public class JavascriptGenerationEngine implements IGenerationEngine {
 			Map<Object, Object> context = new HashMap<Object, Object>();
 	        BiConsumer<Object, Object> action = new ContextBiConsumer(context);
 			parameters.forEach(action);
-			String result = ScriptEngineExecutorsManager.executeServiceModule("javascript", (String) parameters.get("handler"), context).toString();
+			String result = ScriptEngineExecutorsManager.evalModule((String) parameters.get("handler"), context).toString();
 			return result.getBytes(StandardCharsets.UTF_8);
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var destinations = require('core/v4/destinations');
+var assertTrue = require('utils/assert').assertTrue;
 
 var destination = {};
 destination.name1 = 'value1';
 destinations.set('destination1', destination);
 var result = destinations.get('destination1');
 
-result.name1 === 'value1';
+assertTrue(result.name1 === 'value1');

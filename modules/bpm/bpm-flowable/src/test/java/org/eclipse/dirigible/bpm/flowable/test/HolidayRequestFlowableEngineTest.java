@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.flowable.engine.ProcessEngine;
@@ -96,50 +97,56 @@ public class HolidayRequestFlowableEngineTest extends AbstractDirigibleTest {
 	 */
 	@Test
 	public void startProcessTest() throws Exception {
-ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
-		
-		RepositoryService repositoryService = processEngine.getRepositoryService();
-		Deployment deployment = repositoryService.createDeployment()
-		  .addClasspathResource("holiday-request.bpmn20.xml")
-		  .deploy();
-		
-		String deploymentId = deployment.getId();
-		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-				  .deploymentId(deploymentId)
-				  .singleResult();
-		
-		RuntimeService runtimeService = processEngine.getRuntimeService();
+		try {
+			ThreadContextFacade.setUp();
+			ProcessEngine processEngine = (ProcessEngine) bpmProviderFlowable.getProcessEngine();
 
-		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("employee", "John");
-		variables.put("nrOfHolidays", "7");
-		variables.put("description", "test");
-		ProcessInstance processInstance =
-				runtimeService.startProcessInstanceByKey("holidayRequest", variables);
-		
-		TaskService taskService = processEngine.getTaskService();
-		List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
-		assertEquals(1, tasks.size());
-		
-		TaskData taskData = new TaskData();
-		BeanUtils.copyProperties(tasks.get(0), taskData);
-		taskData.setId(tasks.get(0).getId());
-		
-		String json = GsonHelper.GSON.toJson(taskData);
-		System.out.println(json);
-		
-		Task task = tasks.get(0);
-		Map<String, Object> processVariables = taskService.getVariables(task.getId());
-		assertEquals("John", processVariables.get("employee"));
-		
-		variables = new HashMap<String, Object>();
-		variables.put("approved", true);
-		taskService.complete(task.getId(), variables);
-		
-		tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
-		assertEquals(0, tasks.size());
-		
-		// repositoryService.deleteDeployment(deploymentId);
+			RepositoryService repositoryService = processEngine.getRepositoryService();
+			Deployment deployment = repositoryService.createDeployment()
+					.addClasspathResource("holiday-request.bpmn20.xml")
+					.deploy();
+
+			String deploymentId = deployment.getId();
+			ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+					.deploymentId(deploymentId)
+					.singleResult();
+
+			RuntimeService runtimeService = processEngine.getRuntimeService();
+
+			Map<String, Object> variables = new HashMap<String, Object>();
+			variables.put("employee", "John");
+			variables.put("nrOfHolidays", "7");
+			variables.put("description", "test");
+			ProcessInstance processInstance =
+					runtimeService.startProcessInstanceByKey("holidayRequest", variables);
+
+			TaskService taskService = processEngine.getTaskService();
+			List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
+			assertEquals(1, tasks.size());
+
+			TaskData taskData = new TaskData();
+			BeanUtils.copyProperties(tasks.get(0), taskData);
+			taskData.setId(tasks.get(0).getId());
+
+			String json = GsonHelper.GSON.toJson(taskData);
+			System.out.println(json);
+
+			Task task = tasks.get(0);
+			Map<String, Object> processVariables = taskService.getVariables(task.getId());
+			assertEquals("John", processVariables.get("employee"));
+
+			variables = new HashMap<String, Object>();
+			variables.put("approved", true);
+			taskService.complete(task.getId(), variables);
+
+			tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
+			assertEquals(0, tasks.size());
+
+			// repositoryService.deleteDeployment(deploymentId);
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+
 	}
 	
 	

@@ -75,6 +75,18 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		return engine.executeServiceCode(code, executionContext);
 	}
 
+	@Override
+	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		IJavascriptEngineExecutor engine = getJavascriptEngine();
+		return engine.evalCode(code, executionContext);
+	}
+
+	@Override
+	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		IJavascriptEngineExecutor engine = getJavascriptEngine();
+		return engine.evalModule(module, executionContext);
+	}
+
 	private IJavascriptEngineExecutor getJavascriptEngine() throws ScriptingException {
 
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT, IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALVM);

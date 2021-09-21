@@ -10,5 +10,3 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 console.log('Hello World!');
-
-true;

@@ -11,16 +11,59 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.FROM;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.INTO;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.JOIN;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.KEYS;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.ORDERBY;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_COLUMN_LIST;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_PREFIX;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.SELECT_SUFFIX;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.TABLE;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.VALUES;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.WHERE;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isOrderByEntityInExpand;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.edm.EdmEntitySet;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmException;
+import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.EdmType;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.exception.ODataHttpException;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.NavigationSegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
-import org.apache.olingo.odata2.api.uri.expression.ExpressionKind;
+import org.apache.olingo.odata2.api.uri.UriInfo;
+import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
+import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.apache.olingo.odata2.core.edm.EdmDateTime;
@@ -31,24 +74,22 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.*;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionDelete;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionInsert;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionJoin;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionOrderBy;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUpdate;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils;
+import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere.Param;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere.TemporalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Date;
-import java.sql.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpression.ExpressionType.*;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
-
 public final class SQLQuery {
+
     private static final Logger LOG = LoggerFactory.getLogger(SQLQuery.class);
 
     private final Map<String, EdmStructuralType> tableAliasesForEntitiesInQuery;
@@ -95,18 +136,45 @@ public final class SQLQuery {
         return this;
     }
 
-
     public SQLQuery orderBy(final OrderByExpression orderBy, final EdmEntityType entityType) throws ODataNotImplementedException {
         if (orderBy != null && orderBy.getOrders() != null) {
             for (OrderExpression order : orderBy.getOrders()) {
-                if (ExpressionKind.PROPERTY != order.getExpression().getKind()) {
-                    LOG.error("OrderBy with non property expressions are not implemented yet!");
+                switch (order.getExpression().getKind()) {
+                case PROPERTY:
+                case MEMBER:                   
+                    continue;
+                default:
+                    LOG.error("OrderBy with non property or member expressions are not implemented yet!");
                     throw new ODataNotImplementedException();
                 }
             }
         }
         this.orderByExpressions = new SQLExpressionOrderBy(this, entityType, orderBy);
         return this;
+    }
+    
+    public void validateOrderBy(final UriInfo uriInfo)
+            throws EdmException, ODataNotImplementedException {
+        boolean usingOrderBy = uriInfo.getOrderBy() != null && uriInfo.getOrderBy().getOrders() != null;
+        if (usingOrderBy) {
+            for (OrderExpression orderExpression : uriInfo.getOrderBy().getOrders()) {
+                switch (orderExpression.getExpression().getKind()) {
+                case PROPERTY:
+                    continue;
+                case MEMBER:
+                    //For a member order by to work we need a corresponding expand (which also means a join).
+                    //Otherwise the table in the member order by clause will not be part of the query
+                    //E.g. SELECT T0.ID AS "ID_T0" FROM CARS AS T0 ORDER BY T1.FIRSTNAME DESC (we need a join to define T1)
+                    if (!isOrderByEntityInExpand(orderExpression, uriInfo)) {
+                        throw new OData2Exception("Missing $expand of the entity in the OrderBy expression", HttpStatusCodes.BAD_REQUEST); //no expand, but member order by is not allowed
+                    }
+                    continue;
+                default:
+                    LOG.error("OrderBy is implmented only for properties or member properties!");
+                    throw new ODataNotImplementedException();
+                }
+            }
+        }
     }
 
     public SQLQuery filter(final EdmEntitySet filterTarget, final FilterExpression filter) throws ODataException {
@@ -319,12 +387,6 @@ public final class SQLQuery {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     // It will be hidden in future without further mitigation
     // TODO Refactor this method to private area
-    /**
-     * Get table alias
-     * 
-     * @param type the type
-     * @return the alias
-     */
     public String getSQLTableAlias(final EdmType type) {
         if (type instanceof EdmStructuralType)
             return getTableAliasForType((EdmStructuralType) type);
@@ -714,8 +776,7 @@ public final class SQLQuery {
         insertExpression.into(target, entry);
         return insertExpression;
     }
-
-
+  
     public String buildInsert(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
         if (insertExpression == null)

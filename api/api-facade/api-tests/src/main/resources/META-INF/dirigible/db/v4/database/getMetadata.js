@@ -10,9 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var database = require('db/v4/database');
+var assertTrue = require('utils/assert').assertTrue;
 
 var metadata = database.getMetadata();
 
 console.log(JSON.stringify(metadata));
 
-((metadata !== null) && (metadata !== undefined));
+assertTrue((metadata !== null) && (metadata !== undefined));

@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -22,8 +23,11 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
+import org.eclipse.dirigible.api.v3.core.ContextFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
@@ -32,11 +36,8 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
-import org.graalvm.polyglot.EnvironmentAccess;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(module, executionContext, true);
+		return executeService(module, executionContext, true, true);
 	}
 
 	/*
@@ -90,7 +91,17 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 */
 	@Override
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		return executeService(code, executionContext, false);
+		return executeService(code, executionContext, false, true);
+	}
+
+	@Override
+	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false, false);
+	}
+
+	@Override
+	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true, false);
 	}
 
 	/**
@@ -106,13 +117,16 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 	 * @throws ScriptingException
 	 *             the scripting exception
 	 */
-	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule) throws ScriptingException {
-
+	public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
 		logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
 		logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
 		if (moduleOrCode == null) {
 			throw new ScriptingException("JavaScript module name cannot be null");
+		}
+
+		if (executionContext == null) {
+			executionContext = new HashMap<Object, Object>();
 		}
 
 		if (isModule) {
@@ -122,13 +136,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, resourcePath.getPath());
 			}
 		}
-
-		Object result = null;
-
-
 		boolean isDebugEnabled = isDebugEnabled();
-
-//		Builder contextBuilder = Context.newBuilder().allowAllAccess(true);
 		
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 		Bindings engineBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -163,33 +171,58 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 			contextBuilder.option(BUILDER_OPTION_INSPECT_PATH, moduleOrCode);
 		}
 
+		Object result = null;
 		try (Context context = contextBuilder.build()) {
-			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 			Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
 			bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
 			bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
 			bindings.putMember(CONTEXT, executionContext);
-			
-            context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+
             if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA, "false"))) {
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
-            
-            context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
 
-            beforeEval(context);
-            if (isDebugEnabled) {
-            	code = CODE_DEBUGGER + code;
-            }
-            result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
+			beforeEval(context);
+
+            if (commonJSModule) {
+
+				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
+
+				if (isModule) {
+					bindings.putMember("MODULE_FILENAME", moduleOrCode);
+					context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+				} else {
+					bindings.putMember("SCRIPT_STRING", moduleOrCode);
+					context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+				}
+			} else {
+				context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+				context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+				String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+				if (isDebugEnabled) {
+					code = CODE_DEBUGGER + code;
+				}
+				result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
+			}
+
+
         } catch (IOException e) {
         	logger.error(e.getMessage(), e);
-        } catch (URISyntaxException e) {
-        	logger.error(e.getMessage(), e);
-        }
+        } catch (ClassCastException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (PolyglotException e) {
+			e.printStackTrace();
+			logger.trace("exiting: executeServiceModule() with js exception");
+			return e.getMessage(); // TODO: Create JSExecutionResult class and return it instead of Object instance
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		logger.trace("exiting: executeServiceModule()");
-
 		return result;
 	}
 
