@@ -78,7 +78,7 @@ public class Require {
 	}
 
 	public static final String MODULE_CREATE_CODE = "let mainModule = createModule(\".\");\n" +
-			"org.eclipse.dirigible.api.v3.core.ContextFacade.set(\"main_module\", mainModule);";
+			"__context.put(\"main_module\", mainModule);";
 
 	public static final String MODULE_LOAD_CODE = "mainModule.load(MODULE_FILENAME);";
 
