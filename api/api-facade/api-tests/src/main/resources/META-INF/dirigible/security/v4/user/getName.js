@@ -10,5 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var user = require('security/v4/user');
+var assertTrue = require('utils/assert').assertTrue;
 
-user.getName() === 'tester';
+assertTrue(user.getName() === 'tester');

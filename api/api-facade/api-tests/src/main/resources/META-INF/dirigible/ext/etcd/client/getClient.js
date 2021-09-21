@@ -11,6 +11,7 @@
  */
 // Loading the etcd module.
 var etcd = require('etcd/client');
+var assertTrue = require('utils/assert').assertTrue;
 
 // Function for comparing typed arrays for equality.
 function typedArraysAreEqual(a, b) {
@@ -98,4 +99,4 @@ var deleteKvs = etcdClient.delete(10);
 console.log(JSON.stringify(deleteKvs.message));
 var t15 = deleteKvs instanceof Error;
 
-t1 && t2 && t3 && t4 && t5 && t6 && t7 && t8 && t9 && t10 && t11 && t12 && t13 && t14 && t15;
+assertTrue(t1 && t2 && t3 && t4 && t5 && t6 && t7 && t8 && t9 && t10 && t11 && t12 && t13 && t14 && t15);

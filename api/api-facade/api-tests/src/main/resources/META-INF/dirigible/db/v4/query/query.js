@@ -11,6 +11,7 @@
  */
 var query = require('db/v4/query');
 var update = require('db/v4/update');
+var assertTrue = require('utils/assert').assertTrue;
 
 update.execute("CREATE TABLE T (A INT, B VARCHAR(10))");
 update.execute("INSERT INTO T VALUES (1, 'ABC')");
@@ -23,4 +24,4 @@ console.log(JSON.stringify(resultset));
 
 update.execute("DROP TABLE T");
 
-((resultset !== null) && (resultset !== undefined));
+assertTrue((resultset !== null) && (resultset !== undefined));

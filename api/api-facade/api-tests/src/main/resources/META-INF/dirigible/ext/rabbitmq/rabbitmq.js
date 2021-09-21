@@ -12,6 +12,7 @@
 var producer = require("rabbitmq/producer");
 var consumer = require("rabbitmq/consumer");
 var configurations = require("core/v4/configurations");
+var assertTrue = require('utils/assert').assertTrue;
 
 var newMessage = "testMessage";
 
@@ -23,4 +24,4 @@ java.lang.Thread.sleep(1000);
 
 consumer.stopListening("test-queue", "ext/rabbitmq/handler");
 
-configurations.get("RABBITMQ_MESSAGE") == newMessage;
+assertTrue(configurations.get("RABBITMQ_MESSAGE") == newMessage);

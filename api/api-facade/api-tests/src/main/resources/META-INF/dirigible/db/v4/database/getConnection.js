@@ -11,6 +11,7 @@
  */
 var database = require('db/v4/database');
 var update = require('db/v4/update');
+var assertTrue = require('utils/assert').assertTrue;
 
 update.execute("CREATE TABLE T (A INT, B VARCHAR(10))");
 update.execute("INSERT INTO T VALUES (1, 'ABC')");
@@ -42,4 +43,4 @@ try {
 
 update.execute("DROP TABLE T");
 
-value == 'DEF';
+assertTrue(value == 'DEF');

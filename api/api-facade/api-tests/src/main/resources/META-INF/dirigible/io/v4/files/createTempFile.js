@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var files = require('io/v4/files');
+var assertTrue = require('utils/assert').assertTrue;
 
 var tempFile = files.createTempFile("dirigible", ".txt");
 console.log('Temp file: ' + tempFile);
 files.writeText(tempFile, "Eclipse Dirigible");
 files.deleteFile(tempFile);
 
-((tempFile !== null) && (tempFile !== undefined));
+assertTrue((tempFile !== null) && (tempFile !== undefined));

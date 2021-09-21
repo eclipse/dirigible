@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dirigible.commons.api.context.ContextException;
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.core.generation.javascript.JavascriptGenerationEngine;
@@ -35,13 +37,18 @@ public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 	}
 	
 	@Test
-	public void generate() throws IOException {
-		IGenerationEngine generationEngine = new JavascriptGenerationEngine();
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("handler", "my-handler.js");
-		parameters.put("testParameter", "testValue");
-		byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
-		assertEquals("test testValue", new String(result));
+	public void generate() throws IOException, ContextException {
+		try {
+			ThreadContextFacade.setUp();
+			IGenerationEngine generationEngine = new JavascriptGenerationEngine();
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("handler", "my-handler.js");
+			parameters.put("testParameter", "testValue");
+			byte[] result = generationEngine.generate(parameters, "/location", "test $testParameter".getBytes(), null, null);
+			assertEquals("test testValue", new String(result));
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
 	}
 
 }

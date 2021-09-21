@@ -92,7 +92,17 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		return executeService(code, executionContext, false);
 	}
-	
+
+	@Override
+	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(code, executionContext, false);
+	}
+
+	@Override
+	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
+		return executeService(module, executionContext, true);
+	}
+
 	/**
 	 * Execute service.
 	 *

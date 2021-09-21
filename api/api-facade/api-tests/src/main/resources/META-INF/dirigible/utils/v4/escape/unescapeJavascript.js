@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var escape = require('utils/v4/escape');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = 'javascript \\t characters \\n';
 var result = escape.unescapeJavascript(input);
 
-result === 'javascript \t characters \n';
+assertTrue(result === 'javascript \t characters \n');

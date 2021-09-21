@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var spark = require("spark/client");
+var assertTrue = require('utils/assert').assertTrue;
 var sparkSession = spark.getSession("spark://192.168.0.143:7077");
 var dataset = sparkSession.readFormat("src/test/resources/data/UserData.csv", "csv");
 var result = dataset.getRowAsString(0)
 
-result === "[id;name;familyname;personalNumber;age]";
+assertTrue(result === "[id;name;familyname;personalNumber;age]");

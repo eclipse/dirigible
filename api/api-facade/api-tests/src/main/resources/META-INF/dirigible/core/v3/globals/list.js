@@ -10,7 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var globals = require('core/v3/globals');
+var assertTrue = require('utils/assert').assertTrue;
 
 var result = globals.list();
 
-result !== undefined && result !== null;
+assertTrue(result !== undefined && result !== null);

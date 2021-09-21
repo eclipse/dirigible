@@ -11,6 +11,7 @@
  */
 var writer = require('indexing/v4/writer');
 var searcher = require('indexing/v4/searcher');
+var assertTrue = require('utils/assert').assertTrue;
 
 writer.add("index2", "myfile1", "apache lucene", new Date(123));
 writer.add("index2", "myfile2", "lucene - the search engine", new Date(234), {"name2":"value2"});
@@ -20,4 +21,4 @@ var found = searcher.between("index2", new Date(124), new Date(344));
 
 console.log(JSON.stringify(found));
 
-((found !== null) && (found !== undefined) && found.length === 1);
+assertTrue((found !== null) && (found !== undefined) && found.length === 1);

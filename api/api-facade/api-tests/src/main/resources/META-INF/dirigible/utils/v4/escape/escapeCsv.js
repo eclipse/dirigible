@@ -10,8 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var escape = require('utils/v4/escape');
+var assertTrue = require('utils/assert').assertTrue;
 
 var input = '1,2,3,4,5,6';
 var result = escape.escapeCsv(input);
 
-result === '"1,2,3,4,5,6"';
+assertTrue(result === '"1,2,3,4,5,6"');

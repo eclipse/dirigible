@@ -104,6 +104,8 @@ public interface IScriptEngineExecutor extends IEngineExecutor {
 	 */
 	public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
 
-	
+	public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException;
+
+	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
 
 }

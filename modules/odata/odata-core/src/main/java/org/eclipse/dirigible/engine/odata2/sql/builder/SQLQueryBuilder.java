@@ -105,8 +105,9 @@ public class SQLQueryBuilder {
             q.filter(uri.getTargetEntitySet(), getKeyProperty(target), readIdsForExpand);
         }
         q.join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
+        q.validateOrderBy(uri);
         q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
-
+        
         return q;
     }
 
@@ -132,7 +133,10 @@ public class SQLQueryBuilder {
         q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
         q.filter(uri.getTargetEntitySet(), uri.getFilter())
                 .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
-        q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
+        //if the query is expanded, the order by is not necessary, because first the IDs will be selected
+        if (uri.getExpand().isEmpty()) {
+            q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
+        }
 
         return q;
     }

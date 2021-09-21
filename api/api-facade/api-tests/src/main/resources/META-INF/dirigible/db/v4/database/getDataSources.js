@@ -10,9 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var database = require('db/v4/database');
+var assertTrue = require('utils/assert').assertTrue;
 
 var datasources = database.getDataSources();
 
 console.log(JSON.stringify(datasources));
 
-((datasources !== null) && (datasources !== undefined));
+assertTrue(((datasources !== null) && (datasources !== undefined)));

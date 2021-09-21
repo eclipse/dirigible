@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var response = require('http/v4/response');
+var assertTrue = require('utils/assert').assertTrue;
 
-JSON.stringify(response.getHeaderNames()) === '["header1","header2"]';
+assertTrue(JSON.stringify(response.getHeaderNames()) === '["header1","header2"]');
 
