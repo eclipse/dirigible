@@ -1,28 +1,34 @@
-<a style="font-weight:700; text-decoration:none; font-size: 2.4em; line-height: 1em; top:-4px; position:relative;" ui-sref="list" title="{{toolbarVm.i18n.format('buttons.home')}}"><i class="fa fa-home"></i></a>
-<div style="display:inline-block; margin-left:15px; width: 200px; border-radius:10px" title="{{toolbarVm.i18n.format('buttons.search')}}">
-	<div class="input-group input-group">
-	  <span class="input-group-addon" id="quick-filter" style="border-top-left-radius:10em; border-bottom-left-radius:10em;"><i class="fa fa-search"></i></span>
-	  <input type="text" class="form-control" placeholder="" aria-describedby="quick-filter" style="border-top-right-radius:10em; border-bottom-right-radius:10em;" ng-model="toolbarVm.filterList.filterText">
-	</div>
+<a style="font-weight:700; text-decoration:none; font-size: 2.4em; line-height: 1em; top:-4px; position:relative;"
+   ui-sref="list" title="{{toolbarVm.i18n.format('buttons.home')}}"><i class="fa fa-home"></i></a>
+<div style="display:inline-block; margin-left:15px; width: 200px; border-radius:10px"
+     title="{{toolbarVm.i18n.format('buttons.search')}}">
+    <div class="input-group input-group">
+        <span class="input-group-addon" id="quick-filter"
+              style="border-top-left-radius:10em; border-bottom-left-radius:10em;"><i class="fa fa-search"></i></span>
+        <input type="text" class="form-control" placeholder="" aria-describedby="quick-filter"
+               style="border-top-right-radius:10em; border-bottom-right-radius:10em;"
+               ng-model="toolbarVm.filterList.filterText">
+    </div>
 </div>
 
 <div class="pull-right button-group">
-	<button class="btn btn-primary" ui-sref="list.new" title="{{toolbarVm.i18n.format('buttons.new')}}" ng-bind="toolbarVm.i18n.format('buttons.new')"></button>
-	
-	<!--
-	<button class="btn btn-primary" ui-sref="list.login" ng-if="!toolbarVm.loggedUser" title="{{toolbarVm.i18n.format('buttons.signin')}}"><i class="glyphicon glyphicon-log-in"></i></button>
-	<div class="btn-group" ng-if="toolbarVm.loggedUser" >
-		<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{toolbarVm.i18n.format('buttons.settings')}}">
-			<! -- img ng-src="../../../js/dboards/svc/user/avatar.js" title="{{settingsVm.i18n.format('settings.avatar_label')}}" style="width:20px;height:20px"/ -- > 
-			<span class="fa fa-user text-secondary" title="{{settingsVm.i18n.format('settings.avatar_label')}}" style="width:20px;height:20px></span>
-			<span class="caret text-secondary"></span>
-		</button>
-		<ul class="dropdown-menu">
-			<li><a ui-sref="list.settings" title="{{toolbarVm.i18n.format('buttons.settings')}}"><i class="fa fa-cog"></i> Settings</button></li>
-			<li><a href ui-sref="logout" title="{{toolbarVm.i18n.format('buttons.signout')}}"><i class="fa fa-power-off"></i> Sign-out</a></li>
-		</ul>
-	</div>
-	
-	-->
-	
+    <button class="btn btn-primary" ui-sref="list.new" title="{{toolbarVm.i18n.format('buttons.new')}}"
+            ng-bind="toolbarVm.i18n.format('buttons.new')"></button>
+
+    <!--
+    <button class="btn btn-primary" ui-sref="list.login" ng-if="!toolbarVm.loggedUser" title="{{toolbarVm.i18n.format('buttons.signin')}}"><i class="glyphicon glyphicon-log-in"></i></button>
+    <div class="btn-group" ng-if="toolbarVm.loggedUser" >
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{toolbarVm.i18n.format('buttons.settings')}}">
+            <! -- img ng-src="../../../js/dboards/svc/user/avatar.js" title="{{settingsVm.i18n.format('settings.avatar_label')}}" style="width:20px;height:20px"/ -- >
+            <span class="fa fa-user text-secondary" title="{{settingsVm.i18n.format('settings.avatar_label')}}" style="width:20px;height:20px></span>
+            <span class="caret text-secondary"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a ui-sref="list.settings" title="{{toolbarVm.i18n.format('buttons.settings')}}"><i class="fa fa-cog"></i> Settings</button></li>
+            <li><a href ui-sref="logout" title="{{toolbarVm.i18n.format('buttons.signout')}}"><i class="fa fa-power-off"></i> Sign-out</a></li>
+        </ul>
+    </div>
+
+    -->
+
 </div>

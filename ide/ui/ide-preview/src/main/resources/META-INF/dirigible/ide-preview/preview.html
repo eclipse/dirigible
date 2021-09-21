@@ -12,15 +12,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
 
     <title>Eclipse Dirigible - Preview</title>
 
     <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
     <!-- AngularJS -->
-    <script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-    <script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+    <script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
     <!-- jQuery -->
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
@@ -33,25 +33,25 @@
     <script src="preview.js"></script>
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-    <link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css"/>
+    <link href="css/fluid-media.css" type="text/css" rel="stylesheet"/>
 
 </head>
 
 <body ng-app="preview" ng-controller="PreviewController as preview" class="view preview-body">
-    <form class="input-group navbar-fixed-top" name="previewForm">
+<form class="input-group navbar-fixed-top" name="previewForm">
         <span class="input-group-btn input-group-addon view-toolbar">
             <button class="btn btn-default preview-button" type="button" ng-click="preview.refresh()">
                 <i class="fa fa-refresh"></i></button>
         </span>
-        <input type="text" name="preview" class="form-control" ng-model="preview.previewUrl"
-            ng-model-options="{ updateOn: 'blur' }" ng-keyup="cancel($event)" placeholder="Preview ...">
-    </form>
-    <div class="preview-pre"></div>
-    <div class="responsive-container">
-        <iframe id="preview-iframe" class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0"
-            iframe-onload="preview.iframeLoadedCallBack()"> </iframe>
-    </div>
+    <input type="text" name="preview" class="form-control" ng-model="preview.previewUrl"
+           ng-model-options="{ updateOn: 'blur' }" ng-keyup="cancel($event)" placeholder="Preview ...">
+</form>
+<div class="preview-pre"></div>
+<div class="responsive-container">
+    <iframe id="preview-iframe" class="responsive-iframe" ng-src="{{preview.previewUrl}}" frameborder="0"
+            iframe-onload="preview.iframeLoadedCallBack()"></iframe>
+</div>
 
 </body>
 
