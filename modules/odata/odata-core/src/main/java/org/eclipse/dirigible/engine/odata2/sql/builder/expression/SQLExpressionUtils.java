@@ -11,13 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
-import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmSimpleType;
@@ -28,6 +21,13 @@ import org.apache.olingo.odata2.api.uri.expression.ExceptionVisitExpression;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 
 public final class SQLExpressionUtils {
 
@@ -82,7 +82,23 @@ public final class SQLExpressionUtils {
 	}
 	
 	public static String csv(List<String> values) {
-		return values.stream().collect(Collectors.joining(","));
+		return join(values,",");
 	}
+
+    public static String join(List<String> values, String delimiter) {
+        return values.stream().collect(Collectors.joining(delimiter));
+    }
+
+
+    /**
+     *  Basic validity check for the values. Prevents that someone deletes an entity with an invalid request
+     *  In short, a composite key makes sense if all elements are not-null (otherwise the non-null element suffices)
+     * @param keyValue the value of the key
+     * @return if the key value is valid
+     */
+    public static boolean isValidKeyValue(Object keyValue){
+        return keyValue != null;
+    }
+
 
 }
