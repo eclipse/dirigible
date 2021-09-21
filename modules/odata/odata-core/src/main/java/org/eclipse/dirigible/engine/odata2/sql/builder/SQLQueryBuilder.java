@@ -11,21 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.REQUESTED_RANGE_NOT_SATISFIABLE;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmSimpleType;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.EdmTyped;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
@@ -36,6 +22,11 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionWhere;
+
+import java.util.*;
+
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.REQUESTED_RANGE_NOT_SATISFIABLE;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 
 public class SQLQueryBuilder {
 
@@ -288,10 +279,10 @@ public class SQLQueryBuilder {
         return q;
     }
 
-	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> entryKeys) throws ODataException {
+	public SQLQuery buildUpdateEntityQuery(UriInfo uri, ODataEntry entry, Map<String, Object> uriKeys) throws ODataException {
 		EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLQuery q = new SQLQuery(tableMapping);
-        q.update(target, entry, entryKeys).build();
+        q.update(target, entry, uriKeys).build();
         return q;
 	}
 }

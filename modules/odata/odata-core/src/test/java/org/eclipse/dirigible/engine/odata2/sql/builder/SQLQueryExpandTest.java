@@ -89,7 +89,7 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\", T1.ID5 AS \"ID5_T1\", " +
+        String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\", T0.ID4_3 AS \"ID4_3_T0\", T1.ID5 AS \"ID5_T1\", " +
                 "T1.FK_ID4_1 AS \"FK_ID4_1_T1\", T1.FK_ID4_2 AS \"FK_ID4_2_T1\" " +
                 "FROM ENTITY4_TABLE AS T0 " +
                 "LEFT JOIN ENTITY5_TABLE AS T1 ON T1.FK_ID4_1 = T0.ID4_1 AND T1.FK_ID4_2 = T0.ID4_2 " +
@@ -109,7 +109,8 @@ public class SQLQueryExpandTest {
         SQLContext context = new SQLContext();
 
         String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", T0.FK_ID4_2 AS \"FK_ID4_2_T0\", " +
-                "T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\" " +
+                "T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\", " +
+                "T1.ID4_3 AS \"ID4_3_T1\" " +
                 "FROM ENTITY5_TABLE AS T0 " +
                 "LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2 " +
                 "FETCH FIRST 1000 ROWS ONLY";
@@ -164,7 +165,9 @@ public class SQLQueryExpandTest {
 
         SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
-        String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", T0.FK_ID4_2 AS \"FK_ID4_2_T0\", T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\" " +
+        String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", " +
+                "T0.FK_ID4_2 AS \"FK_ID4_2_T0\", T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\", " +
+                "T1.ID4_3 AS \"ID4_3_T1\" " +
                 "FROM ENTITY5_TABLE AS T0 " +
                 "LEFT JOIN ENTITY4_TABLE AS T1 ON T1.ID4_1 = T0.FK_ID4_1 AND T1.ID4_2 = T0.FK_ID4_2 " +
                 "WHERE T1.ID4_1 = ? AND T1.ID4_2 = ? " +
@@ -197,8 +200,6 @@ public class SQLQueryExpandTest {
     //    }
 
     //    @Test
-    //    @Ignore
-    @SuppressWarnings("unchecked")
     public void testExpandWithFilterAndSelect() throws Exception {
         Map<String, String> params = new HashMap<>();
         params.put("$expand", "Entity2");
