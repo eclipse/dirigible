@@ -96,8 +96,7 @@ public final class SQLQuery {
     }
 
 
-    public SQLQuery orderBy(final OrderByExpression orderBy, final EdmEntityType entityType)
-            throws EdmException, ODataNotImplementedException {
+    public SQLQuery orderBy(final OrderByExpression orderBy, final EdmEntityType entityType) throws ODataNotImplementedException {
         if (orderBy != null && orderBy.getOrders() != null) {
             for (OrderExpression order : orderBy.getOrders()) {
                 if (ExpressionKind.PROPERTY != order.getExpression().getKind()) {
@@ -119,7 +118,7 @@ public final class SQLQuery {
         return this;
     }
 
-    public SQLQuery clearFilter(final EdmEntitySet filterTarget) throws ODataException {
+    public SQLQuery clearFilter(final EdmEntitySet filterTarget) {
         whereExpression = new SQLExpressionWhere();
         return this;
     }
@@ -128,7 +127,7 @@ public final class SQLQuery {
             throws ODataException {
         //String column = getSQLTableColumn(filterTarget.getEntityType(), keyProperty);
         ColumnInfo column = getSQLTableColumnInfo(filterTarget.getEntityType(), keyProperty);
-        List<Param> params = new ArrayList<Param>();
+        List<Param> params = new ArrayList<>();
         StringBuilder query = new StringBuilder(column.getColumnName() + " IN (");
         for (String leadingEntityId : idsOfLeadingEntities) {
             params.add(new Param(leadingEntityId, column.getSqlType()));
@@ -196,7 +195,7 @@ public final class SQLQuery {
         }
     }
 
-    public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {
+    public String getSQLTableColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmProperty p) {
         if (p.isSimple()) {
             boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
             if (caseSensitive) {
@@ -260,9 +259,7 @@ public final class SQLQuery {
      * @return true if it is transient and false otherwise
      */
     public boolean isTransientType(final EdmStructuralType targetEnitityType, final EdmProperty property) {
-        if (tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(property))
-            return false;
-        return true;
+        return !tableMappingProvider.getEdmTableBinding(targetEnitityType).isPropertyMapped(property);
     }
 
     /**
@@ -308,10 +305,9 @@ public final class SQLQuery {
         return whereExpression.getParams();
     }
 
-    private String evaluateJoins(final SQLContext context) throws EdmException, ODataException {
+    private String evaluateJoins(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
-        for (Iterator<SQLExpressionJoin> it = joinExpressions.iterator(); it.hasNext(); ) {
-            SQLExpressionJoin join = it.next();
+        for (SQLExpressionJoin join : joinExpressions) {
             if (join.isEmpty()) {
                 continue;
             }
@@ -407,13 +403,13 @@ public final class SQLQuery {
                 TemporalType type = param.getTemporalType();
                 switch (type) {
                     case DATE:
-                        preparedStatement.setDate(i + 1, asSQLDate((Calendar) param.getValue()));
+                        preparedStatement.setDate(i + 1, asSQLDate(param.getValue()));
                         break;
                     case TIMESTAMP:
-                        preparedStatement.setTimestamp(i + 1, asTimeStamp((Calendar) param.getValue()));
+                        preparedStatement.setTimestamp(i + 1, asTimeStamp(param.getValue()));
                         break;
                     case TIME:
-                        preparedStatement.setTime(i + 1, asTime((Calendar) param.getValue()));
+                        preparedStatement.setTime(i + 1, asTime(param.getValue()));
                 }
 
             } else {
@@ -477,14 +473,7 @@ public final class SQLQuery {
         }
     }
 
-    /**
-     * Setter for keys on statement
-     * 
-     * @param preparedStatement the statement
-     * @throws SQLException in case of an error
-     * @throws EdmException in case of an error
-     */
-    public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
+    public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException {
         Map<String, Object> keys = getDeleteExpression().getKeys();
         int i = 0;
         for (Map.Entry<String, Object> key : keys.entrySet()) {
@@ -492,18 +481,10 @@ public final class SQLQuery {
         }
     }
 
-    /**
-     * Setter for values and keys for statement
-     * 
-     * @param preparedStatement the statement
-     * @throws SQLException in case of an error
-     * @throws EdmException in case of an error
-     */
     public void setValuesAndKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException, EdmException {
         SQLExpressionUpdate updateExpression = getUpdateExpression();
-        List<Object> values = updateExpression.getColumnData();
-        List<EdmProperty> columnProperties = updateExpression.getColumnProperties();
-
+        List<Object> values = updateExpression.getQueryData();
+        List<EdmProperty> columnProperties = updateExpression.getQueryOdataProperties();
         setParamsOnPreparedStatement(preparedStatement, values, columnProperties);
     }
 
@@ -535,7 +516,7 @@ public final class SQLQuery {
         } else {//do conversion 
             try {
                 if ("NUMERIC".equals(targetSqlType)) {
-                    return new Long(String.valueOf(actualValue));
+                    return Long.valueOf(String.valueOf(actualValue));
                 } else {
                     throw new OData2Exception("Conversion to specified SQL Type " + targetSqlType + " not implemented!", BAD_REQUEST);
                 }
@@ -735,7 +716,7 @@ public final class SQLQuery {
     }
 
 
-    public String buildInsert(final SQLContext context) throws EdmException, ODataException {
+    public String buildInsert(final SQLContext context) throws ODataException {
         StringBuilder builder = new StringBuilder();
         if (insertExpression == null)
             throw new IllegalStateException("Please initialize the insert clause!");
@@ -771,8 +752,8 @@ public final class SQLQuery {
         return normalizedString(context, builder);
     }
 
-    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> entryKeys) {
-        updateExpression = new SQLExpressionUpdate(this, target, entry, entryKeys);
+    public SQLExpressionUpdate update(EdmEntityType target, ODataEntry entry, Map<String, Object> uriKeys) {
+        updateExpression = new SQLExpressionUpdate(this, target, entry, uriKeys);
         return updateExpression;
     }
 
