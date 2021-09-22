@@ -11,27 +11,22 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
-import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
-import org.apache.olingo.odata2.api.uri.expression.OrderByExpression;
-import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
-import org.apache.olingo.odata2.api.uri.expression.PropertyExpression;
-import org.apache.olingo.odata2.api.uri.expression.SortOrder;
+import org.apache.olingo.odata2.api.uri.expression.*;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
 public final class SQLExpressionOrderBy implements SQLExpression {
 
