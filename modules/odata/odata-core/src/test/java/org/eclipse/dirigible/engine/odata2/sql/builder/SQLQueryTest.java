@@ -447,7 +447,6 @@ public class SQLQueryTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
-
     @Test
     public void testDeleteWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
