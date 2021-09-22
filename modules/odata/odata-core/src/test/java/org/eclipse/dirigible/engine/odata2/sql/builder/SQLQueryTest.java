@@ -462,20 +462,6 @@ public class SQLQueryTest {
     }
 
     @Test
-    public void testDeleteWithNonIdProperty() throws Exception {
-        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        Map<String, String> params = new HashMap<>();
-        params.put("$filter", "Id4_3 eq 'c'");
-        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-
-        SQLQuery q = builder.buildDeleteEntityQuery(uriInfo, mapKeys(uriInfo.getKeyPredicates()));
-        SQLContext context = new SQLContext();
-        String expected = "DELETE FROM ENTITY4_TABLE WHERE ID4_1=? AND ID4_2=?";
-        assertEquals(expected, q.buildDelete(context));
-    }
-
-    @Test
     public void testInsertWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         Map<String, String> params = new HashMap<String, String>();
