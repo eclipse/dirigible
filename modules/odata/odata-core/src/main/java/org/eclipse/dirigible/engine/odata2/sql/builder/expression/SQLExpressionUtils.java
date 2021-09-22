@@ -11,10 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmSimpleType;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.expression.ExceptionVisitExpression;
@@ -100,5 +97,13 @@ public final class SQLExpressionUtils {
         return keyValue != null;
     }
 
+    public static boolean isKeyProperty(EdmEntityType target, EdmProperty prop) throws EdmException {
+        for (String name : target.getKeyPropertyNames()){
+            if (name.equals(prop.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

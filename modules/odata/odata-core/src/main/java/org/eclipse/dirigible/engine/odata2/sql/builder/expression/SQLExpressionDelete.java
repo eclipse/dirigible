@@ -12,12 +12,11 @@
 package org.eclipse.dirigible.engine.odata2.sql.builder.expression;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQuery;
 
@@ -25,15 +24,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.isValidKeyValue;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionUtils.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 public final class SQLExpressionDelete implements SQLExpression {
 	private final SQLQuery query;
-	private Map<String, Object> keys;
+	private Map<String, Object> deleteKeys;
     private EdmEntityType target;
+
+    private final List<String> deleteKeysColumnNames = new ArrayList<>();
+    private final List<Object> deleteKeyValues = new ArrayList<>();
+    private final List<EdmProperty> queryOdataProperties = new ArrayList<>();
 
     public SQLExpressionDelete(final SQLQuery parent) {
         this.query = parent;
@@ -45,7 +47,7 @@ public final class SQLExpressionDelete implements SQLExpression {
         case FROM:
             return buildFrom(context);
         case KEYS:
-            return buildKeys(context);
+            return buildDeleteWhereClauseOnKeys(context);
         default:
             throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
@@ -53,7 +55,7 @@ public final class SQLExpressionDelete implements SQLExpression {
 
     @Override
     public boolean isEmpty() throws EdmException {
-        return keys.size() == 0 ? true : false;
+        return deleteKeys.size() == 0 ? true : false;
     }
 
     public EdmEntityType getTarget() {
@@ -67,12 +69,38 @@ public final class SQLExpressionDelete implements SQLExpression {
     }
     
     public SQLQuery keys(final Map<String, Object> keys) {
-        this.keys = keys;
+        this.deleteKeys = keys;
         return query;
     }
 
+    protected String buildFrom(final SQLContext context) throws EdmException {
+        query.grantTableAliasForStructuralTypeInQuery(target);
 
-    private String buildFrom(final SQLContext context) {
+        for (EdmProperty deleteProperty: target.getKeyProperties()) { //we iterate first the own properties of the type
+            if (deleteKeys.containsKey(deleteProperty.getName())) {
+                String columnName = query.getSQLTableColumnNoAlias(target, deleteProperty);
+                deleteKeysColumnNames.add(query.getSQLTableColumnNoAlias(target, deleteProperty));
+                queryOdataProperties.add(deleteProperty);
+                Object keyValue = deleteKeys.get(deleteProperty.getName());
+                if (!isValidKeyValue(keyValue)) {
+                    throw new OData2Exception("Invalid key value for property  " + deleteProperty.getName(), HttpStatusCodes.BAD_REQUEST);
+                }
+                deleteKeyValues.add(deleteKeys.get(deleteProperty.getName()));
+            } else {
+                throw new OData2Exception(String.format("Key property %s is missing in the DELETE request!", deleteProperty.getName()),
+                        HttpStatusCodes.BAD_REQUEST);
+            }
+        }
+
+        for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
+            if (deleteKeys.containsKey(inlineEntry.getName())) {
+                throw new OData2Exception("Delete by non-id property is not allowed!", HttpStatusCodes.BAD_REQUEST);
+            }
+        }
+        return buildDeleteFrom();
+    }
+
+    private String buildDeleteFrom() {
         StringBuilder from = new StringBuilder();
         for (Iterator<String> it = query.getTablesAliasesForEntitiesInQuery(); it.hasNext();) {
             String tableAlias = it.next();
@@ -95,20 +123,16 @@ public final class SQLExpressionDelete implements SQLExpression {
         return fqn(query.getDeleteExpression().getTarget()).equals(fqn(target)) ? true : false;
     }
 
-    private String buildKeys(final SQLContext context) throws EdmException {
-        List<String> deleteKeys = new ArrayList<String>();
-        for (String key : target.getKeyPropertyNames()) {
-            Object keyValue = keys.get(key);
-            if (!isValidKeyValue(keyValue)){
-                throw new OData2Exception("Invalid key property" + key, HttpStatusCodes.BAD_REQUEST);
-            }
-            deleteKeys.add(key + "=?");
+    private String buildDeleteWhereClauseOnKeys(final SQLContext context) throws EdmException {
+        List<String> deleteKeyExpressions = new ArrayList<String>();
+        for (String columnName : deleteKeysColumnNames) {
+            deleteKeyExpressions.add(columnName + "=?");
         }
-        return deleteKeys.stream().collect(Collectors.joining(" AND "));
+        return join(deleteKeyExpressions, " AND " );
     }
     
-    public Map<String, Object> getKeys() {
-		return keys;
+    public Map<String, Object> getDeleteKeyValues() {
+		return deleteKeys;
 	}
 
 

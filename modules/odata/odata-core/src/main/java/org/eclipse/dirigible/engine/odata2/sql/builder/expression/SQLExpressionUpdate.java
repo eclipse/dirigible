@@ -65,17 +65,6 @@ public class SQLExpressionUpdate implements SQLExpression {
 		return target;
 	}
 
-
-	boolean isKeyProperty(EdmEntityType target, EdmProperty prop) throws EdmException{
-		for (String name : target.getKeyPropertyNames()){
-			if (name.equals(prop.getName())){
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 	public SQLQuery build() throws ODataException {
 		query.grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = requestEntry.getProperties();
@@ -108,7 +97,7 @@ public class SQLExpressionUpdate implements SQLExpression {
 		for (String key : target.getKeyPropertyNames()){ //the order matters
 			Object value = uriKeyProperties.get(key);
 			if (!isValidKeyValue(value)){
-				throw new OData2Exception("Invalid key property" + key, HttpStatusCodes.BAD_REQUEST);
+				throw new OData2Exception("Invalid key value for property " + key, HttpStatusCodes.BAD_REQUEST);
 			}
 			queryOdataProperties.add((EdmProperty) target.getProperty(key));
 			queryData.add(uriKeyProperties.get(key));
