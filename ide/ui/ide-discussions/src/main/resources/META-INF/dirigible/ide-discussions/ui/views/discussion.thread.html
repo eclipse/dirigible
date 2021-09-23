@@ -1,59 +1,94 @@
 <div style="margin-top:20px">
-	<span ng-if="vm.loggedUser && vm.comments.length===0">{{vm.i18n.format('board.comments_stats.none_0') + vm.i18n.format('board.comments_stats.none_1')}}</span>
-	<span ng-if="!vm.loggedUser">{{vm.i18n.format('discussion.notsigned_0')}} <a ui-sref="list.login">{{vm.i18n.format('discussion.notsigned_1')}}</a> {{vm.i18n.format('discussion.notsigned_2')}}</span>
+    <span ng-if="vm.loggedUser && vm.comments.length===0">{{vm.i18n.format('board.comments_stats.none_0') + vm.i18n.format('board.comments_stats.none_1')}}</span>
+    <span ng-if="!vm.loggedUser">{{vm.i18n.format('discussion.notsigned_0')}} <a
+            ui-sref="list.login">{{vm.i18n.format('discussion.notsigned_1')}}</a> {{vm.i18n.format('discussion.notsigned_2')}}</span>
 </div>
 <div class="list-group" ng-if="vm.comments.length>0" style="margin-top:20px">
-	<div class="list-group">
-		<div ng-repeat="comment in vm.comments" class="list-group-item comment">
-			<div class="text-muted">
-				<span ng-bind="comment.user"></span> {{vm.i18n.format('discussion.comment.said')}} <span title="{{comment.lastModifiedTimeLocal || comment.publishTimeLocal}}" ng-bind="comment.timeSinceLastModified || comment.timeSincePublish">:</span>
-			</div>
-			<span ng-if="vm.comment !== comment || vm.replyEdit" ng-bind-html="comment.text" class="post-text"></span>
-			<div ng-if="vm.comment === comment && vm.hasMode('edit') && !vm.replyEdit">
-				<textarea class="form-control" ng-model="vm.comment.text" ck-editor></textarea>
-				<div class="button-group" style="margin: 5px 0;">
-					<button class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')" title="{{vm.i18n.format('buttons.post')}}"></button>
-					<button class="btn btn-primary" ng-click="vm.cancelCommentEdit()" ng-bind="vm.i18n.format('buttons.cancel')" title="{{vm.i18n.format('buttons.cancel')}}"></button>
-				</div>
-			</div>
-			<div style="align-self:flex-end" ng-if="!vm.hasMode('readonly') && !vm.hasMode('edit')">
-				<a href ng-if="vm.hasPrivilege(comment, 'edit')" ng-click="vm.openCommentForEdit(comment)" title="{{vm.i18n.format('buttons.edit')}}">{{vm.i18n.format('buttons.edit')}}</a>
-				<a href ng-if="vm.hasPrivilege(comment, 'delete')" ng-click="vm.remove(comment)" title="{{vm.i18n.format('buttons.delete')}}"><i class="fa fa-trash-o"></i></a>
-			</div>
-			<a href ng-click="vm.replyOpen(comment)" style="text-decoration:none; font-weight:bold" ng-show="vm.hasPrivilege(comment, 'reply') && !vm.hasMode('edit') && !vm.hasMode('readonly')">{{vm.i18n.format('buttons.reply')}}</a>
-			<div ng-if="comment.replies.length>0" class="replies">
-				<div ng-repeat="reply in comment.replies" class="list-group-item reply">
-					<div ng-if="vm.reply!==reply">
-						<span ng-bind-html="reply.text" style="display: inline-block;"></span> <div class="text-muted" style="display: inline-block;">- {{reply.user}} {{vm.i18n.format('discussion.comment.replied')}} <span title="{{reply.lastModifiedTimeLocal || reply.publishTimeLocal}}" ng-bind="reply.timeSinceLastModified || reply.timeSincePublish"></span>
-						<a href ng-if="vm.hasPrivilege(reply, 'edit') && !vm.hasMode('edit') && !vm.hasMode('readonly')" ng-click="vm.replyOpen(comment, reply)" title="{{vm.i18n.format('buttons.edit')}}"><i class="fa fa-pencil" style="font-size: 1.1em"></i></a>
-						<a href ng-if="vm.hasPrivilege(reply, 'delete') && !vm.hasMode('edit') && !vm.hasMode('readonly')" ng-click="vm.remove(reply)" title="{{vm.i18n.format('buttons.delete')}}"><i class="fa fa-trash-o" style="font-size: 1.1em"></i></a></div>
-					</div>
-					<div ng-if="vm.hasMode('edit') && vm.reply===reply" class="list-group-item inline-editor">
-						<textarea class="form-control" placeholder="Type your reply here" ng-model="reply.text" ck-editor></textarea>
-						<div class="button-group" style="margin: 5px 0;"> 
-							<button class="btn btn-default" ng-click="vm.replyPost()" ng-bind="vm.i18n.format('buttons.post')" title="{{vm.i18n.format('buttons.post')}}"></button>
-							<button class="btn btn-default" ng-click="vm.replyCancel()" ng-bind="vm.i18n.format('buttons.cancel')" title="{{vm.i18n.format('buttons.cancel')}}"></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div ng-if="vm.hasMode('edit') && vm.comment===comment && vm.reply && vm.reply.id===undefined" class="list-group-item inline-editor" style="margin-left:40px;">
-				<textarea class="form-control" placeholder="Type your reply here" ng-model="vm.reply.text" ck-editor></textarea>
-				<div class="button-group" style="margin: 5px 0;">
-					<button class="btn btn-default" ng-click="vm.replyPost()" ng-bind="vm.i18n.format('buttons.post')" title="{{vm.i18n.format('buttons.post')}}"></button>
-					<button class="btn btn-default" ng-click="vm.replyCancel()" ng-bind="vm.i18n.format('buttons.cancel')" title="{{vm.i18n.format('buttons.post')}}"></button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="list-group">
+        <div ng-repeat="comment in vm.comments" class="list-group-item comment">
+            <div class="text-muted">
+                <span ng-bind="comment.user"></span> {{vm.i18n.format('discussion.comment.said')}} <span
+                    title="{{comment.lastModifiedTimeLocal || comment.publishTimeLocal}}"
+                    ng-bind="comment.timeSinceLastModified || comment.timeSincePublish">:</span>
+            </div>
+            <span ng-if="vm.comment !== comment || vm.replyEdit" ng-bind-html="comment.text" class="post-text"></span>
+            <div ng-if="vm.comment === comment && vm.hasMode('edit') && !vm.replyEdit">
+                <textarea class="form-control" ng-model="vm.comment.text" ck-editor></textarea>
+                <div class="button-group" style="margin: 5px 0;">
+                    <button class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text"
+                            ng-bind="vm.i18n.format('buttons.post')"
+                            title="{{vm.i18n.format('buttons.post')}}"></button>
+                    <button class="btn btn-primary" ng-click="vm.cancelCommentEdit()"
+                            ng-bind="vm.i18n.format('buttons.cancel')"
+                            title="{{vm.i18n.format('buttons.cancel')}}"></button>
+                </div>
+            </div>
+            <div style="align-self:flex-end" ng-if="!vm.hasMode('readonly') && !vm.hasMode('edit')">
+                <a href ng-if="vm.hasPrivilege(comment, 'edit')" ng-click="vm.openCommentForEdit(comment)"
+                   title="{{vm.i18n.format('buttons.edit')}}">{{vm.i18n.format('buttons.edit')}}</a>
+                <a href ng-if="vm.hasPrivilege(comment, 'delete')" ng-click="vm.remove(comment)"
+                   title="{{vm.i18n.format('buttons.delete')}}"><i class="fa fa-trash-o"></i></a>
+            </div>
+            <a href ng-click="vm.replyOpen(comment)" style="text-decoration:none; font-weight:bold"
+               ng-show="vm.hasPrivilege(comment, 'reply') && !vm.hasMode('edit') && !vm.hasMode('readonly')">{{vm.i18n.format('buttons.reply')}}</a>
+            <div ng-if="comment.replies.length>0" class="replies">
+                <div ng-repeat="reply in comment.replies" class="list-group-item reply">
+                    <div ng-if="vm.reply!==reply">
+                        <span ng-bind-html="reply.text" style="display: inline-block;"></span>
+                        <div class="text-muted" style="display: inline-block;">- {{reply.user}}
+                            {{vm.i18n.format('discussion.comment.replied')}} <span
+                                    title="{{reply.lastModifiedTimeLocal || reply.publishTimeLocal}}"
+                                    ng-bind="reply.timeSinceLastModified || reply.timeSincePublish"></span>
+                            <a href
+                               ng-if="vm.hasPrivilege(reply, 'edit') && !vm.hasMode('edit') && !vm.hasMode('readonly')"
+                               ng-click="vm.replyOpen(comment, reply)" title="{{vm.i18n.format('buttons.edit')}}"><i
+                                    class="fa fa-pencil" style="font-size: 1.1em"></i></a>
+                            <a href
+                               ng-if="vm.hasPrivilege(reply, 'delete') && !vm.hasMode('edit') && !vm.hasMode('readonly')"
+                               ng-click="vm.remove(reply)" title="{{vm.i18n.format('buttons.delete')}}"><i
+                                    class="fa fa-trash-o" style="font-size: 1.1em"></i></a></div>
+                    </div>
+                    <div ng-if="vm.hasMode('edit') && vm.reply===reply" class="list-group-item inline-editor">
+                        <textarea class="form-control" placeholder="Type your reply here" ng-model="reply.text"
+                                  ck-editor></textarea>
+                        <div class="button-group" style="margin: 5px 0;">
+                            <button class="btn btn-default" ng-click="vm.replyPost()"
+                                    ng-bind="vm.i18n.format('buttons.post')"
+                                    title="{{vm.i18n.format('buttons.post')}}"></button>
+                            <button class="btn btn-default" ng-click="vm.replyCancel()"
+                                    ng-bind="vm.i18n.format('buttons.cancel')"
+                                    title="{{vm.i18n.format('buttons.cancel')}}"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="vm.hasMode('edit') && vm.comment===comment && vm.reply && vm.reply.id===undefined"
+                 class="list-group-item inline-editor" style="margin-left:40px;">
+                <textarea class="form-control" placeholder="Type your reply here" ng-model="vm.reply.text"
+                          ck-editor></textarea>
+                <div class="button-group" style="margin: 5px 0;">
+                    <button class="btn btn-default" ng-click="vm.replyPost()" ng-bind="vm.i18n.format('buttons.post')"
+                            title="{{vm.i18n.format('buttons.post')}}"></button>
+                    <button class="btn btn-default" ng-click="vm.replyCancel()"
+                            ng-bind="vm.i18n.format('buttons.cancel')"
+                            title="{{vm.i18n.format('buttons.post')}}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div style="display:flex; flex-direction:column; margin: 10px 0" ng-if="vm.hasPrivilege(undefined, 'comment') && !vm.hasMode('edit') && !vm.hasMode('readonly')">
-	<span style="font-size: 1em;font-weight:bold; margin-bottom: 5px" ng-bind="vm.i18n.format('discussion.comment.new_title')"></span>
-	<form>
-	  <div class="form-group">
-	    <textarea  class="form-control" placeholder="Type your comment here" ng-model="vm.comment.text" style="width:100%" ck-editor></textarea>
-	  </div>
-	</form>	
-	<button style="flex: 1 0 auto; align-self: flex-start;" class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')" title="vm.i18n.format('buttons.post')"></button>
+<div style="display:flex; flex-direction:column; margin: 10px 0"
+     ng-if="vm.hasPrivilege(undefined, 'comment') && !vm.hasMode('edit') && !vm.hasMode('readonly')">
+    <span style="font-size: 1em;font-weight:bold; margin-bottom: 5px"
+          ng-bind="vm.i18n.format('discussion.comment.new_title')"></span>
+    <form>
+        <div class="form-group">
+            <textarea class="form-control" placeholder="Type your comment here" ng-model="vm.comment.text"
+                      style="width:100%" ck-editor></textarea>
+        </div>
+    </form>
+    <button style="flex: 1 0 auto; align-self: flex-start;" class="btn btn-primary" ng-click="vm.postComment()"
+            ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')"
+            title="vm.i18n.format('buttons.post')"></button>
 </div>
