@@ -12,15 +12,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
 
     <title>Eclipse Dirigible - Logs</title>
 
     <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
     <!-- AngularJS -->
-    <script src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-    <script src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+    <script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
     <!-- jQuery -->
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
@@ -32,24 +32,24 @@
     <script src="logs.js"></script>
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-    <link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css"/>
+    <link href="css/fluid-media.css" type="text/css" rel="stylesheet"/>
 
 </head>
 
 <body ng-app="logs" ng-controller="LogsController as logs" class="view">
 
-    <div class="form-horizontal">
-        <div class="col-sm-12" style="padding: 0">
-            <div class="input-group logs-dropdown logs-dropdown">
-                <div class="input-group-addon view-toolbar form-group sticky-top">
-                    <select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
+<div class="form-horizontal">
+    <div class="col-sm-12" style="padding: 0">
+        <div class="input-group logs-dropdown logs-dropdown">
+            <div class="input-group-addon view-toolbar form-group sticky-top">
+                <select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
                         class="dropdown dropdown-toggle dropdown-top form-control logs-dropdown" title="Logs"></select>
-                </div>
             </div>
         </div>
     </div>
-    <pre class="form-control col-lg-12 logs-area">{{ logContent }}</pre>
+</div>
+<pre class="form-control col-lg-12 logs-area">{{ logContent }}</pre>
 
 </body>
 

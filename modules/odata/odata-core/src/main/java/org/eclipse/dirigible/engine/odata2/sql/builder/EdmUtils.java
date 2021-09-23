@@ -11,20 +11,18 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static java.lang.String.format;
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-
-import java.util.*;
-
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
-import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.SelectItem;
-import org.apache.olingo.odata2.core.edm.provider.EdmEntityTypeImplProv;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+import static java.lang.String.format;
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
 public final class EdmUtils {
 
@@ -63,10 +61,8 @@ public final class EdmUtils {
      * @param entityType the type of the entity
      * @return the properties types list
      * @throws EdmException in case of EDM error
-     * @throws ODataNotImplementedException in case not implemented
      */
-    @SuppressWarnings("unchecked")
-    public static Collection<EdmProperty> getProperties(EdmStructuralType entityType) throws EdmException, ODataNotImplementedException {
+    public static Collection<EdmProperty> getProperties(EdmStructuralType entityType) throws EdmException {
         Collection<String> propertyNames = getSelectedPropertyNames(Collections.EMPTY_LIST, entityType);
         Collection<EdmProperty> result = new ArrayList<EdmProperty>();
 
@@ -77,7 +73,7 @@ public final class EdmUtils {
         return result;
     }
 
-    public static Collection<EdmProperty> getKeyProperties(EdmNavigationProperty property) throws EdmException, ODataNotImplementedException {
+    public static Collection<EdmProperty> getKeyProperties(EdmNavigationProperty property) throws EdmException {
         if (property.getType() instanceof EdmEntityType){
             EdmEntityType edmEntityType = (EdmEntityType) property.getType();
             List<EdmProperty> keyProperties = edmEntityType.getKeyProperties();
@@ -107,10 +103,8 @@ public final class EdmUtils {
      * @param type          the edm type
      * @return the list of the selected property names
      * @throws EdmException                 in case of an edm error
-     * @throws ODataNotImplementedException in case of a missing feature
      */
-    public static Collection<String> getSelectedPropertyNames(List<SelectItem> selectedItems, EdmStructuralType type)
-            throws EdmException, ODataNotImplementedException {
+    public static Collection<String> getSelectedPropertyNames(List<SelectItem> selectedItems, EdmStructuralType type) throws EdmException {
         final Set<String> selectedPropertyNames = getSelectedPropertyNames(selectedItems);
         final List<String> allPropertyNames = type.getPropertyNames();
 
@@ -134,8 +128,7 @@ public final class EdmUtils {
         return namesOfEdmPropertiesToBePopulated;
     }
 
-    private static Set<String> getSelectedPropertyNames(List<SelectItem> selectedPropertyNames)
-            throws EdmException, ODataNotImplementedException {
+    private static Set<String> getSelectedPropertyNames(List<SelectItem> selectedPropertyNames) throws EdmException {
         Set<String> result = new HashSet<String>();
         for (SelectItem selectItem : selectedPropertyNames) {
             if (selectItem.getNavigationPropertySegments() != null && !(selectItem.getNavigationPropertySegments().isEmpty()) //
@@ -143,7 +136,7 @@ public final class EdmUtils {
                     || selectItem.isStar() //
             ) {
                 LOG.error("SelectItems with NavigationPath or 'Star' values are not implemented yet!");
-                throw new ODataNotImplementedException();
+                throw new OData2Exception("Not Implemented", HttpStatusCodes.NOT_IMPLEMENTED);
             }
             result.add(selectItem.getProperty().getName());
         }

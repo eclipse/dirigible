@@ -1,55 +1,71 @@
 <style>
-	.timeline-panel {
-		width: initial !important;
-	}
+    .timeline-panel {
+        width: initial !important;
+    }
 </style>
 
 <div style="margin-top:20px">
-	<span ng-if="vm.loggedUser && vm.comments.length===0">{{vm.i18n.format('board.comments_stats.none_0') + vm.i18n.format('board.comments_stats.none_1')}}</span>
-	<span ng-if="!vm.loggedUser">{{vm.i18n.format('discussion.notsigned_0')}} <a ui-sref="list.login">{{vm.i18n.format('discussion.notsigned_1')}}</a> {{vm.i18n.format('discussion.notsigned_2')}}</span>
+    <span ng-if="vm.loggedUser && vm.comments.length===0">{{vm.i18n.format('board.comments_stats.none_0') + vm.i18n.format('board.comments_stats.none_1')}}</span>
+    <span ng-if="!vm.loggedUser">{{vm.i18n.format('discussion.notsigned_0')}} <a
+            ui-sref="list.login">{{vm.i18n.format('discussion.notsigned_1')}}</a> {{vm.i18n.format('discussion.notsigned_2')}}</span>
 </div>
 <div class="" style="margin-top:20px">
-  <timeline>
-    <!-- can also hard-code to side="left" or side="right" -->
-    <timeline-event ng-repeat="comment in vm.comments" side=""> <!--side="{{side}}"-->
-      <!-- uses angular-scroll-animate to give it some pop -->
-      <timeline-badge class="default">
-        <!-- <div style="background-image: url(../../../js/ide-discussions/svc/user/avatar.js/{{comment.user}});background-repeat: no-repeat; background-size: 100%; background-position: 50%; border-radius: 50%; width: 50px; height: 50px;"></div> -->
-        <div style="border-radius: 50%; width: 50px; height: 50px;"><i class="fa fa-user" aria-hidden="true"></i></div>
-      </timeline-badge>
+    <timeline>
+        <!-- can also hard-code to side="left" or side="right" -->
+        <timeline-event ng-repeat="comment in vm.comments" side=""> <!--side="{{side}}"-->
+            <!-- uses angular-scroll-animate to give it some pop -->
+            <timeline-badge class="default">
+                <!-- <div style="background-image: url(../../../js/ide-discussions/svc/user/avatar.js/{{comment.user}});background-repeat: no-repeat; background-size: 100%; background-position: 50%; border-radius: 50%; width: 50px; height: 50px;"></div> -->
+                <div style="border-radius: 50%; width: 50px; height: 50px;"><i class="fa fa-user"
+                                                                               aria-hidden="true"></i></div>
+            </timeline-badge>
 
-      <!-- uses angular-scroll-animate to give it some pop -->
-      <timeline-panel class="default">
-        <timeline-heading>
-          <div style="font-size: 0.9em;color:#848d95">
-		    <span ng-bind="comment.user"></span> {{vm.i18n.format('discussion.comment.said')}} <span title="{{comment.lastModifiedTimeLocal || comment.publishTimeLocal}}" ng-bind="comment.timeSinceLastModified || comment.timeSincePublish"></span>:
-		  </div>
-        </timeline-heading>
-		<p ng-if="vm.comment !== comment" ng-bind-html="comment.text" style="font-size: 1.1em"></p>
-		<div ng-if="vm.comment === comment && vm.hasMode('edit')"> 
-			<textarea class="form-control" ng-model="vm.comment.text" style="width:100%; margin-bottom:3px" ck-editor></textarea>
-			<div class="button-group" style="margin: 5px 0;">
-				<button class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')" title="{{vm.i18n.format('buttons.post')}}"></button>
-				<button class="btn btn-primary" ng-click="vm.cancelCommentEdit()" ng-bind="vm.i18n.format('buttons.cancel')" title="{{vm.i18n.format('buttons.cancel')}}"></button>
-			</div>
-		</div>		
-        <timeline-footer>
-        	<div style="align-self:flex-end" ng-if="!vm.hasMode('readonly') && !vm.hasMode('edit')">
-				<a href ng-if="vm.hasPrivilege(comment, 'edit')" ng-click="vm.openCommentForEdit(comment)" ng-bind="vm.i18n.format('buttons.edit')" title="{{vm.i18n.format('buttons.edit')}}"></a>
-				<a href ng-if="vm.hasPrivilege(comment, 'delete')" ng-click="vm.remove(comment)" ng-bind="vm.i18n.format('buttons.delete')" title="{{vm.i18n.format('buttons.delete')}}"></a>
-			</div>
-        </timeline-footer>
-      </timeline-panel>
-    </timeline-event>
-  </timeline>
+            <!-- uses angular-scroll-animate to give it some pop -->
+            <timeline-panel class="default">
+                <timeline-heading>
+                    <div style="font-size: 0.9em;color:#848d95">
+                        <span ng-bind="comment.user"></span> {{vm.i18n.format('discussion.comment.said')}} <span
+                            title="{{comment.lastModifiedTimeLocal || comment.publishTimeLocal}}"
+                            ng-bind="comment.timeSinceLastModified || comment.timeSincePublish"></span>:
+                    </div>
+                </timeline-heading>
+                <p ng-if="vm.comment !== comment" ng-bind-html="comment.text" style="font-size: 1.1em"></p>
+                <div ng-if="vm.comment === comment && vm.hasMode('edit')">
+                    <textarea class="form-control" ng-model="vm.comment.text" style="width:100%; margin-bottom:3px"
+                              ck-editor></textarea>
+                    <div class="button-group" style="margin: 5px 0;">
+                        <button class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text"
+                                ng-bind="vm.i18n.format('buttons.post')"
+                                title="{{vm.i18n.format('buttons.post')}}"></button>
+                        <button class="btn btn-primary" ng-click="vm.cancelCommentEdit()"
+                                ng-bind="vm.i18n.format('buttons.cancel')"
+                                title="{{vm.i18n.format('buttons.cancel')}}"></button>
+                    </div>
+                </div>
+                <timeline-footer>
+                    <div style="align-self:flex-end" ng-if="!vm.hasMode('readonly') && !vm.hasMode('edit')">
+                        <a href ng-if="vm.hasPrivilege(comment, 'edit')" ng-click="vm.openCommentForEdit(comment)"
+                           ng-bind="vm.i18n.format('buttons.edit')" title="{{vm.i18n.format('buttons.edit')}}"></a>
+                        <a href ng-if="vm.hasPrivilege(comment, 'delete')" ng-click="vm.remove(comment)"
+                           ng-bind="vm.i18n.format('buttons.delete')" title="{{vm.i18n.format('buttons.delete')}}"></a>
+                    </div>
+                </timeline-footer>
+            </timeline-panel>
+        </timeline-event>
+    </timeline>
 </div>
 
-<div style="display:flex; flex-direction:column; margin: 10px 0" ng-if="vm.hasPrivilege(undefined, 'comment') && !vm.hasMode('edit') && !vm.hasMode('readonly')">
-	<span style="font-size: 1em;font-weight:bold; margin-bottom: 5px" ng-bind="vm.i18n.format('discussion.comment.new_title')"></span>
-	<form>
-	  <div class="form-group">
-	    <textarea  class="form-control" placeholder="Type your comment here" ng-model="vm.comment.text" style="width:100%" ck-editor></textarea>
-	  </div>
-	</form>	
-	<button style="flex: 1 0 auto; align-self: flex-start;" class="btn btn-primary" ng-click="vm.postComment()" ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')" title="vm.i18n.format('buttons.post')"></button>
+<div style="display:flex; flex-direction:column; margin: 10px 0"
+     ng-if="vm.hasPrivilege(undefined, 'comment') && !vm.hasMode('edit') && !vm.hasMode('readonly')">
+    <span style="font-size: 1em;font-weight:bold; margin-bottom: 5px"
+          ng-bind="vm.i18n.format('discussion.comment.new_title')"></span>
+    <form>
+        <div class="form-group">
+            <textarea class="form-control" placeholder="Type your comment here" ng-model="vm.comment.text"
+                      style="width:100%" ck-editor></textarea>
+        </div>
+    </form>
+    <button style="flex: 1 0 auto; align-self: flex-start;" class="btn btn-primary" ng-click="vm.postComment()"
+            ng-disabled="!vm.comment.text" ng-bind="vm.i18n.format('buttons.post')"
+            title="vm.i18n.format('buttons.post')"></button>
 </div>
