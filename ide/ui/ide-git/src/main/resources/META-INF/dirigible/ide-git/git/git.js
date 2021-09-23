@@ -298,7 +298,7 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceName, work
 				let position = 'last';
 
 				workspaceController.http.get(url)
-					.success(function (data) {
+					.then(function (data) {
 						data.local.forEach(function (branch) {
 							let nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
 							let newNode = {
@@ -321,7 +321,7 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceName, work
 				$('.workspace').jstree("delete_node", $('.workspace').jstree().get_node(data.node.children[0]));
 				let position = 'last';
 				workspaceController.http.get(url)
-					.success(function (data) {
+					.then(function (data) {
 						data.remote.forEach(function (branch) {
 							let nodeText = branch.name + ': ' + branch.commitShortId + " " + branch.commitMessage + " " + "(" + branch.commitAuthor + " on " + branch.commitDate + ")";
 							let newNode = {

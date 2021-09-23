@@ -23,7 +23,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 
 	function getDatabases() {
 		$http.get(databasesSvcUrl)
-			.success(function (data) {
+			.then(function (data) {
 				$scope.databases = data;
 				if (data.length > 0) {
 					let storedDatabase = JSON.parse(localStorage.getItem('DIRIGIBLE.database'));
@@ -34,7 +34,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 					}
 					if ($scope.selectedDatabase) {
 						messageHub.post($scope.selectedDatabase, 'database.database.selection.changed');
-						$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).success(function (data) {
+						$http.get(databasesSvcUrl + "/" + $scope.selectedDatabase).then(function (data) {
 							$scope.datasources = data;
 							if (data.length > 0) {
 								if (storedDatabase !== null) {
@@ -57,7 +57,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	$scope.refreshDatabase = function () {
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
 			$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
-				.success(function (data) {
+				.then(function (data) {
 					$scope.datasource = data;
 					this.baseUrl = databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource;
 					let schemas = $scope.datasource.schemas.map(function (schemas) {
@@ -193,7 +193,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 
 									$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 										+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
-										.success(function (data) {
+										.then(function (data) {
 											data.columns.forEach(function (column) {
 												let icon = "fa fa-th-large";
 												if (column.key) {
@@ -257,7 +257,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 
 									$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
 										+ '/' + schemaParent.text + '/' + tableParent.text)
-										.success(function (data) {
+										.then(function (data) {
 											data.indices.forEach(function (index) {
 												let nodeText = index.name;
 												let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-list-ul" };
@@ -358,7 +358,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 
 	$scope.databaseChanged = function (evt) {
 		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase)
-			.success(function (data) {
+			.then(function (data) {
 				$scope.datasources = data;
 				if (data[0]) {
 					$scope.selectedDatasource = data[0];

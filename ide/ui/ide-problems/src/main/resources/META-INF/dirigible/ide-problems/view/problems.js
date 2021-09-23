@@ -80,19 +80,19 @@ angular.module('problems', [])
         };
 
         $scope.deleteByStatus = function (status) {
-            $http.delete('/services/v4/ops/problems/delete/' + status).success(function () {
+            $http.delete('/services/v4/ops/problems/delete/' + status).then(function () {
                 refreshList();
             });
         }
 
         $scope.deleteSelected = function () {
-            $http.post('/services/v4/ops/problems/delete/selected', filterSelectedIds()).success(function () {
+            $http.post('/services/v4/ops/problems/delete/selected', filterSelectedIds()).then(function () {
                 refreshList();
             });
         }
 
         $scope.clear = function () {
-            $http.delete('/services/v4/ops/problems/clear').success(function () {
+            $http.delete('/services/v4/ops/problems/clear').then(function () {
                 $scope.allProblems = [];
                 $scope.problemsList = [];
                 $scope.selectAll = false;
