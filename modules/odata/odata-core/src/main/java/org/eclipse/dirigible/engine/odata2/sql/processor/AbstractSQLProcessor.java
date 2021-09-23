@@ -11,30 +11,8 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
-import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
-import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getSelectedProperties;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpand;
-
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.olingo.odata2.api.commons.InlineCount;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmLiteralKind;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmSimpleType;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderReadProperties;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
@@ -49,16 +27,7 @@ import org.apache.olingo.odata2.api.processor.ODataSingleProcessor;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
-import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetComplexPropertyUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetEntitySetCountUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetEntitySetLinksUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetEntitySetUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetEntityUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetMediaResourceUriInfo;
-import org.apache.olingo.odata2.api.uri.info.GetSimplePropertyUriInfo;
-import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
-import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
+import org.apache.olingo.odata2.api.uri.info.*;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
 import org.apache.olingo.odata2.core.uri.UriInfoImpl;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
@@ -72,6 +41,18 @@ import org.eclipse.dirigible.engine.odata2.sql.utils.OData2ResultSetEntity;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
+import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getSelectedProperties;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpand;
 
 public abstract class AbstractSQLProcessor extends ODataSingleProcessor implements SQLProcessor {
 
@@ -564,15 +545,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
 	@Override
 	public ODataResponse deleteEntity(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
-		
 		if (this.odata2EventHandler.forbidDeleteEntity(uriInfo, contentType)) {
 			throw new ODataException(String.format("Delete operation on entity: %s is forbidden.", OData2Utils.fqn(uriInfo.getTargetType())));
 		}
-		
 		if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
 			return this.odata2EventHandler.onDeleteEntity(uriInfo, contentType);
 		}
-		
 		this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType);
 
 		SQLQuery query = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()));
@@ -614,7 +592,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	public ODataResponse updateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
 			final String requestContentType, final boolean merge, final String contentType) throws ODataException {
 		if (uriInfo.getFilter() != null) {
-			throw new ODataException("Update operation is not allowed with filter.");
+			throw new ODataException("Update operation is not allowed with $filter.");
 		}
 		if (this.odata2EventHandler.forbidUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
 			throw new ODataException(String.format("Update operation forbidden on entity: %s", OData2Utils.fqn(uriInfo.getTargetType())));

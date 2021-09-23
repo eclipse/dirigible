@@ -447,7 +447,6 @@ public class SQLQueryTest {
         assertEquals(expected, q.buildSelect(context));
     }
 
-
     @Test
     public void testDeleteWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
@@ -457,7 +456,7 @@ public class SQLQueryTest {
 
         SQLQuery q = builder.buildDeleteEntityQuery(uriInfo, mapKeys(uriInfo.getKeyPredicates()));
         SQLContext context = new SQLContext();
-        String expected = "DELETE FROM ENTITY4_TABLE WHERE Id4_1=? AND Id4_2=?";
+        String expected = "DELETE FROM ENTITY4_TABLE WHERE ID4_1=? AND ID4_2=?";
         assertEquals(expected, q.buildDelete(context));
     }
 

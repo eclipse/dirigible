@@ -359,6 +359,25 @@ public class ODataSQLProcessorTest {
         assertEquals(50000.0d, properties.get("Price"));
     }
 
+
+    @Test
+    public void testDeleteEntity() throws Exception {
+        Response getCar = OData2RequestBuilder.createRequest(sf) //
+                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                .accept("application/json").executeRequest(GET);
+        assertEquals(200, getCar.getStatus());
+
+        Response deleteCar = OData2RequestBuilder.createRequest(sf) //
+                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                .accept("application/json").executeRequest(DELETE);
+        assertEquals(204, deleteCar.getStatus());
+
+        Response getDeletedCar = OData2RequestBuilder.createRequest(sf) //
+                .segments("Drivers('695796c4-09a1-11ec-9a03-0242ac130006')") //
+                .accept("application/json").executeRequest(GET);
+        assertEquals(404, getDeletedCar.getStatus());
+    }
+
     @Test
     public void testChangeReferenceId() throws Exception {
         String existingCarId = "639cac17-4cfd-4d94-b5d0-111fd5488423";

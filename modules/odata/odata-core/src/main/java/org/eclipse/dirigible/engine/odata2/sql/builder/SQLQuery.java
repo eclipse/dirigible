@@ -497,7 +497,7 @@ public final class SQLQuery {
     }
 
     public void setKeysOnStatement(final PreparedStatement preparedStatement) throws SQLException {
-        Map<String, Object> keys = getDeleteExpression().getKeys();
+        Map<String, Object> keys = getDeleteExpression().getDeleteKeyValues();
         int i = 0;
         for (Map.Entry<String, Object> key : keys.entrySet()) {
             preparedStatement.setObject(++i, key.getValue());
