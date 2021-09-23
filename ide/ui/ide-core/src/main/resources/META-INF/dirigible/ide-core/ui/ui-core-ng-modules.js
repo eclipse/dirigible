@@ -62,7 +62,7 @@ angular.module('ideUiCore', ['ngResource'])
 					url: '/services/v4/js/ide-core/services/user-name.js',
 					method: 'GET'
 				}).success(function (data) {
-					user.name = data;
+					user.name = data.data;
 				});
 				return user;
 			}
