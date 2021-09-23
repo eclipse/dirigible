@@ -77,6 +77,25 @@ public class ProblemsService extends AbstractRestService implements IRestService
     }
 
     /**
+     * List all the problems currently registered.
+     *
+     * @return the response
+     * @throws ProblemsException the scheduler exception
+     */
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listProblems(String condition, int limit)
+            throws ProblemsException {
+        String user = UserFacade.getName();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        return Response.ok().entity(processor.searchProblemsChunks(condition, limit)).build();
+    }
+
+    /**
      * Updates the status of all selected problems.
      *
      * @return the complete list of problems after the update

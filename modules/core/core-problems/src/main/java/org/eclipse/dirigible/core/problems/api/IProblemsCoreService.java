@@ -100,6 +100,16 @@ public interface IProblemsCoreService extends ICoreService {
     public ProblemsModel getProblem(String location, String type, String line, String column) throws ProblemsException;
 
     /**
+     * Gets the Problems in chunks under specified search conditions.
+     *
+     * @param condition the search condition
+     * @param limit result limit
+     * @return Problems model list
+     * @throws ProblemsException the dirigible problem exception
+     */
+    public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException;
+
+    /**
      * Gets the Problem by id.
      *
      * @param id of the problem
@@ -111,7 +121,7 @@ public interface IProblemsCoreService extends ICoreService {
     /**
      * Gets all Problems
      *
-     * @return Problem model list
+     * @return Problems model list
      * @throws ProblemsException the dirigible problem exception
      */
     public List<ProblemsModel> getAllProblems() throws ProblemsException;

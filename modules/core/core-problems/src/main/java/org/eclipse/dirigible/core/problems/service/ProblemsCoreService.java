@@ -11,14 +11,17 @@
  */
 package org.eclipse.dirigible.core.problems.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.core.problems.api.IProblemsCoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
+import org.eclipse.dirigible.core.problems.utils.HelperMethods;
 import org.eclipse.dirigible.core.problems.utils.ProblemsConstants;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,6 +144,37 @@ public class ProblemsCoreService implements IProblemsCoreService {
     public List<ProblemsModel> getAllProblems() throws ProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             return persistenceManager.findAll(connection, ProblemsModel.class);
+        } catch (SQLException e) {
+            throw new ProblemsException(e);
+        }
+    }
+
+    @Override
+    public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            SelectBuilder sqlBuilder = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS").limit(limit);
+            List<Object> values = null;
+            Timestamp dateCondition = HelperMethods.stringToTimestamp(condition);
+
+            if (dateCondition != null) {
+                sqlBuilder.where("PROBLEM_CREATED_AT = " +dateCondition);
+            }else if (!StringUtils.isEmpty(condition)) {
+                sqlBuilder.where("PROBLEM_LOCATION LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_TYPE LIKE'%" + condition + "%' " +
+                                 "OR PROBLEM_LINE LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_COLUMN LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_CAUSE LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_CREATED_BY LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_CATEGORY LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_MODULE LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_SOURCE LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_PROGRAM LIKE '%" + condition + "%' " +
+                                 "OR PROBLEM_STATUS LIKE '%" + condition + "%' ");
+
+                values = Collections.singletonList(condition);
+            }
+
+            return persistenceManager.query(connection, ProblemsModel.class, sqlBuilder.toString(), values);
         } catch (SQLException e) {
             throw new ProblemsException(e);
         }

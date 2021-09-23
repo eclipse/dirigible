@@ -25,6 +25,10 @@ public class ProblemsProcessor {
         return GsonHelper.GSON.toJson(problemsCoreService.getAllProblems());
     }
 
+    public String searchProblemsChunks(String condition, int limit) throws ProblemsException {
+        return GsonHelper.GSON.toJson(new ProblemsCoreService().searchProblemsLimited(condition, limit));
+    }
+
     public void updateStatus(List<Long> ids, String status) throws ProblemsException {
         problemsCoreService.updateStatusMultipleProblems(ids, status);
     }

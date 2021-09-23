@@ -33,6 +33,10 @@ public class ProblemsFacade implements IScriptingFacade {
         return GsonHelper.GSON.toJson(new ProblemsCoreService().getAllProblems());
     }
 
+    public static final String searchProblemsChunks(String condition, int limit) throws ProblemsException {
+        return GsonHelper.GSON.toJson(new ProblemsCoreService().searchProblemsLimited(condition, limit));
+    }
+
     public static final void deleteProblem(Long id) throws ProblemsException {
         new ProblemsCoreService().deleteProblemById(id);
     }
