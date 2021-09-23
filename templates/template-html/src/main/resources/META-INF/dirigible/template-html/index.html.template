@@ -10,8 +10,8 @@
     <link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
 
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
   </head>
 
   <body ng-controller="PageController">
