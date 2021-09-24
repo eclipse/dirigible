@@ -170,18 +170,18 @@
 		            method: 'GET',
 		            url: 'services/v4/healthcheck'
 		        }).then(function(healthStatus){
-		        	if (healthStatus.status === "Ready") {
+		        	if (healthStatus.data.status === "Ready") {
 						window.location='home';
 					}
 					var jobs = [];
-					for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+					for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
 						var job = new Object();
 						job.name = key;
 						job.status = value;
 						jobs.push(job);
 					}
 		        	$scope.jobs = jobs.sort((x, y) => x.name > y.name ? 1 : -1);
-		        }).error(function(e){
+		        }), (function(e){
 		            console.error("Error retreiving the health status", e);
 		        });
 
