@@ -254,7 +254,7 @@ angular.module('ideUiCore', ['ngResource'])
 			replace: 'true',
 			scope: {
 				url: '@menuDataUrl',
-				menu: '=menuData'
+				menu: '=?menuData'
 			},
 			link: function (scope, el, attrs) {
 				let url = scope.url;
