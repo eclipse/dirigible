@@ -208,7 +208,6 @@
             $http.get('/services/v4/js/ide-core/services/templates.js').then(function (response) {
                 $scope.templates = response.data.filter(function (value, index, arr) { return !value.extension; });
                 $scope.templateParameters = [];
-                console.info($.scope.templates.toString())
                 for (let i = 0; i < $scope.templates.length; i++) {
                     $scope.templateParameters[$scope.templates[i].id] = $scope.templates[i].parameters;
                 }
