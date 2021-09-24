@@ -182,13 +182,13 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
 
-			beforeEval(context);
-
             if (commonJSModule) {
 
 				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
+
+				beforeEval(context);
 
 				if (isModule) {
 					bindings.putMember("MODULE_FILENAME", moduleOrCode);
@@ -204,6 +204,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				if (isDebugEnabled) {
 					code = CODE_DEBUGGER + code;
 				}
+
+				beforeEval(context);
+
 				result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
 			}
 
