@@ -81,7 +81,7 @@ angular.module('page')
 
 	function load() {
 		$http.get(api)
-		.success(function(data) {
+		.then(function(data) {
 			$scope.data = data;
 		});
 	}

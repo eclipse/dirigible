@@ -441,9 +441,9 @@
       $scope.input = [];
 
       return $scope.submit = function (button) {
-        return $validator.validate($scope, 'default').success(function () {
+        return $validator.validate($scope, 'default').then(function () {
           return console.log('success');
-        }).error(function () {
+        }, function () {
           return console.log('error');
         });
       };
