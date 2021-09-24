@@ -77,11 +77,10 @@ angular.module('flowableModeler')
 		  }
 
 		  $http({method: 'GET', url: FLOWABLE.APP_URL.getModelsUrl(), params: params}).
-		  	success(function(data, status, headers, config) {
+		  	then(function(data, status, headers, config) {
 	    		$scope.model.processes = data;
 	    		$scope.model.loading = false;
-	        }).
-	        error(function(data, status, headers, config) {
+	        }, function(data, status, headers, config) {
 	           console.log('Something went wrong: ' + data);
 	           $scope.model.loading = false;
 	        });
@@ -270,13 +269,13 @@ angular.module('flowableModeler')
           }).progress(function(evt) {
               $scope.model.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
-          }).this(function(data) {
+          }).success(function(data) {
               $scope.model.loading = false;
 
               $location.path("/editor/" + data.id);
               $scope.$hide();
 
-          }), (function(data) {
+          }).error(function(data) {
 
               if (data && data.message) {
                   $scope.model.errorMessage = data.message;
