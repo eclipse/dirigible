@@ -103,7 +103,7 @@
 #else
 			${dollar}http.get('../../../../../../../../../services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
 #end
-			.success(function(views) {
+			.then(function(views) {
 				var master = [];
 				var details = [];
 

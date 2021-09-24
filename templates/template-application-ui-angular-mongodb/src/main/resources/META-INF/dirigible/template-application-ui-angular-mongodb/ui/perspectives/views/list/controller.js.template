@@ -95,7 +95,7 @@ angular.module('page')
 
 	function ${property.name.toLowerCase()}OptionsLoad() {
 		${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
-		.success(function(data) {
+		.then(function(data) {
 			$scope.${property.name.toLowerCase()}Options = data;
 		});
 	}
@@ -127,11 +127,11 @@ angular.module('page')
 	$scope.loadPage = function(pageNumber) {
 		$scope.dataPage = pageNumber;
 		${dollar}http.get(api + '/count')
-		.success(function(data) {
+		.then(function(data) {
 			$scope.dataCount = data;
 			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
 			${dollar}http.get(api + '?${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
-			.success(function(data) {
+			.then(function(data) {
 				$scope.data = data;
 			});
 		});
