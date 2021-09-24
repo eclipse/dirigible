@@ -90,8 +90,8 @@ angular.module('ideUiCore', ['ngResource'])
 			$http({
 				url: relativePath + 'services/v4/js/ide/services/user-name.js',
 				method: 'GET'
-			}).success(function(data){
-				user.name = data;
+			}).then(function(data){
+				user.name = data.data;
 			});
 			return user;
 		}

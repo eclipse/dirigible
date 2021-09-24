@@ -12,20 +12,20 @@
  */
 
 angular.module('flowableModeler').controller('FlowableDecisionTableReferenceCtrl',
-    [ '$scope', '$modal', '$http', function($scope, $modal, $http) {
+    ['$scope', '$modal', '$http', function ($scope, $modal, $http) {
 
-     // Config for the modal window
-     var opts = {
-         template:  'editor-app/configuration/properties/decisiontable-reference-popup.html?version=' + Date.now(),
-         scope: $scope
-     };
+        // Config for the modal window
+        var opts = {
+            template: 'editor-app/configuration/properties/decisiontable-reference-popup.html?version=' + Date.now(),
+            scope: $scope
+        };
 
-     // Open the dialog
-     _internalCreateModal(opts, $modal, $scope);
-}]);
+        // Open the dialog
+        _internalCreateModal(opts, $modal, $scope);
+    }]);
 
 angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopupCtrl', ['$rootScope', '$scope', '$http', '$location', 'editorManager',
-    function($rootScope, $scope, $http, $location, editorManager) {
+    function ($rootScope, $scope, $http, $location, editorManager) {
 
         $scope.state = {
             'loadingDecisionTables': true,
@@ -39,20 +39,20 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
         $scope.foldersBreadCrumbs = [];
 
         // Make click outside dialog also call close.
-        $scope.$parent.$on('modal.hide.before', function() {
+        $scope.$parent.$on('modal.hide.before', function () {
             $scope.close();
             $scope.$parent.$apply();
         });
 
         // Close button handler
-        $scope.close = function() {
+        $scope.close = function () {
             $scope.property.newVariablesMapping = undefined;
             $scope.property.mode = 'read';
             $scope.$hide();
         };
 
         // Selecting/deselecting a decision table
-        $scope.selectDecisionTable = function(decisionTable, $event) {
+        $scope.selectDecisionTable = function (decisionTable, $event) {
             $event.stopPropagation();
             if ($scope.selectedDecisionTable && $scope.selectedDecisionTable.id && decisionTable.id == $scope.selectedDecisionTable.id) {
                 // un-select the current selection
@@ -70,7 +70,7 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
         };
 
         // Saving the selected value
-        $scope.save = function() {
+        $scope.save = function () {
             if ($scope.selectedDecisionTable) {
                 $scope.property.value = {
                     'id': $scope.selectedDecisionTable.id,
@@ -86,7 +86,7 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
         };
 
         // Open the selected value
-        $scope.open = function() {
+        $scope.open = function () {
             if ($scope.selectedDecisionTable) {
                 $scope.property.value = {
                     'id': $scope.selectedDecisionTable.id,
@@ -119,32 +119,32 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
                         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                     },
                     transformRequest: function (obj) {
-	                    var str = [];
-	                    for (var p in obj) {
-	                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-	                    }
-	                    return str.join("&");
-	                },
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        }
+                        return str.join("&");
+                    },
                     url: FLOWABLE.URL.putModel(modelMetaData.modelId)
                 })
 
-                .success(function(data, status, headers, config) {
+                    .then(function (data, status, headers, config) {
                         editorManager.handleEvents({
                             type: ORYX.CONFIG.EVENT_SAVED
                         });
 
-						$rootScope.addHistoryItem($scope.selectedShape.resourceId);
-						$location.path('decision-table-editor/' + $scope.selectedDecisionTable.id);
+                        $rootScope.addHistoryItem($scope.selectedShape.resourceId);
+                        $location.path('decision-table-editor/' + $scope.selectedDecisionTable.id);
                     })
-                    .error(function(data, status, headers, config) {
+                    , function (data, status, headers, config) {
 
-                    });
+                };
 
                 $scope.close();
             }
         };
 
-        $scope.newDecisionTable = function() {
+        $scope.newDecisionTable = function () {
             $scope.property.value.variablesmapping = [];
 
             $scope.popup.state = 'newDecisionTable';
@@ -164,10 +164,10 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
             };
         };
 
-        $scope.createDecisionTable = function() {
+        $scope.createDecisionTable = function () {
 
             if (!$scope.model.decisionTable.name || $scope.model.decisionTable.name.length == 0 ||
-            	!$scope.model.decisionTable.key || $scope.model.decisionTable.key.length == 0) {
+                !$scope.model.decisionTable.key || $scope.model.decisionTable.key.length == 0) {
 
                 return;
             }
@@ -179,8 +179,7 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
                 method: 'POST',
                 url: FLOWABLE.APP_URL.getModelsUrl(),
                 data: $scope.model.decisionTable
-            }).
-            success(function(data, status, headers, config) {
+            }).then(function (data, status, headers, config) {
 
                 var newDecisionTableId = data.id;
                 $scope.property.value = {
@@ -215,16 +214,16 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
                         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                     },
                     transformRequest: function (obj) {
-	                    var str = [];
-	                    for (var p in obj) {
-	                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-	                    }
-	                    return str.join("&");
-	                },
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        }
+                        return str.join("&");
+                    },
                     url: FLOWABLE.URL.putModel(modelMetaData.modelId)
                 })
 
-                .success(function(data, status, headers, config) {
+                    .success(function (data, status, headers, config) {
                         editorManager.handleEvents({
                             type: ORYX.CONFIG.EVENT_SAVED
                         });
@@ -235,19 +234,18 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
                         $rootScope.addHistoryItem($scope.selectedShape.resourceId);
                         $location.path('decision-table-editor/' + newDecisionTableId);
                     })
-                    .error(function(data, status, headers, config) {
+                    .error(function (data, status, headers, config) {
                         $scope.model.loading = false;
                         $scope.$hide();
                     });
 
-            }).
-            error(function(data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
                 $scope.model.loading = false;
                 $scope.model.errorMessage = data.message;
             });
         };
 
-        $scope.cancel = function() {
+        $scope.cancel = function () {
             $scope.close();
         };
 
@@ -261,18 +259,18 @@ angular.module('flowableModeler').controller('FlowableDecisionTableReferencePopu
             }
         };
 
-        $scope.loadDecisionTables = function() {
+        $scope.loadDecisionTables = function () {
             var modelMetaData = editorManager.getBaseModelData();
             $http.get(FLOWABLE.APP_URL.getDecisionTableModelsUrl())
                 .success(
-                    function(response) {
+                    function (response) {
                         $scope.state.loadingDecisionTables = false;
                         $scope.state.decisionTableError = false;
                         $scope.decisionTables = response.data;
                         $scope.resetCurrent();
                     })
                 .error(
-                    function(data, status, headers, config) {
+                    function (data, status, headers, config) {
                         $scope.state.loadingDecisionTables = false;
                         $scope.state.decisionTableError = true;
                     });

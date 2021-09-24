@@ -77,7 +77,7 @@
 
                 function loadConfigurations() {
                     $http.get(configurationsApi)
-                        .success(function (data) {
+                        .then(function (data) {
                             $scope.configurations = data;
                         });
                 }

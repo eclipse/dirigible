@@ -71,7 +71,7 @@ angular.module('page')
 
 	function ${property.name.toLowerCase()}OptionsLoad() {
 		${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
-		.success(function(data) {
+		.then(function(data) {
 			$scope.${property.name.toLowerCase()}Options = data;
 		});
 	}

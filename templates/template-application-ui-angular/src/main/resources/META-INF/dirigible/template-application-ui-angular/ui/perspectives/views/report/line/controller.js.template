@@ -48,7 +48,7 @@ angular.module('page')
 
 	$scope.load = function() {
 		$http.get(api)
-		.success(function(data) {
+		.then(function(data) {
 #foreach ($property in $properties)
 			var chartData${foreach.index} = [];
 #end

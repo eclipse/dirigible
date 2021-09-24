@@ -98,7 +98,7 @@
 
             function loadExtensions() {
                 $http.get(extensionsApi)
-                    .success(function (data) {
+                    .then(function (data) {
                         $scope.extensionPoints = data;
                     });
             }
