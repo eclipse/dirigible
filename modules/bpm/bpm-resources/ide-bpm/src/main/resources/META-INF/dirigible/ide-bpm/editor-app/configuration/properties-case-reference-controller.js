@@ -12,69 +12,69 @@
  */
 
 angular.module('flowableModeler').controller('FlowableCaseReferenceCtrl',
-    [ '$scope', '$modal', '$http', function($scope, $modal, $http) {
-	
-     // Config for the modal window
-     var opts = {
-         template:  'editor-app/configuration/properties/case-reference-popup.html?version=' + Date.now(),
-         scope: $scope
-     };
+    ['$scope', '$modal', '$http', function ($scope, $modal, $http) {
 
-     // Open the dialog
+        // Config for the modal window
+        var opts = {
+            template: 'editor-app/configuration/properties/case-reference-popup.html?version=' + Date.now(),
+            scope: $scope
+        };
+
+        // Open the dialog
         _internalCreateModal(opts, $modal, $scope);
-}]);
+    }]);
 
-angular.module('flowableModeler').controller('FlowableCaseReferencePopupCtrl', [ '$scope', '$http', 'editorManager', function($scope, $http, editorManager) {
-	
-    $scope.state = {'loadingCases' : true, 'error' : false};
-    
+angular.module('flowableModeler').controller('FlowableCaseReferencePopupCtrl', ['$scope', '$http', 'editorManager', function ($scope, $http, editorManager) {
+
+    $scope.state = {'loadingCases': true, 'error': false};
+
     // Close button handler
-    $scope.close = function() {
-    	$scope.property.mode = 'read';
+    $scope.close = function () {
+        $scope.property.mode = 'read';
         $scope.$hide();
     };
-    
+
     // Selecting/deselecting a case
-    $scope.selectCase = function(caseModel, $event) {
-   	 	$event.stopPropagation();
-   	 	if ($scope.selectedCase && $scope.selectedCase.id && caseModel.id == $scope.selectedCase.id) {
-   	 		// un-select the current selection
-   	 		$scope.selectedCase = null;
-   	 	} else {
-   	 		$scope.selectedCase = caseModel;
-   	 	}
+    $scope.selectCase = function (caseModel, $event) {
+        $event.stopPropagation();
+        if ($scope.selectedCase && $scope.selectedCase.id && caseModel.id == $scope.selectedCase.id) {
+            // un-select the current selection
+            $scope.selectedCase = null;
+        } else {
+            $scope.selectedCase = caseModel;
+        }
     };
-    
+
     // Saving the selected value
-    $scope.save = function() {
-   	 	if ($scope.selectedCase) {
-   	 		$scope.property.value = {'id' : $scope.selectedCase.id, 'name' : $scope.selectedCase.name};
-   	 	} else {
-   	 		$scope.property.value = null; 
-   	 	}
-   	 	$scope.updatePropertyInModel($scope.property);
-   	 	$scope.close();
+    $scope.save = function () {
+        if ($scope.selectedCase) {
+            $scope.property.value = {'id': $scope.selectedCase.id, 'name': $scope.selectedCase.name};
+        } else {
+            $scope.property.value = null;
+        }
+        $scope.updatePropertyInModel($scope.property);
+        $scope.close();
     };
-    
-    $scope.loadCases = function() {
-   	    var modelMetaData = editorManager.getBaseModelData();
-    	$http.get(FLOWABLE.APP_URL.getCaseModelsUrl('?excludeId=' + modelMetaData.modelId))
-    		.success(
-    			function(response) {
-    				$scope.state.loadingCases = false;
-    				$scope.state.caseError = false;
-    				$scope.caseModels = response.data;
-    			})
-    		.error(
-    			function(data, status, headers, config) {
-    				$scope.state.loadingCases = false;
-    				$scope.state.caseError = true;
-    			});
+
+    $scope.loadCases = function () {
+        var modelMetaData = editorManager.getBaseModelData();
+        $http.get(FLOWABLE.APP_URL.getCaseModelsUrl('?excludeId=' + modelMetaData.modelId))
+            .then(
+                function (response) {
+                    $scope.state.loadingCases = false;
+                    $scope.state.caseError = false;
+                    $scope.caseModels = response.data;
+                })
+            ,
+            function (data, status, headers, config) {
+                $scope.state.loadingCases = false;
+                $scope.state.caseError = true;
+            };
     };
-    
+
     if ($scope.property && $scope.property.value && $scope.property.value.id) {
-   	 	$scope.selectedCase = $scope.property.value;
+        $scope.selectedCase = $scope.property.value;
     }
-    
-    $scope.loadCases();  
+
+    $scope.loadCases();
 }]);

@@ -48,7 +48,7 @@ angular.module('page')
 
 	$scope.load = function() {
 		$http.get(api)
-		.success(function(data) {
+		.then(function(data) {
 			var chartData = [];
 			for (var i = 0; i < data.length; i ++) {
 				chartData.push([#foreach ($property in $properties)data[i].${property.name}#if($foreach.hasNext), #end#end]);

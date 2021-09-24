@@ -212,6 +212,7 @@
                     $scope.templateParameters[$scope.templates[i].id] = $scope.templates[i].parameters;
                 }
             });
+
             $http.get('/services/v4/ide/workspaces').then(function (response) {
                 $scope.workspaces = response;
             });
@@ -230,7 +231,7 @@
             }
 
             $scope.generateFromTemplate = function (template) {
-                //scope.$apply();
+                // scope.$apply();
                 $scope.selectedTemplate = template;
                 $('#generateFromTemplate').click();
             };

@@ -136,14 +136,14 @@
 
             function loadLogConfigurations() {
                 $http.get(logConfigurationsApi)
-                    .success(function (data) {
+                    .then(function (data) {
                         $scope.logConfigurations = data;
                     });
             }
 
             $scope.setSeverity = function (loggerName, loggerLevel) {
                 $http.post(logConfigurationsApi + "/severity/" + loggerName, loggerLevel)
-                    .success(function (data) {
+                    .then(function (data) {
                         let logger = (element) => element.name === loggerName;
                         let i = $scope.logConfigurations.findIndex(logger);
                         $scope.logConfigurations[i].severity = data;
