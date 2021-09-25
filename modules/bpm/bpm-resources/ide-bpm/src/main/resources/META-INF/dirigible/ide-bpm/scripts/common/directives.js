@@ -713,7 +713,6 @@ flowableModule.
                     userGetPromise.then(function(result) {
                         popoverScope.popupModel.showRecentResults =  false;
 
-
                         var users = [];
                         var excludeUserIdSet = $scope.excludeUserId !== null && $scope.excludeUserId !== undefined;
                         var excludeUserIdsSet = $scope.excludeUserIds !== null && $scope.excludeUserIds !== undefined;
@@ -993,7 +992,7 @@ flowableModule.directive('tabControl', ['$compile', '$http', '$templateCache', f
                 if($scope.activeTab && $scope.activeTab.templateUrl) {
                     // Load the HTML-fragment or get from cache
                     var loader = $http.get($scope.activeTab.templateUrl, {cache: $templateCache});
-                    var promise = loader.then(function(html) {
+                    var promise = loader.success(function(html) {
                         contentDiv.html(html);
                     }).then(function (response) {
                         $scope.activeTemplate = $scope.activeTab.id;
