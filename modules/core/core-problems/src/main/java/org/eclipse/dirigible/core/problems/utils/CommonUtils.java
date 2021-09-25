@@ -15,12 +15,16 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class HelperMethods {
+public class CommonUtils {
 
     public static Timestamp stringToTimestamp(String strDate) {
-        return Optional.ofNullable(strDate)
-                .map(str -> LocalDate.parse(str).atStartOfDay())
-                .map(Timestamp::valueOf)
-                .orElse(null);
+        try {
+            return Optional.ofNullable(strDate)
+                    .map(str -> LocalDate.parse(str).atStartOfDay())
+                    .map(Timestamp::valueOf)
+                    .orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

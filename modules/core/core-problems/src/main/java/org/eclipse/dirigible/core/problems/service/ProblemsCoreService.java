@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.core.problems.api.IProblemsCoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
-import org.eclipse.dirigible.core.problems.utils.HelperMethods;
+import org.eclipse.dirigible.core.problems.utils.CommonUtils;
 import org.eclipse.dirigible.core.problems.utils.ProblemsConstants;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -39,6 +39,8 @@ public class ProblemsCoreService implements IProblemsCoreService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
+
+    private static final String PERCENT = "%";
 
     @Override
     public ProblemsModel createProblem(ProblemsModel problemsModel) throws ProblemsException {
@@ -154,24 +156,25 @@ public class ProblemsCoreService implements IProblemsCoreService {
         try (Connection connection = dataSource.getConnection()) {
             SelectBuilder sqlBuilder = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS").limit(limit);
             List<Object> values = null;
-            Timestamp dateCondition = HelperMethods.stringToTimestamp(condition);
+            Timestamp dateCondition = CommonUtils.stringToTimestamp(condition);
 
             if (dateCondition != null) {
-                sqlBuilder.where("PROBLEM_CREATED_AT = " +dateCondition);
-            }else if (!StringUtils.isEmpty(condition)) {
-                sqlBuilder.where("PROBLEM_LOCATION LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_TYPE LIKE'%" + condition + "%' " +
-                                 "OR PROBLEM_LINE LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_COLUMN LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_CAUSE LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_CREATED_BY LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_CATEGORY LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_MODULE LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_SOURCE LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_PROGRAM LIKE '%" + condition + "%' " +
-                                 "OR PROBLEM_STATUS LIKE '%" + condition + "%' ");
-
+                sqlBuilder.where("PROBLEM_CREATED_AT = ?");
                 values = Collections.singletonList(condition);
+            }else if (!StringUtils.isEmpty(condition)) {
+                sqlBuilder.where("PROBLEM_LOCATION LIKE ? " +
+                                 "OR PROBLEM_TYPE LIKE ? " +
+                                 "OR PROBLEM_LINE LIKE ? " +
+                                 "OR PROBLEM_COLUMN LIKE ? " +
+                                 "OR PROBLEM_CAUSE LIKE ? " +
+                                 "OR PROBLEM_CREATED_BY LIKE ? " +
+                                 "OR PROBLEM_CATEGORY LIKE ? " +
+                                 "OR PROBLEM_MODULE LIKE ? " +
+                                 "OR PROBLEM_SOURCE LIKE ? " +
+                                 "OR PROBLEM_PROGRAM LIKE ? " +
+                                 "OR PROBLEM_STATUS LIKE ?");
+
+                values = Collections.nCopies(11, PERCENT + condition + PERCENT);
             }
 
             return persistenceManager.query(connection, ProblemsModel.class, sqlBuilder.toString(), values);
