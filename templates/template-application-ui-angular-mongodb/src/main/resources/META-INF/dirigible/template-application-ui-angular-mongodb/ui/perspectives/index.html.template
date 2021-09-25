@@ -106,8 +106,8 @@
 			${dollar}http.get('../../../../../../services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
 #end
 			.then(function(views) {
-				for (var i = 0 ; i < views.length; i ++) {
-					${dollar}scope.layoutModel.views.push(views[i].id);
+				for (var i = 0 ; i < views.data.length; i ++) {
+					${dollar}scope.layoutModel.views.push(views.data[i].id);
 				}
 
 			});

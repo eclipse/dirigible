@@ -6,7 +6,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 	function load() {
 		$http.get(api)
 		.then(function(data) {
-			$scope.data = data;
+			$scope.data = data.data;
 		});
 	}
 	load();
@@ -40,7 +40,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 			load();
 			toggleEntityModal();
 		}, function(data) {
-			alert(JSON.stringify(data));
+			alert(JSON.stringify(data.data));
 		});
 			
 	};
@@ -52,7 +52,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 			load();
 			toggleEntityModal();
 		}, function(data) {
-			alert(JSON.stringify(data));
+			alert(JSON.stringify(data.data));
 		})
 	};
 
@@ -62,7 +62,7 @@ angular.module('page').controller('PageController', function ($scope, $http) {
 			load();
 			toggleEntityModal();
 		}, function(data) {
-			alert(JSON.stringify(data));
+			alert(JSON.stringify(data.data));
 		});
 	};
 

@@ -72,7 +72,7 @@ angular.module('page')
 	function ${property.name.toLowerCase()}OptionsLoad() {
 		${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
 		.then(function(data) {
-			$scope.${property.name.toLowerCase()}Options = data;
+			$scope.${property.name.toLowerCase()}Options = data.data;
 		});
 	}
 	${property.name.toLowerCase()}OptionsLoad();
@@ -82,7 +82,7 @@ angular.module('page')
 	function load() {
 		$http.get(api)
 		.then(function(data) {
-			$scope.data = data;
+			$scope.data = data.data;
 		});
 	}
 	load();
