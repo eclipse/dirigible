@@ -9,16 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-
-
-exports.assertTrue = function (condition, message) {
-    if (!condition) {
-        throw(message || "Assertion failed");
-    }
-}
-
-exports.assertNotNull = function (condition, message) {
-    if (condition === null) {
-        throw(message || "Assertion failed");
-    }
+var assert = require('utils/v4/assert');
+for(var propertyName in assert) {
+	exports[propertyName] = assert[propertyName];
 }

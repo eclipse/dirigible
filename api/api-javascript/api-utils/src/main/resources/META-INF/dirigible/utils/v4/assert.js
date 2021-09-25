@@ -10,7 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-
 exports.assertTrue = function (condition, message) {
     if (!condition) {
         throw(message || "Assertion failed");
