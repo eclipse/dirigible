@@ -61,7 +61,7 @@ angular
 		function refreshFolder() {
 			getFolder($scope.folder.path)
 				.then(function (data) {
-					$scope.folder = data;
+					$scope.folder = data.data;
 				});
 		}
 
@@ -87,17 +87,17 @@ angular
 
 		getFolder()
 			.then(function (data) {
-				setCurrentFolder(data);
+				setCurrentFolder(data.data);
 			});
 
 		$scope.handleExplorerClick = function (cmisObject) {
 			if (cmisObject.type === "cmis:folder" && !$scope.inDeleteSession) {
 				getFolder($scope.getFullPath(cmisObject.name))
 					.then(function (data) {
-						setCurrentFolder(data);
+						setCurrentFolder(data.data);
 					}, 
 					function (data) {
-						openErrorModal("Failed to open folder", data.err.message);
+						openErrorModal("Failed to open folder", data.data.err.message);
 					});
 			}
 		};
@@ -113,7 +113,7 @@ angular
 		$scope.crumbsChanged = function (entry) {
 			getFolder(entry.path)
 				.then(function (data) {
-					setCurrentFolder(data);
+					setCurrentFolder(data.data);
 				});
 		};
 
@@ -153,7 +153,7 @@ angular
 				refreshFolder();
 			}, function (error) {
 				$scope.inDeleteSession = false;
-				openErrorModal("Failed to delete items", error.err.message);
+				openErrorModal("Failed to delete items", error.data.err.message);
 			});
 
 			$scope.inDeleteSession = false;
@@ -197,7 +197,7 @@ angular
 			}, function (error) {
 				$('#renameModal').modal('toggle');
 				let title = "Failed to rename item" + $scope.itemToRename.name;
-				openErrorModal(title, error.err.message);
+				openErrorModal(title, error.data.err.message);
 			});
 		}
 
