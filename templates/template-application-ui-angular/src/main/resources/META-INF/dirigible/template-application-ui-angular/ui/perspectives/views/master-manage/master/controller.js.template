@@ -171,7 +171,7 @@ angular.module('page')
 				$scope.loadPage($scope.dataPage);
 				toggleEntityModal();
 				$messageHub.messageEntityModified();
-			}).error(function(data) {
+			}, function(data) {
 				alert(JSON.stringify(data));
 			});
 		}
@@ -188,9 +188,9 @@ angular.module('page')
 				$scope.loadPage($scope.dataPage);
 				toggleEntityModal();
 				$messageHub.messageEntityModified();
-			}), function(data) {
+			}, function(data) {
 				alert(JSON.stringify(data));
-			}
+			})
 		}
 	};
 
@@ -204,9 +204,9 @@ angular.module('page')
 			$scope.loadPage($scope.dataPage);
 			toggleEntityModal();
 			$messageHub.messageEntityModified();
-		}), function(data) {
+		}, function(data) {
 			alert(JSON.stringify(data));
-		};
+		});
 	};
 
 	$scope.updateCalculatedProperties = function() {
