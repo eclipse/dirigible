@@ -79,11 +79,11 @@
             function loadPlugins() {
                 $http.get(pluginsApi)
                     .then(function (data) {
-                        $scope.depots = data;
+                        $scope.depots = data.data;
                         $scope.depots.forEach(function (depot) {
                             $http.get(depot.depot)
                                 .then(function (data) {
-                                    depot.plugins = data;
+                                    depot.plugins = data.data;
                                 });
                         });
                     });

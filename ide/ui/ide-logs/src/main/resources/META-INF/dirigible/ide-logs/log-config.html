@@ -137,7 +137,7 @@
             function loadLogConfigurations() {
                 $http.get(logConfigurationsApi)
                     .then(function (data) {
-                        $scope.logConfigurations = data;
+                        $scope.logConfigurations = data.data;
                     });
             }
 
@@ -146,12 +146,12 @@
                     .then(function (data) {
                         let logger = (element) => element.name === loggerName;
                         let i = $scope.logConfigurations.findIndex(logger);
-                        $scope.logConfigurations[i].severity = data;
+                        $scope.logConfigurations[i].severity = data.data;
                         $route.reload();
                     }), function (data) {
                         let logger = (element) => element.name === loggerName;
                         let i = $scope.logConfigurations.findIndex(logger);
-                        $scope.logConfigurations[i].severity = data;
+                        $scope.logConfigurations[i].severity = data.data;
                         $route.reload()
                     }
                 ;

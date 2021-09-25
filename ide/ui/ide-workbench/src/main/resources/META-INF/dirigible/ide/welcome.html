@@ -213,7 +213,7 @@
                 }
             });
             $http.get('/services/v4/ide/workspaces').then(function (response) {
-                $scope.workspaces = response;
+                $scope.workspaces = response.data;
             });
 
             $scope.openTemplate = function (id) {
