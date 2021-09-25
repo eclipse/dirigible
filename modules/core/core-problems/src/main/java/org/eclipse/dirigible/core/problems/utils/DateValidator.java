@@ -11,20 +11,24 @@
  */
 package org.eclipse.dirigible.core.problems.utils;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-public class CommonUtils {
+public class DateValidator {
 
-    public static Timestamp stringToTimestamp(String strDate) {
+    private DateTimeFormatter dateFormatter;
+
+    public DateValidator(DateTimeFormatter dateFormatter) {
+        this.dateFormatter = dateFormatter;
+    }
+
+    public boolean isValid(String dateStr) {
         try {
-            return Optional.ofNullable(strDate)
-                    .map(str -> LocalDate.parse(str).atStartOfDay())
-                    .map(Timestamp::valueOf)
-                    .orElse(null);
-        } catch (Exception e) {
-            return null;
+            LocalDate.parse(dateStr, this.dateFormatter);
+        } catch (DateTimeParseException e) {
+            return false;
         }
+        return true;
     }
 }

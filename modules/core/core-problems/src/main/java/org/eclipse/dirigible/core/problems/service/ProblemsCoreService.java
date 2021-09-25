@@ -16,6 +16,7 @@ import org.eclipse.dirigible.core.problems.api.IProblemsCoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
 import org.eclipse.dirigible.core.problems.utils.CommonUtils;
+import org.eclipse.dirigible.core.problems.utils.DateValidator;
 import org.eclipse.dirigible.core.problems.utils.ProblemsConstants;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -29,6 +30,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -156,10 +158,9 @@ public class ProblemsCoreService implements IProblemsCoreService {
         try (Connection connection = dataSource.getConnection()) {
             SelectBuilder sqlBuilder = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS").limit(limit);
             List<Object> values = null;
-            Timestamp dateCondition = CommonUtils.stringToTimestamp(condition);
 
-            if (dateCondition != null) {
-                sqlBuilder.where("PROBLEM_CREATED_AT = ?");
+            if (new DateValidator(DateTimeFormatter.ISO_LOCAL_DATE).isValid(condition)) {
+                sqlBuilder.where("FORMATDATETIME(PROBLEM_CREATED_AT,'yyyy-MM-dd') = ?");
                 values = Collections.singletonList(condition);
             }else if (!StringUtils.isEmpty(condition)) {
                 sqlBuilder.where("PROBLEM_LOCATION LIKE ? " +
