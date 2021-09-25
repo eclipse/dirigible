@@ -1106,14 +1106,14 @@
         $http.get(component.templateUrl, {
           cache: $templateCache
         }).then(function(template) {
-          return component.template = template;
+          return component.template = template.data;
         });
       }
       if (component.popoverTemplate == null) {
         return $http.get(component.popoverTemplateUrl, {
           cache: $templateCache
         }).then(function(template) {
-          return component.popoverTemplate = template;
+          return component.popoverTemplate = template.data;
         });
       }
     };
