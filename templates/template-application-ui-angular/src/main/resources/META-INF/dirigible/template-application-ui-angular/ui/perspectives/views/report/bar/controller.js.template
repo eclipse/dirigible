@@ -55,12 +55,12 @@ angular.module('page')
 			var chartData${foreach.index} = [];
 #end
 #end
-			for (var i = 0; i < data.length; i ++) {
+			for (var i = 0; i < data.data.length; i ++) {
 #foreach ($property in $properties)
 #if($foreach.isFirst())
-				chartTicks.push(data[i].${property.name});
+				chartTicks.push(data.data[i].${property.name});
 #else
-				chartData${foreach.index}.push(data[i].${property.name});
+				chartData${foreach.index}.push(data.data[i].${property.name});
 #end
 #end
 			}

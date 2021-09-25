@@ -107,7 +107,7 @@ angular.module('page')
 	function ${property.name.toLowerCase()}OptionsLoad() {
 		${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
 		.then(function(data) {
-			$scope.${property.name.toLowerCase()}Options = data;
+			$scope.${property.name.toLowerCase()}Options = data.data;
 		});
 	}
 	${property.name.toLowerCase()}OptionsLoad();
@@ -139,11 +139,11 @@ angular.module('page')
 		$scope.dataPage = pageNumber;
 		${dollar}http.get(api + '/count')
 		.then(function(data) {
-			$scope.dataCount = data;
+			$scope.dataCount = data.data;
 			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
 			${dollar}http.get(api + '?#foreach ($property in $properties)#if($property.relationshipType == "COMPOSITION" && $property.relationshipCardinality == "1_n")${property.name}#end#end=' + $scope.masterEntityId + '&${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
 			.then(function(data) {
-				$scope.data = data;
+				$scope.data = data.data;
 			});
 		});
 	};
@@ -184,7 +184,7 @@ angular.module('page')
 				toggleEntityModal();
 				$messageHub.messageEntityModified();
 			}, function(data) {
-				alert(JSON.stringify(data));
+				alert(JSON.stringify(data.data));
 			});
 		}	
 	};
@@ -207,7 +207,7 @@ angular.module('page')
 				toggleEntityModal();
 				$messageHub.messageEntityModified();
 			}, function(data) {
-				alert(JSON.stringify(data));
+				alert(JSON.stringify(data.data));
 			})
 		}
 	};

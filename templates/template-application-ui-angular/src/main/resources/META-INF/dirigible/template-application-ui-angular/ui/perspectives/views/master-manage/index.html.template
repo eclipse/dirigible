@@ -107,11 +107,11 @@
 				var master = [];
 				var details = [];
 
-				for (var i = 0 ; i < views.length; i ++) {
-					if (views[i].type !== undefined && views[i].type === 'master') {
-						master.push(views[i].id);
+				for (var i = 0 ; i < views.data.length; i ++) {
+					if (views.data[i].type !== undefined && views.data[i].type === 'master') {
+						master.push(views.data[i].id);
 					} else {
-						details.push(views[i].id);
+						details.push(views.data[i].id);
 					}
 				}
 
