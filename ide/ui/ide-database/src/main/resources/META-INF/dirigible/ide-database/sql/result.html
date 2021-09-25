@@ -129,17 +129,17 @@
                             }
                         }).then(function (result) {
                             cleanScope();
-                            if (result != null && result.length > 0) {
-                                $scope.rows = result;
+                            if (result.data != null && result.data.length > 0) {
+                                $scope.rows = result.data;
                                 $scope.columns = [];
-                                for (let i = 0; i < result.length; i++) {
-                                    for (let column in result[i]) {
+                                for (let i = 0; i < result.data.length; i++) {
+                                    for (let column in result.data[i]) {
                                         $scope.columns.push(column);
                                     }
                                     break;
                                 }
-                            } else if (result !== null && result.errorMessage !== null && result.errorMessage !== undefined) {
-                                $scope.result = result.errorMessage;
+                            } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                                $scope.result = result.data.errorMessage;
                             } else {
                                 $scope.result = 'Empty result';
                             }
@@ -156,12 +156,12 @@
                             }
                         }).then(function (result) {
                             cleanScope();
-                            if (result != null && result.length > 0) {
-                                $scope.hasMultipleProcedureResults = result.length > 1;
+                            if (result.data != null && result.data.length > 0) {
+                                $scope.hasMultipleProcedureResults = result.data.length > 1;
                                 if ($scope.hasMultipleProcedureResults) {
                                     $scope.procedureResults = [];
-                                    for (let resultIndex = 0; resultIndex < result.length; resultIndex++) {
-                                        let procedureResult = JSON.parse(result[resultIndex]);
+                                    for (let resultIndex = 0; resultIndex < result.data.length; resultIndex++) {
+                                        let procedureResult = JSON.parse(result.data[resultIndex]);
                                         let data = {
                                             rows: procedureResult,
                                             columns: []
@@ -175,7 +175,7 @@
                                         $scope.procedureResults.push(data);
                                     }
                                 } else {
-                                    result = JSON.parse(result[0]);
+                                    result = JSON.parse(result.data[0]);
                                     $scope.rows = result;
                                     $scope.columns = [];
                                     for (let i = 0; i < result.length; i++) {
@@ -185,8 +185,8 @@
                                         break;
                                     }
                                 }
-                            } else if (result !== null && result.errorMessage !== null && result.errorMessage !== undefined) {
-                                $scope.result = result.errorMessage;
+                            } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                                $scope.result = result.data.errorMessage;
                             } else {
                                 $scope.result = 'Empty result';
                             }
@@ -203,10 +203,10 @@
                             }
                         }).then(function (result) {
                             cleanScope();
-                            if (!isNaN(result)) {
-                                result = 'Rows updated: ' + result;
+                            if (!isNaN(result.data)) {
+                                result = 'Rows updated: ' + result.data;
                             }
-                            $scope.result = result;
+                            $scope.result = result.data;
                         });
                     }
                 }, "database.sql.execute");
