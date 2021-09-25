@@ -20,22 +20,20 @@ exports.isValid = function() {
 };
 
 exports.print = function(text) {
-	if (!text) text += "";
+	text = (text && text.toString()) || "";
 	var out = this.getOutputStream().native;
 	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
 	writer.flush();
-//	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.print(text);
 };
 
 exports.println = function(text) {
-	if (!text) text = +"";
+	text = (text && text.toString()) || "";
 	var out = this.getOutputStream().native;
 	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
 	writer.write("\n");
 	writer.flush();
-//	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.println(text);
 };
 
 exports.write = function(bytes) {

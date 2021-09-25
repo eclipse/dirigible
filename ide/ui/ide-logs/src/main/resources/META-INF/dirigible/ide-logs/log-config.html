@@ -148,13 +148,12 @@
                         let i = $scope.logConfigurations.findIndex(logger);
                         $scope.logConfigurations[i].severity = data;
                         $route.reload();
-                    })
-                    .error(function (data) {
+                    }), function (data) {
                         let logger = (element) => element.name === loggerName;
                         let i = $scope.logConfigurations.findIndex(logger);
                         $scope.logConfigurations[i].severity = data;
                         $route.reload()
-                    })
+                    }
                 ;
             }
             loadLogConfigurations();
