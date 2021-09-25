@@ -503,9 +503,6 @@
 		<module>resources</module>
 		<module>ext</module>
 
-		<module>groups/runtime-all</module>
-		<module>groups/runtime-javascript</module>
-
 		<module>releng</module>
 	</modules>
 
