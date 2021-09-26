@@ -112,7 +112,7 @@ public class ProblemsService extends AbstractRestService implements IRestService
         }
 
         processor.updateStatus(selectedIds, status);
-        return Response.ok().entity(processor.list()).build();
+        return Response.ok().build();
     }
 
     /**
