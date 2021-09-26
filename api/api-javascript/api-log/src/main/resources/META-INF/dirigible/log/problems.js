@@ -26,8 +26,8 @@ exports.fetchAllProblems = function() {
     return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
 };
 
-exports.searchProblemsChunks = function(condition, limit) {
-    return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.searchProblemsChunks(condition, limit);
+exports.fetchProblemsBatch = function(condition, limit) {
+    return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchProblemsBatch(condition, limit);
 };
 
 exports.deleteProblem = function(id) {
