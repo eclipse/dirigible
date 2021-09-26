@@ -85,7 +85,7 @@ public class ProblemsService extends AbstractRestService implements IRestService
     @GET
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response fetchProblemsBatch(String condition, int limit)
+    public Response fetchProblemsBatch(@QueryParam("condition") String condition, @QueryParam("limit") int limit)
             throws ProblemsException {
         String user = UserFacade.getName();
         if (user == null) {
