@@ -70,11 +70,11 @@
 		    <artifactId>angularjs</artifactId>
 		    <version>1.8.2</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angularjs</artifactId>
 		    <version>1.4.7</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>bootstrap</artifactId>
