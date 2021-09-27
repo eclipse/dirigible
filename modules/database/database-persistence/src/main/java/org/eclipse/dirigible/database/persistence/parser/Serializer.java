@@ -64,6 +64,9 @@ public class Serializer {
 	}
 
 	public static String serializeListOfObjects(List<Object> objects) {
+		if (objects == null || objects.isEmpty()) {
+			return "List is empty or null";
+		}
 		StringBuilder builder = new StringBuilder();
 		for (Object object : objects) {
 			try {

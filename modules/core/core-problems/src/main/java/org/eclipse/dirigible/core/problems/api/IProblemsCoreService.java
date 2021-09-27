@@ -14,6 +14,7 @@ package org.eclipse.dirigible.core.problems.api;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
+import org.eclipse.dirigible.core.problems.model.response.ResponseModel;
 
 import java.util.List;
 
@@ -111,10 +112,38 @@ public interface IProblemsCoreService extends ICoreService {
     /**
      * Gets all Problems
      *
-     * @return Problem model list
+     * @return Problems model list
      * @throws ProblemsException the dirigible problem exception
      */
     public List<ProblemsModel> getAllProblems() throws ProblemsException;
+
+    /**
+     * Gets the Problems in chunks under specified search conditions.
+     *
+     * @param condition the search condition
+     * @param limit result limit
+     * @return ResponseModel with list of ProblemsModels, selected rows count and total rows count.
+     * @throws ProblemsException the dirigible problem exception
+     */
+    public ResponseModel fetchProblemsBatch(String condition, int limit) throws ProblemsException;
+
+    /**
+     * Gets the Problems in chunks under specified search conditions.
+     *
+     * @param condition the search condition
+     * @param limit result limit
+     * @return Problems model list
+     * @throws ProblemsException the dirigible problem exception
+     */
+    public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException;
+
+    /**
+     * Counts all Problems in the DB.
+     *
+     * @return total number as int
+     * @throws ProblemsException the dirigible problem exception
+     */
+    public int countProblems() throws ProblemsException;
 
     /**
      * Deletes the Problem by id.

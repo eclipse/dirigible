@@ -26,6 +26,10 @@ exports.fetchAllProblems = function() {
     return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
 };
 
+exports.fetchProblemsBatch = function(condition, limit) {
+    return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchProblemsBatch(condition, limit);
+};
+
 exports.deleteProblem = function(id) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.deleteProblem(id);
 };

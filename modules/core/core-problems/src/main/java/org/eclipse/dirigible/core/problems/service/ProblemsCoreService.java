@@ -11,14 +11,20 @@
  */
 package org.eclipse.dirigible.core.problems.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.core.problems.api.IProblemsCoreService;
 import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.core.problems.model.ProblemsModel;
+import org.eclipse.dirigible.core.problems.model.response.ResponseModel;
+import org.eclipse.dirigible.core.problems.utils.DateValidator;
 import org.eclipse.dirigible.core.problems.utils.ProblemsConstants;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.database.persistence.PersistenceFactory;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +32,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +43,8 @@ public class ProblemsCoreService implements IProblemsCoreService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
+
+    private static final String PERCENT = "%";
 
     @Override
     public ProblemsModel createProblem(ProblemsModel problemsModel) throws ProblemsException {
@@ -141,6 +150,53 @@ public class ProblemsCoreService implements IProblemsCoreService {
     public List<ProblemsModel> getAllProblems() throws ProblemsException {
         try (Connection connection = dataSource.getConnection()) {
             return persistenceManager.findAll(connection, ProblemsModel.class);
+        } catch (SQLException e) {
+            throw new ProblemsException(e);
+        }
+    }
+
+    @Override
+    public ResponseModel fetchProblemsBatch(String condition, int limit) throws ProblemsException {
+        List<ProblemsModel> result = searchProblemsLimited(condition, limit);
+        return new ResponseModel(result, result.size(), countProblems());
+    }
+
+    @Override
+    public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            SelectBuilder sqlBuilder = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS").limit(limit);
+            List<Object> values = null;
+
+            if (new DateValidator(DateTimeFormatter.ISO_LOCAL_DATE).isValid(condition)) {
+                sqlBuilder.where("FORMATDATETIME(PROBLEM_CREATED_AT,'yyyy-MM-dd') = ?");
+                values = Collections.singletonList(condition);
+            } else if (!StringUtils.isEmpty(condition)) {
+                sqlBuilder.where("PROBLEM_LOCATION LIKE ? " +
+                                 "OR PROBLEM_TYPE LIKE ? " +
+                                 "OR PROBLEM_LINE LIKE ? " +
+                                 "OR PROBLEM_COLUMN LIKE ? " +
+                                 "OR PROBLEM_CAUSE LIKE ? " +
+                                 "OR PROBLEM_CREATED_BY LIKE ? " +
+                                 "OR PROBLEM_CATEGORY LIKE ? " +
+                                 "OR PROBLEM_MODULE LIKE ? " +
+                                 "OR PROBLEM_SOURCE LIKE ? " +
+                                 "OR PROBLEM_PROGRAM LIKE ? " +
+                                 "OR PROBLEM_STATUS LIKE ?");
+
+                values = Collections.nCopies(11, PERCENT + condition + PERCENT);
+            }
+
+            return persistenceManager.query(connection, ProblemsModel.class, sqlBuilder.toString(), values);
+        } catch (SQLException e) {
+            throw new ProblemsException(e);
+        }
+    }
+
+    @Override
+    public int countProblems() throws ProblemsException {
+        try (Connection connection = dataSource.getConnection()) {
+            PersistenceTableModel tableModel = PersistenceFactory.createModel(ProblemsModel.class);
+            return SqlFactory.getNative(connection).count(connection, tableModel.getTableName());
         } catch (SQLException e) {
             throw new ProblemsException(e);
         }
