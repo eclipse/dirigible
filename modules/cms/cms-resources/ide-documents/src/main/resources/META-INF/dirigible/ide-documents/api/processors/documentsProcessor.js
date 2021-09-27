@@ -13,6 +13,8 @@ let objectUtils = require("ide-documents/utils/cmis/object");
 let folderUtils = require("ide-documents/utils/cmis/folder");
 let documentUtils = require("ide-documents/utils/cmis/document");
 let contentTypeHandler = require("ide-documents/utils/content-type-handler");
+let registry = require("platform/v4/registry");
+let { replaceAll, unescapePath, getNameFromPath } = require("ide-documents/utils/string");
 
 exports.get = function (path) {
 	let document = documentUtils.getDocument(path);

@@ -35,13 +35,13 @@ angular.module('page')
     
 #if($next.primary)
         ${dollar}http.get("${next.url}")
-            .success(function(data) {
-                ${dollar}scope.data = data;
+            .then(function(data) {
+                ${dollar}scope.data = data.data;
             });
 #else
         ${dollar}http.get("${next.url}")
-            .success(function(data) {
-                ${dollar}scope["${next.name}"] = data;
+            .then(function(data) {
+                ${dollar}scope["${next.name}"] = data.data;
             });
 #end
 #end

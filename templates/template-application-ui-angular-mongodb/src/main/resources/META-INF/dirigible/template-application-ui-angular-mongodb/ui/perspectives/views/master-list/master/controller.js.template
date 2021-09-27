@@ -118,12 +118,12 @@ angular.module('page')
 	$scope.loadPage = function(pageNumber) {
 		$scope.dataPage = pageNumber;
 		${dollar}http.get(api + '/count')
-		.success(function(data) {
-			$scope.dataCount = data;
+		.then(function(data) {
+			$scope.dataCount = data.data;
 			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
 			${dollar}http.get(api + '?${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
-			.success(function(data) {
-				$scope.data = data;
+			.then(function(data) {
+				$scope.data = data.data;
 			});
 		});
 	};
@@ -133,8 +133,8 @@ angular.module('page')
 
 	function ${property.name.toLowerCase()}OptionsLoad() {
 		${dollar}http.get(${property.name.toLowerCase()}OptionsApi)
-		.success(function(data) {
-			$scope.${property.name.toLowerCase()}Options = data;
+		.then(function(data) {
+			$scope.${property.name.toLowerCase()}Options = data.data;
 		});
 	}
 	${property.name.toLowerCase()}OptionsLoad();

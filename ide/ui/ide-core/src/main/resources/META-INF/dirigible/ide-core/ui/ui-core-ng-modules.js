@@ -61,8 +61,8 @@ angular.module('ideUiCore', ['ngResource'])
 				$http({
 					url: '/services/v4/js/ide-core/services/user-name.js',
 					method: 'GET'
-				}).success(function (data) {
-					user.name = data;
+				}).then(function (data) {
+					user.name = data.data;
 				});
 				return user;
 			}
@@ -254,7 +254,7 @@ angular.module('ideUiCore', ['ngResource'])
 			replace: 'true',
 			scope: {
 				url: '@menuDataUrl',
-				menu: '=menuData'
+				menu: '=?menuData'
 			},
 			link: function (scope, el, attrs) {
 				let url = scope.url;

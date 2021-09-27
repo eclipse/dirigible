@@ -8,7 +8,7 @@
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
 	
 		<!-- FontAwesome icon set -->
-    	<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.csss" rel="stylesheet">
+    	<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 		<style>
 			.busy-indicator {
@@ -130,8 +130,8 @@
 		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
 		
 		<!-- AngularJS -->
-		<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-		<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 		
 	</head>
 
@@ -169,19 +169,19 @@
 				$http({
 		            method: 'GET',
 		            url: 'services/v4/healthcheck'
-		        }).success(function(healthStatus){
-		        	if (healthStatus.status === "Ready") {
+		        }).then(function(healthStatus){
+		        	if (healthStatus.data.status === "Ready") {
 						window.location='home';
 					}
 					var jobs = [];
-					for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+					for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
 						var job = new Object();
 						job.name = key;
 						job.status = value;
 						jobs.push(job);
 					}
 		        	$scope.jobs = jobs.sort((x, y) => x.name > y.name ? 1 : -1);
-		        }).error(function(e){
+		        }), (function(e){
 		            console.error("Error retreiving the health status", e);
 		        });
 

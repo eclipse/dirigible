@@ -50,8 +50,8 @@
 	<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
 	
 	<!-- AngularJS -->
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-	<script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
 	<!-- GoldenLayout with Theme Support -->
 	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
@@ -103,15 +103,15 @@
 #else
 			${dollar}http.get('../../../../../../../../../services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
 #end
-			.success(function(views) {
+			.then(function(views) {
 				var master = [];
 				var details = [];
 
-				for (var i = 0 ; i < views.length; i ++) {
-					if (views[i].type !== undefined && views[i].type === 'master') {
-						master.push(views[i].id);
+				for (var i = 0 ; i < views.data.length; i ++) {
+					if (views.data[i].type !== undefined && views.data[i].type === 'master') {
+						master.push(views.data[i].id);
 					} else {
-						details.push(views[i].id);
+						details.push(views.data[i].id);
 					}
 				}
 

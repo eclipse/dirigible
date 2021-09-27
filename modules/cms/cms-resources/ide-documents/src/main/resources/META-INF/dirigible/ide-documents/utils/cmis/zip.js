@@ -51,7 +51,7 @@ function createFolder(rootPath, zipEntry, zipInputStream) {
 	if (parent === null) {
 		createParentFolder(path);
 	}
-	let parent = folderUtils.getFolder(path);
+	parent = folderUtils.getFolder(path);
 	folderUtils.createFolder(parent, name);
 }
 

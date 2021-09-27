@@ -68,13 +68,15 @@ angular.module('problems', [])
 
         $scope.deleteByStatus = function (status) {
             $http.delete('/services/v4/ops/problems/delete/' + status).then(function () {
-                fetchData();
+                fetchData()
+                $scope.selectAll = false;
             });
         }
 
         $scope.deleteSelected = function () {
             $http.post('/services/v4/ops/problems/delete/selected', filterSelectedIds()).then(function () {
                 fetchData();
+                $scope.selectAll = false;
             });
         }
 

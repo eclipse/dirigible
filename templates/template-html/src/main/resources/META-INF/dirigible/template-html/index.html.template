@@ -10,8 +10,8 @@
     <link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
 
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
   </head>
 
   <body ng-controller="PageController">
@@ -97,18 +97,18 @@
         $scope.explore = 'customers';
 
         $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Customers')
-        .success(function(data) {
-        	$scope.customers = data.value;
+        .then(function(data) {
+        	$scope.customers = data.data.value;
         });
 
         $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Employees')
-        .success(function(data) {
-        	$scope.employees = data.value;
+        .then(function(data) {
+        	$scope.employees = data.data.value;
         });
 
         $http.get('https://services.odata.org/V4/Northwind/Northwind.svc/Products')
-        .success(function(data) {
-        	$scope.products = data.value;
+        .then(function(data) {
+        	$scope.products = data.data.value;
         });
   	  });
     </script>

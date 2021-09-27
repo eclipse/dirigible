@@ -151,7 +151,7 @@ angular.module('page')
 		}
 
 		function loadContents() {
-			return getResource('/services/v4/js/ide-documents/api/constraints');
+			return getResource('/services/v4/js/ide-documents/api/constraints.js');
 		}
 
 		function load() {

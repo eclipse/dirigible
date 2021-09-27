@@ -21,16 +21,16 @@ angular.module('about', [])
 			$http({
 				method: 'GET',
 				url: '/services/v4/healthcheck'
-			}).success(function (healthStatus) {
+			}).then(function (healthStatus) {
 				let jobs = [];
-				for (const [key, value] of Object.entries(healthStatus.jobs.statuses)) {
+				for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
 					let job = new Object();
 					job.name = key;
 					job.status = value;
 					jobs.push(job);
 				}
 				$scope.jobs = jobs;
-			}).error(function (e) {
+			}, function (e) {
 				console.error("Error retreiving the health status", e);
 			});
 

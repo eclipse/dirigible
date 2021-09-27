@@ -77,11 +77,10 @@ angular.module('flowableModeler')
 		  }
 
 		  $http({method: 'GET', url: FLOWABLE.APP_URL.getModelsUrl(), params: params}).
-		  	success(function(data, status, headers, config) {
+		  	then(function(data, status, headers, config) {
 	    		$scope.model.processes = data;
 	    		$scope.model.loading = false;
-	        }).
-	        error(function(data, status, headers, config) {
+	        }, function(data, status, headers, config) {
 	           console.log('Something went wrong: ' + data);
 	           $scope.model.loading = false;
 	        });

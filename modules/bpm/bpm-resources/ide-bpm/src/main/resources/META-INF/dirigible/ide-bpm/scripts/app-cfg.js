@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-'use strict';
+var FLOWABLE = FLOWABLE || {};
 
-let FLOWABLE = FLOWABLE || {};
+// angular.lowercase = text => text.toLowerCase(); // forward compatibility for 1.8.2
 
 FLOWABLE.CONFIG = {
 	'onPremise': true,

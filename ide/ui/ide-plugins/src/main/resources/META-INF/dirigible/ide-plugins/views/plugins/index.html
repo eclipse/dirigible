@@ -78,12 +78,12 @@
 
             function loadPlugins() {
                 $http.get(pluginsApi)
-                    .success(function (data) {
-                        $scope.depots = data;
+                    .then(function (data) {
+                        $scope.depots = data.data;
                         $scope.depots.forEach(function (depot) {
                             $http.get(depot.depot)
-                                .success(function (data) {
-                                    depot.plugins = data;
+                                .then(function (data) {
+                                    depot.plugins = data.data;
                                 });
                         });
                     });

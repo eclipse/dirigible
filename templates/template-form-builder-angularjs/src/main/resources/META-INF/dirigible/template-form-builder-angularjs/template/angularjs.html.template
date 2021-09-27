@@ -10,9 +10,9 @@
     <script type="text/javascript" src="/webjars/requirejs/2.3.6/require.min.js"></script>
     <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-resource.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.4.7/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
     <script src="../../../../../services/v4/web/ide-core/ui/message-hub.js"></script>
 
     <script type="text/javascript" src="./${controller}"></script>

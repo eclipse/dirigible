@@ -148,11 +148,6 @@
 		 	<artifactId>dirigible-ide-ui-plugins</artifactId>
 		 	<version>6.0.0-SNAPSHOT</version>
 		</dependency>
-		<!-- <dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ide-ui-discussions</artifactId>
-		 	<version>6.0.0-SNAPSHOT</version>
-		</dependency> -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide-ui-deploy-manager</artifactId>
