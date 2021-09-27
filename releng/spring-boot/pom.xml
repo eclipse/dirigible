@@ -247,6 +247,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
 				<configuration>
 					<mainClass>org.eclipse.dirigible.services.spring.boot.DirigibleRestServiceApplication</mainClass>
 				</configuration>
