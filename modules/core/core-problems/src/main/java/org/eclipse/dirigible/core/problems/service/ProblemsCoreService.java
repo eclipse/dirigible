@@ -170,7 +170,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
             if (new DateValidator(DateTimeFormatter.ISO_LOCAL_DATE).isValid(condition)) {
                 sqlBuilder.where("FORMATDATETIME(PROBLEM_CREATED_AT,'yyyy-MM-dd') = ?");
                 values = Collections.singletonList(condition);
-            }else if (!StringUtils.isEmpty(condition)) {
+            } else if (!StringUtils.isEmpty(condition)) {
                 sqlBuilder.where("PROBLEM_LOCATION LIKE ? " +
                                  "OR PROBLEM_TYPE LIKE ? " +
                                  "OR PROBLEM_LINE LIKE ? " +
