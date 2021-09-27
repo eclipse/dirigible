@@ -433,4 +433,34 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         System.out.println(String.format("API test [%s] on engine [%s] passed for: %d ms", testModule,
                 executor.getType(), time));
     }
+
+    protected void runEcmaScriptTest(IJavascriptEngineExecutor executor, IRepository repository, String testModule) throws IOException, ScriptingException {
+
+        try {
+            InputStream in = AbstractApiSuiteTest.class.getResourceAsStream("/META-INF/dirigible/" + testModule);
+            try {
+                if (in == null) {
+                    throw new IOException(IRepositoryStructure.SEPARATOR + testModule + " does not exist");
+                }
+                repository.createResource(
+                        IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + testModule,
+                        IOUtils.readBytesFromStream(in));
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
+            }
+        } catch (RepositoryWriteException e) {
+            throw new IOException(IRepositoryStructure.SEPARATOR + testModule, e);
+        }
+        Object result = null;
+        long start = System.currentTimeMillis();
+        Object error = executor.executeServiceModule(testModule, null);
+        if (error != null && error.toString() != null) {
+            throw new ScriptingException(error.toString());
+        }
+        long time = System.currentTimeMillis() - start;
+        System.out.println(String.format("API test [%s] on engine [%s] passed for: %d ms", testModule,
+                executor.getType(), time));
+    }
 }

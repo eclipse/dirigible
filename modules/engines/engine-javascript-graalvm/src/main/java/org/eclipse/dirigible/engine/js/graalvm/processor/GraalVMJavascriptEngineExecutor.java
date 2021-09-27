@@ -12,9 +12,15 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.nio.file.attribute.FileAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.script.Bindings;
@@ -22,6 +28,8 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.api.v3.core.ContextFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -35,9 +43,11 @@ import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
+import org.graalvm.polyglot.io.FileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,11 +152,100 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		Bindings engineBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 		engineBindings.put("polyglot.js.allowHostAccess", true);
 		engineBindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
-		
+
 		Builder contextBuilder = Context.newBuilder("js")
 				.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
-				.option("js.ecmascript-version", "2021");
-		
+				.option("js.ecmascript-version", "2021").fileSystem(new FileSystem() {
+					@Override
+					public Path parsePath(URI uri) {
+
+						return null;
+					}
+
+					@Override
+					public Path parsePath(String path) {
+						return Paths.get(path);
+					}
+
+					@Override
+					public void checkAccess(Path path, Set<? extends AccessMode> modes, LinkOption... linkOptions) throws IOException {
+
+					}
+
+					@Override
+					public void createDirectory(Path dir, FileAttribute<?>... attrs) throws IOException {
+
+					}
+
+					@Override
+					public void delete(Path path) throws IOException {
+
+					}
+
+					@Override
+					public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
+
+						Path p = Paths.get("");
+						var source = "";
+						if(path.toString().toLowerCase().endsWith(".js"))
+						{
+//							p = Paths.get(createResourcePath(
+//									IRepositoryStructure.PATH_REGISTRY_PUBLIC,
+//									path.toString().replace(".js", ""),
+//									".js"));
+							source = new String(retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
+									path.toString().replace(".js", ""),
+									".js").getContent(), StandardCharsets.UTF_8);
+						}
+						else if(path.toString().toLowerCase().endsWith(".mjs"))
+						{
+//							p = Paths.get(createResourcePath(
+//									IRepositoryStructure.PATH_REGISTRY_PUBLIC,
+//									path.toString().replace(".mjs", ""),
+//									".mjs"));
+							source = new String(retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
+									path.toString().replace(".mjs", ""),
+									".mjs").getContent(), StandardCharsets.UTF_8);
+						}
+						else
+						{
+
+						}
+//						try {
+//							String source = sourceProvider.loadSource(p.toString());
+//						} catch (URISyntaxException e) {
+//							e.printStackTrace();
+//						}
+						var bytes = source.getBytes(StandardCharsets.UTF_8);
+						return new SeekableInMemoryByteChannel(bytes);
+					}
+
+					@Override
+					public DirectoryStream<Path> newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) throws IOException {
+						return null;
+					}
+
+					@Override
+					public Path toAbsolutePath(Path path) {
+						return path;
+					}
+
+					@Override
+					public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
+						return path;
+					}
+
+					@Override
+					public Map<String, Object> readAttributes(Path path, String attributes, LinkOption... options) throws IOException {
+//						Map<String, Object> attr = new HashMap<>();
+//						// for testing purposes, we consider all files non-regular. In this way, we force the
+//						// module loader to try all possible file names before throwing module not found
+//						attr.put("isRegularFile", true);
+//						return attr;
+						return null;
+					}
+				});
+
 		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
 			contextBuilder.allowHostClassLookup(s -> true)
 			.allowHostAccess(HostAccess.ALL)
@@ -182,8 +281,20 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
 
-            if (commonJSModule) {
 
+			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+			if (isDebugEnabled) {
+				code = CODE_DEBUGGER + code;
+			}
+			code = Require.CODE + "const console = require('core/v4/console');" + code;
+			beforeEval(context);
+
+			String fileName = isModule ? moduleOrCode : "unknown";
+			Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build(); // TODO: or unoficcialy you can Source.newBuilder("js", script, "script").mimeType("application/javascript+module").build();
+			result = context.eval(src).as(Object.class);
+
+			/*
+            if (commonJSModule) {
 				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
 				Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);;
@@ -208,7 +319,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 				beforeEval(context);
 
 				result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
-			}
+			}*/
 
 
         } catch (IOException e) {

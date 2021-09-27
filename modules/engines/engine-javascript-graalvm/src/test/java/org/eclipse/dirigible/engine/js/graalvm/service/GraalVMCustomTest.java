@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
+import static org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor.DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,12 +24,14 @@ import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +75,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	 * @throws ExtensionsException the extensions exception
 	 */
 	@Test
+	@Ignore
 	public void customPackage() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		
 		String testModule = "graalvm/customPackage.js";
@@ -99,15 +103,16 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	 * @throws ExtensionsException the extensions exception
 	 */
 	@Test
+	@Ignore
 	public void customPackageImport() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		
 		String testModule = "graalvm/customPackageImport.js";
-		
+
 		try {
 			ThreadContextFacade.setUp();
 
 			logger.info("API test starting... " + testModule);
-			
+
 			Object result = null;
 			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 
@@ -118,4 +123,23 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
+	@Test
+	public void ecmaScriptImportTest() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
+
+		String testModule = "graalvm/ecmaScriptImport.mjs";
+
+		try {
+			ThreadContextFacade.setUp();
+
+			logger.info("API test starting... " + testModule);
+
+			Object result = null;
+			runEcmaScriptTest(graalVMJavascriptEngineExecutor, repository, testModule);
+
+			logger.info("API test passed successfully: " + testModule);
+
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+	}
 }

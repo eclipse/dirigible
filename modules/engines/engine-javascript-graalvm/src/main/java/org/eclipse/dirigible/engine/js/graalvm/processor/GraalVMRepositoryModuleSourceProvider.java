@@ -25,6 +25,8 @@ public class GraalVMRepositoryModuleSourceProvider implements IJavascriptModuleS
 
 	private static final String JS_EXTENSION = ".js"; //$NON-NLS-1$
 
+	private static final String MJS_EXTENSION = ".mjs";
+
 	private IScriptEngineExecutor executor;
 
 	private String root;
@@ -63,9 +65,13 @@ public class GraalVMRepositoryModuleSourceProvider implements IJavascriptModuleS
 		byte[] sourceCode = null;
 		if (module.endsWith(JS_EXTENSION)) {
 			sourceCode = executor.retrieveModule(root, module).getContent();
-		} else {
+		} else if (module.endsWith(MJS_EXTENSION)) {
+			sourceCode = executor.retrieveModule(root, module).getContent();
+		}
+		else {
 			sourceCode = executor.retrieveModule(root, module, JS_EXTENSION).getContent();
 		}
+
 
 		return new String(sourceCode, StandardCharsets.UTF_8);
 	}

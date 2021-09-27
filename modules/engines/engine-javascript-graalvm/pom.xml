@@ -332,6 +332,18 @@
 			<version>1.15.3</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.20</version>
+            <scope>compile</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.20</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
