@@ -44,9 +44,13 @@
                     <i class="fa fa-refresh"></i>
                 </button>
             </div>
-            <div class="col-md-5">
-                <input type="text" name="search" class="form-control" ng-model="searchText" ng-change="search()"
-                    ng-keyup="cancel($event)" placeholder="Search ...">
+            <div class="col">
+                <button class="btn btn-default preview-button" type="button" ng-click="problems.nextBatch(0)">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" ng-model="searchText" placeholder="Search ... Date format: yyyy-MM-dd">
             </div>
             <div class="col">
                 <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('IGNORED')">Mark as
@@ -72,11 +76,12 @@
                 <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
             </div>
         </div>
-        <div id="row" style="padding-top: 30px; padding-bottom: 20px">
+        <div id="row" style="padding-top: 30px; padding-bottom: 5px">
             <table class="table table-striped" ng-cloak>
                 <thead>
                     <tr>
-                        <th><input type="checkbox" ng-model="selectAll" ng-click="checkAll()"></th>
+                        <th><input type="checkbox" ng-model="selectAll" ng-change="checkAll()"></th>
+                        <th>#</th>
                         <th>Status</th>
                         <th>Location</th>
                         <th>Type</th>
@@ -93,8 +98,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="next in problemsList">
+                    <tr ng-repeat="next in problemsList track by $index">
                         <td><input type="checkbox" ng-model="next.checked"></td>
+                        <td>{{$index + 1}}</td>
                         <td>
                             <div class="tdSingleLine">{{next.status}}</div>
                         </td>
@@ -137,6 +143,11 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="row" style="padding-bottom: 15px">
+            <button class="btn btn-primary" type="button" ng-click="problems.nextBatch(25)">
+                <i class="fa">Next</i>
+            </button>
         </div>
     </div>
 </body>
