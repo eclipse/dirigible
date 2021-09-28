@@ -514,7 +514,6 @@ jobs:
         git add LICENSES/
         git add api/
         git add ext/
-        git add groups/
         git add ide/
         git add logo/
         git add modules/
