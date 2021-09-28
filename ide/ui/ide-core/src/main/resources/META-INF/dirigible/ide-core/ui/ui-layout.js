@@ -338,7 +338,7 @@ function LayoutController(viewRegistry, messageHub) {
 		}
 	};
 
-	this.openEditor = function (resourcePath, resourceLabel, contentType, editorId, extraArgs = null) {
+	this.openEditor = function (resourcePath, resourceLabel, contentType, editorId = "editor", extraArgs = null) {
 		let newItemConfig = {
 			id: resourcePath,
 			title: resourceLabel,

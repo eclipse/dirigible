@@ -251,7 +251,6 @@ RegistryTreeAdapter.prototype.dblClickNode = function (node) {
 		this.$messageHub.announceResourceOpen(node.original._resource);
 }
 RegistryTreeAdapter.prototype.clickNode = function (node) {
-	let type = node.original.type;
 	this.$messageHub.announceResourceSelected(node.original._resource);
 };
 RegistryTreeAdapter.prototype.raw = function () {
@@ -335,12 +334,12 @@ angular.module('registry', ['registry.config'])
 	.factory('$messageHub', [function () {
 		let messageHub = new FramesMessageHub();
 		let send = function (evtName, data, absolute) {
-			messageHub.post({ data: data }, 'repository.' + evtName);
+			messageHub.post({ data: data }, 'registry.' + evtName);
 		};
 
 		let transformDescriptor = function (resourceDescriptor) {
 			let resourceDescriptorRepository = JSON.parse(JSON.stringify(resourceDescriptor));
-			resourceDescriptorRepository.path = resourceDescriptorRepository.path.replace('/registry/', '/registry/public/');
+			resourceDescriptorRepository.path = resourceDescriptorRepository.path.replace('/registry/', '/');
 			return resourceDescriptorRepository;
 		};
 
@@ -356,8 +355,6 @@ angular.module('registry', ['registry.config'])
 			let resourceDescriptorRepository = transformDescriptor(resourceDescriptor);
 			this.send('resource.deleted', resourceDescriptorRepository);
 		};
-
-
 
 		return {
 			send: send,
@@ -385,7 +382,7 @@ angular.module('registry', ['registry.config'])
 					return true;
 				}
 			},
-			'plugins': ['state', 'dnd', 'sort', 'types', 'contextmenu', 'unique'],
+			'plugins': ['state', 'sort', 'types', 'contextmenu', 'unique'],
 			'unique': {
 				'newNodeName': function (node, typesConfig) {
 					let typeCfg = typesConfig[node.type] || typesConfig['default'];
@@ -470,7 +467,6 @@ angular.module('registry', ['registry.config'])
 
 		this.registryTree;
 		this.registry;
-
 
 		this.registryTree = registryTreeAdapter.init($('.registry'), "/");
 		if (!registryService.typeMapping)
