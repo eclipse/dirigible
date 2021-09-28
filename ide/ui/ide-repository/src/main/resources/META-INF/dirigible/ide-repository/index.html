@@ -19,6 +19,8 @@
 
     <title brandtitle perspective-name="Repository"></title>
 
+    <link brandicon />
+
     <!-- Twitter Bootstrap with Theme Support -->
     <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
@@ -31,19 +33,6 @@
 
     <!-- FontAwesome icon set -->
     <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <link brandicon />
-</head>
-
-<body>
-
-    <div menu menu-data-url="/services/v4/js/ide-core/services/menu.js"></div>
-
-    <div class="shell">
-        <div class="sidebar list-group" sidebar active="Repository"></div>
-        <div id="repository" class="plane" views-layout views-layout-model="wb.layoutModel"></div>
-    </div>
-    <div class="statusbar" status-bar>{{message}}</div>
 
     <!-- jQuery -->
     <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
@@ -61,6 +50,17 @@
     <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
     <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
     <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
+</head>
+
+<body>
+
+    <div menu menu-data-url="/services/v4/js/ide-core/services/menu.js"></div>
+
+    <div class="shell">
+        <div class="sidebar list-group" sidebar active="Repository"></div>
+        <div id="repository" class="plane" views-layout views-layout-model="wb.layoutModel"></div>
+    </div>
+    <div class="statusbar" status-bar>{{message}}</div>
 
     <script type="text/javascript">
         angular.module('repository', ['ngResource', 'ideUiCore'])
@@ -77,16 +77,20 @@
                     },
                     events: {
                         'repository.resource.open': function (msg) {
-                            Layouts.manager.openEditor(msg.data.path, msg.data.label, msg.data.contentType, "repository");
+                            Layouts.manager.openEditor(
+                                msg.data.path,
+                                msg.data.label,
+                                msg.data.contentType,
+                                "editor",
+                                { readOnly: true, rtype: "repository" }
+                            );
                         },
                         'repository.resource.deleted': function (msg) {
                             //TODO: check if deleted file is currently open in editor and close the editor window
                             console.log('resource deleted recieved:' + msg);
                         },
                         'ide.perspective.views.open': function (msg) {
-                            var viewId = msg.data.viewId;
-                            var regionId = msg.data.regionId;
-                            Layouts.manager.open(viewId, regionId);
+                            Layouts.manager.open(msg.data.viewId, msg.data.regionId);
                         },
                         'workbench.open': function (msg) {
                             window.open(msg.data, '_blank');

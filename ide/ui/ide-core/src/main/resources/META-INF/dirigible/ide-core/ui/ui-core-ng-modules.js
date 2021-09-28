@@ -268,7 +268,7 @@ angular.module('ideUiCore', ['ngResource'])
 						msg.data.file.path,
 						msg.data.file.label,
 						msg.data.file.contentType,
-						msg.data.editor,
+						msg.data.editor || "editor",
 						msg.data.extraArgs
 					);
 				});

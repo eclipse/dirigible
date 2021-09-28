@@ -84,7 +84,22 @@
                     },
                     events: {
                         'repository.resource.open': function (msg) {
-                            Layouts.manager.openEditor(msg.data.path, msg.data.label, msg.data.contentType, "repository");
+                            Layouts.manager.openEditor(
+                                msg.data.path,
+                                msg.data.label,
+                                msg.data.contentType,
+                                "editor",
+                                { readOnly: true, rtype: "repository" }
+                            );
+                        },
+                        'registry.resource.open': function (msg) {
+                            Layouts.manager.openEditor(
+                                msg.data.path,
+                                msg.data.label,
+                                msg.data.contentType,
+                                "editor",
+                                { readOnly: true, rtype: "registry" }
+                            );
                         },
                         'fileselected': function (msg) {
                             Layouts.manager.openEditor(msg.data.path, msg.data.label);
