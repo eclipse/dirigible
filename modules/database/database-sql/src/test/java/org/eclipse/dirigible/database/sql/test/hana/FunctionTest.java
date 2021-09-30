@@ -47,23 +47,23 @@ public class FunctionTest {
 
     @Test
     public void checkIfFunctionExist() throws SQLException {
-        String funcName = "\"MYSCHEMA\".\"namespace.path::MyFunction\"";
+        String funcName = "\"namespace.path::MyFunction\"";
         when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
-        when(mockDatabaseMetaData.getFunctions(null, null, funcName)).thenReturn(mockResultSet);
+        when(mockDatabaseMetaData.getFunctions(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, funcName, DatabaseArtifactTypes.FUNCTION);
+                .exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
         assertTrue(exist);
     }
 
     @Test
     public void checkIfFunctionDoesNotExist() throws SQLException {
-        String funcName = "\"MYSCHEMA\".\"namespace.path::MyFunction\"";
+        String funcName = "\"namespace.path::MyFunction\"";
         when(mockConnection.getMetaData()).thenReturn(mockDatabaseMetaData);
-        when(mockDatabaseMetaData.getFunctions(null, null, funcName)).thenReturn(mockResultSet);
+        when(mockDatabaseMetaData.getFunctions(null, "MYSCHEMA", funcName)).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
         boolean exist = SqlFactory.getNative(new HanaSqlDialect())
-                .exists(mockConnection, "\"MYSCHEMA\".\"namespace.path::MyFunction\"", DatabaseArtifactTypes.FUNCTION);
+                .exists(mockConnection, "MYSCHEMA", funcName, DatabaseArtifactTypes.FUNCTION);
         assertFalse(exist);
     }
 
