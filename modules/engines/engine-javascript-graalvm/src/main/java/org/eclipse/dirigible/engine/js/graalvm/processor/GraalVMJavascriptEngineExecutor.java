@@ -155,7 +155,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		Builder contextBuilder = Context.newBuilder("js")
 				.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
+				.allowExperimentalOptions(true)
 				.option("js.ecmascript-version", "2021")
+				.option("js.commonjs-require", "true")
 				.fileSystem(new RegistryTruffleFileSystem(this));
 
 		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
@@ -166,9 +168,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD, "true"))) {
 			contextBuilder.allowCreateThread(true);
 		}
-		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
+//		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
 			contextBuilder.allowIO(true);
-		}
+//		}
 		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
 			contextBuilder.allowCreateProcess(true);
 		}

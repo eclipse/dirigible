@@ -34,12 +34,13 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path parsePath(URI uri) {
-        return null;
+        return Paths.get(uri);
     }
 
     @Override
     public Path parsePath(String path) {
-        return Paths.get(path);
+        return handlePossibleDirigiblePath(path);
+//        return Paths.get(path);
     }
 
     @Override
@@ -60,22 +61,23 @@ public class RegistryTruffleFileSystem implements FileSystem {
     @Override
     public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
         var source = "";
-        if(!path.toString().endsWith(".js") && !path.toString().endsWith(".mjs")) {
-            source = new String(executor.retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-                    path.toString(),
-                    ".mjs").getContent(), StandardCharsets.UTF_8);
+        var pathString = path.toString();
+        var root = IRepositoryStructure.PATH_REGISTRY_PUBLIC;
+
+        if (pathString.startsWith(IRepositoryStructure.PATH_REGISTRY_PUBLIC)) {
+            pathString = pathString.replace(IRepositoryStructure.PATH_REGISTRY_PUBLIC, "");
         }
-        else  if(path.toString().toLowerCase().endsWith(".js")) {
-            source = new String(executor.retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-                    path.toString().replace(".js", ""),
-                    ".mjs").getContent(), StandardCharsets.UTF_8);
-        }
-        else if(path.toString().toLowerCase().endsWith(".mjs")) {
-            source = new String(executor.retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-                    path.toString().replace(".mjs", ""),
-                    ".mjs").getContent(), StandardCharsets.UTF_8);
-        }
-        else {
+
+        if (!pathString.endsWith(".js") && !pathString.endsWith(".mjs")) {
+            var module = executor.retrieveModule(root, pathString, ".mjs");
+            source = new String(module.getContent(), StandardCharsets.UTF_8);
+        } else if (pathString.toLowerCase().endsWith(".js")) {
+            var module = executor.retrieveModule(root, pathString.replace(".js", ""), ".mjs");
+            source = new String(module.getContent(), StandardCharsets.UTF_8);
+        } else if (pathString.toLowerCase().endsWith(".mjs")) {
+            var module = executor.retrieveModule(root, pathString.replace(".mjs", ""), ".mjs");
+            source = new String(module.getContent(), StandardCharsets.UTF_8);
+        } else {
             source = "";
         }
 
@@ -89,12 +91,39 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path toAbsolutePath(Path path) {
-        return path.toAbsolutePath();
+        var maybeDirigiblePath = handlePossibleDirigiblePath(path);
+        return maybeDirigiblePath.toAbsolutePath();
     }
 
     @Override
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
-        return path.normalize().;
+//        return path.toRealPath(linkOptions);
+//        return path.normalize();
+        return handlePossibleDirigiblePath(path);
+    }
+
+    private Path handlePossibleDirigiblePath(String path) {
+        return handlePossibleDirigiblePath(Paths.get(path));
+    }
+
+    private Path handlePossibleDirigiblePath(Path path) {
+        var pathString = path.toString();
+
+        if (pathString.startsWith(IRepositoryStructure.PATH_REGISTRY_PUBLIC)) {
+            return path;
+        }
+
+        // skip relative paths and URI paths
+        if (pathString.contains("./") || pathString.contains("://")) {
+            return path;
+        }
+
+        return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, pathString);
+    }
+
+    @Override
+    public void setCurrentWorkingDirectory(Path currentWorkingDirectory) {
+        FileSystem.super.setCurrentWorkingDirectory(currentWorkingDirectory);
     }
 
     @Override
