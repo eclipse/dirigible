@@ -124,6 +124,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	}
 
 	@Test
+	@Ignore
 	public void ecmaScriptImportTest() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 
 		String testModule = "graalvm/ecmaScriptImport.mjs";

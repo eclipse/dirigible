@@ -155,96 +155,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 		Builder contextBuilder = Context.newBuilder("js")
 				.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
-				.option("js.ecmascript-version", "2021").fileSystem(new FileSystem() {
-					@Override
-					public Path parsePath(URI uri) {
-
-						return null;
-					}
-
-					@Override
-					public Path parsePath(String path) {
-						return Paths.get(path);
-					}
-
-					@Override
-					public void checkAccess(Path path, Set<? extends AccessMode> modes, LinkOption... linkOptions) throws IOException {
-
-					}
-
-					@Override
-					public void createDirectory(Path dir, FileAttribute<?>... attrs) throws IOException {
-
-					}
-
-					@Override
-					public void delete(Path path) throws IOException {
-
-					}
-
-					@Override
-					public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
-
-						Path p = Paths.get("");
-						var source = "";
-						if(path.toString().toLowerCase().endsWith(".js"))
-						{
-//							p = Paths.get(createResourcePath(
-//									IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-//									path.toString().replace(".js", ""),
-//									".js"));
-							source = new String(retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-									path.toString().replace(".js", ""),
-									".js").getContent(), StandardCharsets.UTF_8);
-						}
-						else if(path.toString().toLowerCase().endsWith(".mjs"))
-						{
-//							p = Paths.get(createResourcePath(
-//									IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-//									path.toString().replace(".mjs", ""),
-//									".mjs"));
-							source = new String(retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-									path.toString().replace(".mjs", ""),
-									".mjs").getContent(), StandardCharsets.UTF_8);
-						}
-						else
-						{
-
-						}
-//						try {
-//							String source = sourceProvider.loadSource(p.toString());
-//						} catch (URISyntaxException e) {
-//							e.printStackTrace();
-//						}
-						var bytes = source.getBytes(StandardCharsets.UTF_8);
-						return new SeekableInMemoryByteChannel(bytes);
-					}
-
-					@Override
-					public DirectoryStream<Path> newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) throws IOException {
-						return null;
-					}
-
-					@Override
-					public Path toAbsolutePath(Path path) {
-						return path;
-					}
-
-					@Override
-					public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
-						return path;
-					}
-
-					@Override
-					public Map<String, Object> readAttributes(Path path, String attributes, LinkOption... options) throws IOException {
-//						Map<String, Object> attr = new HashMap<>();
-//						// for testing purposes, we consider all files non-regular. In this way, we force the
-//						// module loader to try all possible file names before throwing module not found
-//						attr.put("isRegularFile", true);
-//						return attr;
-						return null;
-					}
-				});
+				.option("js.ecmascript-version", "2021")
+				.fileSystem(new RegistryTruffleFileSystem(this));
 
 		if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
 			contextBuilder.allowHostClassLookup(s -> true)
@@ -281,18 +193,64 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             	context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
 
+			var code = "";
+//			if (commonJSModule) { // New Require
+//				code += Require.LOAD_CONSOLE_CODE + System.lineSeparator()
+//						+ Require.MODULE_CODE(isDebugEnabled) + System.lineSeparator()
+//						+ Require.MODULE_CREATE_CODE + System.lineSeparator();
+//
+//				if (isModule) {
+//					code += Require.MODULE_LOAD_CODE.replace("MODULE_FILENAME", "'" + moduleOrCode + "'");
+//				} else {
+//					code += Require.LOAD_STRING_CODE.replace("SCRIPT_STRING", "'" + moduleOrCode + "'");
+//				}
+//				code += System.lineSeparator();
+//			}
+			if(moduleOrCode.endsWith(".mjs"))
+			{
+				code = (isDebugEnabled ? CODE_DEBUGGER : "")
+						+ Require.CODE + System.lineSeparator()
+						+ "const console = require('core/v4/console');" + System.lineSeparator()
+						+ (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 
-			String code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
-			if (isDebugEnabled) {
-				code = CODE_DEBUGGER + code;
+				String fileName = isModule ? moduleOrCode : "unknown";
+				Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build();
+
+				beforeEval(context);
+				result = context.eval(src).as(Object.class);
 			}
-			code = Require.CODE + "const console = require('core/v4/console');" + code;
-			beforeEval(context);
+			else {
+				if (commonJSModule) {
+					context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+					context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+					context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
 
-			String fileName = isModule ? moduleOrCode : "unknown";
-			Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build(); // TODO: or unoficcialy you can Source.newBuilder("js", script, "script").mimeType("application/javascript+module").build();
-			result = context.eval(src).as(Object.class);
+					beforeEval(context);
 
+					if (isModule) {
+						bindings.putMember("MODULE_FILENAME", moduleOrCode);
+						context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+					} else {
+						bindings.putMember("SCRIPT_STRING", moduleOrCode);
+						context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+					}
+				} else { // Old Require
+					code = (isDebugEnabled ? CODE_DEBUGGER : "")
+							+ Require.CODE + System.lineSeparator()
+							+ "const console = require('core/v4/console');" + System.lineSeparator()
+							+ (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+				}
+
+				String fileName = isModule ? moduleOrCode : "unknown";
+				Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build();
+
+				beforeEval(context);
+				if (isModule && commonJSModule) {
+					context.eval(src);
+				} else {
+					result = context.eval(src).as(Object.class);
+				}
+			}
 			/*
             if (commonJSModule) {
 				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
