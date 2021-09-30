@@ -53,15 +53,15 @@ public class HanaSqlDialect extends
         }
     }
 
-    private boolean isProcedureExisting(Connection connection, String procedure) throws SQLException {
+    private boolean isProcedureExisting(Connection connection, String schemaPattern, String procedure) throws SQLException {
         DatabaseMetaData metadata = connection.getMetaData();
-        ResultSet procedureDescription = metadata.getProcedures(null, null, procedure);
+        ResultSet procedureDescription = metadata.getProcedures(null, schemaPattern, procedure);
         return procedureDescription.next();
     }
 
-    private boolean isFunctionExisting(Connection connection, String function) throws SQLException {
+    private boolean isFunctionExisting(Connection connection, String schemaPattern, String function) throws SQLException {
         DatabaseMetaData metadata = connection.getMetaData();
-        ResultSet funcDescription = metadata.getFunctions(null, null, function);
+        ResultSet funcDescription = metadata.getFunctions(null, schemaPattern, function);
         return funcDescription.next();
     }
 
@@ -408,10 +408,10 @@ public class HanaSqlDialect extends
                     exists = isSynonymExisting(connection, schema, artefact);
                     break;
                 case DatabaseArtifactTypes.FUNCTION:
-                    exists = isFunctionExisting(connection, artefact);
+                    exists = isFunctionExisting(connection, schema, artefact);
                     break;
                 case DatabaseArtifactTypes.PROCEDURE:
-                    exists = isProcedureExisting(connection, artefact);
+                    exists = isProcedureExisting(connection, schema, artefact);
                     break;
                 case DatabaseArtifactTypes.SEQUENCE:
                     exists = isSequenceExisting(connection, schema, artefact);
