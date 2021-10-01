@@ -12,16 +12,26 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.io.FileSystem;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,13 +44,33 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path parsePath(URI uri) {
-        return Paths.get(uri);
+        try {
+            var filePath = "/Users/c5326377/work/firebase/firebase.mjs";
+            var fileToWriteDataTo = new File(filePath);
+            var maybeDownloadedData = FileUtils.readFileToString(fileToWriteDataTo, StandardCharsets.UTF_8);
+            if (!StringUtils.isBlank(maybeDownloadedData)) {
+                return Paths.get(filePath);
+            }
+
+            CloseableHttpClient client = HttpClients.createDefault();
+            try (CloseableHttpResponse response = client.execute(new HttpGet(uri))) {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    try (FileOutputStream outstream = new FileOutputStream(fileToWriteDataTo)) {
+                        entity.writeTo(outstream);
+                    }
+                }
+            }
+
+            return Paths.get(filePath);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Path parsePath(String path) {
         return handlePossibleDirigiblePath(path);
-//        return Paths.get(path);
     }
 
     @Override
@@ -63,10 +93,6 @@ public class RegistryTruffleFileSystem implements FileSystem {
         var source = "";
         var pathString = path.toString();
         var root = IRepositoryStructure.PATH_REGISTRY_PUBLIC;
-
-        if (pathString.startsWith(IRepositoryStructure.PATH_REGISTRY_PUBLIC)) {
-            pathString = pathString.replace(IRepositoryStructure.PATH_REGISTRY_PUBLIC, "");
-        }
 
         if (!pathString.endsWith(".js") && !pathString.endsWith(".mjs")) {
             var module = executor.retrieveModule(root, pathString, ".mjs");
@@ -97,8 +123,6 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path toRealPath(Path path, LinkOption... linkOptions) throws IOException {
-//        return path.toRealPath(linkOptions);
-//        return path.normalize();
         return handlePossibleDirigiblePath(path);
     }
 
@@ -109,30 +133,18 @@ public class RegistryTruffleFileSystem implements FileSystem {
     private Path handlePossibleDirigiblePath(Path path) {
         var pathString = path.toString();
 
-        if (pathString.startsWith(IRepositoryStructure.PATH_REGISTRY_PUBLIC)) {
-            return path;
-        }
-
         // skip relative paths and URI paths
         if (pathString.contains("./") || pathString.contains("://")) {
             return path;
         }
 
-        return Path.of(IRepositoryStructure.PATH_REGISTRY_PUBLIC, pathString);
-    }
-
-    @Override
-    public void setCurrentWorkingDirectory(Path currentWorkingDirectory) {
-        FileSystem.super.setCurrentWorkingDirectory(currentWorkingDirectory);
+        return Path.of("/" + pathString);
     }
 
     @Override
     public Map<String, Object> readAttributes(Path path, String attributes, LinkOption... options) throws IOException {
-//						Map<String, Object> attr = new HashMap<>();
-//						// for testing purposes, we consider all files non-regular. In this way, we force the
-//						// module loader to try all possible file names before throwing module not found
-//						attr.put("isRegularFile", false);
-//						return attr;
-        return null;
+        var attr = new HashMap<String, Object>();
+        attr.put("isRegularFile", true);
+        return attr;
     }
 }
