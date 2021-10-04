@@ -13,13 +13,16 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.io.FileSystem;
 
@@ -37,6 +40,7 @@ import java.util.Set;
 
 public class RegistryTruffleFileSystem implements FileSystem {
     private final IScriptEngineExecutor executor;
+    private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
     public RegistryTruffleFileSystem(IScriptEngineExecutor executor) {
         this.executor = executor;
@@ -45,24 +49,26 @@ public class RegistryTruffleFileSystem implements FileSystem {
     @Override
     public Path parsePath(URI uri) {
         try {
-            var filePath = "/Users/c5326377/work/firebase/firebase.mjs";
-            var fileToWriteDataTo = new File(filePath);
-            var maybeDownloadedData = FileUtils.readFileToString(fileToWriteDataTo, StandardCharsets.UTF_8);
-            if (!StringUtils.isBlank(maybeDownloadedData)) {
-                return Paths.get(filePath);
+            var packageName = "firebase.mjs";
+            if (uri.toString().contains("firestore")) {
+                packageName = "firestore.mjs";
+            }
+
+            if (repository.getResource(packageName).exists()) {
+                return Paths.get(packageName);
             }
 
             CloseableHttpClient client = HttpClients.createDefault();
             try (CloseableHttpResponse response = client.execute(new HttpGet(uri))) {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
-                    try (FileOutputStream outstream = new FileOutputStream(fileToWriteDataTo)) {
-                        entity.writeTo(outstream);
-                    }
+                    var bytes = IOUtils.toByteArray(entity.getContent());
+                    repository.createResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/" + packageName, bytes);
                 }
             }
 
-            return Paths.get(filePath);
+
+            return Paths.get(packageName);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
