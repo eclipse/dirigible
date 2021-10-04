@@ -78,7 +78,17 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path parsePath(String path) {
-        return handlePossibleDirigiblePath(path);
+        String dirigibleScope = "@dirigible";
+
+        if(path.startsWith(dirigibleScope))
+        {
+            path = path.substring(dirigibleScope.length()).replace('-', '/');
+            String api = StringUtils.substringBeforeLast(path, "/");
+            api = StringUtils.substringAfterLast(api,"/") + ".mjs";
+            path += "/" + api;
+        }
+
+        return handlePossibleDirigiblePath(Paths.get(path));
     }
 
     @Override

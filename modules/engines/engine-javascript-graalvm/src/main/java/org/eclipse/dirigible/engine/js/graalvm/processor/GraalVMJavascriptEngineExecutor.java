@@ -203,11 +203,13 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
             var code = "";
             if (moduleOrCode.endsWith(".mjs")) {
-                context.eval(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE);
-                code = (isDebugEnabled ? CODE_DEBUGGER : "")
-                        + (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+                context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+                context.eval(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE); // alias of Require.CODE
+                context.eval(ENGINE_JAVA_SCRIPT, isDebugEnabled ? CODE_DEBUGGER : "");
+                context.eval(ENGINE_JAVA_SCRIPT, "globalThis.console = require('core/v4/console');");
 
                 String fileName = isModule ? moduleOrCode : "unknown";
+                code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
                 Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build();
 
                 beforeEval(context);

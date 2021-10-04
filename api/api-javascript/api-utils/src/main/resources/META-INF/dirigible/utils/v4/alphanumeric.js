@@ -74,7 +74,8 @@ exports.isNumeric = function(str){
 	var code, i, len;
     for (i = 0, len = str.length; i < len; i++) {
 		code = str.charCodeAt(i);
-		if (!(code > 47 && code < 58) { // numeric (0-9)
+		const notNumeric = !(code > 47 && code < 58);
+		if (notNumeric) { // numeric (0-9)
 		  return false;
 		}
 	  }
@@ -90,9 +91,12 @@ exports.isAlphanumeric = function(str){
 	var code, i, len;
     for (i = 0, len = str.length; i < len; i++) {
 		code = str.charCodeAt(i);
-		if (!(code > 47 && code < 58) && // numeric (0-9)
-			!(code > 64 && code < 91) && // upper alpha (A-Z)
-			!(code > 96 && code < 123)) { // lower alpha (a-z)
+
+		const notNumeric = !(code > 47 && code < 58);
+		const notUppercase = !(code > 64 && code < 91);
+		const notLowercase = !(code > 96 && code < 123);
+
+		if (notNumeric && notUppercase && notLowercase) {
 		  return false;
 		}
 	  }
