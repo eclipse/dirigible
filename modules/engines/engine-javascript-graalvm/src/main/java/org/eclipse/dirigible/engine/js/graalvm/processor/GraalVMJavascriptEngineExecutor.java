@@ -155,8 +155,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 .option("js.ecmascript-version", "2021");
 
         if (moduleOrCode.endsWith(".mjs")) {
-            contextBuilder.option("js.commonjs-require", "true")
-                    .fileSystem(new RegistryTruffleFileSystem(this));
+            contextBuilder.fileSystem(new RegistryTruffleFileSystem(this));
         }
 
 
