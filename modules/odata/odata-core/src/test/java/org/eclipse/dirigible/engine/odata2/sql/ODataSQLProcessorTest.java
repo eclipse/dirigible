@@ -25,6 +25,7 @@ import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 import org.easymock.EasyMockSupport;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
@@ -67,9 +68,11 @@ public class ODataSQLProcessorTest {
     @Before
     public void setup() throws ODataException, SQLException {
         ds = createDataSource();
-        edm = new AnnotationEdmProvider(Arrays.asList(Car.class, Driver.class));
+        Class<?> [] classes = {Car.class, Driver.class, Owner.class};
+
+        edm = new AnnotationEdmProvider(Arrays.asList(classes));
         edm.getSchemas();
-        sf = new OData2TestServiceFactory(ds, Car.class, Driver.class);
+        sf = new OData2TestServiceFactory(ds, classes);
         OData2TestUtils.initLiquibase(ds);
     }
 
@@ -212,11 +215,8 @@ public class ODataSQLProcessorTest {
                 + "\"Year\":2021," //
                 + "\"Price\":\"30000.0\"," //
                 + "\"Updated\":null," //
-                + "\"Drivers\":{" //
-                + "\"__deferred\":{" //
-                + "\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"" //
-                + "}" //
-                + "}" //
+                + "\"Drivers\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"}}," //
+                + "\"Owners\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Owners\"}}" //
                 + "}" //
                 + "}", //
                 res);
@@ -662,8 +662,7 @@ public class ODataSQLProcessorTest {
         Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
         assertEquals("Natalie", secondDriverProperties.get("FirstName"));
     }
-    
-    
+
     @Test
     public void testOrderByExpandedEntityWithoutExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -673,7 +672,6 @@ public class ODataSQLProcessorTest {
                 //expand missing
                 .accept("application/atom+xml").executeRequest(GET);
         assertEquals(500, response.getStatus()); //TODO refine the error codes, here it should be a bad request
-        
     }
 
     @Test

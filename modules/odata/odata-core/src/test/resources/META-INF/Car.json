@@ -11,5 +11,8 @@
     "_ref_Driver" : {
     	"joinColumn" :["ID"]
     },
+	"_ref_Owner" : {
+		"joinColumn" :["ID"]
+	},
 	"Id" : "ID"
 }
