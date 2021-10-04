@@ -30,7 +30,7 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_ID", columnDefinition = "BIGINT", nullable = false)
     private Long id;
 
-    @Column(name = "PROBLEM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "PROBLEM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 512)
     private String location;
 
     @Column(name = "PROBLEM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 32)
@@ -42,10 +42,10 @@ public class ProblemsModel {
     @Column(name = "PROBLEM_COLUMN", columnDefinition = "VARCHAR", nullable = false, length = 11)
     private String column;
 
-    @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "PROBLEM_CAUSE", columnDefinition = "VARCHAR", nullable = false, length = 1024)
     private String cause;
 
-    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Column(name = "PROBLEM_EXPECTED", columnDefinition = "VARCHAR", nullable = false, length = 512)
     private String expected;
 
     @Column(name = "PROBLEM_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)

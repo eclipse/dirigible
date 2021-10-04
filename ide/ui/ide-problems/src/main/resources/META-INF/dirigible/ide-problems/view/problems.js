@@ -19,6 +19,8 @@ angular.module('problems', [])
         function fetchData() {
             $http.get('/services/v4/ops/problems/search', {params: {'condition': $scope.searchText, 'limit': $scope.limit}}).then(function (response) {
                 $scope.problemsList = response.data.result;
+                $scope.selectedRows = response.data.selectedRows;
+                $scope.totalRows = response.data.totalRows;
             });
             $scope.selectAll = false;
         }
@@ -68,7 +70,7 @@ angular.module('problems', [])
 
         $scope.deleteByStatus = function (status) {
             $http.delete('/services/v4/ops/problems/delete/' + status).then(function () {
-                fetchData()
+                fetchData();
                 $scope.selectAll = false;
             });
         }
