@@ -139,7 +139,6 @@ nav.navbar {
   color: #d7e6f4;
 }
 nav.navbar a {
-  line-height: 21px;
   color: aliceblue !important;
 }
 nav.navbar .dropdown-menu {
