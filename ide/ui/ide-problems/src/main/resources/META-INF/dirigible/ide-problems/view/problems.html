@@ -76,9 +76,9 @@
                 <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
             </div>
         </div>
-        <div id="row" style="padding-top: 30px; padding-bottom: 5px">
+        <div id="row" style="padding-top: 20px; padding-bottom: 5px">
             <table class="table table-striped" ng-cloak>
-                <thead>
+                <thead style="position: sticky; top: 20px">
                     <tr>
                         <th><input type="checkbox" ng-model="selectAll" ng-change="checkAll()"></th>
                         <th>#</th>
@@ -144,11 +144,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="row" style="padding-bottom: 15px">
+        <div ng-show="problemsList.length !== 0 && selectedRows !== totalRows" class="row" style="padding: 5px">
             <button class="btn btn-primary" type="button" ng-click="problems.nextBatch(25)">
                 <i class="fa">Next</i>
             </button>
         </div>
+        <div style="padding: 5px">Selected: {{selectedRows}}/Total rows: {{totalRows}}
+            (Selected count is limited by the search terms)</div>
     </div>
 </body>
 
