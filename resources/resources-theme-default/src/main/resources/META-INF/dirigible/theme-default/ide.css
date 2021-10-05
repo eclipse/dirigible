@@ -96,9 +96,6 @@ nav.navbar {
   border: transparent;
   top: 0;
 }
-nav.navbar a {
-  line-height: 21px;
-}
 nav.navbar .dropdown-menu {
   border: 0px;
 }
