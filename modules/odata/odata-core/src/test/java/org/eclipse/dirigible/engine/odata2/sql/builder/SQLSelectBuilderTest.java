@@ -30,8 +30,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
-import org.eclipse.dirigible.engine.odata2.sql.builder.expression.SQLExpressionSelect;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause;
 import org.eclipse.dirigible.engine.odata2.sql.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
@@ -44,7 +43,7 @@ import java.util.*;
 import static java.util.Collections.EMPTY_MAP;
 import static org.junit.Assert.*;
 
-public class SQLQueryTest {
+public class SQLSelectBuilderTest {
 
     private static final String SERVER_SIDE_PAGING_DEFAULT_SUFFIX = String.format(" FETCH FIRST %d ROWS ONLY",
             SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE);
@@ -83,7 +82,7 @@ public class SQLQueryTest {
         PathSegment ps3 = new ODataPathSegmentImpl("$count", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps3), EMPTY_MAP);
 
-        SQLQuery q = builder.buildSelectCountQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectCountQuery(uriInfo);
         SQLContext context = new SQLContext();
         assertEquals("SELECT COUNT(*) FROM MPLHEADER AS T0", q.buildSelect(context));
     }
@@ -97,12 +96,12 @@ public class SQLQueryTest {
         params.put("$filter", "Status eq 'ERROR' and LogEnd lt datetime'2014-10-02T09:14:00'");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps2), params);
 
-        SQLQuery q = builder.buildSelectCountQuery(uriInfo);
-        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause());
+        SQLSelectBuilder q = builder.buildSelectCountQuery(uriInfo);
+        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClauseExpression().getWhereClause());
         assertFalse(q.getJoinWhereClauses().hasNext());
 
-        assertEquals("ERROR", q.getParams().get(0).getValue());
-        assertTrue(q.getParams().get(1).getValue() instanceof Calendar);
+        assertEquals("ERROR", q.getStatementParams().get(0).getValue());
+        assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
         assertEquals("SELECT COUNT(*) FROM MPLHEADER AS T0 WHERE T0.STATUS = ? AND T0.LOGEND < ?", q.buildSelect(context));
     }
 
@@ -114,12 +113,12 @@ public class SQLQueryTest {
         params.put("$filter", "Status eq 'ERROR' and LogEnd lt datetime'2014-10-02T09:14:00'");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause());
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClauseExpression().getWhereClause());
         assertFalse(q.getJoinWhereClauses().hasNext());
 
-        assertEquals("ERROR", q.getParams().get(0).getValue());
-        assertTrue(q.getParams().get(1).getValue() instanceof Calendar);
+        assertEquals("ERROR", q.getStatementParams().get(0).getValue());
+        assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
         assertEquals(
                 "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
@@ -137,12 +136,12 @@ public class SQLQueryTest {
         params.put("$filter", "Status eq 'ERROR' and LogEnd lt datetime'2014-10-02T09:14:00'");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClause());
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        assertEquals("T0.STATUS = ? AND T0.LOGEND < ?", q.getWhereClauseExpression().getWhereClause());
         assertFalse(q.getJoinWhereClauses().hasNext());
 
-        assertEquals("ERROR", q.getParams().get(0).getValue());
-        assertTrue(q.getParams().get(1).getValue() instanceof Calendar);
+        assertEquals("ERROR", q.getStatementParams().get(0).getValue());
+        assertTrue(q.getStatementParams().get(1).getValue() instanceof Calendar);
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
         assertEquals(
                 "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
@@ -166,7 +165,7 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$orderby", "Status, LogStart desc");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //the AlternateWebLink is mapped to MESSAGEID, therefore 2 times MESSAGEID
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
@@ -184,7 +183,7 @@ public class SQLQueryTest {
         params.put("$skip", "0");
         params.put("$top", "10");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
                         "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
                         "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
@@ -201,7 +200,7 @@ public class SQLQueryTest {
         params.put("$select", "Status");
         params.put("$orderby", "Status, LogStart desc");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //The primary key is always selected in addition
         assertEquals(
@@ -220,7 +219,7 @@ public class SQLQueryTest {
         params.put("$select", "MessageGuid");
         params.put("$orderby", "Status, LogStart desc");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //The primary key is always selected in addition
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
@@ -234,8 +233,8 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$select", "Status");
         params.put("$orderby", "Status, LogStart desc");
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         //The primary key is always selected in addition
         assertEquals(
@@ -253,9 +252,9 @@ public class SQLQueryTest {
         params.put("$orderby", "Status, LogStart desc");
         params.put("$top", "2");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
-        //We expect to have FETCH FIRST expression with derby
+        //We expect to have FETCH FIRST clause with derby
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
                 "FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART " +
                 "DESC FETCH FIRST 2 ROWS ONLY", q.buildSelect(context));
@@ -270,10 +269,10 @@ public class SQLQueryTest {
         params.put("$orderby", "Status, LogStart desc");
         params.put("$top", "2");
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
-        SQLContext context = new SQLContext(DatabaseProduct.POSTGRE_SQL);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLContext context = new SQLContext(SQLContext.DatabaseProduct.POSTGRE_SQL);
 
-        //We expect to have FETCH FIRST expression with derby
+        //We expect to have FETCH FIRST clause with derby
         assertEquals("SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC LIMIT 2",
                 q.buildSelect(context));
     }
@@ -283,10 +282,10 @@ public class SQLQueryTest {
         PathSegment ps1 = createPathSegment();
         Map<String, String> params = new HashMap<>();
         params.put("$skip", "3");
-        String $skiptoken = params.put("$skiptoken", "5");
+        params.put("$skiptoken", "5");
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualSkip = q.getSelectExpression().getSkip();
 
         assertEquals(8, actualSkip);
@@ -298,8 +297,8 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$skiptoken", "5");
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualSkip = q.getSelectExpression().getSkip();
 
         assertEquals(5, actualSkip);
@@ -311,8 +310,8 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$skip", "3");
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualSkip = q.getSelectExpression().getSkip();
 
         assertEquals(3, actualSkip);
@@ -323,11 +322,11 @@ public class SQLQueryTest {
         PathSegment ps1 = createPathSegment();
         Map<String, String> params = new HashMap<>();
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualSkip = q.getSelectExpression().getSkip();
 
-        assertEquals(SQLExpressionSelect.NOT_SET, actualSkip);
+        assertEquals(SQLSelectClause.NOT_SET, actualSkip);
     }
 
     @Test
@@ -336,12 +335,12 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$top", "3");
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualTop = q.getSelectExpression().getTop();
 
         assertEquals(3, actualTop);
-        assertEquals(false, q.isServersidePaging());
+        assertFalse(q.isServersidePaging());
     }
 
     @Test
@@ -349,12 +348,12 @@ public class SQLQueryTest {
         PathSegment ps1 = createPathSegment();
         Map<String, String> params = new HashMap<>();
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualTop = q.getSelectExpression().getTop();
 
         assertEquals(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE, actualTop);
-        assertEquals(true, q.isServersidePaging());
+        assertTrue(q.isServersidePaging());
     }
 
     @Test
@@ -363,8 +362,8 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$top", Integer.toString(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE + 10));
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         int actualTop = q.getSelectExpression().getTop();
 
         assertEquals(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE, actualTop);
@@ -378,7 +377,7 @@ public class SQLQueryTest {
         params.put("$top", Integer.toString(10));
 
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
         EasyMock.expect(rs.next()).andReturn(true).times(100);
@@ -398,12 +397,12 @@ public class SQLQueryTest {
         Map<String, String> params = new HashMap<>();
         params.put("$skip", Integer.toString(30));
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
         EasyMock.expect(rs.next()).andReturn(true).times(100);
-        Capture<Integer> capturedRelativeMoves = new Capture<>();
+        Capture<Integer> capturedRelativeMoves = EasyMock.newCapture();
         EasyMock.expect(rs.relative(EasyMock.captureInt(capturedRelativeMoves))).andReturn(true);
         EasyMock.replay(rs);
 
@@ -434,10 +433,10 @@ public class SQLQueryTest {
     public void testSelectWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         Map<String, String> params = new HashMap<>();
-        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", Collections.emptyMap());
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\", " +
                 "T0.ID4_3 AS \"ID4_3_T0\" " +
@@ -451,36 +450,36 @@ public class SQLQueryTest {
     public void testDeleteWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         Map<String, String> params = new HashMap<>();
-        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", Collections.emptyMap());
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLQuery q = builder.buildDeleteEntityQuery(uriInfo, mapKeys(uriInfo.getKeyPredicates()));
+        SQLDeleteBuilder deleteBuilder = builder.buildDeleteEntityQuery(uriInfo, mapKeys(uriInfo.getKeyPredicates()));
         SQLContext context = new SQLContext();
         String expected = "DELETE FROM ENTITY4_TABLE WHERE ID4_1=? AND ID4_2=?";
-        assertEquals(expected, q.buildDelete(context));
+        assertEquals(expected, deleteBuilder.build(context).sql());
     }
 
     @Test
     public void testInsertWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
-        Map<String, String> params = new HashMap<String, String>();
-        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", EMPTY_MAP);
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
+        Map<String, String> params = new HashMap<>();
+        PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", Collections.emptyMap());
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
         Map<String, Object> entity4=new HashMap<>();
         entity4.put("Id4_1", "1");
         entity4.put("Id4_2", "2");
         ODataEntry entity =new ODataEntryImpl(entity4, null, null, null);
 
-        SQLQuery q = builder.buildInsertEntityQuery(uriInfo, entity);
+        SQLInsertBuilder insertBuilder = builder.buildInsertEntityQuery(uriInfo, entity);
         SQLContext context = new SQLContext();
         String expected = "INSERT INTO ENTITY4_TABLE (ID4_1,ID4_2) VALUES (?,?)";
-        assertEquals(expected, q.buildInsert(context));
+        assertEquals(expected, insertBuilder.build(context).sql());
 
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
-        q = builder.buildInsertEntityQuery(uriInfo, entity);
+        SQLInsertBuilder insertBuilder2 = builder.buildInsertEntityQuery(uriInfo, entity);
         expected = "INSERT INTO \"ENTITY4_TABLE\" (\"ID4_1\",\"ID4_2\") VALUES (?,?)";
-        assertEquals(expected, q.buildInsert(context));
+        assertEquals(expected, insertBuilder2.build(context).sql());
     }
 
     @Test
@@ -510,13 +509,13 @@ public class SQLQueryTest {
         params.put("$top", Integer.toString(top));
         params.put("$skip", Integer.toString(skip));
 
-        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
-        SQLQuery q = builder.buildSelectEntitySetQuery(uriInfo);
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
 
         ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
 
         EasyMock.expect(rs.next()).andReturn(true).times(resultSetSize);
-        Capture<Integer> capturedRelativeMoves = new Capture<>();
+        Capture<Integer> capturedRelativeMoves = EasyMock.newCapture();
         EasyMock.expect(rs.relative(EasyMock.captureInt(capturedRelativeMoves))).andReturn(true);
         EasyMock.replay(rs);
 

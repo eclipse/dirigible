@@ -11,13 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.processor.ODataContext;
@@ -27,6 +20,11 @@ import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.util.Map;
+
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
 public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
@@ -57,15 +55,14 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
     @Override
     public Map<String, Object> onCustomizeExpandedNavigatonProperty(EdmStructuralType entityType, EdmStructuralType expandType,
-            Map<String, Object> expandInstance) throws EdmException {
+            Map<String, Object> expandInstance) {
         LOG.debug("Override this method to customize the navigation properties feed.");
         return expandInstance;
 
     }
 
     @Override
-    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
-            throws EdmException {
+    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) {
         return value;
     }
 

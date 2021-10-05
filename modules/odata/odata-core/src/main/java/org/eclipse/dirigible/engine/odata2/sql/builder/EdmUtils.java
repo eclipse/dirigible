@@ -13,7 +13,6 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
-import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.SelectItem;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.slf4j.Logger;
@@ -41,12 +40,11 @@ public final class EdmUtils {
      * @param entityType    the entity type
      * @return the selected properties
      * @throws EdmException                 in case of an edm error
-     * @throws ODataNotImplementedException in case of missing feature
      */
     public static Collection<EdmProperty> getSelectedProperties(List<SelectItem> selectedItems, EdmStructuralType entityType)
-            throws EdmException, ODataNotImplementedException {
+            throws EdmException {
         Collection<String> propertyNames = getSelectedPropertyNames(selectedItems, entityType);
-        Collection<EdmProperty> result = new ArrayList<EdmProperty>();
+        Collection<EdmProperty> result = new ArrayList<>();
 
         for (String propertyName : propertyNames) {
             EdmTyped property = entityType.getProperty(propertyName);
@@ -63,8 +61,8 @@ public final class EdmUtils {
      * @throws EdmException in case of EDM error
      */
     public static Collection<EdmProperty> getProperties(EdmStructuralType entityType) throws EdmException {
-        Collection<String> propertyNames = getSelectedPropertyNames(Collections.EMPTY_LIST, entityType);
-        Collection<EdmProperty> result = new ArrayList<EdmProperty>();
+        Collection<String> propertyNames = getSelectedPropertyNames(Collections.emptyList(), entityType);
+        Collection<EdmProperty> result = new ArrayList<>();
 
         for (String propertyName : propertyNames) {
             EdmTyped property = entityType.getProperty(propertyName);
@@ -73,11 +71,10 @@ public final class EdmUtils {
         return result;
     }
 
-    public static Collection<EdmProperty> getKeyProperties(EdmNavigationProperty property) throws EdmException {
-        if (property.getType() instanceof EdmEntityType){
-            EdmEntityType edmEntityType = (EdmEntityType) property.getType();
-            List<EdmProperty> keyProperties = edmEntityType.getKeyProperties();
-            return keyProperties;
+    public static Collection<EdmProperty> getKeyProperties(EdmNavigationProperty navigationEntityProperty) throws EdmException {
+        if (navigationEntityProperty.getType() instanceof EdmEntityType){
+            EdmEntityType edmEntityType = (EdmEntityType) navigationEntityProperty.getType();
+            return edmEntityType.getKeyProperties();
         } else {
             return Collections.emptyList();
         }
@@ -114,14 +111,14 @@ public final class EdmUtils {
             namesOfEdmPropertiesToBePopulated = allPropertyNames;
         } else {
             if (!allPropertyNames.containsAll(selectedPropertyNames)) {
-                Set<String> nonExistingProperties = new HashSet<String>(selectedPropertyNames);
+                Set<String> nonExistingProperties = new HashSet<>(selectedPropertyNames);
                 nonExistingProperties.removeAll(allPropertyNames);
-                throw new OData2Exception(format("Some of the selected properties don't exist: %s", nonExistingProperties.toString()),
+                throw new OData2Exception(format("Some of the selected properties don't exist: %s", nonExistingProperties),
                         HttpStatusCodes.BAD_REQUEST);
             }
             // Ensure key properties are always read even if not selected (those are required to build the self link, NullPointerException will occur otherwise)
             final List<String> keyPropertyNames = type instanceof EdmEntityType ? ((EdmEntityType) type).getKeyPropertyNames()
-                    : Collections.<String>emptyList();
+                    : Collections.emptyList();
             selectedPropertyNames.addAll(keyPropertyNames);
             namesOfEdmPropertiesToBePopulated = selectedPropertyNames;
         }
@@ -129,7 +126,7 @@ public final class EdmUtils {
     }
 
     private static Set<String> getSelectedPropertyNames(List<SelectItem> selectedPropertyNames) throws EdmException {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         for (SelectItem selectItem : selectedPropertyNames) {
             if (selectItem.getNavigationPropertySegments() != null && !(selectItem.getNavigationPropertySegments().isEmpty()) //
                     || selectItem.getProperty() == null //
@@ -144,12 +141,12 @@ public final class EdmUtils {
     }
 
     /**
-     * This method evaluates the expression based on the type instance. Used for
+     * This method evaluates the clause based on the type instance. Used for
      * adding escape characters where necessary.
      *
      * @param value         the datetime instance
      * @param edmSimpleType edm type
-     * @return the evaluated expression
+     * @return the evaluated clause
      */
     public static Object evaluateDateTimeExpressions(Object value, final EdmSimpleType edmSimpleType) {
         if (edmSimpleType == EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance()

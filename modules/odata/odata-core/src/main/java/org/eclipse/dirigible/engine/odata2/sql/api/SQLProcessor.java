@@ -11,17 +11,14 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
+
+import javax.sql.DataSource;
+import java.util.Map;
 
 public interface SQLProcessor extends ODataProcessor {
 

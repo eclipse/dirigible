@@ -11,19 +11,14 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.binding;
 
-import static java.lang.String.format;
+import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.edm.provider.Mapping;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.olingo.odata2.api.edm.EdmComplexType;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
-import org.apache.olingo.odata2.api.edm.provider.Mapping;
+import static java.lang.String.format;
 
 public class EdmTableBinding extends Mapping {
     
@@ -160,7 +155,7 @@ public class EdmTableBinding extends Mapping {
                 Map<String, Object> value = (Map) bindingData.get(propertyName);
                 String name = String.valueOf(value.get("name"));
                 String sqlType = String.valueOf(value.get("sqlType"));
-                return new ColumnInfo(name, sqlType);
+                return new ColumnInfo(name, sqlType); //TODO read this from the database metadata and perform a conversion there
             } else {
                 throw new IllegalArgumentException(format(PROPERTY_WRONG_CONFIGURATION, propertyName));
             }
