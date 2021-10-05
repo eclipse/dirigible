@@ -12,15 +12,14 @@
 package org.eclipse.dirigible.engine.odata2.sql.entities;
 
 import org.apache.olingo.odata2.api.annotation.edm.*;
-import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 
 import java.util.Calendar;
 
-import static org.eclipse.dirigible.engine.odata2.sql.entities.Car.CAR_2_DRIVERS_ASSOCIATION;
+import static org.eclipse.dirigible.engine.odata2.sql.entities.Car.CAR_2_TOWNER_ASSOCIATION;
 
-@EdmEntityType(name = "Driver")
-@EdmEntitySet(name = "Drivers")
-public class Driver {
+@EdmEntityType(name = "Owner")
+@EdmEntitySet(name = "Owners")
+public class Owner {
     @EdmKey
     @EdmProperty
     private String id;
@@ -31,10 +30,12 @@ public class Driver {
     @EdmProperty
     private String lastName;
 
-    @EdmNavigationProperty(toMultiplicity = Multiplicity.ZERO_OR_ONE, toType = Car.class, association = CAR_2_DRIVERS_ASSOCIATION)
+    @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.ZERO_OR_ONE, toType = Car.class, association = CAR_2_TOWNER_ASSOCIATION)
     private Car car;
 
     @EdmProperty(type = EdmType.DATE_TIME)
-    private Calendar updated;
+    private Calendar purchaseDate;
 
 }
+
+

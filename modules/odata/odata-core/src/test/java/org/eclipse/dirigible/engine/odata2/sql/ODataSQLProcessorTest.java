@@ -25,6 +25,7 @@ import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 import org.easymock.EasyMockSupport;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
@@ -67,9 +68,11 @@ public class ODataSQLProcessorTest {
     @Before
     public void setup() throws ODataException, SQLException {
         ds = createDataSource();
-        edm = new AnnotationEdmProvider(Arrays.asList(Car.class, Driver.class));
+        Class<?> [] classes = {Car.class, Driver.class, Owner.class};
+
+        edm = new AnnotationEdmProvider(Arrays.asList(classes));
         edm.getSchemas();
-        sf = new OData2TestServiceFactory(ds, Car.class, Driver.class);
+        sf = new OData2TestServiceFactory(ds, classes);
         OData2TestUtils.initLiquibase(ds);
     }
 
@@ -212,11 +215,8 @@ public class ODataSQLProcessorTest {
                 + "\"Year\":2021," //
                 + "\"Price\":\"30000.0\"," //
                 + "\"Updated\":null," //
-                + "\"Drivers\":{" //
-                + "\"__deferred\":{" //
-                + "\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"" //
-                + "}" //
-                + "}" //
+                + "\"Drivers\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"}}," //
+                + "\"Owners\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Owners\"}}" //
                 + "}" //
                 + "}", //
                 res);
@@ -662,8 +662,66 @@ public class ODataSQLProcessorTest {
         Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
         assertEquals("Natalie", secondDriverProperties.get("FirstName"));
     }
-    
-    
+
+    @Test
+    public void testGetEntityExpandTwoEntities() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars('b4dc3e22-bacb-44ed-aa02-70273525fb73')") //
+                .param("$expand", "Drivers,Owners") //
+                .accept("application/atom+xml").executeRequest(GET);
+
+        ODataEntry resultEntry = retrieveODataEntry(response, "Cars");
+
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+        Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+        assertEquals("Johnny", firstDriverProperties.get("FirstName"));
+        Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+        assertEquals("Natalie", secondDriverProperties.get("FirstName"));
+
+        List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+        assertEquals(4, owners.size());
+        Map<String, Object> firstOwnerProperties = owners.get(0).getProperties();
+        assertEquals("Johnny", firstOwnerProperties.get("FirstName"));
+        Map<String, Object> secondOwnerProperties = owners.get(1).getProperties();
+        assertEquals("Mihail", secondOwnerProperties.get("FirstName"));
+        Map<String, Object> thirdOwnerProperties = owners.get(2).getProperties();
+        assertEquals("Morgan", thirdOwnerProperties.get("FirstName"));
+        Map<String, Object> fourthOwnerProperties = owners.get(3).getProperties();
+        assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
+    }
+
+    @Test
+    public void testGetEntitySetExpandTwoEntities() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$filter", "Id eq 'b4dc3e22-bacb-44ed-aa02-70273525fb73'") //
+                .param("$expand", "Drivers,Owners") //
+                .accept("application/atom+xml").executeRequest(GET);
+
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        assertEquals(1, resultFeed.getEntries().size());
+        ODataEntry resultEntry = resultFeed.getEntries().get(0);
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+        Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
+        assertEquals("Johnny", firstDriverProperties.get("FirstName"));
+        Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
+        assertEquals("Natalie", secondDriverProperties.get("FirstName"));
+
+        List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+        assertEquals(4, owners.size());
+        Map<String, Object> firstOwnerProperties = owners.get(0).getProperties();
+        assertEquals("Johnny", firstOwnerProperties.get("FirstName"));
+        Map<String, Object> secondOwnerProperties = owners.get(1).getProperties();
+        assertEquals("Mihail", secondOwnerProperties.get("FirstName"));
+        Map<String, Object> thirdOwnerProperties = owners.get(2).getProperties();
+        assertEquals("Morgan", thirdOwnerProperties.get("FirstName"));
+        Map<String, Object> fourthOwnerProperties = owners.get(3).getProperties();
+        assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
+    }
+
+
     @Test
     public void testOrderByExpandedEntityWithoutExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -673,7 +731,6 @@ public class ODataSQLProcessorTest {
                 //expand missing
                 .accept("application/atom+xml").executeRequest(GET);
         assertEquals(500, response.getStatus()); //TODO refine the error codes, here it should be a bad request
-        
     }
 
     @Test

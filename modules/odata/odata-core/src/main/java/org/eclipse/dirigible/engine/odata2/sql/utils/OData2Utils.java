@@ -11,23 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import org.apache.olingo.odata2.api.ODataCallback;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmType;
-import org.apache.olingo.odata2.api.edm.EdmTypeKind;
-import org.apache.olingo.odata2.api.edm.EdmTyped;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
@@ -47,6 +33,8 @@ import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+
+import java.util.*;
 
 public class OData2Utils {
 
@@ -101,7 +89,7 @@ public class OData2Utils {
     }
 
     public static <T> ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, OData2ResultSetEntity data,
-            final String contentType) throws ODataException, EntityProviderException {
+            final String contentType) throws ODataException {
         if (data == null) {
             // Important NOTE:
             // T07.2016: After input by Olingo developers "No content" code is not
@@ -125,7 +113,7 @@ public class OData2Utils {
         final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
         final org.apache.olingo.odata2.api.edm.EdmEntityType entityType = targetEntitySet.getEntityType();
         final ExpandSelectTreeNode expandSelectTree = UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand());
-        final List<OData2ResultSetEntity> resultSetData = data != null ? Arrays.asList(data) : new ArrayList<OData2ResultSetEntity>();
+        final List<OData2ResultSetEntity> resultSetData = Arrays.asList(data);
 
         EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties.serviceRoot(context.getPathInfo().getServiceRoot())
                 .expandSelectTree(expandSelectTree).callbacks(buildExpand(context, resultSetData, entityType)).build();
@@ -136,7 +124,7 @@ public class OData2Utils {
     }
     
     public static <T> ODataResponse writeEntryProperty(ODataContext context, EdmProperty edmProperty, UriInfo uriInfo, OData2ResultSetEntity data,
-            final String contentType) throws ODataException, EntityProviderException {
+            final String contentType) throws ODataException {
         if (data == null) {
             ODataErrorContext errorContext = new ODataErrorContext();
             errorContext.setContentType(contentType);
@@ -152,7 +140,7 @@ public class OData2Utils {
     }
     
     public static <T> ODataResponse writeEntryPropertyValue(ODataContext context, EdmProperty edmProperty, UriInfo uriInfo, OData2ResultSetEntity data,
-            final String contentType) throws ODataException, EntityProviderException {
+            final String contentType) throws ODataException {
         if (data == null) {
             ODataErrorContext errorContext = new ODataErrorContext();
             errorContext.setContentType(contentType);
@@ -168,7 +156,7 @@ public class OData2Utils {
     }
 
     public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<OData2ResultSetEntity> feedEntities,
-            final String contentType, Integer count, String nextLink) throws ODataException, EntityProviderException {
+            final String contentType, Integer count, String nextLink) throws ODataException {
         final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
         // Map<String, Map<String, Object>> links = new HashMap<String,
         // Map<String,Object>>();
@@ -182,7 +170,7 @@ public class OData2Utils {
                 // .additionalLinks(links)
                 .callbacks(buildExpand(context, feedEntities, uriInfo.getTargetEntitySet().getEntityType())).nextLink(nextLink).build();
 
-        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> result = new ArrayList<>();
         for (OData2ResultSetEntity resultEntity : feedEntities) {
             result.add(resultEntity.getEntitiyPropertiesData());
         }
@@ -191,7 +179,7 @@ public class OData2Utils {
 
     @SuppressWarnings("unchecked")
     private static Map<String, ODataCallback> buildExpand(ODataContext context, List<OData2ResultSetEntity> data, EdmEntityType entityType)
-            throws ODataException, EntityProviderException {
+            throws ODataException {
         if (data == null || data.isEmpty()) {
             return Collections.EMPTY_MAP;
         } else {
@@ -210,13 +198,13 @@ public class OData2Utils {
      * @throws EntityProviderException in case of an error
      */
     public static Map<String, ODataCallback> getNavigationPropertiesWriteCallbacks(ODataContext context,
-            final List<OData2ResultSetEntity> feedData, final EdmEntityType entityType) throws ODataException, EntityProviderException {
+            final List<OData2ResultSetEntity> feedData, final EdmEntityType entityType) throws ODataException {
         final List<String> navigationPropertyNames = entityType.getNavigationPropertyNames();
         if (navigationPropertyNames.isEmpty()) {
             return null;
         } else {
             final ExpandSupportCallback callback = new ExpandSupportCallback(context, feedData);
-            Map<String, ODataCallback> callbacks = new HashMap<String, ODataCallback>();
+            Map<String, ODataCallback> callbacks = new HashMap<>();
             for (final String name : navigationPropertyNames) {
                 callbacks.put(name, callback);
             }
@@ -256,14 +244,17 @@ public class OData2Utils {
         return hasExpand(info.getExpand());
     }
 
-
     public static boolean isEmpty(EdmEntityType entityType, OData2ResultSetEntity entity) throws ODataException {
+        return isEmpty(entityType, entity.getEntitiyPropertiesData());
+    }
+
+    public static boolean isEmpty(EdmEntityType entityType, Map<String, Object> entityData) throws ODataException {
         final List<String> keyPropertyNames = entityType.getKeyPropertyNames();
         boolean allKeysNull = true;
         for (String keyPropertyName : keyPropertyNames) {
             EdmTyped keyProperty = entityType.getProperty(keyPropertyName);
             if (keyProperty instanceof EdmProperty) {
-                Object pv = entity.getEntitiyPropertiesData().get(keyProperty.getName());
+                Object pv = entityData.get(keyProperty.getName());
                 if (pv != null) {
                     allKeysNull = false;
                     break;

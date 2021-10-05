@@ -51,7 +51,6 @@ import java.util.*;
 
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getProperties;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.getSelectedProperties;
-import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpand;
 
 public abstract class AbstractSQLProcessor extends ODataSingleProcessor implements SQLProcessor {
@@ -174,25 +173,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
 							resultEntity = new OData2ResultSetEntity(data);
 						}
-						if (hasExpand(uriInfo.getExpand())) {// TODO remove the duplication here with the readEntitySet
-							for (List<NavigationPropertySegment> expandContents : uriInfo.getExpand()) {
-								for (NavigationPropertySegment expandContent : expandContents) {
-									EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
-									String expandTypeFqn = fqn(expandType);
-									if (!resultEntity.getExpandData().containsKey(expandTypeFqn)) {
-										resultEntity.getExpandData().put(expandTypeFqn, new ArrayList<>());
-									}
-									Map<String, Object> expandData = readResultSet(query, expandType,
-											EdmUtils.getProperties(expandType), resultSet);
-									if (OData2Utils.isEmpty(expandType, new OData2ResultSetEntity(expandData))) {
-										// nothing there, we need to find the next one
-										continue;
-									}
-									Map<String, Object> customizedExpandData = onCustomizeExpandedNavigatonProperty(
-											targetEntityType, expandType, expandData);
-									resultEntity.getExpandData().get(expandTypeFqn).add(customizedExpandData);
-								}
-							}
+						List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
+						if (hasExpand(expandEntities)) {
+							processExpand(targetEntityType, query, resultSet, resultEntity, expandEntities);
 						}
 					}
 				}
@@ -261,28 +244,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 							currentResultSetEntity = nextResultSetEntity;
 							targetEntitiesResult.add(currentResultSetEntity);
 						}
-
-						if (OData2Utils.hasExpand((UriInfo) uriInfo)) {
-							for (List<NavigationPropertySegment> expandContents : uriInfo.getExpand()) {
-								for (NavigationPropertySegment expandContent : expandContents) {
-									EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
-									String expandTypeFqn = fqn(expandType);
-									if (!currentResultSetEntity.getExpandData().containsKey(expandTypeFqn)) {
-										currentResultSetEntity.getExpandData().put(expandTypeFqn, new ArrayList<>());
-									}
-									Map<String, Object> expandData = readResultSet(query, expandType,
-											EdmUtils.getProperties(expandType), resultSet);
-									if (OData2Utils.isEmpty(expandType, new OData2ResultSetEntity(expandData))) {
-										// nothing there, we need to find the next one
-										continue;
-									}
-
-									Map<String, Object> customizedExpandData = onCustomizeExpandedNavigatonProperty(
-											targetEntityType, expandType, expandData);
-									currentResultSetEntity.getExpandData().get(expandTypeFqn)
-											.add(customizedExpandData);
-								}
-							}
+						List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
+						if (hasExpand(expandEntities)) {
+							processExpand(targetEntityType, query, resultSet, currentResultSetEntity, expandEntities);
 						}
 					}
 					boolean needsNextLink = query.isServersidePaging() && targetEntitiesResult.size() == this
@@ -296,6 +260,22 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		}
 		return OData2Utils.writeFeedWithExpand(getContext(), (UriInfo) uriInfo, targetEntitiesResult, contentType,
 				count, nextLink);
+	}
+
+	private void processExpand(EdmEntityType targetEntityType, SQLQuery query, ResultSet resultSet, OData2ResultSetEntity currentResultSetEntity,
+							   List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException {
+		for (List<NavigationPropertySegment> expandContents : expandEntities) {
+			for (NavigationPropertySegment expandContent : expandContents) {
+				EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
+				Map<String, Object> expandData = readResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
+				if (OData2Utils.isEmpty(expandType, expandData)) {
+					// nothing there, we need to find the next one
+					continue;
+				}
+				Map<String, Object> customizedExpandData = onCustomizeExpandedNavigatonProperty(targetEntityType, expandType, expandData);
+				currentResultSetEntity.addExpandedEntityProperties(expandType, customizedExpandData);
+			}
+		}
 	}
 
 	public List<String> readIdsForExpand (final GetEntitySetUriInfo uriInfo) throws ODataException {
