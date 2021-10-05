@@ -32,30 +32,7 @@
 				<maven.javadoc.skip>true</maven.javadoc.skip>
 			</properties>
 			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>${exec.maven.plugin}</version>
-						<executions>
-							<execution>
-								<id>install-cjs-to-es6</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<workingDirectory>../../../</workingDirectory>
-							<executable>npx</executable>
-							<arguments>
-								<argument>./cjs-to-es6</argument>
-								<argument>api/api-javascript/api-io/target/classes/META-INF/dirigible/io/v4</argument>
-							</arguments>
-						</configuration>
-					</plugin>
-				</plugins>
+
 			</build>
 		</profile>
 	</profiles>

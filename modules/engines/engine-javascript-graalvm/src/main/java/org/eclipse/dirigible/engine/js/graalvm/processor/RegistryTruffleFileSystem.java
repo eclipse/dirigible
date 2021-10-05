@@ -108,9 +108,11 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
+
         var source = "";
         var pathString = path.toString();
         var root = IRepositoryStructure.PATH_REGISTRY_PUBLIC;
+
 
         if (!pathString.endsWith(".js") && !pathString.endsWith(".mjs")) {
             var module = executor.retrieveModule(root, pathString, ".mjs");

@@ -603,7 +603,7 @@
                             triggerCharacters: ["\"", "'"],
                             provideCompletionItems: function (model, position) {
                                 let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
-                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0) {
+                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0 && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0 ) {
                                     return { suggestions: [] };
                                 }
                                 let wordPosition = model.getWordUntilPosition(position);
