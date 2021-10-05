@@ -436,6 +436,58 @@ public class ODataSQLProcessorTest {
         assertEquals(50000.0d, properties.get("Price"));
     }
 
+    @Test
+    public void testPatchEntity() throws Exception {
+        Response existingCar = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                .accept("application/json").executeRequest(GET);
+        assertEquals(200, existingCar.getStatus());
+
+        String content = "{" //
+                + "  \"d\": {" //
+                + "    \"__metadata\": {" //
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+                + "    }," //
+                + "    \"Price\": 50001.0" //
+                + " }" + "}";
+
+        Response response = modifyingRequestBuilder(sf, content)//
+                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                .accept("application/json")//
+                .content(content)//
+                .param("content-type", "application/json")//
+                .contentSize(content.length()).executeRequest(PATCH);
+        assertEquals(204, response.getStatus());
+
+        existingCar = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars('639cac17-4cfd-4d94-b5d0-111fd5488423')") //
+                .accept("application/json").executeRequest(GET);
+        assertEquals(200, existingCar.getStatus());
+        ODataEntry resultEntry = retrieveODataEntry(existingCar, "Cars");
+        Map<String, Object> properties = resultEntry.getProperties();
+        assertEquals("BMW", properties.get("Make"));
+        assertEquals("530e", properties.get("Model"));
+        assertEquals(2021, properties.get("Year"));
+        assertEquals(50001.0d, properties.get("Price"));
+    }
+
+    @Test
+    public void testPatchEntityNonExistingId() throws Exception {
+        String content = "{" //
+                + "  \"d\": {" //
+                + "    \"__metadata\": {" //
+                + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+                + "    }," //
+                + "    \"Price\": 50001.0" //
+                + " }" + "}";
+        Response response = modifyingRequestBuilder(sf, content)//
+                .segments("Cars('88888888-8888-8888-8888-888888888888')") //
+                .accept("application/json")//
+                .content(content)//
+                .param("content-type", "application/json")//
+                .contentSize(content.length()).executeRequest(PATCH);
+        assertEquals(404, response.getStatus());
+    }
 
     @Test
     public void testPutEntityWithFilterNotAllowed() throws Exception {

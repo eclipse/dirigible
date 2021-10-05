@@ -31,12 +31,12 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 public class SQLExpressionUpdate implements SQLExpression {
 
 	private final SQLQuery query;
-	private EdmEntityType target;
-	private ODataEntry requestEntry;
+	private final EdmEntityType target;
+	private final ODataEntry requestEntry;
 	private final List<String> nonKeyColumnNames = new ArrayList<>();
 	private final List<Object> queryData = new ArrayList<>();
 	private final List<EdmProperty> queryOdataProperties = new ArrayList<>();
-	private Map<String, Object> uriKeyProperties;
+	private final Map<String, Object> uriKeyProperties;
 
 	public SQLExpressionUpdate(final SQLQuery parent, EdmEntityType target, ODataEntry requestEntry, Map<String, Object> uriKeys) {
 		this.query = parent;
@@ -47,18 +47,15 @@ public class SQLExpressionUpdate implements SQLExpression {
 
 	@Override
 	public String evaluate(final SQLContext context, final ExpressionType type) throws EdmException {
-		switch (type) {
-		case TABLE:
+		if (type == ExpressionType.TABLE) {
 			return buildStatement(context);
-		default:
-			throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type,
-					HttpStatusCodes.INTERNAL_SERVER_ERROR);
 		}
+		throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type, HttpStatusCodes.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
 	public boolean isEmpty() throws EdmException {
-		return (nonKeyColumnNames.size() == 0 ? true : false);
+		return (nonKeyColumnNames.size() == 0);
 	}
 
 	public EdmStructuralType getTarget() {
@@ -68,7 +65,6 @@ public class SQLExpressionUpdate implements SQLExpression {
 	public SQLQuery build() throws ODataException {
 		query.grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = requestEntry.getProperties();
-
 
 		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
 			if (entryValues.containsKey(property.getName()) && !isKeyProperty(target, property)) {
@@ -129,7 +125,7 @@ public class SQLExpressionUpdate implements SQLExpression {
 
 	protected boolean isUpdateTarget(final EdmStructuralType target) {
 		// always select the entity target
-		return fqn(query.getUpdateExpression().getTarget()).equals(fqn(target)) ? true : false;
+		return fqn(query.getUpdateExpression().getTarget()).equals(fqn(target));
 	}
 
 	protected String buildColumnList(final SQLContext context) {

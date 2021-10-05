@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.commons.InlineCount;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
@@ -184,7 +185,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			LOG.error("Unable to serve request", e);
 			throw new ODataException(e);
 		}
-		
 		ODataResponse response = OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
 		return response;
 	}
@@ -622,14 +622,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			LOG.error("Unable to serve request", e);
 			throw new ODataException(e);
 		}
-
-		ODataContext context = getContext();
-		EntityProviderWriteProperties writeProperties = EntityProviderWriteProperties
-				.serviceRoot(context.getPathInfo().getServiceRoot()).expandSelectTree(entry.getExpandSelectTree())
-				.build();
-		final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry.getProperties(),
-				writeProperties);
-		
+		ODataResponse response = ODataResponse.newBuilder().status(HttpStatusCodes.NO_CONTENT).build();
 		this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry);
 		return response;
 	}
