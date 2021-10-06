@@ -15,7 +15,9 @@ import static org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascrip
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,7 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
+import org.eclipse.dirigible.engine.js.graalvm.processor.ExportGenerator;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -142,5 +145,13 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		} finally {
 			ThreadContextFacade.tearDown();
 		}
+	}
+
+	@Ignore
+	@Test
+	public void generateMjsTest() throws IOException {
+		ExportGenerator generator = new ExportGenerator(graalVMJavascriptEngineExecutor);
+		String output = generator.generate(Paths.get("/utils/v4"));
+		System.out.println(output);
 	}
 }

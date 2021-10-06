@@ -1,1 +1,0 @@
-export function decode(input) { return 2; };
