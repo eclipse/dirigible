@@ -1,0 +1,22 @@
+[
+  {
+    "name": "security/v4/user",
+    "description": "User API",
+    "api": "user",
+    "versionedPaths": [
+      "security/v3/user",
+      "security/v4/user"
+    ],
+    "pathDefault": "security/v4/user"
+  },
+  {
+    "name": "security/v4/oauth",
+    "description": "OAuth API",
+    "api": "oauth",
+    "versionedPaths": [
+      "security/v3/oauth",
+      "security/v4/oauth"
+    ],
+    "pathDefault": "security/v4/oauth"
+  }
+]

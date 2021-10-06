@@ -39,3 +39,4 @@ exports.getContent = function() {
 		description: "XML API"
 	}];
 };
+
