@@ -40,10 +40,12 @@ import java.util.Set;
 
 public class RegistryTruffleFileSystem implements FileSystem {
     private final IScriptEngineExecutor executor;
+    private final String project;
     private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
-    public RegistryTruffleFileSystem(IScriptEngineExecutor executor) {
+    public RegistryTruffleFileSystem(IScriptEngineExecutor executor, String project) {
         this.executor = executor;
+        this.project = "/" + project;
     }
 
     @Override
@@ -139,8 +141,11 @@ public class RegistryTruffleFileSystem implements FileSystem {
     private Path handlePossibleDirigiblePath(Path path) {
         var pathString = path.toString();
 
-        // skip relative paths and URI paths
-        if (pathString.contains("./") || pathString.contains("://")) {
+        if (pathString.startsWith("./")) {
+            return Path.of(project, pathString);
+        }
+
+        if (pathString.startsWith("/")) {
             return path;
         }
 

@@ -30,6 +30,7 @@ import javax.script.ScriptEngineManager;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
 import org.eclipse.dirigible.api.v3.core.ContextFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -124,12 +125,12 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
      * @throws ScriptingException the scripting exception
      */
     public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
-        logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
-        logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
-
         if (moduleOrCode == null) {
             throw new ScriptingException("JavaScript module name cannot be null");
         }
+
+        logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
+        logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
         if (executionContext == null) {
             executionContext = new HashMap<Object, Object>();
@@ -155,7 +156,12 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 .option("js.ecmascript-version", "2021");
 
         if (moduleOrCode.endsWith(".mjs")) {
-            contextBuilder.fileSystem(new RegistryTruffleFileSystem(this));
+            if (moduleOrCode.startsWith("/")){
+                moduleOrCode = StringUtils.substringAfter(moduleOrCode, "/");
+            }
+
+            var project = StringUtils.substringBefore(moduleOrCode, "/");
+            contextBuilder.fileSystem(new RegistryTruffleFileSystem(this, project));
         }
 
 
