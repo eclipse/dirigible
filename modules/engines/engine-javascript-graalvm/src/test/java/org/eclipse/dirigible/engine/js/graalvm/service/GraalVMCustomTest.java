@@ -17,7 +17,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -147,11 +149,13 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void generateMjsTest() throws IOException {
 		ExportGenerator generator = new ExportGenerator(graalVMJavascriptEngineExecutor);
-		String output = generator.generate(Paths.get("/utils/v4"));
+		String output = generator.generate(Paths.get("/utils/v4"), "v4");
 		System.out.println(output);
+
+
+
 	}
 }

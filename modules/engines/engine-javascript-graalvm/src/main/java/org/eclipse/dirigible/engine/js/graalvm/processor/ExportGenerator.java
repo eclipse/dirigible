@@ -12,13 +12,13 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ExportGenerator {
 
@@ -31,18 +31,21 @@ public class ExportGenerator {
         this.executor = executor;
     }
 
-    public String generate(Path path) throws IOException {
-        path = resolveApiModuleJson(path);
+    public String generate(Path path, String apiVersion) {
+        path = path.resolve(apiModuleJsonPath);
         ApiModule[] modules = readApiModuleJson(path);
-
         StringBuilder source = new StringBuilder();
         StringBuilder moduleNames = new StringBuilder();
+
         for(ApiModule module : modules) {
+            String api = module.getApi();
+            String dir = resolvePath(module, apiVersion);
+
             source.append(exportPattern
-                    .replace("<name_placeholder>", module.getApiName())
-                    .replace("<path_placeholder>", module.getName()));
+                    .replace("<name_placeholder>", api)
+                    .replace("<path_placeholder>", dir));
             source.append(System.lineSeparator());
-            moduleNames.append(module.getApiName());
+            moduleNames.append(api);
             moduleNames.append(',');
         }
 
@@ -55,19 +58,38 @@ public class ExportGenerator {
         return source.toString();
     }
 
-    private ApiModule[] readApiModuleJson(Path path) throws IOException {
+    private ApiModule[] readApiModuleJson(Path path) {
         Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
         var module = executor.retrieveModule("/registry/public",
                 path.toString().replace(".json", ""), ".json");
         String apiModuleJson = new String(module.getContent(), StandardCharsets.UTF_8);
         return gson.fromJson(apiModuleJson, ApiModule[].class);
     }
 
-    private Path resolveApiModuleJson(Path path) {
-        if(path.endsWith("v4")) {
-            path = path.getParent();
+    private String resolvePath(ApiModule module, String apiVersion) {
+        if(!apiVersion.isEmpty()) {
+            var foundPaths = Arrays.stream(module.getVersionedPaths())
+                    .filter(p -> p.contains(apiVersion))
+                    .collect(Collectors.toList());
+
+            if(foundPaths.size() == 1) {
+                return foundPaths.get(0);
+            }
+            else {
+                var message = new StringBuilder();
+                message.append("Searching for single api path containing '");
+                message.append(apiVersion);
+                message.append("' but found: ");
+                for(var item : foundPaths)
+                {
+                    message.append("'");
+                    message.append(item);
+                    message.append("' ");
+                }
+                throw new MultipleMatchingApiPathsException(message.toString());
+            }
         }
-        return path.resolve(apiModuleJsonPath);
+
+        return module.getPathDefault();
     }
 }

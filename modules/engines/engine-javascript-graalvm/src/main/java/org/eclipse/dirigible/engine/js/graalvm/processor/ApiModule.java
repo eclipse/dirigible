@@ -11,10 +11,11 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class ApiModule {
     private String name;
+    private String api;
+    private String[] versionedPaths;
+    private String pathDefault;
 
     public String getName() {
         return name;
@@ -24,7 +25,28 @@ public class ApiModule {
         this.name = name;
     }
 
-    public String getApiName() {
-        return StringUtils.substringAfterLast(name, "/");
+    public String getApi() {
+        return api;
     }
+
+    public void setApi(String api) {
+        this.api = api;
+    }
+
+    public String[] getVersionedPaths() {
+        return versionedPaths;
+    }
+
+    public void setVersionedPaths(String[] versionedPaths) {
+        this.versionedPaths = versionedPaths;
+    }
+
+    public String getPathDefault() {
+        return pathDefault;
+    }
+
+    public void setPathDefault(String pathDefault) {
+        this.pathDefault = pathDefault;
+    }
+
 }

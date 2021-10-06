@@ -12,9 +12,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -26,8 +24,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.io.FileSystem;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
@@ -41,7 +37,8 @@ import java.util.Set;
 public class RegistryTruffleFileSystem implements FileSystem {
     private final IScriptEngineExecutor executor;
     private final String project;
-    private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    private final IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+
 
     public RegistryTruffleFileSystem(IScriptEngineExecutor executor, String project) {
         this.executor = executor;
@@ -158,17 +155,22 @@ public class RegistryTruffleFileSystem implements FileSystem {
     }
 
     private String handleDirigibleScopePath(Path path) throws IOException {
-        var dirigibleScope = "/@dirigible";
+        var dirigibleScopeDefault = "/@dirigible";
+        var dirigibleScopeVersioned = "/@dirigible-";
+        var pathString = path.toString();
 
-        if(path.startsWith(dirigibleScope))
-        {
-            var pathString = path.toString();
-            pathString = pathString.substring(dirigibleScope.length()).replace('-', '/');
-            //var api = StringUtils.substringBeforeLast(pathString, "/");
-            //api = StringUtils.substringAfterLast(api,"/") + ".mjs";
-            //pathString += "/" + api;
+        if(pathString.startsWith(dirigibleScopeVersioned)) {
+            pathString = pathString.substring(dirigibleScopeVersioned.length() - 1).replace('-', '/');
+            String apiVersion = pathString.split("/")[1];
+            String apiVersionPath = "/" + apiVersion;
+            pathString = pathString.replace(apiVersionPath, "");
             ExportGenerator generator = new ExportGenerator(executor);
-            return generator.generate(Paths.get(pathString));
+            return generator.generate(Paths.get(pathString), apiVersion);
+        }
+        else if(pathString.startsWith(dirigibleScopeDefault)) {
+            pathString = pathString.substring(dirigibleScopeDefault.length()).replace('-', '/');
+            ExportGenerator generator = new ExportGenerator(executor);
+            return generator.generate(Paths.get(pathString), "");
         }
 
         return "";
