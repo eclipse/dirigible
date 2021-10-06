@@ -146,7 +146,7 @@ public class RegistryTruffleFileSystem implements FileSystem {
     private Path handlePossibleDirigiblePath(Path path) {
         var pathString = path.toString();
 
-        if (pathString.startsWith("./")) {
+        if (pathString.startsWith("./") || pathString.startsWith("../")) {
             return Path.of(project, pathString);
         }
 
@@ -155,10 +155,6 @@ public class RegistryTruffleFileSystem implements FileSystem {
         }
 
         return Path.of("/" + pathString);
-    }
-
-    private String handleDirigibleScopePath(String path) throws IOException {
-        return handleDirigibleScopePath(Paths.get(path));
     }
 
     private String handleDirigibleScopePath(Path path) throws IOException {

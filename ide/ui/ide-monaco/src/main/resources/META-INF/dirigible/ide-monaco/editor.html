@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Embedded Monaco Editor</title>
     <link data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet"
-        href="monaco-editor/min/vs/editor/editor.main.css">
+          href="monaco-editor/min/vs/editor/editor.main.css">
     <style>
         body {
             overflow: hidden;
@@ -27,9 +27,9 @@
 
 <body id="monaco-browser" spellcheck="false">
 
-    <script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
+<script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
 
-    <div id="embeddedEditor"></div>
+<div id="embeddedEditor"></div>
 
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
     <script type="text/javascript" src="js/assignmentsParser.js"></script>
@@ -599,11 +599,14 @@
                         });
                         monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
                         monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
+                        monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                            'declare module "@dirigible/utils" { declare module base64 { function encode(text: string); }}'
+                        )
                         monaco.languages.registerCompletionItemProvider('javascript', {
                             triggerCharacters: ["\"", "'"],
                             provideCompletionItems: function (model, position) {
                                 let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
-                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0 && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0 ) {
+                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0 && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
                                     return { suggestions: [] };
                                 }
                                 let wordPosition = model.getWordUntilPosition(position);
@@ -634,102 +637,102 @@
                                 };
                             }
                         });
-                        monaco.languages.registerCompletionItemProvider('javascript', {
-                            triggerCharacters: ["."],
-                            provideCompletionItems: function (model, position) {
-                                let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
+                        // monaco.languages.registerCompletionItemProvider('javascript', {
+                        //     triggerCharacters: ["."],
+                        //     provideCompletionItems: function (model, position) {
+                        //         let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
 
-                                let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
-                                let afterDotToken = token.substring(token.indexOf(".") + 1);
-                                let tokenParts = token.split(".");
-                                let moduleName = moduleImport ? moduleImport.module : null;
-                                if (tokenParts != null && tokenParts.length > 2) {
-                                    moduleName = null;
-                                }
-                                let nestedObjectKeyword = null;
-                                if (!moduleName) {
-                                    let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
-                                    if (nestedKeyword) {
-                                        nestedObjectKeyword = nestedKeyword.split(".")[0];
-                                    }
-                                }
-                                if (!moduleName && !nestedObjectKeyword) {
-                                    return { suggestions: [] };
-                                }
-                                let wordPosition = model.getWordUntilPosition(position);
-                                let word = wordPosition.word;
-                                let range = {
-                                    startLineNumber: position.lineNumber,
-                                    endLineNumber: position.lineNumber,
-                                    startColumn: wordPosition.startColumn,
-                                    endColumn: wordPosition.endColumn
-                                };
-                                let suggestions = [];
-                                let moduleSuggestions = codeCompletionSuggestions[moduleName];
-                                if (moduleSuggestions) {
-                                    Object.keys(moduleSuggestions["exports"]).forEach(suggestionName => {
-                                        let suggestion = moduleSuggestions["exports"][suggestionName];
-                                        suggestion.name = suggestion.definition;
-                                        suggestions.push(suggestion);
-                                    });
-                                } else if (nestedObjectKeyword) {
-                                    let assignment = codeCompletionAssignments[nestedObjectKeyword];
-                                    if (assignment) {
-                                        let assignmentInfo = {
-                                            parentModule: null,
-                                            methods: []
-                                        };
-                                        traverseAssignment(assignment, assignmentInfo);
+                        //         let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
+                        //         let afterDotToken = token.substring(token.indexOf(".") + 1);
+                        //         let tokenParts = token.split(".");
+                        //         let moduleName = moduleImport ? moduleImport.module : null;
+                        //         if (tokenParts != null && tokenParts.length > 2) {
+                        //             moduleName = null;
+                        //         }
+                        //         let nestedObjectKeyword = null;
+                        //         if (!moduleName) {
+                        //             let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
+                        //             if (nestedKeyword) {
+                        //                 nestedObjectKeyword = nestedKeyword.split(".")[0];
+                        //             }
+                        //         }
+                        //         if (!moduleName && !nestedObjectKeyword) {
+                        //             return { suggestions: [] };
+                        //         }
+                        //         let wordPosition = model.getWordUntilPosition(position);
+                        //         let word = wordPosition.word;
+                        //         let range = {
+                        //             startLineNumber: position.lineNumber,
+                        //             endLineNumber: position.lineNumber,
+                        //             startColumn: wordPosition.startColumn,
+                        //             endColumn: wordPosition.endColumn
+                        //         };
+                        //         let suggestions = [];
+                        //         let moduleSuggestions = codeCompletionSuggestions[moduleName];
+                        //         if (moduleSuggestions) {
+                        //             Object.keys(moduleSuggestions["exports"]).forEach(suggestionName => {
+                        //                 let suggestion = moduleSuggestions["exports"][suggestionName];
+                        //                 suggestion.name = suggestion.definition;
+                        //                 suggestions.push(suggestion);
+                        //             });
+                        //         } else if (nestedObjectKeyword) {
+                        //             let assignment = codeCompletionAssignments[nestedObjectKeyword];
+                        //             if (assignment) {
+                        //                 let assignmentInfo = {
+                        //                     parentModule: null,
+                        //                     methods: []
+                        //                 };
+                        //                 traverseAssignment(assignment, assignmentInfo);
 
-                                        let parentObject = "exports";
-                                        for (let i = 0; i < assignmentInfo.methods.length; i++) {
-                                            parentObject = codeCompletionSuggestions[assignmentInfo.parentModule][parentObject][assignmentInfo.methods[i]].returnType;
-                                        }
+                        //                 let parentObject = "exports";
+                        //                 for (let i = 0; i < assignmentInfo.methods.length; i++) {
+                        //                     parentObject = codeCompletionSuggestions[assignmentInfo.parentModule][parentObject][assignmentInfo.methods[i]].returnType;
+                        //                 }
 
-                                        let moduleSuggestions = codeCompletionSuggestions[assignmentInfo.parentModule];
-                                        Object.keys(moduleSuggestions[parentObject]).forEach(suggestionName => {
-                                            let suggestion = moduleSuggestions[parentObject][suggestionName];
-                                            suggestion.name = suggestion.definition;
-                                            suggestions.push(suggestion);
-                                        });
-                                    }
-                                }
-                                return {
-                                    suggestions: suggestions
-                                        .filter(function (e) {
-                                            if (word.length > 0) {
-                                                return e.name.toLowerCase().startsWith(word.toLowerCase());
-                                            }
-                                            return true;
-                                        })
-                                        .map(function (e) {
-                                            return {
-                                                label: e.name,
-                                                kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
-                                                documentation: {
-                                                    value: e.documentation
-                                                },
-                                                detail: e.isFunction ? "function " + e.name : e.name,
-                                                insertText: e.name,
-                                                range: range
-                                            }
-                                        })
-                                };
-                            }
-                        });
+                        //                 let moduleSuggestions = codeCompletionSuggestions[assignmentInfo.parentModule];
+                        //                 Object.keys(moduleSuggestions[parentObject]).forEach(suggestionName => {
+                        //                     let suggestion = moduleSuggestions[parentObject][suggestionName];
+                        //                     suggestion.name = suggestion.definition;
+                        //                     suggestions.push(suggestion);
+                        //                 });
+                        //             }
+                        //         }
+                        //         return {
+                        //             suggestions: suggestions
+                        //                 .filter(function (e) {
+                        //                     if (word.length > 0) {
+                        //                         return e.name.toLowerCase().startsWith(word.toLowerCase());
+                        //                     }
+                        //                     return true;
+                        //                 })
+                        //                 .map(function (e) {
+                        //                     return {
+                        //                         label: e.name,
+                        //                         kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
+                        //                         documentation: {
+                        //                             value: e.documentation
+                        //                         },
+                        //                         detail: e.isFunction ? "function " + e.name : e.name,
+                        //                         insertText: e.name,
+                        //                         range: range
+                        //                     }
+                        //                 })
+                        //         };
+                        //     }
+                        // });
                     });
                 monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
                     noSemanticValidation: false,
                     noSyntaxValidation: false,
                     noSuggestionDiagnostics: false,
                     diagnosticCodesToIgnore: [
+                        2307,
                         2304, // Cannot find name 'exports'.(2304)
                         2683, // 'this' implicitly has type 'any' because it does not have a type annotation.(2683)
                         7005, // Variable 'ctx' implicitly has an 'any' type.(7005)
                         7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
                         7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
                         7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
-                        2307  // Cannot find module 'utils/v4/base64.mjs'.(2307)
                     ]
                 });
                 monaco.languages.typescript.javascriptDefaults.setCompilerOptions({

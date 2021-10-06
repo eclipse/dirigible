@@ -160,7 +160,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 moduleOrCode = StringUtils.substringAfter(moduleOrCode, "/");
             }
 
-            var project = StringUtils.substringBefore(moduleOrCode, "/");
+            var project = StringUtils.substringBeforeLast(moduleOrCode, "/");
             contextBuilder.fileSystem(new RegistryTruffleFileSystem(this, project));
         }
 
