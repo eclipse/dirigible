@@ -1,0 +1,7 @@
+[{
+  "name": "cassandra/client",
+  "description": "Cassandra API",
+  "api": "cassandra",
+  "versionedPaths": [ "cassandra/client"],
+  "pathDefault": "cassandra/client"
+}]
