@@ -50,12 +50,22 @@ function MailClient(native) {
             type: 'text'
         }
 
-        this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, [part]);
+        try {
+            this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, [part]);
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(error);
+        }
     };
 
     this.sendMultipart = function (from, recipients, subject, parts) {
         var recipients = processRecipients(recipients);
-        return this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, stringifyPartData(parts));
+        try {
+            return this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, stringifyPartData(parts));
+        } catch (error) {
+            console.error(error.message);
+            throw new Error(error);
+        }
     };
 }
 
