@@ -12,41 +12,37 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 public class ApiModule {
-    private String name;
-    private String api;
-    private String[] versionedPaths;
-    private String pathDefault;
+    private final String name;
+    private final String api;
+    private final String[] versionedPaths;
+    private final String pathDefault;
+    private final boolean isPackageDescription;
+
+    public ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription) {
+        this.name = name;
+        this.api = api;
+        this.versionedPaths = versionedPaths;
+        this.pathDefault = pathDefault;
+        this.isPackageDescription = isPackageDescription;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getApi() {
         return api;
     }
 
-    public void setApi(String api) {
-        this.api = api;
-    }
-
     public String[] getVersionedPaths() {
         return versionedPaths;
-    }
-
-    public void setVersionedPaths(String[] versionedPaths) {
-        this.versionedPaths = versionedPaths;
     }
 
     public String getPathDefault() {
         return pathDefault;
     }
 
-    public void setPathDefault(String pathDefault) {
-        this.pathDefault = pathDefault;
+    public boolean isPackageDescription() {
+        return isPackageDescription;
     }
-
 }

@@ -11,6 +11,11 @@
  */
 exports.getContent = function() {
 	return [{
+              "name": "@dirigible/utils",
+              "description": "Dirigible Utils module",
+              "isPackageDescription": true
+            },
+    {
 		name: "utils/v4/alphanumeric",
 		description: "Alphanumeric API"
 	}, {

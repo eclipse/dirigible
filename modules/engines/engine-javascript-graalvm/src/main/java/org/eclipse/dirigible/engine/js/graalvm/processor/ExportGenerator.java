@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import com.google.gson.Gson;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -37,7 +38,11 @@ public class ExportGenerator {
         StringBuilder source = new StringBuilder();
         StringBuilder moduleNames = new StringBuilder();
 
-        for(ApiModule module : modules) {
+        for (ApiModule module : modules) {
+            if (module.isPackageDescription()) {
+                continue;
+            }
+
             String api = module.getApi();
             String dir = resolvePath(module, apiVersion);
 
@@ -60,36 +65,34 @@ public class ExportGenerator {
 
     private ApiModule[] readApiModuleJson(Path path) {
         Gson gson = new Gson();
-        var module = executor.retrieveModule("/registry/public",
+        var module = executor.retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
                 path.toString().replace(".json", ""), ".json");
         String apiModuleJson = new String(module.getContent(), StandardCharsets.UTF_8);
         return gson.fromJson(apiModuleJson, ApiModule[].class);
     }
 
     private String resolvePath(ApiModule module, String apiVersion) {
-        if(!apiVersion.isEmpty()) {
-            var foundPaths = Arrays.stream(module.getVersionedPaths())
-                    .filter(p -> p.contains(apiVersion))
-                    .collect(Collectors.toList());
-
-            if(foundPaths.size() == 1) {
-                return foundPaths.get(0);
-            }
-            else {
-                var message = new StringBuilder();
-                message.append("Searching for single api path containing '");
-                message.append(apiVersion);
-                message.append("' but found: ");
-                for(var item : foundPaths)
-                {
-                    message.append("'");
-                    message.append(item);
-                    message.append("' ");
-                }
-                throw new MultipleMatchingApiPathsException(message.toString());
-            }
+        if (apiVersion.isEmpty()) {
+            return module.getPathDefault();
         }
 
-        return module.getPathDefault();
+        var foundPaths = Arrays.stream(module.getVersionedPaths())
+                .filter(p -> p.contains(apiVersion))
+                .collect(Collectors.toList());
+
+        if (foundPaths.size() == 1) {
+            return foundPaths.get(0);
+        } else {
+            var message = new StringBuilder();
+            message.append("Searching for single api path containing '");
+            message.append(apiVersion);
+            message.append("' but found: ");
+            for (var item : foundPaths) {
+                message.append("'");
+                message.append(item);
+                message.append("' ");
+            }
+            throw new MultipleMatchingApiPathsException(message.toString());
+        }
     }
 }
