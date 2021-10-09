@@ -64,9 +64,12 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
-    public String getSQLTableName(final EdmStructuralType target) {
+    public String getSQLTableName(final EdmStructuralType target) { //TODO use context
+        boolean caseSensitive = Boolean.parseBoolean(
+                Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
         EdmTableBinding mapping = tableMappingProvider.getEdmTableBinding(target);
-        return mapping.getTableName();
+        String tableName = mapping.getTableName();
+       return caseSensitive ? ("\"" + tableName + "\"") : tableName;
     }
 
     public List<String> getSQLJoinTableName(final EdmStructuralType from, final EdmStructuralType to) throws EdmException {

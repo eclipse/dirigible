@@ -13,7 +13,6 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
@@ -85,12 +84,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
             String tableAlias = it.next();
             EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
             if (isDeleteTarget(target)) {
-                boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
-                if (caseSensitive) {
-                    from.append("\"" + getSQLTableName(target) + "\"");
-                } else {
-                    from.append(getSQLTableName(target));
-                }
+                from.append(getSQLTableName(target));
                 break;
             }
         }

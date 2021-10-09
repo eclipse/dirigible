@@ -15,7 +15,6 @@ import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
@@ -120,13 +119,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 			String tableAlias = it.next();
 			EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
 			if (isUpdateTarget(target)) {
-				boolean caseSensitive = Boolean.parseBoolean(
-						Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
-				if (caseSensitive) {
-					into.append("\"" + getSQLTableName(target) + "\"");
-				} else {
-					into.append(getSQLTableName(target));
-				}
+				into.append(getSQLTableName(target));
 				break;
 			}
 		}

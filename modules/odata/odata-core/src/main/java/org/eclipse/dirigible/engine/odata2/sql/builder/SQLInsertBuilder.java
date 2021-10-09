@@ -11,10 +11,12 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
@@ -103,13 +105,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 			String tableAlias = it.next();
 			EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
 			if (isInsertTarget(target)) {
-				boolean caseSensitive = Boolean.parseBoolean(
-						Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
-				if (caseSensitive) {
-					into.append("\"" + getSQLTableName(target) + "\"");
-				} else {
-					into.append(getSQLTableName(target));
-				}
+				into.append(getSQLTableName(target));
 				break;
 			}
 		}

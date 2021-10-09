@@ -69,7 +69,7 @@ public final class SQLJoinClause implements SQLClause {
         StringBuilder join = new StringBuilder();
         join.append(joinType.toString());
         join.append(" JOIN ");
-        join.append(csl + getTableName(start) + csl);
+        join.append(csl + query.getSQLTableName(start) + csl);
         join.append(" AS ");
         join.append(csl + query.getSQLTableAlias(start) + csl);
         join.append(" ON ");
@@ -110,10 +110,6 @@ public final class SQLJoinClause implements SQLClause {
         SQLWhereClause where = SQLUtils.whereClauseFromKeyPredicates(query, start, keyPredicates);
         query.and(where);
         return query;
-    }
-
-    private String getTableName(EdmStructuralType type) {
-        return query.getSQLTableName(type);
     }
 
     private List<String> getTargetJoinKeyForEntityType(EdmStructuralType start, EdmStructuralType end) throws EdmException {

@@ -11,18 +11,26 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.SERVICE_UNAVAILABLE;
+import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
-import org.apache.olingo.odata2.api.processor.ODataContext;
-import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.SERVICE_UNAVAILABLE;
 
 public class SQLContext {
 
     public enum DatabaseProduct {
-        DERBY, SYBASE_ASE, POSTGRE_SQL, H2, HANA
+        DERBY(false), SYBASE_ASE(false), POSTGRE_SQL(true), H2(false), HANA(true);
+
+        private boolean caseSensitive;
+        DatabaseProduct (boolean caseSensitive){
+            this.caseSensitive = caseSensitive;
+        }
+        public boolean isCaseSensitive(){
+            return caseSensitive;
+        }
     }
 
     private final DatabaseProduct databaseProduct;

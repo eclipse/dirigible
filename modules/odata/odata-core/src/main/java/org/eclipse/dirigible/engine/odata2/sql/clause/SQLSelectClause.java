@@ -16,7 +16,6 @@ import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
@@ -189,12 +188,7 @@ public final class SQLSelectClause {
             String tableAlias = it.next();
             EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(target)) {
-            	boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
-            	if (caseSensitive) {
-            		tables.add("\"" + query.getSQLTableName(target) + "\"" + " AS " + "\"" + tableAlias + "\"");
-            	} else {
-            		tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
-            	}
+                tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
             }
         }
         return SQLUtils.csv(tables);
