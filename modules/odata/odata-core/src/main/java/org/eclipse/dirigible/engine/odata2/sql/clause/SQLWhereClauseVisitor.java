@@ -21,10 +21,7 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
@@ -56,6 +53,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
     private SQLSelectBuilder query;
     private EdmStructuralType targetType;
     private boolean isInComplexType = false;
+
 
     public SQLWhereClauseVisitor(SQLSelectBuilder query, EdmStructuralType targetType) {
         this.whereClauseParams = new ArrayList<>();
@@ -89,27 +87,30 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
 
         switch (operator) {
-        case AND:
-        case OR:
-        case EQ:
-        case NE:
-        case LT:
-        case LE:
-        case GT:
-        case GE:
-            return escapeOperatorPrecedence(binaryExpression, binaryExpression.getLeftOperand(), //
-                    writeParams(binaryExpression.getLeftOperand(), leftSideString)) + //
-                    " " + translateToSQL(operator) + " " + //
-                    escapeOperatorPrecedence(binaryExpression, binaryExpression.getRightOperand(), //
-                            writeParams(binaryExpression.getRightOperand(), rightSideString, (String) null, leftSideSqlType));
-        //TODO Add support for ADD SUB MUL DIV MOD (Relevant for SQL ?)
-        case PROPERTY_ACCESS:
-            //TODO this is when we have property access (need to use different table). what
-            LOG.debug("Property access not implemented for {}", binaryExpression.getUriLiteral());
-            throw new RuntimeException(new ODataNotImplementedException());
-        default:
-            LOG.debug("Binary clause not implemented for {}", binaryExpression.getUriLiteral());
-            throw new RuntimeException(new ODataNotImplementedException());
+            case AND:
+            case OR:
+            case EQ:
+            case NE:
+            case LT:
+            case LE:
+            case GT:
+            case GE: {
+
+                Object res = escapeOperatorPrecedence(binaryExpression, binaryExpression.getLeftOperand(), //
+                        writeParams(binaryExpression.getLeftOperand(), leftSideString, null)) + //
+                        " " + translateToSQL(operator) + " " + //
+                        escapeOperatorPrecedence(binaryExpression, binaryExpression.getRightOperand(), //
+                                writeParams(binaryExpression.getRightOperand(), rightSideString, null));
+                return res;
+                //TODO Add support for ADD SUB MUL DIV MOD (Relevant for SQL ?)
+            }
+            case PROPERTY_ACCESS:
+                //TODO this is when we have property access (need to use different table). what
+                LOG.debug("Property access not implemented for {}", binaryExpression.getUriLiteral());
+                throw new RuntimeException(new ODataNotImplementedException());
+            default:
+                LOG.debug("Binary clause not implemented for {}", binaryExpression.getUriLiteral());
+                throw new RuntimeException(new ODataNotImplementedException());
         }
     }
 
@@ -140,24 +141,24 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
 
         switch (methodExpression.getMethod()) {
-        case ENDSWITH:
-            return String.format("%s LIKE %s", //
-                    firstParameterAsString, //
-                    writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%%%s"));
-        case STARTSWITH:
-            return String.format("%s LIKE %s", //
-                    firstParameterAsString, //
-                    writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%s%%"));
-        case SUBSTRINGOF:
-            return String.format("%s LIKE %s", //
-                    secondParameterAsString, //
-                    writeParams(methodExpression.getParameters().get(0), firstParameterAsString, "%%%s%%"));
-        case TOLOWER:
-            return String.format("LOWER(%s)", firstParameterAsString);
-        case TOUPPER:
-            return String.format("UPPER(%s)", firstParameterAsString);
-        default:
-            throw new RuntimeException(new ODataNotImplementedException());
+            case ENDSWITH:
+                return String.format("%s LIKE %s", //
+                        firstParameterAsString, //
+                        writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%%%s"));
+            case STARTSWITH:
+                return String.format("%s LIKE %s", //
+                        firstParameterAsString, //
+                        writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%s%%"));
+            case SUBSTRINGOF:
+                return String.format("%s LIKE %s", //
+                        secondParameterAsString, //
+                        writeParams(methodExpression.getParameters().get(0), firstParameterAsString, "%%%s%%"));
+            case TOLOWER:
+                return String.format("LOWER(%s)", firstParameterAsString);
+            case TOUPPER:
+                return String.format("UPPER(%s)", firstParameterAsString);
+            default:
+                throw new RuntimeException(new ODataNotImplementedException());
         }
     }
 
@@ -167,31 +168,31 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         final CommonExpression pathEdmType = memberExpression.getPath();
         try {
             switch (propertyKind) {
-            case SIMPLE:
-                if (memberExpression.getPath().getKind() == ExpressionKind.MEMBER) {
-                    final MemberExpression pathMemberExpression = (MemberExpression) memberExpression.getPath();
-                    query.join((EdmStructuralType) pathMemberExpression.getProperty().getEdmType(),
-                            (EdmStructuralType) pathMemberExpression.getPath().getEdmType());
-                } else {
-                    query.join((EdmStructuralType) memberExpression.getPath().getEdmType(), targetType);
-                }
-                return query.getSQLTableColumnInfo((EdmStructuralType) memberExpression.getPath().getEdmType(), (EdmProperty) property);
-            case ENTITY:
-                if (memberExpression.getPath().getKind() == ExpressionKind.MEMBER) {
-                    final MemberExpression pathMemberExpression = (MemberExpression) memberExpression.getPath();
-                    query.join((EdmStructuralType) pathMemberExpression.getProperty().getEdmType(),
-                            (EdmStructuralType) pathMemberExpression.getPath().getEdmType());
+                case SIMPLE:
+                    if (memberExpression.getPath().getKind() == ExpressionKind.MEMBER) {
+                        final MemberExpression pathMemberExpression = (MemberExpression) memberExpression.getPath();
+                        query.join((EdmStructuralType) pathMemberExpression.getProperty().getEdmType(),
+                                (EdmStructuralType) pathMemberExpression.getPath().getEdmType());
+                    } else {
+                        query.join((EdmStructuralType) memberExpression.getPath().getEdmType(), targetType);
+                    }
                     return query.getSQLTableColumnInfo((EdmStructuralType) memberExpression.getPath().getEdmType(), (EdmProperty) property);
-                } else {
-                    query.join((EdmStructuralType) memberExpression.getPath().getEdmType(), targetType);
-                }
-                return property; // Return property here to be used as path for next level Member
-            default:
-                throw new OData2Exception(
-                        String.format(
-                                "Error during processing member clause between path %s and property %s: Unsupported property kind %s",
-                                pathEdmType.getEdmType(), memberExpression.getProperty().getEdmType(), propertyKind),
-                        INTERNAL_SERVER_ERROR);
+                case ENTITY:
+                    if (memberExpression.getPath().getKind() == ExpressionKind.MEMBER) {
+                        final MemberExpression pathMemberExpression = (MemberExpression) memberExpression.getPath();
+                        query.join((EdmStructuralType) pathMemberExpression.getProperty().getEdmType(),
+                                (EdmStructuralType) pathMemberExpression.getPath().getEdmType());
+                        return query.getSQLTableColumnInfo((EdmStructuralType) memberExpression.getPath().getEdmType(), (EdmProperty) property);
+                    } else {
+                        query.join((EdmStructuralType) memberExpression.getPath().getEdmType(), targetType);
+                    }
+                    return property; // Return property here to be used as path for next level Member
+                default:
+                    throw new OData2Exception(
+                            String.format(
+                                    "Error during processing member clause between path %s and property %s: Unsupported property kind %s",
+                                    pathEdmType.getEdmType(), memberExpression.getProperty().getEdmType(), propertyKind),
+                            INTERNAL_SERVER_ERROR);
             }
         } catch (EdmException e) {
             throw new OData2Exception(String.format("Error during processing member clause between path %s and property %s",
@@ -211,25 +212,25 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         final String operandString = String.valueOf(operand);
         String operatorString = operator.name();
         switch (operator) {
-        case NOT:
-            operatorString = "NOT";
-            break;
-        case MINUS:
-            operatorString = "-";
-            break;
+            case NOT:
+                operatorString = "NOT";
+                break;
+            case MINUS:
+                operatorString = "-";
+                break;
         }
         return String.format(format, operatorString, operandString);
     }
 
     @Override
     public Object visitOrderByExpression(OrderByExpression orderByExpression, String expressionString, List<Object> orders) {
-        //TODO implement me 
+        //TODO implement me
         throw new RuntimeException(new ODataNotImplementedException());
     }
 
     @Override
     public Object visitOrder(OrderExpression orderExpression, Object filterResult, SortOrder sortOrder) {
-        //TODO implement me 
+        //TODO implement me
         throw new RuntimeException(new ODataNotImplementedException());
     }
 
@@ -239,27 +240,27 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             final EdmTypeKind propertyKind = edmProperty.getType().getKind();
 
             switch (propertyKind) {
-            case COMPLEX:
-                this.isInComplexType = true;
-                EdmStructuralType complexType = (EdmStructuralType) edmProperty.getType();
-                return complexType;
-            case ENTITY:
-                isInComplexType = true; // ???
-                return propertyExpression.getEdmType();
-            case SIMPLE:
-                if (isInComplexType) {
-                    this.isInComplexType = false;
-                    return edmProperty;
-                }
-                try {
-                    return query.getSQLTableColumnInfo(targetType, (EdmProperty) edmProperty);
-                } catch (EdmException e) {
-                    throw new OData2Exception(String.format("Unable to find binding for type %s and property %s", targetType, edmProperty),
-                            INTERNAL_SERVER_ERROR, e);
-                }
-            default:
-                throw new OData2Exception(String.format("Unable to handle PropertyKind %s for EdmType %s and PropertyProvider %s",
-                        propertyKind, targetType, edmProperty.getClass().getName()), INTERNAL_SERVER_ERROR);
+                case COMPLEX:
+                    this.isInComplexType = true;
+                    EdmStructuralType complexType = (EdmStructuralType) edmProperty.getType();
+                    return complexType;
+                case ENTITY:
+                    isInComplexType = true; // ???
+                    return propertyExpression.getEdmType();
+                case SIMPLE:
+                    if (isInComplexType) {
+                        this.isInComplexType = false;
+                        return edmProperty;
+                    }
+                    try {
+                        return query.getSQLTableColumnInfo(targetType, (EdmProperty) edmProperty);
+                    } catch (EdmException e) {
+                        throw new OData2Exception(String.format("Unable to find binding for type %s and property %s", targetType, edmProperty),
+                                INTERNAL_SERVER_ERROR, e);
+                    }
+                default:
+                    throw new OData2Exception(String.format("Unable to handle PropertyKind %s for EdmType %s and PropertyProvider %s",
+                            propertyKind, targetType, edmProperty.getClass().getName()), INTERNAL_SERVER_ERROR);
 
             }
         } catch (EdmException e) {
@@ -271,26 +272,22 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
 
     private String translateToSQL(final BinaryOperator operator) {
         switch (operator) {
-        case EQ:
-            // TODO CLEARIFY: Why not using operator.name() also here ???
-            return "=";
-        case NE:
-            return "<>";
-        case LT:
-            return "<";
-        case LE:
-            return "<=";
-        case GT:
-            return ">";
-        case GE:
-            return ">=";
-        default:
-            return operator.name();
+            case EQ:
+                // TODO CLEARIFY: Why not using operator.name() also here ???
+                return "=";
+            case NE:
+                return "<>";
+            case LT:
+                return "<";
+            case LE:
+                return "<=";
+            case GT:
+                return ">";
+            case GE:
+                return ">=";
+            default:
+                return operator.name();
         }
-    }
-
-    private String writeParams(final CommonExpression expression, final String literal) {
-        return writeParams(expression, literal, null);
     }
 
     private String writeParams(final CommonExpression expression, final String literal, final String format) {
@@ -298,19 +295,67 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         if (expression.getKind() == ExpressionKind.LITERAL) {
             final String value = (format != null ? String.format(format, literal) : literal);
             Object literalValue = evaluateDateTimeExpressions(value, (EdmSimpleType) expression.getEdmType());
-            whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType()));
+            List<ColumnInfo> columnInfo = getColumnInfo(expression);
+            if (columnInfo != null && columnInfo.size() > 1){
+                throw new IllegalArgumentException(String.format("Unable to parse expression %s", expression));
+            }
+            whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType(), columnInfo == null ? null: columnInfo.get(0)));
             //we should be using a prepared statement, so therefore always return the question marks here, since we have added the param to the query
             return "?";
         }
         return literal;
     }
 
-    private String writeParams(final CommonExpression expression, final String literal, final String format, final String sqlType) {
+    List<ColumnInfo> getColumnInfo(CommonExpression expression) {
+        try {
+            if (expression instanceof BinaryExpression) {
+                BinaryExpression be = (BinaryExpression)expression;
+                CommonExpression left = be.getLeftOperand();
+                CommonExpression right = be.getRightOperand();
+                List<ColumnInfo> leftColumnInfo = getColumnInfo(left);
+                List<ColumnInfo> rightColumnInfo = getColumnInfo(right);
 
+                List<ColumnInfo> res = new ArrayList<>();
+                if (leftColumnInfo != null) res.addAll(leftColumnInfo);
+                if (rightColumnInfo != null) res.addAll(rightColumnInfo);
+                return res;
+            } else if (expression instanceof UnaryExpression) {
+                CommonExpression operand = ((UnaryExpression) expression).getOperand();
+                return getColumnInfo(operand);
+            } else if (expression instanceof MethodExpression) {
+                List<CommonExpression> params = ((MethodExpression) expression).getParameters();
+                List<ColumnInfo> result = new ArrayList<>();
+                for (CommonExpression ce : params){
+                    List<ColumnInfo> cis =  getColumnInfo(ce);
+                    if (cis != null){
+                       result.addAll(cis);
+                    }
+                }
+                return result;
+            } else if (expression instanceof PropertyExpression) {
+                PropertyExpression propExpression = (PropertyExpression) expression;
+                EdmTyped property = targetType.getProperty(propExpression.getPropertyName());
+                if (property instanceof EdmProperty) {
+                    ColumnInfo ci = query.getSQLTableColumnInfo(targetType, (EdmProperty) property);
+                    return Collections.singletonList(ci);
+                } else {
+                    return null;
+                }
+            } else if (expression instanceof LiteralExpression) {
+                    return null;
+            }
+        } catch (EdmException e) {
+            throw new RuntimeException("Unable to parse where expression", e);
+        }
+        return null;
+    }
+
+    private String writeParams(final CommonExpression expression, final String literal, final String format, final ColumnInfo info) {
         if (expression.getKind() == ExpressionKind.LITERAL) {
             final String value = (format != null ? String.format(format, literal) : literal);
-            Object literalValue = evaluateDateTimeExpressions(value, (EdmSimpleType) expression.getEdmType());
-            whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType(), sqlType));
+            EdmSimpleType edmType = (EdmSimpleType) expression.getEdmType();
+            Object literalValue = evaluateDateTimeExpressions(value, edmType);
+            whereClauseParams.add(SQLWhereClause.param(literalValue, edmType, info));
             //we should be using a prepared statement, so therefore always return the question marks here, since we have added the param to the query
             return "?";
         }

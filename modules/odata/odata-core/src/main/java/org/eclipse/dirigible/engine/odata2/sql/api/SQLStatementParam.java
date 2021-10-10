@@ -11,31 +11,29 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
-import org.apache.olingo.odata2.api.edm.EdmSimpleType;
-import org.apache.olingo.odata2.api.edm.EdmSimpleTypeKind;
+import org.apache.olingo.odata2.api.edm.*;
+import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 
 public class SQLStatementParam {
 
     private final Object value;
-    private final EdmSimpleType edmSimpleType;
-    private final String sqlType;
+    private final EdmType edmType;
+    private final EdmTableBinding.ColumnInfo columnInfo;
 
     public enum TemporalType {
         DATE, TIME, TIMESTAMP
     }
-
-    public SQLStatementParam(Object value) {
-        this(value, null, null);
-    }
-
-    public SQLStatementParam(Object value, String customSqlType) {
-        this(value, null, customSqlType);
-    }
-
-    public SQLStatementParam(Object value, EdmSimpleType edmSimpleType, String sqlType) {
+    public SQLStatementParam(Object value, EdmProperty edmProperty, EdmTableBinding.ColumnInfo columnInfo) throws EdmException {
         this.value = value;
-        this.edmSimpleType = edmSimpleType;
-        this.sqlType = sqlType;
+        this.edmType = edmProperty.getType();
+        this.columnInfo = columnInfo;
+    }
+
+
+    public SQLStatementParam(Object value, EdmType edmType, EdmTableBinding.ColumnInfo columnInfo) {
+        this.value = value;
+        this.edmType = edmType;
+        this.columnInfo = columnInfo;
     }
 
     public boolean isTemporalType() {
@@ -43,7 +41,7 @@ public class SQLStatementParam {
     }
 
     public TemporalType getTemporalType() {
-        EdmSimpleType edmType = getEdmType();
+        EdmType edmType = getEdmType();
         if (EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance().equals(edmType)) {
             return TemporalType.TIMESTAMP;
         } else if (EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance().equals(edmType)) {
@@ -55,12 +53,12 @@ public class SQLStatementParam {
         }
     }
 
-    public EdmSimpleType getEdmType() {
-        return edmSimpleType;
+    public EdmType getEdmType() {
+        return edmType;
     }
 
     public String getSqlType() {
-        return this.sqlType;
+        return columnInfo == null ? null: columnInfo.getSqlType();
     }
 
     @SuppressWarnings("unchecked")

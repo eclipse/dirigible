@@ -14,6 +14,7 @@ package org.eclipse.dirigible.engine.odata2.sql.clause;
 import org.apache.olingo.odata2.api.edm.EdmSimpleType;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLClause;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
+import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 
 import java.util.*;
@@ -95,21 +96,15 @@ public final class SQLWhereClause implements SQLClause {
     }
 
     private boolean endsWithOpenBracket() {
-        if (whereClause.length() < 1) {
+        if (isEmpty()) {
             return false;
         } else {
             return OPEN_BRACKET == whereClause.charAt(whereClause.length() - 1);
         }
     }
 
-    public static SQLStatementParam param(Object value) {
-        return new SQLStatementParam(value);
-    }
-    public static SQLStatementParam param(Object value, final EdmSimpleType edmType) {
-        return new SQLStatementParam(value, edmType, null);
-    }
-    public static SQLStatementParam param(Object value, final EdmSimpleType edmType, final String sqlType) {
-       return new SQLStatementParam(value, edmType, sqlType);
+    public static SQLStatementParam param(Object value, final EdmSimpleType edmType, final EdmTableBinding.ColumnInfo columnInfo) {
+       return new SQLStatementParam(value, edmType, columnInfo);
     }
 
 }

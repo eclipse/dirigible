@@ -135,6 +135,13 @@ public final class SQLWhereClauseTest {
     }
 
     @Test
+    public void testFilterFunctionToUpperAppliedTwice() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "toupper(MessageGuid) eq  tolower(MessageGuid)");
+        assertEquals("UPPER(T0.MESSAGEGUID) = LOWER(T0.MESSAGEGUID)", where.getWhereClause());
+    }
+
+    @Test
     public void testFilterFunctionStartsWith() throws Exception {
 
         SQLWhereClause where = createWhereClause( //

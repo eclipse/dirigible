@@ -195,7 +195,7 @@ public class SQLQueryBuilder {
                     literal = evaluateDateTimeExpressions(literal, edmSimpleType);
                     ColumnInfo info = query.getSQLTableColumnInfo(type, property);
                     whereClause.append(info.getColumnName()).append(" = ?");
-                    SQLParams.add(SQLWhereClause.param(literal, edmSimpleType, info.getSqlType()));
+                    SQLParams.add(SQLWhereClause.param(literal, edmSimpleType, info));
                 } else {
                     //TODO what to do with complex properties?
                     throw new IllegalStateException();

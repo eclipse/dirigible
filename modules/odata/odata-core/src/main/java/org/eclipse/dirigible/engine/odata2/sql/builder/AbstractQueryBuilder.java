@@ -58,7 +58,7 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     public void addStatementParam(EdmEntityType entity, EdmProperty property, Object value) throws EdmException {
         if (property.isSimple()) {
             EdmTableBinding.ColumnInfo info = getSQLTableColumnInfo(entity, property);
-            addStatementParam(new SQLStatementParam(value, (EdmSimpleType) property.getType(), info.getSqlType()));
+            addStatementParam(new SQLStatementParam(value, (EdmSimpleType) property.getType(), info));
         } else {
             throw new IllegalArgumentException("Not Implemented");
         }

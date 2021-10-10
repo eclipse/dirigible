@@ -17,7 +17,6 @@ import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.expression.ExceptionVisitExpression;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
-import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
@@ -173,7 +172,7 @@ public final class SQLUtils {
                     literal = evaluateDateTimeExpressions(literal, edmSimpleType);
                     ColumnInfo info = query.getSQLTableColumnInfo(type, property);
                     whereClause.append(info.getColumnName()).append(" = ?");
-                    params.add(SQLWhereClause.param(literal, edmSimpleType, info.getSqlType()));
+                    params.add(SQLWhereClause.param(literal, edmSimpleType, info));
                 } else {
                     //TODO what to do with complex properties?
                     throw new IllegalStateException();

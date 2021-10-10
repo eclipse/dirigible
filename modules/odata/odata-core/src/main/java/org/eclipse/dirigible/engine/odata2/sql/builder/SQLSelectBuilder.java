@@ -141,7 +141,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         List<SQLStatementParam> filterParams = new ArrayList<>();
         StringBuilder filterClause = new StringBuilder(column.getColumnName() + " IN (");
         for (String leadingEntityId : idsOfLeadingEntities) {
-            filterParams.add(new SQLStatementParam(leadingEntityId, column.getSqlType()));
+            filterParams.add(new SQLStatementParam(leadingEntityId, keyProperty, column));
             filterClause.append("?,");
         }
         //delete the last ,

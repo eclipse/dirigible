@@ -198,6 +198,5 @@ public class EdmTableBinding extends Mapping {
         public String getSqlType() {
             return sqlType;
         }
-
     }
 }
