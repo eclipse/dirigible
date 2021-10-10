@@ -58,7 +58,7 @@ public class SQLStatementParam {
     }
 
     public String getSqlType() {
-        return columnInfo == null ? null: columnInfo.getSqlType();
+        return columnInfo == null ? null: columnInfo.getJdbcType();
     }
 
     @SuppressWarnings("unchecked")

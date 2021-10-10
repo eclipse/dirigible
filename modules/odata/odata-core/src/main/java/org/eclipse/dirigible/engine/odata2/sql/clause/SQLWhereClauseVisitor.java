@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
+import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.expression.*;
@@ -75,7 +76,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
 
         if (leftSide instanceof ColumnInfo) {
             leftSideString = ((ColumnInfo) leftSide).getColumnName();
-            leftSideSqlType = ((ColumnInfo) leftSide).getSqlType();
+            leftSideSqlType = ((ColumnInfo) leftSide).getJdbcType();
         } else {
             leftSideString = (String) leftSide;
         }
@@ -97,10 +98,10 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             case GE: {
 
                 Object res = escapeOperatorPrecedence(binaryExpression, binaryExpression.getLeftOperand(), //
-                        writeParams(binaryExpression.getLeftOperand(), leftSideString, null)) + //
+                        writeParam(binaryExpression.getLeftOperand(), leftSideString, null)) + //
                         " " + translateToSQL(operator) + " " + //
                         escapeOperatorPrecedence(binaryExpression, binaryExpression.getRightOperand(), //
-                                writeParams(binaryExpression.getRightOperand(), rightSideString, null));
+                                writeParam(binaryExpression.getRightOperand(), rightSideString, null));
                 return res;
                 //TODO Add support for ADD SUB MUL DIV MOD (Relevant for SQL ?)
             }
@@ -142,17 +143,33 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
 
         switch (methodExpression.getMethod()) {
             case ENDSWITH:
+                String param =  writeParam(methodExpression.getParameters().get(1), secondParameterAsString, "%%%s");
+                if (!(firstParameter instanceof ColumnInfo)){
+                    throw new OData2Exception("Invalid like syntax", HttpStatusCodes.BAD_REQUEST);
+                }
                 return String.format("%s LIKE %s", //
                         firstParameterAsString, //
-                        writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%%%s"));
+                        param);
+            case LENGTH:
+                writeParam(methodExpression.getParameters().get(0), firstParameterAsString, "%s");
+                return String.format("LENGTH(%s)", //
+                        firstParameterAsString);
+            case CONCAT:
+                //concat(FIELD, '') and concat('',FIELD)
+                String param1 = writeParam(methodExpression.getParameters().get(0), firstParameterAsString, "%s");
+                String param2 = writeParam(methodExpression.getParameters().get(1), secondParameterAsString, "%s");
+                return String.format("CONCAT(%s,%s)", param1, param2);
             case STARTSWITH:
+                if (!(firstParameter instanceof ColumnInfo)){
+                    throw new OData2Exception("Invalid startswith usage", HttpStatusCodes.BAD_REQUEST);
+                }
                 return String.format("%s LIKE %s", //
                         firstParameterAsString, //
-                        writeParams(methodExpression.getParameters().get(1), secondParameterAsString, "%s%%"));
+                        writeParam(methodExpression.getParameters().get(1), secondParameterAsString, "%s%%"));
             case SUBSTRINGOF:
                 return String.format("%s LIKE %s", //
                         secondParameterAsString, //
-                        writeParams(methodExpression.getParameters().get(0), firstParameterAsString, "%%%s%%"));
+                        writeParam(methodExpression.getParameters().get(0), firstParameterAsString, "%%%s%%"));
             case TOLOWER:
                 return String.format("LOWER(%s)", firstParameterAsString);
             case TOUPPER:
@@ -290,16 +307,16 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
-    private String writeParams(final CommonExpression expression, final String literal, final String format) {
+    private String writeParam(final CommonExpression expression, final String literal, final String format) {
 
         if (expression.getKind() == ExpressionKind.LITERAL) {
             final String value = (format != null ? String.format(format, literal) : literal);
             Object literalValue = evaluateDateTimeExpressions(value, (EdmSimpleType) expression.getEdmType());
             List<ColumnInfo> columnInfo = getColumnInfo(expression);
-            if (columnInfo != null && columnInfo.size() > 1){
+            if (columnInfo != null && columnInfo.size() > 1) {
                 throw new IllegalArgumentException(String.format("Unable to parse expression %s", expression));
             }
-            whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType(), columnInfo == null ? null: columnInfo.get(0)));
+            whereClauseParams.add(SQLWhereClause.param(literalValue, (EdmSimpleType) expression.getEdmType(), columnInfo == null ? null : columnInfo.get(0)));
             //we should be using a prepared statement, so therefore always return the question marks here, since we have added the param to the query
             return "?";
         }
@@ -309,7 +326,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
     List<ColumnInfo> getColumnInfo(CommonExpression expression) {
         try {
             if (expression instanceof BinaryExpression) {
-                BinaryExpression be = (BinaryExpression)expression;
+                BinaryExpression be = (BinaryExpression) expression;
                 CommonExpression left = be.getLeftOperand();
                 CommonExpression right = be.getRightOperand();
                 List<ColumnInfo> leftColumnInfo = getColumnInfo(left);
@@ -325,10 +342,10 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             } else if (expression instanceof MethodExpression) {
                 List<CommonExpression> params = ((MethodExpression) expression).getParameters();
                 List<ColumnInfo> result = new ArrayList<>();
-                for (CommonExpression ce : params){
-                    List<ColumnInfo> cis =  getColumnInfo(ce);
-                    if (cis != null){
-                       result.addAll(cis);
+                for (CommonExpression ce : params) {
+                    List<ColumnInfo> cis = getColumnInfo(ce);
+                    if (cis != null) {
+                        result.addAll(cis);
                     }
                 }
                 return result;
@@ -342,7 +359,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
                     return null;
                 }
             } else if (expression instanceof LiteralExpression) {
-                    return null;
+                return null;
             }
         } catch (EdmException e) {
             throw new RuntimeException("Unable to parse where expression", e);
@@ -350,7 +367,7 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         return null;
     }
 
-    private String writeParams(final CommonExpression expression, final String literal, final String format, final ColumnInfo info) {
+    private String writeParam(final CommonExpression expression, final String literal, final String format, final ColumnInfo info) {
         if (expression.getKind() == ExpressionKind.LITERAL) {
             final String value = (format != null ? String.format(format, literal) : literal);
             EdmSimpleType edmType = (EdmSimpleType) expression.getEdmType();

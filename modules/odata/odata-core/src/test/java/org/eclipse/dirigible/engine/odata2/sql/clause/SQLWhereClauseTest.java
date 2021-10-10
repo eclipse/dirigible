@@ -17,6 +17,7 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.UriParser;
 import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
+import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
@@ -71,11 +72,11 @@ public final class SQLWhereClauseTest {
         //
         // Right
         SQLWhereClause where = createWhereClause("MessageGuid eq '1234'").and(new SQLWhereClause());
-        assertParamListEquals(new String[] { "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"1234"}, where.getStatementParams());
         assertEquals("T0.MESSAGEGUID = ?", where.getWhereClause());
         // Left
         where = new SQLWhereClause().and(createWhereClause("MessageGuid eq '1234'"));
-        assertParamListEquals(new String[] { "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"1234"}, where.getStatementParams());
         assertEquals("T0.MESSAGEGUID = ?", where.getWhereClause());
 
         //
@@ -83,7 +84,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "Status eq 'SUCCESS' and MessageGuid eq '1234'");
 
-        assertParamListEquals(new String[] { "SUCCESS", "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"SUCCESS", "1234"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID = ?", where.getWhereClause());
 
         //
@@ -95,7 +96,7 @@ public final class SQLWhereClauseTest {
                 .and(createWhereClause("Sender eq 'sender'")) //
                 .and(createWhereClause("MessageGuid eq '0815'"));
 
-        assertParamListEquals(new String[] { "1234", "SUCCESS", "sender", "0815" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"1234", "SUCCESS", "sender", "0815"}, where.getStatementParams());
         assertEquals("T0.MESSAGEGUID = ? AND T0.STATUS = ? AND T0.SENDER = ? AND T0.MESSAGEGUID = ?", where.getWhereClause());
 
     }
@@ -107,11 +108,11 @@ public final class SQLWhereClauseTest {
         //
         // Right
         SQLWhereClause where = createWhereClause("MessageGuid eq '1234'").or(new SQLWhereClause());
-        assertParamListEquals(new String[] { "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"1234"}, where.getStatementParams());
         assertEquals("T0.MESSAGEGUID = ?", where.getWhereClause());
         // Left
         where = new SQLWhereClause().or(createWhereClause("MessageGuid eq '1234'"));
-        assertParamListEquals(new String[] { "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"1234"}, where.getStatementParams());
         assertEquals("T0.MESSAGEGUID = ?", where.getWhereClause());
 
         //
@@ -119,7 +120,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "Status eq 'SUCCESS' or MessageGuid eq '1234'");
 
-        assertParamListEquals(new String[] { "SUCCESS", "1234" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"SUCCESS", "1234"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? OR T0.MESSAGEGUID = ?", where.getWhereClause());
 
     }
@@ -130,7 +131,7 @@ public final class SQLWhereClauseTest {
         SQLWhereClause where = createWhereClause( //
                 "toupper(Status) eq 'SUCCESS' and tolower(MessageGuid) eq '4711'");
 
-        assertParamListEquals(new String[] { "SUCCESS", "4711" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"SUCCESS", "4711"}, where.getStatementParams());
         assertEquals("UPPER(T0.STATUS) = ? AND LOWER(T0.MESSAGEGUID) = ?", where.getWhereClause());
     }
 
@@ -142,32 +143,61 @@ public final class SQLWhereClauseTest {
     }
 
     @Test
-    public void testFilterFunctionStartsWith() throws Exception {
-
+    public void testConcatFunction() throws Exception {
         SQLWhereClause where = createWhereClause( //
-                "Status eq 'ERROR' and startswith(MessageGuid, 'fl')");
+                "concat(MessageGuid, 'test')");
+        assertParamListEquals(new String[]{"test"}, where.getStatementParams());
+        assertEquals("CONCAT(T0.MESSAGEGUID,?)", where.getWhereClause());
+    }
 
-        assertParamListEquals(new String[] { "ERROR", "fl%" }, where.getStatementParams());
+    @Test
+    public void testConcatFunction2() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "concat('test', MessageGuid)");
+        assertParamListEquals(new String[]{"test"}, where.getStatementParams());
+        assertEquals("CONCAT(?,T0.MESSAGEGUID)", where.getWhereClause());
+    }
+
+    @Test
+    public void testConcatFunction3() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "concat(MessageGuid, MessageGuid)");
+        assertEquals(0, where.getStatementParams().size());
+        assertEquals("CONCAT(T0.MESSAGEGUID,T0.MESSAGEGUID)", where.getWhereClause());
+    }
+
+    @Test
+    public void testLengthFunction() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "length(MessageGuid)");
+        assertEquals(0, where.getStatementParams().size());
+        assertEquals("LENGTH(T0.MESSAGEGUID)", where.getWhereClause());
+    }
+
+    @Test
+    public void testFilterFunctionStartsWith() throws Exception {
+        SQLWhereClause where = createWhereClause("Status eq 'ERROR' and startswith(MessageGuid, 'fl')");
+
+        assertParamListEquals(new String[]{"ERROR", "fl%"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
+    }
+
+    @Test(expected = OData2Exception.class)
+    public void testFilterFunctionStartsWith2() throws Exception {
+        SQLWhereClause where = createWhereClause("Status eq 'ERROR' and startswith('fl',MessageGuid)");
+        where.getWhereClause();
     }
 
     @Test
     public void testFilterFunctionEndsWith() throws Exception {
-
-        SQLWhereClause where = createWhereClause( //
+        SQLWhereClause where = createWhereClause(
                 "Status eq 'ERROR' and endswith(MessageGuid, 'fl')");
-
-        assertParamListEquals(new String[] { "ERROR", "%fl" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "%fl"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
     }
 
-    @Test
     public void testFilterFunctionSubtringOf() throws Exception {
-
-        SQLWhereClause where = createWhereClause( //
-                "Status eq 'ERROR' and substringof('fl', MessageGuid)");
-
-        assertParamListEquals(new String[] { "ERROR", "%fl%" }, where.getStatementParams());
+        SQLWhereClause where = createWhereClause("Status eq 'ERROR' and substringof('fl', MessageGuid)");
         assertEquals("T0.STATUS = ? AND T0.MESSAGEGUID LIKE ?", where.getWhereClause());
     }
 
@@ -222,7 +252,7 @@ public final class SQLWhereClauseTest {
         SQLWhereClause where = createWhereClause( //
                 "Status eq 'ERROR' and ( Sender eq 'From' and Receiver eq 'To' ) and Status eq 'RETRY'");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? AND T0.SENDER = ? AND T0.RECEIVER = ? AND T0.STATUS = ?", where.getWhereClause());
 
         /////////////////////////////////////////
@@ -230,7 +260,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "Status eq 'ERROR' or ( Sender eq 'From' and Receiver eq 'To' ) or Status eq 'RETRY'");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? OR T0.SENDER = ? AND T0.RECEIVER = ? OR T0.STATUS = ?", where.getWhereClause());
 
         /////////////////////////////////////////
@@ -238,7 +268,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "Status eq 'ERROR' or Sender eq 'From' and Receiver eq 'To' or Status eq 'RETRY'");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("T0.STATUS = ? OR T0.SENDER = ? AND T0.RECEIVER = ? OR T0.STATUS = ?", where.getWhereClause());
 
         /////////////////////////////////////////
@@ -246,7 +276,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "(Status eq 'ERROR' or Sender eq 'From') and (Receiver eq 'To' or Status eq 'RETRY')");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("(T0.STATUS = ? OR T0.SENDER = ?) AND (T0.RECEIVER = ? OR T0.STATUS = ?)", where.getWhereClause());
 
         /////////////////////////////////////////
@@ -254,7 +284,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "( not ( Status eq 'ERROR' ) or Sender eq 'From' ) and not ( Receiver eq 'To' ) or Status eq 'RETRY'");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("(NOT(T0.STATUS = ?) OR T0.SENDER = ?) AND NOT(T0.RECEIVER = ?) OR T0.STATUS = ?", where.getWhereClause());
 
         /////////////////////////////////////////
@@ -262,7 +292,7 @@ public final class SQLWhereClauseTest {
         where = createWhereClause( //
                 "( Status eq 'ERROR' or not ( Sender eq 'From' ) ) and not ( Receiver eq 'To' or Status eq 'RETRY' )");
 
-        assertParamListEquals(new String[] { "ERROR", "From", "To", "RETRY" }, where.getStatementParams());
+        assertParamListEquals(new String[]{"ERROR", "From", "To", "RETRY"}, where.getStatementParams());
         assertEquals("(T0.STATUS = ? OR NOT(T0.SENDER = ?)) AND NOT(T0.RECEIVER = ? OR T0.STATUS = ?)", where.getWhereClause());
 
     }

@@ -159,7 +159,6 @@ public class EdmTableBinding extends Mapping {
             } else {
                 throw new IllegalArgumentException(format(PROPERTY_WRONG_CONFIGURATION, propertyName));
             }
-
         } else {
             throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, propertyName, targetFqn));
         }
@@ -180,11 +179,11 @@ public class EdmTableBinding extends Mapping {
 
     public static class ColumnInfo {
         private final String columnName;
-        private final String sqlType;
+        private final String jdbcType;
 
-        public ColumnInfo(final String columnName, final String sqlType) {
+        public ColumnInfo(final String columnName, final String jdbcType) {
             this.columnName = columnName;
-            this.sqlType = sqlType;
+            this.jdbcType = jdbcType;
         }
 
         public ColumnInfo(final String columnName) {
@@ -195,8 +194,8 @@ public class EdmTableBinding extends Mapping {
             return columnName;
         }
 
-        public String getSqlType() {
-            return sqlType;
+        public String getJdbcType() {
+            return jdbcType;
         }
     }
 }

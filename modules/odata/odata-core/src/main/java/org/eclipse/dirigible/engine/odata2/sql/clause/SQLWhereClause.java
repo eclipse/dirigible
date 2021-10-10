@@ -36,7 +36,9 @@ public final class SQLWhereClause implements SQLClause {
     public SQLWhereClause(String whereClause, List<SQLStatementParam> statementParams) {
         this.whereClause = new StringBuilder(whereClause);
         this.statementParams = new ArrayList<>();
-        this.statementParams.addAll(statementParams);
+        if (statementParams != null) {
+            this.statementParams.addAll(statementParams);
+        }
     }
 
     public SQLWhereClause(String whereClause, SQLStatementParam... statementParams) {

@@ -125,10 +125,10 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
             ColumnInfo info = tableMappingProvider.getEdmTableBinding((targetEnitityType)).getColumnInfo(p);
             boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
             if (caseSensitive) {
-                return new ColumnInfo("\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + info.getColumnName() + "\"", info.getSqlType());
+                return new ColumnInfo("\"" + getSQLTableAlias(targetEnitityType) + "\".\"" + info.getColumnName() + "\"", info.getJdbcType());
                 //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
             } else {
-                return new ColumnInfo(getSQLTableAlias(targetEnitityType) + "." + info.getColumnName(), info.getSqlType());
+                return new ColumnInfo(getSQLTableAlias(targetEnitityType) + "." + info.getColumnName(), info.getJdbcType());
                 //return getSQLTableAlias(targetEnitityType) + "." + tableMappingProvider.getTableMapping(targetEnitityType).getColumnName(p);
             }
         } else {
