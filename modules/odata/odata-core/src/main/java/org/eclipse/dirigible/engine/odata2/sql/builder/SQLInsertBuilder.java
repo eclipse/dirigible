@@ -11,28 +11,25 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
-import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils.csvInBrackets;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.csvInBrackets;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 public class SQLInsertBuilder extends AbstractQueryBuilder {
 
-	private EdmStructuralType target;
+	private EdmEntityType target;
 	private final List<String> columnNames = new ArrayList<>();
+	private  ODataEntry entry;
 
 	public SQLInsertBuilder(final EdmTableBindingProvider tableMappingProvider) {
 		super(tableMappingProvider);
@@ -43,7 +40,9 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 		return new SQLStatement() {
 
 			@Override
-			public String sql() {
+			public String sql() throws ODataException {
+					//TODO make immutable
+					initializeQuery();
 					StringBuilder builder = new StringBuilder();
 					builder.append("INSERT ");
 					builder.append(" INTO ");
@@ -65,9 +64,22 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 		};
 	}
 
-	public SQLInsertBuilder into(final EdmEntityType target, ODataEntry entry) throws ODataException {
-		grantTableAliasForStructuralTypeInQuery(target);
+	public SQLInsertBuilder into(final EdmEntityType target, ODataEntry entry) {
 		this.target = target;
+		this.entry = entry;
+		return this;
+	}
+
+	public EdmEntityType getTarget(){
+		return target;
+	}
+
+	public ODataEntry getEntry() {
+		return entry;
+	}
+
+	protected void initializeQuery() throws ODataException {
+		grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = entry.getProperties();
 
 		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
@@ -81,7 +93,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 
 		for (EdmNavigationProperty inlineEntry : EdmUtils.getNavigationProperties(target)) {
 			if (entryValues.containsKey(inlineEntry.getName())) {
-					Collection<EdmProperty> inlineEntityKeys = EdmUtils.getKeyProperties(inlineEntry);
+				Collection<EdmProperty> inlineEntityKeys = EdmUtils.getKeyProperties(inlineEntry);
 				if (!inlineEntityKeys.isEmpty()) {
 					columnNames.addAll(getSQLJoinColumnNoAlias(target, inlineEntry));
 					for (EdmProperty inlineEntityKey : inlineEntityKeys) {
@@ -94,8 +106,6 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 				}
 			}
 		}
-
-		return this;
 	}
 
 	protected String buildInto(final SQLContext context) {
@@ -113,9 +123,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 		return into.toString();
 	}
 
-	public EdmStructuralType getTarget(){
-		return target;
-	}
+
 
 	protected boolean isInsertTarget(final EdmStructuralType target) {
 		// always select the entity target

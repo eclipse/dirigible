@@ -68,7 +68,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         params.put("$filter", "Entity1/Status eq 'ERROR' and Value eq 'Something'");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         assertEquals("SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\" " +
                 "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
                 "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID WHERE T1.STATUS = ? " +
@@ -83,7 +83,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         params.put("$select", "Entity1/Status, Value");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         assertEquals("SELECT T0.ID AS ID_T0, T0.NAME AS NAME_T0, T0.VALUE AS VALUE_T0 " //
                 + "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID " //
                 + "WHERE T1.STATUS = ? AND T0.VALUE = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
@@ -116,7 +116,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         params.put("$filter", "Status eq 'ERROR' and Entity2/Value eq 'Something'");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         assertEquals(
                 "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0, T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0, T0.RECEIVER AS RECEIVER_T0, T0.STATUS AS STATUS_T0, T0.MESSAGEGUID AS MESSAGEGUID_T0 "
                         + "FROM MPLHEADER AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T1 ON T1.HEADER_ID = T0.ID " //
@@ -131,7 +131,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         params.put("$filter", "Entity2/Entity1/Status eq 'ERROR' and Description eq 'Something'");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         assertEquals("SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T2.CT_ID AS \"CT_ID_T2\", " +
                 "T2.CT_DETAIL AS \"CT_DETAIL_T2\" " +
                 "FROM ENTITY3_TABLE AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " +
@@ -147,7 +147,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         params.put("$filter", "Entity2/Entity1/Status eq 'ERROR' and ComplexTypeProperty/Detail eq 'Something'");
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         assertEquals("SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T2.CT_ID AS \"CT_ID_T2\", " +
                 "T2.CT_DETAIL AS \"CT_DETAIL_T2\" " +
                 "FROM ENTITY3_TABLE AS T0 " +

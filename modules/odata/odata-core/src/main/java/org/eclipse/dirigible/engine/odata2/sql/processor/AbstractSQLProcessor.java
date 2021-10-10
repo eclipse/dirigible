@@ -31,13 +31,10 @@ import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.info.*;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
 import org.apache.olingo.odata2.core.uri.UriInfoImpl;
-import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
-import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
-import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
-import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
+import org.eclipse.dirigible.engine.odata2.sql.api.*;
 import org.eclipse.dirigible.engine.odata2.sql.builder.*;
 import org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause;
-import org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2ResultSetEntity;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 import org.slf4j.Logger;
@@ -67,8 +64,11 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	public AbstractSQLProcessor(OData2EventHandler odata2EventHandler) {
 		this.odata2EventHandler = odata2EventHandler;
 	}
-	
-	
+
+	@Override
+	public ODataResponse updateEntitySimplePropertyValue(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType, String contentType) throws ODataException {
+		return super.updateEntitySimplePropertyValue(uriInfo, content, requestContentType, contentType);
+	}
 
 	@Override
 	public ODataResponse countEntitySet(final GetEntitySetCountUriInfo uriInfo, final String contentType)
@@ -77,7 +77,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			throw new ODataNotImplementedException();
 		}
 		try {
-			SQLSelectBuilder sqlQuery = this.getSQLQueryBuilder().buildSelectCountQuery((UriInfo) uriInfo);
+			SQLSelectBuilder sqlQuery = this.getSQLQueryBuilder().buildSelectCountQuery((UriInfo) uriInfo, getContext());
+
 			try (Connection connection = getDataSource().getConnection()) {
 				int count = doCountEntitySet(sqlQuery, connection);
 				return ODataResponse.fromResponse(EntityProvider.writeText(String.valueOf(count))).build();
@@ -90,6 +91,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	@Override
 	public ODataResponse readEntityComplexProperty(final GetComplexPropertyUriInfo uriInfo, final String contentType)
 			throws ODataException {
+		LOG.error("readEntityComplexProperty not implemented: {}",uriInfo.toString());
 		throw new ODataException("Not Implemented");
 	}
 
@@ -146,7 +148,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
-		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
 		OData2ResultSetEntity resultEntity = null;
 		// TODO change logic to read columns from ResultSet? (key has to be read even if
 		// it is now requested via $select)
@@ -190,7 +192,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		String nextLink;
 		try (Connection connection = getDataSource().getConnection()) {
 			if (inlineCountType == InlineCount.ALLPAGES) {
-				SQLSelectBuilder countEntitySet = this.getSQLQueryBuilder().buildSelectCountQuery((UriInfo) uriInfo);
+				SQLSelectBuilder countEntitySet = this.getSQLQueryBuilder().buildSelectCountQuery((UriInfo) uriInfo, getContext());
 				count = doCountEntitySet(countEntitySet, connection); // does not close the connection
 			} else {
 				count = null;
@@ -202,7 +204,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				readIdsForExpand = readIdsForExpand(uriInfo);
 				LOG.info("Using IDs for $expand: {}", readIdsForExpand);
 			}
-			query = this.getSQLQueryBuilder().buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand);
+			query = this.getSQLQueryBuilder().buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
 
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
@@ -267,7 +269,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	public List<String> readIdsForExpand (final GetEntitySetUriInfo uriInfo) throws ODataException {
 		List<String> idsOfLeadingEntities = new ArrayList<>();
 		try (Connection connection = getDataSource().getConnection()) {
-			SQLSelectBuilder queryForIdsInExpand = this.getSQLQueryBuilder().buildSelectEntitySetIdsForTopAndExpandQuery((UriInfo) uriInfo);
+			SQLSelectBuilder queryForIdsInExpand = this.getSQLQueryBuilder().buildSelectEntitySetIdsForTopAndExpandQuery((UriInfo) uriInfo, getContext());
 			try (PreparedStatement statement = createSelectStatement(queryForIdsInExpand, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
 					queryForIdsInExpand.setOffset(resultSet);
@@ -308,7 +310,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
-		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
 		OData2ResultSetEntity resultEntity = null;
 		Collection<EdmProperty> properties = uriInfo.getPropertyPath();
 		try (Connection connection = getDataSource().getConnection()){
@@ -337,7 +339,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
-		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
 		OData2ResultSetEntity resultEntity = null;
 		Collection<EdmProperty> properties = uriInfo.getPropertyPath();
 		try (Connection connection = getDataSource().getConnection()){
@@ -431,7 +433,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		this.odata2EventHandler.beforeCreateEntity(uriInfo,
 				requestContentType, contentType, entry);
 
-		SQLInsertBuilder insertBuilder = this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry);
+		SQLInsertBuilder insertBuilder = this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext());
 
 		try (Connection connection = getDataSource().getConnection()){
 			try (PreparedStatement statement = createInsertStatement(insertBuilder, connection)){
@@ -461,7 +463,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
 				
 				// Re-read the inserted entity to get the auto-generated properties
-				SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+				SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
 				OData2ResultSetEntity resultEntity = null;
 				Collection<EdmProperty> properties = getProperties(entityType);
 				try (Connection connection = getDataSource().getConnection()){
@@ -520,7 +522,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		}
 		this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType);
 
-		SQLDeleteBuilder deleteBuilder = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()));
+		SQLDeleteBuilder deleteBuilder = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()), getContext());
 
 		try (Connection connection = getDataSource().getConnection()) {
 			try (PreparedStatement statement = createDeleteStatement(deleteBuilder, connection)) {
@@ -564,7 +566,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
-		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo);
+		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
 		OData2ResultSetEntity resultEntity = null;
 		Collection<EdmProperty> properties = targetEntityType.getKeyProperties();
 		try (Connection connection = getDataSource().getConnection()) {
@@ -591,7 +593,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		this.odata2EventHandler.beforeUpdateEntity(uriInfo, requestContentType, merge, contentType, entry);
 
 		SQLUpdateBuilder updateBuilder = this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
-				mapKeys(uriInfo.getKeyPredicates()));
+				mapKeys(uriInfo.getKeyPredicates()), getContext());
 
 		try(Connection connection = getDataSource().getConnection()){
 			try (PreparedStatement statement = createUpdateStatement(updateBuilder, connection)){

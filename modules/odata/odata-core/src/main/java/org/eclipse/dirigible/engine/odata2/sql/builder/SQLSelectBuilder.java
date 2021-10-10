@@ -45,17 +45,15 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     private final Map<String, EdmStructuralType> tableAliasesForEntitiesInQuery;
     private final Set<String> structuralTypesInJoin;
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
-    private SQLWhereClause whereExpression;
     private SQLSelectClause selectExpression;
-    private SQLOrderByClause orderByExpressions;
+    private SQLOrderByClause orderByClause;
     private boolean serversidePaging;
     private int row = 0;
 
     public SQLSelectBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
         selectExpression = null;
-        orderByExpressions = null;
-        whereExpression = new SQLWhereClause();
+        orderByClause = null;
         tableAliasesForEntitiesInQuery = new TreeMap<>();
         structuralTypesInJoin = new HashSet<>();
     }
@@ -72,12 +70,12 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     }
 
     public SQLSelectBuilder and(final SQLWhereClause whereClause) {
-        this.whereExpression.and(whereClause);
+        getWhereClause().and(whereClause);
         return this;
     }
 
     public SQLSelectBuilder or(final SQLWhereClause whereClause) {
-        this.whereExpression.or(whereClause);
+        getWhereClause().or(whereClause);
         return this;
     }
 
@@ -94,8 +92,12 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
                 }
             }
         }
-        this.orderByExpressions = new SQLOrderByClause(this, entityType, orderBy);
+        this.orderByClause = new SQLOrderByClause(this, entityType, orderBy);
         return this;
+    }
+
+    public SQLOrderByClause getOrderByClause() {
+        return orderByClause;
     }
 
     public void validateOrderBy(final UriInfo uriInfo)
@@ -126,13 +128,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         //TODO we do not search only filter target table. What if we filter on property that is complex type and is field of the target entity?
         SQLWhereClause where = SQLUtils.buildSQLWhereClause(this, filterTarget.getEntityType(), filter);
         if (!where.isEmpty()) {
-           this.whereExpression.and(where);
+           getWhereClause().and(where);
         }
-        return this;
-    }
-
-    public SQLSelectBuilder clearFilter(final EdmEntitySet filterTarget) {
-        this.whereExpression = new SQLWhereClause();
         return this;
     }
 
@@ -149,13 +146,9 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         filterClause.append(")");
         SQLWhereClause where = new SQLWhereClause(filterClause.toString(), filterParams);
         if (!where.isEmpty()) {
-            this.whereExpression.and(where);
+            getWhereClause().and(where);
         }
         return this;
-    }
-
-    public SQLWhereClause getWhereClauseExpression() {
-        return whereExpression;
     }
 
     public SQLSelectClause getSelectExpression() {
@@ -187,7 +180,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     @Override
     public List<SQLStatementParam> getStatementParams() {
-        return whereExpression.getStatementParams();
+        return getWhereClause().getStatementParams();
     }
 
     private String evaluateJoins(final SQLContext context) throws ODataException {
@@ -266,7 +259,9 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
      * @throws EdmException   in case of an error
      * @throws ODataException in case of an error
      */
-    public String buildSelect(final SQLContext context) throws EdmException, ODataException {
+    public String buildSelect(final SQLContext context) throws ODataException {
+        //TODO make immutable
+
         StringBuilder builder = new StringBuilder();
         if (selectExpression == null)
             throw new IllegalStateException("Please initialize the select clause!");
@@ -279,12 +274,13 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         builder.append(" FROM ");
         builder.append(selectExpression.evaluate(context, FROM)).append(" ");
         builder.append(evaluateJoins(context));
-        if (!whereExpression.isEmpty()) {
+        if (!getWhereClause().isEmpty()) {
             builder.append(" WHERE ");
-            builder.append(whereExpression.evaluate(context)).append(" ");
+            builder.append(getWhereClause().evaluate(context)).append(" ");
         }
-        if (orderByExpressions != null && !orderByExpressions.isEmpty()) {
-            builder.append("ORDER BY ").append(orderByExpressions.evaluate(context)).append(" ");
+        SQLOrderByClause ob = getOrderByClause();
+        if (ob != null && !ob.isEmpty()) {
+            builder.append("ORDER BY ").append(ob.evaluate(context)).append(" ");
         }
         String selectSuffix = (String) selectExpression.evaluate(context, SELECT_LIMIT);
         if (!selectSuffix.isEmpty()) {

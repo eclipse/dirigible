@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.odata2.sql.clause;
+package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
@@ -19,7 +19,8 @@ import org.apache.olingo.odata2.api.uri.expression.FilterExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClauseVisitor;
 
 import java.sql.Date;
 import java.sql.*;
@@ -33,7 +34,6 @@ public final class SQLUtils {
 
     private SQLUtils() {
     }
-
 
 
     public static void setParamsOnStatement(final PreparedStatement preparedStatement, List<SQLStatementParam> params) throws SQLException {
@@ -56,7 +56,8 @@ public final class SQLUtils {
                 boolean successfullySet = setInteger(preparedStatement, i, value);
                 if (!successfullySet) {
                     successfullySet = setLong(preparedStatement, i, value);
-                } if (!successfullySet) {
+                }
+                if (!successfullySet) {
                     setObject(preparedStatement, i, value);
                 }
             }
@@ -147,6 +148,15 @@ public final class SQLUtils {
         return expression.replaceAll("  ", " ").trim();
     }
 
+    public static String assertParametersCount(String sql, List<SQLStatementParam> params) {
+        long count = sql.chars().filter(ch -> ch == '?').count();
+        if (count != params.size()) {
+            throw new IllegalStateException("The count of the ? symbols in the generated SQL "
+                    + sql + " does not match the existing params " + params + ". Make sure that the count is the same");
+        }
+        return sql;
+    }
+
     //TODO handle also Grouping Operators () for example /Products?$filter=(Price sub 5) gt 10
     public static SQLWhereClause buildSQLWhereClause(SQLSelectBuilder query, EdmStructuralType targetEntityType,
                                                      final FilterExpression expression) throws ExceptionVisitExpression, ODataApplicationException {
@@ -156,7 +166,7 @@ public final class SQLUtils {
         return expression == null ? new SQLWhereClause() : (SQLWhereClause) expression.accept(visitor);
     }
 
-    static SQLWhereClause whereClauseFromKeyPredicates(SQLSelectBuilder query, EdmStructuralType type,
+    public static SQLWhereClause whereClauseFromKeyPredicates(SQLSelectBuilder query, EdmStructuralType type,
                                                        final List<KeyPredicate> keyPredicates) throws EdmException {
         StringBuilder whereClause = new StringBuilder();
         List<SQLStatementParam> params = new ArrayList<>();

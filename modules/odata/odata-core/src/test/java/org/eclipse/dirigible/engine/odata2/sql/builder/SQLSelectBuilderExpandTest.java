@@ -11,14 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import static java.util.Collections.EMPTY_MAP;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.uri.PathSegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
@@ -27,15 +19,19 @@ import org.apache.olingo.odata2.core.ODataPathSegmentImpl;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.apache.olingo.odata2.core.uri.UriParserImpl;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity4;
-import org.eclipse.dirigible.engine.odata2.sql.edm.Entity5;
+import org.eclipse.dirigible.engine.odata2.sql.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Collections.EMPTY_MAP;
+import static org.junit.Assert.assertEquals;
 
 public class SQLSelectBuilderExpandTest {
 
@@ -67,7 +63,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", " +
                 "T0.LOGEND AS \"LOGEND_T0\", T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", " +
@@ -87,7 +83,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities4", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID4_1 AS \"ID4_1_T0\", T0.ID4_2 AS \"ID4_2_T0\", T0.ID4_3 AS \"ID4_3_T0\", T1.ID5 AS \"ID5_T1\", " +
                 "T1.FK_ID4_1 AS \"FK_ID4_1_T1\", T1.FK_ID4_2 AS \"FK_ID4_2_T1\" " +
@@ -105,7 +101,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities5", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
 
         String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", T0.FK_ID4_2 AS \"FK_ID4_2_T0\", " +
@@ -125,7 +121,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities2", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
 
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\", T1.LOGSTART AS \"LOGSTART_T1\", T1.LOGEND AS \"LOGEND_T1\", T1.SENDER AS \"SENDER_T1\", T1.RECEIVER AS \"RECEIVER_T1\", T1.STATUS AS \"STATUS_T1\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\" " +
@@ -144,7 +140,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps2 = new ODataPathSegmentImpl("Entity2", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps2), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\", T1.LOGSTART AS \"LOGSTART_T1\", T1.LOGEND AS \"LOGEND_T1\", T1.SENDER AS \"SENDER_T1\", T1.RECEIVER AS \"RECEIVER_T1\", T1.STATUS AS \"STATUS_T1\", T1.MESSAGEGUID AS \"MESSAGEGUID_T1\" " +
                 "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
@@ -163,7 +159,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps2 = new ODataPathSegmentImpl("Entity5", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1, ps2), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID5 AS \"ID5_T0\", T0.FK_ID4_1 AS \"FK_ID4_1_T0\", " +
                 "T0.FK_ID4_2 AS \"FK_ID4_2_T0\", T1.ID4_1 AS \"ID4_1_T1\", T1.ID4_2 AS \"ID4_2_T1\", " +
@@ -186,7 +182,7 @@ public class SQLSelectBuilderExpandTest {
     //        PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
     //        UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
     //
-    //        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+    //        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
     //        SQLContext context = new SQLContext();
     //        String expected = "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
     //                + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0,"
@@ -208,7 +204,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
                 + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0,"
@@ -235,7 +231,7 @@ public class SQLSelectBuilderExpandTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities1", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.MESSAGEGUID AS MESSAGEGUID_T0,"
                 + " T0.LOGSTART AS LOGSTART_T0, T0.LOGEND AS LOGEND_T0, T0.SENDER AS SENDER_T0,"

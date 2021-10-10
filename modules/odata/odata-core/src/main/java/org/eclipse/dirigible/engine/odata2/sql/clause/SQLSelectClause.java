@@ -20,6 +20,7 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 
 import java.util.*;
 
@@ -103,10 +104,6 @@ public final class SQLSelectClause {
 
     void setUsingCount(final boolean count) {
         isCount = count;
-    }
-
-    public boolean isCount() {
-        return isCount;
     }
 
     public int getTop() {

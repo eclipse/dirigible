@@ -21,6 +21,7 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity1;
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity2;
 import org.eclipse.dirigible.engine.odata2.sql.edm.Entity3;

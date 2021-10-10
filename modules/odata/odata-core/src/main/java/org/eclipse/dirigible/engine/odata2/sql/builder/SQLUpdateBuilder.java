@@ -19,13 +19,13 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
-import org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils.*;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 public class SQLUpdateBuilder extends AbstractQueryBuilder {
@@ -33,7 +33,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 	private final Map<String, Object> uriKeyProperties;
 
 	private  EdmEntityType target;
-	private  ODataEntry requestEntry;
+	private  ODataEntry updateEntry;
 
 	private final List<String> nonKeyColumnNames = new ArrayList<>();
 
@@ -42,17 +42,61 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		this.uriKeyProperties = uriKeys;
 	}
 
-	public SQLUpdateBuilder update(EdmEntityType target, ODataEntry entry) throws ODataException {
-		this.requestEntry = entry;
+	public SQLUpdateBuilder update(EdmEntityType target, ODataEntry updateEntry) throws ODataException {
+		this.updateEntry = updateEntry;
 		this.target = target;
+		return this;
+	}
+
+	public ODataEntry getUpdateEntry() {
+		return updateEntry;
+	}
+
+	@Override
+	public SQLStatement build(SQLContext context) {
+		return new SQLStatement() {
+		//TODO make immutable
+			@Override
+			public String sql() throws ODataException {
+				initializeQuery();
+				StringBuilder builder = new StringBuilder();
+				builder.append("UPDATE ");
+				builder.append(buildInto());
+				builder.append(" SET ");
+				builder.append(buildColumnList()).append(" WHERE ");
+
+				SQLWhereClause where = new SQLWhereClause(buildWhereClauseForKeys());
+				where.and(getWhereClause()); //the interceptor added where clause
+
+				builder.append(where.getWhereClause());
+				return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
+			}
+			@Override
+			public List<SQLStatementParam> getStatementParams() {
+				return SQLUpdateBuilder.this.getStatementParams();
+			}
+
+			@Override
+			public boolean isEmpty() {
+				return nonKeyColumnNames.isEmpty();
+			}
+		};
+	}
+
+	public EdmStructuralType getTarget() {
+		return target;
+	}
+
+
+	public void initializeQuery() throws ODataException {
 
 		grantTableAliasForStructuralTypeInQuery(target);
-		Map<String, Object> entryValues = requestEntry.getProperties();
+		Map<String, Object> entryValues = updateEntry.getProperties();
 
 		for (EdmProperty property : EdmUtils.getProperties(target)) { //we iterate first the own properties of the type
 			if (entryValues.containsKey(property.getName()) && !isKeyProperty(target, property)) {
 				String columnName = getSQLTableColumnNoAlias(target, property);
-				nonKeyColumnNames.add(getSQLTableColumnNoAlias(target, property));
+				nonKeyColumnNames.add(columnName);
 				this.addStatementParam(target, property, entryValues.get(property.getName()));
 
 			}
@@ -81,38 +125,9 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 			EdmProperty property = (EdmProperty) target.getProperty(key);
 			this.addStatementParam(target, property, uriKeyProperties.get(key));
 		}
-		return this;
 	}
 
-	@Override
-	public SQLStatement build(SQLContext context) {
-		return new SQLStatement() {
-
-			@Override
-			public String sql() throws EdmException {
-				StringBuilder builder = new StringBuilder();
-				builder.append("UPDATE ");
-				builder.append(buildStatement());
-				return SQLUtils.normalizeSQLExpression(builder);
-			}
-			@Override
-			public List<SQLStatementParam> getStatementParams() {
-				return SQLUpdateBuilder.this.getStatementParams();
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return nonKeyColumnNames.isEmpty();
-			}
-		};
-	}
-
-	protected EdmStructuralType getTarget() {
-		return target;
-	}
-
-
-	private String buildStatement() throws EdmException {
+	private String buildInto() throws EdmException {
 		StringBuilder into = new StringBuilder();
 		Iterator<String> it = getTablesAliasesForEntitiesInQuery();
 		while (it.hasNext()) {
@@ -123,7 +138,6 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				break;
 			}
 		}
-		into.append(" SET ").append(buildColumnList()).append(" WHERE ").append(buildWhereClauseForKeys());
 		return into.toString();
 	}
 

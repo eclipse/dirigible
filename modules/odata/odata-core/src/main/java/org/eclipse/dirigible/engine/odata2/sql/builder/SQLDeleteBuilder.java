@@ -17,13 +17,14 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLUtils.*;
+import static org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 
 public class SQLDeleteBuilder extends AbstractQueryBuilder {
@@ -45,9 +46,13 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         return this;
     }
 
-    public SQLDeleteBuilder keys(final Map<String, Object> keys) {
-        this.deleteKeys = keys;
+    public SQLDeleteBuilder keys(final Map<String, Object> deleteKeys) {
+        this.deleteKeys = deleteKeys;
         return this;
+    }
+
+    public Map<String, Object> getDeleteKeys() {
+        return deleteKeys;
     }
 
     protected String buildFrom(final SQLContext context) throws EdmException {
@@ -111,14 +116,20 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
 
             @Override
             public String sql() throws EdmException {
+                //TODO make immutable
                 StringBuilder builder = new StringBuilder();
                 builder.append("DELETE ");
                 builder.append(" FROM ");
                 builder.append(buildFrom(context));
+
+                SQLWhereClause where = new SQLWhereClause(buildDeleteWhereClauseOnKeys(context));
+                where.and(getWhereClause()); //add any update where clause set by the interceptors
+
                 builder.append(" WHERE ");
-                builder.append(buildDeleteWhereClauseOnKeys(context));
-                return normalizeSQLExpression(builder.toString());
+                builder.append(where.getWhereClause());
+                return SQLUtils.assertParametersCount(normalizeSQLExpression(builder.toString()), getStatementParams());
             }
+
 
             @Override
             public List<SQLStatementParam> getStatementParams() {

@@ -64,7 +64,7 @@ public class SQLSelectBuilderComplexTypeTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities3", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), EMPTY_MAP);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
                 "FROM ENTITY3_TABLE AS T0 " +
@@ -81,7 +81,7 @@ public class SQLSelectBuilderComplexTypeTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities3", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
                 "FROM ENTITY3_TABLE AS T0 " +
@@ -98,7 +98,7 @@ public class SQLSelectBuilderComplexTypeTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities3", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
                 "FROM ENTITY3_TABLE AS T0 " +
@@ -116,7 +116,7 @@ public class SQLSelectBuilderComplexTypeTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities3", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T0.ID AS \"ID_T0\", T0.DESCRIPTION AS \"DESCRIPTION_T0\", T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\" " +
                 "FROM ENTITY3_TABLE AS T0 " +
@@ -134,7 +134,7 @@ public class SQLSelectBuilderComplexTypeTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities3", EMPTY_MAP);
         UriInfo uriInfo = uriParser.parse(Arrays.asList(ps1), params);
 
-        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo);
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext();
         String expected = "SELECT T1.CT_ID AS \"CT_ID_T1\", T1.CT_DETAIL AS \"CT_DETAIL_T1\", T0.ID AS \"ID_T0\" " +
                 "FROM ENTITY3_TABLE AS T0 " +

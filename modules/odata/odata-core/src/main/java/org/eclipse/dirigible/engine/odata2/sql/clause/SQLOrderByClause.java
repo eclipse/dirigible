@@ -20,6 +20,7 @@ import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLClause;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
