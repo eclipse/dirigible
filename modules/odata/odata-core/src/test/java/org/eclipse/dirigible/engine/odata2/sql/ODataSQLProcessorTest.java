@@ -13,86 +13,30 @@ package org.eclipse.dirigible.engine.odata2.sql;
 
 import com.google.gson.Gson;
 import org.apache.cxf.helpers.IOUtils;
-import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
-import org.apache.olingo.odata2.api.ODataServiceFactory;
-import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
-import org.apache.olingo.odata2.api.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
-import org.easymock.EasyMockSupport;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
-import org.h2.jdbcx.JdbcDataSource;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 
-public class ODataSQLProcessorTest {
-
-    DataSource ds;
-
-    AnnotationEdmProvider edm;
-
-    ODataServiceFactory sf;
-
-    @Before
-    public void setup() throws ODataException, SQLException {
-        ds = createDataSource();
-        Class<?> [] classes = {Car.class, Driver.class, Owner.class};
-
-        edm = new AnnotationEdmProvider(Arrays.asList(classes));
-        edm.getSchemas();
-        sf = new OData2TestServiceFactory(ds, classes);
-        OData2TestUtils.initLiquibase(ds);
-    }
-
-    @After
-    public void clearDb() {
-        try (Connection c = ds.getConnection()) {
-            try (PreparedStatement s = c.prepareStatement("DROP ALL OBJECTS")) {
-                s.execute();
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to clear the H2 database, the tests are not isolated!");
-        }
-    }
-
-    public DataSource createDataSource() {
-        JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:mem:odata2;JMX=TRUE;DB_CLOSE_DELAY=-1");
-        ds.setUser("sa");
-        return ds;
-    }
+public class ODataSQLProcessorTest extends AbstractSQLPropcessorTest {
 
     @Test
     public void testSQLProcessor() throws Exception {
@@ -203,30 +147,30 @@ public class ODataSQLProcessorTest {
 
         String res = IOUtils.toString((InputStream) response.getEntity());
         assertEquals("{" // 
-                + "\"d\":{" //
-                + "\"__metadata\":{" //
-                + "\"id\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')\"," //
-                + "\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')\"," //
-                + "\"type\":\"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
-                + "}," //
-                + "\"Id\":\"3ab18d92-a574-45bb-a5e5-bcce38b7afb8\"," //
-                + "\"Make\":\"BMW\"," //
-                + "\"Model\":\"320i\"," //
-                + "\"Year\":2021," //
-                + "\"Price\":\"30000.0\"," //
-                + "\"Updated\":null," //
-                + "\"Drivers\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"}}," //
-                + "\"Owners\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Owners\"}}" //
-                + "}" //
-                + "}", //
+                        + "\"d\":{" //
+                        + "\"__metadata\":{" //
+                        + "\"id\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')\"," //
+                        + "\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')\"," //
+                        + "\"type\":\"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
+                        + "}," //
+                        + "\"Id\":\"3ab18d92-a574-45bb-a5e5-bcce38b7afb8\"," //
+                        + "\"Make\":\"BMW\"," //
+                        + "\"Model\":\"320i\"," //
+                        + "\"Year\":2021," //
+                        + "\"Price\":\"30000.0\"," //
+                        + "\"Updated\":null," //
+                        + "\"Drivers\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Drivers\"}}," //
+                        + "\"Owners\":{\"__deferred\":{\"uri\":\"http://localhost:8080/api/v1/Cars('3ab18d92-a574-45bb-a5e5-bcce38b7afb8')/Owners\"}}" //
+                        + "}" //
+                        + "}", //
                 res);
 
     }
-    
+
     @Test
     public void testReadEntity() throws Exception {
-    	
-    	String content = "{" //
+
+        String content = "{" //
                 + "  \"d\": {" //
                 + "    \"__metadata\": {" //
                 + "      \"type\": \"org.eclipse.dirigible.engine.odata2.sql.entities.Car\"" //
@@ -243,7 +187,7 @@ public class ODataSQLProcessorTest {
 //                .accept("application/json")//
                 .content(content).param("content-type", "application/json")//
                 .contentSize(content.length()).executeRequest(POST);
-        
+
         Response response = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars('3ab18d92-a574-45bb-a5e5-bcce38b7af11')") //
                 .accept("application/atom+xml").executeRequest(GET);
@@ -254,15 +198,15 @@ public class ODataSQLProcessorTest {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new ByteArrayInputStream(res.getBytes()));
         String idValue = null;
-		NodeList nList = document.getElementsByTagName("d:Id");
-		for (int i = 0; i < nList.getLength(); i++) {
-			Node node = nList.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) node;
-				idValue = eElement.getTextContent();
-			}
-		}
-		assertEquals("3ab18d92-a574-45bb-a5e5-bcce38b7af11", idValue);
+        NodeList nList = document.getElementsByTagName("d:Id");
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node node = nList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) node;
+                idValue = eElement.getTextContent();
+            }
+        }
+        assertEquals("3ab18d92-a574-45bb-a5e5-bcce38b7af11", idValue);
     }
 
     @Test
@@ -319,6 +263,7 @@ public class ODataSQLProcessorTest {
                 .segments("Car").accept("application/json").executeRequest(GET);
         assertEquals(200, getResponseCreatedEntity.getStatus());
         String referencedCarResponse = IOUtils.toString((InputStream) getResponseCreatedEntity.getEntity());
+        System.out.println(referencedCarResponse);
         assertTrue(referencedCarResponse.contains(existingCarId));
 
     }
@@ -686,7 +631,7 @@ public class ODataSQLProcessorTest {
         List<ODataEntry> entries = resultFeed.getEntries();
         assertEquals(6, entries.size());
     }
-    
+
     @Test
     public void testExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -794,7 +739,7 @@ public class ODataSQLProcessorTest {
                 .param("$expand", "Drivers") //
                 .accept("application/atom+xml").executeRequest(GET);
         assertEquals(200, response.getStatus());
-        
+
         ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
         List<ODataEntry> entries = resultFeed.getEntries();
         assertEquals("The limit must work with expand", 3, entries.size());
@@ -809,9 +754,8 @@ public class ODataSQLProcessorTest {
         assertEquals("Natalie", firstDriverProperties.get("FirstName"));
         Map<String, Object> secondDriverProperties = drivers.get(1).getProperties();
         assertEquals("Johnny", secondDriverProperties.get("FirstName"));
-        
-        
-        
+
+
         Response responseAsc = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars") //
                 .param("$top", "3") //
@@ -819,7 +763,7 @@ public class ODataSQLProcessorTest {
                 .param("$expand", "Drivers") //
                 .accept("application/atom+xml").executeRequest(GET);
         assertEquals(200, responseAsc.getStatus());
-        
+
         ODataFeed resultFeedAsc = retrieveODataFeed(responseAsc, "Cars");
         List<ODataEntry> entriesAsc = resultFeedAsc.getEntries();
         assertEquals("The limit must work with expand", 3, entriesAsc.size());
@@ -831,7 +775,7 @@ public class ODataSQLProcessorTest {
         List<ODataEntry> driversAsc = ((ODataDeltaFeedImpl) (firstEntryPropertiesAsc.get("Drivers"))).getEntries();
         assertEquals(0, driversAsc.size());
     }
-    
+
     @Test
     public void testOrderByExpandedEntityProperties() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
@@ -857,80 +801,4 @@ public class ODataSQLProcessorTest {
         assertEquals("Johnny", secondDriverProperties.get("FirstName"));
 
     }
-    
-    
-    OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
-        OData2RequestBuilder builder = new OData2RequestBuilder() {
-            @Override
-            protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
-                    final HttpServletRequest servletRequest) throws IOException {
-
-                final ServletInputStream s = new DelegateServletInputStream(new ByteArrayInputStream(content.getBytes()));
-                expect(servletRequest.getInputStream()).andReturn(s).atLeastOnce();
-            }
-
-        };
-        return builder.serviceFactory(sf);
-    }
-
-    class DelegateServletInputStream extends ServletInputStream {
-
-        private final InputStream delegate;
-
-        private boolean finished = false;
-
-        public DelegateServletInputStream(InputStream sourceStream) {
-            this.delegate = sourceStream;
-        }
-
-        public final InputStream getSourceStream() {
-            return this.delegate;
-        }
-
-        @Override
-        public int read() throws IOException {
-            int data = this.delegate.read();
-            if (data == -1) {
-                this.finished = true;
-            }
-            return data;
-        }
-
-        @Override
-        public int available() throws IOException {
-            return this.delegate.available();
-        }
-
-        @Override
-        public void close() throws IOException {
-            super.close();
-            this.delegate.close();
-        }
-
-        @Override
-        public boolean isFinished() {
-            return this.finished;
-        }
-
-        @Override
-        public boolean isReady() {
-            return true;
-        }
-
-        @Override
-        public void setReadListener(ReadListener readListener) {
-        }
-
-    }
-
-    private ODataFeed retrieveODataFeed(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
-        return OData2TestUtils.retrieveODataFeedFromResponse(response, entitySet);
-    }
-
-    private ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
-        EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
-        return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
-    }
-
 }
