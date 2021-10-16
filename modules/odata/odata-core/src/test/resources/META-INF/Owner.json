@@ -9,5 +9,8 @@
     "_ref_Car" : {
     	"joinColumn" :["CAR_ID"]
     },
+	"_ref_Address" : {
+		"joinColumn" :["ID"]
+	},
 	"Id" : "ID"
 }

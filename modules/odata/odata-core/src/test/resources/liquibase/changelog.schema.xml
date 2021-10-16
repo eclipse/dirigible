@@ -89,6 +89,33 @@
         </createTable>
     </changeSet>
 
+
+    <changeSet author="dirigible" id="ADDRESSES">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ADDRESSES"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ADDRESSES">
+
+            <column name="ID" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="CITY" type="VARCHAR(300)" defaultValueComputed="${now}">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="STREET" type="VARCHAR(300)">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="POSTAL_CODE" type="number">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="OWNER_ID" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet author="dirigible" id="car-drivers">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -107,6 +134,18 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="CAR_ID" baseTableName="OWNERS"
                                  constraintName="fk_CAR_OWNERS" referencedColumnNames="ID" referencedTableName="CARS"
+                                 validate="true"/>
+
+    </changeSet>
+
+    <changeSet author="dirigible" id="owners-addresses">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_OWNER_ADDRESS"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="OWNER_ID" baseTableName="ADDRESSES"
+                                 constraintName="fk_OWNER_ADDRESS" referencedColumnNames="ID" referencedTableName="OWNERS"
                                  validate="true"/>
     </changeSet>
 </databaseChangeLog> 
