@@ -14,12 +14,15 @@ package org.eclipse.dirigible.engine.odata2.sql.entities;
 import org.apache.olingo.odata2.api.annotation.edm.*;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static org.eclipse.dirigible.engine.odata2.sql.entities.Car.CAR_2_TOWNER_ASSOCIATION;
 
 @EdmEntityType(name = "Owner")
 @EdmEntitySet(name = "Owners")
 public class Owner {
+    static final String OWNER_2_ADDRESS_ASSOCIATION = "Owner2AddressAssociation";
+
     @EdmKey
     @EdmProperty
     private String id;
@@ -32,6 +35,9 @@ public class Owner {
 
     @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.ZERO_OR_ONE, toType = Car.class, association = CAR_2_TOWNER_ASSOCIATION)
     private Car car;
+
+    @EdmNavigationProperty(toMultiplicity = EdmNavigationProperty.Multiplicity.MANY, toType = Address.class, association = OWNER_2_ADDRESS_ASSOCIATION)
+    private List<Address> addresses;
 
     @EdmProperty(type = EdmType.DATE_TIME)
     private Calendar purchaseDate;

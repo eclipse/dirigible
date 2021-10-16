@@ -39,6 +39,16 @@
     </loadData>
   </changeSet>
 
+  <changeSet author="dirigible" id="addresses-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM ADDRESSES
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/Addresses.csv"
+              separator=";" tableName="ADDRESSES">
+    </loadData>
+  </changeSet>
 
 
 </databaseChangeLog> 

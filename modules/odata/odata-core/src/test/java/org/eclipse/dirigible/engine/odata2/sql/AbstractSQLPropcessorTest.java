@@ -20,6 +20,7 @@ import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.easymock.EasyMockSupport;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
@@ -64,7 +65,7 @@ public abstract class AbstractSQLPropcessorTest {
     @Before
     public void setup() throws ODataException, SQLException {
         ds = createDataSource();
-        Class<?> [] classes = {Car.class, Driver.class, Owner.class};
+        Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
 
         edm = new AnnotationEdmProvider(Arrays.asList(classes));
         edm.getSchemas();

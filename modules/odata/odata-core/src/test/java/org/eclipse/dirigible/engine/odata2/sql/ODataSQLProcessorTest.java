@@ -17,6 +17,7 @@ import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -718,6 +719,25 @@ public class ODataSQLProcessorTest extends AbstractSQLPropcessorTest {
         assertEquals("Grigor", fourthOwnerProperties.get("FirstName"));
     }
 
+    @Test
+    @Ignore
+    public void testGetEntitySetExpandSubEntity() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$filter", "Id eq 'b4dc3e22-bacb-44ed-aa02-70273525fb73'") //
+                .param("$expand", "Drivers,Owners/Addresses") //
+                .accept("application/atom+xml").executeRequest(GET);
+        //TODO implmeent me
+        String content = IOUtils.toString((InputStream) response.getEntity());
+        System.out.println(content);
+
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        assertEquals(1, resultFeed.getEntries().size());
+        ODataEntry resultEntry = resultFeed.getEntries().get(0);
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+
+    }
 
     @Test
     public void testOrderByExpandedEntityWithoutExpand() throws Exception {
