@@ -37,7 +37,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
 	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-	
+
 	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
 
 	/**

@@ -91,6 +91,9 @@ angular.module('preview', [])
                     case 'mjs':
                         url += '/js';
                         break;
+					case 'ts':
+						url += '/js';
+						break;
 					case 'xsjs':
 						url += '/xsk';
 						break;

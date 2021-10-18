@@ -23,6 +23,12 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 	private static Cache<String, byte[]> cache;
 
 	public CaffeineRepositoryCache() {
+		if (cache == null) {
+			initCache();
+		}
+	}
+
+	private static void initCache() {
 		long timePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_TIME_LIMIT_IN_MINUTES, "10"));
 		long sizePolicy = Long.parseLong(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_SIZE_LIMIT_IN_MEGABYTES, "100"));
 		cache = Caffeine.newBuilder()
@@ -30,6 +36,14 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 				.maximumWeight(sizePolicy * 1024 * 1024)
 				.weigher((String k, byte[] v) -> v.length)
 				.build();
+	}
+
+	public static Cache<String, byte[]> getInternalCache() {
+		if (cache == null) {
+			initCache();
+		}
+
+		return cache;
 	}
 
 	@Override

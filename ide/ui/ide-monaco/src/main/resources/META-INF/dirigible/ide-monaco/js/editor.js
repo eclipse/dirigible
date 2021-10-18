@@ -31,6 +31,9 @@ function FileIO() {
             extension: ".js",
             type: "javascript"
         }, {
+            extension: ".ts",
+            type: "javascript"
+        }, {
             extension: ".html",
             type: "html"
         }, {
