@@ -9,39 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-              "name": "@dirigible/utils",
-              "description": "Dirigible Utils module",
-              "isPackageDescription": true
-            },
-    {
-		name: "utils/v4/alphanumeric",
-		description: "Alphanumeric API"
-	}, {
-		name: "utils/v4/base64",
-		description: "Base64 API"
-	}, {
-		name: "utils/v4/digest",
-		description: "Digest API"
-	}, {
-		name: "utils/v4/escape",
-		description: "Escape API"
-	}, {
-		name: "utils/v4/hex",
-		description: "Hex API"
-	}, {
-		name: "utils/v4/jsonpath",
-		description: "JsonPath API"
-	}, {
-		name: "utils/v4/url",
-		description: "URL API"
-	}, {
-		name: "utils/v4/uuid",
-		description: "UUID API"
-	}, {
-		name: "utils/v4/xml",
-		description: "XML API"
-	}];
+
+var platform = require('platform/v4/registry');
+
+exports.getContent = function () {
+    let file = platform.getText("utils/extensions/modules.json");
+    return JSON.parse(file);
 };
 

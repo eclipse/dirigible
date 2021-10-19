@@ -9,9 +9,10 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var registry = require('platform/v4/registry');
-exports.getContent = function () {
-    let file = registry.getText("core/extensions/modules.json");
-    return JSON.parse(file);
+let response = require("http/v4/response");
+let dtsParser = require("ide-monaco-extensions/api/utils/dtsParser");
 
-};
+let dtsPaths = dtsParser.getDtsPaths();
+let dtsContent = dtsParser.getDtsFileContents(dtsPaths);
+
+response.println(dtsContent);

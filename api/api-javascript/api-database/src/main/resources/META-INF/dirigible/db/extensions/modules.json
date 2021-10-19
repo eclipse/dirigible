@@ -1,4 +1,10 @@
-[
+[{
+  "name": "@dirigible/db",
+  "description": "Dirigible DB module",
+  "isPackageDescription": true,
+  "dtsPath": "db/extensions/db.d.ts"
+
+},
   {
     "name": "db/v4/dao",
     "description": "Database DAO API",
@@ -88,5 +94,4 @@
       "db/v4/update"
     ],
     "pathDefault": "db/v4/update"
-  }
-]
+  }]

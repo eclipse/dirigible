@@ -1,0 +1,45 @@
+[{
+  "name": "@dirigible/http",
+  "description": "Dirigible HTTP module",
+  "isPackageDescription": true,
+  "dtsPath": "http/extensions/http.d.ts"
+}, {
+  "require_suggestion": "http/v4/client",
+  "description": "Client API",
+  "api": "client",
+  "versionedPaths": ["http/v3/client", "http/v4/client"],
+  "pathDefault": "http/v4/client"
+}, {
+  "require_suggestion": "http/v4/clientAsync",
+  "description": "ClientAsync API",
+  "api": "clientAsync",
+  "versionedPaths": ["http/v3/clientAsync", "http/v4/clientAsync"],
+  "pathDefault": "http/v4/clientAsync"
+}, {
+  "require_suggestion": "http/v4/request",
+  "description": "Request API",
+  "api": "request",
+  "versionedPaths": ["http/v3/request", "http/v4/request"],
+  "pathDefault": "http/v4/request"
+}, {
+  "require_suggestion": "http/v4/response",
+  "description": "Response API",
+  "api": "response",
+  "versionedPaths": ["http/v3/response", "http/v4/response"],
+  "pathDefault": "http/v4/response"
+},
+
+
+ {"require_suggestion": "http/v4/session",
+    "description": "HTTP Session API",
+    "api": "session",
+    "versionedPaths": ["http/v3/session", "http/v4/session"],
+    "pathDefault": "http/v4/session"
+  }, {
+    "require_suggestion": "http/v4/upload",
+    "description": "HTTP Upload API",
+    "api": "upload",
+    "versionedPaths": ["http/v3/upload", "http/v4/upload"],
+    "pathDefault": "http/v4/upload"
+  }
+]

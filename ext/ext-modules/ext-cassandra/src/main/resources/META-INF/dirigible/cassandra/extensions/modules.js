@@ -11,8 +11,17 @@
  */
 exports.getContent = function() {
 	return [{
-		name: "cassandra/cassandra",
-		description: "Cassandra API"
-	}];
+		"name": "@dirigible/cassandra",
+		"description": "Cassandra API",
+		"isPackageDescription": true,
+		"dtsPath": "cassandra/extensions/cassandra.d.ts"
+	},
+		{
+			"require_suggestion": "cassandra/cassandra",
+			"description": "Cassandra API",
+			"api": "cassandra",
+			"versionedPaths": [ "cassandra/cassandra"],
+			"pathDefault": "cassandra/cassandra"
+		}];
 };
 

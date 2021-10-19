@@ -463,6 +463,23 @@
             };
             xhrModules.send();
         }
+        function loadDTS() {
+            let cachedDts = window.sessionStorage.getItem('dtsContent');
+            if(cachedDts) {
+                monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "")
+            }
+            else {
+                let xhrModules = new XMLHttpRequest();
+                xhrModules.open('GET', '/services/v4/js/ide-monaco-extensions/api/dts.js');
+                xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
+                xhrModules.onload = function (xhrModules) {
+                    let dtsContent = xhrModules.target.responseText;
+                    monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "")
+                    window.sessionStorage.setItem('dtsContent', dtsContent);
+                };
+                xhrModules.send();
+            }
+        }
 
         function loadSuggestions(moduleName, suggestions) {
             if (moduleName.split("/").length <= 1) {
@@ -599,9 +616,8 @@
                         });
                         monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
                         monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
-                        monaco.languages.typescript.javascriptDefaults.addExtraLib(
-                            'declare module "@dirigible/utils" { declare module base64 { function encode(text: string); }}'
-                        )
+                        loadDTS();
+
                         monaco.languages.registerCompletionItemProvider('javascript', {
                             triggerCharacters: ["\"", "'"],
                             provideCompletionItems: function (model, position) {

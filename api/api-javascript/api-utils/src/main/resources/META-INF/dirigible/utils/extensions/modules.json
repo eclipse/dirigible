@@ -1,7 +1,8 @@
 [{
   "name": "@dirigible/utils",
   "description": "Dirigible Utils module",
-  "isPackageDescription": true
+  "isPackageDescription": true,
+  "dtsPath": "utils/extensions/utils.d.ts"
 }, {
   "name": "utils/v4/alphanumeric",
   "description": "Alphanumeric API",
@@ -57,3 +58,18 @@
   "versionedPaths": [ "utils/v3/xml", "utils/v4/xml"],
   "pathDefault": "utils/v4/xml"
 }]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

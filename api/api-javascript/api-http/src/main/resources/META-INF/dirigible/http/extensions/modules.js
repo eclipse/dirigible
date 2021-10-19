@@ -9,30 +9,17 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "http/v4/client",
-		description: "HTTP Client API"
-	}, {
-		name: "http/v4/clientAsync",
-		description: "HTTP Client Async API"
-	}, {
-		name: "http/v4/request",
-		description: "HTTP Request API"
-	}, {
-		name: "http/v4/response",
-		description: "HTTP Response API"
-	}, {
-		name: "http/v4/rs-data",
-		description: "HTTP RS-Data API"
-	}, {
-		name: "http/v4/rs",
-		description: "HTTP RS API"
-	}, {
-		name: "http/v4/session",
-		description: "HTTP Session API"
-	}, {
-		name: "http/v4/upload",
-		description: "HTTP Upload API"
-	}];
+var registry = require('platform/v4/registry');
+exports.getContent = function () {
+    let file = registry.getText("core/extensions/modules.json");
+    return JSON.parse(file);
+// /*
+//   // , {
+//   // 	name: "http/v4/rs-data",
+//   // 	description: "HTTP RS-Data API"
+//   // }, {
+//   // 	name: "http/v4/rs",
+//   // 	description: "HTTP RS API"
+//   // }
+//   */
 };

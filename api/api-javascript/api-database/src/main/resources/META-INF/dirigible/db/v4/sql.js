@@ -18,6 +18,7 @@
 var database = require('db/v4/database');
 
 exports.getDialect = function(connection) {
+
 	/**
 	 * Dialect object
 	 */

@@ -11,6 +11,11 @@
  */
 exports.getContent = function() {
 	return [{
+		"name": "@dirigible/indexing",
+		"description": "Dirigible Indexing module",
+		"isPackageDescription": true,
+		"dtsPath": "indexing/extensions/indexing.d.ts"
+	},{
 		name: "indexing/v4/searcher",
 		description: "Indexing Searcher API"
 	}, {
