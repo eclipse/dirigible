@@ -186,8 +186,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
 				context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
 				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
-				context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE);
-
+				Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);;
+				executionContext.put("main_module", mainModule);
 				beforeEval(context);
 
 				if (isModule) {
