@@ -14,7 +14,7 @@
 **Eclipse Dirigible** is a High-Productivity Application Platform as a Service (hpaPaaS). It provides an application server consisting of pre-selected execution engines and built-in development tools as WebIDE. It is suitable for rapid development of business applications by also leveraging the Low Code / No Code techniques.
 
 <p align="center">
-  <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-symbol.png" width="60%" alt="dirigible logo"/>
+  <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-2Kx2K.svg" width="40%" alt="dirigible logo"/>
 </p>
 
 > Enjoy Programming Like Never Before
