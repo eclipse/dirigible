@@ -497,7 +497,6 @@
                 if (xhr.target.status === 200) {
                     let loadedSuggestions = JSON.parse(xhr.target.responseText);
                     suggestions[moduleName] = loadedSuggestions;
-                    console.log("LOADED SUGGESTIONS FOR MODULE  "+ moduleName+ " \n"+suggestions )
                 }
             };
             xhr.send();
