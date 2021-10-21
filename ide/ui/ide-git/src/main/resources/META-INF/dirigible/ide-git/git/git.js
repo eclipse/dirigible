@@ -972,12 +972,13 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		workspaceService.listWorkspaceNames()
 			.then(function (workspaceNames) {
 				this.workspaces = workspaceNames;
-				let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace'));
-				if (storedWorkspace !== null) {
+				let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+				if ('name' in storedWorkspace) {
 					this.selectedWorkspace = storedWorkspace.name;
 					this.workspaceSelected();
 				} else if (this.workspaces[0]) {
-					this.selectedWorkspace = this.workspaces[0];
+					this.selectedWorkspace = 'workspace'; // Default
+					localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
 					this.workspaceSelected();
 				}
 			}.bind(this));
@@ -991,7 +992,6 @@ angular.module('workspace', ['workspace.config', 'ngAnimate', 'ngSanitize', 'ui.
 		this.workspaceSelected = function () {
 			if (this.wsTree) {
 				this.wsTree.workspaceName = this.selectedWorkspace;
-				localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
 				this.wsTree.refresh();
 				return;
 			}
