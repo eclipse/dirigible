@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var testRunner = require('test/v4/test-runner');
-for(var propertyName in testRunner) {
-	exports[propertyName] = testRunner[propertyName];
+for (var propertyName in testRunner) {
+    exports[propertyName] = testRunner[propertyName];
 }

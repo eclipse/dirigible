@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Destinations
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.get = function(name) {
-	return JSON.parse(org.eclipse.dirigible.api.v3.core.DestinationsFacade.get(name));
+exports.get = function (name) {
+    return JSON.parse(org.eclipse.dirigible.api.v3.core.DestinationsFacade.get(name));
 };
 
-exports.set = function(name, destination) {
-	org.eclipse.dirigible.api.v3.core.DestinationsFacade.set(name, JSON.stringify(destination));
+exports.set = function (name, destination) {
+    org.eclipse.dirigible.api.v3.core.DestinationsFacade.set(name, JSON.stringify(destination));
 };

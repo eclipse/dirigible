@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var upload = require('http/v4/upload');
-for(var propertyName in upload) {
-	exports[propertyName] = upload[propertyName];
+for (var propertyName in upload) {
+    exports[propertyName] = upload[propertyName];
 }

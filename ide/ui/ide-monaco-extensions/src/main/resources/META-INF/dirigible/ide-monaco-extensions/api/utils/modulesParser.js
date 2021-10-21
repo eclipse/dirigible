@@ -26,7 +26,10 @@ exports.getModules = function () {
     }
 
     let apiModulesExtensions = extensions.getExtensions("api-modules");
-    apiModulesExtensions.forEach(function (apiModule) {
+    let extModulesExtensions = extensions.getExtensions("ext-modules");
+    let apis= apiModulesExtensions.concat(extModulesExtensions);
+
+    apis.forEach(function (apiModule) {
         let module = require(apiModule);
         modules = modules.concat(module.getContent());
     });
@@ -61,6 +64,7 @@ function isIgnoredModulePath(path) {
         || path.startsWith("db/") // Ignore system JavaScript API packages
         || path.startsWith("security/") // Ignore system JavaScript API packages
         || path.startsWith("security/") // Ignore system JavaScript API packages
+        || path.startsWith("cassandra/") // Ignore system JavaScript API packages
 
         || path.startsWith("template-application-") // Ignore application templates
 

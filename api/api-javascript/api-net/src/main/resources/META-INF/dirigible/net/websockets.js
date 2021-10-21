@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var websockets = require('net/v4/websockets');
-for(var propertyName in websockets) {
-	exports[propertyName] = websockets[propertyName];
+for (var propertyName in websockets) {
+    exports[propertyName] = websockets[propertyName];
 }

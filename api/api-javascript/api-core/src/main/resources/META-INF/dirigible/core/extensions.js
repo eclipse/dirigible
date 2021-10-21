@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var extensions = require('core/v4/extensions');
-for(var propertyName in extensions) {
-	exports[propertyName] = extensions[propertyName];
+for (var propertyName in extensions) {
+    exports[propertyName] = extensions[propertyName];
 }

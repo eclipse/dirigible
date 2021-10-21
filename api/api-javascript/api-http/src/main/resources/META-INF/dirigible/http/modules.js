@@ -9,37 +9,37 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getClient = function() {
-	var client = require('http/v4/client');
-	return client;
+exports.getClient = function () {
+    var client = require('http/v4/client');
+    return client;
 };
 
-exports.getRequest = function() {
-	var request = require('http/v4/request');
-	return request;
+exports.getRequest = function () {
+    var request = require('http/v4/request');
+    return request;
 };
 
-exports.getResponse = function() {
-	var response = require('http/v4/response');
-	return response;
+exports.getResponse = function () {
+    var response = require('http/v4/response');
+    return response;
 };
 
-exports.getSession = function() {
-	var session = require('http/v4/session');
-	return session;
+exports.getSession = function () {
+    var session = require('http/v4/session');
+    return session;
 };
 
-exports.getUpload = function() {
-	var upload = require('http/v4/upload');
-	return upload;
+exports.getUpload = function () {
+    var upload = require('http/v4/upload');
+    return upload;
 };
 
-exports.getRest = function() {
-	var rest = require('http/v4/rs');
-	return rest;
+exports.getRest = function () {
+    var rest = require('http/v4/rs');
+    return rest;
 };
 
-exports.getRestData = function() {
-	var restData = require('http/v4/rs-data');
-	return restData;
+exports.getRestData = function () {
+    var restData = require('http/v4/rs-data');
+    return restData;
 };

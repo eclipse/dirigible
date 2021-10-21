@@ -11,5 +11,5 @@
  */
 var templateEngines = require("platform/v4/template-engines");
 for (var propertyName in templateEngines) {
-	exports[propertyName] = templateEngines[propertyName];
+    exports[propertyName] = templateEngines[propertyName];
 }

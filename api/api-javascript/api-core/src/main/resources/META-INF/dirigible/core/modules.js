@@ -9,38 +9,38 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getConsole = function() {
-	var console = require('core/v4/console');
-	return console;
+exports.getConsole = function () {
+    var console = require('core/v4/console');
+    return console;
 };
 
-exports.getContext = function() {
-	var context = require('core/v4/context');
-	return context;
+exports.getContext = function () {
+    var context = require('core/v4/context');
+    return context;
 };
 
-exports.getEnv = function() {
-	var env = require('core/v4/env');
-	return env;
+exports.getEnv = function () {
+    var env = require('core/v4/env');
+    return env;
 };
 
-exports.getExtensions = function() {
-	var extensions = require('core/v4/extensions');
-	return extensions;
+exports.getExtensions = function () {
+    var extensions = require('core/v4/extensions');
+    return extensions;
 };
 
-exports.getGlobals = function() {
-	var globals = require('core/v4/globals');
-	return globals;
+exports.getGlobals = function () {
+    var globals = require('core/v4/globals');
+    return globals;
 };
 
-exports.getThreads = function() {
-	var threads = require('core/v4/threads');
-	return threads;
+exports.getThreads = function () {
+    var threads = require('core/v4/threads');
+    return threads;
 };
 
-exports.getDestinations = function() {
-	var destinations = require('core/v4/destinations');
-	return destinations;
+exports.getDestinations = function () {
+    var destinations = require('core/v4/destinations');
+    return destinations;
 };
 

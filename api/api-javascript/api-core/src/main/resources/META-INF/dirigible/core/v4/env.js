@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Env
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.get = function(name) {
-	return org.eclipse.dirigible.api.v3.core.EnvFacade.get(name);
+exports.get = function (name) {
+    return org.eclipse.dirigible.api.v3.core.EnvFacade.get(name);
 };
 
-exports.list = function() {
-	return org.eclipse.dirigible.api.v3.core.EnvFacade.list();
+exports.list = function () {
+    return org.eclipse.dirigible.api.v3.core.EnvFacade.list();
 };

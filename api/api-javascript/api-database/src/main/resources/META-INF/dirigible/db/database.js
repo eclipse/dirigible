@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var database = require('db/v4/database');
-for(var propertyName in database) {
-	exports[propertyName] = database[propertyName];
+for (var propertyName in database) {
+    exports[propertyName] = database[propertyName];
 }

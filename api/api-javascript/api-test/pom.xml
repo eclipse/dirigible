@@ -9,17 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Test</name>
-	<artifactId>dirigible-api-javascript-test</artifactId>
-	<description>Test Control Modules</description>
+    <name>API - JavaScript - Test</name>
+    <artifactId>dirigible-api-javascript-test</artifactId>
+    <description>Test Control Modules</description>
     <packaging>jar</packaging>
-	
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>		
-		<content.repository.name>api-test</content.repository.name>
-		<content.project.name>test</content.project.name>
-		
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-test</content.repository.name>
+        <content.project.name>test</content.project.name>
+
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

@@ -24,6 +24,6 @@ exports.assertNotNull = function (condition, message) {
 
 exports.assertEquals = function assertEquals(actual, expected, message) {
     if (expected !== actual) {
-       throw(message || "Assertion failed");
+        throw(message || "Assertion failed");
     }
 }

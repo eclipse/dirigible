@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getLogging = function() {
-	var logging = require('log/v4/logging');
-	return logging;
+exports.getLogging = function () {
+    var logging = require('log/v4/logging');
+    return logging;
 };
 

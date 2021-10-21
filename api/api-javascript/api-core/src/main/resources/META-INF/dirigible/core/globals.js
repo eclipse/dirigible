@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var globals = require('core/v4/globals');
-for(var propertyName in globals) {
-	exports[propertyName] = globals[propertyName];
+for (var propertyName in globals) {
+    exports[propertyName] = globals[propertyName];
 }

@@ -17,8 +17,9 @@ exports.getDtsPaths = function () {
     let dtsPaths = [];
 
     let apiModulesExtensions = extensions.getExtensions("api-modules");
-    // let extModulesExtensions = extensions.getExtensions("ext-modules");
-    let apis = apiModulesExtensions;
+    let extModulesExtensions = extensions.getExtensions("ext-modules");
+    let apis = apiModulesExtensions.concat(extModulesExtensions);
+    console.log("APIS "+ apis);
 
     apis.forEach(function (apiModule) {
         let module = require(apiModule);

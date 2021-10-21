@@ -11,7 +11,7 @@
  */
 var registry = require('platform/v4/registry');
 exports.getContent = function () {
-    let file = registry.getText("core/extensions/modules.json");
+    let file = registry.getText("http/extensions/modules.json");
     return JSON.parse(file);
 // /*
 //   // , {

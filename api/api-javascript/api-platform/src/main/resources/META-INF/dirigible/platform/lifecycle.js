@@ -11,5 +11,5 @@
  */
 var lifecycle = require("platform/v4/lifecycle");
 for (var propertyName in lifecycle) {
-	exports[propertyName] = lifecycle[propertyName];
+    exports[propertyName] = lifecycle[propertyName];
 }

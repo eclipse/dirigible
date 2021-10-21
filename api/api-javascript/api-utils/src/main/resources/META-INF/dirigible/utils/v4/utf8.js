@@ -13,20 +13,20 @@
 /**
  * Encode the input (text or byte array) as text
  */
- exports.encode = function(input) {
-	return org.eclipse.dirigible.api.v3.utils.UTF8Facade.encode(input);
+exports.encode = function (input) {
+    return org.eclipse.dirigible.api.v3.utils.UTF8Facade.encode(input);
 }
 
 /**
  * Decode the input (text or byte array) as text
  */
-exports.decode = function(input) {
-	return org.eclipse.dirigible.api.v3.utils.UTF8Facade.decode(input);
+exports.decode = function (input) {
+    return org.eclipse.dirigible.api.v3.utils.UTF8Facade.decode(input);
 }
 
 /**
  * Decode the input byte array as text
  */
-exports.bytesToString = function(bytes, offset, length) {
+exports.bytesToString = function (bytes, offset, length) {
     return org.eclipse.dirigible.api.v3.utils.UTF8Facade.bytesToString(bytes, offset, length);
 }

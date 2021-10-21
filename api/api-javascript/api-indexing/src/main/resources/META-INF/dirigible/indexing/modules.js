@@ -9,12 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getWriter = function() {
-	var writer = require('messaging/v4/writer');
-	return writer;
+exports.getWriter = function () {
+    var writer = require('messaging/v4/writer');
+    return writer;
 };
 
-exports.getSearcher = function() {
-	var searcher = require('messaging/v4/searcher');
-	return searcher;
+exports.getSearcher = function () {
+    var searcher = require('messaging/v4/searcher');
+    return searcher;
 };

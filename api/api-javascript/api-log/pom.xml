@@ -9,17 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Log</name>
-	<artifactId>dirigible-api-javascript-log</artifactId>
-	<description>Logging Modules</description>
+    <name>API - JavaScript - Log</name>
+    <artifactId>dirigible-api-javascript-log</artifactId>
+    <description>Logging Modules</description>
     <packaging>jar</packaging>
 
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>		
-		<content.repository.name>api-log</content.repository.name>
-		<content.project.name>log</content.project.name>
-		
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-log</content.repository.name>
+        <content.project.name>log</content.project.name>
+
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

@@ -497,6 +497,7 @@
                 if (xhr.target.status === 200) {
                     let loadedSuggestions = JSON.parse(xhr.target.responseText);
                     suggestions[moduleName] = loadedSuggestions;
+                    console.log("LOADED SUGGESTIONS FOR MODULE  "+ moduleName+ " \n"+suggestions )
                 }
             };
             xhr.send();
@@ -622,7 +623,8 @@
                             triggerCharacters: ["\"", "'"],
                             provideCompletionItems: function (model, position) {
                                 let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
-                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0 && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
+                                if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0
+                                    && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
                                     return { suggestions: [] };
                                 }
                                 let wordPosition = model.getWordUntilPosition(position);
@@ -653,89 +655,89 @@
                                 };
                             }
                         });
-                        // monaco.languages.registerCompletionItemProvider('javascript', {
-                        //     triggerCharacters: ["."],
-                        //     provideCompletionItems: function (model, position) {
-                        //         let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
+                        monaco.languages.registerCompletionItemProvider('javascript', {
+                            triggerCharacters: ["."],
+                            provideCompletionItems: function (model, position) {
+                                let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
 
-                        //         let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
-                        //         let afterDotToken = token.substring(token.indexOf(".") + 1);
-                        //         let tokenParts = token.split(".");
-                        //         let moduleName = moduleImport ? moduleImport.module : null;
-                        //         if (tokenParts != null && tokenParts.length > 2) {
-                        //             moduleName = null;
-                        //         }
-                        //         let nestedObjectKeyword = null;
-                        //         if (!moduleName) {
-                        //             let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
-                        //             if (nestedKeyword) {
-                        //                 nestedObjectKeyword = nestedKeyword.split(".")[0];
-                        //             }
-                        //         }
-                        //         if (!moduleName && !nestedObjectKeyword) {
-                        //             return { suggestions: [] };
-                        //         }
-                        //         let wordPosition = model.getWordUntilPosition(position);
-                        //         let word = wordPosition.word;
-                        //         let range = {
-                        //             startLineNumber: position.lineNumber,
-                        //             endLineNumber: position.lineNumber,
-                        //             startColumn: wordPosition.startColumn,
-                        //             endColumn: wordPosition.endColumn
-                        //         };
-                        //         let suggestions = [];
-                        //         let moduleSuggestions = codeCompletionSuggestions[moduleName];
-                        //         if (moduleSuggestions) {
-                        //             Object.keys(moduleSuggestions["exports"]).forEach(suggestionName => {
-                        //                 let suggestion = moduleSuggestions["exports"][suggestionName];
-                        //                 suggestion.name = suggestion.definition;
-                        //                 suggestions.push(suggestion);
-                        //             });
-                        //         } else if (nestedObjectKeyword) {
-                        //             let assignment = codeCompletionAssignments[nestedObjectKeyword];
-                        //             if (assignment) {
-                        //                 let assignmentInfo = {
-                        //                     parentModule: null,
-                        //                     methods: []
-                        //                 };
-                        //                 traverseAssignment(assignment, assignmentInfo);
+                                let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
+                                let afterDotToken = token.substring(token.indexOf(".") + 1);
+                                let tokenParts = token.split(".");
+                                let moduleName = moduleImport ? moduleImport.module : null;
+                                if (tokenParts != null && tokenParts.length > 2) {
+                                    moduleName = null;
+                                }
+                                let nestedObjectKeyword = null;
+                                if (!moduleName) {
+                                    let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
+                                    if (nestedKeyword) {
+                                        nestedObjectKeyword = nestedKeyword.split(".")[0];
+                                    }
+                                }
+                                if (!moduleName && !nestedObjectKeyword) {
+                                    return { suggestions: [] };
+                                }
+                                let wordPosition = model.getWordUntilPosition(position);
+                                let word = wordPosition.word;
+                                let range = {
+                                    startLineNumber: position.lineNumber,
+                                    endLineNumber: position.lineNumber,
+                                    startColumn: wordPosition.startColumn,
+                                    endColumn: wordPosition.endColumn
+                                };
+                                let suggestions = [];
+                                let moduleSuggestions = codeCompletionSuggestions[moduleName];
+                                if (moduleSuggestions) {
+                                    Object.keys(moduleSuggestions["exports"]).forEach(suggestionName => {
+                                        let suggestion = moduleSuggestions["exports"][suggestionName];
+                                        suggestion.name = suggestion.definition;
+                                        suggestions.push(suggestion);
+                                    });
+                                } else if (nestedObjectKeyword) {
+                                    let assignment = codeCompletionAssignments[nestedObjectKeyword];
+                                    if (assignment) {
+                                        let assignmentInfo = {
+                                            parentModule: null,
+                                            methods: []
+                                        };
+                                        traverseAssignment(assignment, assignmentInfo);
 
-                        //                 let parentObject = "exports";
-                        //                 for (let i = 0; i < assignmentInfo.methods.length; i++) {
-                        //                     parentObject = codeCompletionSuggestions[assignmentInfo.parentModule][parentObject][assignmentInfo.methods[i]].returnType;
-                        //                 }
+                                        let parentObject = "exports";
+                                        for (let i = 0; i < assignmentInfo.methods.length; i++) {
+                                            parentObject = codeCompletionSuggestions[assignmentInfo.parentModule][parentObject][assignmentInfo.methods[i]].returnType;
+                                        }
 
-                        //                 let moduleSuggestions = codeCompletionSuggestions[assignmentInfo.parentModule];
-                        //                 Object.keys(moduleSuggestions[parentObject]).forEach(suggestionName => {
-                        //                     let suggestion = moduleSuggestions[parentObject][suggestionName];
-                        //                     suggestion.name = suggestion.definition;
-                        //                     suggestions.push(suggestion);
-                        //                 });
-                        //             }
-                        //         }
-                        //         return {
-                        //             suggestions: suggestions
-                        //                 .filter(function (e) {
-                        //                     if (word.length > 0) {
-                        //                         return e.name.toLowerCase().startsWith(word.toLowerCase());
-                        //                     }
-                        //                     return true;
-                        //                 })
-                        //                 .map(function (e) {
-                        //                     return {
-                        //                         label: e.name,
-                        //                         kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
-                        //                         documentation: {
-                        //                             value: e.documentation
-                        //                         },
-                        //                         detail: e.isFunction ? "function " + e.name : e.name,
-                        //                         insertText: e.name,
-                        //                         range: range
-                        //                     }
-                        //                 })
-                        //         };
-                        //     }
-                        // });
+                                        let moduleSuggestions = codeCompletionSuggestions[assignmentInfo.parentModule];
+                                        Object.keys(moduleSuggestions[parentObject]).forEach(suggestionName => {
+                                            let suggestion = moduleSuggestions[parentObject][suggestionName];
+                                            suggestion.name = suggestion.definition;
+                                            suggestions.push(suggestion);
+                                        });
+                                    }
+                                }
+                                return {
+                                    suggestions: suggestions
+                                        .filter(function (e) {
+                                            if (word.length > 0) {
+                                                return e.name.toLowerCase().startsWith(word.toLowerCase());
+                                            }
+                                            return true;
+                                        })
+                                        .map(function (e) {
+                                            return {
+                                                label: e.name,
+                                                kind: e.isFunction ? monaco.languages.CompletionItemKind.Function : monaco.languages.CompletionItemKind.Field,
+                                                documentation: {
+                                                    value: e.documentation
+                                                },
+                                                detail: e.isFunction ? "function " + e.name : e.name,
+                                                insertText: e.name,
+                                                range: range
+                                            }
+                                        })
+                                };
+                            }
+                        });
                     });
                 monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
                     noSemanticValidation: false,

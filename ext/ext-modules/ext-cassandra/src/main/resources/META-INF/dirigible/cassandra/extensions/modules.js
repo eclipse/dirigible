@@ -17,7 +17,7 @@ exports.getContent = function() {
 		"dtsPath": "cassandra/extensions/cassandra.d.ts"
 	},
 		{
-			"require_suggestion": "cassandra/cassandra",
+			"name": "cassandra/cassandra",
 			"description": "Cassandra API",
 			"api": "cassandra",
 			"versionedPaths": [ "cassandra/cassandra"],

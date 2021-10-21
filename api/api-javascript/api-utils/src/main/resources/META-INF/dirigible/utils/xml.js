@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var xml = require('utils/v4/xml');
-for(var propertyName in xml) {
-	exports[propertyName] = xml[propertyName];
+for (var propertyName in xml) {
+    exports[propertyName] = xml[propertyName];
 }

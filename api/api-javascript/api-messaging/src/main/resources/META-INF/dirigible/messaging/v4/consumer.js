@@ -11,36 +11,36 @@
  */
 /**
  * API v4 Consumer
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.queue = function(destination) {
-	var queue = new Queue();
-	queue.destination = destination;
-	return queue;
+exports.queue = function (destination) {
+    var queue = new Queue();
+    queue.destination = destination;
+    return queue;
 };
 
-exports.topic = function(destination) {
-	var topic = new Topic();
-	topic.destination = destination;
-	return topic;
+exports.topic = function (destination) {
+    var topic = new Topic();
+    topic.destination = destination;
+    return topic;
 };
 
 function Queue() {
-	this.receive = function(timeout) {
-		if (!timeout) {
-			timeout = 1000;
-		}
-		return org.eclipse.dirigible.api.v3.messaging.MessagingFacade.receiveFromQueue(this.destination, timeout);
-	};
+    this.receive = function (timeout) {
+        if (!timeout) {
+            timeout = 1000;
+        }
+        return org.eclipse.dirigible.api.v3.messaging.MessagingFacade.receiveFromQueue(this.destination, timeout);
+    };
 }
 
 function Topic() {
-	this.receive = function(timeout) {
-		if (!timeout) {
-			timeout = 1000;
-		}
-		return org.eclipse.dirigible.api.v3.messaging.MessagingFacade.receiveFromTopic(this.destination, timeout);
-	};
+    this.receive = function (timeout) {
+        if (!timeout) {
+            timeout = 1000;
+        }
+        return org.eclipse.dirigible.api.v3.messaging.MessagingFacade.receiveFromTopic(this.destination, timeout);
+    };
 }

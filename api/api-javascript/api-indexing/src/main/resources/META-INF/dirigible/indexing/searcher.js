@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var searcher = require('messaging/v4/searcher');
-for(var propertyName in searcher) {
-	exports[propertyName] = searcher[propertyName];
+for (var propertyName in searcher) {
+    exports[propertyName] = searcher[propertyName];
 }

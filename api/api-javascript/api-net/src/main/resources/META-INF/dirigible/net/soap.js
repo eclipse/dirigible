@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var soap = require('net/v4/soap');
-for(var propertyName in soap) {
-	exports[propertyName] = soap[propertyName];
+for (var propertyName in soap) {
+    exports[propertyName] = soap[propertyName];
 }

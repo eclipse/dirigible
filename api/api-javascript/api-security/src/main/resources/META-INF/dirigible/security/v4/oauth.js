@@ -18,9 +18,9 @@ var url = require("utils/v4/url");
 var base64 = require("utils/v4/base64");
 var bytes = require("io/v4/bytes");
 
-exports.getToken = function() {
+exports.getToken = function () {
     let request = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequest();
-	let jwtToken = org.eclipse.dirigible.oauth.utils.JwtUtils.getJwt(request);
+    let jwtToken = org.eclipse.dirigible.oauth.utils.JwtUtils.getJwt(request);
     if (jwtToken === undefined || jwtToken === null || jwtToken === "") {
         console.error("No JWT token present, the reason could be that this is not a OAuth enabled deployment.")
         throw new Error("No JWT token present, the reason could be that this is not a OAuth enabled deployment.");
@@ -30,23 +30,23 @@ exports.getToken = function() {
     return JSON.parse(payload);
 };
 
-exports.get = function(name) {
+exports.get = function (name) {
     return exports.getToken()[name];
 };
 
-exports.getEmail = function() {
+exports.getEmail = function () {
     return exports.get("email");
 };
 
-exports.getUsername = function() {
+exports.getUsername = function () {
     return exports.get("user_name");
 };
 
-exports.getGrantType = function() {
+exports.getGrantType = function () {
     return exports.get("grant_type");
 };
 
-exports.verify = function(token) {
+exports.verify = function (token) {
     try {
         org.eclipse.dirigible.oauth.utils.JwtUtils.verifyJwt(token);
     } catch (e) {
@@ -56,34 +56,34 @@ exports.verify = function(token) {
     return true;
 };
 
-exports.getClient = function(config) {
+exports.getClient = function (config) {
     return new OAuthClient(config);
 };
 
-function OAuthClient (config) {
+function OAuthClient(config) {
     this.url = config ? config.url : null;
     this.isAbsoluteUrl = config && config.isAbsoluteUrl ? config.isAbsoluteUrl : false;
     this.clientId = config ? config.clientId : null;
     this.clientSecret = config ? config.clientSecret : null;
     this.grantType = config && config.granType ? config.granType : "client_credentials";
 
-    this.setUrl = function(url) {
+    this.setUrl = function (url) {
         this.url = url;
     };
 
-    this.setClientId = function(clientId) {
+    this.setClientId = function (clientId) {
         this.clientId = clientId;
     };
 
-    this.setClientSecret = function(clientSecret) {
+    this.setClientSecret = function (clientSecret) {
         this.clientSecret = clientSecret;
     };
 
-    this.setGrantType = function(grantType) {
+    this.setGrantType = function (grantType) {
         this.grantType = grantType;
     };
 
-    this.getToken = function() {
+    this.getToken = function () {
         if (!this.url) {
             console.error("The OAuth 'url' property is not provided.")
             throw new Error("The OAuth 'url' property is not provided.");

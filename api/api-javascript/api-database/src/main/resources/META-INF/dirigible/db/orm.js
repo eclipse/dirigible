@@ -11,6 +11,6 @@
  */
 "use strict";
 var orm = require('db/v4/orm');
-for(var propertyName in orm) {
-	exports[propertyName] = orm[propertyName];
+for (var propertyName in orm) {
+    exports[propertyName] = orm[propertyName];
 }

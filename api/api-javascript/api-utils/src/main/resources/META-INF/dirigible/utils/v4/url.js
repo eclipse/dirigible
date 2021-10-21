@@ -9,27 +9,27 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.encode = function(input, charset) {
-	var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.encode(input, charset);
-	return output;
+exports.encode = function (input, charset) {
+    var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.encode(input, charset);
+    return output;
 };
 
-exports.decode = function(input, charset) {
-	var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.decode(input, charset);
-	return output;
+exports.decode = function (input, charset) {
+    var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.decode(input, charset);
+    return output;
 };
 
-exports.escape = function(input) {
-	var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escape(input);
-	return output;
+exports.escape = function (input) {
+    var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escape(input);
+    return output;
 };
 
-exports.escapePath = function(input) {
-	var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escapePath(input);
-	return output;
+exports.escapePath = function (input) {
+    var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escapePath(input);
+    return output;
 };
 
-exports.escapeForm = function(input) {
-	var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escapeForm(input);
-	return output;
+exports.escapeForm = function (input) {
+    var output = org.eclipse.dirigible.api.v3.utils.UrlFacade.escapeForm(input);
+    return output;
 };

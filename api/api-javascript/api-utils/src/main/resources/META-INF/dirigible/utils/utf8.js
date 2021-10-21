@@ -11,6 +11,6 @@
  */
 
 var utf8 = require('utils/v4/utf8');
-for(var propertyName in utf8) {
-	exports[propertyName] = utf8[propertyName];
+for (var propertyName in utf8) {
+    exports[propertyName] = utf8[propertyName];
 }

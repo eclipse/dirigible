@@ -9,17 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - HTTP</name>
-	<artifactId>dirigible-api-javascript-http</artifactId>
-	<description>HTTP Modules</description>
+    <name>API - JavaScript - HTTP</name>
+    <artifactId>dirigible-api-javascript-http</artifactId>
+    <description>HTTP Modules</description>
     <packaging>jar</packaging>
-	
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>		
-		<content.repository.name>api-http</content.repository.name>
-		<content.project.name>http</content.project.name>
-		
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-http</content.repository.name>
+        <content.project.name>http</content.project.name>
+
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

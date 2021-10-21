@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var consumer = require('messaging/v4/consumer');
-for(var propertyName in consumer) {
-	exports[propertyName] = consumer[propertyName];
+for (var propertyName in consumer) {
+    exports[propertyName] = consumer[propertyName];
 }

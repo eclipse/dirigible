@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var procedure = require('db/v4/procedure');
-for(var propertyName in procedure) {
-	exports[propertyName] = procedure[propertyName];
+for (var propertyName in procedure) {
+    exports[propertyName] = procedure[propertyName];
 }

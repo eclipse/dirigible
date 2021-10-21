@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var url = require('utils/v4/url');
-for(var propertyName in url) {
-	exports[propertyName] = url[propertyName];
+for (var propertyName in url) {
+    exports[propertyName] = url[propertyName];
 }

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var files = require('io/v4/files');
-for(var propertyName in files) {
-	exports[propertyName] = files[propertyName];
+for (var propertyName in files) {
+    exports[propertyName] = files[propertyName];
 }

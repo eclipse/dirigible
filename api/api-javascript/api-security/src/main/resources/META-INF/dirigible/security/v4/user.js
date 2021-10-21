@@ -15,30 +15,30 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.getName = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getName();
+exports.getName = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getName();
 };
 
-exports.isInRole = function(role) {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.isInRole(role);
+exports.isInRole = function (role) {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.isInRole(role);
 };
 
-exports.getTimeout = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getTimeout();
+exports.getTimeout = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getTimeout();
 };
 
-exports.getAuthType = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getAuthType();
+exports.getAuthType = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getAuthType();
 };
 
-exports.getSecurityToken = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getSecurityToken();
+exports.getSecurityToken = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getSecurityToken();
 };
 
-exports.getInvocationCount = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getInvocationCount();
+exports.getInvocationCount = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getInvocationCount();
 };
 
-exports.getLanguage = function() {
-	return org.eclipse.dirigible.api.v3.security.UserFacade.getLanguage();
+exports.getLanguage = function () {
+    return org.eclipse.dirigible.api.v3.security.UserFacade.getLanguage();
 };

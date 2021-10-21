@@ -9,12 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "security/v4/user",
-		description: "User API"
-	}, {
-		name: "security/v4/oauth",
-		description: "OAuth API"
-	}];
+const registry = require('platform/v4/registry');
+exports.getContent = function () {
+    const file = registry.getText("security/extensions/modules.json");
+    return JSON.parse(file);
 };

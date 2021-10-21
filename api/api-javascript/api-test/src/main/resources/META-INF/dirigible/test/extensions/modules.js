@@ -9,9 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "test/v4/test-runner",
-		description: "Test Runner API"
-	}];
+var registry = require("platform/v4/registry");
+exports.getContent = function () {
+    var file = registry.getText("test/extensions/modules.json")
+    return JSON.parse(file);
 };

@@ -11,9 +11,9 @@
  */
 /**
  * API v4 Exec
- * 
+ *
  */
 
-exports.exec = function(commandLine, toAdd, toRemove) {
-	return org.eclipse.dirigible.api.v3.core.ExecFacade.exec(commandLine, toAdd, toRemove);
+exports.exec = function (commandLine, toAdd, toRemove) {
+    return org.eclipse.dirigible.api.v3.core.ExecFacade.exec(commandLine, toAdd, toRemove);
 };

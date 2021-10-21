@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var env = require('core/v4/env');
-for(var propertyName in env) {
-	exports[propertyName] = env[propertyName];
+for (var propertyName in env) {
+    exports[propertyName] = env[propertyName];
 }

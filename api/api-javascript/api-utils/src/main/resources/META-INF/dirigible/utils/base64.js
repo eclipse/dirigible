@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var base64 = require('utils/v4/base64');
-for(var propertyName in base64) {
-	exports[propertyName] = base64[propertyName];
+for (var propertyName in base64) {
+    exports[propertyName] = base64[propertyName];
 }

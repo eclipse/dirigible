@@ -11,5 +11,5 @@
  */
 var repository = require("platform/v4/repository");
 for (var propertyName in repository) {
-	exports[propertyName] = repository[propertyName];
+    exports[propertyName] = repository[propertyName];
 }

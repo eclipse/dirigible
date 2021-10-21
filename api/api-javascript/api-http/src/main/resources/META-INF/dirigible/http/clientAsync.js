@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var client = require('http/v4/clientAsync');
-for(var propertyName in client) {
-	exports[propertyName] = client[propertyName];
+for (var propertyName in client) {
+    exports[propertyName] = client[propertyName];
 }

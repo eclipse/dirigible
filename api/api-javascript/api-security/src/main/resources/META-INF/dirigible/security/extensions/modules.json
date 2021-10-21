@@ -1,5 +1,11 @@
 [
   {
+    "name": "@dirigible/security",
+    "description": "Dirigible Security module",
+    "isPackageDescription": true,
+    "dtsPath": "security/extensions/security.d.ts"
+  },
+  {
     "name": "security/v4/user",
     "description": "User API",
     "api": "user",

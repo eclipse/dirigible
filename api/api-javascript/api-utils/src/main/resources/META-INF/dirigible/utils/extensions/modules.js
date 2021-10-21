@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-var platform = require('platform/v4/registry');
+var registry = require('platform/v4/registry');
 
 exports.getContent = function () {
-    let file = platform.getText("utils/extensions/modules.json");
+    let file = registry.getText("utils/extensions/modules.json");
     return JSON.parse(file);
 };
 

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var console = require('core/v4/console');
-for(var propertyName in console) {
-	exports[propertyName] = console[propertyName];
+for (var propertyName in console) {
+    exports[propertyName] = console[propertyName];
 }

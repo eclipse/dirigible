@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var uuid = require('utils/v4/uuid');
-for(var propertyName in uuid) {
-	exports[propertyName] = uuid[propertyName];
+for (var propertyName in uuid) {
+    exports[propertyName] = uuid[propertyName];
 }

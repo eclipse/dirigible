@@ -11,166 +11,166 @@
  */
 /**
  * API v4 Files
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 var streams = require("io/v4/streams");
 var bytes = require("io/v4/bytes");
 
-exports.exists = function(path){
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.exists(path);
-};
-    
-exports.isExecutable = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isExecutable(path);
+exports.exists = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.exists(path);
 };
 
-exports.isReadable = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isReadable(path);
+exports.isExecutable = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isExecutable(path);
 };
 
-exports.isWritable = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isWritable(path);
+exports.isReadable = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isReadable(path);
 };
 
-exports.isHidden = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isHidden(path);
+exports.isWritable = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isWritable(path);
 };
 
-exports.isDirectory = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isDirectory(path);
+exports.isHidden = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isHidden(path);
 };
 
-exports.isFile = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isFile(path);
+exports.isDirectory = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isDirectory(path);
 };
 
-exports.isSameFile = function(path1, path2) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.isSameFile(path1, path2);
+exports.isFile = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isFile(path);
 };
 
-exports.getCanonicalPath = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.getCanonicalPath(path);
+exports.isSameFile = function (path1, path2) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.isSameFile(path1, path2);
 };
 
-exports.getName = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.getName(path);
+exports.getCanonicalPath = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.getCanonicalPath(path);
 };
 
-exports.getParentPath = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.getParentPath(path);
+exports.getName = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.getName(path);
 };
 
-exports.readBytes = function(path){
-	var native = org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
-	var data = bytes.toJavaScriptBytes(native);
-	return data;
+exports.getParentPath = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.getParentPath(path);
 };
 
-exports.readBytesNative = function(path){
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
+exports.readBytes = function (path) {
+    var native = org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
+    var data = bytes.toJavaScriptBytes(native);
+    return data;
 };
 
-exports.readText = function(path){
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.readText(path);
+exports.readBytesNative = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
 };
 
-exports.writeBytes = function(path, data){
-	var native = bytes.toJavaBytes(data);
-	org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, native);
+exports.readText = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.readText(path);
 };
 
-exports.writeBytesNative = function(path, data){
-	org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, data);
+exports.writeBytes = function (path, data) {
+    var native = bytes.toJavaBytes(data);
+    org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, native);
 };
 
-exports.writeText = function(path, text) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.writeText(path, text);
+exports.writeBytesNative = function (path, data) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, data);
 };
 
-exports.getLastModified = function(path) {
-	return new Date(org.eclipse.dirigible.api.v3.io.FilesFacade.getLastModified(path));
+exports.writeText = function (path, text) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.writeText(path, text);
 };
 
-exports.setLastModified = function(path, time) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.setLastModified(path, time.getMilliseconds());
+exports.getLastModified = function (path) {
+    return new Date(org.eclipse.dirigible.api.v3.io.FilesFacade.getLastModified(path));
 };
 
-exports.getOwner = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.getOwner(path);
+exports.setLastModified = function (path, time) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.setLastModified(path, time.getMilliseconds());
 };
 
-exports.setOwner = function(path, owner) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.setOwner(path, owner);
+exports.getOwner = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.getOwner(path);
 };
 
-exports.getPermissions = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.getPermissions(path);
+exports.setOwner = function (path, owner) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.setOwner(path, owner);
 };
 
-exports.setPermissions = function(path, permissions) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.setPermissions(path, permissions);
+exports.getPermissions = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.getPermissions(path);
 };
 
-exports.size = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.size(path);
+exports.setPermissions = function (path, permissions) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.setPermissions(path, permissions);
 };
 
-exports.createFile = function(path) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.createFile(path);
+exports.size = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.size(path);
 };
 
-exports.createDirectory = function(path) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.createDirectory(path);
+exports.createFile = function (path) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.createFile(path);
 };
 
-exports.copy = function(source, target) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.copy(path, source, target);
+exports.createDirectory = function (path) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.createDirectory(path);
 };
 
-exports.move = function(source, target) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.move(path, source, target);
+exports.copy = function (source, target) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.copy(path, source, target);
 };
 
-exports.deleteFile = function(path) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.deleteFile(path);
+exports.move = function (source, target) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.move(path, source, target);
 };
 
-exports.deleteDirectory = function(path, forced) {
-	org.eclipse.dirigible.api.v3.io.FilesFacade.deleteDirectory(path, forced);
+exports.deleteFile = function (path) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.deleteFile(path);
 };
 
-exports.createTempFile = function(prefix, suffix) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.createTempFile(prefix, suffix);
+exports.deleteDirectory = function (path, forced) {
+    org.eclipse.dirigible.api.v3.io.FilesFacade.deleteDirectory(path, forced);
 };
 
-exports.createTempDirectory = function(prefix) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.createTempDirectory(prefix);
+exports.createTempFile = function (prefix, suffix) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.createTempFile(prefix, suffix);
 };
 
-exports.createInputStream = function(path) {
-	var inputStream = new streams.InputStream();
-	var native = org.eclipse.dirigible.api.v3.io.FilesFacade.createInputStream(path);
-	inputStream.native = native;
-	return inputStream;
+exports.createTempDirectory = function (prefix) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.createTempDirectory(prefix);
 };
 
-exports.createOutputStream = function(path) {
-	var outputStream = new streams.OutputStream();
-	var native = org.eclipse.dirigible.api.v3.io.FilesFacade.createOutputStream(path);
-	outputStream.native = native;
-	return outputStream;
+exports.createInputStream = function (path) {
+    var inputStream = new streams.InputStream();
+    var native = org.eclipse.dirigible.api.v3.io.FilesFacade.createInputStream(path);
+    inputStream.native = native;
+    return inputStream;
 };
 
-exports.traverse = function(path) {
-	return org.eclipse.dirigible.api.v3.io.FilesFacade.traverse(path);
+exports.createOutputStream = function (path) {
+    var outputStream = new streams.OutputStream();
+    var native = org.eclipse.dirigible.api.v3.io.FilesFacade.createOutputStream(path);
+    outputStream.native = native;
+    return outputStream;
 };
 
-exports.list = function(path) {
-	return JSON.parse(org.eclipse.dirigible.api.v3.io.FilesFacade.list(path)).map(e => e.path);
+exports.traverse = function (path) {
+    return org.eclipse.dirigible.api.v3.io.FilesFacade.traverse(path);
 };
 
-exports.find = function(path, pattern) {
-	return JSON.parse(org.eclipse.dirigible.api.v3.io.FilesFacade.find(path, pattern));
+exports.list = function (path) {
+    return JSON.parse(org.eclipse.dirigible.api.v3.io.FilesFacade.list(path)).map(e => e.path);
+};
+
+exports.find = function (path, pattern) {
+    return JSON.parse(org.eclipse.dirigible.api.v3.io.FilesFacade.find(path, pattern));
 };

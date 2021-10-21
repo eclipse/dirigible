@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var threads = require('core/v4/threads');
-for(var propertyName in threads) {
-	exports[propertyName] = threads[propertyName];
+for (var propertyName in threads) {
+    exports[propertyName] = threads[propertyName];
 }

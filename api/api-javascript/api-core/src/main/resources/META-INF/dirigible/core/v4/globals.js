@@ -11,18 +11,18 @@
  */
 /**
  * API v4 Globals
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.get = function(name) {
-	return org.eclipse.dirigible.api.v3.core.GlobalsFacade.get(name);
+exports.get = function (name) {
+    return org.eclipse.dirigible.api.v3.core.GlobalsFacade.get(name);
 };
 
-exports.set = function(name, value) {
-	org.eclipse.dirigible.api.v3.core.GlobalsFacade.set(name, value);
+exports.set = function (name, value) {
+    org.eclipse.dirigible.api.v3.core.GlobalsFacade.set(name, value);
 };
 
-exports.list = function() {
-	return org.eclipse.dirigible.api.v3.core.GlobalsFacade.list();
+exports.list = function () {
+    return org.eclipse.dirigible.api.v3.core.GlobalsFacade.list();
 };
