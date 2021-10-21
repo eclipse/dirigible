@@ -54,7 +54,9 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	public static final String MODULE_EXT_COMMAND = COMMAND_EXTENSION + "/";
 	
 	public static final String ENGINE_NAME = "Execution Command Engine";
-	
+
+	private static final String DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED = "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED";
+
 
 	/*
 	 * (non-Javadoc)
@@ -225,7 +227,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	}
 
 	private boolean shouldLogCommand() {
-		String shouldEnableLogging = Configuration.get("DIRIGIBLE_EXEC_DISABLE_COMMAND_LOGGING");
+		String shouldEnableLogging = Configuration.get(DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED);
 		return Boolean.parseBoolean(shouldEnableLogging);
 	}
 
