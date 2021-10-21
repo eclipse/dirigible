@@ -78,7 +78,7 @@ public class Require {
 	}
 
 	public static final String MODULE_CREATE_CODE = "let mainModule = createModule(\".\");\n" +
-			"__context.put(\"main_module\", mainModule);";
+			"mainModule;";
 
 	public static final String MODULE_LOAD_CODE = "mainModule.load(MODULE_FILENAME);";
 
