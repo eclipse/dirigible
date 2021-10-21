@@ -22,6 +22,7 @@ import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.process.Piper;
 import org.eclipse.dirigible.commons.process.ProcessUtils;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
@@ -53,7 +54,9 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	public static final String MODULE_EXT_COMMAND = COMMAND_EXTENSION + "/";
 	
 	public static final String ENGINE_NAME = "Execution Command Engine";
-	
+
+	private static final String DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED = "DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED";
+
 
 	/*
 	 * (non-Javadoc)
@@ -133,7 +136,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			}
 		}
 
-		String result = null;
+		String result;
 		
 		String commandSource = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
 		
@@ -162,9 +165,9 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 	}
 
 	public String executeCommandLine(String commandLine, Map<String, String> forAdding, List<String> forRemoving, boolean isFileBasedRepository) throws ScriptingException {
-		String result = null;
+		String result;
 
-		String[] args = null;
+		String[] args;
 		try {
 			args = ProcessUtils.translateCommandline(commandLine);
 		} catch (Exception e1) {
@@ -172,7 +175,9 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			throw new ScriptingException(e1);
 		}
 
-		logger.debug("executing command=" + commandLine); //$NON-NLS-1$
+		if (shouldLogCommand()) {
+			logger.debug("executing command=" + commandLine); //$NON-NLS-1$
+		}
 
 		ByteArrayOutputStream out;
 		try {
@@ -204,7 +209,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 						if (++i >= ProcessUtils.DEFAULT_LOOP_COUNT) {
 							process.destroy();
 							throw new RuntimeException(
-									"Exeeds timeout - " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * ProcessUtils.DEFAULT_LOOP_COUNT));
+									"Exceeds timeout - " + ((ProcessUtils.DEFAULT_WAIT_TIME / 1000) * ProcessUtils.DEFAULT_LOOP_COUNT));
 						}
 					}
 				} while (!deadYet);
@@ -219,6 +224,11 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		}
 		result = new String(out.toByteArray());
 		return result;
+	}
+
+	private boolean shouldLogCommand() {
+		String shouldEnableLogging = Configuration.get(DIRIGIBLE_EXEC_COMMAND_LOGGING_ENABLED);
+		return Boolean.parseBoolean(shouldEnableLogging);
 	}
 
 	private String loadSource(String module) throws ScriptingException {
