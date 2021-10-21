@@ -1271,12 +1271,14 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         this.selectedWorkspace = this.workspaceName;
                         this.workspaceSelected();
                     } else {
-                        let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace'));
-                        if (storedWorkspace !== null) {
+                        let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+                        if ('name' in storedWorkspace) {
                             this.selectedWorkspace = storedWorkspace.name;
                             this.workspaceSelected();
-                        } else if (this.workspaces[0]) {
-                            this.selectedWorkspace = this.workspaces[0];
+                        } else {
+                            this.selectedWorkspace = 'workspace'; // Default
+                            localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
+                            console.log("WASD", "here");
                             this.workspaceSelected();
                         }
                     }
@@ -1287,7 +1289,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         this.workspaceSelected = function () {
             if (this.wsTree) {
                 this.wsTree.workspaceName = this.selectedWorkspace;
-                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
                 this.wsTree.refresh();
                 return;
             }

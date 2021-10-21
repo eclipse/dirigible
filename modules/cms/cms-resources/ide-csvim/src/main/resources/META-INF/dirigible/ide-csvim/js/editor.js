@@ -37,7 +37,7 @@ editorView.directive('allowedSymbols', () => {
                 if (!value) {
                     return true;
                 }
-                let correct = RegExp(scope.regex, 'gm').test(value);
+                let correct = RegExp(scope.regex, 'g').test(value);
                 if (correct) {
                     element.removeClass("error-input");
                 } else {
@@ -63,7 +63,7 @@ editorView.directive('uniqueField', () => {
         link: (scope, element, attrs, controller) => {
             controller.$validators.forbiddenName = value => {
                 let unique = true;
-                let correct = RegExp(scope.regex, 'gm').test(value);
+                let correct = RegExp(scope.regex, 'g').test(value);
                 if (correct) {
                     if ("index" in attrs) {
                         for (let i = 0; i < scope.$parent.csvimData[scope.$parent.activeItemId].keys.length; i++) {
@@ -102,7 +102,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     const ctrlKey = 17;
     let ctrlDown = false;
     let isMac = false;
-    let emptyHdbti = ["", "import=[]", "import=[];", "import=[{}]", "import=[{}];"];
+    let workspace = 'workspace'; // This needs to be replace with an API.
     let csrfToken;
     $scope.fileExists = true;
     $scope.saveEnabled = true;
@@ -119,7 +119,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
             let msg = {
                 "file": {
                     "name": $scope.csvimData[$scope.activeItemId].name,
-                    "path": $scope.csvimData[$scope.activeItemId].file,
+                    "path": `/${workspace}${$scope.csvimData[$scope.activeItemId].file}`,
                     "type": "file",
                     "contentType": "text/csv",
                     "label": $scope.csvimData[$scope.activeItemId].name
@@ -317,7 +317,7 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     $scope.checkResource = function (resourcePath) {
         if (resourcePath != "") {
             let xhr = new XMLHttpRequest();
-            xhr.open('HEAD', `/services/v4/ide/workspaces${resourcePath}`, false);
+            xhr.open('HEAD', `/services/v4/ide/workspaces/${workspace}${resourcePath}`, false);
             xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
             xhr.send();
             if (xhr.status === 200) {
@@ -358,7 +358,9 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
             $http.get('/services/v4/ide/workspaces' + $scope.file)
                 .then(function (response) {
                     let contents = response.data;
-                    if (!contents) contents = [];
+                    if (!contents || !Array.isArray(contents)) {
+                        contents = [];
+                    }
                     $scope.csvimData = contents;
                     for (let i = 0; i < $scope.csvimData.length; i++) {
                         $scope.csvimData[i]["name"] = $scope.getFileName($scope.csvimData[i].file, false);
@@ -405,11 +407,17 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     }
 
     function checkPlatform() {
-        let platform = window.navigator.platform;
+        let platform = window.navigator.platform; // This needs improvement
         let macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K', 'darwin', 'Mac', 'mac', 'macOS'];
         if (macosPlatforms.indexOf(platform) !== -1) isMac = true;
     }
 
+    function getCurrentWorkspace() { // This needs to be replaced with an API
+        let storedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+        if ('name' in storedWorkspace) workspace = currentWorkspace.name;
+    }
+
+    getCurrentWorkspace();
     checkPlatform();
     loadFileContents();
 
