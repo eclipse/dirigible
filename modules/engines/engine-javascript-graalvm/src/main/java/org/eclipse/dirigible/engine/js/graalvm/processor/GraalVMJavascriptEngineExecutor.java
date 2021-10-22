@@ -12,15 +12,9 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.nio.file.attribute.FileAttribute;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.script.Bindings;
@@ -28,15 +22,9 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.dirigible.api.v3.core.ConsoleFacade;
-import org.eclipse.dirigible.api.v3.core.ContextFacade;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.context.ContextException;
-import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.api.resource.ResourcePath;
@@ -44,15 +32,12 @@ import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
-import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.engine.js.graalvm.processor.truffle.RegistryTruffleFileSystem;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
-import org.graalvm.polyglot.io.FileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 /**
  * The GraalVM Javascript Engine Executor.

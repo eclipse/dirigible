@@ -12,7 +12,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
-import org.eclipse.dirigible.engine.js.graalvm.processor.ExportGenerator;
+import org.eclipse.dirigible.engine.js.graalvm.processor.generation.ExportGenerator;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.junit.Assert;
 import org.junit.Before;

@@ -9,16 +9,16 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.js.graalvm.processor;
+package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
 
-public class ApiModule {
+class ApiModule {
     private final String name;
     private final String api;
     private final String[] versionedPaths;
     private final String pathDefault;
     private final boolean isPackageDescription;
 
-    public ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription) {
+    ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription) {
         this.name = name;
         this.api = api;
         this.versionedPaths = versionedPaths;
@@ -26,23 +26,23 @@ public class ApiModule {
         this.isPackageDescription = isPackageDescription;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getApi() {
+    String getApi() {
         return api;
     }
 
-    public String[] getVersionedPaths() {
+    String[] getVersionedPaths() {
         return versionedPaths;
     }
 
-    public String getPathDefault() {
+    String getPathDefault() {
         return pathDefault;
     }
 
-    public boolean isPackageDescription() {
+    boolean isPackageDescription() {
         return isPackageDescription;
     }
 }
