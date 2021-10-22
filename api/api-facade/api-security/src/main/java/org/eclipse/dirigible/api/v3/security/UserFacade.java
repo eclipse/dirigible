@@ -25,6 +25,9 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Locale;
+
 /**
  * The Class UserFacade.
  */
@@ -199,7 +202,8 @@ public class UserFacade implements IScriptingFacade {
 	public static String getLanguage() {
 		if (HttpRequestFacade.isValid()) {
 			String language = HttpRequestFacade.getHeader(LANGUAGE_HEADER);
-			return language != null && !"".equals(language)? language.substring(0, language.indexOf(';')) : "";
+			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
+			return  ranges.isEmpty() ? "" : ranges.get(0).getRange();
 		} else {
 			logger.error(NO_VALID_REQUEST);
 		}
