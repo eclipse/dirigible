@@ -40,6 +40,6 @@ exports.getRest = function () {
 };
 
 exports.getRestData = function () {
-    var restData = require('http/v4/rsdata');
+    var restData = require('http/v4/rs-data');
     return restData;
 };
