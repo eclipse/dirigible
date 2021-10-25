@@ -141,20 +141,28 @@ declare module "@dirigible/platform" {
 
         function find(path, pattern): JSON;
     }
-    //TODO d.ts files dont allow "-" in module name
-    // module template-engines {
-    //     interface TemplateEngine{
-    //         generate(template,parameters);
-    //         setSm(sm);
-    //         setEm(em);
-    //     }
-    //     function getDefaultEngine();
-    //     function getMustacheEngine():TemplateEngine;
-    //     function getVelocityEngine():TemplateEngine;
-    //     function getJavascriptEngine():TemplateEngine;
-    //     function generate(template,parameters);
-    //     function generateFromFile(location,parameters);
-    // }
+
+    module templates {
+        interface TemplateEngine {
+            generate(template, parameters);
+
+            setSm(sm);
+
+            setEm(em);
+        }
+
+        function getDefaultEngine();
+
+        function getMustacheEngine(): TemplateEngine;
+
+        function getVelocityEngine(): TemplateEngine;
+
+        function getJavascriptEngine(): TemplateEngine;
+
+        function generate(template, parameters);
+
+        function generateFromFile(location, parameters);
+    }
     module workspace {
         interface Folder {
             getName(): string;

@@ -26,6 +26,10 @@ exports.getDtsPaths = function () {
 
         for (let [property, value] of Object.entries(content)) {
             let isPackageDescription = value["isPackageDescription"];
+            let shouldBeUnexposedToESM = value["shouldBeUnexposedToESM"];
+            if(shouldBeUnexposedToESM){
+                continue;
+            }
             if(typeof isPackageDescription === 'boolean' && isPackageDescription === true)
             {
                 dtsPaths.push(value["dtsPath"])

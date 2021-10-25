@@ -35,6 +35,6 @@ exports.getEngines = function () {
 };
 
 exports.getTemplateEngines = function () {
-    var templateEngines = require("platform/v4/template-engines");
+    var templateEngines = require("platform/v4/templates");
     return templateEngines;
 };

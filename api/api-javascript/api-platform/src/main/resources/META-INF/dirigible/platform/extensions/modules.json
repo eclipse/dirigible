@@ -56,13 +56,23 @@
     "pathDefault": "platform/v4/engines"
   },
   {
-    "name": "platform/v4/template-engines",
+    "name": "platform/v4/templates",
     "description": "Template Engines API",
-    "api": "template-engines",
+    "api": "templates",
     "versionedPaths": [
-      "platform/v3/template-engines",
-      "platform/v4/template-engines"
+      "platform/v3/templates",
+      "platform/v4/templates"
     ],
-    "pathDefault": "platform/v4/template-engines"
-  }
+    "pathDefault": "platform/v4/templates"
+  },{
+  "name": "platform/v4/template-engines",
+  "description": "Template Engines API",
+  "api": "template-engines",
+  "versionedPaths": [
+    "platform/v3/template-engines",
+    "platform/v4/template-engines"
+  ],
+  "pathDefault": "platform/v4/template-engines",
+  "shouldBeUnexposedToESM": true
+}
 ]

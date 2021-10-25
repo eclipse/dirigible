@@ -16,7 +16,7 @@
 
 var registry = require("platform/v4/registry");
 var xml = require("utils/v4/xml");
-var templateEngine = require("platform/v4/template-engines");
+var templateEngine = require("platform/v4/templates");
 
 const TEMPLATE_PATH_TABLE = "documents/templates/table.xml";
 

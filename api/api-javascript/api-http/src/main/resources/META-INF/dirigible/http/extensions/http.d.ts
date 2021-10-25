@@ -54,12 +54,99 @@ declare module "@dirigible/http" {
 
     }
 
-    interface DataService {
+    module rsdata {
+
+        interface DataService {
+
+            mappings()
+
+
+            dao(ormConfig?): DataService;
+
+
+            logger();
+
+
+            execute(oRequest?, oResponse?);
+        }
+
+        function service(oConfiguration?, oProtocolHandlersAdapter?, oDataProtocolDefinition?, sLoggerName?): DataService;
     }
 
-    // module rsdata{
-    //     function service(oConfig:object,oProtocolHandlersAdapter,oDataProtocolDefinition:object,sLoggerName:string):DataService;
-    // }
+    module rs {
+        interface HttpController {
+            resource(oConfiguration?): Resource;
+
+            mappings(): ResourceMappings;
+
+            execute(oRequest?, oResponse?);
+        }
+
+        interface ResourceMappings {
+            resource(oConfiguration?): Resource;
+
+            configuration(): Object;
+
+            readonly(): ResourceMappings;
+
+            disable(sPath, sVerb, arrConsumes, arrProduces): ResourceMappings;
+
+            find(sPath, sVerb, arrConsumes, arrProduces): ResourceMethod;
+
+            execute(oRequest?, oResponse?);
+        }
+
+        interface Resource {
+            get(fServeCallback?): ResourceMethod;
+
+            post(fServeCallback?): ResourceMethod;
+
+            put(fServeCallback?): ResourceMethod;
+
+            delete(fServeCallback?): ResourceMethod;
+
+            remove(fServeCallback?): ResourceMethod;
+
+            method(sHttpVerb, oConfiguration?): ResourceMethod;
+
+            configuration(): Object;
+
+            readonly(): ResourceMappings;
+
+            disable(sVerb, arrConsumesTypeStrings, arrProducesTypeStrings): ResourceMappings;
+
+            find(sVerb, arrConsumesMimeTypeStrings: any[], arrProducesMimeTypeStrings: any[]): ResourceMethod;
+
+            execute(oRequest?, oResponse?);
+        }
+
+        interface ResourceMethod {
+
+            configuration(): Object
+
+
+            consumes(arrMediaTypeStrings): ResourceMethod;
+
+            produces(arrMediaTypeStrings): ResourceMethod;
+
+
+            before(somefunc): ResourceMethod;
+
+            serve(somefunc): ResourceMethod;
+
+
+            catch(somefunc): ResourceMethod
+
+
+            finally(somefunc): ResourceMethod
+
+
+            execute(oRequest?, oResponse?);
+        }
+
+
+        function service(oConfig?): HttpController;
+    }
 
 
     module client {
@@ -78,15 +165,12 @@ declare module "@dirigible/http" {
 
         function buildUrl(url: string, options: string): object;
     }
-
     module clientAsync {
         function getInstance(): HttpAsyncClient;
 
         //need to be deleted
         function getInstnace(): HttpAsyncClient;
     }
-
-
     module request {
         function isValid(): boolean;
 
@@ -174,7 +258,6 @@ declare module "@dirigible/http" {
 
         function getInputStream(): string;
     }
-
     module response {
         interface HttpCodesReasons {
         }

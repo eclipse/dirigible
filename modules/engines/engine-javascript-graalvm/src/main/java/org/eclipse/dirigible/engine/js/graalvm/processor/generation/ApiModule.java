@@ -17,13 +17,15 @@ class ApiModule {
     private final String[] versionedPaths;
     private final String pathDefault;
     private final boolean isPackageDescription;
+    private final Boolean shouldBeUnexposedToESM;
 
-    ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription) {
+    ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription, Boolean shouldBeUnexposedToESM) {
         this.name = name;
         this.api = api;
         this.versionedPaths = versionedPaths;
         this.pathDefault = pathDefault;
         this.isPackageDescription = isPackageDescription;
+        this.shouldBeUnexposedToESM = shouldBeUnexposedToESM;
     }
 
     String getName() {
@@ -40,6 +42,14 @@ class ApiModule {
 
     String getPathDefault() {
         return pathDefault;
+    }
+
+    boolean getShouldBeUnexposedToESM() {
+        if(shouldBeUnexposedToESM==null){
+            return false;
+        }
+
+        return shouldBeUnexposedToESM;
     }
 
     boolean isPackageDescription() {

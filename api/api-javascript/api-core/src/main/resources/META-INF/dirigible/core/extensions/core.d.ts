@@ -1,4 +1,4 @@
-declare module core {
+declare module "@dirigible/core" {
     module configuration {
         function get(key, defaultValue): string;
 

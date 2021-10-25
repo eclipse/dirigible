@@ -64,5 +64,36 @@
       "http/v4/upload"
     ],
     "pathDefault": "http/v4/upload"
+  },
+  {
+    "name": "http/v4/rsdata",
+    "description": "HTTP RsData API",
+    "api": "rsdata",
+    "versionedPaths": [
+      "http/v4/rsdata",
+      "http/v3/rsdata"
+    ],
+    "pathDefault": "http/v4/rsdata"
+  },
+  {
+    "name": "http/v4/rs-data",
+    "description": "HTTP RsData API",
+    "api": "rs-data",
+    "versionedPaths": [
+      "http/v4/rs-data",
+      "http/v3/rs-data"
+    ],
+    "pathDefault": "http/v4/rs-data",
+    "shouldBeUnexposedToESM": true
+  },
+  {
+    "name": "http/v4/rs",
+    "description": "HTTP RS API",
+    "api": "rs",
+    "versionedPaths": [
+      "http/v4/rs",
+      "http/v3/rs"
+    ],
+    "pathDefault": "http/v4/rs"
   }
 ]

@@ -46,7 +46,7 @@ public class ExportGenerator {
         StringBuilder moduleNames = new StringBuilder();
 
         for (ApiModule module : modules) {
-            if (module.isPackageDescription()) {
+            if (module.isPackageDescription() || module.getShouldBeUnexposedToESM()) {
                 continue;
             }
 

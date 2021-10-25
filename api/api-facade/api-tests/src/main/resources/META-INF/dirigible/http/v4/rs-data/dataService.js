@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const DataService  = require('http/v4/rs-data').DataService;
+const DataService  = require('http/v4/rsdata').DataService;
 var MyDAO = function(){};
 MyDAO.prototype.list = function(){
     return [{id:1, text:'b'}];

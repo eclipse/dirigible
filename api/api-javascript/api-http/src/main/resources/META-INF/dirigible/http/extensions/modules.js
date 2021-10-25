@@ -13,13 +13,17 @@ var registry = require('platform/v4/registry');
 exports.getContent = function () {
     let file = registry.getText("http/extensions/modules.json");
     return JSON.parse(file);
-// /*
-//   // , {
-//   // 	name: "http/v4/rs-data",
-//   // 	description: "HTTP RS-Data API"
-//   // }, {
-//   // 	name: "http/v4/rs",
-//   // 	description: "HTTP RS API"
-//   // }
-//   */
+
+
+// ,
+//     {
+//         "name": "http/v4/rs-data",
+//         "description": "HTTP RS-DATA API",
+//         "api": "rs-data",
+//         "versionedPaths": [
+//         "http/v4/rs-data",
+//         "http/v3/rs-data"
+//     ],
+//         "pathDefault": "http/v4/rs-data"
+//     },
 };
