@@ -203,7 +203,7 @@ public class UserFacade implements IScriptingFacade {
 		if (HttpRequestFacade.isValid()) {
 			String language = HttpRequestFacade.getHeader(LANGUAGE_HEADER);
 			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
-			return  ranges.isEmpty() ? "" : ranges.get(0).getRange();
+			return  ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
 		} else {
 			logger.error(NO_VALID_REQUEST);
 		}
