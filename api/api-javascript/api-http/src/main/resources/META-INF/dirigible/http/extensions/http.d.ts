@@ -1,5 +1,4 @@
 declare module "@dirigible/http" {
-
     interface FileItems {
         get(index): FileItem;
 
@@ -72,7 +71,6 @@ declare module "@dirigible/http" {
 
         function service(oConfiguration?, oProtocolHandlersAdapter?, oDataProtocolDefinition?, sLoggerName?): DataService;
     }
-
     module rs {
         interface HttpController {
             resource(oConfiguration?): Resource;
@@ -147,8 +145,6 @@ declare module "@dirigible/http" {
 
         function service(oConfig?): HttpController;
     }
-
-
     module client {
         function get(url: string, options: string): object;
 
@@ -391,4 +387,6 @@ declare module "@dirigible/http" {
 
         function parseRequest(): FileItems;
     }
+
+
 }

@@ -1,3 +1,47 @@
+declare module "@dirigible/db" {
+    module dao {
+        function create(): DAO;
+    }
+    module database {
+        function getDatabaseTypes(): string[];
+
+        function getDataSources(databaseType: string): string[];
+
+        function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string);
+
+        function getMetadata(databaseType: string, datasourceName: string): object;
+
+        function getConnection(databaseType: string, datasourceName: string): Connection;
+        function getConnection(): Connection;
+
+        function getProductName(databaseType: string, datasourceName: string): string;
+
+    }
+    module procedure {
+        function create(sql: string, databaseType, datasourceName);
+
+        function execute(sql, parameters, databaseType, datasourceName): any;
+    }
+    module query {
+        function execute(sql: string, parameters, databaseType, datasourceName): JSON | ResultSet
+    }
+    module sequence {
+        function nextval(sequence, databaseType, datasourceName): any;
+
+        function create(sequence, databaseType, datasourceName);
+
+        function drop(sequence, databaseType, datasourceName);
+    }
+    module sql {
+        function getDialect(connection: Connection): Dialect
+    }
+    module update {
+        function execute(sql, parameters, databaseType, datasourceName);
+    }
+
+
+}
+
 interface DAO {
     insert(entity): any;
 
@@ -477,49 +521,4 @@ interface DropView {
 
 interface DropSequence {
     build;
-}
-
-
-declare module "@dirigible/db" {
-    module dao {
-        function create(): DAO;
-    }
-    module database {
-        function getDatabaseTypes(): string[];
-
-        function getDatabaseSources(databaseType: string): string[];
-
-        function createDataSource(name: string, driver: string, url: string, username: string, password: string, properties: string);
-
-        function getMetadata(databaseType: string, datasourceName: string): object;
-
-        function getConnection(databaseType: string, datasourceName: string): Connection;
-        function getConnection(): Connection;
-
-        function getProductName(databaseType: string, datasourceName: string): string;
-
-    }
-    module procedure {
-        function create(sql: string, databaseType, datasourceName);
-
-        function execute(sql, parameters, databaseType, datasourceName): any;
-    }
-    module query {
-        function execute(sql: string, parameters, databaseType, datasourceName): JSON | ResultSet
-    }
-    module sequence {
-        function nextval(sequence, databaseType, datasourceName): any;
-
-        function create(sequence, databaseType, datasourceName);
-
-        function drop(sequence, databaseType, datasourceName);
-    }
-    module sql {
-        function getDialect(connection: Connection): Dialect
-    }
-    module update {
-        function execute(sql, parameters, databaseType, datasourceName);
-    }
-
-
 }

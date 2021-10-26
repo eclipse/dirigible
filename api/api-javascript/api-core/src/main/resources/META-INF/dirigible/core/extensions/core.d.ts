@@ -2,7 +2,7 @@ declare module "@dirigible/core" {
     module configuration {
         function get(key, defaultValue): string;
 
-        function set(key, value): string;
+        function set(key, value);
 
         function remove(key);
 
@@ -29,7 +29,7 @@ declare module "@dirigible/core" {
 
         function info(message);
 
-        function warna(message);
+        function warn(message);
 
         function debug(message);
 
