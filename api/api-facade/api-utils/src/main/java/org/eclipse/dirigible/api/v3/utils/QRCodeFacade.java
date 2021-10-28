@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.api.v3.utils;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+
+public class QRCodeFacade {
+    public static final byte[] generateQRCode(String text) throws WriterException, IOException, SQLException {
+        QRCodeWriter qrCodeWriter               = new QRCodeWriter();
+        BitMatrix bitMatrix                     = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        ByteArrayOutputStream pngOutputStream   = new ByteArrayOutputStream();
+
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+        return pngOutputStream.toByteArray();
+    }
+}
