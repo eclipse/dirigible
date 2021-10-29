@@ -24,6 +24,7 @@
 		<module>ide-core</module>
 		<module>ide-workbench</module>
 		<module>ide-database</module>
+		<module>ide-database-menu</module>
 		<module>ide-deploy-manager</module>
 		<module>ide-git</module>
 		<module>ide-preview</module>
@@ -32,22 +33,31 @@
 		<module>ide-swagger</module>
 		<module>ide-terminal</module>
 		<module>ide-workspace</module>
+		<module>ide-workspace-menu</module>
 		<module>ide-schema</module>
+		<module>ide-schema-menu</module>
 		<module>ide-entity</module>
+		<module>ide-entity-menu</module>
 		<module>ide-monaco</module>
 		<module>ide-monaco-extensions</module>
 		<module>ide-debugger</module>
 		<module>ide-logs</module>
 		<module>ide-jobs</module>
+		<module>ide-jobs-menu</module>
 		<module>ide-extensions</module>
+		<module>ide-extensions-menu</module>
 		<module>ide-operations</module>
 		<module>ide-security</module>
+		<module>ide-security-menu</module>
 		<module>ide-listeners</module>
+		<module>ide-listeners-menu</module>
 		<module>ide-data-structures</module>
 		<module>ide-registry</module>
 		<module>ide-plugins</module>
 		<module>ide-websockets</module>
+		<module>ide-websockets-menu</module>
 		<module>ide-form-builder</module>
+		<module>ide-form-builder-menu</module>
 		<module>ide-image</module>
 	</modules>
 

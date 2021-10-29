@@ -18,6 +18,7 @@
 	<modules>
 		<module>api-bpm</module>
         <module>ide-bpm</module>
+        <module>ide-bpm-menu</module>
         <module>resources-flowable-libs</module>
 	</modules>
 
