@@ -11,7 +11,7 @@
 
     <name>IDE - UI</name>
     <artifactId>dirigible-ide-ui-group-all</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <license.header.location>../../../licensing-header.txt</license.header.location>
