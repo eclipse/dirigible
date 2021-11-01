@@ -203,7 +203,7 @@ public abstract class AbstractApiSuiteTest extends AbstractDirigibleTest {
         TEST_MODULES.add("utils/v4/url/escape.js");
         TEST_MODULES.add("utils/v4/url/escapePath.js");
         TEST_MODULES.add("utils/v4/url/escapeForm.js");
-        TEST_MODULES.add("utils/v4/qrcode/qrcode.js");
+        TEST_MODULES.add("utils/v4/qrcode/qrCode.js");
     }
 
     protected void registerModulesV3() {
