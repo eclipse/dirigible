@@ -17,7 +17,7 @@
     <properties>
         <profile.content.phase>generate-sources</profile.content.phase>
         <content.repository.name>ide-bpm-menu</content.repository.name>
-        <content.project.name>ide-bpm</content.project.name>
+        <content.project.name>ide-bpm-menu</content.project.name>
 
         <license.header.location>../../../../licensing-header.txt</license.header.location>
     </properties>
