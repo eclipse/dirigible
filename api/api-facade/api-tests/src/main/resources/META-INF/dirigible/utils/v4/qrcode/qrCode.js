@@ -28,7 +28,7 @@ var expectedResult  = [-119, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68
                 -81, -64, -30, 125, -79, 10, -10, 46, 98, 41, 98, 41, 98, 41, 98, 41, 98, 41, 98, 41, 63, 102, 15, 78, -18, -101, -38,
                  49, 35, 78, 66, 0, 0, 0, 0, 73, 69, 78, 68, -82, 66, 96, -126];
 
-var result = qrCodeGenerator.generateQRCodeByteArray(input);
+var result = qrCodeGenerator.generateQRCode(input);
 
 function arraysEqual(a, b) {
   if (a === b) return true;
