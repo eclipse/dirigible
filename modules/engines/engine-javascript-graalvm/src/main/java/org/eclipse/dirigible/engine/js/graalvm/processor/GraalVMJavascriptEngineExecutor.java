@@ -11,10 +11,8 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -24,8 +22,6 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
@@ -37,14 +33,11 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptModuleSourceProvider;
 import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.engine.js.graalvm.processor.truffle.RegistryTruffleFileSystem;
-import org.eclipse.dirigible.repository.api.CaffeineRepositoryCache;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * The GraalVM Javascript Engine Executor.
@@ -223,7 +216,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
                     context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
                     context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
-                    Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);;
+                    Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);
                     executionContext.put("main_module", mainModule);
                     beforeEval(context);
 
