@@ -85,6 +85,9 @@ body {
 .error-label {
   color: red;
 }
+.warn-label {
+  color: #d7ad2a;
+}
 .statusbar-error {
   color: #ffcebb;
   width: 45%;
