@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.generateQRCodeByteArray = function(text){
+exports.generateQRCode = function(text){
     var bytes = require("io/v4/bytes");
     return bytes.toJavaScriptBytes(org.eclipse.dirigible.api.v3.utils.QRCodeFacade.generateQRCode(text));
 };
