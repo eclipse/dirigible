@@ -502,10 +502,8 @@
 		<module>templates</module>
 		<module>resources</module>
 		<module>ext</module>
-
 		<module>releng</module>
-	</modules>
-
+    </modules>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
