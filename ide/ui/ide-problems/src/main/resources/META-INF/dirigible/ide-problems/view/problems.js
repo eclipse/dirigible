@@ -10,11 +10,25 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('problems', [])
-    .controller('ProblemsController', ['$scope', '$http', function ($scope, $http) {
+    .factory('$messageHub', [function () {
+        let messageHub = new FramesMessageHub();
+        let message = function (evtName, data) {
+            messageHub.post({ data: data }, evtName);
+        };
+        let on = function (topic, callback) {
+            messageHub.subscribe(callback, topic);
+        };
+        return {
+            message: message,
+            on: on
+        };
+    }])
+    .controller('ProblemsController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
         $scope.selectAll = false;
         $scope.searchText = "";
         $scope.problemsList = [];
         $scope.limit = 25;
+        $scope.openedProblem = {};
 
         function fetchData() {
             $http.get('/services/v4/ops/problems/search', {params: {'condition': $scope.searchText, 'limit': $scope.limit}}).then(function (response) {
@@ -88,6 +102,30 @@ angular.module('problems', [])
                 $scope.selectAll = false;
             });
         }
+
+        $scope.openFile = function (fullPath) {
+            const fullName = fullPath.split("/").pop();
+            const [name, extension] = fullName.split('.');
+
+            let msg = {
+                "file": {
+                    "name": name,
+                    "path": "/workspace" + fullPath,
+                    "type": "file",
+                    "contentType": extension,
+                    "label": fullName
+                }
+            };
+            $messageHub.message('ide-core.openEditor', msg);
+        }
+
+        $scope.showInfo = function(problem){
+            $scope.openedProblem = problem;
+        }
+
+        $('#problemContent').on('hidden.bs.modal', function() {
+            $scope.openedProblem = {};
+        });
     }]).config(function ($sceProvider) {
         $sceProvider.enabled(false);
     });
