@@ -12,10 +12,10 @@
 
 	<name>IDE - UI - BPM</name>
 	<artifactId>dirigible-ide-ui-bpm</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
 	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase> 
+		<profile.content.phase>generate-sources</profile.content.phase>
 		<content.repository.name>ide-bpm</content.repository.name>
 		<content.project.name>ide-bpm</content.project.name>
 

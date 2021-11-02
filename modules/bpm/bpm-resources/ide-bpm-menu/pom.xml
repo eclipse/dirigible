@@ -12,12 +12,12 @@
 
     <name>IDE - UI - BPM - Menu</name>
     <artifactId>dirigible-ide-ui-bpm-menu</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <profile.content.phase>generate-sources</profile.content.phase>
         <content.repository.name>ide-bpm-menu</content.repository.name>
-        <content.project.name>ide-bpm-menu</content.project.name>
+        <content.project.name>ide-bpm</content.project.name>
 
         <license.header.location>../../../../licensing-header.txt</license.header.location>
     </properties>
