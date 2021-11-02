@@ -66,7 +66,7 @@ Nevertheless, we highly recommend building the binaries from source in order to 
 
 1. Clone the [project repository - master branch](https://github.com/eclipse/dirigible/tree/master) or [download the latest sources](https://github.com/eclipse/dirigible/archive/master.zip).
 
-  In case there is an issue with 'Filename too long in Git for Windows' then add the fllowing git confoguration 
+  In case there is an issue with 'Filename too long in Git for Windows' then add the fllowing git confoguration
 ```
 git config --system core.longpaths true
 ```
@@ -95,7 +95,7 @@ git config --system core.longpaths true
  - If you want to do a fast build, with no tests, javadocs and license updates:
 
         mvn -T 1C clean install -Dmaven.test.skip=true -DskipTests -Dmaven.javadoc.skip=true -Dlicense.skip=true
-        
+
 > The main groups of modules can be built separately: `api`, `ext`, `ide`, `modules`, `releng`, `resources` and `templates`:
 
         cd api
@@ -110,7 +110,7 @@ The build should pass successfully. The produced `ROOT.war` files are in `releng
 
 ##### Prerequisites
 
-- [Tomcat 8.5.6](https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.6/bin/)
+- [Tomcat 8.5.72](https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.72/bin/)
 
 The Java Web Application Archive (WAR) files can be deployed on [Apache Tomcat](http://tomcat.apache.org/) web container. In this case the built-in H2 database is used.
 
