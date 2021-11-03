@@ -283,9 +283,13 @@ WorkspaceService.prototype.createProject = function (workspace, project, wsTree)
         });
 };
 WorkspaceService.prototype.deleteProject = function (workspace, project, wsTree) {
-    let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
+    let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project.name).build();
     return this.$http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
         .then(function (response) {
+            project.files.forEach(function (f) {
+                wsTree.messageHub.announceFileDeleted(f);
+            });
+
             wsTree.refresh();
             return response.data;
         });
@@ -1324,7 +1328,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                     }.bind(this));
             }
             if (this.selectedNodeData.type === "project") {
-                workspaceService.deleteProject(this.selectedWorkspace, this.selectedNodeData.name, this.wsTree);
+                workspaceService.deleteProject(this.selectedWorkspace, this.selectedNodeData, this.wsTree);
             } else {
                 workspaceTreeAdapter.deleteNode(this.selectedNodeData);
             }
