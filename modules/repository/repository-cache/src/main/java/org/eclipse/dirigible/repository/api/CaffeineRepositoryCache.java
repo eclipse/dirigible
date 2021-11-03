@@ -36,6 +36,14 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 				.build();
 	}
 
+	public static Cache<String, byte[]> getInternalCache() {
+		if (cache == null) {
+			initCache();
+		}
+
+		return cache;
+	}
+
 	@Override
 	public byte[] get(String path) {
 		return cache.getIfPresent(path);

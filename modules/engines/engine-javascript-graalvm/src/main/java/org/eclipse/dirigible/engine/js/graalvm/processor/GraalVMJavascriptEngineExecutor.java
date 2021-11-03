@@ -22,7 +22,6 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
@@ -35,7 +34,6 @@ import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugPr
 import org.eclipse.dirigible.engine.js.graalvm.processor.truffle.RegistryTruffleFileSystem;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.*;
-import org.graalvm.polyglot.Context.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +47,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
     private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineExecutor.class);
 
     private static final String ENGINE_JAVA_SCRIPT = "js";
-    private static final String BUILDER_OPTION_INSPECT = "inspect";
-    private static final String BUILDER_OPTION_INSPECT_SECURE = "inspect.Secure";
-    private static final String BUILDER_OPTION_INSPECT_PATH = "inspect.Path";
     private static final String SOURCE_PROVIDER = "SourceProvider";
     private static final String CODE_DEBUGGER = "debugger;\n\n";
 
@@ -59,18 +54,12 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
     public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_ENABLED";
     public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT = "DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT";
-    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS";
-    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD";
-    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS";
-    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO = "DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO";
-    public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN";
     public static final String DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
 
     public static final String DEFAULT_DEBUG_PORT = "8081";
 
-    private static final Object kotlinCompilerProcessLock = new Object();
-
     private GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+    private ExecutableFileTypeResolver executableFileTypeResolver = new ExecutableFileTypeResolver();
 
     /*
      * (non-Javadoc)
@@ -115,23 +104,12 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         if (moduleOrCode == null) {
             throw new ScriptingException("JavaScript module name cannot be null");
         }
-//
-//        if (moduleOrCode.endsWith(".ts")) {
-//            try {
-//                handleTypeScriptFile(moduleOrCode);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            moduleOrCode = moduleOrCode.replace(".ts", ".js");
-//        }
 
         logger.trace("entering: executeServiceModule()"); //$NON-NLS-1$
         logger.trace("module or code=" + moduleOrCode); //$NON-NLS-1$
 
         if (executionContext == null) {
-            executionContext = new HashMap<Object, Object>();
+            executionContext = new HashMap<>();
         }
 
         if (isModule) {
@@ -148,47 +126,11 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         engineBindings.put("polyglot.js.allowHostAccess", true);
         engineBindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
 
-        Builder contextBuilder = Context.newBuilder("js")
-                .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
-                .allowExperimentalOptions(true)
-                .option("js.ecmascript-version", "2021");
-
-        if (moduleOrCode.endsWith(".mjs")) {
-            if (moduleOrCode.startsWith("/")) {
-                moduleOrCode = StringUtils.substringAfter(moduleOrCode, "/");
-            }
-
-            var project = StringUtils.substringBeforeLast(moduleOrCode, "/");
-            contextBuilder.fileSystem(new RegistryTruffleFileSystem(this, project));
-        }
-
-
-        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_HOST_ACCESS, "true"))) {
-            contextBuilder.allowHostClassLookup(s -> true)
-                    .allowHostAccess(HostAccess.ALL)
-                    .allowAllAccess(true);
-        }
-        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_THREAD, "true"))) {
-            contextBuilder.allowCreateThread(true);
-        }
-        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_IO, "true"))) {
-            contextBuilder.allowIO(true);
-        }
-        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_ALLOW_CREATE_PROCESS, "true"))) {
-            contextBuilder.allowCreateProcess(true);
-        }
-        if (Boolean.parseBoolean(Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN, "true"))) {
-            contextBuilder.option("js.nashorn-compat", "true");
-        }
-
-        if (isDebugEnabled) {
-            contextBuilder.option(BUILDER_OPTION_INSPECT, Configuration.get(DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, DEFAULT_DEBUG_PORT));
-            contextBuilder.option(BUILDER_OPTION_INSPECT_SECURE, Boolean.FALSE.toString());
-            contextBuilder.option(BUILDER_OPTION_INSPECT_PATH, moduleOrCode);
-        }
-
         Object result = null;
-        try (Context context = contextBuilder.build()) {
+        var contextBuilder = new GraalVMJavaScriptContextBuilder();
+        Context context = contextBuilder.createJavaScriptContext(moduleOrCode, projectName -> new RegistryTruffleFileSystem(this, projectName));
+
+        try (context) {
             Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
             bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
             bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
@@ -199,7 +141,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             }
 
             var code = "";
-            if (moduleOrCode.endsWith(".mjs")) {
+            var executableFileType = executableFileTypeResolver.resolveFileType(moduleOrCode, commonJSModule);
+            if (executableFileType == ExecutableFileType.JAVASCRIPT_ESM) {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
                 context.eval(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE); // alias of Require.CODE
                 context.eval(ENGINE_JAVA_SCRIPT, isDebugEnabled ? CODE_DEBUGGER : "");
@@ -211,35 +154,31 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
                 beforeEval(context);
                 result = context.eval(src).as(Object.class);
-            } else {
-                if (commonJSModule) {
+            } else if (executableFileType == ExecutableFileType.JAVASCRIPT_NODE_CJS) {
+                context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
+                context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+                Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);
+                executionContext.put("main_module", mainModule);
+                beforeEval(context);
 
-                    context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
-                    context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
-                    Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);
-                    executionContext.put("main_module", mainModule);
-                    beforeEval(context);
-
-                    if (isModule) {
-                        bindings.putMember("MODULE_FILENAME", moduleOrCode);
-                        context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
-                    } else {
-                        bindings.putMember("SCRIPT_STRING", moduleOrCode);
-                        context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
-                    }
+                if (isModule) {
+                    bindings.putMember("MODULE_FILENAME", moduleOrCode);
+                    context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
                 } else {
-                    context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
-                    context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
-                    code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
-                    if (isDebugEnabled) {
-                        code = CODE_DEBUGGER + code;
-                    }
-
-                    beforeEval(context);
-
-                    result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
+                    bindings.putMember("SCRIPT_STRING", moduleOrCode);
+                    context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+                }
+            } else {
+                context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
+                context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+                code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
+                if (isDebugEnabled) {
+                    code = CODE_DEBUGGER + code;
                 }
 
+                beforeEval(context);
+
+                result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
             }
 
         } catch (IOException e) {
@@ -255,36 +194,6 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         logger.trace("exiting: executeServiceModule()");
         return result;
     }
-
-//    private void handleTypeScriptFile(String relativeProjectFilePath) throws IOException, InterruptedException {
-//        var projectPath = "/Users/xxxxxx/target/dirigible/repository/root/registry/public/";
-//        var filePath = projectPath + relativeProjectFilePath;
-//        var fileDirectoryPath = StringUtils.substringBeforeLast(filePath, "/");
-//
-//        createIndexDtsFile(fileDirectoryPath);
-//        compileTypeScriptFile(filePath);
-//        invalidateCache(fileDirectoryPath);
-//    }
-//
-//    private void createIndexDtsFile(String fileDirectoryPath) throws IOException {
-//        var indexDtsFile = new File(fileDirectoryPath + "/index.d.ts");
-//        FileUtils.writeStringToFile(indexDtsFile, "declare const require: any;", StandardCharsets.UTF_8);
-//    }
-//
-//    private void compileTypeScriptFile(String filePath) throws InterruptedException, IOException {
-//        Runtime rt = Runtime.getRuntime();
-//        Process pr = rt.exec("tsc index.d.ts " + filePath);
-//        pr.waitFor();
-//    }
-//
-//    private void invalidateCache(String fileDirectoryPath) {
-//        Cache<String, byte[]> cache = CaffeineRepositoryCache.getInternalCache();
-//        var keys = cache.asMap().keySet().stream()
-//                .filter(key -> key.startsWith(fileDirectoryPath))
-//                .collect(toList());
-//
-//        cache.invalidateAll(keys);
-//    }
 
     protected String loadSource(String module) throws IOException, URISyntaxException {
         return getSourceProvider().loadSource(module);
