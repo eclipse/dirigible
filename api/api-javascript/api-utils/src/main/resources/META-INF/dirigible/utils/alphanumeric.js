@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var alphanumeric = require('utils/v4/alphanumeric');
-for (var propertyName in uuid) {
-    exports[propertyName] = alphanumeric[propertyName];
+for(var propertyName in uuid) {
+	exports[propertyName] = alphanumeric[propertyName];
 }

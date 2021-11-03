@@ -9,12 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getUser = function () {
-    var user = require('security/v4/user');
-    return user;
+exports.getUser = function() {
+	var user = require('security/v4/user');
+	return user;
 };
 
-exports.getOAuth = function () {
-    var oauth = require('security/v4/oauth');
-    return oauth;
+exports.getOAuth = function() {
+	var oauth = require('security/v4/oauth');
+	return oauth;
 };

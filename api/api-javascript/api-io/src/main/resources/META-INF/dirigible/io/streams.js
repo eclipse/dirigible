@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var streams = require('io/v4/streams');
-for (var propertyName in streams) {
-    exports[propertyName] = streams[propertyName];
+for(var propertyName in streams) {
+	exports[propertyName] = streams[propertyName];
 }

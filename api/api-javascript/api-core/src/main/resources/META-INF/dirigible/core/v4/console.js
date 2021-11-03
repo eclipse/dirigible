@@ -11,41 +11,41 @@
  */
 /**
  * API v4 Console
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.log = function (message) {
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message));
+exports.log = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.log(stringify(message));
 };
 
-exports.error = function (message) {
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(stringify(message));
+exports.error = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.error(stringify(message));
 };
 
-exports.info = function (message) {
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(stringify(message));
+exports.info = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.info(stringify(message));
 };
 
-exports.warn = function (message) {
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(stringify(message));
+exports.warn = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.warn(stringify(message));
 };
 
-exports.debug = function (message) {
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(stringify(message));
+exports.debug = function(message) {
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.debug(stringify(message));
 };
 
-exports.trace = function (message) {
-    let traceMessage = new Error(stringify(`${message}`)).stack;
-    if (traceMessage) {
-        traceMessage = traceMessage.substring("Error: ".length, traceMessage.length);
-    }
-    org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(traceMessage);
+exports.trace = function(message) {
+	let traceMessage = new Error(stringify(`${message}`)).stack;
+	if (traceMessage) {
+		traceMessage = traceMessage.substring("Error: ".length, traceMessage.length);
+	}
+	org.eclipse.dirigible.api.v3.core.ConsoleFacade.trace(traceMessage);
 };
 
 function stringify(message) {
-    if (typeof message === 'object' && message !== null && message.class === undefined) {
-        return JSON.stringify(message);
-    }
-    return "" + message;
+	if (typeof message === 'object' && message !== null && message.class === undefined) {
+		return JSON.stringify(message);
+	}
+	return "" + message;
 }

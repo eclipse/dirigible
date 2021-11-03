@@ -199,12 +199,29 @@ th {
 .table .input-cell {
   display: flex;
   flex-direction: row;
+  align-items: stretch;
 }
-.table .column-values .input-cell {
-  border-bottom: 1px solid #1f1f20;
+.table .column-value {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.table .input-cell > button {
+  margin-left: 8px;
+}
+.table .column-value > button {
+  margin-left: 8px;
+}
+.table .column-values > .input-cell {
+  padding: 10px 10px 0px 10px;
 }
 .table .column-values .input-cell:last-of-type {
   border-bottom: 0;
+  padding-bottom: 10px;
+}
+.table .form-control {
+  width: auto;
+  flex-grow: 2;
 }
 .column-values {
   padding: 0 !important;
@@ -212,7 +229,6 @@ th {
 }
 .column-value {
   width: 100%;
-  padding: 10px;
 }
 .values-button {
   width: 100%;
@@ -257,19 +273,13 @@ th {
 .values-button > .fa, .keys-button > .fa {
   margin-right: 8px;
 }
-.table-input {
-  border: none;
-  background-image: none;
-  background-color: transparent;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
 .error-input,
 .error-input:focus {
   border-radius: 1px;
   outline: 2px solid red !important;
+}
+.warn-input,
+.warn-input:focus {
+  border-radius: 1px;
+  outline: 2px solid #d7ad2a !important;
 }

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var user = require('security/v4/user');
-for (var propertyName in user) {
-    exports[propertyName] = user[propertyName];
+for(var propertyName in user) {
+	exports[propertyName] = user[propertyName];
 }

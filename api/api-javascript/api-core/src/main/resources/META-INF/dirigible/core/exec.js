@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var exec = require('core/v4/exec');
-for (var propertyName in exec) {
-    exports[propertyName] = exec[propertyName];
+for(var propertyName in exec) {
+	exports[propertyName] = exec[propertyName];
 }

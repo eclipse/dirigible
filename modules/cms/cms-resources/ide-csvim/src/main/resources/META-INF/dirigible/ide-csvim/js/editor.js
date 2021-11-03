@@ -13,6 +13,18 @@ let editorView = angular.module('csvim-editor', []);
 
 editorView.factory('$messageHub', [function () {
     let messageHub = new FramesMessageHub();
+    let announceAlert = function (title, message, type) {
+        messageHub.post({
+            data: {
+                title: title,
+                message: message,
+                type: type
+            }
+        }, 'ide.alert');
+    };
+    let announceAlertError = function (title, message) {
+        announceAlert(title, message, "error");
+    };
     let message = function (evtName, data) {
         messageHub.post({ data: data }, evtName);
     };
@@ -20,32 +32,36 @@ editorView.factory('$messageHub', [function () {
         messageHub.subscribe(callback, topic);
     };
     return {
+        announceAlert: announceAlert,
+        announceAlertError: announceAlertError,
         message: message,
         on: on
     };
 }]);
 
-editorView.directive('allowedSymbols', () => {
+editorView.directive('validateInput', () => {
     return {
         restrict: 'A',
         require: 'ngModel',
         scope: {
-            regex: '@allowedSymbols'
+            regex: '@validateInput'
         },
         link: (scope, element, attrs, controller) => {
             controller.$validators.forbiddenName = value => {
-                if (!value) {
-                    return true;
+                let correct = false;
+                if (value) {
+                    correct = RegExp(scope.regex, 'g').test(value);
                 }
-                let correct = RegExp(scope.regex, 'g').test(value);
-                if (correct) {
-                    element.removeClass("error-input");
-                } else {
-                    element.addClass('error-input');
+                if (attrs.hasOwnProperty("id")) {
+                    if (attrs["id"] === "table") scope.$parent.showTableError(!correct);
+                    else if (attrs["id"] === "schema") scope.$parent.showSchemaError(!correct);
+                    else if (attrs["id"] === "filepath") {
+                        scope.$parent.fileExists = true;
+                        scope.$parent.showFilepathError(!correct);
+                    }
                 }
-                if (attrs.hasOwnProperty("id") && attrs["id"] === "filepath") {
-                    scope.$parent.fileExists = true;
-                }
+                if (correct) element.removeClass("error-input");
+                else element.addClass('error-input');
                 scope.$parent.setSaveEnabled(correct);
                 return correct;
             };
@@ -104,6 +120,18 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     let isMac = false;
     let workspace = 'workspace'; // This needs to be replace with an API.
     let csrfToken;
+    $scope.schemaError = {
+        hasError: false,
+        msg: 'Schema can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$")'
+    };
+    $scope.tableError = {
+        hasError: false,
+        msg: 'Table can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), dots ("."), underscores ("_"), and dollar signs ("$"). Two colons ("::") are permitted only when table name contains schema ("schemaName::tableName").'
+    };
+    $scope.filepathError = {
+        hasError: false,
+        msg: 'Path can only contain letters (a-z, A-Z), numbers (0-9), hyphens ("-"), forward slashes ("/"), dots ("."), underscores ("_"), and dollar signs ("$")'
+    };
     $scope.fileExists = true;
     $scope.saveEnabled = true;
     $scope.editEnabled = false;
@@ -134,8 +162,29 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
         }
     };
 
+    $scope.showTableError = function (hasError) {
+        $scope.tableError.hasError = hasError;
+    };
+
+    $scope.showSchemaError = function (hasError) {
+        $scope.schemaError.hasError = hasError;
+    };
+
+    $scope.showFilepathError = function (hasError) {
+        $scope.filepathError.hasError = hasError;
+    };
+
+    $scope.inputsHaveErrors = function () {
+        let inputs = document.getElementsByClassName("form-control");
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].classList.contains('error-input')) return true;
+        }
+        return false;
+    };
+
     $scope.setSaveEnabled = function (enabled) {
-        $scope.saveEnabled = enabled;
+        if (enabled && !$scope.inputsHaveErrors()) $scope.saveEnabled = true;
+        else $scope.saveEnabled = false;
     };
 
     $scope.setEditEnabled = function (enabled) {
@@ -180,9 +229,11 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
     };
 
     $scope.fileSelected = function (id) {
-        $scope.setEditEnabled(false);
-        $scope.fileExists = true;
-        $scope.activeItemId = id;
+        if (!$scope.inputsHaveErrors()) {
+            $scope.setEditEnabled(false);
+            $scope.fileExists = true;
+            $scope.activeItemId = id;
+        }
     };
 
     $scope.isDelimiterSupported = function (delimiter) {
@@ -378,6 +429,12 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
                         if ("error" in response.data) {
                             console.error("Loading file:", response.data.error.message);
                         }
+                    } else {
+                        $messageHub.announceAlertError(
+                            "Error while loading the file",
+                            "Please look at the console for more information"
+                        );
+                        console.error(response);
                     }
                 });
         } else {

@@ -11,5 +11,5 @@
  */
 var registry = require("platform/v4/registry");
 for (var propertyName in registry) {
-    exports[propertyName] = registry[propertyName];
+	exports[propertyName] = registry[propertyName];
 }

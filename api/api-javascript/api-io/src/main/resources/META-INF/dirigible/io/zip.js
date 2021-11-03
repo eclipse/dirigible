@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var zip = require('io/v4/zip');
-for (var propertyName in zip) {
-    exports[propertyName] = zip[propertyName];
+for(var propertyName in zip) {
+	exports[propertyName] = zip[propertyName];
 }

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var image = require('io/v4/image');
-for (var propertyName in image) {
-    exports[propertyName] = image[propertyName];
+for(var propertyName in image) {
+	exports[propertyName] = image[propertyName];
 }

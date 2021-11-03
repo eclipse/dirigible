@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var query = require('db/v4/query');
-for (var propertyName in query) {
-    exports[propertyName] = query[propertyName];
+for(var propertyName in query) {
+	exports[propertyName] = query[propertyName];
 }

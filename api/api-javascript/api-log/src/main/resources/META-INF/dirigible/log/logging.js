@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var log = require('log/v4/logging');
-for (var propertyName in log) {
-    exports[propertyName] = log[propertyName];
+for(var propertyName in log) {
+	exports[propertyName] = log[propertyName];
 }

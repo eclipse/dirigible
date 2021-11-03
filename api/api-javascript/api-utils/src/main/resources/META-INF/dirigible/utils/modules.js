@@ -9,47 +9,47 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getBase64 = function () {
-    var base64 = require('utils/v4/base64');
-    return base64;
+exports.getBase64 = function() {
+	var base64 = require('utils/v4/base64');
+	return base64;
 };
 
-exports.getDigest = function () {
-    var digest = require('utils/v4/digest');
-    return digest;
+exports.getDigest = function() {
+	var digest = require('utils/v4/digest');
+	return digest;
 };
 
-exports.getHex = function () {
-    var hex = require('utils/v4/hex');
-    return hex;
+exports.getHex = function() {
+	var hex = require('utils/v4/hex');
+	return hex;
 };
 
-exports.getUuid = function () {
-    var uuid = require('utils/v4/uuid');
-    return uuid;
+exports.getUuid = function() {
+	var uuid = require('utils/v4/uuid');
+	return uuid;
 };
 
-exports.getXml = function () {
-    var xml = require('utils/v4/xml');
-    return xml;
+exports.getXml = function() {
+	var xml = require('utils/v4/xml');
+	return xml;
 };
 
-exports.getUrl = function () {
-    var url = require('utils/v4/url');
-    return url;
+exports.getUrl = function() {
+	var url = require('utils/v4/url');
+	return url;
 };
 
-exports.getEscape = function () {
-    var url = require('utils/v4/escape');
-    return url;
+exports.getEscape = function() {
+	var url = require('utils/v4/escape');
+	return url;
 };
 
-exports.getAlphanumeric = function () {
-    var alphanumeric = require('utils/v4/alphanumeric');
-    return alphanumeric;
+exports.getAlphanumeric = function() {
+	var alphanumeric = require('utils/v4/alphanumeric');
+	return alphanumeric;
 };
 
-exports.getJsonPath = function () {
-    var jsonpath = require('utils/v4/jsonpath');
-    return jsonpath;
+exports.getJsonPath = function() {
+	var jsonpath = require('utils/v4/jsonpath');
+	return jsonpath;
 };

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var digest = require('utils/v4/digest');
-for (var propertyName in digest) {
-    exports[propertyName] = digest[propertyName];
+for(var propertyName in digest) {
+	exports[propertyName] = digest[propertyName];
 }

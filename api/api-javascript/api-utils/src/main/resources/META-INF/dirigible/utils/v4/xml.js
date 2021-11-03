@@ -11,23 +11,23 @@
  */
 /**
  * API v4 Files
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.fromJson = function (input) {
-    var data = input;
-    if (typeof data !== "string") {
-        data = JSON.stringify(input);
-    }
-    return org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade.fromJson(data);
+exports.fromJson = function(input) {
+	var data = input;
+	if(typeof data !== "string"){
+		data = JSON.stringify(input);
+	}
+	return org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade.fromJson(data);
 };
 
-exports.toJson = function (input) {
-    var data = input;
-    if (typeof data !== "string") {
-        data = JSON.stringify(input);
-    }
-    return org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade.toJson(data);
+exports.toJson = function(input) {
+	var data = input;
+	if(typeof data !== "string"){
+		data = JSON.stringify(input);
+	}
+	return org.eclipse.dirigible.api.v3.utils.Xml2JsonFacade.toJson(data);
 };
 

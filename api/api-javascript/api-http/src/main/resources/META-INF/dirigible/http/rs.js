@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var rs = require('http/v4/rs');
-for (var propertyName in rs) {
-    exports[propertyName] = rest[propertyName];
+for(var propertyName in rs) {
+	exports[propertyName] = rest[propertyName];
 }

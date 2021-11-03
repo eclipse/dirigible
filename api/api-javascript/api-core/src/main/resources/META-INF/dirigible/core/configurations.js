@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var context = require('core/v4/configurations');
-for (var propertyName in context) {
-    exports[propertyName] = context[propertyName];
+for(var propertyName in context) {
+	exports[propertyName] = context[propertyName];
 }

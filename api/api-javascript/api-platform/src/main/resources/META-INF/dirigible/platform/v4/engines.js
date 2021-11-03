@@ -12,40 +12,40 @@
 /**
  * Get engine by type
  */
-exports.getEngine = function (type) {
-    return new Engine(type);
+exports.getEngine = function(type) {
+	return new Engine(type);
 }
 
 /**
  * Engine
  */
 function Engine(type) {
-    this.type = type;
+	this.type = type;
 
-    this.execute = function (module, context) {
-        var mapInstance = new java.util.HashMap();
-        for (var property in context) {
-            if (context.hasOwnProperty(property)) {
-                mapInstance.put(property, context[property]);
-            }
-        }
-        return org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager
-            .executeServiceModule(this.type, module, mapInstance);
-    }
+	this.execute = function(module, context) {
+		var mapInstance = new java.util.HashMap();
+			for (var property in context) {
+				if (context.hasOwnProperty(property)) {
+					mapInstance.put(property, context[property]);
+				}
+			}
+		return org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager
+			.executeServiceModule(this.type, module, mapInstance);
+	}
 
-    this.executeCode = function (module, context) {
-        var mapInstance = new java.util.HashMap();
-        for (var property in context) {
-            if (context.hasOwnProperty(property)) {
-                mapInstance.put(property, context[property]);
-            }
-        }
-        return org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager
-            .executeServiceCode(this.type, module, mapInstance);
-    }
+	this.executeCode = function(module, context) {
+		var mapInstance = new java.util.HashMap();
+			for (var property in context) {
+				if (context.hasOwnProperty(property)) {
+					mapInstance.put(property, context[property]);
+				}
+			}
+		return org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager
+			.executeServiceCode(this.type, module, mapInstance);
+	}
 }
 
-exports.getTypes = function () {
-    var json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
-    return JSON.parse(json);
+exports.getTypes = function() {
+	var json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
+	return JSON.parse(json);
 }

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var writer = require('messaging/v4/writer');
-for (var propertyName in writer) {
-    exports[propertyName] = writer[propertyName];
+for(var propertyName in writer) {
+	exports[propertyName] = writer[propertyName];
 }

@@ -11,16 +11,16 @@
  */
 /**
  * API v4 Extensions
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.getExtensions = function (extensionPoint) {
-    var extensions = org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade.getExtensions(extensionPoint);
-    return JSON.parse(JSON.stringify(extensions));
+exports.getExtensions = function(extensionPoint) {
+	var extensions = org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade.getExtensions(extensionPoint);
+	return JSON.parse(JSON.stringify(extensions));
 };
 
-exports.getExtensionPoints = function () {
-    var extensionPoints = org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade.getExtensionPoints();
-    return JSON.parse(JSON.stringify(extensionPoints));
+exports.getExtensionPoints = function() {
+	var extensionPoints = org.eclipse.dirigible.api.v3.core.ExtensionsServiceFacade.getExtensionPoints();
+	return JSON.parse(JSON.stringify(extensionPoints));
 };

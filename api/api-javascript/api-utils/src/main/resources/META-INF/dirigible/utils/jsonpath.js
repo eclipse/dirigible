@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var jp = require('utils/v4/jsonpath');
-for (var propertyName in jp) {
-    exports[propertyName] = jp[propertyName];
+for(var propertyName in jp) {
+	exports[propertyName] = jp[propertyName];
 }

@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var sequence = require('db/v4/sequence');
-for (var propertyName in sequence) {
-    exports[propertyName] = sequence[propertyName];
+for(var propertyName in sequence) {
+	exports[propertyName] = sequence[propertyName];
 }

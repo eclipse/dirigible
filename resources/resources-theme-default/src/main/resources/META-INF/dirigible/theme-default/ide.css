@@ -74,6 +74,9 @@ body {
 .error-label {
   color: red;
 }
+.warn-label {
+  color: #d7ad2a;
+}
 .statusbar-error {
   color: #ed7474;
   width: 45%;

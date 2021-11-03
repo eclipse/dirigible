@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var destinations = require('core/v4/destinations');
-for (var propertyName in destinations) {
-    exports[propertyName] = destinations[propertyName];
+for(var propertyName in destinations) {
+	exports[propertyName] = destinations[propertyName];
 }

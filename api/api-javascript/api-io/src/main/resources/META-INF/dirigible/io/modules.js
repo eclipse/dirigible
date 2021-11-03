@@ -9,23 +9,23 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getFiles = function () {
-    var files = require('io/v4/files');
-    return files;
+exports.getFiles = function() {
+	var files = require('io/v4/files');
+	return files;
 };
 
-exports.getStreams = function () {
-    var streams = require('io/v4/streams');
-    return streams;
+exports.getStreams = function() {
+	var streams = require('io/v4/streams');
+	return streams;
 };
 
-exports.getZip = function () {
-    var zip = require('io/v4/zip');
-    return zip;
+exports.getZip = function() {
+	var zip = require('io/v4/zip');
+	return zip;
 };
 
-exports.getImage = function () {
-    var image = require('io/v4/image');
-    return image;
+exports.getImage = function() {
+	var image = require('io/v4/image');
+	return image;
 };
 

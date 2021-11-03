@@ -11,30 +11,30 @@
  */
 /**
  * API v4 Producer
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.queue = function (destination) {
-    var queue = new Queue();
-    queue.destination = destination;
-    return queue;
+exports.queue = function(destination) {
+	var queue = new Queue();
+	queue.destination = destination;
+	return queue;
 };
 
-exports.topic = function (destination) {
-    var topic = new Topic();
-    topic.destination = destination;
-    return topic;
+exports.topic = function(destination) {
+	var topic = new Topic();
+	topic.destination = destination;
+	return topic;
 };
 
 function Queue() {
-    this.send = function (message) {
-        org.eclipse.dirigible.api.v3.messaging.MessagingFacade.sendToQueue(this.destination, message);
-    };
+	this.send = function(message) {
+		org.eclipse.dirigible.api.v3.messaging.MessagingFacade.sendToQueue(this.destination, message);
+	};
 }
 
 function Topic() {
-    this.send = function (message) {
-        org.eclipse.dirigible.api.v3.messaging.MessagingFacade.sendToTopic(this.destination, message);
-    };
+	this.send = function(message) {
+		org.eclipse.dirigible.api.v3.messaging.MessagingFacade.sendToTopic(this.destination, message);
+	};
 }

@@ -1,8 +1,8 @@
 {
-  "guid": "core",
-  "repository": {
-    "type": "git",
-    "branch": "master",
-    "url": "https://github.com/dirigiblelabs/api-core.git"
-  }
+	"guid": "core",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/api-core.git"
+	}
 }

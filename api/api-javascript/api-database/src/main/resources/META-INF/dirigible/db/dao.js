@@ -11,6 +11,6 @@
  */
 "use strict";
 var dao = require('db/v4/dao');
-for (var propertyName in dao) {
-    exports[propertyName] = dao[propertyName];
+for(var propertyName in dao) {
+	exports[propertyName] = dao[propertyName];
 }

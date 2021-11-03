@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var update = require('db/v4/update');
-for (var propertyName in update) {
-    exports[propertyName] = update[propertyName];
+for(var propertyName in update) {
+	exports[propertyName] = update[propertyName];
 }

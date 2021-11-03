@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var hex = require('utils/v4/hex');
-for (var propertyName in hex) {
-    exports[propertyName] = hex[propertyName];
+for(var propertyName in hex) {
+	exports[propertyName] = hex[propertyName];
 }

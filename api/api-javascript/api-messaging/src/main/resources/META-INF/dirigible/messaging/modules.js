@@ -9,12 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getProducer = function () {
-    var producer = require('messaging/v4/producer');
-    return producer;
+exports.getProducer = function() {
+	var producer = require('messaging/v4/producer');
+	return producer;
 };
 
-exports.getConsumer = function () {
-    var consumer = require('messaging/v4/consumer');
-    return consumer;
+exports.getConsumer = function() {
+	var consumer = require('messaging/v4/consumer');
+	return consumer;
 };

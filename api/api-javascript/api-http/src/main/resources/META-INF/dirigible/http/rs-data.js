@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var restData = require('http/v4/rs-data');
-for (var propertyName in restData) {
-    exports[propertyName] = restData[propertyName];
+for(var propertyName in restData) {
+	exports[propertyName] = restData[propertyName];
 }

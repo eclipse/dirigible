@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var session = require('http/v4/session');
-for (var propertyName in session) {
-    exports[propertyName] = session[propertyName];
+for(var propertyName in session) {
+	exports[propertyName] = session[propertyName];
 }

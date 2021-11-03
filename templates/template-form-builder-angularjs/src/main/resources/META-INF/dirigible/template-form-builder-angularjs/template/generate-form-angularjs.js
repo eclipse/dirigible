@@ -11,7 +11,7 @@
  */
 var workspaceManager = require("platform/v4/workspace");
 var bytes = require("io/v4/bytes");
-var templateEngines = require("platform/v4/templates");
+var templateEngines = require("platform/v4/template-engines");
 var repositoryContent = require("platform/v4/registry");
 
 exports.generateView = function(workspaceName, projectName, filePath) {

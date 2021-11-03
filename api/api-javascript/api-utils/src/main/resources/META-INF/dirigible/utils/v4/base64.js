@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Files
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -21,61 +21,61 @@ var bytes = require("io/v4/bytes");
 /**
  * Encode the input (text or byte array) as text
  */
-exports.encode = function (input) {
-    return bytes.byteArrayToText(exports.encodeAsNativeBytes(input));
+exports.encode = function(input) {
+	return bytes.byteArrayToText(exports.encodeAsNativeBytes(input));
 };
 
 /**
  * Encode the input (text or byte array) as byte array
  */
-exports.encodeAsBytes = function (input) {
-    return bytes.toJavaScriptBytes(exports.encodeAsNativeBytes(input));
+exports.encodeAsBytes = function(input) {
+	return bytes.toJavaScriptBytes(exports.encodeAsNativeBytes(input));
 };
 
 /**
  * Encode the input (text or byte array) as java native byte array
  */
-exports.encodeAsNativeBytes = function (input) {
-    var data = input;
-    var native;
-    if (typeof data === 'string') {
-        var baos = streams.createByteArrayOutputStream();
-        baos.writeText(data);
-        native = baos.getBytesNative();
-    } else if (Array.isArray(data)) {
-        native = bytes.toJavaBytes(data);
-    }
-
-    var output = org.eclipse.dirigible.api.v3.utils.Base64Facade.encodeNative(native);
-    return output;
+exports.encodeAsNativeBytes = function(input) {
+	var data = input;
+	var native;
+	if (typeof data === 'string') {
+		var baos = streams.createByteArrayOutputStream();
+		baos.writeText(data);
+		native = baos.getBytesNative();
+	} else if (Array.isArray(data)) {
+		native = bytes.toJavaBytes(data);
+	}
+	
+	var output = org.eclipse.dirigible.api.v3.utils.Base64Facade.encodeNative(native);
+	return output;
 };
 
 /**
  * Decode the input (text or byte array) as text
  */
-exports.decode = function (input) {
-    var output = exports.decodeAsNativeBytes(input);
-    if (output && output !== null) {
-        var result = bytes.toJavaScriptBytes(output);
-        return result;
-    }
-    return output;
+exports.decode = function(input) {
+	var output = exports.decodeAsNativeBytes(input);
+	if (output && output !== null) {
+		var result = bytes.toJavaScriptBytes(output);
+		return result;
+	}
+	return output;
 };
 
 /**
  * Decode the input (text or byte array) as java native byte array
  */
-exports.decodeAsNativeBytes = function (input) {
-    var data = input;
-    var native;
-    if (typeof data === 'string') {
-        var baos = streams.createByteArrayOutputStream();
-        baos.writeText(data);
-        native = baos.getBytesNative();
-    } else if (Array.isArray(data)) {
-        native = bytes.toJavaBytes(data);
-    }
-    var output = org.eclipse.dirigible.api.v3.utils.Base64Facade.decodeNative(native);
-    return output;
+exports.decodeAsNativeBytes = function(input) {
+	var data = input;
+	var native;
+	if (typeof data === 'string') {
+		var baos = streams.createByteArrayOutputStream();
+		baos.writeText(data);
+		native = baos.getBytesNative();
+	} else if (Array.isArray(data)) {
+		native = bytes.toJavaBytes(data);
+	}
+	var output = org.eclipse.dirigible.api.v3.utils.Base64Facade.decodeNative(native);
+	return output;
 };
 

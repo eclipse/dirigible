@@ -11,6 +11,6 @@
  */
 var mail = require("mail/v4/client");
 
-for (var propertyName in mail) {
-    exports[propertyName] = mail[propertyName];
+for(var propertyName in mail) {
+	exports[propertyName] = mail[propertyName];
 }

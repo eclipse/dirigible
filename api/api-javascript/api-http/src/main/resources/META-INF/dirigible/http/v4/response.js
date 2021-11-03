@@ -11,145 +11,145 @@
  */
 /**
  * API v4 Response
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.isValid = function () {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isValid();
+exports.isValid = function() {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isValid();
 };
 
-exports.print = function (text) {
-    text = (text && text.toString()) || "";
-    var out = this.getOutputStream().native;
-    var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
-    writer.write(text);
-    writer.flush();
+exports.print = function(text) {
+	text = (text && text.toString()) || "";
+	var out = this.getOutputStream().native;
+	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
+	writer.write(text);
+	writer.flush();
 };
 
-exports.println = function (text) {
-    text = (text && text.toString()) || "";
-    var out = this.getOutputStream().native;
-    var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
-    writer.write(text);
-    writer.write("\n");
-    writer.flush();
+exports.println = function(text) {
+	text = (text && text.toString()) || "";
+	var out = this.getOutputStream().native;
+	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
+	writer.write(text);
+	writer.write("\n");
+	writer.flush();
 };
 
-exports.write = function (bytes) {
-    if (!bytes) bytes += "";
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.write(bytes);
+exports.write = function(bytes) {
+	if (!bytes) bytes += "";
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.write(bytes);
 };
 
-exports.isCommitted = function () {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isCommitted();
+exports.isCommitted = function() {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.isCommitted();
 };
 
-exports.setContentType = function (contentType) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentType(contentType);
+exports.setContentType = function(contentType) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentType(contentType);
 };
 
-exports.flush = function () {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.flush();
+exports.flush = function() {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.flush();
 };
 
-exports.close = function () {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.close();
+exports.close = function() {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.close();
 };
 
-exports.addCookie = function (cookie) {
-    var cookieJson = JSON.stringify(cookie);
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addCookie(cookieJson);
+exports.addCookie = function(cookie) {
+	var cookieJson = JSON.stringify(cookie);
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addCookie(cookieJson);
 };
 
-exports.containsHeader = function (name) {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.containsHeader(name);
+exports.containsHeader = function(name) {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.containsHeader(name);
 };
 
-exports.encodeURL = function (url) {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeURL(url);
+exports.encodeURL = function(url) {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeURL(url);
+};
+	
+exports.getCharacterEncoding = function() {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getCharacterEncoding();
+};
+	
+exports.encodeRedirectURL = function(url) {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeRedirectURL(url);
 };
 
-exports.getCharacterEncoding = function () {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getCharacterEncoding();
+exports.getContentType = function() {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getContentType();
 };
 
-exports.encodeRedirectURL = function (url) {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeRedirectURL(url);
+exports.sendError = function(status, message) {
+	if (message) {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status, message);
+	} else {
+		org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status);
+	}
 };
 
-exports.getContentType = function () {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getContentType();
+exports.setCharacterEncoding = function(charset) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setCharacterEncoding(charset);
 };
 
-exports.sendError = function (status, message) {
-    if (message) {
-        org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status, message);
-    } else {
-        org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendError(status);
-    }
+exports.sendRedirect = function(location) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendRedirect(location);
 };
 
-exports.setCharacterEncoding = function (charset) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setCharacterEncoding(charset);
+exports.setContentLength = function(length) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentLength(length);
 };
 
-exports.sendRedirect = function (location) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.sendRedirect(location);
+exports.setHeader = function(name, value) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setHeader(name, value);
 };
 
-exports.setContentLength = function (length) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setContentLength(length);
+exports.addHeader = function(name, value) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addHeader(name, value);
 };
 
-exports.setHeader = function (name, value) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setHeader(name, value);
+exports.setStatus = function(status) {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setStatus(status);
 };
 
-exports.addHeader = function (name, value) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.addHeader(name, value);
+exports.reset = function() {
+	org.eclipse.dirigible.api.v3.http.HttpResponseFacade.reset();
 };
 
-exports.setStatus = function (status) {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setStatus(status);
+exports.getHeader = function(name) {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeader(name);
 };
 
-exports.reset = function () {
-    org.eclipse.dirigible.api.v3.http.HttpResponseFacade.reset();
+exports.setLocale = function(language, country, variant) {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setLocale(language, country, variant);
+};
+	
+exports.getHeaders = function(name) {
+	var headersJson;
+	headersJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaders(name);
+	var headers = JSON.parse(headersJson);
+	return headers;
 };
 
-exports.getHeader = function (name) {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeader(name);
+exports.getHeaderNames = function() {
+	var headerNamesJson;
+	headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaderNames();
+	var headerNames = JSON.parse(headerNamesJson);
+	return headerNames;
 };
 
-exports.setLocale = function (language, country, variant) {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setLocale(language, country, variant);
+exports.getLocale = function() {
+	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getLocale();
 };
 
-exports.getHeaders = function (name) {
-    var headersJson;
-    headersJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaders(name);
-    var headers = JSON.parse(headersJson);
-    return headers;
-};
-
-exports.getHeaderNames = function () {
-    var headerNamesJson;
-    headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaderNames();
-    var headerNames = JSON.parse(headerNamesJson);
-    return headerNames;
-};
-
-exports.getLocale = function () {
-    return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getLocale();
-};
-
-exports.getOutputStream = function () {
+exports.getOutputStream = function() {
     var streams = require("io/v4/streams");
     var outputStream = new streams.OutputStream();
-    var native = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getOutputStream();
-    outputStream.native = native;
-    return outputStream;
+	var native = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getOutputStream();
+	outputStream.native = native;
+	return outputStream;
 };
 
 /**
@@ -360,57 +360,57 @@ exports.USE_PROXY = 305;
 /**
  * Mapping between HTTP response codes (string) and reason-pharses as defiend in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1).
  * (See HttpCodesReasons.getReason for number based retrieval of reason-phrase for code)
- *
+ * 
  */
 var HttpCodesReasons = exports.HttpCodesReasons = {
-    "100": "Continue",
-    "101": "Switching Protocols",
-    "200": "OK",
-    "201": "Created",
-    "202": "Accepted",
-    "203": "Non-Authoritative Information",
-    "204": "No Content",
-    "205": "Reset Content",
-    "206": "Partial Content",
-    "300": "Multiple Choices",
-    "301": "Moved Permanently",
-    "302": "Found",
-    "303": "See Other",
-    "304": "Not Modified",
-    "305": "Use Proxy",
-    "307": "Temporary Redirect",
-    "400": "Bad Request",
-    "401": "Unauthorized",
-    "402": "Payment Required",
-    "403": "Forbidden",
-    "404": "Not Found",
-    "405": "Method Not Allowed",
-    "406": "Not Acceptable",
-    "407": "Proxy Authentication Required",
-    "408": "Request Timeout",
-    "409": "Conflict",
-    "410": "Gone",
-    "411": "Length Required",
-    "412": "Precondition Failed",
-    "413": "Payload Too Large",
-    "414": "URI Too Large",
-    "415": "Unsupported Media Type",
-    "416": "Range Not Satisfiable",
-    "417": "Expectation Failed",
-    "426": "Upgrade Required",
-    "500": "Internal Server Error",
-    "501": "Not Implemented",
-    "502": "Bad Gateway",
-    "503": "Service Unavailable",
-    "504": "Gateway Timmeout",
-    "505": "HTTP Version Not Supported"
+	"100": "Continue",	
+	"101": "Switching Protocols",
+	"200": "OK",	
+	"201": "Created",	
+	"202": "Accepted",
+	"203": "Non-Authoritative Information",	
+	"204": "No Content",	
+	"205": "Reset Content",		
+	"206": "Partial Content",
+	"300": "Multiple Choices",			
+	"301": "Moved Permanently",
+	"302": "Found",	
+	"303": "See Other",
+	"304": "Not Modified",	
+	"305": "Use Proxy",	
+	"307": "Temporary Redirect",
+	"400": "Bad Request",
+	"401": "Unauthorized",
+	"402": "Payment Required",
+	"403": "Forbidden",
+	"404": "Not Found",
+	"405": "Method Not Allowed",	
+	"406": "Not Acceptable",		
+	"407": "Proxy Authentication Required",
+	"408": "Request Timeout",			
+	"409": "Conflict",
+	"410": "Gone",	
+	"411": "Length Required",		
+	"412": "Precondition Failed",			
+	"413": "Payload Too Large",	
+	"414": "URI Too Large",	
+	"415": "Unsupported Media Type",		
+	"416": "Range Not Satisfiable",
+	"417": "Expectation Failed",
+	"426": "Upgrade Required",	
+	"500": "Internal Server Error",	
+	"501": "Not Implemented",		
+	"502": "Bad Gateway",		
+	"503": "Service Unavailable",			
+	"504": "Gateway Timmeout",
+	"505": "HTTP Version Not Supported"				
 };
 
 /**
  * Utility method that accepts HTTP code as argument (string or number) and returns its corresponding reason-phrase as defined in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1)
  */
-HttpCodesReasons.getReason = function (code) {
-    if (isNaN(code))
-        throw Error('Illegal argument for code[' + code + ']. Valid HTTP codes are integer numbers in the range [100-505].')
-    return HttpCodesReasons[String(code)];
+HttpCodesReasons.getReason = function(code){
+	if(isNaN(code))
+		throw Error('Illegal argument for code['+code+']. Valid HTTP codes are integer numbers in the range [100-505].')
+	return HttpCodesReasons[String(code)];
 };

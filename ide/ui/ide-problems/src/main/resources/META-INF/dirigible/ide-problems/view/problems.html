@@ -53,24 +53,31 @@
                 <input type="text" name="search" class="form-control" ng-model="searchText" placeholder="Search ... Date format: yyyy-MM-dd">
             </div>
             <div class="col">
-                <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('IGNORED')">Mark as
-                    Ignored</button>
-            </div>
-            <div class="col">
-                <button class="btn btn-default preview-button" type="button" ng-click="updateStatus('SOLVED')">Mark as
-                    Solved</button>
+                <div class="dropdown-subtle pull-right">
+                    <div class="btn-group btn-group-md" activiti-fix-dropdown-bug>
+                        <button type="button" class="btn btn-default dropdown-toggle" style="height:20px;" data-toggle="dropdown">
+                            Actions <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a style="font-size: 15px" ng-click="updateStatus('SOLVED')">Mark as Solved <i class="fa fa-check-square"></i></a>
+                            </li>
+                            <li>
+                                <a style="font-size: 15px" ng-click="updateStatus('IGNORED')">Mark as Ignored <i class="fa fa-exclamation-triangle"></i></a>
+                            </li>
+                            <li>
+                                <a style="font-size: 15px" ng-click="deleteByStatus('SOLVED')">Delete all Solved <i class="fa fa-check-square"></i></a>
+                            </li>
+                            <li>
+                                <a style="font-size: 15px" ng-click="deleteByStatus('IGNORED')">Delete all Ignored <i class="fa fa-exclamation-triangle"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <button class="btn btn-default preview-button" type="button" ng-click="deleteSelected()">Delete
                     Selected</button>
-            </div>
-            <div class="col">
-                <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('SOLVED')">Delete
-                    Solved</button>
-            </div>
-            <div class="col">
-                <button class="btn btn-default preview-button" type="button" ng-click="deleteByStatus('IGNORED')">Delete
-                    Ignored</button>
             </div>
             <div class="col">
                 <button class="btn btn-default preview-button" type="button" ng-click="clear()">Delete All</button>
@@ -86,35 +93,40 @@
                         <th>Location</th>
                         <th>Type</th>
                         <th>Cause</th>
-                        <th>Module</th>
                         <th>Category</th>
                         <th>Line</th>
                         <th>Column</th>
                         <th>Expected</th>
-                        <th>Source</th>
-                        <th>Creator</th>
-                        <th>Created</th>
-                        <th>Program</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="next in problemsList track by $index">
+                    <tr ng-repeat="next in problemsList track by $index" ng-dblclick="openFile(next.location)">
                         <td><input type="checkbox" ng-model="next.checked"></td>
                         <td>{{$index + 1}}</td>
                         <td>
-                            <div class="tdSingleLine">{{next.status}}</div>
+                            <div ng-switch="next.status">
+                                <div ng-switch-when="ACTIVE">
+                                    <i style="padding-left: 12px" class="fa fa-times-circle"></i>
+                                </div>
+
+                                <div ng-switch-when="SOLVED">
+                                    <i style="padding-left: 12px" class="fa fa-check-square"></i>
+                                </div>
+
+                                <div ng-switch-when="IGNORED">
+                                    <i style="padding-left: 12px" class="fa fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
                         </td>
-                        <td>
+                        <td tyle="max-width: 150px; textoverflow: ellipsis;">
                             <div class="tdSingleLine">{{next.location}}</div>
                         </td>
                         <td>
                             <div class="tdSingleLine">{{next.type}}</div>
                         </td>
-                        <td>
+                        <td style="max-width: 150px; textoverflow: ellipsis;">
                             <div class="tdSingleLine">{{next.cause}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{next.module}}</div>
                         </td>
                         <td>
                             <div class="tdSingleLine">{{next.category}}</div>
@@ -125,20 +137,13 @@
                         <td>
                             <div class="tdSingleLine">{{next.column}}</div>
                         </td>
-                        <td>
+                        <td tyle="max-width: 150px; textoverflow: ellipsis;">
                             <div class="tdSingleLine">{{next.expected}}</div>
                         </td>
                         <td>
-                            <div class="tdSingleLine">{{next.source}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{next.createdBy}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{next.createdAt}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{next.program}}</div>
+                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#problemContent" ng-click="showInfo(next)">
+                                <i class="fa">Expand</i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -150,7 +155,90 @@
             </button>
         </div>
         <div style="padding: 5px">Selected: {{selectedRows}}/Total rows: {{totalRows}}
-            (Selected count is limited by the search terms)</div>
+            (Selected count is limited by the search terms)
+        </div>
+        <div class="modal fade" id="problemContent" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table class="table table-striped" ng-cloak>
+                            <tbody>
+                            <tr>
+                                <td>Status</td>
+                                <td>
+                                    <div ng-switch="openedProblem.status">
+                                        <div ng-switch-when="ACTIVE">
+                                            ACTIVE <i class="fa fa-times-circle"></i>
+                                        </div>
+
+                                        <div ng-switch-when="SOLVED">
+                                            SOLVED <i class="fa fa-check-square"></i>
+                                        </div>
+
+                                        <div ng-switch-when="IGNORED">
+                                            IGNORED <i class="fa fa-exclamation-triangle"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Location</td>
+                                <td>{{openedProblem.location}}</td>
+                            </tr>
+                            <td>
+                                <tr>
+                                    <td>Type</td>
+                                    <td>{{openedProblem.type}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cause</td>
+                                    <td>{{openedProblem.cause}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Module</td>
+                                    <td>{{openedProblem.module}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Category</td>
+                                    <td>{{openedProblem.category}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Line</td>
+                                    <td>{{openedProblem.line}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Column</td>
+                                    <td>{{openedProblem.column}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Expected</td>
+                                    <td>{{openedProblem.expected}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Source</td>
+                                    <td>{{openedProblem.source}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Creator</td>
+                                    <td>{{openedProblem.createdBy}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Created</td>
+                                    <td>{{openedProblem.createdAt}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Program</td>
+                                    <td>{{openedProblem.program}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

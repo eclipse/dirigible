@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var assert = require('utils/v4/assert');
-for (var propertyName in assert) {
-    exports[propertyName] = assert[propertyName];
+for(var propertyName in assert) {
+	exports[propertyName] = assert[propertyName];
 }

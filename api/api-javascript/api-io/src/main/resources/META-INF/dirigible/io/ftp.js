@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var ftp = require('io/v4/ftp');
-for (var propertyName in ftp) {
-    exports[propertyName] = ftp[propertyName];
+for(var propertyName in ftp) {
+	exports[propertyName] = ftp[propertyName];
 }

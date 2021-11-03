@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Context
- *
+ * 
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.get = function (name) {
-    return org.eclipse.dirigible.api.v3.core.ContextFacade.get(name);
+exports.get = function(name) {
+	return org.eclipse.dirigible.api.v3.core.ContextFacade.get(name);
 };
 
-exports.set = function (name, value) {
-    org.eclipse.dirigible.api.v3.core.ContextFacade.set(name, value);
+exports.set = function(name, value) {
+	org.eclipse.dirigible.api.v3.core.ContextFacade.set(name, value);
 };

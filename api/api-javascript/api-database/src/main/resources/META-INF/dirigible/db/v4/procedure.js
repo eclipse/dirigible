@@ -11,18 +11,18 @@
  */
 /**
  * API v4 Procedure
- *
+ * 
  */
 
 var update = require("db/v4/update");
 var database = require("db/v4/database");
 
-exports.create = function (sql, databaseType, datasourceName) {
+exports.create = function(sql, databaseType, datasourceName) {
     let parameters = [];
-    update.execute(sql, parameters, databaseType, datasourceName);
+	update.execute(sql, parameters, databaseType, datasourceName);
 };
 
-exports.execute = function (sql, parameters, databaseType, datasourceName) {
+exports.execute = function(sql, parameters, databaseType, datasourceName) {
     let result = [];
 
     let connection = null;
@@ -54,8 +54,8 @@ exports.execute = function (sql, parameters, databaseType, datasourceName) {
             }
             return mappedParameter;
         });
-        for (let i = 0; i < mappedParameters.length; i++) {
-            switch (mappedParameters[i].type) {
+        for (let i = 0; i < mappedParameters.length; i ++) {
+            switch(mappedParameters[i].type) {
                 case "string":
                     callableStatement.setString(i + 1, mappedParameters[i].value);
                     break;

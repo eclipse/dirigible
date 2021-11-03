@@ -13,39 +13,39 @@ exports.ACTIVE = "ACTIVE";
 exports.SOLVED = "SOLVED";
 exports.IGNORED = "IGNORED";
 
-exports.save = function (location, type, line, column, cause, expected, category, module, source, program) {
+exports.save = function(location, type, line, column, cause, expected, category, module, source, program) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.save(location, type, line, column, cause, expected,
         category, module, source, program);
 };
 
-exports.findProblem = function (id) {
+exports.findProblem = function(id) {
     return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.findProblem(id);
 };
 
-exports.fetchAllProblems = function () {
+exports.fetchAllProblems = function() {
     return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchAllProblems();
 };
 
-exports.fetchProblemsBatch = function (condition, limit) {
+exports.fetchProblemsBatch = function(condition, limit) {
     return org.eclipse.dirigible.api.v3.problems.ProblemsFacade.fetchProblemsBatch(condition, limit);
 };
 
-exports.deleteProblem = function (id) {
+exports.deleteProblem = function(id) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.deleteProblem(id);
 };
 
-exports.deleteAllByStatus = function (status) {
+exports.deleteAllByStatus = function(status) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.deleteAllByStatus(status);
 };
 
-exports.clearAllProblems = function () {
+exports.clearAllProblems = function() {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.clearAllProblems();
 };
 
-exports.updateStatus = function (id, status) {
+exports.updateStatus = function(id, status) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.updateStatus(id, status);
 };
 
-exports.updateStatusMultiple = function (ids, status) {
+exports.updateStatusMultiple = function(ids, status) {
     org.eclipse.dirigible.api.v3.problems.ProblemsFacade.updateStatusMultiple(ids, status);
 };

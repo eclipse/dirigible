@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var oauth = require('security/v4/oauth');
-for (var propertyName in oauth) {
-    exports[propertyName] = oauth[propertyName];
+for(var propertyName in oauth) {
+	exports[propertyName] = oauth[propertyName];
 }

@@ -11,5 +11,5 @@
  */
 var workspace = require("platform/v4/workspace");
 for (var propertyName in workspace) {
-    exports[propertyName] = workspace[propertyName];
+	exports[propertyName] = workspace[propertyName];
 }
