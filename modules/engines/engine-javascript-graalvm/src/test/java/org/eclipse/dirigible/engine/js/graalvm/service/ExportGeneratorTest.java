@@ -51,7 +51,8 @@ public class ExportGeneratorTest extends AbstractDirigibleTest {
                 "export const url = dirigibleRequire('utils/v4/url');\n" +
                 "export const uuid = dirigibleRequire('utils/v4/uuid');\n" +
                 "export const xml = dirigibleRequire('utils/v4/xml');\n" +
-                "export default { alphanumeric,base64,digest,escape,hex,jsonpath,url,uuid,xml }\n";
+                "export const qrcode = dirigibleRequire('utils/v4/qrcode');\n"+
+                "export default { alphanumeric,base64,digest,escape,hex,jsonpath,url,uuid,xml,qrcode }\n";
 
         logger.info("API export generation test starting... " + testApi);
         var actual = generator.generate(path, apiVersion);
