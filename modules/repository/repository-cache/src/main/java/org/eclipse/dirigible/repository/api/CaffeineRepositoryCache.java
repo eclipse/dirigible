@@ -23,9 +23,7 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 	private static Cache<String, byte[]> cache;
 
 	public CaffeineRepositoryCache() {
-		if (cache == null) {
-			initCache();
-		}
+		initCache();
 	}
 
 	private static void initCache() {
@@ -36,14 +34,6 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 				.maximumWeight(sizePolicy * 1024 * 1024)
 				.weigher((String k, byte[] v) -> v.length)
 				.build();
-	}
-
-	public static Cache<String, byte[]> getInternalCache() {
-		if (cache == null) {
-			initCache();
-		}
-
-		return cache;
 	}
 
 	@Override
