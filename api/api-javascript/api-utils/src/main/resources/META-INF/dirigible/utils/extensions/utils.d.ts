@@ -129,4 +129,8 @@ declare module "@dirigible/utils" {
         function toJson(input: string): string
     }
 
+   module qrcode {
+          function generateQRCode(text: string): any[];
+      }
+
 }

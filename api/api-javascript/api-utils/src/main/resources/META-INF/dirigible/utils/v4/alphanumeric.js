@@ -73,13 +73,12 @@ exports.isNumeric = function (str) {
     // copy from public domain at: https://stackoverflow.com/a/25352300
     var code, i, len;
     for (i = 0, len = str.length; i < len; i++) {
-        code = str.charCodeAt(i);
-        const notNumeric = !(code > 47 && code < 58);
-        if (notNumeric) { // numeric (0-9)
-            return false;
-        }
-    }
-    return true;
+		code = str.charCodeAt(i);
+		if (!(code > 47 && code < 58)) { // numeric (0-9)
+		  return false;
+		}
+	  }
+	return true;
 }
 /**
  * Tests is the provided `str` argument is a valid alphanumeric sequence.

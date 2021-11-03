@@ -94,6 +94,15 @@
       "utils/v4/xml"
     ],
     "pathDefault": "utils/v4/xml"
+  },
+  {
+    "name": "utils/v4/qrcode",
+    "description": "QR Code Generator API",
+    "api": "qrcode",
+    "versionedPaths": [
+      "utils/v4/qrcode"
+    ],
+    "pathDefault": "utils/v4/qrcode"
   }
 ]
 
