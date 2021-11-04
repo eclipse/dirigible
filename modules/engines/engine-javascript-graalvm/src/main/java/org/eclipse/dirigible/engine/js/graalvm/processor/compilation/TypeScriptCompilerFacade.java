@@ -40,8 +40,9 @@ class TypeScriptCompilerFacade {
     }
 
     private void compileTypeScriptFile(String filePath) throws InterruptedException, IOException {
-        Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("tsc index.d.ts " + filePath);
+        var runtime = Runtime.getRuntime();
+        var command = new String[]{"tsc index.d.ts ", filePath};
+        Process pr = runtime.exec(command);
         pr.waitFor();
     }
 
