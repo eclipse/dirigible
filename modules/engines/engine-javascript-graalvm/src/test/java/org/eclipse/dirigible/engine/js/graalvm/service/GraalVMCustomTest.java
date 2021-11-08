@@ -11,13 +11,7 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
@@ -102,12 +96,12 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	public void customPackageImport() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 		
 		String testModule = "graalvm/customPackageImport.js";
-		
+
 		try {
 			ThreadContextFacade.setUp();
 
 			logger.info("API test starting... " + testModule);
-			
+
 			Object result = null;
 			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 
@@ -118,4 +112,41 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 		}
 	}
 
+	@Test
+	public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
+		var testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
+
+		try {
+			ThreadContextFacade.setUp();
+
+			logger.info("API test starting... " + testModule);
+
+			Object result = null;
+			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+
+			logger.info("API test passed successfully: " + testModule);
+
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+	}
+
+	@Test
+	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
+		var testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
+
+		try {
+			ThreadContextFacade.setUp();
+
+			logger.info("API test starting... " + testModule);
+
+			Object result = null;
+			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+
+			logger.info("API test passed successfully: " + testModule);
+
+		} finally {
+			ThreadContextFacade.tearDown();
+		}
+	}
 }

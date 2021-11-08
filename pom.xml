@@ -712,6 +712,7 @@
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<caffeine.version>3.0.3</caffeine.version>
+		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		
 		<profile.content.phase>none</profile.content.phase>
 		

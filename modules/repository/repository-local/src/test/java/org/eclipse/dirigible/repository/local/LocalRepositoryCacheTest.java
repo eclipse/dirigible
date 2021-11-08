@@ -47,7 +47,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Test cache text.
 	 */
@@ -64,24 +64,24 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertNotNull(resource1);
 			assertTrue(resource1.exists());
 			assertFalse(resource1.isBinary());
-			
+
 			String workspacePath = LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached2.txt");
 
 			FileSystemUtils.createFile(workspacePath);
-			
+
 			resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
 			assertNotNull(resource2);
 			assertTrue(resource2.exists());
-			
+
 			String workspacePath1 = LocalWorkspaceMapper.getMappedName(((FileSystemRepository) repository), "/testCollection/toBeRemoved1Cached.txt");
 			FileWriter output = new FileWriter(workspacePath1);
 			IOUtils.write("cached file changed", output);
 			output.flush();
 			output.close();
-			
+
 			String content = new String(resource1.getContent());
 			assertEquals("cached file", content);
-			
+
 			try {
 				new RepositoryCache().disable();
 				resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
@@ -90,20 +90,20 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
 				content = new String(resource1.getContent());
 				assertEquals("cached file changed", content);
-				
+
 				output = new FileWriter(workspacePath1);
 				IOUtils.write("cached file changed 2", output);
 				output.flush();
 				output.close();
-				
+
 				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
 				content = new String(resource1.getContent());
 				assertEquals("cached file changed", content);
-				
+
 			} finally {
 				Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString());
 			}
-			
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

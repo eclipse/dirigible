@@ -14,7 +14,7 @@ package org.eclipse.dirigible.commons.api.scripting;
 /**
  * The ScriptingException.
  */
-public class ScriptingException extends Exception {
+public class ScriptingException extends RuntimeException {
 
 	private static final long serialVersionUID = 375339390660073390L;
 

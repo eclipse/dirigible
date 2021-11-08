@@ -9,12 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "messaging/v4/consumer",
-		description: "Messaging Consumer API"
-	}, {
-		name: "messaging/v4/producer",
-		description: "Messaging Producer API"
-	}];
+var registry = require("platform/v4/registry");
+exports.getContent = function () {
+    var file = registry.getText("messaging/extensions/modules.json");
+    return JSON.parse(file);
 };

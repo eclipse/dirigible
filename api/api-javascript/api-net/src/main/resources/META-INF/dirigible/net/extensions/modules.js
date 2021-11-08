@@ -9,12 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "net/v4/soap",
-		description: "SOAP API"
-	}, {
-		name: "net/v4/websockets",
-		description: "Websockets API"
-	}];
+var registry = require("platform/v4/registry");
+exports.getContent = function () {
+    var file = registry.getText("net/extensions/modules.json");
+    return JSON.parse(file);
 };

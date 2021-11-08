@@ -31,6 +31,12 @@ function FileIO() {
             extension: ".js",
             type: "javascript"
         }, {
+            extension: ".mjs",
+            type: "javascript"
+        }, {
+            extension: ".ts",
+            type: "typescript"
+        }, {
             extension: ".html",
             type: "html"
         }, {
@@ -401,6 +407,23 @@ function loadModuleSuggestions(modulesSuggestions) {
     };
     xhrModules.send();
 }
+function loadDTS() {
+    let cachedDts = window.sessionStorage.getItem('dtsContent');
+    if (cachedDts) {
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "")
+    }
+    else {
+        let xhrModules = new XMLHttpRequest();
+        xhrModules.open('GET', '/services/v4/js/ide-monaco-extensions/api/dts.js');
+        xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
+        xhrModules.onload = function (xhrModules) {
+            let dtsContent = xhrModules.target.responseText;
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "")
+            window.sessionStorage.setItem('dtsContent', dtsContent);
+        };
+        xhrModules.send();
+    }
+}
 
 function loadSuggestions(moduleName, suggestions) {
     if (moduleName.split("/").length <= 1) {
@@ -541,11 +564,14 @@ function traverseAssignment(assignment, assignmentInfo) {
                 });
                 monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
                 monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
+                loadDTS();
+
                 monaco.languages.registerCompletionItemProvider('javascript', {
                     triggerCharacters: ["\"", "'"],
                     provideCompletionItems: function (model, position) {
                         let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
-                        if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0) {
+                        if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0
+                            && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
                             return { suggestions: [] };
                         }
                         let wordPosition = model.getWordUntilPosition(position);
@@ -665,12 +691,13 @@ function traverseAssignment(assignment, assignmentInfo) {
             noSyntaxValidation: false,
             noSuggestionDiagnostics: false,
             diagnosticCodesToIgnore: [
+                2307,
                 2304, // Cannot find name 'exports'.(2304)
                 2683, // 'this' implicitly has type 'any' because it does not have a type annotation.(2683)
                 7005, // Variable 'ctx' implicitly has an 'any' type.(7005)
                 7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
                 7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
-                7034  // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
+                7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
             ]
         });
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({

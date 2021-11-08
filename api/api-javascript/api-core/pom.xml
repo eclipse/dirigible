@@ -9,17 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Core</name>
-	<artifactId>dirigible-api-javascript-core</artifactId>
-	<description>Core Modules</description>
+    <name>API - JavaScript - Core</name>
+    <artifactId>dirigible-api-javascript-core</artifactId>
+    <description>Core Modules</description>
     <packaging>jar</packaging>
 
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>
-		<content.repository.name>api-core</content.repository.name>
-		<content.project.name>core</content.project.name>
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-core</content.repository.name>
+        <content.project.name>core</content.project.name>
 
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

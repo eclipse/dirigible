@@ -1481,7 +1481,7 @@ function getIcon(f) {
         icon = "fa fa-git-square";
     } else if (f.type === 'file') {
         let ext = getFileExtension(f.name);
-        if (ext === 'js') {
+        if (ext === 'js'|| ext === 'mjs') {
             icon = "fa fa-file-code-o";
         } else if (ext === 'html') {
             icon = "fa fa-html5";

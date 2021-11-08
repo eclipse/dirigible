@@ -74,7 +74,7 @@ exports.isNumeric = function(str){
 	var code, i, len;
     for (i = 0, len = str.length; i < len; i++) {
 		code = str.charCodeAt(i);
-		if (!(code > 47 && code < 58) { // numeric (0-9)
+		if (!(code > 47 && code < 58)) { // numeric (0-9)
 		  return false;
 		}
 	  }

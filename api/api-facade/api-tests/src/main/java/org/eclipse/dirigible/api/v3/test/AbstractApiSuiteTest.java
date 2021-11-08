@@ -11,10 +11,6 @@
  */
 package org.eclipse.dirigible.api.v3.test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

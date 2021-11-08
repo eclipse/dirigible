@@ -21,3 +21,9 @@ exports.assertNotNull = function (condition, message) {
         throw(message || "Assertion failed");
     }
 }
+
+exports.assertEquals = function assertEquals(actual, expected, message) {
+    if (expected !== actual) {
+        throw(message || "Assertion failed");
+    }
+}

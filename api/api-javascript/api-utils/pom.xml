@@ -9,17 +9,30 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Utils</name>
-	<artifactId>dirigible-api-javascript-utils</artifactId>
-	<description>Utilities Modules</description>
+    <name>API - JavaScript - Utils</name>
+    <artifactId>dirigible-api-javascript-utils</artifactId>
+    <description>Utilities Modules</description>
     <packaging>jar</packaging>
 
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>		
-		<content.repository.name>api-utils</content.repository.name>
-		<content.project.name>utils</content.project.name>
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-utils</content.repository.name>
+        <content.project.name>utils</content.project.name>
 
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
+            <build>
 
+            </build>
+        </profile>
+    </profiles>
 </project>

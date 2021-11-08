@@ -9,12 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "indexing/v4/searcher",
-		description: "Indexing Searcher API"
-	}, {
-		name: "indexing/v4/writer",
-		description: "Indexing Writer API"
-	}];
+var registry = require('platform/v4/registry');
+exports.getContent = function () {
+    var file = registry.getText("indexing/extensions/modules.json");
+    return JSON.parse(file);
 };

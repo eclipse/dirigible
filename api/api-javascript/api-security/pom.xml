@@ -9,17 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Security</name>
-	<artifactId>dirigible-api-javascript-security</artifactId>
-	<description>Security Modules</description>
+    <name>API - JavaScript - Security</name>
+    <artifactId>dirigible-api-javascript-security</artifactId>
+    <description>Security Modules</description>
     <packaging>jar</packaging>
-	
-	<properties>
-		<profile.content.phase>generate-sources</profile.content.phase>		
-		<content.repository.name>api-security</content.repository.name>
-		<content.project.name>security</content.project.name>
 
-		<license.header.location>../../../licensing-header.txt</license.header.location>
-	</properties>
+    <properties>
+        <profile.content.phase>generate-sources</profile.content.phase>
+        <content.repository.name>api-security</content.repository.name>
+        <content.project.name>security</content.project.name>
+
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+    </properties>
 
 </project>

@@ -9,33 +9,9 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "db/v4/dao",
-		description: "Database DAO API"
-	}, {
-		name: "db/v4/database",
-		description: "Database API"
-	}, {
-		name: "db/v4/orm",
-		description: "Database ORM API"
-	}, {
-		name: "db/v4/ormstatements",
-		description: "Database ORM Statements API"
-	}, {
-		name: "db/v4/procedure",
-		description: "Database Procedure API"
-	}, {
-		name: "db/v4/query",
-		description: "Database Query API"
-	}, {
-		name: "db/v4/sequence",
-		description: "Database Sequence API"
-	}, {
-		name: "db/v4/sql",
-		description: "SQL API"
-	}, {
-		name: "db/v4/update",
-		description: "Database Update API"
-	}];
+var registry = require("platform/v4/registry")
+exports.getContent = function () {
+    let file = registry.getText("db/extensions/modules.json");
+    return JSON.parse(file);
+
 };

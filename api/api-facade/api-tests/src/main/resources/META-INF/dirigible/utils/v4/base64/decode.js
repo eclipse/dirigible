@@ -17,6 +17,4 @@ var result = base64.decode(input);
 
 console.log('decoded: ' + result);
 
-assertTrue(result[0] === 61 &&
-result[1] === 62 &&
-result[2] === 63);
+assertTrue(result[0] === 61 && result[1] === 62 && result[2] === 63);
