@@ -1,24 +1,56 @@
 declare module "@dirigible/messaging" {
     interface Queue {
-        receive(timeout): string;
+        /**
+         * Receives a message from this Message Queue if any or null with the given timeout in milliseconds
+         * @param timeout
+         */
+        receive(timeout:number): string;
 
-        send(message);
+        /**
+         * Send a message to this Message Queue
+         * @param message
+         */
+        send(message:string);
     }
 
     interface Topic {
-        receive(timeout): string;
+        /**
+         * Receives a message from this Message Topic if any or null with the given timeout in milliseconds
+         * @param timeout
+         */
+        receive(timeout:number): string;
 
-        send(message);
+        /**
+         * Send a message to this Message Queue
+         * @param message
+         */
+        send(message:string);
     }
 
     module consumer {
-        function queue(destination): Queue;
+        /**
+         * Returns an object representing a Message Queue
+         * @param destination
+         */
+        function queue(destination:string): Queue;
 
-        function topic(destination): Topic;
+        /**
+         * Returns an object representing a Message Topic
+         * @param destination
+         */
+        function topic(destination:string): Topic;
     }
     module producer {
-        function queue(destination): Queue;
+        /**
+         * Returns an object representing a Message Queue
+         * @param destination
+         */
+        function queue(destination:string): Queue;
 
-        function topic(destination): Topic;
+        /**
+         * Returns an object representing a Message Topic
+         * @param destination
+         */
+        function topic(destination:string): Topic;
     }
 }

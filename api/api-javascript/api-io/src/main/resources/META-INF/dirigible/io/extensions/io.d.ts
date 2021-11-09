@@ -1,299 +1,813 @@
+// @ts-ignore
+class stream {
+}
+
+class byte {
+}
+
 declare module "@dirigible/io" {
     module bytes {
+        /**
+         * Convert the native JavaScript byte array to Java one, to be used internally by the API layer
+         * @param bytes
+         */
         function toJavaBytes(bytes);
 
+        /**
+         * Convert the Java byte array to a native JavaScript one, to be used internally by the API layer
+         * @param internalBytes
+         */
         function toJavaScriptBytes(internalBytes);
 
-        function textToByteArray(text);
+        /**
+         * Converts a text to a byte array
+         * @param text
+         */
+        function textToByteArray(text: string);
 
-        function byteArrayToText(data);
-
-        function intToByteArray(value, byteOrder);
-
-        function byteArrayToInt(data, byteOrder);
+        /**
+         * Converts a byte array to text
+         * @param data
+         */
+        function byteArrayToText(data): string;
     }
-
     module files {
-        function exist(path): boolean;
+        /**
+         * Whether a file by this path exists
+         * @param path
+         */
+        function exist(path: string): boolean;
 
-        function isExecutable(path): boolean;
+        /**
+         * List files under this path
+         * @param path
+         */
+        function list(path: string): string[];
 
-        function isReadable(path): boolean;
+        /**
+         * Whether the file by this path is executable
+         * @param path
+         */
+        function isExecutable(path: string): boolean;
 
-        function isWritable(path): boolean;
+        /**
+         * Whether the file by this path is readable
+         * @param path
+         */
+        function isReadable(path: string): boolean;
 
-        function isHidden(path): boolean;
+        /**
+         * Whether the file by this path is writable
+         * @param path
+         */
+        function isWritable(path: string): boolean;
 
-        function isDirectory(path): boolean;
+        /**
+         * Whether the file by this path is hidden
+         * @param path
+         */
+        function isHidden(path: string): boolean;
 
-        function isFile(path): boolean;
+        /**
+         * Whether the file by this path is directory
+         * @param path
+         */
+        function isDirectory(path: string): boolean;
 
-        function isSameFile(path): boolean;
+        /**
+         * Whether the file by this path is file
+         * @param path
+         */
+        function isFile(path: string): boolean;
 
-        function getCanonicalPath(path): string;
+        /**
+         * Whether the files by these path1 and path2 are pointing to the same file
+         * @param path1
+         * @param path2
+         */
+        function isSameFile(path1: string, path2: string): boolean;
 
-        function getName(path): string;
+        /**
+         * Returns the canonical path of the file by this path
+         * @param path
+         */
+        function getCanonicalPath(path: string): string;
 
-        function getParentPath(path): string;
+        /**
+         * Returns the name of the file by this path
+         * @param path
+         */
+        function getName(path: string): string;
 
-        function readBytes(path): string;
+        /**
+         * Returns the parent's path of the file by this path
+         * @param path
+         */
+        function getParentPath(path: string): string;
 
-        function readBytesNative(path): string;
+        /**
+         * Returns the content of the given file as byte array
+         * @param path
+         */
+        function readBytes(path: string): [];
 
-        function readText(path): string;
+        /**
+         * Returns the content of the given file as array of Java bytes
+         * @param path
+         */
+        function readBytesNative(path: string): string;
 
-        function writeBytes(path, data): string;
+        /**
+         * Returns the content of the given file as string
+         * @param path
+         */
+        function readText(path: string): string;
 
-        function writeBytesNative(path, data): string;
+        /**
+         * Writes the given byte array content to the file
+         * @param path
+         * @param data
+         */
+        function writeBytes(path: string, data);
 
-        function writeText(path, text): string;
+        /**
+         * Writes the given array of Java bytes content to the file
+         * @param path
+         * @param data
+         */
+        function writeBytesNative(path: string, data);
 
-        function getLastModified(path): string;
+        /**
+         * Writes the given text content to the file
+         * @param path
+         * @param text
+         */
+        function writeText(path: string, text: string);
 
-        function setLastModified(path, time);
+        /**
+         * Returns the last modification date of the file by this path
+         * @param path
+         */
+        function getLastModified(path: string): Date;
 
-        function getOwner(path): string;
+        /**
+         * Sets the last modification date of the file by this path
+         * @param path
+         * @param time
+         */
+        function setLastModified(path: String, time: Date);
 
-        function setOwner(path): string;
+        /**
+         * Returns the owner of the file by this path
+         * @param path
+         */
+        function getOwner(path: string): string;
 
-        function getPermissions(path): string;
+        /**
+         * Sets the owner of the file by this path
+         * @param path
+         * @param owner
+         */
+        function setOwner(path: string, owner: string);
 
-        function setPermissions(path, permissions);
+        /**
+         * Returns the POSIX permissions of the file by this path
+         * @param path
+         */
+        function getPermissions(path: string): string;
 
-        function size(path): number;
+        /**
+         * Sets the POSIX permissions of the file by this path
+         * @param path
+         * @param permissions
+         */
+        function setPermissions(path: string, permissions);
 
-        function createFile(path);
+        /**
+         * Returns the size of the file by this path
+         * @param path
+         */
+        function size(path: string): number;
 
-        function createDirectory(path);
+        /**
+         * Creates a new file by the given path
+         * @param path
+         */
+        function createFile(path: string);
 
-        function copy(source, target);
+        /**
+         * Creates a new directory by the given path
+         * @param path
+         */
+        function createDirectory(path: string);
 
-        function move(source, target);
+        /**
+         * Copies a source file to a target
+         * @param source
+         * @param target
+         */
+        function copy(source: string, target: string);
 
-        function deleteFile(path);
+        /**
+         * Moves a source file to a target
+         * @param source
+         * @param target
+         */
+        function move(source: string, target: string);
 
-        function deleteDirectory(path, forced);
+        /**
+         * Deletes the file by the given path
+         * @param path
+         */
+        function deleteFile(path: string);
 
-        function createTempFile(prefix, suffix);
+        /**
+         * Deletes the directory by the given path
+         * @param path
+         * @param forced
+         */
+        function deleteDirectory(path: string, forced?: boolean);
 
-        function createTempDirectory(prefix);
+        /**
+         * Creates a new temporary file by the given prefix and suffix
+         * @param prefix
+         * @param suffix
+         */
+        function createTempFile(prefix: string, suffix: string);
 
-        function createInputStream(path);
+        /**
+         * Creates a new temporary directory by the given prefix
+         * @param prefix
+         */
+        function createTempDirectory(prefix: string);
 
-        function createOutputStream(path);
+        /**
+         * Creates an InputStream pointing to a file by the given path
+         * @param path
+         */
+        function createInputStream(path: string): stream;
+
+        /**
+         * Creates an OutputStream pointing to a file by the given path
+         * @param path
+         */
+        function createOutputStream(path: string): stream;
 
         function traverse(path);
 
-        function list(path);
-
-        function find(path, pattern): JSON;
+        /**
+         * Creates an OutputStream pointing to a file by the given path
+         * @param path
+         * @param pattern
+         */
+        function find(path: string, pattern): JSON;
     }
-
     module ftp {
+        /**
+         * Returns a FTP Client instance
+         * @param host
+         * @param port
+         * @param userName
+         * @param password
+         */
         function getClient(host, port, userName, password): FTPClient;
     }
-
     module image {
         function resize(original, type, width, height);
     }
-
     module streams {
         function copyLarge(input, output);
 
-        function copy(input, output);
+        /**
+         * Copies an InputStream to an OutputStream
+         * @param input
+         * @param output
+         */
+        function copy(input: InputStream, output: OutputStream);
 
+        /**
+         * Creates an ByteArrayInputStream from the array of bytes
+         * @param data
+         */
         function createByteArrayInputStream(data): InputStream;
 
+        /**
+         * Creates an ByteArrayOutputStream
+         */
         function createByteArrayOutputStream(): OutputStream;
 
+        /**
+         * Creates InputSteam out of NativeBytesArray
+         * @param native
+         */
         function createInputStream(native): InputStream;
 
+        /**
+         * Creates OutputSteam out of NativeBytesArray
+         * @param native
+         */
         function createOutputStream(native): OutputStream
     }
-
     module zip {
-        function createZipInputStream(inputStream): ZipInputStream;
+        /**
+         * Returns the Zip archive reader object
+         * @param inputStream
+         */
+        function createZipInputStream(inputStream:InputStream): ZipInputStream;
 
-        function createZipOutputStream(inputStream): ZipInputStream;
+        /**
+         * Returns the Zip archive writer object
+         * @param outputStream
+         */
+        function createZipOutputStream(outputStream: OutputStream): ZipOutputStream;
 
         interface ZipInputStream {
+            /**
+             * Returns the next entry from the archive or null if no more entries found
+             */
             getNextEntry(): ZipEntry;
 
-            read()
+            /**
+             * Reads from the zip input stream at the current entry point and returns the result as array of bytes
+             */
+            read():byte[];
 
-            readNative();
+            /**
+             * Reads from the zip input stream at the current entry point and returns the result as array of Java bytes
+             */
+            readNative():byte[];
 
-            readText();
+            /**
+             * Reads from the zip input stream at the current entry point and returns the result as text
+             */
+            readText():string;
 
+            /**
+             * Closes the zip input stream
+             */
             close();
         }
 
         interface ZipOutputStream {
-            close
+            /**
+             * Finishes, flushes and closes the zip output stream
+             */
+            close();
 
+            /**
+             * Returns a new entry for the archive
+             * @param name
+             */
             createZipEntry(name): ZipEntry;
 
+            /**
+             * Writes an array of bytes to the zip output stream at the current entry point
+             * @param data
+             */
             write(data)
 
+            /**
+             * Writes an array of Java bytes to the zip output stream at the current entry point
+             */
             writeNative();
 
-            writeText();
+            /**
+             * Writes a text to the zip output stream at the current entry point
+             */
+            writeText(text:string);
 
+            /**
+             * Closes the current entry (optional)
+             */
             closeEntry();
         }
 
         interface ZipEntry {
+            /**
+             * Returns the name of the entry
+             */
             getName(): string;
 
+            /**
+             * Returns the size of the entry
+             */
             getSize(): number;
 
+            /**
+             * Returns the compressed size of the entry
+             */
             getCompressedSize(): number;
 
-            getTime(): string;
+            /**
+             * Returns the time stamp of the entry
+             */
+            getTime(): number;
 
-            getCrc();
+            /**
+             * Returns the CRC sum of the entry
+             */
+            getCrc():number;
 
-            getComment();
+            /**
+             * Returns the comment text of the entry
+             */
+            getComment():number;
 
+            /**
+             * Returns true if the entry represents a directory and false otherwise
+             */
             getDirectory();
 
-            isValid(): boolean
+            /**
+             * Returns true if the entry is a valid one and false otherwise (after last)
+             */
+            isValid(): boolean;
         }
     }
 
     interface InputStream {
-        read(): any;
+        /**
+         * Reads a single byte from this InputStream
+         */
+        read(): byte;
 
-        readBytes(): any;
+        /**
+         * Returns the array of bytes contained in this InputStream
+         */
+        readBytes(): byte[];
 
         readBytesNative(): any;
 
-        readText(text): string;
+        /**
+         * Returns a string representation of the array of bytes contained in this InputStream
+         */
+        readText(): string;
 
+        /**
+         * Closes this InputStream to release the resources
+         */
         close();
 
+        /**
+         * Returns true if inputstream is valid
+         */
         isValid(): boolean;
     }
 
     interface OutputStream {
+        /**
+         * Write byte to this OutputStream
+         * @param byte
+         */
         write(byte);
 
-        writeBytes(data);
+        /**
+         * Writes a single byte to this OutputStream
+         * @param byte
+         */
+        writeByte(byte: byte);
 
+        /**
+         * Writes the array of bytes to this OutputStream
+         * @param bytes
+         */
+        writeBytes(bytes: byte[]):byte[];
+
+        /**
+         * Writes the array of NativeBytes to this OutputStream
+         * @param data
+         */
         writeBytesNative(data);
 
-        writeText(text);
+        /**
+         * Writes the text to this OutputStream
+         * @param text
+         */
+        writeText(text:string);
 
+        /**
+         * Returns a string representation of the array of bytes contained in this InputStream
+         */
+        readText():string
+
+        /**
+         * Close this OutputStream
+         */
         close();
 
+        /**
+         * Gets bytes from this OutputStream
+         */
         getBytes();
 
+        /**
+         * Gets bytes from this OutputStream
+         */
         getBytesNative();
 
+        /**
+         * Get text from this OutputStream
+         */
         getText(): string;
 
+        /**
+         * Returns true if OutputStream is valid
+         */
         isValid(): boolean;
     }
 
     interface FTPObject {
+        /**
+         * Gets the object path
+         */
         getPath(): string;
 
+        /**
+         * Gets the object name
+         */
         getName(): string;
 
+        /**
+         * Returns true if the object is file
+         */
         isFile(): boolean;
 
+        /**
+         * Returns true if the object is folder
+         */
         isFolder(): boolean;
 
-        getFile(): FTPFile | boolean;
+        /**
+         * Gets object as FTPFile
+         */
+        getFile(): FTPFile;
 
-        getFolder(): FTPFolder | boolean;
+        /**
+         * Gets object as FTPFolder
+         */
+        getFolder(): FTPFolder;
 
     }
 
     interface FTPFile {
+        /**
+         * Gets the folder path
+         */
         getPath(): string;
 
+        /**
+         * Gets the folder name
+         */
         getName(): string;
 
-        getContent(): string;
+        /**
+         * Gets the file content
+         */
+        getContent(): InputStream;
 
-        setContent(inputStream): boolean;
+        /**
+         * Gets the file content
+         */
+        getContentText(): string
 
-        getContentBinary(): string;
+        /**
+         * Gets the file content
+         * @param inputStream
+         */
+        getContentBinary();
 
+        /**
+         * Sets the file content from an InputStream
+         * @param inputStream
+         */
+        setContent(inputStream: InputStream): boolean;
+
+        /**
+         * Sets the file content from byte array
+         * @param bytes
+         */
         setContentBinary(bytes): boolean;
 
-        setContentText(text): boolean;
+        /**
+         * Sets the file content from string
+         * @param text
+         */
+        setContentText(text: string): boolean;
 
-        appendContent(inputStream): boolean;
+        /**
+         * Appends file content from an InputStream
+         * @param inputStream
+         */
+        appendContent(inputStream: stream): boolean;
 
+        /**
+         * Appends file content from an byte array
+         * @param bytes
+         */
         appendContentBinary(bytes): boolean;
 
-        appendContentText(text): boolean;
+        /**
+         * Appends file content from string
+         * @param text
+         */
+        appendContentText(text: string): boolean;
 
+        /**
+         * Deletes the file
+         */
         delete(): boolean;
     }
 
     interface FTPFolder {
-        getPath();
+        /**
+         * Gets the folder path
+         */
+        getPath(): string;
 
-        getName();
+        /**
+         * Gets the folder name
+         */
+        getName(): string;
 
-        getFile(fileName): string;
+        /**
+         * Gets FTPFile by fileName
+         * @param fileName
+         */
+        getFile(fileName: string): FTPFile;
 
-        getFolder(folderName);
+        /**
+         * Gets FTPFolder by folderName
+         * @param folderName
+         */
+        getFolder(folderName: string): FTPFolder;
 
+        /**
+         * Gets array of FTPObjects
+         */
         list(): FTPObject[];
 
+        /**
+         * Gets array of FTPFiles
+         */
         listFiles(): FTPFile[];
 
+        /**
+         * Gets array of FTPFolder
+         */
         listFolder(): FTPFolder[];
 
-        createFile(fileName, inputStream);
+        /**
+         * Creates file from InputStream and return true if the file was created successfully
+         * @param fileName
+         * @param inputStream
+         */
+        createFile(fileName: string, inputStream: stream): boolean;
 
-        createFileBinary(fileName, bytes);
+        /**
+         * Creates file from byte array and return true if the file was created successfully
+         * @param fileName
+         * @param bytes
+         */
+        createFileBinary(fileName: string, bytes: byte[]): boolean;
 
-        createFileText(fileName, text);
+        /**
+         * Creates file from string and return true if the file was created successfully
+         * @param fileName
+         * @param text
+         */
+        createFileText(fileName: string, text: string): boolean;
 
-        createFolder(folderName);
+        /**
+         * Creates FTPFolder
+         * @param folderName
+         */
+        createFolder(folderName): FTPFolder;
 
+        /**
+         * Deletes the current folder
+         */
         delete(): boolean;
 
-        deleteFile(fileName): boolean;
+        /**
+         * Deletes FTPFile
+         * @param fileName
+         */
+        deleteFile(fileName: string): boolean;
 
-        deleteFolder(folderName): boolean;
+        /**
+         * Deletes FTPFolder
+         * @param folderName
+         */
+        deleteFolder(folderName: string): boolean;
     }
 
     interface FTPClient {
+        /**
+         * Gets the root folder
+         */
         getRootFolder(): FTPFolder;
 
-        getFile(path: string, fileName: string): [];
+        /**
+         * Gets the file content as an input stream
+         * @param path
+         * @param fileName
+         */
+        getFile(path: string, fileName: string): InputStream;
 
-        getFileBinary(path: string, fileName: string): [];
+        /**
+         * Gets the file content as byte array
+         * @param path
+         * @param fileName
+         */
+        getFileBinary(path: string, fileName: string): byte[];
 
+        /**
+         * Gets the file content as string
+         * @param path
+         * @param fileName
+         */
         getFileText(path: string, fileName: string): string;
 
+        /**
+         * Gets the folder
+         * @param path
+         * @param fileName
+         */
         getFolder(path: string, fileName: string): string;
 
-        createFile(path, fileName, inputStream): boolean;
+        /**
+         * Creates file from InputStream and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param inputStream
+         */
+        createFile(path: string, fileName: string, inputStream: stream): boolean;
 
-        createFileBinary(path, fileName, bytes): boolean;
+        /**
+         * Creates file from byte array and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param bytes
+         */
+        createFileBinary(path: string, fileName: string, bytes: byte[]): boolean;
 
-        createFileText(path, fileName, text): boolean;
+        /**
+         * Creates file from string and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param text
+         */
+        createFileText(path: string, fileName: string, text: string): boolean;
 
-        appendFile(path, fileName, inputStream): boolean;
+        /**
+         * Appends InputStream to file and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param inputStream
+         */
+        appendFile(path: string, fileName: string, inputStream: stream): boolean;
 
-        appendFileBinary(path, fileName, bytes): boolean;
+        /**
+         * Appends byte array to file and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param bytes
+         */
+        appendFileBinary(path: string, fileName: string, bytes: byte[]): boolean;
 
-        appendFileText(path, fileName, text): boolean;
+        /**
+         * Appends string to file and return true if the file was created successfully
+         * @param path
+         * @param fileName
+         * @param text
+         */
+        appendFileText(path: string, fileName: string, text: string): boolean;
 
-        createFolder(path, folderName): boolean;
+        /**
+         * Creates folder
+         * @param path
+         * @param folderName
+         */
+        createFolder(path: string, folderName: string): boolean;
 
-        deleteFolder(path, folderName): boolean;
+        /**
+         * Deletes file
+         * @param path
+         * @param fileName
+         */
+        deleteFiles(path: string, fileName: string): boolean;
 
+        /**
+         * Deletes folder
+         * @param path
+         * @param folderName
+         */
+        deleteFolder(path: string, folderName: string): boolean;
+
+        /**
+         * Closes the FPT client
+         */
         close();
 
     }
-
-
 }
