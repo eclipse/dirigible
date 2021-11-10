@@ -65,9 +65,8 @@ function isIgnoredModulePath(path) {
         || path.startsWith("security/") // Ignore system JavaScript API packages
         || path.startsWith("security/") // Ignore system JavaScript API packages
         || path.startsWith("cassandra/") // Ignore system JavaScript API packages
-
+        || path.startsWith("documents/")  // Ignore system JavaScript API packages
         || path.startsWith("template-application-") // Ignore application templates
-
         || path.endsWith("/extensions/perspective.js") // Ignore generated application UI related components
         || path.endsWith("/extensions/view.js") // Ignore generated application UI related components
         || path.endsWith("/extensions/tile/tile.js") // Ignore generated application UI related components
