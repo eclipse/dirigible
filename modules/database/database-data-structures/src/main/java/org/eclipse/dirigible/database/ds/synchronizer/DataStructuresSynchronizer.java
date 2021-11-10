@@ -40,6 +40,7 @@ import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
+import org.eclipse.dirigible.database.ds.artefacts.TableSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataAppendModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataDeleteModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureDataReplaceModel;
@@ -129,6 +130,8 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+	
+	private static final TableSynchronizationArtefactType TABLE_ARTEFACT = new TableSynchronizationArtefactType();
 	
 	/*
 	 * (non-Javadoc)
@@ -406,9 +409,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			if (!dataStructuresCoreService.existsTable(tableModel.getLocation())) {
 				DataStructureTableModel duplicated = dataStructuresCoreService.getTableByName(tableModel.getName());
 				if (duplicated != null) {
+					
+					String message = format("Table [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", tableModel.getName(),
+							tableModel.getLocation(), duplicated.getLocation());
+					applyArtefactState(tableModel.getName(), tableModel.getLocation(), TABLE_ARTEFACT.getId(), TABLE_ARTEFACT.getStateFatal(), message);
 					throw new SynchronizationException(
-							format("Table [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", tableModel.getName(),
-									tableModel.getLocation(), duplicated.getLocation()));
+							message);
 				}
 				dataStructuresCoreService.createTable(tableModel.getLocation(), tableModel.getName(), tableModel.getHash());
 				DATA_STRUCTURE_MODELS.put(tableModel.getName(), tableModel);
@@ -422,7 +428,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				}
 			}
 			TABLES_SYNCHRONIZED.add(tableModel.getLocation());
-		} catch (DataStructuresException e) {
+		} catch (DataStructuresException | SchedulerException e) {
 			throw new SynchronizationException(e);
 		}
 	}
@@ -869,16 +875,23 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
 							if (model instanceof DataStructureTableModel) {
 								executeTableCreate(connection, (DataStructureTableModel) model);
+								applyArtefactState(model.getName(), model.getLocation(), TABLE_ARTEFACT.getId(), TABLE_ARTEFACT.getStateSuccessful(), "Create Table was Successful");
 							}
 						} else {
 							logger.warn(format("Table [{0}] already exists during the update process", dsName));
 							if (model instanceof DataStructureTableModel && SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
 								executeTableAlter(connection, (DataStructureTableModel) model);
+								applyArtefactState(model.getName(), model.getLocation(), TABLE_ARTEFACT.getId(), TABLE_ARTEFACT.getStateSuccessful(), "Update Table was Successful");
 							}
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						errors.add(e.getMessage());
+						try {
+							applyArtefactState(model.getName(), model.getLocation(), TABLE_ARTEFACT.getId(), TABLE_ARTEFACT.getStateFailed(), "Create or Update Table Failed");
+						} catch (SchedulerException e1) {
+							logger.error(e.getMessage(), e1);
+						}
 					}
 				}
 				

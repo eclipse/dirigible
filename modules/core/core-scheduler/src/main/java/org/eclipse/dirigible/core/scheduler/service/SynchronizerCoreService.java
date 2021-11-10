@@ -13,14 +13,20 @@ package org.eclipse.dirigible.core.scheduler.service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateArtefactDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateLogDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -37,7 +43,20 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	
 	private PersistenceManager<SynchronizerStateLogDefinition> synchronizerStateLogPersistenceManager = new PersistenceManager<SynchronizerStateLogDefinition>();
 	
+	private PersistenceManager<SynchronizerStateArtefactDefinition> synchronizerStateArtefactPersistenceManager = new PersistenceManager<SynchronizerStateArtefactDefinition>();
+	
 	private static AtomicBoolean SYNCHRONIZATION_ENABLED = new AtomicBoolean(true);
+	
+	private static Map<Integer, ISynchronizerArtefactType> artefactTypes = new HashMap<Integer, ISynchronizerArtefactType>();
+	
+	static {
+		ServiceLoader<ISynchronizerArtefactType> artefactTypesProviders = ServiceLoader.load(ISynchronizerArtefactType.class);
+		for (Iterator iterator = artefactTypesProviders.iterator(); iterator.hasNext();) {
+			ISynchronizerArtefactType type = (ISynchronizerArtefactType) iterator.next();
+			artefactTypes.put(type.getId(), type);
+		}
+	}
+	
 
 	// State
 
@@ -256,6 +275,10 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		return getSynchronizerState(name) != null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#initializeSynchronizersStates()
+	 */
 	@Override
 	public void initializeSynchronizersStates() throws SchedulerException {
 		try {
@@ -278,18 +301,249 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#disableSynchronization()
+	 */
 	@Override
 	public void disableSynchronization() throws SchedulerException {
 		SYNCHRONIZATION_ENABLED.set(false);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#enableSynchronization()
+	 */
 	@Override
 	public void enableSynchronization() throws SchedulerException {
 		SYNCHRONIZATION_ENABLED.set(true);
 	}
 	
+	/**
+	 * Returns the current state whether the synchronization is enabled
+	 * 
+	 * @return true if enabled
+	 */
 	public static boolean isSynchronizationEnabled() {
 		return SYNCHRONIZATION_ENABLED.get();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(java.lang.String, java.lang.String, int, int, java.lang.String)
+	 */
+	@Override
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, int type,
+			int state, String message) throws SchedulerException {
+		SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition = new SynchronizerStateArtefactDefinition();
+		synchronizerStateArtefactDefinition.setName(name);
+		synchronizerStateArtefactDefinition.setLocation(location);
+		synchronizerStateArtefactDefinition.setType(type);
+		synchronizerStateArtefactDefinition.setState(state);
+		synchronizerStateArtefactDefinition.setMessage(message);
+		synchronizerStateArtefactDefinition.setTimestamp(System.currentTimeMillis());
+
+		return createSynchronizerStateArtefact(synchronizerStateArtefactDefinition);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(SynchronizerStateArtefactDefinition)
+	 */
+	@Override
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(
+			SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition) throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(synchronizerStateArtefactDefinition.getName(), synchronizerStateArtefactDefinition.getLocation());
+				if (existing != null && !synchronizerStateArtefactDefinition.equals(existing)) {
+					synchronizerStateArtefactPersistenceManager.update(connection, synchronizerStateArtefactDefinition);
+				} else {
+					synchronizerStateArtefactPersistenceManager.insert(connection, synchronizerStateArtefactDefinition);
+				}
+				return synchronizerStateArtefactDefinition;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefact(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public SynchronizerStateArtefactDefinition getSynchronizerStateArtefact(String name, String location)
+			throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
+						.where("SYNCHRONIZER_ARTEFACT_NAME = ? AND SYNCHRONIZER_ARTEFACT_LOCATION = ?")
+						.build();
+				List<SynchronizerStateArtefactDefinition> list = synchronizerStateArtefactPersistenceManager.query(
+						connection, SynchronizerStateArtefactDefinition.class, sql, name, location);
+				if (list.size() > 0) {
+					return list.get(0);
+				}
+				return null;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#removeSynchronizerStateArtefact(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void removeSynchronizerStateArtefact(String name, String location) throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
+				if (existing != null) {
+					connection = dataSource.getConnection();
+					synchronizerStateArtefactPersistenceManager.delete(
+							connection, SynchronizerStateArtefactDefinition.class, existing.getId());
+				}
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(java.lang.String, java.lang.String, int, int, java.lang.String)
+	 */
+	@Override
+	public void updateSynchronizerStateArtefact(String name, String location, int type, int state, String message)
+			throws SchedulerException {
+		SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
+		if (existing != null) {
+			existing.setType(type);
+			existing.setState(state);
+			existing.setMessage(message);
+			existing.setTimestamp(System.currentTimeMillis());
+	
+			updateSynchronizerStateArtefact(existing);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(SynchronizerStateArtefactDefinition)
+	 */
+	@Override
+	public void updateSynchronizerStateArtefact(SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition)
+			throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				synchronizerStateArtefactPersistenceManager.update(connection, synchronizerStateArtefactDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefacts()
+	 */
+	@Override
+	public List<SynchronizerStateArtefactDefinition> getSynchronizerStateArtefacts() throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				List<SynchronizerStateArtefactDefinition> list = synchronizerStateArtefactPersistenceManager.findAll(
+						connection, SynchronizerStateArtefactDefinition.class);
+				
+				return list;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#getSynchronizerStateArtefactsByLocation()
+	 */
+	@Override
+	public List<SynchronizerStateArtefactDefinition> getSynchronizerStateArtefactsByLocation(String location) throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = dataSource.getConnection();
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
+						.where("SYNCHRONIZER_ARTEFACT_LOCATION = ?")
+						.build();
+				List<SynchronizerStateArtefactDefinition> list = synchronizerStateArtefactPersistenceManager.query(
+						connection, SynchronizerStateArtefactDefinition.class, sql, location);
+				
+				return list;
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#existsSynchronizerStateArtefact(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean existsSynchronizerStateArtefact(String name, String location) throws SchedulerException {
+		SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
+		return (existing != null);
+	}
+
+	@Override
+	public String describeArtefactType(int type) throws SchedulerException {
+		ISynchronizerArtefactType artefactType = artefactTypes.get(type);
+		return artefactType.getName();
+	}
+
+	@Override
+	public String describeArtefactState(int type, int state) throws SchedulerException {
+		ISynchronizerArtefactType artefactType = artefactTypes.get(type);
+		return artefactType.describeState(state);
+	}
+	
+	
 
 }

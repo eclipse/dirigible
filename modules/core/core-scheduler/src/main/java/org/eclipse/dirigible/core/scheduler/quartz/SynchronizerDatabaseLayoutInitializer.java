@@ -61,6 +61,9 @@ public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayou
 			if (!sqlFactory.exists(connection, "DIRIGIBLE_SYNCHRONIZER_STATE_LOG")) {
 				createTable(connection, "/synchronizer/DIRIGIBLE_SYNCHRONIZER_STATE_LOG.json");
 			}
+			if (!sqlFactory.exists(connection, "DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")) {
+				createTable(connection, "/synchronizer/DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS.json");
+			}
 
 			logger.debug("Done creating the database layout for Synchronizer.");
 		} catch (Exception e) {

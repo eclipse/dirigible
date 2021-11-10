@@ -235,5 +235,17 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	public boolean isSynchronizationEnabled() {
 		return SynchronizerCoreService.isSynchronizationEnabled();
 	}
+	
+	public void applyArtefactState(String name, String location, int type, int state, String message) throws SchedulerException {
+		if (synchronizerCoreService.existsSynchronizerStateArtefact(name, location)) {
+			synchronizerCoreService.updateSynchronizerStateArtefact(name, location, type, state, message);
+		} else {
+			synchronizerCoreService.createSynchronizerStateArtefact(name, location, type, state, message);
+		}
+	}
+	
+	public void removeArtefactState(String name, String location) throws SchedulerException {
+		synchronizerCoreService.removeSynchronizerStateArtefact(name, location);
+	}
 
 }

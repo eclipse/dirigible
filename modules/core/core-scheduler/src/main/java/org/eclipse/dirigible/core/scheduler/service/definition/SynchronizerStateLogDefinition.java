@@ -17,7 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The Synchronizer State Definition transfer object.
+ * The Synchronizer State Log Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_SYNCHRONIZER_STATE_LOG")
 public class SynchronizerStateLogDefinition {

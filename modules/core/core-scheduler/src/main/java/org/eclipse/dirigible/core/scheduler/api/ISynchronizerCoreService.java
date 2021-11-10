@@ -14,6 +14,7 @@ package org.eclipse.dirigible.core.scheduler.api;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
+import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateArtefactDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateLogDefinition;
 
@@ -21,6 +22,7 @@ import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerState
  * The Synchronizer Core Service interface.
  */
 public interface ISynchronizerCoreService extends ICoreService {
+	
 	
 	/** The state initial */
 	public int STATE_INITIAL = 0;
@@ -33,7 +35,8 @@ public interface ISynchronizerCoreService extends ICoreService {
 	
 	/** The state in progress */
 	public int STATE_IN_PROGRESS = 3;
-
+	
+	
 	/**
 	 * Creates the synchronizer state with parameters.
 	 * 
@@ -158,5 +161,118 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 * @throws SchedulerException
 	 */
 	public void enableSynchronization() throws SchedulerException;
+	
+	
+	/**
+	 * Creates the synchronizer state artefact with parameters.
+	 * 
+	 * @param name the name of the synchronizer
+	 * @param location the name of the synchronizer
+	 * @param type the type
+	 * @param state the last state
+	 * @param message the message from execution
+	 * @return the synchronizer state
+	 * @throws SchedulerException the scheduler exception
+	 */
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, int type, int state, String message) throws SchedulerException;
+
+	/**
+	 * Creates the synchronizer state artefact by definition.
+	 *
+	 * @param synchronizerStateDefinition
+	 *            the synchronizer state definition
+	 * @return the synchronizer state
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 */
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition) throws SchedulerException;
+
+	/**
+	 * Gets the synchronizer artefact state.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @return the synchronizer state artefact
+	 * @throws SchedulerException the scheduler exception
+	 */
+	public SynchronizerStateArtefactDefinition getSynchronizerStateArtefact(String name, String location) throws SchedulerException;
+
+	/**
+	 * Removes the synchronizer state.
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 */
+	public void removeSynchronizerStateArtefact(String name, String location) throws SchedulerException;
+
+	/**
+	 * Update synchronizer state artfeact.
+	 *
+	 * @param name the name of the artefact
+	 * @param location the location of the artefact
+	 * @param type the type of the artefact
+	 * @param state the last state
+	 * @param message the message from execution
+	 * @throws SchedulerException the scheduler exception
+	 */
+	public void updateSynchronizerStateArtefact(String name, String location, int type, int state, String message) throws SchedulerException;
+	
+	/**
+	 * Update synchronizer state artefact.
+	 * 
+	 * @param synchronizerStateArtefactDefinition the definition
+	 * @throws SchedulerException the scheduler exception
+	 */
+	public void updateSynchronizerStateArtefact(SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition) throws SchedulerException;
+
+	/**
+	 * Gets the synchronizer state artefacts.
+	 *
+	 * @return the synchronizer state artefacts
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 */
+	public List<SynchronizerStateArtefactDefinition> getSynchronizerStateArtefacts() throws SchedulerException;
+	
+	/**
+	 * Gets the synchronizer state artefacts by a location (file).
+	 * 
+	 * @param location the location of the artefact
+	 * @return the synchronizer state artefacts
+	 * @throws SchedulerException
+	 *             the scheduler exception
+	 */
+	public List<SynchronizerStateArtefactDefinition> getSynchronizerStateArtefactsByLocation(String location) throws SchedulerException;
+
+	/**
+	 * Checks whether a job with the given name already exist
+	 *
+	 * @param name the name
+	 * @param location the location
+	 * @return true if exists and false otherwise
+	 * @throws SchedulerException
+	 *             in case of an internal error
+	 */
+	public boolean existsSynchronizerStateArtefact(String name, String location) throws SchedulerException;
+	
+	/**
+	 * Gives the actual human readable name of the artefact type
+	 * 
+	 * @param type the type id
+	 * @return the name of the type
+	 * @throws SchedulerException
+	 */
+	public String describeArtefactType(int type) throws SchedulerException;
+	
+	/**
+	 * Gives the actual human readable name of the artefact state
+	 * 
+	 * @param state the state id
+	 * @return the name of the state
+	 * @throws SchedulerException
+	 */
+	public String describeArtefactState(int type, int state) throws SchedulerException;
 
 }
