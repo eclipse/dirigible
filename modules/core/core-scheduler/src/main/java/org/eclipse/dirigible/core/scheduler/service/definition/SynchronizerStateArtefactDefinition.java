@@ -53,7 +53,6 @@ public class SynchronizerStateArtefactDefinition {
 	/**
 	 * Create Synchronizer state artefact by parameters
 	 * 
-	 * @param id the id of the artefact
 	 * @param name the name of the artefact
 	 * @param location the file location of the artefact
 	 * @param type the type of the artefact
