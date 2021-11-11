@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var platform = require("platform/v4/registry")
+let platform = require("platform/v4/registry")
 exports.getContent = function () {
-	var file = platform.getText("platform/extensions/modules.json");
-	return JSON.parse(file);
+    let file = platform.getText("platform/extensions/modules.json");
+    return JSON.parse(file);
 };
