@@ -25,6 +25,8 @@ public interface ISynchronizer {
 	
 	/**
 	 * Before synchronizing.
+	 * 
+	 * @return to continue or not
 	 */
 	public boolean beforeSynchronizing();
 	
@@ -33,12 +35,17 @@ public interface ISynchronizer {
 	 */
 	public void afterSynchronizing();
 
-	/** Set the flag whether the synchronization is forced or not*/
-	void setForcedSynchronization(boolean forced);
+	/**
+	 * Set the flag whether the synchronization is forced or not
+	 * 
+	 * @param forced flag showing whether is forced or not
+	 */
+	public void setForcedSynchronization(boolean forced);
 	
 	/**
 	 * Is synchronization enabled globally
-	 * @return
+	 * 
+	 * @return true if enabled
 	 */
 	public boolean isSynchronizationEnabled();
 

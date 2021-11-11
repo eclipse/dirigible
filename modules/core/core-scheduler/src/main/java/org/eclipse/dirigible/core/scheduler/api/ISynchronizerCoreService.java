@@ -144,21 +144,21 @@ public interface ISynchronizerCoreService extends ICoreService {
 	/**
 	 * Delete all the State Logs data for synchronizers
 	 * 
-	 * @throws SchedulerException
+	 * @throws SchedulerException in case of error
 	 */
 	public void initializeSynchronizersStates() throws SchedulerException;
 	
 	/**
 	 * Disable synchronization
 	 * 
-	 * @throws SchedulerException
+	 * @throws SchedulerException in case of error
 	 */
 	public void disableSynchronization() throws SchedulerException;
 	
 	/**
 	 * Enable synchronization
 	 * 
-	 * @throws SchedulerException
+	 * @throws SchedulerException in case of error
 	 */
 	public void enableSynchronization() throws SchedulerException;
 	
@@ -179,8 +179,8 @@ public interface ISynchronizerCoreService extends ICoreService {
 	/**
 	 * Creates the synchronizer state artefact by definition.
 	 *
-	 * @param synchronizerStateDefinition
-	 *            the synchronizer state definition
+	 * @param synchronizerStateArtefactDefinition
+	 *            the synchronizer state artefact definition
 	 * @return the synchronizer state
 	 * @throws SchedulerException
 	 *             the scheduler exception
@@ -262,16 +262,17 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 * 
 	 * @param type the type id
 	 * @return the name of the type
-	 * @throws SchedulerException
+	 * @throws SchedulerException in case of error
 	 */
 	public String describeArtefactType(int type) throws SchedulerException;
 	
 	/**
 	 * Gives the actual human readable name of the artefact state
 	 * 
+	 * @param type the type id
 	 * @param state the state id
 	 * @return the name of the state
-	 * @throws SchedulerException
+	 * @throws SchedulerException in case of error
 	 */
 	public String describeArtefactState(int type, int state) throws SchedulerException;
 
