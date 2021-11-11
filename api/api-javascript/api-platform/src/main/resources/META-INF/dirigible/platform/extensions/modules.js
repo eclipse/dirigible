@@ -11,6 +11,6 @@
  */
 let platform = require("platform/v4/registry")
 exports.getContent = function () {
-    let file = platform.getText("platform/extensions/modules.json");
-    return JSON.parse(file);
+	let file = platform.getText("platform/extensions/modules.json");
+	return JSON.parse(file);
 };

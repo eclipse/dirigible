@@ -9,8 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var mail = require("mail/v4/client");
-
+let mail = require("mail/v4/client");
 for(var propertyName in mail) {
 	exports[propertyName] = mail[propertyName];
 }
