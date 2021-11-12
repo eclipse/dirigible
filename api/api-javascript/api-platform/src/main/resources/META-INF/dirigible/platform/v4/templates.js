@@ -15,7 +15,7 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-var repository = require("platform/v4/repository");
+let repository = require("platform/v4/repository");
 
 const REGISTRY_PUBLIC = "/registry/public/";
 const MUSTACHE_FILE_EXTENSION = ".mustache";
