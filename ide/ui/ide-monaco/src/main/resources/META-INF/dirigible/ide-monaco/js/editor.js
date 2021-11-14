@@ -698,6 +698,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                 7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
                 7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
                 7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
+                2354, //
             ]
         });
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({

@@ -9,9 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "documents/v4/pdf",
-		description: "PDF API"
-	}];
+let platform = require("platform/v4/registry")
+exports.getContent = function () {
+	let file = platform.getText("documents/extensions/modules.json");
+	return JSON.parse(file);
 };

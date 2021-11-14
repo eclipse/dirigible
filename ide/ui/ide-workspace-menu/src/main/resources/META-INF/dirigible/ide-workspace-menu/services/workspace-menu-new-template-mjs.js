@@ -9,8 +9,12 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let registry = require("platform/v4/registry");
-exports.getContent = function () {
-    let file = registry.getText("log/extensions/modules.json");
-    return JSON.parse(file);
+exports.getTemplate = function () {
+	return {
+		"name": "javascript-esm",
+		"label": "Javascript ESM Service",
+		"extension": "mjs",
+		"data": 'import {response} from "@dirigible/http";\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();',
+		"order": 1
+	};
 };

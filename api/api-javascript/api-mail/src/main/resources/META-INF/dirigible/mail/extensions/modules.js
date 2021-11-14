@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var registry = require("platform/v4/registry");
+let registry = require("platform/v4/registry");
 exports.getContent = function () {
     let file = registry.getText("mail/extensions/modules.json")
     return JSON.parse(file);

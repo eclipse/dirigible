@@ -12,7 +12,7 @@
 exports.getTemplate = function () {
 	return {
 		"name": "javascript",
-		"label": "Javascript Service",
+		"label": "Javascript CJS Service",
 		"extension": "js",
 		"data": 'var response = require("http/v4/response");\n\nresponse.println("Hello World!");\nresponse.flush();\nresponse.close();',
 		"order": 0

@@ -9,24 +9,8 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "platform/v4/lifecycle",
-		description: "Lifecycle API"
-	}, {
-		name: "platform/v4/registry",
-		description: "Registry API"
-	}, {
-		name: "platform/v4/repository",
-		description: "Repository API"
-	}, {
-		name: "platform/v4/workspace",
-		description: "Workspace API"
-	}, {
-		name: "platform/v4/engines",
-		description: "Engines API"
-	}, {
-		name: "platform/v4/template-engines",
-		description: "Template Engines API"
-	}];
+let platform = require("platform/v4/registry")
+exports.getContent = function () {
+	let file = platform.getText("platform/extensions/modules.json");
+	return JSON.parse(file);
 };
