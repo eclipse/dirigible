@@ -236,11 +236,14 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		return SynchronizerCoreService.isSynchronizationEnabled();
 	}
 	
-	public void applyArtefactState(String name, String location, int type, int state, String message) throws SchedulerException {
+	public void applyArtefactState(String name, String location, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) throws SchedulerException {
+		String artefactType = type.getId();
+		String artefactState = state.getValue();
+		String artefactStateMessage = type.getStateMessage(state, message);
 		if (synchronizerCoreService.existsSynchronizerStateArtefact(name, location)) {
-			synchronizerCoreService.updateSynchronizerStateArtefact(name, location, type, state, message);
+			synchronizerCoreService.updateSynchronizerStateArtefact(name, location, artefactType, artefactState, artefactStateMessage);
 		} else {
-			synchronizerCoreService.createSynchronizerStateArtefact(name, location, type, state, message);
+			synchronizerCoreService.createSynchronizerStateArtefact(name, location, artefactType, artefactState, artefactStateMessage);
 		}
 	}
 	

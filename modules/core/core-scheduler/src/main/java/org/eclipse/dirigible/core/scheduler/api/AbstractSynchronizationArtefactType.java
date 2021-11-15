@@ -11,52 +11,23 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+import java.text.MessageFormat;
+
 public abstract class AbstractSynchronizationArtefactType implements ISynchronizerArtefactType {
 	
 	@Override
-	public String describeState(int state) {
-		String name = null;
-		switch (state) {
-		case STATE_ARTEFACT_INITIAL:
-			name = "Initial";
-			break;
-		case STATE_ARTEFACT_SUCCESSFUL:
-			name = "Successful";
-			break;
-		case STATE_ARTEFACT_FAILED:
-			name = "Failed";
-			break;
-		case STATE_ARTEFACT_IN_PROGRESS:
-			name = "Processing...";
-			break;
-		case STATE_ARTEFACT_FATAL:
-			name = "Erroneous";
-			break;
-		default:
-			name = "Unknown";
-			break;
-		};
-		return name;
+	public String getStateMessage(ArtefactState state) {
+		return getStateMessage(state, null);
 	}
-	
-	public int getStateInitial() {
-		return STATE_ARTEFACT_INITIAL;
+
+	@Override
+	public String getStateMessage(ArtefactState state, String message) {
+		if (message != null && !message.equals("")) {
+			return MessageFormat.format("{0}. {1}.", getArtefactStateMessage(state), message);
+		}
+		return getArtefactStateMessage(state);
 	}
-	
-	public int getStateSuccessful() {
-		return STATE_ARTEFACT_SUCCESSFUL;
-	}
-	
-	public int getStateFailed() {
-		return STATE_ARTEFACT_FAILED;
-	}
-	
-	public int getStateInProgress() {
-		return STATE_ARTEFACT_IN_PROGRESS;
-	}
-	
-	public int getStateFatal() {
-		return STATE_ARTEFACT_FATAL;
-	}
+
+	protected abstract String getArtefactStateMessage(ArtefactState state);
 
 }

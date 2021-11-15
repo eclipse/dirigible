@@ -26,15 +26,15 @@
 			},
 			{
 				"name":"SYNCHRONIZER_ARTEFACT_TYPE",
-				"type":"INTEGER",
-				"length":"0",
+				"type":"VARCHAR",
+				"length":"255",
 				"nullable":"false",
 				"primaryKey":"false"
 			},
 			{
 				"name":"SYNCHRONIZER_ARTEFACT_STATE",
-				"type":"INTEGER",
-				"length":"0",
+				"type":"VARCHAR",
+				"length":"255",
 				"nullable":"false",
 				"primaryKey":"false"
 			},

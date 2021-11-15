@@ -13,25 +13,39 @@ package org.eclipse.dirigible.core.scheduler.api;
 
 public interface ISynchronizerArtefactType {
 	
-	/** The state initial */
-	public int STATE_ARTEFACT_INITIAL = 0;
-	
-	/** The state successful */
-	public int STATE_ARTEFACT_SUCCESSFUL = 1;
-	
-	/** The state failed */
-	public int STATE_ARTEFACT_FAILED = 2;
-	
-	/** The state in progress */
-	public int STATE_ARTEFACT_IN_PROGRESS = 3;
-	
-	/** The state fatal */
-	public int STATE_ARTEFACT_FATAL = 4;
-	
-	public int getId();
-	
-	public String getName();
-	
-	public String describeState(int state);
-	
+	public enum ArtefactState {
+		INITIAL("Initial"), //
+
+		SUCCESSFUL("Successful"),  //
+		SUCCESSFUL_CREATE("Successful"), //
+		SUCCESSFUL_UPDATE("Successful"), //
+		SUCCESSFUL_CREATE_UPDATE("Successful"), //
+
+		FAILED("Failed"), //
+		FAILED_CREATE("Failed"), //
+		FAILED_UPDATE("Failed"), //
+		FAILED_CREATE_UPDATE("Failed"), //
+
+		IN_PROGRESS("Processing..."), //
+
+		FATAL("Erroneous"),
+
+		UNKNOWN("Unknown");
+
+		private String state;
+
+		ArtefactState(String state) {
+			this.state = state;
+		}
+
+		public String getValue() {
+			return this.state;
+		}
+	}
+
+	public String getId();
+
+	public String getStateMessage(ArtefactState state);
+
+	public String getStateMessage(ArtefactState state, String message);
 }

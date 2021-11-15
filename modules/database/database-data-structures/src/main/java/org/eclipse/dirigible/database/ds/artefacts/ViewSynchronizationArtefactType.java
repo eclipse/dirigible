@@ -13,28 +13,28 @@ package org.eclipse.dirigible.database.ds.artefacts;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 
-public class TableSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
+public class ViewSynchronizationArtefactType extends AbstractSynchronizationArtefactType {
 
 	@Override
 	public String getId() {
-		return "Database Table";
+		return "Database View";
 	}
 
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {
 		case FAILED_CREATE:
-			return "Create table has failed";
+			return "Create view has failed";
 		case FAILED_CREATE_UPDATE:
-			return "Create or update table has failed";
+			return "Create or update view has failed";
 		case FAILED_UPDATE:
-			return "Update table has failed";
+			return "Update view has failed";
 		case SUCCESSFUL_CREATE:
-			return "Create table was successful";
+			return "Create view was successful";
 		case SUCCESSFUL_CREATE_UPDATE:
-			return "Create or update table was successful";
+			return "Create or update view was successful";
 		case SUCCESSFUL_UPDATE:
-			return "Update table was successful";
+			return "Update view was successful";
 		default:
 			return state.getValue();
 		}

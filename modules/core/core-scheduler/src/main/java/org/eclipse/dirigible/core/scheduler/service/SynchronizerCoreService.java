@@ -47,7 +47,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	
 	private static AtomicBoolean SYNCHRONIZATION_ENABLED = new AtomicBoolean(true);
 	
-	private static Map<Integer, ISynchronizerArtefactType> artefactTypes = new HashMap<Integer, ISynchronizerArtefactType>();
+	private static Map<String, ISynchronizerArtefactType> artefactTypes = new HashMap<String, ISynchronizerArtefactType>();
 	
 	static {
 		ServiceLoader<ISynchronizerArtefactType> artefactTypesProviders = ServiceLoader.load(ISynchronizerArtefactType.class);
@@ -330,11 +330,11 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(java.lang.String, java.lang.String, int, int, java.lang.String)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#createSynchronizerStateArtefact(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, int type,
-			int state, String message) throws SchedulerException {
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, String type,
+			String state, String message) throws SchedulerException {
 		SynchronizerStateArtefactDefinition synchronizerStateArtefactDefinition = new SynchronizerStateArtefactDefinition();
 		synchronizerStateArtefactDefinition.setName(name);
 		synchronizerStateArtefactDefinition.setLocation(location);
@@ -432,10 +432,10 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(java.lang.String, java.lang.String, int, int, java.lang.String)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService#updateSynchronizerStateArtefact(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateSynchronizerStateArtefact(String name, String location, int type, int state, String message)
+	public void updateSynchronizerStateArtefact(String name, String location, String type, String state, String message)
 			throws SchedulerException {
 		SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
 		if (existing != null) {
@@ -531,19 +531,5 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
 		return (existing != null);
 	}
-
-	@Override
-	public String describeArtefactType(int type) throws SchedulerException {
-		ISynchronizerArtefactType artefactType = artefactTypes.get(type);
-		return artefactType.getName();
-	}
-
-	@Override
-	public String describeArtefactState(int type, int state) throws SchedulerException {
-		ISynchronizerArtefactType artefactType = artefactTypes.get(type);
-		return artefactType.describeState(state);
-	}
-	
-	
 
 }

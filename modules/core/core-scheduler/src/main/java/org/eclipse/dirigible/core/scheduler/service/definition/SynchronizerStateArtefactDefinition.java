@@ -33,11 +33,11 @@ public class SynchronizerStateArtefactDefinition {
 	@Column(name = "SYNCHRONIZER_ARTEFACT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String location;
 	
-	@Column(name = "SYNCHRONIZER_ARTEFACT_TYPE", columnDefinition = "INTEGER", nullable = false)
-	private int type;
+	@Column(name = "SYNCHRONIZER_ARTEFACT_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	private String type;
 
-	@Column(name = "SYNCHRONIZER_ARTEFACT_STATE", columnDefinition = "INTEGER", nullable = false)
-	private int state;
+	@Column(name = "SYNCHRONIZER_ARTEFACT_STATE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+	private String state;
 
 	@Column(name = "SYNCHRONIZER_ARTEFACT_MESSAGE", columnDefinition = "VARCHAR", nullable = false, length = 2000)
 	private String message = "";
@@ -59,7 +59,7 @@ public class SynchronizerStateArtefactDefinition {
 	 * @param state the state of the artefact
 	 * @param message the last status message
 	 */
-	public SynchronizerStateArtefactDefinition(String name, String location, int type, int state, String message) {
+	public SynchronizerStateArtefactDefinition(String name, String location, String type, String state, String message) {
 		super();
 		this.name = name;
 		this.location = location;
@@ -114,28 +114,28 @@ public class SynchronizerStateArtefactDefinition {
 	/**
 	 * @return the type
 	 */
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
 	 * @return the state
 	 */
-	public int getState() {
+	public String getState() {
 		return state;
 	}
 
 	/**
 	 * @param state the state to set
 	 */
-	public void setState(int state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 

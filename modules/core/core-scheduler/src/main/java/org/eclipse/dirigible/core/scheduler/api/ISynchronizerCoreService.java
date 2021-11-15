@@ -174,7 +174,7 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 * @return the synchronizer state
 	 * @throws SchedulerException the scheduler exception
 	 */
-	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, int type, int state, String message) throws SchedulerException;
+	public SynchronizerStateArtefactDefinition createSynchronizerStateArtefact(String name, String location, String type, String  state, String message) throws SchedulerException;
 
 	/**
 	 * Creates the synchronizer state artefact by definition.
@@ -217,7 +217,7 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 * @param message the message from execution
 	 * @throws SchedulerException the scheduler exception
 	 */
-	public void updateSynchronizerStateArtefact(String name, String location, int type, int state, String message) throws SchedulerException;
+	public void updateSynchronizerStateArtefact(String name, String location, String type, String state, String message) throws SchedulerException;
 	
 	/**
 	 * Update synchronizer state artefact.
@@ -257,23 +257,4 @@ public interface ISynchronizerCoreService extends ICoreService {
 	 */
 	public boolean existsSynchronizerStateArtefact(String name, String location) throws SchedulerException;
 	
-	/**
-	 * Gives the actual human readable name of the artefact type
-	 * 
-	 * @param type the type id
-	 * @return the name of the type
-	 * @throws SchedulerException in case of error
-	 */
-	public String describeArtefactType(int type) throws SchedulerException;
-	
-	/**
-	 * Gives the actual human readable name of the artefact state
-	 * 
-	 * @param type the type id
-	 * @param state the state id
-	 * @return the name of the state
-	 * @throws SchedulerException in case of error
-	 */
-	public String describeArtefactState(int type, int state) throws SchedulerException;
-
 }
