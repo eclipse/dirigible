@@ -36,6 +36,8 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
+import org.eclipse.dirigible.database.changelog.artefacts.ChangelogSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.model.DataStructureChangelogModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
@@ -71,6 +73,8 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
+
+	private static final ChangelogSynchronizationArtefactType CHANGELOG_ARTEFACT = new ChangelogSynchronizationArtefactType();
 	
 	/*
 	 * (non-Javadoc)
@@ -196,16 +200,19 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 				dataStructuresCoreService.createSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
 				DATA_STRUCTURE_CHANGELOG_MODELS.put(schemaModel.getName(), schemaModel);
 				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+				applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureChangelogModel existing = dataStructuresCoreService.getChangelog(schemaModel.getLocation());
 				if (!schemaModel.equals(existing)) {
 					dataStructuresCoreService.updateSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
 					DATA_STRUCTURE_CHANGELOG_MODELS.put(schemaModel.getName(), schemaModel);
 					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+					applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			CHANGELOG_SYNCHRONIZED.add(schemaModel.getLocation());
 		} catch (DataStructuresException e) {
+			applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -303,9 +310,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 					DataStructureChangelogModel model = DATA_STRUCTURE_CHANGELOG_MODELS.get(changelog);
 					try {
 						executeChangelogUpdate(connection, changelog, model);
+						applyArtefactState(model, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 					} catch (URISyntaxException | LiquibaseException | IOException e) {
 						logger.error(e.getMessage(), e);
 						errors.add(e.getMessage());
+						applyArtefactState(model, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 					}
 				}
 
