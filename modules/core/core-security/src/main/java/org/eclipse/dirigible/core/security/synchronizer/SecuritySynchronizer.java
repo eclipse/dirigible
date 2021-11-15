@@ -37,8 +37,11 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
+import org.eclipse.dirigible.core.security.artefacts.AccessSynchronizationArtefactType;
+import org.eclipse.dirigible.core.security.artefacts.RoleSynchronizationArtefactType;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
 import org.eclipse.dirigible.core.security.definition.RoleDefinition;
 import org.eclipse.dirigible.core.security.service.SecurityCoreService;
@@ -68,7 +71,10 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 	private PersistenceManager<AccessDefinition> accessPersistenceManager = new PersistenceManager<AccessDefinition>();
 
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final AccessSynchronizationArtefactType ACCESS_ARTEFACT = new AccessSynchronizationArtefactType();
+	private static final RoleSynchronizationArtefactType ROLE_ARTEFACT = new RoleSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -218,20 +224,24 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 			if (!securityCoreService.existsRole(roleDefinition.getName())) {
 				securityCoreService.createRole(roleDefinition.getName(), roleDefinition.getLocation(), roleDefinition.getDescription());
 				logger.info("Synchronized a new Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
+				applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				RoleDefinition existing = securityCoreService.getRole(roleDefinition.getName());
 				if (!roleDefinition.equals(existing)) {
 					if (!roleDefinition.getLocation().equals(existing.getLocation())) {
-						throw new SynchronizationException(
-								format("Trying to update the Role [{0}] already set from location [{1}] with a location [{2}]",
-										roleDefinition.getName(), existing.getLocation(), roleDefinition.getLocation()));
+						String errorMessage = format("Trying to update the Role [{0}] already set from location [{1}] with a location [{2}]",
+								roleDefinition.getName(), existing.getLocation(), roleDefinition.getLocation());
+						applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.FAILED_UPDATE, errorMessage);
+						throw new SynchronizationException(errorMessage);
 					}
 					securityCoreService.updateRole(roleDefinition.getName(), roleDefinition.getLocation(), roleDefinition.getDescription());
 					logger.info("Synchronized a modified Role [{}] from location: {}", roleDefinition.getName(), roleDefinition.getLocation());
+					applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			ACCESS_SYNCHRONIZED.add(roleDefinition.getLocation());
 		} catch (AccessException e) {
+			applyArtefactState(roleDefinition, ROLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -251,24 +261,28 @@ public class SecuritySynchronizer extends AbstractSynchronizer {
 						accessDefinition.getRole(), accessDefinition.getDescription(), accessDefinition.getHash());
 				logger.info("Synchronized a new Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
 						accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+				applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				AccessDefinition existing = securityCoreService.getAccessDefinition(accessDefinition.getScope(), accessDefinition.getPath(), accessDefinition.getMethod(),
 						accessDefinition.getRole());
 				if (!accessDefinition.equals(existing)) {
 					if (!accessDefinition.getLocation().equals(existing.getLocation())) {
-						throw new SynchronizationException(
-								format("Trying to update the Access definition for [{0}-{1}-{2}] already set from location [{3}] with a location [{4}]",
-										accessDefinition.getPath(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(),
-										accessDefinition.getLocation()));
+						String errorMessage = format("Trying to update the Access definition for [{0}-{1}-{2}] already set from location [{3}] with a location [{4}]",
+								accessDefinition.getPath(), accessDefinition.getMethod(), accessDefinition.getRole(), existing.getLocation(),
+								accessDefinition.getLocation());
+						applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.FAILED_UPDATE, errorMessage);
+						throw new SynchronizationException(errorMessage);
 					}
 					securityCoreService.updateAccessDefinition(existing.getId(), accessDefinition.getLocation(), accessDefinition.getScope(), accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getDescription(), accessDefinition.getHash());
 					logger.info("Synchronized a modified Access definition [[{}]-[{}]-[{}]] from location: {}", accessDefinition.getPath(),
 							accessDefinition.getMethod(), accessDefinition.getRole(), accessDefinition.getLocation());
+					applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			ACCESS_SYNCHRONIZED.add(accessDefinition.getLocation());
 		} catch (AccessException e) {
+			applyArtefactState(accessDefinition, ACCESS_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}

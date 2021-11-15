@@ -1,0 +1,2 @@
+org.eclipse.dirigible.core.security.artefacts.AccessSynchronizationArtefactType    # Access
+org.eclipse.dirigible.core.security.artefacts.RoleSynchronizationArtefactType    # Role
