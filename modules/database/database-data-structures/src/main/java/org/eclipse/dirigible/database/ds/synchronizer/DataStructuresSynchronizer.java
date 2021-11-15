@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.database.ds.synchronizer;
 
 import static java.text.MessageFormat.format;
-import static org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.*;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -36,9 +35,8 @@ import javax.sql.DataSource;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizationArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
-import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;

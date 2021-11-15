@@ -37,9 +37,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.bpm.api.BpmException;
 import org.eclipse.dirigible.bpm.flowable.BpmProviderFlowable;
 import org.eclipse.dirigible.bpm.flowable.api.IBpmCoreService;
+import org.eclipse.dirigible.bpm.flowable.artefacts.BpmSynchronizationArtefactType;
 import org.eclipse.dirigible.bpm.flowable.definition.BpmDefinition;
 import org.eclipse.dirigible.bpm.flowable.service.BpmCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -66,7 +68,9 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 	private BpmProviderFlowable bpmProviderFlowable = new BpmProviderFlowable();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final BpmSynchronizationArtefactType BPM_ARTEFACT = new BpmSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -165,16 +169,19 @@ public class BpmSynchronizer extends AbstractSynchronizer {
 				bpmCoreService.createBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
 				deployOnProcessEngine(bpmDefinition);
 				logger.info("Synchronized a new BPMN file from location: {}", bpmDefinition.getLocation());
+				applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				BpmDefinition existing = bpmCoreService.getBpm(bpmDefinition.getLocation());
 				if (!bpmDefinition.equals(existing)) {
 					bpmCoreService.updateBpm(bpmDefinition.getLocation(), bpmDefinition.getHash());
 					deployOnProcessEngine(bpmDefinition);
 					logger.info("Synchronized a modified BPMN file from location: {}", bpmDefinition.getLocation());
+					applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			BPMN_SYNCHRONIZED.put(bpmDefinition.getLocation(), bpmDefinition);
 		} catch (BpmException e) {
+			applyArtefactState(bpmDefinition, BPM_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
