@@ -1,3 +1,4 @@
+org.eclipse.dirigible.database.ds.artefacts.SchemaSynchronizationArtefactType    # Schema
 org.eclipse.dirigible.database.ds.artefacts.TableSynchronizationArtefactType    # Database Table
 org.eclipse.dirigible.database.ds.artefacts.ViewSynchronizationArtefactType	   # Database View
 org.eclipse.dirigible.database.ds.artefacts.ReplaceSynchronizationArtefactType	   # Data Replace

@@ -45,6 +45,7 @@ import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.artefacts.AppendSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.DeleteSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.ReplaceSynchronizationArtefactType;
+import org.eclipse.dirigible.database.ds.artefacts.SchemaSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.TableSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.UpdateSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.artefacts.ViewSynchronizationArtefactType;
@@ -138,6 +139,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
+	private static final SchemaSynchronizationArtefactType SCHEMA_ARTEFACT = new SchemaSynchronizationArtefactType();
 	private static final TableSynchronizationArtefactType TABLE_ARTEFACT = new TableSynchronizationArtefactType();
 	private static final ViewSynchronizationArtefactType VIEW_ARTEFACT = new ViewSynchronizationArtefactType();
 	private static final ReplaceSynchronizationArtefactType REPLACE_ARTEFACT = new ReplaceSynchronizationArtefactType();
@@ -606,6 +608,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 				addDataStructureModelsFromSchema(schemaModel);
 				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+				applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureSchemaModel existing = dataStructuresCoreService.getSchema(schemaModel.getLocation());
 				if (!schemaModel.equals(existing)) {
@@ -613,10 +616,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 					addDataStructureModelsFromSchema(schemaModel);
 					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+					applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			SCHEMA_SYNCHRONIZED.add(schemaModel.getLocation());
 		} catch (DataStructuresException e) {
+			applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
