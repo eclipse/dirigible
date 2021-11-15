@@ -25,10 +25,13 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.core.extensions.api.IExtensionsCoreService;
+import org.eclipse.dirigible.core.extensions.artefacts.ExtensionPointSynchronizationArtefactType;
+import org.eclipse.dirigible.core.extensions.artefacts.ExtensionSynchronizationArtefactType;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionDefinition;
 import org.eclipse.dirigible.core.extensions.definition.ExtensionPointDefinition;
 import org.eclipse.dirigible.core.extensions.service.ExtensionsCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -56,6 +59,9 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
+	private static final ExtensionSynchronizationArtefactType EXTENSION_ARTEFACT = new ExtensionSynchronizationArtefactType();
+	private static final ExtensionPointSynchronizationArtefactType EXTENSION_POINT_ARTEFACT = new ExtensionPointSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -178,6 +184,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 						extensionPointDefinition.getDescription());
 				logger.info("Synchronized a new Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
 						extensionPointDefinition.getLocation());
+				applyArtefactState(extensionPointDefinition.getLocation(), extensionPointDefinition.getLocation(), EXTENSION_POINT_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE, null);
 			} else {
 				ExtensionPointDefinition existing = extensionsCoreService.getExtensionPoint(extensionPointDefinition.getLocation());
 				if (!extensionPointDefinition.equals(existing)) {
@@ -185,10 +192,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 							extensionPointDefinition.getDescription());
 					logger.info("Synchronized a modified Extension Point [{}] from location: {}", extensionPointDefinition.getName(),
 							extensionPointDefinition.getLocation());
+					applyArtefactState(extensionPointDefinition.getLocation(), extensionPointDefinition.getLocation(), EXTENSION_POINT_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE, null);
 				}
 			}
 			EXTENSION_POINTS_SYNCHRONIZED.add(extensionPointDefinition.getLocation());
-		} catch (ExtensionsException e) {
+		} catch (ExtensionsException | SchedulerException e) {
+			try {
+				applyArtefactState(extensionPointDefinition.getLocation(), extensionPointDefinition.getLocation(), EXTENSION_POINT_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			} catch (SchedulerException e1) {
+				logger.error(e1.getMessage(), e1);
+			}
 			throw new SynchronizationException(e);
 		}
 	}
@@ -200,6 +213,7 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 						extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
 				logger.info("Synchronized a new Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
 						extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+				applyArtefactState(extensionDefinition.getLocation(), extensionDefinition.getLocation(), EXTENSION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE, null);
 			} else {
 				ExtensionDefinition existing = extensionsCoreService.getExtension(extensionDefinition.getLocation());
 				if (!extensionDefinition.equals(existing)) {
@@ -207,10 +221,16 @@ public class ExtensionsSynchronizer extends AbstractSynchronizer {
 							extensionDefinition.getExtensionPoint(), extensionDefinition.getDescription());
 					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", extensionDefinition.getModule(),
 							extensionDefinition.getExtensionPoint(), extensionDefinition.getLocation());
+					applyArtefactState(extensionDefinition.getLocation(), extensionDefinition.getLocation(), EXTENSION_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE, null);
 				}
 			}
 			EXTENSIONS_SYNCHRONIZED.add(extensionDefinition.getLocation());
-		} catch (ExtensionsException e) {
+		} catch (ExtensionsException | SchedulerException e) {
+			try {
+				applyArtefactState(extensionDefinition.getLocation(), extensionDefinition.getLocation(), EXTENSION_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			} catch (SchedulerException e1) {
+				logger.error(e1.getMessage(), e1);
+			}
 			throw new SynchronizationException(e);
 		}
 	}
