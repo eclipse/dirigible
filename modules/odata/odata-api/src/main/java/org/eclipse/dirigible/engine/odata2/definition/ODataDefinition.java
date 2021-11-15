@@ -19,13 +19,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The OData Model
  */
 @Table(name = "DIRIGIBLE_ODATA")
-public class ODataDefinition {
+public class ODataDefinition implements IArtefactDefinition {
 	
 	@Id
 	@Column(name = "ODATA_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -229,6 +230,16 @@ public class ODataDefinition {
 	 */
 	public List<ODataAssociationDefinition> getAssociations() {
 		return associations;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getNamespace();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

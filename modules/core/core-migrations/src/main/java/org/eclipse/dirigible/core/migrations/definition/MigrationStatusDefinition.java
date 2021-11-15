@@ -17,11 +17,13 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+
 /**
  * The Role Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_MIGRATIONS_STATUS")
-public class MigrationStatusDefinition {
+public class MigrationStatusDefinition implements IArtefactDefinition {
 
 	@Id
 	
@@ -188,6 +190,16 @@ public class MigrationStatusDefinition {
 		} else if (!project.equals(other.project))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

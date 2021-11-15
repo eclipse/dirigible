@@ -18,11 +18,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+
 /**
  * The Access Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_SECURITY_ACCESS")
-public class AccessDefinition {
+public class AccessDefinition implements IArtefactDefinition {
 
 	public static final transient String METHOD_ANY = "*";
 
@@ -313,6 +315,16 @@ public class AccessDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

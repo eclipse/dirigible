@@ -17,11 +17,13 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+
 /**
  * The OData Schema Entity.
  */
 @Table(name = "DIRIGIBLE_ODATA_SCHEMA")
-public class ODataSchemaDefinition {
+public class ODataSchemaDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "ODATAX_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -162,6 +164,16 @@ public class ODataSchemaDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

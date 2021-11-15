@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The ExtensionPointDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_EXTENSION_POINTS")
-public class ExtensionPointDefinition {
+public class ExtensionPointDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "EXTENSIONPOINT_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -224,6 +225,16 @@ public class ExtensionPointDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

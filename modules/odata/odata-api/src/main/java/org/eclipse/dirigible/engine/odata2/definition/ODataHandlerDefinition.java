@@ -18,11 +18,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+
 /**
  * The OData Handler Model
  */
 @Table(name = "DIRIGIBLE_ODATA_HANDLER")
-public class ODataHandlerDefinition {
+public class ODataHandlerDefinition implements IArtefactDefinition {
 	
 	@Id
 	@GeneratedValue
@@ -177,6 +179,16 @@ public class ODataHandlerDefinition {
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getName();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

@@ -426,7 +426,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					
 					String message = format("Table [{0}] defined by the model at: [{1}] has already been defined by the model at: [{2}]", tableModel.getName(),
 							tableModel.getLocation(), duplicated.getLocation());
-					applyDataStructureArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.FATAL, message);
+					applyArtefactState(tableModel, TABLE_ARTEFACT, ArtefactState.FATAL, message);
 					throw new SynchronizationException(
 							message);
 				}
@@ -608,7 +608,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 				addDataStructureModelsFromSchema(schemaModel);
 				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
-				applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
+				applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				DataStructureSchemaModel existing = dataStructuresCoreService.getSchema(schemaModel.getLocation());
 				if (!schemaModel.equals(existing)) {
@@ -616,12 +616,12 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					DATA_STRUCTURE_SCHEMA_MODELS.put(schemaModel.getName(), schemaModel);
 					addDataStructureModelsFromSchema(schemaModel);
 					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
-					applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
+					applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			SCHEMA_SYNCHRONIZED.add(schemaModel.getLocation());
 		} catch (DataStructuresException e) {
-			applyDataStructureArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			applyArtefactState(schemaModel, SCHEMA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -876,7 +876,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 								} else {
 									String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", dsName);
 									logger.warn(message);
-									applyDataStructureArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED, message);
+									applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED, message);
 								}
 							}
 						}
@@ -894,19 +894,19 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
 							if (model instanceof DataStructureTableModel) {
 								executeTableCreate(connection, (DataStructureTableModel) model);
-								applyDataStructureArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
+								applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 							}
 						} else {
 							logger.warn(format("Table [{0}] already exists during the update process", dsName));
 							if (model instanceof DataStructureTableModel && SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
 								executeTableAlter(connection, (DataStructureTableModel) model);
-								applyDataStructureArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
+								applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 							}
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						errors.add(e.getMessage());
-						applyDataStructureArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+						applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 					}
 				}
 				
@@ -930,7 +930,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
 							if (model instanceof DataStructureViewModel) {
 								executeViewCreate(connection, (DataStructureViewModel) model);
-								applyDataStructureArtefactState(model, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
+								applyArtefactState(model, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 							}
 						} else {
 							logger.warn(format("View [{0}] already exists during the update process", dsName));
@@ -938,7 +938,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 					} catch (Exception e) {
 						logger.error(e.getMessage(), e);
 						errors.add(e.getMessage());
-						applyDataStructureArtefactState(model, VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+						applyArtefactState(model, VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 					}
 				}
 
@@ -1105,10 +1105,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			DataStructureDataReplaceModel model = DATA_STRUCTURE_REPLACE_MODELS.get(dsName);
 			try {
 				executeReplaceUpdate(model);
-				applyDataStructureArtefactState(model, REPLACE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+				applyArtefactState(model, REPLACE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				applyDataStructureArtefactState(model, REPLACE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+				applyArtefactState(model, REPLACE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
 
@@ -1117,10 +1117,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			DataStructureDataAppendModel model = DATA_STRUCTURE_APPEND_MODELS.get(dsName);
 			try {
 				executeAppendUpdate(model);
-				applyDataStructureArtefactState(model, APPEND_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+				applyArtefactState(model, APPEND_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				applyDataStructureArtefactState(model, APPEND_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+				applyArtefactState(model, APPEND_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
 
@@ -1129,10 +1129,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			DataStructureDataDeleteModel model = DATA_STRUCTURE_DELETE_MODELS.get(dsName);
 			try {
 				executeDeleteUpdate(model);
-				applyDataStructureArtefactState(model, DELETE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+				applyArtefactState(model, DELETE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				applyDataStructureArtefactState(model, DELETE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+				applyArtefactState(model, DELETE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
 
@@ -1141,10 +1141,10 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			DataStructureDataUpdateModel model = DATA_STRUCTURE_UPDATE_MODELS.get(dsName);
 			try {
 				executeUpdateUpdate(model);
-				applyDataStructureArtefactState(model, UPDATE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
+				applyArtefactState(model, UPDATE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-				applyDataStructureArtefactState(model, UPDATE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+				applyArtefactState(model, UPDATE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			}
 		}
 
@@ -1352,18 +1352,6 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 			if (connection != null) {
 				connection.close();
 			}
-		}
-	}
-
-	private void applyDataStructureArtefactState(DataStructureModel model, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state) {
-		applyDataStructureArtefactState(model, type, state, null);
-	}
-
-	private void applyDataStructureArtefactState(DataStructureModel model, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
-		try {
-			applyArtefactState(model.getName(), model.getLocation(), type, state, message);
-		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
 		}
 	}
 

@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The Job Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_JOBS")
-public class JobDefinition {
+public class JobDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "JOB_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -369,6 +370,16 @@ public class JobDefinition {
 		if (singleton != other.singleton)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getName();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getName();
 	}
 
 }

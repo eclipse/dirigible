@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The ListenerDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_LISTENERS")
-public class ListenerDefinition {
+public class ListenerDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "LISTENER_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -280,6 +281,16 @@ public class ListenerDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getName();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

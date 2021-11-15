@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
@@ -235,15 +236,25 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	public boolean isSynchronizationEnabled() {
 		return SynchronizerCoreService.isSynchronizationEnabled();
 	}
-	
-	public void applyArtefactState(String name, String location, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) throws SchedulerException {
+
+	public void applyArtefactState(IArtefactDefinition artefact, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state) {
+		applyArtefactState(artefact, type, state, null);
+	}
+
+	public void applyArtefactState(IArtefactDefinition artefact, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
+		String artefactName = artefact.getArtefactName();
+		String artefactLocation = artefact.getArtefactLocation();
 		String artefactType = type.getId();
 		String artefactState = state.getValue();
 		String artefactStateMessage = type.getStateMessage(state, message);
-		if (synchronizerCoreService.existsSynchronizerStateArtefact(name, location)) {
-			synchronizerCoreService.updateSynchronizerStateArtefact(name, location, artefactType, artefactState, artefactStateMessage);
-		} else {
-			synchronizerCoreService.createSynchronizerStateArtefact(name, location, artefactType, artefactState, artefactStateMessage);
+		try {
+			if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
+				synchronizerCoreService.updateSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+			} else {
+				synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+			}
+		} catch (SchedulerException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 	

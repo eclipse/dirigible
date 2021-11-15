@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The BpmnDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_BPM")
-public class BpmDefinition {
+public class BpmDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "BPM_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -189,6 +190,16 @@ public class BpmDefinition {
 	
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getLocation();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 	
 }

@@ -17,13 +17,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The WebsocketDefinition Entity.
  */
 @Table(name = "DIRIGIBLE_WEBSOCKETS")
-public class WebsocketDefinition {
+public class WebsocketDefinition implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "WEBSOCKET_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -284,6 +285,16 @@ public class WebsocketDefinition {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getEndpoint();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }

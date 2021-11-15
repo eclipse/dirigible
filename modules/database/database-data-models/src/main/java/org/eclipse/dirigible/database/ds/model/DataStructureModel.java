@@ -20,13 +20,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 /**
  * The basis for all the data structure models.
  */
 @Table(name = "DIRIGIBLE_DATA_STRUCTURES")
-public class DataStructureModel {
+public class DataStructureModel implements IArtefactDefinition {
 
 	@Id
 	@Column(name = "DS_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -261,6 +262,16 @@ public class DataStructureModel {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String getArtefactName() {
+		return getName();
+	}
+
+	@Override
+	public String getArtefactLocation() {
+		return getLocation();
 	}
 
 }
