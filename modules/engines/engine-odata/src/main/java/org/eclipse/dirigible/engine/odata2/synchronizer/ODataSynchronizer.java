@@ -13,10 +13,12 @@ package org.eclipse.dirigible.engine.odata2.synchronizer;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.odata2.api.IODataCoreService;
 import org.eclipse.dirigible.engine.odata2.api.ODataException;
+import org.eclipse.dirigible.engine.odata2.artefacts.ODataSynchronizationArtefactType;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataHandlerDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataMappingDefinition;
@@ -74,7 +76,9 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	private OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final ODataSynchronizationArtefactType ODATA_ARTEFACT = new ODataSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -410,9 +414,11 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 					odataCoreService.removeContainer(model.getLocation());
 					odataCoreService.removeMappings(model.getLocation());
 					odataCoreService.removeHandlers(model.getLocation());
+					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					errors.add(e.getMessage());
+					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 				}
 			}
 			
@@ -437,9 +443,11 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 						odataCoreService.createHandler(model.getLocation(), odatah.getNamespace(), odatah.getName(),
 								odatah.getMethod(), odatah.getType(), odatah.getHandler());
 					}
+					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					errors.add(e.getMessage());
+					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 				}
 			}
 			

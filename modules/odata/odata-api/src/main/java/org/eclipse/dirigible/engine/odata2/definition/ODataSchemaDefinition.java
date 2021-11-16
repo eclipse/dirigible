@@ -23,7 +23,7 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
  * The OData Schema Entity.
  */
 @Table(name = "DIRIGIBLE_ODATA_SCHEMA")
-public class ODataSchemaDefinition implements IArtefactDefinition {
+public class ODataSchemaDefinition {
 
 	@Id
 	@Column(name = "ODATAX_LOCATION", columnDefinition = "VARCHAR", nullable = false, length = 255)
@@ -164,16 +164,6 @@ public class ODataSchemaDefinition implements IArtefactDefinition {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public String getArtefactName() {
-		return getLocation();
-	}
-
-	@Override
-	public String getArtefactLocation() {
-		return getLocation();
 	}
 
 }

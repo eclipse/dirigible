@@ -24,7 +24,7 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
  * The OData Handler Model
  */
 @Table(name = "DIRIGIBLE_ODATA_HANDLER")
-public class ODataHandlerDefinition implements IArtefactDefinition {
+public class ODataHandlerDefinition {
 	
 	@Id
 	@GeneratedValue
@@ -179,16 +179,6 @@ public class ODataHandlerDefinition implements IArtefactDefinition {
 	 */
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	@Override
-	public String getArtefactName() {
-		return getName();
-	}
-
-	@Override
-	public String getArtefactLocation() {
-		return getLocation();
 	}
 
 }
