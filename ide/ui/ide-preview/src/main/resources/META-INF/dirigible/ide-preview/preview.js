@@ -107,6 +107,7 @@ angular.module('preview', [])
 					case 'dsm':
 					case 'bpmn':
 					case 'job':
+					case 'xsjob':
 					case 'listener':
 					case 'extensionpoint':
 					case 'extension':

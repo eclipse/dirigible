@@ -439,6 +439,9 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_JSON_JOB. */
 	public static final String APPLICATION_JSON_JOB = "application/json+job";
 
+	/** The Constant APPLICATION_JSON_XSJOB. */
+	public static final String APPLICATION_JSON_XSJOB = "application/json+xsjob";
+
 	/** The Constant APPLICATION_JSON_LISTENER. */
 	public static final String APPLICATION_JSON_LISTENER = "application/json+listener";
 
@@ -672,6 +675,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON_TABLE); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON_VIEW); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("job", APPLICATION_JSON_JOB); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("xsjob", APPLICATION_JSON_XSJOB); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("listener", APPLICATION_JSON_LISTENER); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("websocket", APPLICATION_JSON_WEBSOCKET); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("extensionpoint", APPLICATION_JSON_EXTENSION_POINT); //$NON-NLS-1$

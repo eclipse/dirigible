@@ -29,6 +29,7 @@ exports.getEditor = function () {
 			"application/json+table",
 			"application/json+view",
 			"application/json+job",
+			"application/json+xsjob",
 			"application/json+listener",
 			"application/json+websocket",
 			"application/json+access",
