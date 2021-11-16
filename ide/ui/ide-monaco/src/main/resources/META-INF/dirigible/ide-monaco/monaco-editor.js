@@ -40,7 +40,8 @@ exports.getEditor = function () {
 			"application/bpmn+xml",
 			"application/database-schema-model+xml",
 			"application/entity-data-model+xml",
-			"application/json+form"
+			"application/json+form",
+			"application/xml+calculationview"
 		]
 	};
 }

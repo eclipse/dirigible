@@ -442,6 +442,9 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_JSON_XSJOB. */
 	public static final String APPLICATION_JSON_XSJOB = "application/json+xsjob";
 
+	/** The Constant APPLICATION_XML_CALCULATIONVIEW. */
+	public static final String APPLICATION_XML_CALCULATIONVIEW = "application/xml+calculationview";
+
 	/** The Constant APPLICATION_JSON_LISTENER. */
 	public static final String APPLICATION_JSON_LISTENER = "application/json+listener";
 
@@ -671,6 +674,7 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("mjs", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsjs", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("xsjslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("calculationview", APPLICATION_XML_CALCULATIONVIEW); //$NON-NLS-1$
 		//TEXT_CONTENT_TYPES.put("jslib", APPLICATION_JAVASCRIPT); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("table", APPLICATION_JSON_TABLE); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("view", APPLICATION_JSON_VIEW); //$NON-NLS-1$
