@@ -61,6 +61,9 @@ function FileIO() {
             extension: ".job",
             type: "json"
         }, {
+            extension: ".xsjob",
+            type: "json"
+        }, {
             extension: ".listener",
             type: "json"
         }, {
@@ -144,6 +147,9 @@ function FileIO() {
         }, {
             extension: ".csvim",
             type: "json"
+        }, {
+            extension: ".calculationview",
+            type: "xml"
         }];
 
         for (let i = 0; i < mappings.length; i++) {
@@ -185,13 +191,13 @@ function FileIO() {
                 xhr.onload = () => resolve(fileName);
                 xhr.onerror = () => reject(xhr.statusText);
                 xhr.send(text);
-                messageHub.post({ data: fileName }, 'editor.file.saved');
+                messageHub.post({data: fileName}, 'editor.file.saved');
                 messageHub.post({
                     data: {
                         path: fileName
                     }
                 }, 'workspace.file.selected');
-                messageHub.post({ data: 'File [' + fileName + '] saved.' }, 'status.message');
+                messageHub.post({data: 'File [' + fileName + '] saved.'}, 'status.message');
                 dirty = false;
             } else {
                 reject('file query parameter is not present in the URL');
@@ -328,7 +334,7 @@ function createCloseAction() {
         run: function (editor) {
             let fileIO = new FileIO();
             let fileName = fileIO.resolveFileName();
-            messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
+            messageHub.post({fileName: fileName}, 'ide-core.closeEditor');
         }
     };
 };
@@ -361,7 +367,7 @@ function createCloseOthersAction() {
         run: function (editor) {
             let fileIO = new FileIO();
             let fileName = fileIO.resolveFileName();
-            messageHub.post({ fileName: fileName }, 'ide-core.closeOtherEditors');
+            messageHub.post({fileName: fileName}, 'ide-core.closeOtherEditors');
         }
     };
 };
@@ -407,12 +413,12 @@ function loadModuleSuggestions(modulesSuggestions) {
     };
     xhrModules.send();
 }
+
 function loadDTS() {
     let cachedDts = window.sessionStorage.getItem('dtsContent');
     if (cachedDts) {
         monaco.languages.typescript.javascriptDefaults.addExtraLib(cachedDts, "")
-    }
-    else {
+    } else {
         let xhrModules = new XMLHttpRequest();
         xhrModules.open('GET', '/services/v4/js/ide-monaco-extensions/api/dts.js');
         xhrModules.setRequestHeader('X-CSRF-Token', 'Fetch');
@@ -503,7 +509,7 @@ function traverseAssignment(assignment, assignmentInfo) {
             .catch((statusCode, statusText) => {
                 let fileIO = new FileIO();
                 let fileName = fileIO.resolveFileName();
-                messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
+                messageHub.post({fileName: fileName}, 'ide-core.closeEditor');
             })
             .then((editor) => {
                 _editor = editor;
@@ -534,7 +540,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                 _editor.addAction(createCloseAllAction());
                 _editor.onDidChangeCursorPosition(function (e) {
                     let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
-                    messageHub.post({ data: caretInfo }, 'status.caret');
+                    messageHub.post({data: caretInfo}, 'status.caret');
                 });
                 _editor.onDidChangeModelContent(function (e) {
                     if (e.changes && e.changes[0].text === ".") {
@@ -543,7 +549,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                     let newModuleImports = getModuleImports(_editor.getValue());
                     if (e && !dirty) {
                         dirty = true;
-                        messageHub.post({ data: fileName }, 'editor.file.dirty');
+                        messageHub.post({data: fileName}, 'editor.file.dirty');
                     }
                     newModuleImports.forEach(function (module) {
                         if (module.module.split("/").length > 0) {
@@ -569,10 +575,15 @@ function traverseAssignment(assignment, assignmentInfo) {
                 monaco.languages.registerCompletionItemProvider('javascript', {
                     triggerCharacters: ["\"", "'"],
                     provideCompletionItems: function (model, position) {
-                        let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
+                        let token = model.getValueInRange({
+                            startLineNumber: position.lineNumber,
+                            startColumn: 1,
+                            endLineNumber: position.lineNumber,
+                            endColumn: position.column
+                        })
                         if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0
                             && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
-                            return { suggestions: [] };
+                            return {suggestions: []};
                         }
                         let wordPosition = model.getWordUntilPosition(position);
                         let word = wordPosition.word;
@@ -605,7 +616,12 @@ function traverseAssignment(assignment, assignmentInfo) {
                 monaco.languages.registerCompletionItemProvider('javascript', {
                     triggerCharacters: ["."],
                     provideCompletionItems: function (model, position) {
-                        let token = model.getValueInRange({ startLineNumber: position.lineNumber, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column })
+                        let token = model.getValueInRange({
+                            startLineNumber: position.lineNumber,
+                            startColumn: 1,
+                            endLineNumber: position.lineNumber,
+                            endColumn: position.column
+                        })
 
                         let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
                         let afterDotToken = token.substring(token.indexOf(".") + 1);
@@ -622,7 +638,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                             }
                         }
                         if (!moduleName && !nestedObjectKeyword) {
-                            return { suggestions: [] };
+                            return {suggestions: []};
                         }
                         let wordPosition = model.getWordUntilPosition(position);
                         let word = wordPosition.word;
@@ -698,7 +714,6 @@ function traverseAssignment(assignment, assignmentInfo) {
                 7006, // Parameter 'ctx' implicitly has an 'any' type.(7006),
                 7009, // 'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.(7009)
                 7034, // Variable 'ctx' implicitly has type 'any' in some locations where its type cannot be determined.(7034)
-                2354, //
             ]
         });
         monaco.languages.typescript.javascriptDefaults.setCompilerOptions({

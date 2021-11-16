@@ -537,7 +537,7 @@ WorkspaceTreeAdapter.prototype.renameNode = function (node, oldName, newName) {
     }
 };
 WorkspaceTreeAdapter.prototype.moveNode = function (sourceParentNode, node) {
-    //strip the "/{workspace}" segment from paths and the file segment from source path (for consistency) 
+    //strip the "/{workspace}" segment from paths and the file segment from source path (for consistency)
     let sourcepath = sourceParentNode.original._file.path.substring(this.workspaceName.length + 1);
     let tagetParentNode = this.jstree.get_node(node.parent);
     let targetpath = tagetParentNode.original._file.path.substring(this.workspaceName.length + 1);
@@ -910,39 +910,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                     return true;
                 }
             },
-            'plugins': ['state', 'dnd', 'sort', 'types', 'contextmenu', 'unique'],
-            'unique': {
-                'newNodeName': function (node, typesConfig) {
-                    let typeCfg = typesConfig[node.type] || typesConfig['default'];
-                    let name = typeCfg.default_name || typesConfig['default'].default_name || 'file';
-                    let tmplName = typeCfg.template_new_name || typesConfig['default'].template_new_name || '{name}{ext}';
-                    let parameters = {
-                        '{name}': name,
-                        '{counter}': '',
-                        '{ext}': typeCfg.ext || typesConfig['default'].ext || ''
-                    };
-                    let regex = new RegExp(Object.keys(parameters).join('|'), 'g');
-                    let fName = tmplName.replace(regex, function (m) {
-                        return parameters[m] !== undefined ? parameters[m] : m;
-                    });
-                    return fName;
-                },
-                'duplicate': function (name, counter, node, typesConfig) {
-                    let typeCfg = typesConfig[node.type] || typesConfig['default'];
-                    let new_name = typeCfg.default_name || typesConfig['default'].default_name || 'file';
-                    let tmplName = typeCfg.template_new_name || typesConfig['default'].template_new_name || '{name}{counter}{ext}';
-                    let parameters = {
-                        '{name}': name,
-                        '{counter}': counter,
-                        '{ext}': typeCfg.ext
-                    };
-                    let regex = new RegExp(Object.keys(parameters).join('|'), 'g');
-                    let fName = tmplName.replace(regex, function (m) {
-                        return parameters[m] !== undefined ? parameters[m] : m;
-                    });
-                    return fName;
-                }
-            },
+            'plugins': ['state', 'dnd', 'sort', 'types', 'contextmenu'],
             "types": {
                 "default": {
                     "icon": "fa fa-file-o",
@@ -1473,7 +1441,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     }]);
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
-const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job','xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
 function getIcon(f) {
     let icon;
@@ -1481,7 +1449,7 @@ function getIcon(f) {
         icon = "fa fa-git-square";
     } else if (f.type === 'file') {
         let ext = getFileExtension(f.name);
-        if (ext === 'js'|| ext === 'mjs') {
+        if (ext === 'js'|| ext === 'mjs'|| ext==='xsjs') {
             icon = "fa fa-file-code-o";
         } else if (ext === 'html') {
             icon = "fa fa-html5";

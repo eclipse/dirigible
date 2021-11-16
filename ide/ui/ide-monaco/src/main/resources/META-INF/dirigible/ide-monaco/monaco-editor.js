@@ -29,6 +29,7 @@ exports.getEditor = function () {
 			"application/json+table",
 			"application/json+view",
 			"application/json+job",
+			"application/json+xsjob",
 			"application/json+listener",
 			"application/json+websocket",
 			"application/json+access",
@@ -39,7 +40,8 @@ exports.getEditor = function () {
 			"application/bpmn+xml",
 			"application/database-schema-model+xml",
 			"application/entity-data-model+xml",
-			"application/json+form"
+			"application/json+form",
+			"application/xml+calculationview"
 		]
 	};
 }
