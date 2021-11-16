@@ -26,8 +26,10 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.websockets.api.IWebsocketsCoreService;
 import org.eclipse.dirigible.core.websockets.api.WebsocketsException;
+import org.eclipse.dirigible.core.websockets.artefacts.WebsocketSynchronizationArtefactType;
 import org.eclipse.dirigible.core.websockets.definition.WebsocketDefinition;
 import org.eclipse.dirigible.core.websockets.service.WebsocketsCoreService;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -49,7 +51,9 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	private WebsocketsCoreService websocketsCoreService = new WebsocketsCoreService();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final WebsocketSynchronizationArtefactType WEBSOCKET_ARTEFACT = new WebsocketSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -141,6 +145,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 						websocketDefinition.getEndpoint(), websocketDefinition.getDescription());
 				logger.info("Synchronized a new Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
 						websocketDefinition.getEndpoint(), websocketDefinition.getLocation());
+				applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
 				WebsocketDefinition existing = websocketsCoreService.getWebsocket(websocketDefinition.getLocation());
 				if (!websocketDefinition.equals(existing)) {
@@ -148,10 +153,12 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 							websocketDefinition.getEndpoint(), websocketDefinition.getDescription());
 					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", websocketDefinition.getHandler(),
 							websocketDefinition.getEndpoint(), websocketDefinition.getLocation());
+					applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
 			WEBSOCKETS_SYNCHRONIZED.add(websocketDefinition.getLocation());
 		} catch (WebsocketsException e) {
+			applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
