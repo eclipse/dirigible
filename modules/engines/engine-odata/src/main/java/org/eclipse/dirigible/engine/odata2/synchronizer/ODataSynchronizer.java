@@ -443,7 +443,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 						odataCoreService.createHandler(model.getLocation(), odatah.getNamespace(), odatah.getName(),
 								odatah.getMethod(), odatah.getType(), odatah.getHandler());
 					}
-					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
+					applyArtefactState(model, ODATA_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE_UPDATE);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					errors.add(e.getMessage());

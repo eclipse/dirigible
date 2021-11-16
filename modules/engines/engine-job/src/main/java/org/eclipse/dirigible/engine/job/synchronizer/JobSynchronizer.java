@@ -203,8 +203,10 @@ public class JobSynchronizer extends AbstractSynchronizer {
 			try {
 				if (!JOBS_SYNCHRONIZED.contains(jobKey.getName())) {
 					SchedulerManager.unscheduleJob(jobKey.getName(), jobKey.getGroup());
-					jobDefinition = schedulerCoreService.getJob(jobKey.getName());
-					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
+					if (ISchedulerCoreService.JOB_GROUP_DEFINED.equals(jobKey.getGroup())) {
+						jobDefinition = schedulerCoreService.getJob(jobKey.getName());
+						applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
+					}
 				}
 			} catch (SchedulerException e) {
 				logger.error(e.getMessage(), e);
