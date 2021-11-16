@@ -26,11 +26,13 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.engine.job.artefacts.JobSynchronizationArtefactType;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.quartz.TriggerKey;
 import org.slf4j.Logger;
@@ -50,7 +52,9 @@ public class JobSynchronizer extends AbstractSynchronizer {
 	private SchedulerCoreService schedulerCoreService = new SchedulerCoreService();
 
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final JobSynchronizationArtefactType JOB_ARTEFACT = new JobSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -182,23 +186,29 @@ public class JobSynchronizer extends AbstractSynchronizer {
 
 		for (String jobName : JOBS_SYNCHRONIZED) {
 			if (!SchedulerManager.existsJob(jobName)) {
+				JobDefinition jobDefinition = schedulerCoreService.getJob(jobName);
 				try {
-					JobDefinition jobDefinition = schedulerCoreService.getJob(jobName);
 					SchedulerManager.scheduleJob(jobDefinition);
+					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 				} catch (SchedulerException e) {
 					logger.error(e.getMessage(), e);
+					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 				}
 			}
 		}
 
 		Set<TriggerKey> runningJobs = SchedulerManager.listJobs();
 		for (TriggerKey jobKey : runningJobs) {
+			JobDefinition jobDefinition = null;
 			try {
 				if (!JOBS_SYNCHRONIZED.contains(jobKey.getName())) {
 					SchedulerManager.unscheduleJob(jobKey.getName(), jobKey.getGroup());
+					jobDefinition = schedulerCoreService.getJob(jobKey.getName());
+					applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				}
 			} catch (SchedulerException e) {
 				logger.error(e.getMessage(), e);
+				applyArtefactState(jobDefinition, JOB_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 			}
 		}
 

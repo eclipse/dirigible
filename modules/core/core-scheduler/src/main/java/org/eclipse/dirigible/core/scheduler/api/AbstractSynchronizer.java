@@ -242,19 +242,23 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	}
 
 	public void applyArtefactState(IArtefactDefinition artefact, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
-		String artefactName = artefact.getArtefactName();
-		String artefactLocation = artefact.getArtefactLocation();
-		String artefactType = type.getId();
-		String artefactState = state.getValue();
-		String artefactStateMessage = type.getStateMessage(state, message);
-		try {
-			if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
-				synchronizerCoreService.updateSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
-			} else {
-				synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+		if (artefact != null && type != null && state != null) {
+			String artefactName = artefact.getArtefactName();
+			String artefactLocation = artefact.getArtefactLocation();
+			String artefactType = type.getId();
+			String artefactState = state.getValue();
+			String artefactStateMessage = type.getStateMessage(state, message);
+			try {
+				if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
+					synchronizerCoreService.updateSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+				} else {
+					synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+				}
+			} catch (SchedulerException e) {
+				logger.error(e.getMessage(), e);
 			}
-		} catch (SchedulerException e) {
-			logger.error(e.getMessage(), e);
+		} else {
+			logger.error("Can't apply artefact state to \"null\" artefact object.");
 		}
 	}
 	

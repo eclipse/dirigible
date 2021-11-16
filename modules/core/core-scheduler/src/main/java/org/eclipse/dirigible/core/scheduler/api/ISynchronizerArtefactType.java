@@ -20,11 +20,13 @@ public interface ISynchronizerArtefactType {
 		SUCCESSFUL_CREATE("Successful"), //
 		SUCCESSFUL_UPDATE("Successful"), //
 		SUCCESSFUL_CREATE_UPDATE("Successful"), //
+		SUCCESSFUL_DELETE("Successful"), //
 
 		FAILED("Failed"), //
 		FAILED_CREATE("Failed"), //
 		FAILED_UPDATE("Failed"), //
 		FAILED_CREATE_UPDATE("Failed"), //
+		FAILED_DELETE("Failed"), //
 
 		IN_PROGRESS("Processing..."), //
 
