@@ -31,6 +31,8 @@ import org.eclipse.dirigible.core.messaging.service.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
+import org.eclipse.dirigible.engine.messaging.artefacts.ListenerSynchronizationArtefactType;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,9 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 	private SchedulerManager messagingManager = new SchedulerManager();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final ListenerSynchronizationArtefactType LISTENER_ARTEFACT = new ListenerSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -186,11 +190,14 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		// Stop modified listeners first
 		for (String listenerLocation : LISTENERS_MODIFIED) {
 			if (messagingManager.existsListener(listenerLocation)) {
+				ListenerDefinition listenerDefinition = null;
 				try {
-					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					listenerDefinition = messagingCoreService.getListener(listenerLocation);
 					messagingManager.stopListener(listenerDefinition);
+					applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				} catch (MessagingException e) {
 					logger.error(e.getMessage(), e);
+					applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 				}
 			}
 		}
@@ -198,11 +205,14 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		// Start all the synchronized listeners (if not started)
 		for (String listenerLocation : LISTENERS_SYNCHRONIZED) {
 			if (!messagingManager.existsListener(listenerLocation)) {
+				ListenerDefinition listenerDefinition = null;
 				try {
-					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					listenerDefinition = messagingCoreService.getListener(listenerLocation);
 					messagingManager.startListener(listenerDefinition);
+					applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 				} catch (MessagingException e) {
 					logger.error(e.getMessage(), e);
+					applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 				}
 			}
 		}
@@ -210,13 +220,16 @@ public class MessagingSynchronizer extends AbstractSynchronizer {
 		// Stop all the running listeners that are not available in the last synchronization
 		List<String> runningListeners = messagingManager.getRunningListeners();
 		for (String listenerLocation : runningListeners) {
+			ListenerDefinition listenerDefinition = null;
 			try {
 				if (!LISTENERS_SYNCHRONIZED.contains(listenerLocation)) {
-					ListenerDefinition listenerDefinition = messagingCoreService.getListener(listenerLocation);
+					listenerDefinition = messagingCoreService.getListener(listenerLocation);
 					messagingManager.stopListener(listenerDefinition);
+					applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.SUCCESSFUL_DELETE);
 				}
 			} catch (MessagingException e) {
 				logger.error(e.getMessage(), e);
+				applyArtefactState(listenerDefinition, LISTENER_ARTEFACT, ArtefactState.FAILED_DELETE, e.getMessage());
 			}
 		}
 
