@@ -23,10 +23,9 @@ import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
  * The Role Definition transfer object.
  */
 @Table(name = "DIRIGIBLE_MIGRATIONS_STATUS")
-public class MigrationStatusDefinition implements IArtefactDefinition {
+public class MigrationStatusDefinition {
 
 	@Id
-	
 	@Column(name = "MIGRATION_STATUS_PROJECT", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String project;
 	
@@ -190,16 +189,6 @@ public class MigrationStatusDefinition implements IArtefactDefinition {
 		} else if (!project.equals(other.project))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String getArtefactName() {
-		return getLocation();
-	}
-
-	@Override
-	public String getArtefactLocation() {
-		return getLocation();
 	}
 
 }

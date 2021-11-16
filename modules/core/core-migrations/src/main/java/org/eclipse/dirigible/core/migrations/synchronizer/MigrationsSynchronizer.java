@@ -16,6 +16,7 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,10 +29,12 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.core.migrations.api.IMigrationsCoreService;
 import org.eclipse.dirigible.core.migrations.api.MigrationsException;
+import org.eclipse.dirigible.core.migrations.artefacts.MigrationSynchronizationArtefactType;
 import org.eclipse.dirigible.core.migrations.definition.MigrationDefinition;
 import org.eclipse.dirigible.core.migrations.definition.MigrationStatusDefinition;
 import org.eclipse.dirigible.core.migrations.service.MigrationsCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
 import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
@@ -53,7 +56,9 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 	private MigrationsCoreService migrationsCoreService = new MigrationsCoreService();
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
+	private static final MigrationSynchronizationArtefactType MIGRATION_ARTEFACT = new MigrationSynchronizationArtefactType();
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
@@ -241,6 +246,8 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 		List<String> migratedProjects = new ArrayList<String>();
 		for (String migrationLocation : MIGRATIONS_SYNCHRONIZED) {
 			String project = "";
+			MigrationDefinition lastMigration = null;
+			MigrationDefinition currentMigration = null;
 			try {
 				project = "location: " + migrationLocation;
 				MigrationDefinition migrationDefinition = migrationsCoreService.getMigration(migrationLocation);
@@ -250,24 +257,30 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 				}
 				List<MigrationDefinition> migrationDefinitions = migrationsCoreService.getMigrationsPerProject(project);
 				MigrationStatusDefinition migrationStatusDefinition = migrationsCoreService.getMigrationStatus(project);
-				MigrationDefinition lastMigration = null;
 				for (MigrationDefinition migration : migrationDefinitions) {
+					currentMigration = migration;
 					if (migrationStatusDefinition != null) {
 						if (migration.getMajor() > migrationStatusDefinition.getMajor()) {
 							performMigration(migration);
+							applyArtefactState(migration, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 						} else if (migration.getMajor() == migrationStatusDefinition.getMajor() 
 								&& migration.getMinor() > migrationStatusDefinition.getMinor()) {
 							performMigration(migration);
+							applyArtefactState(migration, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 						} else if (migration.getMajor() == migrationStatusDefinition.getMajor() 
 								&& migration.getMinor() == migrationStatusDefinition.getMinor()
 								&& migration.getMicro() > migrationStatusDefinition.getMicro()) {
 							performMigration(migration);
+							applyArtefactState(migration, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 						} else {
-							logger.trace("Migration for project {} with version {}.{}.{} has been skipped because the project status is with a higher version", 
+							String errorMessage = MessageFormat.format("Migration for project {0} with version {1}.{2}.{3} has been skipped because the project status is with a higher version", 
 									project, migration.getMajor(), migration.getMinor(), migration.getMicro());
+							logger.trace(errorMessage);
+							applyArtefactState(migration, MIGRATION_ARTEFACT, ArtefactState.FAILED_CREATE, errorMessage);
 						}
 					} else {
 						performMigration(migration);
+						applyArtefactState(migration, MIGRATION_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 					}
 					lastMigration = migration;
 				}
@@ -286,6 +299,7 @@ public class MigrationsSynchronizer extends AbstractSynchronizer {
 			} catch (MigrationsException | ScriptingException e) {
 				logger.error("Migration procedure for project {} artifacts failed.", project);
 				logger.error("Migration procedure error: ", e);
+				applyArtefactState(currentMigration, MIGRATION_ARTEFACT, ArtefactState.FAILED_CREATE, e.getMessage());
 			}
 			
 		}
