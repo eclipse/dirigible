@@ -33,9 +33,8 @@ public class RegistryTruffleFileSystem implements FileSystem {
     private final StandardPathHandler standardHandler;
 
     public RegistryTruffleFileSystem(IScriptEngineExecutor executor, String project) {
-        var root = IRepositoryStructure.PATH_REGISTRY_PUBLIC;
         this.scopeHandler = new DirigibleScopePathHandler(executor);
-        this.standardHandler = new StandardPathHandler(project, root, executor);
+        this.standardHandler = new StandardPathHandler(project, IRepositoryStructure.PATH_REGISTRY_PUBLIC, executor);
     }
 
     @Override
@@ -76,10 +75,8 @@ public class RegistryTruffleFileSystem implements FileSystem {
             Set<? extends OpenOption> options,
             FileAttribute<?>... attrs
     ) throws IOException {
-        var pathString = path.toString();
-        var source = "";
-
-        source = scopeHandler.resolve(path);
+        String pathString = path.toString();
+        String source = scopeHandler.resolve(path);
         if(!source.isEmpty()) {
             return new SeekableInMemoryByteChannel(source.getBytes(StandardCharsets.UTF_8));
         }
@@ -98,7 +95,7 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path toAbsolutePath(Path path) {
-        var maybeDirigiblePath = standardHandler.handlePossibleRepositoryPath(path);
+    	Path maybeDirigiblePath = standardHandler.handlePossibleRepositoryPath(path);
         return maybeDirigiblePath.toAbsolutePath();
     }
 
@@ -116,7 +113,7 @@ public class RegistryTruffleFileSystem implements FileSystem {
             String attributes,
             LinkOption... options
     ) throws IOException {
-        var attr = new HashMap<String, Object>();
+        Map<String, Object> attr = new HashMap<String, Object>();
         attr.put("isRegularFile", true);
         return attr;
     }

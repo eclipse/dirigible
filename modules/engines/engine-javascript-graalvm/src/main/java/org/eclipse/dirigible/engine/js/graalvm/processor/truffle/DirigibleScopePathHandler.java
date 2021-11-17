@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.processor.truffle;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 class DirigibleScopePathHandler {
 
@@ -33,12 +35,12 @@ class DirigibleScopePathHandler {
     }
 
     String resolve(Path path) {
-        var pathString = path.toString();
+        String pathString = path.toString();
 
         if (pathString.startsWith("/@dirigible-native/")) {
-            var packageName = parseImportedJavaPackage(pathString);
-            var classes = getClassesInPackage(packageName);
-            var generated = generateJavaExports(classes);
+            String packageName = parseImportedJavaPackage(pathString);
+            List<ClassName> classes = getClassesInPackage(packageName);
+            String generated = generateJavaExports(classes);
             return generated;
         } else if (pathString.startsWith(Constants.DIRIGIBLE_SCOPE_VERSIONED)) {
             return resolveVersionedScopePath(pathString);
@@ -70,7 +72,7 @@ class DirigibleScopePathHandler {
     }
 
     private List<ClassName> getClassesInPackage(String packageName) {
-        var classNames = new HashSet<ClassName>();
+        Set<ClassName> classNames = new HashSet<ClassName>();
 
         try (ScanResult scanResult = new ClassGraph()
                 .verbose()
@@ -78,8 +80,8 @@ class DirigibleScopePathHandler {
                 .enableSystemJarsAndModules()
                 .acceptPackages(packageName)
                 .scan()) {
-            for (var classInfo : scanResult.getAllClasses()) {
-                var className = new ClassName(classInfo.getSimpleName(), classInfo.getName());
+            for (ClassInfo classInfo : scanResult.getAllClasses()) {
+                ClassName className = new ClassName(classInfo.getSimpleName(), classInfo.getName());
                 classNames.add(className);
             }
         }
@@ -88,10 +90,10 @@ class DirigibleScopePathHandler {
     }
 
     private String generateJavaExports(List<ClassName> classes) {
-        var exportsBuilder = new StringBuilder();
-        var exportedSymbolNames = new ArrayList<String>();
+    	StringBuilder exportsBuilder = new StringBuilder();
+        List<String> exportedSymbolNames = new ArrayList<String>();
 
-        for (var klass : classes) {
+        for (ClassName klass : classes) {
             if (!StringUtils.isAlphanumeric(klass.getClassName())) {
                 continue;
             }

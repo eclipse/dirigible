@@ -114,7 +114,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 
 	@Test
 	public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
-		var testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
+		String testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
 
 		try {
 			ThreadContextFacade.setUp();
@@ -133,7 +133,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 
 	@Test
 	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
-		var testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
+		String testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
 
 		try {
 			ThreadContextFacade.setUp();

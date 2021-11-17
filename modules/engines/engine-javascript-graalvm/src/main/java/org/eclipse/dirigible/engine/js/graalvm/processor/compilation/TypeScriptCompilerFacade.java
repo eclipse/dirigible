@@ -19,15 +19,16 @@ import org.eclipse.dirigible.repository.api.CaffeineRepositoryCache;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 class TypeScriptCompilerFacade {
 
     void handleTypeScriptFile(String relativeProjectFilePath) throws IOException, InterruptedException {
-        var projectPath = "/Users/xxxxxx/target/dirigible/repository/root/registry/public/";
-        var filePath = projectPath + relativeProjectFilePath;
-        var fileDirectoryPath = StringUtils.substringBeforeLast(filePath, "/");
+        String projectPath = "/Users/xxxxxx/target/dirigible/repository/root/registry/public/";
+        String filePath = projectPath + relativeProjectFilePath;
+        String fileDirectoryPath = StringUtils.substringBeforeLast(filePath, "/");
 
         createIndexDtsFile(fileDirectoryPath);
         compileTypeScriptFile(filePath);
@@ -35,20 +36,20 @@ class TypeScriptCompilerFacade {
     }
 
     private void createIndexDtsFile(String fileDirectoryPath) throws IOException {
-        var indexDtsFile = new File(fileDirectoryPath + "/index.d.ts");
+        File indexDtsFile = new File(fileDirectoryPath + "/index.d.ts");
         FileUtils.writeStringToFile(indexDtsFile, "declare const require: any;", StandardCharsets.UTF_8);
     }
 
     private void compileTypeScriptFile(String filePath) throws InterruptedException, IOException {
-        var runtime = Runtime.getRuntime();
-        var command = new String[]{"tsc index.d.ts ", filePath};
+        Runtime runtime = Runtime.getRuntime();
+        String[] command = new String[]{"tsc index.d.ts ", filePath};
         Process pr = runtime.exec(command);
         pr.waitFor();
     }
 
     private void invalidateCache(String fileDirectoryPath) {
         Cache<String, byte[]> cache = CaffeineRepositoryCache.getInternalCache();
-        var keys = cache.asMap().keySet().stream()
+        List<String> keys = cache.asMap().keySet().stream()
                 .filter(key -> key.startsWith(fileDirectoryPath))
                 .collect(toList());
 

@@ -35,7 +35,7 @@ class StandardPathHandler {
     }
 
     Path handlePossibleRepositoryPath(Path path) {
-        var pathString = path.toString();
+        String pathString = path.toString();
 
         if (pathString.startsWith(Constants.CURRENT_DIRECTORY)
                 || pathString.startsWith(Constants.PARENT_DIRECTORY)) {
@@ -51,7 +51,7 @@ class StandardPathHandler {
 
     String resolve(String pathString) {
         pathString = trimPathExtension(pathString);
-        var module = getModuleFromRepository(root, pathString, executor);
+        Module module = getModuleFromRepository(root, pathString, executor);
         return new String(module.getContent(), StandardCharsets.UTF_8);
     }
 

@@ -127,10 +127,10 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         engineBindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
 
         Object result = null;
-        var contextBuilder = new GraalVMJavaScriptContextBuilder();
+        GraalVMJavaScriptContextBuilder contextBuilder = new GraalVMJavaScriptContextBuilder();
         Context context = contextBuilder.createJavaScriptContext(moduleOrCode, projectName -> new RegistryTruffleFileSystem(this, projectName));
 
-        try (context) {
+        try {
             Value bindings = context.getBindings(ENGINE_JAVA_SCRIPT);
             bindings.putMember(SOURCE_PROVIDER, getSourceProvider());
             bindings.putMember(JAVASCRIPT_ENGINE_TYPE, JAVASCRIPT_TYPE_GRAALVM);
@@ -140,8 +140,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
 
-            var code = "";
-            var executableFileType = executableFileTypeResolver.resolveFileType(moduleOrCode, commonJSModule);
+            String code = "";
+            ExecutableFileType executableFileType = executableFileTypeResolver.resolveFileType(moduleOrCode, commonJSModule);
             if (executableFileType == ExecutableFileType.JAVASCRIPT_ESM) {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
                 context.eval(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE); // alias of Require.CODE
@@ -189,6 +189,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             e.printStackTrace();
             logger.trace("exiting: executeServiceModule() with js exception");
             return e.getMessage(); // TODO: Create JSExecutionResult class and return it instead of Object instance
+        } finally {
+            context.close();
         }
 
         logger.trace("exiting: executeServiceModule()");

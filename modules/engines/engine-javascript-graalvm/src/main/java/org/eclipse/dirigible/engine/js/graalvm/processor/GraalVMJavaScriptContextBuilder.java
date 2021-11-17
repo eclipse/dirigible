@@ -50,8 +50,8 @@ class GraalVMJavaScriptContextBuilder {
             if (moduleOrCode.startsWith("/")) {
                 moduleOrCode = StringUtils.substringAfter(moduleOrCode, "/");
             }
-            var project = StringUtils.substringBeforeLast(moduleOrCode, "/");
-            var registryTruffleFileSystem = truffleFileSystemProvider.apply(project);
+            String project = StringUtils.substringBeforeLast(moduleOrCode, "/");
+            RegistryTruffleFileSystem registryTruffleFileSystem = truffleFileSystemProvider.apply(project);
             contextBuilder.fileSystem(registryTruffleFileSystem);
         }
 

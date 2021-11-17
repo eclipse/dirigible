@@ -19,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ExportGeneratorTest extends AbstractDirigibleTest {
@@ -37,11 +39,11 @@ public class ExportGeneratorTest extends AbstractDirigibleTest {
 
     @Test
     public void generateApiUtilsExports() {
-        var testApi = "@dirigible-v4/utils";
-        var apiVersion = "v4";
-        var path = Paths.get("/utils");
+        String testApi = "@dirigible-v4/utils";
+        String apiVersion = "v4";
+        Path path = Paths.get("/utils");
 
-        var expected =
+        String expected =
                 "export const alphanumeric = dirigibleRequire('utils/v4/alphanumeric');\n" +
                 "export const base64 = dirigibleRequire('utils/v4/base64');\n" +
                 "export const digest = dirigibleRequire('utils/v4/digest');\n" +
@@ -55,7 +57,7 @@ public class ExportGeneratorTest extends AbstractDirigibleTest {
                 "export default { alphanumeric,base64,digest,escape,hex,jsonpath,url,uuid,xml,qrcode }\n";
 
         logger.info("API export generation test starting... " + testApi);
-        var actual = generator.generate(path, apiVersion);
+        String actual = generator.generate(path, apiVersion);
         Assert.assertEquals(expected, actual);
         logger.info("API export generation test passed successfully: " + testApi);
     }
