@@ -577,7 +577,7 @@ jobs:
         mkdir $HOME/.kube
         echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
     - name: Update Trial Instance
-      run: kubectl set image deployment/trial-dirigible dirigible=dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
+      run: kubectl -n trial set image deployment/trial dirigible=dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
 
 #-----------------Update Trial Instance------------------#
 
