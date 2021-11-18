@@ -50,6 +50,10 @@ public class TerminalWebsocketService {
 
 	private static Map<String, ProcessRunnable> SESSION_TO_PROCESS = new ConcurrentHashMap<String, ProcessRunnable>();
 
+	public static final String DIRIGIBLE_TERMINAL_ENABLED = "DIRIGIBLE_TERMINAL_ENABLED";
+
+	private static final Boolean TERMINAL_ENABLED = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_TERMINAL_ENABLED, Boolean.TRUE.toString()));
+
 	/**
 	 * On open callback.
 	 *
@@ -75,7 +79,7 @@ public class TerminalWebsocketService {
 	public void onMessage(String message, Session session) {
 		logger.trace("[ws:terminal] onMessage: " + message);
 		
-		if (Configuration.isAnonymousModeEnabled()) {
+		if (Configuration.isAnonymousModeEnabled() || !isTerminalEnabled()) {
 			try {
 				session.getBasicRemote().sendText("Feature 'Terminal' is disabled in this mode.", true);
 			} catch (IOException e) {
@@ -325,4 +329,7 @@ public class TerminalWebsocketService {
 		return process;
 	}
 
+	private Boolean isTerminalEnabled() {
+		return TERMINAL_ENABLED;
+	}
 }
