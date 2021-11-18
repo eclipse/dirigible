@@ -11,14 +11,26 @@
  */
 package org.eclipse.dirigible.database.ds.model;
 
-/**
- * The Data Structure Table Constraint Unique Model.
- */
-public class DataStructureTableConstraintUniqueModel extends DataStructureTableConstraintModel {
+import java.util.Set;
 
+public class DataStructureTableIndexModel {
+
+    private String name ;
     private String indexType;
-
     private String order;
+    private Boolean unique;
+    private Set<String> indexColumns;
+
+    public DataStructureTableIndexModel() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getIndexType() {
         return indexType;
@@ -34,5 +46,21 @@ public class DataStructureTableConstraintUniqueModel extends DataStructureTableC
 
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public Boolean isUnique() {
+        return unique;
+    }
+
+    public void setUnique(Boolean unique) {
+        this.unique = unique;
+    }
+
+    public Set<String> getIndexColumns() {
+        return indexColumns;
+    }
+
+    public void setIndexColumns(Set<String> indexColumns) {
+        this.indexColumns = indexColumns;
     }
 }

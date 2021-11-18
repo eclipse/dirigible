@@ -11,24 +11,20 @@
  */
 package org.eclipse.dirigible.database.ds.model.processors;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintCheckModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintUniqueModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
-import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
+import org.eclipse.dirigible.database.ds.model.*;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Table Create Processor.
@@ -64,6 +60,7 @@ public class TableCreateProcessor {
 		logger.info("Processing Create Table: " + tableName);
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(connection).create().table(tableName);
 		List<DataStructureTableColumnModel> columns = tableModel.getColumns();
+		List<DataStructureTableIndexModel> indexes = tableModel.getIndexes();
 		for (DataStructureTableColumnModel columnModel : columns) {
 			String name = columnModel.getName();
 			if (caseSensitive) {
@@ -163,7 +160,6 @@ public class TableCreateProcessor {
 							uniqueIndexColumns[i++] = column;
 						}
 					}
-					
 					createTableBuilder.unique(uniqueIndexName, uniqueIndexColumns);
 				}
 			}
@@ -175,6 +171,16 @@ public class TableCreateProcessor {
 					}
 					createTableBuilder.check(checkName, check.getExpression());
 				}
+			}
+		}
+		if(indexes != null){
+			for(DataStructureTableIndexModel indexModel : indexes) {
+				String name = indexModel.getName();
+				String indexType = indexModel.getIndexType();
+				Boolean isUnique = indexModel.isUnique();
+				String order = indexModel.getOrder();
+				Set<String> indexColumns = indexModel.getIndexColumns();
+				createTableBuilder.index(name, isUnique, order, indexType, indexColumns);
 			}
 		}
 

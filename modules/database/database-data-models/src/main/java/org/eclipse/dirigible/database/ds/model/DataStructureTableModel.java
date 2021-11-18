@@ -11,10 +11,9 @@
  */
 package org.eclipse.dirigible.database.ds.model;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Transient;
 
 /**
  * The table model representation.
@@ -26,6 +25,9 @@ public class DataStructureTableModel extends DataStructureModel {
 
 	@Transient
 	private DataStructureTableConstraintsModel constraints = new DataStructureTableConstraintsModel();
+
+	@Transient
+	private List<DataStructureTableIndexModel> indexes = new ArrayList<DataStructureTableIndexModel>();
 
 	/**
 	 * Getter for the columns.
@@ -45,4 +47,12 @@ public class DataStructureTableModel extends DataStructureModel {
 		return constraints;
 	}
 
+	/**
+	 * Gets the indexes.
+	 *
+	 * @return the indexes
+	 */
+	public List<DataStructureTableIndexModel> getIndexes() {
+		return indexes;
+	}
 }

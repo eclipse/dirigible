@@ -50,6 +50,10 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         return this;
     }
 
+    public AbstractTableBuilder unique(String name, String[] columns, String type, String order) {
+        return this;
+    }
+
     /**
      * Gets the table.
      *

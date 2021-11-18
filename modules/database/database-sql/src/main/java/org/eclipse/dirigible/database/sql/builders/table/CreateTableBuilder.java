@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -176,6 +177,20 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
     }
 
     /**
+     * Unique.
+     *
+     * @param name    the name
+     * @param columns the columns
+     * @param type the type
+     * @param order the order
+     * @return the creates the table builder
+     */
+    @Override
+    public CreateTableBuilder unique(String name, String[] columns, String type, String order){
+        return unique(name, columns);
+    }
+
+    /**
      * Check.
      *
      * @param name       the name
@@ -187,6 +202,20 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
         CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
         check.expression(expression);
         this.checks.add(check);
+        return this;
+    }
+
+    /**
+     * Index.
+     *
+     * @param name    the name
+     * @param isUnique    the isUnique
+     * @param order the order
+     * @param indexType the indexType
+     * @param indexColumns the indexColumns
+     * @return the creates the table builder
+     */
+    public CreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
         return this;
     }
 
