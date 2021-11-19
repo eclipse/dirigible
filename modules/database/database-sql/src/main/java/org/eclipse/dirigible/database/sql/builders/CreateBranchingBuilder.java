@@ -44,6 +44,10 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
         return new CreateTableBuilder(getDialect(), table);
     }
 
+    public CreateTableBuilder table(String table, String tableType) {
+        return new CreateTableBuilder(getDialect(), table);
+    }
+
     /**
      * View branch.
      *

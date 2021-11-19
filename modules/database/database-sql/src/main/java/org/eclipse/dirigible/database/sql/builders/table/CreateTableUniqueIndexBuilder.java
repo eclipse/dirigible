@@ -18,6 +18,10 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
  */
 public class CreateTableUniqueIndexBuilder extends AbstractCreateTableConstraintBuilder<CreateTableUniqueIndexBuilder> {
 
+	private String indexType;
+
+	private String order;
+
 	/**
 	 * Instantiates a new creates the table unique index builder.
 	 *
@@ -26,8 +30,25 @@ public class CreateTableUniqueIndexBuilder extends AbstractCreateTableConstraint
 	 * @param name
 	 *            the name
 	 */
-	CreateTableUniqueIndexBuilder(ISqlDialect dialect, String name) {
+	public CreateTableUniqueIndexBuilder(ISqlDialect dialect, String name) {
 		super(dialect, name);
 	}
 
+
+
+	public String getIndexType() {
+		return indexType;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setIndexType(String indexType) {
+		this.indexType = indexType;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
 }

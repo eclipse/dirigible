@@ -40,6 +40,17 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 		return new HanaCreateTableBuilder(this.getDialect(), table, true);
 	}
 
+	@Override
+	public CreateTableBuilder table(String table, String tableType) {
+		if(tableType.equalsIgnoreCase(KEYWORD_COLUMNSTORE)){
+			return this.columnTable(table);
+		}else if (tableType.equalsIgnoreCase(KEYWORD_ROWSTORE)){
+			return this.rowTable(table);
+		} else {
+			throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
+	}
+	}
+
 	/**
 	 * Column table.
 	 *

@@ -306,6 +306,11 @@ public interface ISqlKeywords {
     public static final String KEYWORD_COLUMN = "COLUMN"; //$NON-NLS-1$
 
     /**
+     * The Constant KEYWORD_ROW.
+     */
+    public static final String KEYWORD_ROW = "ROW"; //$NON-NLS-1$
+
+    /**
      * The Constant KEYWORD_ROWS.
      */
     public static final String KEYWORD_ROWS = "ROWS"; //$NON-NLS-1$
@@ -492,4 +497,13 @@ public interface ISqlKeywords {
     public static final List<String> METADATA_TABLE_TYPES = Collections.unmodifiableList(Arrays.asList(METADATA_TABLE, METADATA_VIEW, METADATA_ALIAS,
             METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE));
 
+    /**
+     * The Constant KEYWORD_COLUMNSTORE.
+     */
+    public static final String KEYWORD_COLUMNSTORE = "COLUMNSTORE";
+
+    /**
+     * The Constant KEYWORD_ROWSTORE.
+     */
+    public static final String KEYWORD_ROWSTORE = "ROWSTORE";
 }

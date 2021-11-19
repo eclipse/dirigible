@@ -16,6 +16,9 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.hana.HanaSqlDialect;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -56,6 +59,23 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
+    }
+
+    /**
+     * Creates the row table.
+     */
+    @Test
+    public void createRowTable() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                .create()
+                .rowTable("CUSTOMERS")
+                .column("ID", DataType.INTEGER, true, false, false)
+                .column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+                .column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
+                .build();
+
+        assertNotNull(sql);
+        assertEquals("CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )", sql);
     }
 
     /**
@@ -148,5 +168,24 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals("CREATE COLUMN TABLE CUSTOMERS ( ID INTEGER NOT NULL , FIRST_NAME VARCHAR (20) UNIQUE )", sql);
+    }
+
+    /**
+     * Creates the row table with indexes.
+     */
+    @Test
+    public void createRowTableWithIndexes() {
+        String sql = SqlFactory.getNative(new HanaSqlDialect())
+                .create()
+                .rowTable("CUSTOMERS")
+                .column("ID", DataType.INTEGER, true, false, false)
+                .column("FIRST_NAME", DataType.VARCHAR, false, false, true, "(20)")
+                .column("LAST_NAME", DataType.VARCHAR, false, true, false, "(30)")
+                .index("I1", false, "DESC", "BTREE", new HashSet<>(Arrays.asList("LAST_NAME")))
+                .unique("I2", new String[] {"ID"}, "CPBTREE", "ASC")
+                .build();
+
+        assertNotNull(sql);
+        assertEquals("CREATE ROW TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) ); CREATE UNIQUE CPBTREE INDEX I2 ON CUSTOMERS ( ID ) ASC; CREATE BTREE INDEX I1 ON CUSTOMERS ( LAST_NAME ) DESC", sql);
     }
 }
