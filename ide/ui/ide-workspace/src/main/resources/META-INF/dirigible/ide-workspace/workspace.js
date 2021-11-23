@@ -194,6 +194,7 @@ WorkspaceService.prototype.uploadFile = function (name, path, node) {
         method: 'POST',
         url: url,
         headers: {
+            'Dirigible-Editor': 'Editor',
             'Content-Type': 'application/octet-stream',
             'Content-Transfer-Encoding': 'base64'
         },
