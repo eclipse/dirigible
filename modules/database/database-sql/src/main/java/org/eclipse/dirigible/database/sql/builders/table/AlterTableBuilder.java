@@ -12,13 +12,13 @@
 
 package org.eclipse.dirigible.database.sql.builders.table;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Create Table Builder.
@@ -114,6 +114,11 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         }
         this.uniqueIndices.add(uniqueIndex);
         return this;
+    }
+
+    @Override
+    public AlterTableBuilder unique(String name, String[] columns, String type, String order){
+        return unique(name, columns);
     }
 
     /*
