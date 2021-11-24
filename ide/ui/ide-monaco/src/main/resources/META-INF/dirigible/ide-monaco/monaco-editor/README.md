@@ -6,7 +6,7 @@ The Monaco Editor is the code editor which powers [VS Code](https://github.com/M
 
 Please note that this repository contains no source code for the code editor, it only contains the scripts to package everything together and ship the `monaco-editor` npm module.
 
-![image](https://cloud.githubusercontent.com/assets/5047891/19600675/5eaae9e6-97a6-11e6-97ad-93903167d8ba.png)
+![image](https://user-images.githubusercontent.com/5047891/94183711-290c0780-fea3-11ea-90e3-c88ff9d21bd6.png)
 
 ## Try it out
 
@@ -19,25 +19,26 @@ $ npm install monaco-editor
 ```
 
 You will get:
-* inside `esm`: ESM version of the editor (compatible with e.g. webpack)
-* inside `dev`: AMD bundled, not minified
-* inside `min`: AMD bundled, and minified
-* inside `min-maps`: source maps for `min`
-* `monaco.d.ts`: this specifies the API of the editor (this is what is actually versioned, everything else is considered private and might break with any release).
+
+- inside `esm`: ESM version of the editor (compatible with e.g. webpack)
+- inside `dev`: AMD bundled, not minified
+- inside `min`: AMD bundled, and minified
+- inside `min-maps`: source maps for `min`
+- `monaco.d.ts`: this specifies the API of the editor (this is what is actually versioned, everything else is considered private and might break with any release).
 
 It is recommended to develop against the `dev` version, and in production to use the `min` version.
 
 ## Documentation
 
-* Learn how to integrate the editor with these [complete samples](https://github.com/Microsoft/monaco-editor-samples/).
-    * [Integrate the AMD version](./docs/integrate-amd.md).
-    * [Integrate the AMD version cross-domain](./docs/integrate-amd-cross.md)
-    * [Integrate the ESM version](./docs/integrate-esm.md)
-* Learn how to use the editor API and try out your own customizations in the [playground](https://microsoft.github.io/monaco-editor/playground.html).
-* Explore the [API docs](https://microsoft.github.io/monaco-editor/api/index.html) or read them straight from [`monaco.d.ts`](https://github.com/Microsoft/monaco-editor/blob/master/website/playground/monaco.d.ts.txt).
-* Read [this guide](https://github.com/Microsoft/monaco-editor/wiki/Accessibility-Guide-for-Integrators) to ensure the editor is accessible to all your users!
-* Create a Monarch tokenizer for a new programming language [in the Monarch playground](https://microsoft.github.io/monaco-editor/monarch.html).
-* Ask questions on [StackOverflow](https://stackoverflow.com/questions/tagged/monaco-editor)! Search open and closed issues, there are a lot of tips in there!
+- Learn how to integrate the editor with these [complete samples](https://github.com/Microsoft/monaco-editor-samples/).
+  - [Integrate the AMD version](./monaco-editor/docs/integrate-amd.md).
+  - [Integrate the AMD version cross-domain](./monaco-editor/docs/integrate-amd-cross.md)
+  - [Integrate the ESM version](./monaco-editor/docs/integrate-esm.md)
+- Learn how to use the editor API and try out your own customizations in the [playground](https://microsoft.github.io/monaco-editor/playground.html).
+- Explore the [API docs](https://microsoft.github.io/monaco-editor/api/index.html) or read them straight from [`monaco.d.ts`](https://github.com/Microsoft/monaco-editor/blob/master/website/playground/monaco.d.ts.txt).
+- Read [this guide](https://github.com/Microsoft/monaco-editor/wiki/Accessibility-Guide-for-Integrators) to ensure the editor is accessible to all your users!
+- Create a Monarch tokenizer for a new programming language [in the Monarch playground](https://microsoft.github.io/monaco-editor/monarch.html).
+- Ask questions on [StackOverflow](https://stackoverflow.com/questions/tagged/monaco-editor)! Search open and closed issues, there are a lot of tips in there!
 
 ## Issues
 
@@ -77,16 +78,11 @@ No.
 
 ❓ **Why doesn't the editor support TextMate grammars?**
 
-* All the regular expressions in TM grammars are based on [oniguruma](https://github.com/kkos/oniguruma), a regular expression library written in C.
-* The only way to interpret the grammars and get anywhere near original fidelity is to use the exact same regular expression library (with its custom syntax constructs).
-* In VSCode, our runtime is node.js and we can use a node native module that exposes the library to JavaScript.
-* In Monaco, we are constrained to a browser environment where we cannot do anything similar.
-* We have experimented with Emscripten to compile the C library to asm.js, but performance was very poor even in Firefox (10x slower) and extremely poor in Chrome (100x slower).
-* We can revisit this once WebAssembly gets traction in the major browsers, but we will still need to consider the browser matrix we support, i.e. if we support IE11 and only Edge will add WebAssembly support, what will the experience be in IE11, etc.
+- Please see https://github.com/bolinfest/monaco-tm which puts together `monaco-editor`, `vscode-oniguruma` and `vscode-textmate` to get TM grammar support in the editor.
 
 ❓ **What about IE 11 support?**
 
-* The Monaco Editor no longer supports IE 11. The last version that was tested on IE 11 is `0.18.1`.
+- The Monaco Editor no longer supports IE 11. The last version that was tested on IE 11 is `0.18.1`.
 
 ## Development setup
 
@@ -96,6 +92,6 @@ Please see [CONTRIBUTING](./CONTRIBUTING.md)
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-
 ## License
+
 Licensed under the [MIT](https://github.com/Microsoft/monaco-editor/blob/master/LICENSE.md) License.

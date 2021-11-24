@@ -1251,7 +1251,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         } else {
                             this.selectedWorkspace = 'workspace'; // Default
                             localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
-                            console.log("WASD", "here");
                             this.workspaceSelected();
                         }
                     }

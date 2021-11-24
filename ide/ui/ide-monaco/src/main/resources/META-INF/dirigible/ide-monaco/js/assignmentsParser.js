@@ -1,10 +1,13 @@
 const MAX_ASSIGNMENTS_COUNT = 10000;
 
 function parseAssignments(acorn, fileContent) {
+
     let allAssignments = {};
 
     try {
-        let parsed = acorn.parse(fileContent);
+        let parsed = acorn.parse(fileContent, {
+            ecmaVersion: 'latest',
+        });
         flatParsedBody(parsed);
 
         let requires = getRequires(parsed);

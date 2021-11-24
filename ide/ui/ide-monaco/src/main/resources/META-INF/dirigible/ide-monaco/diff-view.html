@@ -1,16 +1,17 @@
 <!doctype html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <meta charset="utf-8" />
     <meta http-equiv="Content-Language" content="en-us">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Diff Monaco Editor</title>
-    <link data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet"
+    <link type="text/css" data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet"
         href="monaco-editor/min/vs/editor/editor.main.css">
     <style>
         body {
             overflow: hidden;
-            height: 100%
+            height: 100%;
         }
 
         #diffEditor {
@@ -22,16 +23,15 @@
             right: 0;
         }
     </style>
-    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
 </head>
 
 <body id="diff-browser" spellcheck="false">
 
-    <script src="/services/v4/js/theme/resources.js/monaco.js"></script>
-
     <div id="diffEditor"></div>
 
-    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
     <script>
         let messageHub = new FramesMessageHub();
         let csrfToken;
