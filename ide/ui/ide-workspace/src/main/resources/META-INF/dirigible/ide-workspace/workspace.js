@@ -194,6 +194,7 @@ WorkspaceService.prototype.uploadFile = function (name, path, node) {
         method: 'POST',
         url: url,
         headers: {
+            'Dirigible-Editor': 'Editor',
             'Content-Type': 'application/octet-stream',
             'Content-Transfer-Encoding': 'base64'
         },
@@ -1250,7 +1251,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         } else {
                             this.selectedWorkspace = 'workspace'; // Default
                             localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
-                            console.log("WASD", "here");
                             this.workspaceSelected();
                         }
                     }

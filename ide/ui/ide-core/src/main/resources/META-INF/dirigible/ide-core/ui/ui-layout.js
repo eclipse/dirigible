@@ -415,13 +415,10 @@ function LayoutController(viewRegistry, messageHub) {
 				let panel = this.layout.root.getItemsById(resourcePath)[0];
 				let title = panel.container.tab.titleElement.text();
 				if (!title.startsWith('*') && dirty) {
-					panel.setTitle('*' + title);
-				} else {
-					if (title.startsWith('*') && !dirty) {
-						panel.setTitle(title.substring(1, title.length));
-					}
+					panel.setTitle(`*${title}`);
+				} else if (title.startsWith('*') && !dirty) {
+					panel.setTitle(title.substring(1, title.length));
 				}
-				panel.parent.setActiveContentItem(panel);
 			}
 		}
 	};
