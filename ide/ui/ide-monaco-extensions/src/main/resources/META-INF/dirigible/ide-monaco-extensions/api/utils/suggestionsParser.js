@@ -22,7 +22,7 @@ exports.parse = function (moduleName) {
     let content = contentManager.getText(moduleName + ".js");
     let comments = [];
     let nodes = acorn.parse(content, {
-        ecmaVersion: 'latest',
+        ecmaVersion: 10,
         onComment: comments,
         ranges: true
     });
