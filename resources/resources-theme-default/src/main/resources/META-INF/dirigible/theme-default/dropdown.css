@@ -23,6 +23,9 @@
     display: block;
     cursor: pointer;
 }
+.dropdown-item.selected {
+    font-weight: bold;
+}
 .dropdown-btn {
     border: none;
     background-color: transparent;
@@ -58,6 +61,7 @@
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
 }
+.dropdown-toggle.btn-default { white-space: normal!important;}
 .dropdown-left-manual {
   right: 0;
   left: auto;
