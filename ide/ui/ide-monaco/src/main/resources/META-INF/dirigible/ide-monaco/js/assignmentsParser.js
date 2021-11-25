@@ -6,7 +6,7 @@ function parseAssignments(acorn, fileContent) {
 
     try {
         let parsed = acorn.parse(fileContent, {
-            ecmaVersion: 'latest',
+            ecmaVersion: 10,
         });
         flatParsedBody(parsed);
 
