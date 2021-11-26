@@ -1,64 +1,66 @@
 .dropdown-input {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 .dropdown-input .form-control {
-    border: none;
-    border-radius: none;
-    box-shadow: none;
+  border: none;
+  border-radius: none;
+  box-shadow: none;
 }
 .dropdown-container {
-    width: 100%;
-    position: relative;
-    display: inline-block;
+  width: 100%;
+  position: relative;
+  display: inline-block;
 }
 .dropdown-container .dropdown-menu {
-    width: 100%;
+  width: 100%;
 }
 .dropdown-item {
-    width: 100%;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    cursor: pointer;
+  width: 100%;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
 }
 .dropdown-item.selected {
-    font-weight: bold;
+  font-weight: bold;
 }
 .dropdown-btn {
-    border: none;
-    background-color: transparent;
-    margin: none;
-    outline: none;
-    width: 100%;
-    text-align: left;
-    padding: 12px 14px;
-    font-size: 12px;
+  border: none;
+  background-color: transparent;
+  margin: none;
+  outline: none;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 12px;
 }
-.fa_margin{
-    margin: 0px 8px 0px 0px;
+.fa_margin {
+  margin: 0px 8px 0px 0px;
 }
 .dropdown-container .dropdown-item:hover {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 .dropdown-toggle {
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px 8px 12px;
-    font-size: 14px;    
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px 8px 12px;
+  font-size: 14px;
 }
-.dropdown-toggle.btn-default { white-space: normal!important;}
+.dropdown-toggle.btn-default {
+  white-space: normal !important;
+}
 .dropdown-toggle .caret {
-    float: right;
-    margin: 8px 0;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    border-top: 4px dashed;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
+  float: right;
+  margin: 8px 0;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
 }
 .dropdown-left-manual {
   right: 0;

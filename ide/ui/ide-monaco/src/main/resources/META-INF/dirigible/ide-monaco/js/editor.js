@@ -8,6 +8,8 @@ let codeCompletionAssignments = {};
 let _editor;
 let resourceApiUrl;
 let editorUrl;
+let loadingOverview = document.getElementsByClassName('loading-overview')[0];
+let loadingMessage = document.getElementsByClassName('loading-message')[0];
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -238,6 +240,7 @@ function createEditorInstance(readOnly = false) {
                 window.onresize = function () {
                     editor.layout();
                 };
+                if (loadingOverview) loadingOverview.style.display = "none";
             } catch (err) {
                 reject(err);
             }
@@ -271,8 +274,13 @@ function createSaveAction() {
         // Method that will be executed when the action is triggered.
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
-            let fileIO = new FileIO();
-            fileIO.saveText(editor.getModel().getValue());
+            loadingMessage.innerText = 'Saving...';
+            if (loadingOverview) loadingOverview.style.display = "flex";
+            editor.getAction('editor.action.formatDocument').run().then(() => {
+                let fileIO = new FileIO();
+                fileIO.saveText(editor.getModel().getValue());
+                if (loadingOverview) loadingOverview.style.display = "none";
+            });
         }
     };
 };
@@ -541,7 +549,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                     _editor.addAction(createCloseAllAction());
                     _editor.onDidChangeCursorPosition(function (e) {
                         let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
-                        messageHub.post({data: caretInfo}, 'status.caret');
+                        messageHub.post({ data: caretInfo }, 'status.caret');
                     });
                     _editor.onDidChangeModelContent(function (e) {
                         if (e.changes && e.changes[0].text === ".") {
