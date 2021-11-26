@@ -8,21 +8,7 @@
 	<title>Embedded Monaco Editor</title>
 	<link type="text/css" data-name="monaco-editor/min/vs/editor/editor.main" rel="stylesheet"
 		href="monaco-editor/min/vs/editor/editor.main.css">
-	<style>
-		body {
-			overflow: hidden;
-			height: 100%;
-		}
-
-		#embeddedEditor {
-			margin: 0;
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-		}
-	</style>
+	<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/monaco.css" />
 	<script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
 	<script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
 	<script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
@@ -30,6 +16,10 @@
 </head>
 
 <body id="monaco-browser" spellcheck="false">
+
+	<div class="loading-overview">
+		<div class="loading-message">Loading...</div>
+	</div>
 
 	<div id="embeddedEditor"></div>
 
