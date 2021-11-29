@@ -506,6 +506,11 @@ function traverseAssignment(assignment, assignmentInfo) {
     loadModuleSuggestions(modulesSuggestions);
 
     require(['vs/editor/editor.main', 'parser/acorn-loose'], function (monaco, acornLoose) {
+        cssFormatMonaco(monaco, {
+            indent_size: 2,
+            newline_between_rules: false,
+            end_with_newline: true,
+        });
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
