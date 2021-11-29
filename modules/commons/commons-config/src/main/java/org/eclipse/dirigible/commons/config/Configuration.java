@@ -297,6 +297,15 @@ public class Configuration {
 	}
 
 	/**
+	 * Checks if Web IDE Terminal is enabled.
+	 *
+	 * @return true, if Web IDE Terminal is enabled
+	 */
+	public static boolean isTerminalEnabled() {
+		return Boolean.parseBoolean(Configuration.get("DIRIGIBLE_TERMINAL_ENABLED", Boolean.TRUE.toString()));
+	}
+
+	/**
 	 * Setter as a System's property.
 	 *
 	 * @param key   the key

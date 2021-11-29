@@ -137,7 +137,7 @@ public class XTerminalWebsocketService {
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
-		if (Configuration.isAnonymousModeEnabled()) {
+		if (Configuration.isAnonymousModeEnabled() || !Configuration.isTerminalEnabled()) {
 			try {
 				session.getBasicRemote().sendText(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE, true);
 				logger.warn(FEATURE_TERMINAL_IS_DISABLED_IN_THIS_MODE);
