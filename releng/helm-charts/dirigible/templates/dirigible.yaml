@@ -312,3 +312,43 @@ spec:
   selector:
     app: {{ include "dirigible.fullname" . }}-database
 {{- end }}
+
+---
+
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ .Values.istio.gatewayName }}
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway implementation
+  servers:
+  - port:
+      number: {{ .Values.istio.serversPortNumber }}
+      name: {{ .Values.istio.serversPortName }}
+      protocol: {{ .Values.istio.serversPortProtocol }}
+    hosts:
+    - {{ .Values.istio.serversHost | quote }}
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ .Values.istio.virtualserviceName }}
+spec:
+  hosts:
+  - {{ .Values.istio.virtualserviceHosts | quote }}
+  gateways:
+  - {{ .Values.istio.virtualserviceGateways }}
+  http:
+  - match:
+    - uri:
+        regex: /.*
+    route:
+    - destination:
+        host: {{ .Values.istio.virtualserviceDestination }}
+        port:
+          number: {{ .Values.istio.virtualservicePort }}           
+{{- end }}
