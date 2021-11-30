@@ -102,3 +102,26 @@ keycloak:
     username: keycloak
     password: keycloak
 
+# Enable Istio configuration
+istio:
+  enabled: false
+  # Istio gateway name
+  gatewayName: gateway
+  # Istio servers port number
+  serversPortNumber: 80
+  # Istio servers port name
+  serversPortName: http
+  # Istio servers port protocol
+  serversPortProtocol: HTTP
+  # Istio servers host
+  serversHost: "*"
+  # Istio virtual service name
+  virtualserviceName: dirigible
+  # Istio virtual service hosts
+  virtualserviceHosts: "*"
+  # Istio virtual service gateways
+  virtualserviceGateways: gateway
+  # Istio virtual service destination
+  virtualserviceDestination: dirigible
+  # Istio virtual service port
+  virtualservicePort: 8080
