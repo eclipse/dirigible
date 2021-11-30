@@ -75,8 +75,8 @@ public class RegistryTruffleFileSystem implements FileSystem {
             Set<? extends OpenOption> options,
             FileAttribute<?>... attrs
     ) throws IOException {
-        String pathString = path.toString();
-        String source = scopeHandler.resolve(path);
+        String pathString = path.toString().replace("\\", "/");
+        String source = scopeHandler.resolve(pathString);
         if(!source.isEmpty()) {
             return new SeekableInMemoryByteChannel(source.getBytes(StandardCharsets.UTF_8));
         }

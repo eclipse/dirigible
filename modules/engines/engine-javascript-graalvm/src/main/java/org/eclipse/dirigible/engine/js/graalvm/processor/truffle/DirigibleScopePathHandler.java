@@ -34,9 +34,7 @@ class DirigibleScopePathHandler {
         this.generator = new ExportGenerator(executor);
     }
 
-    String resolve(Path path) {
-        String pathString = path.toString();
-
+    String resolve(String pathString) {
         if (pathString.startsWith("/@dirigible-native/")) {
             String packageName = parseImportedJavaPackage(pathString);
             List<ClassName> classes = getClassesInPackage(packageName);
@@ -57,13 +55,13 @@ class DirigibleScopePathHandler {
         String apiVersion = pathString.split(Constants.PATH_SEPARATOR)[1];
         String apiVersionPath = Constants.PATH_SEPARATOR + apiVersion;
         pathString = pathString.replace(apiVersionPath, "");
-        return generator.generate(Paths.get(pathString), apiVersion);
+        return generator.generate(pathString, apiVersion);
     }
 
     private String resoveDefaultScopePath(String pathString) {
         pathString = pathString.substring(Constants.DIRIGIBLE_SCOPE_DEFAULT.length());
         pathString = pathString.replace(Constants.SCOPED_PATH_SEPARATOR, Constants.PATH_SEPARATOR);
-        return generator.generate(Paths.get(pathString), "");
+        return generator.generate(pathString, "");
     }
 
     private String parseImportedJavaPackage(String importString) {

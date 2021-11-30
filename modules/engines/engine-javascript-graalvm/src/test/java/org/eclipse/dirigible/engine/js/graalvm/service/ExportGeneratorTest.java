@@ -41,20 +41,20 @@ public class ExportGeneratorTest extends AbstractDirigibleTest {
     public void generateApiUtilsExports() {
         String testApi = "@dirigible-v4/utils";
         String apiVersion = "v4";
-        Path path = Paths.get("/utils");
+        String path = "/utils";
 
         String expected =
-                "export const alphanumeric = dirigibleRequire('utils/v4/alphanumeric');\n" +
-                "export const base64 = dirigibleRequire('utils/v4/base64');\n" +
-                "export const digest = dirigibleRequire('utils/v4/digest');\n" +
-                "export const escape = dirigibleRequire('utils/v4/escape');\n" +
-                "export const hex = dirigibleRequire('utils/v4/hex');\n" +
-                "export const jsonpath = dirigibleRequire('utils/v4/jsonpath');\n" +
-                "export const url = dirigibleRequire('utils/v4/url');\n" +
-                "export const uuid = dirigibleRequire('utils/v4/uuid');\n" +
-                "export const xml = dirigibleRequire('utils/v4/xml');\n" +
-                "export const qrcode = dirigibleRequire('utils/v4/qrcode');\n"+
-                "export default { alphanumeric,base64,digest,escape,hex,jsonpath,url,uuid,xml,qrcode }\n";
+                "export const alphanumeric = dirigibleRequire('utils/v4/alphanumeric');" + System.lineSeparator() +
+                        "export const base64 = dirigibleRequire('utils/v4/base64');" + System.lineSeparator() +
+                        "export const digest = dirigibleRequire('utils/v4/digest');" + System.lineSeparator() +
+                        "export const escape = dirigibleRequire('utils/v4/escape');" + System.lineSeparator() +
+                        "export const hex = dirigibleRequire('utils/v4/hex');"  + System.lineSeparator() +
+                        "export const jsonpath = dirigibleRequire('utils/v4/jsonpath');" + System.lineSeparator() +
+                        "export const url = dirigibleRequire('utils/v4/url');" + System.lineSeparator() +
+                        "export const uuid = dirigibleRequire('utils/v4/uuid');"  + System.lineSeparator() +
+                        "export const xml = dirigibleRequire('utils/v4/xml');" + System.lineSeparator() +
+                        "export const qrcode = dirigibleRequire('utils/v4/qrcode');"  + System.lineSeparator() +
+                        "export default { alphanumeric,base64,digest,escape,hex,jsonpath,url,uuid,xml,qrcode }"  + System.lineSeparator();
 
         logger.info("API export generation test starting... " + testApi);
         String actual = generator.generate(path, apiVersion);

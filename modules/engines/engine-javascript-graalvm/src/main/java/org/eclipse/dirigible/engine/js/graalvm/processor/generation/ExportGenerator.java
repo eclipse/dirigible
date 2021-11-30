@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ExportGenerator {
 
     private final IScriptEngineExecutor executor;
-    private final Path apiModuleJsonPath = Paths.get("extensions", "modules.json");
+    private final String apiModuleJsonPath = "/extensions/modules.json";
 
     private final String NAME_PLACEHOLDER = "<name_placeholder>";
     private final String PATH_PLACEHOLDER = "<path_placeholder>";
@@ -41,8 +41,8 @@ public class ExportGenerator {
         this.executor = executor;
     }
 
-    public String generate(Path path, String apiVersion) {
-        path = path.resolve(apiModuleJsonPath);
+    public String generate(String path, String apiVersion) {
+        path += apiModuleJsonPath;
         ApiModule[] modules = readApiModuleJson(path);
         StringBuilder source = new StringBuilder();
         StringBuilder moduleNames = new StringBuilder();
@@ -72,10 +72,10 @@ public class ExportGenerator {
         return source.toString();
     }
 
-    private ApiModule[] readApiModuleJson(Path path) {
+    private ApiModule[] readApiModuleJson(String path) {
         Gson gson = new Gson();
         Module module = executor.retrieveModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-                path.toString().replace(".json", ""), ".json");
+                path.replace(".json", ""), ".json");
         String apiModuleJson = new String(module.getContent(), StandardCharsets.UTF_8);
         return gson.fromJson(apiModuleJson, ApiModule[].class);
     }

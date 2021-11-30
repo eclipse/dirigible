@@ -36,13 +36,14 @@ class StandardPathHandler {
 
     Path handlePossibleRepositoryPath(Path path) {
         String pathString = path.toString();
+        pathString = pathString.replace("\\", "/");
 
         if (pathString.startsWith(Constants.CURRENT_DIRECTORY)
                 || pathString.startsWith(Constants.PARENT_DIRECTORY)) {
             return Path.of(project, pathString);
         }
 
-        if (pathString.startsWith(Constants.PATH_SEPARATOR)) {
+        if (pathString.startsWith(Constants.PATH_SEPARATOR) || pathString.charAt(1) == ':') {
             return path;
         }
 
