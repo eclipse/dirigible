@@ -240,7 +240,7 @@ function createEditorInstance(readOnly = false) {
                 window.onresize = function () {
                     editor.layout();
                 };
-                if (loadingOverview) loadingOverview.style.display = "none";
+                if (loadingOverview) loadingOverview.classList.add("hide");
             } catch (err) {
                 reject(err);
             }
@@ -275,11 +275,11 @@ function createSaveAction() {
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
             loadingMessage.innerText = 'Saving...';
-            if (loadingOverview) loadingOverview.style.display = "flex";
+            if (loadingOverview) loadingOverview.classList.remove("hide");
             editor.getAction('editor.action.formatDocument').run().then(() => {
                 let fileIO = new FileIO();
                 fileIO.saveText(editor.getModel().getValue());
-                if (loadingOverview) loadingOverview.style.display = "none";
+                if (loadingOverview) loadingOverview.classList.add("hide");
             });
         }
     };
@@ -506,11 +506,6 @@ function traverseAssignment(assignment, assignmentInfo) {
     loadModuleSuggestions(modulesSuggestions);
 
     require(['vs/editor/editor.main', 'parser/acorn-loose'], function (monaco, acornLoose) {
-        cssFormatMonaco(monaco, {
-            indent_size: 2,
-            newline_between_rules: false,
-            end_with_newline: true,
-        });
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
@@ -744,6 +739,26 @@ function traverseAssignment(assignment, assignmentInfo) {
             noUnusedLocals: true,
             checkJs: true,
             noFallthroughCasesInSwitch: true
+        });
+        monaco.languages.html.registerHTMLLanguageService('xml', {}, { documentFormattingEdits: true });
+        monaco.languages.html.htmlDefaults.setOptions({
+            format: {
+                tabSize: 2,
+                insertSpaces: true,
+                endWithNewline: true,
+                indentHandlebars: true,
+                indentInnerHtml: true,
+                wrapLineLength: 120,
+                wrapAttributes: "auto",
+                extraLiners: "head, body, /html",
+                maxPreserveNewLines: null
+            }
+        });
+        cssFormatMonaco(monaco, {
+            indent_size: 2,
+            newline_between_rules: false,
+            end_with_newline: true,
+            indent_with_tabs: false,
         });
         monaco.editor.setTheme(monacoTheme);
     });
