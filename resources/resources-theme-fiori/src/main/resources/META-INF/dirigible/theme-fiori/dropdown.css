@@ -28,13 +28,14 @@
 }
 .dropdown-btn {
   border: none;
-  background-color: transparent;
-  margin: none;
+  background-color: #e9e9e9;
+  margin: 0 6px;
   outline: none;
-  width: 100%;
+  width: calc(100% - 12px);
   text-align: left;
   padding: 12px 14px;
   font-size: 12px;
+  border-radius: 4px;
 }
 .fa_margin {
   margin: 0px 8px 0px 0px;
