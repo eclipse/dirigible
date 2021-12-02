@@ -28,19 +28,18 @@
 }
 .dropdown-btn {
   border: none;
-  background-color: transparent;
-  color: white;
-  margin: none;
+  background-color: #767676;
+  margin: 0 6px;
   outline: none;
-  width: 100%;
+  width: calc(100% - 12px);
   text-align: left;
   padding: 12px 14px;
   font-size: 12px;
+  border-radius: 4px;
 }
 .fa_margin {
   margin: 0 8px 0 0;
 }
-
 .dropdown-container .dropdown-item:hover {
   background-color: #676767;
 }

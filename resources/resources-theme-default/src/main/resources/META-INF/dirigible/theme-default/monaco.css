@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -14,6 +15,9 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+}
+.loading-overview.hide {
+  display: none !important;
 }
 .loading-overview {
   font-family: Arial, Helvetica, sans-serif;
@@ -33,7 +37,7 @@ body {
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.6);
 }
-.loading-overview > .loading-message {
+.loading-overview>.loading-message {
   background-color: #232323;
   color: silver;
   padding: 6px 10px;
