@@ -17,4 +17,4 @@ var zero = sequence.nextval('mysequence');
 var one = sequence.nextval('mysequence');
 sequence.drop('mysequence');
 
-assertTrue(zero === 1 && one === 2);
+assertTrue(zero === 0 && one === 1);
