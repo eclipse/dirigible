@@ -1,7 +1,7 @@
 [
   {
     "name": "@dirigible/core",
-    "description": "Dirigible Core module",
+    "description": "Dirigible Core Module",
     "isPackageDescription": true,
     "dtsPath": "core/extensions/core.d.ts"
   },
@@ -30,10 +30,10 @@
     "description": "Destinations API",
     "api": "destination",
     "versionedPaths": [
-      "core/v4/destination",
-      "core/v3/destination"
+      "core/v4/destinations",
+      "core/v3/destinations"
     ],
-    "pathDefault": "core/v4/destination"
+    "pathDefault": "core/v4/destinations"
   },
   {
     "name": "core/v4/env",

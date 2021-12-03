@@ -10,31 +10,31 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getDatabase = function() {
-	var database = require('db/v4/database');
+	const database = require('db/v4/database');
 	return database;
 };
 
 exports.getQuery = function() {
-	var query = require('db/v4/query');
+	const query = require('db/v4/query');
 	return query;
 };
 
 exports.getUpdate = function() {
-	var update = require('db/v4/update');
+	const update = require('db/v4/update');
 	return update;
 };
 
 exports.getSequence = function() {
-	var sequence = require('db/v4/sequence');
+	const sequence = require('db/v4/sequence');
 	return sequence;
 };
 
 exports.getDao = function() {
-	var dao = require('db/v4/dao');
+	const dao = require('db/v4/dao');
 	return dao;
 };
 
 exports.getSql = function() {
-	var sql = require('db/v4/sql');
+	const sql = require('db/v4/sql');
 	return sql;
 };

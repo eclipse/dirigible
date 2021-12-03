@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 "use strict";
-var ormstatements = require('db/v4/ormstatements');
-for(var propertyName in ormstatements) {
+const ormstatements = require('db/v4/ormstatements');
+for(let propertyName in ormstatements) {
 	exports[propertyName] = ormstatements[propertyName];
 }
