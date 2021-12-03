@@ -22,10 +22,7 @@ import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -220,17 +217,15 @@ public class DBMetadataUtil {
      * Find schema of a given artifact name.
      * The searchable artifacts are TABLE, VIEW, CALC_VIEW
      *
-     * @param artifactName
-     *              name of the artifact
-     * @return  of a given artifact name
+     * @param artifactName name of the artifact
+     * @return of a given artifact name
      * @throws SQLException SQLException
-     *
      */
-    public String getOdataArtifactTypeSchema( String artifactName) throws SQLException {
+    public String getOdataArtifactTypeSchema(String artifactName) throws SQLException {
         return getArtifactSchema(artifactName, new String[]{ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW});
     }
 
-    public String getArtifactSchema( String artifactName, String[] types) throws SQLException {
+    public String getArtifactSchema(String artifactName, String[] types) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             ResultSet rs = databaseMetadata.getTables(connection.getCatalog(), null, artifactName, types);
@@ -243,4 +238,26 @@ public class DBMetadataUtil {
         }
     }
 
+    public HashMap<String, String> getSynonymTargetObjectMetadata(String synonymName) throws SQLException {
+        HashMap<String, String> targetObjectMetadata = new HashMap<String, String>();
+
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM \"SYS\".\"SYNONYMS\" WHERE \"SYNONYM_NAME\" = ?");
+            prepareStatement.setString(1, synonymName);
+
+            try (ResultSet resultSet = prepareStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    String name = resultSet.getString("OBJECT_NAME");
+                    String schema = resultSet.getString("OBJECT_SCHEMA");
+                    String type = resultSet.getString("OBJECT_TYPE");
+
+                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE, name);
+                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_SCHEMA, schema);
+                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE_TYPE, type);
+                }
+            }
+        }
+
+        return targetObjectMetadata;
+    }
 }

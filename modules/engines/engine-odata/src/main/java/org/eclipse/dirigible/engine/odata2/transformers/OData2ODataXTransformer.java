@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
@@ -22,7 +23,12 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +50,24 @@ public class OData2ODataXTransformer {
         StringBuilder entitySets = new StringBuilder();
         StringBuilder associationsSets = new StringBuilder();
         for (ODataEntityDefinition entity : model.getEntities()) {
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(),dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
+
+            if (ISqlKeywords.METADATA_SYNONYM.equals(tableMetadata.getTableType())) {
+                HashMap<String, String> targetObjectMetadata = dbMetadataUtil.getSynonymTargetObjectMetadata(tableMetadata.getTableName());
+
+                if (targetObjectMetadata.isEmpty()) {
+                    logger.error("Failed to get details for synonym - " + tableMetadata.getTableName());
+                    continue;
+                }
+
+                if (!VIEW_TYPES.contains(targetObjectMetadata.get(ISqlKeywords.KEYWORD_TABLE_TYPE)) && !ISqlKeywords.METADATA_TABLE.equals(targetObjectMetadata.get(ISqlKeywords.KEYWORD_TABLE_TYPE))) {
+                    logger.error("Unsupported object type for {}", targetObjectMetadata.get(ISqlKeywords.KEYWORD_TABLE));
+                    continue;
+                }
+
+                tableMetadata = dbMetadataUtil.getTableMetadata(targetObjectMetadata.get(ISqlKeywords.KEYWORD_TABLE), targetObjectMetadata.get(ISqlKeywords.KEYWORD_SCHEMA));
+            }
+
             List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
 
             if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
@@ -105,8 +128,9 @@ public class OData2ODataXTransformer {
                 });
             } else {
                 //in case entity props are defined expose only them
+                PersistenceTableModel finalTableMetadata = tableMetadata;
                 entityProperties.forEach(prop -> {
-                    List<PersistenceTableColumnModel> dbColumn = tableMetadata.getColumns().stream().filter(el -> el.getName().equals(prop.getColumn())).collect(Collectors.toList());
+                    List<PersistenceTableColumnModel> dbColumn = finalTableMetadata.getColumns().stream().filter(el -> el.getName().equals(prop.getColumn())).collect(Collectors.toList());
                     if (dbColumn.size() > 0) {
                         String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(dbColumn.get(0).getName(), entityProperties, isPretty);
                         buff.append("\t\t<Property Name=\"").append(columnValue).append("\"")
@@ -191,5 +215,4 @@ public class OData2ODataXTransformer {
     private List<PersistenceTableColumnModel> checkIfViewHasExposedOriginalKeysFromTable(PersistenceTableModel tableMetadata, ODataEntityDefinition entity) {
         return tableMetadata.getColumns().stream().filter(el -> entity.getKeys().stream().anyMatch(x -> x.equals(el.getName()))).collect(Collectors.toList());
     }
-
 }
