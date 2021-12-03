@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var sql = require('db/v4/sql');
-for(var propertyName in sql) {
+const sql = require('db/v4/sql');
+for(let propertyName in sql) {
 	exports[propertyName] = sql[propertyName];
 }

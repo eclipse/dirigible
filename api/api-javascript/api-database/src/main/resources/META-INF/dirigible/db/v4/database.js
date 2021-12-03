@@ -11,14 +11,13 @@
  */
 /**
  * API v4 Database
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var bytes = require('io/v4/bytes');
+const bytes = require('io/v4/bytes');
 
 exports.getDatabaseTypes = function() {
-	var types = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDatabaseTypes();
+	const types = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDatabaseTypes();
 	if (types) {
 		return JSON.parse(types);
 	}
@@ -26,7 +25,7 @@ exports.getDatabaseTypes = function() {
 };
 
 exports.getDataSources = function(databaseType) {
-	var datasources = databaseType ? 
+	const datasources = databaseType ?
 		org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDataSources(databaseType) :
 		org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDataSources();
 	if (datasources) {
@@ -40,7 +39,7 @@ exports.createDataSource = function(name, driver, url, username, password, prope
 };
 
 exports.getMetadata = function(databaseType, datasourceName) {
-	var metadata;
+	let metadata;
 	if (databaseType && datasourceName) {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata(databaseType, datasourceName);
 	} else if (databaseType && !datasourceName) {
@@ -48,7 +47,7 @@ exports.getMetadata = function(databaseType, datasourceName) {
 	} else {
 		metadata = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getMetadata();
 	}
-	
+
 	if (metadata) {
 		return JSON.parse(metadata);
 	}
@@ -56,7 +55,7 @@ exports.getMetadata = function(databaseType, datasourceName) {
 };
 
 exports.getProductName = function(databaseType, datasourceName) {
-	var productName;
+	let productName;
 	if (databaseType && datasourceName) {
 		productName = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getProductName(databaseType, datasourceName);
 	} else if (databaseType && !datasourceName) {
@@ -68,7 +67,7 @@ exports.getProductName = function(databaseType, datasourceName) {
 };
 
 exports.getConnection = function(databaseType, datasourceName) {
-	var connection = new Connection();
+	const connection = new Connection();
 	var native;
 	if (databaseType && datasourceName) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getConnection(databaseType, datasourceName);
@@ -87,15 +86,15 @@ exports.getConnection = function(databaseType, datasourceName) {
 function Connection() {
 
 	this.prepareStatement = function(sql) {
-		var preparedStatement = new PreparedStatement();
-		var native = this.native.prepareStatement(sql);
+		const preparedStatement = new PreparedStatement();
+		const native = this.native.prepareStatement(sql);
 		preparedStatement.native = native;
 		return preparedStatement;
 	};
 
 	this.prepareCall = function(sql) {
-		var callableStatement = new CallableStatement();
-		var native = this.native.prepareCall(sql);
+		const callableStatement = new CallableStatement();
+		const native = this.native.prepareCall(sql);
 		callableStatement.native = native;
 		return callableStatement;
 	};
@@ -171,8 +170,8 @@ function PreparedStatement(internalStatement) {
 	};
 
 	this.getResultSet = function() {
-		var resultset = new ResultSet();
-		var native = this.native.getResultSet();
+		const resultset = new ResultSet();
+		const native = this.native.getResultSet();
 		resultset.native = native;
 		return resultset;
 	};
@@ -182,9 +181,8 @@ function PreparedStatement(internalStatement) {
 	};
 
 	this.executeQuery = function() {
-		var resultset = new ResultSet();
-		var native = this.native.executeQuery();
-		resultset.native = native;
+		const resultset = new ResultSet();
+		resultset.native = this.native.executeQuery();
 		return resultset;
 	};
 
@@ -195,9 +193,9 @@ function PreparedStatement(internalStatement) {
 	// getMetaData
 	// setBigDecimal
 	// setBlob
-	
+
 	this.SQLTypes = Object.freeze({
-		"BOOLEAN": 16,	
+		"BOOLEAN": 16,
 		"DATE": 91,
 		"TIME": 92,
 		"TIMESTAMP": 93,
@@ -207,14 +205,14 @@ function PreparedStatement(internalStatement) {
 		"TINYINT": -6,
 		"SMALLINT": 5,
 		"INTEGER": 4,
-		"BIGINT": -5,		
+		"BIGINT": -5,
 		"VARCHAR": 12,
 		"CHAR": 1,
 		"CLOB": 2005,
 		"BLOB": 2004,
 		"VARBINARY": -3
 	});
-	
+
 	this.setNull = function(index, sqlType){
 		this.native.setNull(index, sqlType);
 	};
@@ -226,7 +224,7 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.BOOLEAN);
 		}
 	};
-	
+
 	this.setByte = function(index, value) {
 		if(value!==null && value!==undefined) {
 			this.native.setByte(index, value);
@@ -234,7 +232,7 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.TINYINT);
 		}
 	};
-	
+
 	this.setClob = function(index, value) {
 		if(value!==null && value!==undefined) {
 			this.native.setClob(index, value);
@@ -242,7 +240,7 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.CLOB);
 		}
 	};
-	
+
 	this.setBlob = function(index, value) {
 		if(value!==null && value!==undefined) {
 			this.native.setBlob(index, value);
@@ -250,7 +248,7 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.BLOB);
 		}
 	};
-	
+
 	this.setBytesNative = function(index, value) {
 		if(value!==null && value!==undefined) {
 			this.native.setBytes(index, value);
@@ -258,7 +256,7 @@ function PreparedStatement(internalStatement) {
 			this.setNull(index, this.SQLTypes.VARBINARY);
 		}
 	};
-	
+
 	this.setBytes = function(index, value) {
 		if(value!==null && value!==undefined) {
 			var data = bytes.toJavaBytes(value);
@@ -302,7 +300,7 @@ function PreparedStatement(internalStatement) {
 	};
 
 	this.setLong = function(index, value) {
-		index = parseInt(index, 10); //Rhino things.. 
+		index = parseInt(index, 10); //Rhino things..
 		if(value!==null && value!==undefined) {
 			this.native.setLong(index, value);
 		} else {
@@ -389,16 +387,14 @@ function PreparedStatement(internalStatement) {
 function CallableStatement() {
 
 	this.getResultSet = function() {
-		var resultset = new ResultSet();
-		var native = this.native.getResultSet();
-		resultset.native = native;
+		const resultset = new ResultSet();
+		resultset.native = this.native.getResultSet();
 		return resultset;
 	};
 
 	this.executeQuery = function() {
-		var resultset = new ResultSet();
-		var native = this.native.executeQuery();
-		resultset.native = native;
+		const resultset = new ResultSet();
+		resultset.native = this.native.executeQuery();
 		return resultset;
 	};
 
@@ -409,176 +405,176 @@ function CallableStatement() {
 	this.registerOutParameter = function(parameterIndex, sqlType) {
 		this.native.registerOutParameter(parameterIndex, sqlType);
 	};
-	
+
 	this.registerOutParameterByScale = function(parameterIndex, sqlType, scale) {
 		this.native.registerOutParameter(parameterIndex, sqlType, scale);
 	};
-	
+
 	this.registerOutParameterByTypeName = function(parameterIndex, sqlType, typeName) {
 		this.native.registerOutParameter(parameterIndex, sqlType, typeName);
 	};
-	
+
 	this.wasNull = function() {
 		return this.native.wasNull();
 	};
-	
+
 	this.getString = function(parameter) {
 		return this.native.getString(parameter);
 	};
-	
+
 	this.getBoolean = function(parameter) {
 		return this.native.getBoolean(parameter);
 	};
-	
+
 	this.getByte = function(parameter) {
 		return this.native.getByte(parameter);
 	};
-	
+
 	this.getShort = function(parameter) {
 		return this.native.getShort(parameter);
 	};
-	
+
 	this.getInt = function(parameter) {
 		return this.native.getInt(parameter);
 	};
-	
+
 	this.getLong = function(parameter) {
 		return this.native.getLong(parameter);
 	};
-	
+
 	this.getFloat = function(parameter) {
 		return this.native.getFloat(parameter);
 	};
-	
+
 	this.getDouble = function(parameter) {
 		return this.native.getDouble(parameter);
 	};
-	
+
 	this.getBytes = function(parameter) {
 		return this.native.getBytes(parameter);
 	};
-	
+
 	this.getDate = function(parameter) {
 		return this.native.getDate(parameter);
 	};
-	
+
 	this.getTime = function(parameter) {
 		return this.native.getTime(parameter);
 	};
-	
+
 	this.getTimestamp = function(parameter) {
 		return this.native.getTimestamp(parameter);
 	};
-	
+
 	this.getObject = function(parameter) {
 		return this.native.getObject(parameter);
 	};
-	
+
 	this.getBigDecimal = function(parameter) {
 		return this.native.getBigDecimal(parameter);
 	};
-	
+
 	this.getRef = function(parameter) {
 		return this.native.getRef(parameter);
 	};
-	
+
 	this.getBlob = function(parameter) {
 		return this.native.getBlob(parameter);
 	};
-	
+
 	this.getClob = function(parameter) {
 		return this.native.getClob(parameter);
 	};
-	
+
 	this.getNClob = function(parameter) {
 		return this.native.getNClob(parameter);
 	};
-	
+
 	this.getNString = function(parameter) {
 		return this.native.getNString(parameter);
 	};
-	
+
 	this.getArray = function(parameter) {
 		return this.native.getArray(parameter);
 	};
-	
+
 	this.getURL = function(parameter) {
 		return this.native.getURL(parameter);
 	};
-	
+
 	this.getRowId = function(parameter) {
 		return this.native.getRowId(parameter);
 	};
-	
+
 	this.getSQLXML = function(parameter) {
 		return this.native.getSQLXML(parameter);
 	};
-	
+
 	this.setURL = function(parameter, value) {
 		this.native.setURL(parameter, value);
 	};
-	
+
 	this.setNull = function(parameter, sqlTypeStr, typeName) {
-	    var sqlType = PreparedStatement.SQLTypes[sqlTypeStr];
+		const sqlType = PreparedStatement.SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
 			this.native.setNull(parameter, sqlType, typeName);
 		} else {
 			this.native.setNull(parameter, sqlType);
 		}
 	};
-	
+
 	this.setBoolean = function(parameter, value) {
 		this.native.setBoolean(parameter, value);
 	};
-	
+
 	this.setByte = function(parameter, value) {
 		this.native.setByte(parameter, value);
 	};
-	
+
 	this.setShort = function(parameter, value) {
 		this.native.setShort(parameter, value);
 	};
-	
+
 	this.setInt = function(parameter, value) {
 		this.native.setInt(parameter, value);
 	};
-	
+
 	this.setLong = function(parameter, value) {
 		this.native.setLong(parameter, value);
 	};
-	
+
 	this.setFloat = function(parameter, value) {
 		this.native.setFloat(parameter, value);
 	};
-	
+
 	this.setDouble = function(parameter, value) {
 		this.native.setDouble(parameter, value);
 	};
-	
+
 	this.setBigDecimal = function(parameter, value) {
 		this.native.setBigDecimal(parameter, value);
 	};
-	
+
 	this.setString = function(parameter, value) {
 		this.native.setString(parameter, value);
 	};
-	
+
 	this.setBytes = function(parameter, value) {
 		this.native.setBytes(parameter, value);
 	};
-	
+
 	this.setDate = function(parameter, value) {
 		this.native.setDate(parameter, value);
 	};
-	
+
 	this.setTime = function(parameter, value) {
 		this.native.setTime(parameter, value);
 	};
-	
+
 	this.setTimestamp = function(parameter, value) {
 		this.native.setTimestamp(parameter, value);
 	};
-	
+
 	this.setAsciiStream = function(parameter, inputStream, length) {
 		if (length !== undefined && length !== null) {
 			this.native.setAsciiStream(parameter, inputStream, length);
@@ -586,7 +582,7 @@ function CallableStatement() {
 			this.native.setAsciiStream(parameter, inputStream);
 		}
 	};
-	
+
 	this.setBinaryStream = function(parameter, inputStream, length) {
 		if (length !== undefined && length !== null) {
 			this.native.setBinaryStream(parameter, inputStream, length);
@@ -594,7 +590,7 @@ function CallableStatement() {
 			this.native.setBinaryStream(parameter, inputStream);
 		}
 	};
-	
+
 	this.setObject = function(parameter, value, targetSqlType, scale) {
 		if (scale !== undefined && scale !== null && targetSqlType !== undefined && targetSqlType !== null) {
 			this.native.setObject(parameter, value, targetSqlType, scale);
@@ -604,27 +600,27 @@ function CallableStatement() {
 			this.native.setObject(parameter, value);
 		}
 	};
-	
+
 	this.setRowId = function(parameter, value) {
 		this.native.setRowId(parameter, value);
 	};
-	
+
 	this.setNString = function(parameter, value) {
 		this.native.setNString(parameter, value);
 	};
-	
+
 	this.setSQLXML = function(parameter, value) {
 		this.native.setSQLXML(parameter, value);
 	};
-	
+
 	this.setBlob = function(parameter, value) {
 		this.native.setBlob(parameter, value);
 	};
-	
+
 	this.setClob = function(parameter, value) {
 		this.native.setClob(parameter, value);
 	};
-	
+
 	this.execute = function() {
 		return this.native.execute();
 	};
@@ -644,7 +640,7 @@ function CallableStatement() {
     this.setNClob = function(parameter, value) {
     	this.native.setNClob(parameter, value);
     };
-	
+
 	this.close = function() {
 		this.native.close();
 	};
@@ -669,7 +665,7 @@ function ResultSet(internalResultset) {
 	this.getBlob = function(identifier) {
 		return this.native.getBlob(identifier);
 	};
-	
+
 	this.getBigDecimal = function(identifier) {
 		return this.native.getBigDecimal(identifier);
 	};
@@ -677,28 +673,27 @@ function ResultSet(internalResultset) {
 	this.getBoolean = function(identifier) {
 		return this.native.getBoolean(identifier);
 	};
-	
+
 	this.getByte = function(identifier) {
 		return this.native.getByte(identifier);
 	};
-	
+
 	this.getBytesNative = function(identifier) {
 		return this.native.getBytes(identifier);
 	};
-	
+
 	this.getBytes = function(identifier) {
 		var data = this.native.getBytes(identifier);
 		return bytes.toJavaScriptBytes(data);
 	};
-	
+
 	this.getClob = function(identifier) {
 		return this.native.getClob(identifier);
 	};
 
 	this.getDate = function(identifier) {
-		var dateInstance = this.native.getDate(identifier);
-		var date = new Date(dateInstance.getTime());
-		return date;
+		const dateInstance = this.native.getDate(identifier);
+		return new Date(dateInstance.getTime());
 	};
 
 	this.getDouble = function(identifier) {
@@ -726,14 +721,13 @@ function ResultSet(internalResultset) {
 	};
 
 	this.getTime = function(identifier) {
-		var dateInstance = this.native.getTime(identifier);
-		var date = new Date(dateInstance.getTime());
-		return date;
+		const dateInstance = this.native.getTime(identifier);
+		return new Date(dateInstance.getTime());
 	};
 
 	this.getTimestamp = function(identifier) {
-		var dateInstance = this.native.getTimestamp(identifier);
-		var date = new Date(dateInstance.getTime());
+		const dateInstance = this.native.getTimestamp(identifier);
+		const date = new Date(dateInstance.getTime());
 		return date;
 	};
 

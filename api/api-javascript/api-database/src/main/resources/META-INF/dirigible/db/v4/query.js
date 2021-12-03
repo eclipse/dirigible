@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Query
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 exports.execute = function(sql, parameters, databaseType, datasourceName) {
-	var resultset = [];
+	let resultset = [];
 	if (parameters) {
-		var params = JSON.stringify(parameters);
+		const params = JSON.stringify(parameters);
 		if (databaseType) {
 			if (datasourceName) {
 				resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql, params, databaseType, datasourceName);

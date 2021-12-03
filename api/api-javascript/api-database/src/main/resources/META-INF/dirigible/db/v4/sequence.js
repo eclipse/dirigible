@@ -11,12 +11,12 @@
  */
 /**
  * API v4 Sequence
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 exports.nextval = function(sequence, databaseType, datasourceName) {
-	var result = -1;
+	let result = -1;
 	if (databaseType) {
 		if (datasourceName) {
 			result = org.eclipse.dirigible.api.v3.db.DatabaseFacade.nextval(sequence, databaseType, datasourceName);

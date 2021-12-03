@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 "use strict";
-var orm = require('db/v4/orm');
-for(var propertyName in orm) {
+const orm = require('db/v4/orm');
+for(let propertyName in orm) {
 	exports[propertyName] = orm[propertyName];
 }

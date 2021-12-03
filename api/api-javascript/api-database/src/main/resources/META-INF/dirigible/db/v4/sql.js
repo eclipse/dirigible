@@ -11,50 +11,49 @@
  */
 /**
  * API v4 SQL
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var database = require('db/v4/database');
+const database = require('db/v4/database');
 
 exports.getDialect = function(connection) {
 	/**
 	 * Dialect object
 	 */
-	var Dialect = function() {
-		
-		var _parameters = [];
-		
-		var parameters = function(){
+	let Dialect = function() {
+
+		let _parameters = [];
+
+		const parameters = function () {
 			return _parameters;
 		};
-		
-		var build = function() {
+
+		const build = function () {
 			return this.native.build();
 		};
-		
+
 		this.select = function() {
-			
+
 			/**
 			 * Select object
 			 */
-			var Select = function() {
-				
+			let Select = function() {
+
 				this.distinct = function() {
 					this.native.distinct();
 					return this;
 				};
-				
+
 				this.forUpdate = function() {
 					this.native.forUpdate();
 					return this;
 				};
-				
+
 				this.column = function(column) {
 					this.native.column(column);
 					return this;
 				};
-				
+
 				this.from = function(table, alias) {
 					if (alias !== undefined) {
 						this.native.from(table, alias);
@@ -63,7 +62,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.join = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.join(table, on, alias);
@@ -84,7 +83,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.innerJoin = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.innerJoin(table, on, alias);
@@ -105,7 +104,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.outerJoin = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.outerJoin(table, on, alias);
@@ -126,7 +125,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.leftJoin = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.leftJoin(table, on, alias);
@@ -147,7 +146,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.rightJoin = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.rightJoin(table, on, alias);
@@ -168,7 +167,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.fullJoin = function(table, on, alias) {
 					if (alias !== undefined) {
 						this.native.fullJoin(table, on, alias);
@@ -189,7 +188,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.where = function(condition) {
 					this.native.where(condition);
 					if(arguments.length>1){
@@ -200,7 +199,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.order = function(column, asc) {
 					if (asc !== undefined) {
 						this.native.order(column, asc);
@@ -209,22 +208,22 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.group = function(column) {
 					this.native.group(column);
 					return this;
 				};
-				
+
 				this.limit = function(limit) {
 					this.native.limit(limit);
 					return this;
 				};
-				
+
 				this.offset = function(offset) {
 					this.native.offset(offset);
 					return this;
 				};
-				
+
 				this.having = function(having) {
 					this.native.having(having);
 					return this;
@@ -240,32 +239,31 @@ exports.getDialect = function(connection) {
 				this.parameters = parameters.bind(this);
 
 			}
-			
-			
+
+
 			_parameters = [];
-			var select = new Select();
-			var native = this.native.select();
-			select.native = native;
+			const select = new Select();
+			select.native = this.native.select();
 			return select;
 		};
-		
+
 		this.insert = function() {
-			
+
 			/**
 			 * Insert object
 			 */
-			var Insert = function() {
-				
+			let Insert = function() {
+
 				this.into = function(table) {
 					this.native.into(table);
 					return this;
 				};
-				
+
 				this.column = function(column) {
 					this.native.column(column);
 					return this;
 				};
-				
+
 				this.value = function(value) {
 					this.native.value(value);
 					if(arguments.length>1){
@@ -276,37 +274,36 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.select = function(select) {
 					this.native.select(select);
 					return this;
 				};
 
 				this.build = build.bind(this);
-				
+
 				this.parameters = parameters.bind(this);
 
 			};
 
 			_parameters = [];
-			var insert = new Insert();
-			var native = this.native.insert();
-			insert.native = native;
+			const insert = new Insert();
+			insert.native = this.native.insert();
 			return insert;
 		};
-	
+
 		this.update = function() {
-			
+
 			/**
 			 * Update object
 			 */
-			var Update = function() {
-				
+			let Update = function() {
+
 				this.table = function(table) {
 					this.native.table(table);
 					return this;
 				};
-				
+
 				this.set = function(column, value) {
 					this.native.set(column, value);
 					if(arguments.length>2){
@@ -317,7 +314,7 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.where = function(condition) {
 					this.native.where(condition);
 					if(arguments.length>1){
@@ -328,30 +325,29 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.build = build.bind(this);
 				this.parameters = parameters.bind(this);
 			};
-			
+
 			_parameters = [];
-			var update = new Update();
-			var native = this.native.update();
-			update.native = native;
+			const update = new Update();
+			update.native = this.native.update();
 			return update;
 		};
-	
+
 		this.delete = function() {
-			
+
 			/**
 			 * Delete object
 			 */
-			var Delete = function() {
-				
+			let Delete = function() {
+
 				this.from = function(table) {
 					this.native.from(table);
 					return this;
 				};
-				
+
 				this.where = function(condition) {
 					this.native.where(condition);
 					if(arguments.length>1){
@@ -362,51 +358,49 @@ exports.getDialect = function(connection) {
 					}
 					return this;
 				};
-				
+
 				this.build = build.bind(this);
 				this.parameters = parameters.bind(this);
 			}
-			
+
 			_parameters = [];
-			var deleteRows = new Delete();
-			var native = this.native.delete();
-			deleteRows.native = native;
+			const deleteRows = new Delete();
+			deleteRows.native = this.native.delete();
 			return deleteRows;
 		};
-		
-		
+
+
 		this.nextval = function(name) {
-			
+
 			/**
 			 * Nextval object
 			 */
-			var Nextval = function(name) {
+			let Nextval = function(name) {
 				this.name = name;
 				this.build = build.bind(this);
 			}
-			
-			var nextval = new Nextval();
-			var native = this.native.nextval(name);
-			nextval.native = native;
+
+			const nextval = new Nextval();
+			nextval.native = this.native.nextval(name);
 			return nextval;
 		};
-		
+
 		this.create = function() {
-			
+
 			/**
 			 * Create object
 			 */
-			var Create = function() {
-				
+			let Create = function() {
+
 				this.table = function(table) {
 					/**
 					 * CreateTable object
 					 */
-					var CreateTable = function() {
-						
+					let CreateTable = function() {
+
 						this.column = function(column, type, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.column(column, type, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.column(column, type, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.column(column, type, isPrimaryKey, isNullable, isUnique);
@@ -422,13 +416,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnVarchar = function(column, length, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnVarchar(column, length, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnVarchar(column, length, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnVarchar(column, length, isPrimaryKey, isNullable, isUnique);
@@ -444,13 +438,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnChar = function(column, length, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnChar(column, length, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnChar(column, length, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnChar(column, length, isPrimaryKey, isNullable, isUnique);
@@ -466,13 +460,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnDate = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnDate(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnDate(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnDate(column, isPrimaryKey, isNullable, isUnique);
@@ -488,13 +482,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnTime = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnTime(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnTime(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnTime(column, isPrimaryKey, isNullable, isUnique);
@@ -510,13 +504,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnTimestamp = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnTimestamp(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnTimestamp(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnTimestamp(column, isPrimaryKey, isNullable, isUnique);
@@ -532,13 +526,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnInteger = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnInteger(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnInteger(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnInteger(column, isPrimaryKey, isNullable, isUnique);
@@ -554,13 +548,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnTinyint = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnTinyint(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnTinyint(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnTinyint(column, isPrimaryKey, isNullable, isUnique);
@@ -576,13 +570,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnBigint = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnBigint(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnBigint(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnBigint(column, isPrimaryKey, isNullable, isUnique);
@@ -598,13 +592,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnSmallint = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnSmallint(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnSmallint(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnSmallint(column, isPrimaryKey, isNullable, isUnique);
@@ -620,13 +614,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnReal = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnReal(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnReal(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnReal(column, isPrimaryKey, isNullable, isUnique);
@@ -642,13 +636,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnDouble = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnDouble(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnDouble(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnDouble(column, isPrimaryKey, isNullable, isUnique);
@@ -664,13 +658,13 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnBoolean = function(column, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnBoolean(column, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnBoolean(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnBoolean(column, isPrimaryKey, isNullable, isUnique);
@@ -686,27 +680,27 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnBlob = function(column, isNullable, args) {
 							if (args !== undefined) {
 								this.native.columnBlob(column, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isNullable) {
 									this.native.columnBlob(column, isPrimaryKey, isNullable);
-								} else {						
+								} else {
 									this.native.columnBlob(column);
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.columnDecimal = function(column, precision, scale, isPrimaryKey, isNullable, isUnique, args) {
 							if (args !== undefined) {
-								this.native.columnDecimal(column, precision, scale, isPrimaryKey, isNullable, isUnique, args);	
+								this.native.columnDecimal(column, precision, scale, isPrimaryKey, isNullable, isUnique, args);
 							} else {
 								if (isUnique) {
 									this.native.columnDecimal(column, precision, scale, isPrimaryKey, isNullable, isUnique);
@@ -722,10 +716,10 @@ exports.getDialect = function(connection) {
 									}
 								}
 							}
-							
+
 							return this;
 						};
-						
+
 						this.primaryKey = function(columns, name) {
 							if (name !== undefined) {
 								this.native.primaryKey(name, columns);
@@ -734,144 +728,136 @@ exports.getDialect = function(connection) {
 							}
 							return this;
 						};
-						
+
 						this.foreignKey = function(name, columns, referencedTable, referencedColumns) {
 							this.native.foreignKey(name, columns, referencedTable, referencedColumns);
 							return this;
 						};
-						
+
 						this.unique = function(name, columns) {
 							this.native.unique(name, columns);
 							return this;
 						};
-						
+
 						this.check = function(name, expression) {
 							this.native.check(name, expression);
 							return this;
 						};
-						
+
 						this.build = build.bind(this);
-						
+
 					}
-					
-					var createTable = new CreateTable();
-					var native = this.native.table(table);
-					createTable.native = native;
+
+					const createTable = new CreateTable();
+					createTable.native = this.native.table(table);
 					return createTable;
 				};
-				
+
 				this.view = function(view) {
 					/**
 					 * CreateView object
 					 */
-					var CreateView = function() {
-						
+					let CreateView = function() {
+
 						this.column = function(column) {
 							this.native.column(column);
 							return this;
 						};
-						
+
 						this.asSelect = function(select) {
 							this.native.asSelect(select);
 							return this;
 						};
-						
+
 						this.build = build.bind(this);
 					}
-					
+
 					_parameters = [];
-					var createView = new CreateView();
-					var native = this.native.view(view);
-					createView.native = native;
+					const createView = new CreateView();
+					createView.native = this.native.view(view);
 					return createView;
 				};
-				
+
 				this.sequence = function(sequence) {
 					/**
 					 * CreateSequence object
 					 */
-					var CreateSequence = function() {
-						
+					let CreateSequence = function() {
+
 						this.build = build.bind(this);
 					}
-					
-					var createSequence = new CreateSequence();
-					var native = this.native.sequence(sequence);
-					createSequence.native = native;
+
+					const createSequence = new CreateSequence();
+					createSequence.native = this.native.sequence(sequence);
 					return createSequence;
 				};
-				
+
 			}
-			
-			var create = new Create();
-			var native = this.native.create();
-			create.native = native;
+
+			const create = new Create();
+			create.native = this.native.create();
 			return create;
 		};
-		
+
 		this.drop = function() {
-			
+
 			/**
 			 * Drop object
 			 */
-			var Drop = function() {
-				
+			let Drop = function() {
+
 				this.table = function(table) {
 					/**
 					 * DropTable object
 					 */
-					var DropTable = function() {
-						
+					const DropTable = function () {
+
 						this.build = build.bind(this);
-					}
-					
-					var dropTable = new DropTable();
-					var native = this.native.table(table);
-					dropTable.native = native;
+					};
+
+					const dropTable = new DropTable();
+					dropTable.native = this.native.table(table);
 					return dropTable;
 				};
-				
+
 				this.view = function(view) {
 					/**
 					 * DropView object
 					 */
-					var DropView = function() {
-						
+					const DropView = function () {
+
 						this.build = build.bind(this);
-					}
-					
-					var dropView = new DropView();
-					var native = this.native.view(view);
-					dropView.native = native;
+					};
+
+					const dropView = new DropView();
+					dropView.native = this.native.view(view);
 					return dropView;
 				};
-				
+
 				this.sequence = function(sequence) {
 					/**
 					 * DropSequence object
 					 */
-					var DropSequence = function() {
-						
+					let DropSequence = function() {
+
 						this.build = build.bind(this);
 					}
-					
-					var dropSequence = new DropSequence();
-					var native = this.native.sequence(sequence);
-					dropSequence.native = native;
+
+					const dropSequence = new DropSequence();
+					dropSequence.native = this.native.sequence(sequence);
 					return dropSequence;
 				};
-				
+
 			}
-			
-			var drop = new Drop();
-			var native = this.native.drop();
-			drop.native = native;
+
+			const drop = new Drop();
+			drop.native = this.native.drop();
 			return drop;
 		};
 	}
-	
-	var dialect = new Dialect();
-	var native;
+
+	const dialect = new Dialect();
+	let native;
 	if (connection) {
 		native = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getNative(connection.native);
 	} else {

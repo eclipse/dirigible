@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var update = require('db/v4/update');
-for(var propertyName in update) {
+const update = require('db/v4/update');
+for(let propertyName in update) {
 	exports[propertyName] = update[propertyName];
 }
