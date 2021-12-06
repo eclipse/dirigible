@@ -11,6 +11,21 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.DELETE;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PATCH;
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.POST;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.Response;
+
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
@@ -29,19 +44,19 @@ import org.eclipse.dirigible.engine.odata2.sql.builder.SQLInsertBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUpdateBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.clause.SQLWhereClause;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.junit.Test;
-
-import javax.ws.rs.core.Response;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
-import static org.junit.Assert.*;
 
 public class ODataSQLInterceptorTest extends AbstractSQLPropcessorTest {
 
+	@Override
+	protected Class<?>[] getODataEntities() {
+		Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
+		return classes;
+	}
 
     @Test
     public void testSQLInterceptorReadEntity() throws Exception {

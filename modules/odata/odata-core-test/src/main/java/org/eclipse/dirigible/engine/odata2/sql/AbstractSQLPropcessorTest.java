@@ -11,6 +11,22 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
+import static org.easymock.EasyMock.expect;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Arrays;
+
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import javax.ws.rs.core.Response;
+
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
@@ -20,28 +36,9 @@ import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.easymock.EasyMockSupport;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
-import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Arrays;
-
-import static org.easymock.EasyMock.expect;
 
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
@@ -65,13 +62,15 @@ public abstract class AbstractSQLPropcessorTest {
     @Before
     public void setup() throws ODataException, SQLException {
         ds = createDataSource();
-        Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
+        Class<?>[] classes = getODataEntities();
 
         edm = new AnnotationEdmProvider(Arrays.asList(classes));
         edm.getSchemas();
         sf = new OData2TestServiceFactory(ds, classes);
         OData2TestUtils.initLiquibase(ds);
     }
+
+	protected abstract Class<?>[] getODataEntities();
 
     @After
     public void clearDb() {

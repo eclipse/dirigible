@@ -17,6 +17,10 @@ import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -38,6 +42,12 @@ import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
 import static org.junit.Assert.*;
 
 public class ODataSQLProcessorTest extends AbstractSQLPropcessorTest {
+
+	@Override
+	protected Class<?>[] getODataEntities() {
+		Class<?> [] classes = {Car.class, Driver.class, Owner.class, Address.class};
+		return classes;
+	}
 
     @Test
     public void testSQLProcessor() throws Exception {
