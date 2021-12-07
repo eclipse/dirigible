@@ -33,7 +33,7 @@ public class DBMetadataUtil {
 
     public static final String DIRIGIBLE_GENERATE_PRETTY_NAMES = "DIRIGIBLE_GENERATE_PRETTY_NAMES";
 
-    private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
+    private static final boolean IS_CASE_SENSITIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
     private final DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
@@ -100,7 +100,7 @@ public class DBMetadataUtil {
 
     private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
-        if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+        if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSITIVE) {
             // Fallback for PostgreSQL
             foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
@@ -131,7 +131,7 @@ public class DBMetadataUtil {
 
     private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
-        if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+        if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSITIVE) {
             // Fallback for PostgreSQL
             primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
         }
@@ -150,7 +150,7 @@ public class DBMetadataUtil {
 
     private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
-        if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+        if (!columns.isBeforeFirst() && !IS_CASE_SENSITIVE) {
             // Fallback for PostgreSQL
             columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
         }
@@ -195,7 +195,7 @@ public class DBMetadataUtil {
         String columnName = column.getName();
         for (ODataProperty next : properties) {
             if (next.getType() != null) {
-                if (columnName.equals(next.getColumn()) || !IS_CASE_SENSETIVE && columnName.equalsIgnoreCase(next.getColumn())) {
+                if (columnName.equals(next.getColumn()) || !IS_CASE_SENSITIVE && columnName.equalsIgnoreCase(next.getColumn())) {
                     return next.getType();
                 }
             }
@@ -216,7 +216,7 @@ public class DBMetadataUtil {
 
     private void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
-        if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
+        if (!tables.isBeforeFirst() && !IS_CASE_SENSITIVE) {
             // Fallback for PostgreSQL
             tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
         }
