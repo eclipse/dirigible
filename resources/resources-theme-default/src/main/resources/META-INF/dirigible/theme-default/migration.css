@@ -172,6 +172,10 @@ body {
   border-top: 1px solid #1f1f20;
   border-radius: 0 0 3px 3px;
 }
+.changes-body .list-group-item .diff-view>p {
+  text-align: center;
+  padding: 24px;
+}
 .changes-body .list-group-item .diff-view .diffOverviewRuler {
   border-bottom-right-radius: 3px;
 }
