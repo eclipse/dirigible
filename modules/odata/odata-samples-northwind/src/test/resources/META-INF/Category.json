@@ -1,0 +1,11 @@
+{
+	"edmType": "Category",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Category",
+	"sqlTable": " PUBLIC.CATEGORY",
+	"Id": "ID",
+	"Name": "NAME",
+	"_pk_": "ID",
+	"_ref_Advertisement" : {
+		"joinColumn" :["ID"]
+	}
+}

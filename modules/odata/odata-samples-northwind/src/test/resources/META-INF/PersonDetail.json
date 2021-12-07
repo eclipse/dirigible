@@ -1,0 +1,8 @@
+{
+	"edmType" : "PersonDetail",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.PersonDetail",
+	"sqlTable" : " PUBLIC.PERSON_DETAIL",
+	"Name" : "NAME",
+	"Id" : "ID",
+	"_pk_" : "ID"
+}

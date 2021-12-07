@@ -1,0 +1,12 @@
+{
+	"edmType": "Advertisement",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Advertisement",
+	"sqlTable": " PUBLIC.ADVERTISEMENT",
+	"Id": "ID",
+	"Name": "NAME",
+	"AirDate": "AIR_DATE",
+	"_pk_": "ID",
+	"_ref_FeaturedProduct" : {
+		"joinColumn" :["ID"]
+	}
+}

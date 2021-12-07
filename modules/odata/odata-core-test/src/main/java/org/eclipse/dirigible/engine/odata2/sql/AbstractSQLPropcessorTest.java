@@ -16,6 +16,7 @@ import static org.easymock.EasyMock.expect;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
@@ -90,6 +92,10 @@ public abstract class AbstractSQLPropcessorTest {
         return ds;
     }
 
+
+    protected String loadExpectedData(String fileName) throws IOException {
+		return IOUtils.toString(AbstractSQLPropcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
+	}
 
     OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {
         OData2RequestBuilder builder = new OData2RequestBuilder() {

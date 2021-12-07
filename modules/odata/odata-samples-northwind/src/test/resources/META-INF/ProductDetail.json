@@ -1,0 +1,12 @@
+{
+	"edmType": "FeaturedProduct",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductDetail",
+	"sqlTable": " PUBLIC.PRODUCT_DETAIL",
+	"ProductID": "PRODUCT_ID",
+	"Name": "NAME",
+	"Details": "DETAILS",
+	"_pk_": "ProductID",
+	"_ref_Advertisement" : {
+		"joinColumn" :["ID"]
+	}
+}

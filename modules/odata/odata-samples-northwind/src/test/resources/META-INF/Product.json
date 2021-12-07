@@ -1,0 +1,15 @@
+{
+	"edmType": "Product",
+	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product",
+	"sqlTable": "PUBLIC.PRODUCT",
+
+	"ID": "ID",
+	"Name": "NAME",
+	"Description": "DESCRIPTION",
+	"ReleaseDate": "RELEASE_DATE",
+	"DiscontinuedDate": "DISCONTINUED_DATE",
+	"Rating": "RATING",
+	"Price": "PRICE",
+
+	"_pk_": "ID"
+}
