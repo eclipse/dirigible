@@ -1,8 +1,0 @@
-{
-	"edmType": "Supplier",
-	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier",
-	"sqlTable": " PUBLIC.SUPPLIER",
-	"Id": "ID",
-	"Name": "NAME",
-	"_pk_": "ID"
-}
