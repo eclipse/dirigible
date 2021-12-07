@@ -43,7 +43,6 @@ import org.apache.cxf.jaxrs.utils.HttpUtils;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.api.processor.ODataRequest.ODataRequestBuilder;
 import org.apache.olingo.odata2.core.rest.ODataSubLocator;
 import org.apache.olingo.odata2.core.rest.SubLocatorParameter;
 import org.easymock.Capture;
@@ -56,10 +55,10 @@ import org.easymock.IAnswer;
 /**
  * Base class for OData API tests, which can be used to simulate calls to the OData API without having to use a servlet.
  * 
- * In order to use the class, inherit from it and overwrite the {@link ODataRequestBuilder#getServiceFactoryClass()} method. You can use
+ * In order to use the class, inherit from it and overwrite the {@link OData2RequestBuilder#executeRequest(ODataHttpMethod)} method. You can use
  * this method also to provide mock data to your API. If you API retrieves handles to data sources via the servlet context or the servlet
- * request, use the {@link ODataRequestBuilder#enrichServletContextMock(ServletContext)} and
- * {@link ODataRequestBuilder#enrichServletRequestMock(ServletRequest)} methods to provide the handles to you mock data.
+ * request, use the {@link OData2RequestBuilder#enrichServletContextMock(ServletContext)} and
+ * {@link OData2RequestBuilder#enrichServletRequestMock(ServletRequest)} methods to provide the handles to you mock data.
  * 
  */
 public class OData2RequestBuilder {
@@ -76,35 +75,65 @@ public class OData2RequestBuilder {
     private int contentSize = 1024 * 4;
     private ODataServiceFactory serviceFactory;
 
+    /**
+     * @param pathSegmentStrings the path
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder segments(final String... pathSegmentStrings) {
         pathSegmentStringList.addAll(Arrays.asList(pathSegmentStrings));
         return this;
     }
 
+    /**
+     * @param name the param name
+     * @param value the param value
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder param(final String name, final String value) {
         queryParams.add(name, value);
         return this;
     }
 
+    /**
+     * @param accept the accept header
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder accept(final String accept) {
         this.accept = accept;
         return this;
     }
 
+    /**
+     * @param contentSize the contentSize header
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder contentSize(final int contentSize) {
         this.contentSize = contentSize;
         return this;
     }
 
+    /**
+     * @return executeRequest
+     * @throws IOException in case of error
+     * @throws ODataException in case of error
+     */
     public Response executeRequest() throws IOException, ODataException {
         return executeRequest(GET);
     }
 
+    /**
+     * @param serviceFactory serviceFactory
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder serviceFactory(ODataServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
         return this;
     }
 
+    /**
+     * @param sf ODataServiceFactory
+     * @return OData2RequestBuilder
+     */
     public static OData2RequestBuilder createRequest(ODataServiceFactory sf) {
         final OData2RequestBuilder request = new OData2RequestBuilder();
         return request.serviceFactory(sf);
@@ -117,10 +146,8 @@ public class OData2RequestBuilder {
      *            Mandatory parameter defining Http Method to be used for the request. Expected values are: GET, PUT, POST, DELETE, PATCH,
      *            MERGE
      * @return OData Response
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws IOException
-     * @throws ODataException
+     * @throws IOException in case of error
+     * @throws ODataException in case of error
      */
     public Response executeRequest(final ODataHttpMethod method) throws IOException, ODataException {
 
@@ -221,6 +248,12 @@ public class OData2RequestBuilder {
         return response;
     }
 
+    /**
+     * @param method the method
+     * @param easyMockSupport the easyMockSupport 
+     * @param servletRequest the servletRequest
+     * @throws IOException in case of error
+     */
     protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
             final HttpServletRequest servletRequest) throws IOException {
         @SuppressWarnings("resource")
@@ -237,6 +270,10 @@ public class OData2RequestBuilder {
         expect(servletRequest.getInputStream()).andReturn(contentInputStream).atLeastOnce();
     }
 
+    /**
+     * @param content the content
+     * @return OData2RequestBuilder
+     */
     public OData2RequestBuilder content(@SuppressWarnings("unused") final String content) { //NOSONAR to be overridden by subclasses
         return this;
     }
@@ -247,7 +284,7 @@ public class OData2RequestBuilder {
      * 
      * @param servletContext
      *            the EasyMock instance of the {@link ServletContext}.
-     * @throws Exception
+     * @throws ODataException in case of error
      */
     protected void enrichServletContextMock(final ServletContext servletContext) throws ODataException {
         // default implementation is empty

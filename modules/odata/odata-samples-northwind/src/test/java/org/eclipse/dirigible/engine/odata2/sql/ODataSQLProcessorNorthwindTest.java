@@ -72,12 +72,15 @@ public class ODataSQLProcessorNorthwindTest extends AbstractSQLPropcessorTest {
 				.param("$format", "json") //
 				.executeRequest(GET);
 		String content = IOUtils.toString((InputStream) response.getEntity());
-		assertNotNull(content);
-		System.err.println(content);
+		assertEquals(loadExpectedData("products-all.json"), content);
 	}
 
 	private String loadExpectedMetadata() throws IOException {
-		String metadata = loadExpectedData("metadata.xml");
-		return metadata.replaceAll("\n", "").replaceAll("[^\\S\\r]{2,}", "");
+		return loadExpectedData("metadata.xml");
+	}
+
+	private String loadExpectedData(String fileName) throws IOException {
+		String data = loadResource(fileName);
+		return data.replaceAll("\n", "").replaceAll("[^\\S\\r]{2,}", "");
 	}
 }

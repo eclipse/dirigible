@@ -31,7 +31,6 @@ import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
-import org.apache.olingo.odata2.api.processor.ODataRequest.ODataRequestBuilder;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -43,21 +42,25 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+/**
+ * OData2TestUtils
+ *
+ */
 public class OData2TestUtils {
 
     private OData2TestUtils() {
     }
 
     /**
-     * Helper method to retrieve the {@link ODataEntry} from the response object returned by {@link ODataRequestBuilder#executeRequest()}.
+     * Helper method to retrieve the {@link ODataEntry} from the response object returned by {@link OData2RequestBuilder#executeRequest()}.
      * 
      * @param response
-     *            the response returned by {@link ODataRequestBuilder#executeRequest()}
+     *            the response returned by {@link OData2RequestBuilder#executeRequest()}
      * @param entitySet
      *            the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataEntry}
-     * @throws IOException
-     * @throws ODataException
+     * @throws IOException in case of error
+     * @throws ODataException in case of error
      */
     public static ODataEntry retrieveODataEntryFromResponse(final Response response, final EdmEntitySet entitySet)
             throws IOException, ODataException {
@@ -70,15 +73,15 @@ public class OData2TestUtils {
     }
 
     /**
-     * Helper method to retrieve the {@link ODataFeed} from the response object returned by {@link ODataRequestBuilder#executeRequest()}.
+     * Helper method to retrieve the {@link ODataFeed} from the response object returned by {@link OData2RequestBuilder#executeRequest()}.
      * 
      * @param response
-     *            the response returned by {@link ODataRequestBuilder#executeRequest()}
+     *            the response returned by {@link OData2RequestBuilder#executeRequest()}
      * @param entitySet
      *            the {@link EdmEntitySet} used to parse the response
      * @return the {@link ODataFeed}
-     * @throws IOException
-     * @throws ODataException
+     * @throws IOException in case of error
+     * @throws ODataException in case of error
      */
     public static ODataFeed retrieveODataFeedFromResponse(final Response response, final EdmEntitySet entitySet)
             throws IOException, ODataException {
@@ -92,14 +95,14 @@ public class OData2TestUtils {
 
     /**
      * Helper method to retrieve the {@link ODataErrorContext} representing the error response to a failed call to an OData API from the
-     * response object returned by {@link ODataRequestBuilder#executeRequest()}.
+     * response object returned by {@link OData2RequestBuilder#executeRequest()}.
      * 
      * @param response
      *            the object containing the error response
      * @return the ODataErrorContext representing the content of the returned error document. <b>NOTE:</b> The used parser does not parse
      *         the message's locale so it will always be <code>null</code>.
-     * @throws IOException
-     * @throws EntityProviderException
+     * @throws IOException in case of error
+     * @throws EntityProviderException in case of error
      */
     public static ODataErrorContext retrieveODataErrorDocumentFromResponse(final Response response)
             throws IOException, EntityProviderException {
@@ -108,10 +111,19 @@ public class OData2TestUtils {
         }
     }
 
+    /**
+     * @param ns the namespace
+     * @param name the name
+     * @return FQN
+     */
     public static String fqn(String ns, String name) {
         return ns + "." + name;
     }
 
+    /**
+     * @param clazz the class
+     * @return FQN
+     */
     public static String fqn(Class<?> clazz) {
         AnnotationHelper annotationHelper = new AnnotationHelper();
         FullQualifiedName fqn = null;
@@ -128,6 +140,10 @@ public class OData2TestUtils {
         return fqn.toString();
     }
 
+    /**
+     * @param classes the classes
+     * @return list
+     */
     public static List<String> fqns(Class<?>... classes) {
         List<String> fqns = new ArrayList<String>();
         for (Class<?> clazz : classes) {
@@ -136,6 +152,10 @@ public class OData2TestUtils {
         return fqns;
     }
 
+    /**
+     * @param classes the classes
+     * @return array
+     */
     @SuppressWarnings("rawtypes")
     public static String[] resources(Class... classes) {
         List<String> resources = new ArrayList<>();
@@ -145,14 +165,28 @@ public class OData2TestUtils {
         return resources.toArray(new String[resources.size()]);
     }
 
+    /**
+     * @param <T> T
+     * @param clazz class
+     * @return content
+     */
     public static <T> String resource(Class<T> clazz) {
         return "META-INF/" + clazz.getSimpleName() + ".json";
     }
 
+    /**
+     * @param <T> T
+     * @param clazz class
+     * @return InputStream
+     */
     public static <T> InputStream stream(Class<T> clazz) {
         return OData2TestUtils.class.getClassLoader().getResourceAsStream(resource(clazz));
     }
 
+    /**
+     * @param ds data source
+     * @throws SQLException in case of error
+     */
     public static void initLiquibase(DataSource ds) throws SQLException {
         try (Connection connection = ds.getConnection()) {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));

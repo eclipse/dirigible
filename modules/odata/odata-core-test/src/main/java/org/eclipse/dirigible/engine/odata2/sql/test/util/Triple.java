@@ -13,6 +13,13 @@ package org.eclipse.dirigible.engine.odata2.sql.test.util;
 
 import java.io.Serializable;
 
+/**
+ * Triple
+ *
+ * @param <T> T
+ * @param <U> U
+ * @param <V> V
+ */
 public class Triple<T, U, V> implements Serializable {
     private static final long serialVersionUID = 8719382431393826469L;
 
@@ -20,25 +27,37 @@ public class Triple<T, U, V> implements Serializable {
     private final U second;
     private final V third;
 
+    /**
+     * @param a a
+     * @param b b
+     * @param c c
+     */
     public Triple(T a, U b, V c) {
         first = a;
         second = b;
         third = c;
     }
 
+    /**
+     * @return T
+     */
     public T getFirst() {
         return first;
     }
 
+    /**
+     * @return U
+     */
     public U getSecond() {
         return second;
     }
 
+    /**
+     * @return V
+     */
     public V getThird() {
         return third;
     }
-
-   
 
     @Override
     public int hashCode() {
@@ -82,10 +101,25 @@ public class Triple<T, U, V> implements Serializable {
         return "[" + first + ", " + second + ", " + third + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
+    /**
+     * @param <T> T
+     * @param <U> U
+     * @param <V> V
+     * @param a a
+     * @param b b
+     * @param c c
+     * @return Triple
+     */
     public static <T, U, V> Triple<T, U, V> create(T a, U b, V c) {
         return new Triple<T, U, V>(a, b, c);
     }
 
+    /**
+     * @param <T> T
+     * @param <U> U
+     * @param <V> V
+     * @return Triple
+     */
     @SuppressWarnings("unchecked")
     public static final <T, U, V> Triple<T, U, V> nullTriple() {
         return (Triple<T, U, V>) NULL_TRIPLE;

@@ -13,6 +13,12 @@ package org.eclipse.dirigible.engine.odata2.sql.test.util;
 
 import java.io.Serializable;
 
+/**
+ * Pair
+ *
+ * @param <T> t
+ * @param <U> u
+ */
 public class Pair<T, U> implements Serializable {
     private static final long serialVersionUID = 8719382431393826469L;
 
@@ -25,15 +31,25 @@ public class Pair<T, U> implements Serializable {
         this.second = null;
     }
 
+    /**
+     * @param a a
+     * @param b b
+     */
     public Pair(T a, U b) {
         this.first = a;
         this.second = b;
     }
 
+    /**
+     * @return T
+     */
     public T getFirst() {
         return first;
     }
 
+    /**
+     * @return U
+     */
     public U getSecond() {
         return second;
     }
@@ -43,10 +59,22 @@ public class Pair<T, U> implements Serializable {
         return "[" + first + ", " + second + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
+    /**
+     * @param <T> T
+     * @param <U> U
+     * @param a a
+     * @param b b
+     * @return Pair
+     */
     public static <T, U> Pair<T, U> create(T a, U b) {
         return new Pair<T, U>(a, b);
     }
 
+    /**
+     * @param <T> T
+     * @param <U> U
+     * @return Pair
+     */
     @SuppressWarnings("unchecked")
     public static final <T, U> Pair<T, U> nullPair() {
         return (Pair<T, U>) NULL_PAIR;

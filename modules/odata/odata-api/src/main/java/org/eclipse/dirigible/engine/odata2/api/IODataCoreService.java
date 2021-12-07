@@ -269,9 +269,9 @@ public interface IODataCoreService extends ICoreService {
 	/**
 	 * Getter for the OData entity
 	 * 
-	 * @param location
-	 * @return
-	 * @throws ODataException
+	 * @param location the location
+	 * @return ODataDefinition
+	 * @throws ODataException in case of an error
 	 */
 	public ODataDefinition getOData(String location) throws ODataException;
 
@@ -382,7 +382,7 @@ public interface IODataCoreService extends ICoreService {
 	/**
 	 * Removes the handlers
 	 * 
-	 * @param location
+	 * @param location the location
 	 * @throws ODataException in case of an error
 	 */
 	public void removeHandlers(String location) throws ODataException;
