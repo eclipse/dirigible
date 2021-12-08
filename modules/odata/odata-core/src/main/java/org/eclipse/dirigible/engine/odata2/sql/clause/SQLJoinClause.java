@@ -30,7 +30,7 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 public final class SQLJoinClause implements SQLClause {
 
     private static final List<KeyPredicate> NO_PREDICATES_USED = Collections.emptyList();
-    public static final String DOUBLE_QUOTES = "\"";
+    private static final String DOUBLE_QUOTES = "\"";
 
     private final EdmStructuralType start;
     private final EdmStructuralType target;
@@ -92,7 +92,7 @@ public final class SQLJoinClause implements SQLClause {
         return caseSensitive ? surroundWithDoubleQuotes(value) : value;
     }
 
-    private String surroundWithDoubleQuotes(String value) {
+    String surroundWithDoubleQuotes(String value) {
         if(value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
             return value;
         }
