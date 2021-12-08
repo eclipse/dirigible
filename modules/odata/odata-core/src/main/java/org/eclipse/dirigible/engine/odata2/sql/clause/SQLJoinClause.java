@@ -30,6 +30,7 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
 public final class SQLJoinClause implements SQLClause {
 
     private static final List<KeyPredicate> NO_PREDICATES_USED = Collections.emptyList();
+    public static final String DOUBLE_QUOTES = "\"";
 
     private final EdmStructuralType start;
     private final EdmStructuralType target;
@@ -63,31 +64,40 @@ public final class SQLJoinClause implements SQLClause {
             return "";
         }
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
-        String csl = "";
-        if (caseSensitive) {
-            csl = "\"";
-        }
+
         StringBuilder join = new StringBuilder();
         join.append(joinType.toString());
         join.append(" JOIN ");
-        join.append(csl + query.getSQLTableName(start) + csl);
+        join.append(getValue(caseSensitive, query.getSQLTableName(start)));
         join.append(" AS ");
-        join.append(csl + query.getSQLTableAlias(start) + csl);
+        join.append(getValue(caseSensitive, query.getSQLTableAlias(start)));
         join.append(" ON ");
 
         List<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
         for (int i = 0; i < targetKeys.size(); i++) {
-            join.append(csl + query.getSQLTableAlias(start) + csl);
+            join.append(getValue(caseSensitive, query.getSQLTableAlias(start)));
             join.append(".");
-            join.append(csl + targetKeys.get(i) + csl);
+            join.append(getValue(caseSensitive, targetKeys.get(i)));
             join.append(" = ");
-            join.append(csl + query.getSQLTableAlias(target) + csl);
+            join.append(getValue(caseSensitive, query.getSQLTableAlias(target)));
             join.append(".");
-            join.append(csl + query.getSQLJoinTableName(target, start).get(i) + csl);
+            join.append(getValue(caseSensitive, query.getSQLJoinTableName(target, start).get(i)));
             if (i < targetKeys.size() - 1) join.append(" AND ");
         }
 
         return join.toString();
+    }
+
+    private String getValue(boolean caseSensitive, String value){
+        return caseSensitive ? surroundWithDoubleQuotes(value) : value;
+    }
+
+    private String surroundWithDoubleQuotes(String value) {
+        if(value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
+            return value;
+        }
+
+        return DOUBLE_QUOTES + value + DOUBLE_QUOTES;
     }
 
     @Override
