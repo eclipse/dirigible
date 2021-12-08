@@ -35,7 +35,7 @@ public class DBMetadataUtil {
 
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private final DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
@@ -45,33 +45,38 @@ public class DBMetadataUtil {
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
-    public static final Map<String, String> sqlToOdataEdmColumnTypes = new HashMap<>();
+    public static final Map<String, String> SQL_TO_ODATA_EDM_TYPES = new HashMap<>();
 
     static {
-        sqlToOdataEdmColumnTypes.put("TIME", "Edm.Time");
-        sqlToOdataEdmColumnTypes.put("DATE", "Edm.DateTime");
-        sqlToOdataEdmColumnTypes.put("SECONDDATE", "Edm.DateTime");
-        sqlToOdataEdmColumnTypes.put("TIMESTAMP", "Edm.DateTime");
-        sqlToOdataEdmColumnTypes.put("TINYINT", "Edm.Byte");
-        sqlToOdataEdmColumnTypes.put("SMALLINT", "Edm.Int16");
-        sqlToOdataEdmColumnTypes.put("INTEGER", "Edm.Int32");
-        sqlToOdataEdmColumnTypes.put("INT4", "Edm.Int32");
-        sqlToOdataEdmColumnTypes.put("BIGINT", "Edm.Int64");
-        sqlToOdataEdmColumnTypes.put("SMALLDECIMAL", "Edm.Decimal");
-        sqlToOdataEdmColumnTypes.put("DECIMAL", "Edm.Decimal");
-        sqlToOdataEdmColumnTypes.put("REAL", "Edm.Single");
-        sqlToOdataEdmColumnTypes.put("FLOAT", "Edm.Single");
-        sqlToOdataEdmColumnTypes.put("DOUBLE", "Edm.Double");
-        sqlToOdataEdmColumnTypes.put("VARCHAR", "Edm.String");
-        sqlToOdataEdmColumnTypes.put("NVARCHAR", "Edm.String");
-        sqlToOdataEdmColumnTypes.put("CHAR", "Edm.String");
-        sqlToOdataEdmColumnTypes.put("NCHAR", "Edm.String");
-        sqlToOdataEdmColumnTypes.put("BINARY", "Edm.Binary");
-        sqlToOdataEdmColumnTypes.put("VARBINARY", "Edm.Binary");
-        sqlToOdataEdmColumnTypes.put("BOOLEAN", "Edm.Boolean");
-        sqlToOdataEdmColumnTypes.put("BYTE", "Edm.Byte");
-        sqlToOdataEdmColumnTypes.put("BIT", "Edm.Byte");
-        sqlToOdataEdmColumnTypes.put("BLOB", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("TIME", "Edm.Time");
+        SQL_TO_ODATA_EDM_TYPES.put("DATE", "Edm.DateTime");
+        SQL_TO_ODATA_EDM_TYPES.put("SECONDDATE", "Edm.DateTime");
+        SQL_TO_ODATA_EDM_TYPES.put("TIMESTAMP", "Edm.DateTime");
+        SQL_TO_ODATA_EDM_TYPES.put("TINYINT", "Edm.Byte");
+        SQL_TO_ODATA_EDM_TYPES.put("SMALLINT", "Edm.Int16");
+        SQL_TO_ODATA_EDM_TYPES.put("INTEGER", "Edm.Int32");
+        SQL_TO_ODATA_EDM_TYPES.put("INT4", "Edm.Int32");
+        SQL_TO_ODATA_EDM_TYPES.put("BIGINT", "Edm.Int64");
+        SQL_TO_ODATA_EDM_TYPES.put("SMALLDECIMAL", "Edm.Decimal");
+        SQL_TO_ODATA_EDM_TYPES.put("DECIMAL", "Edm.Decimal");
+        SQL_TO_ODATA_EDM_TYPES.put("REAL", "Edm.Single");
+        SQL_TO_ODATA_EDM_TYPES.put("FLOAT", "Edm.Single");
+        SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
+        SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("NVARCHAR", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("CHAR", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("NCHAR", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("BINARY", "Edm.Binary");
+        SQL_TO_ODATA_EDM_TYPES.put("VARBINARY", "Edm.Binary");
+        SQL_TO_ODATA_EDM_TYPES.put("BOOLEAN", "Edm.Boolean");
+        SQL_TO_ODATA_EDM_TYPES.put("BYTE", "Edm.Byte");
+        SQL_TO_ODATA_EDM_TYPES.put("BIT", "Edm.Byte");
+        SQL_TO_ODATA_EDM_TYPES.put("BLOB", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("NCLOB", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("CLOB", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("TEXT", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("BINTEXT", "Edm.Binary");
+        SQL_TO_ODATA_EDM_TYPES.put("ALPHANUM", "Edm.String");
     }
 
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
@@ -87,8 +92,6 @@ public class DBMetadataUtil {
             addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
             addTableType(databaseMetadata, connection, tableMetadata, schemaName);
             tableMetadata.setSchemaName(schemaName);
-        } catch (SQLException e) {
-            throw e;
         }
 
         convertSqlTypesToOdataEdmTypes(tableMetadata.getColumns());
@@ -114,7 +117,16 @@ public class DBMetadataUtil {
     }
 
     private void convertSqlTypesToOdataEdmTypes(List<PersistenceTableColumnModel> columnsMetadata) {
-        columnsMetadata.forEach(column -> column.setType(sqlToOdataEdmColumnTypes.get(column.getType().toUpperCase())));
+        columnsMetadata.forEach(column -> column.setType(convertSqlTypeToOdataEdmType(column.getType())));
+    }
+
+    private String convertSqlTypeToOdataEdmType(String sqlType) {
+        String edmColumnType = SQL_TO_ODATA_EDM_TYPES.get(sqlType.toUpperCase());
+        if(null != edmColumnType) {
+            return edmColumnType;
+        }
+
+        throw new IllegalArgumentException("SQL Type [" + sqlType + "] is not supported.");
     }
 
     private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
@@ -233,13 +245,11 @@ public class DBMetadataUtil {
                 return rs.getString("TABLE_SCHEM");
             }
             return null;
-        } catch (SQLException e) {
-            throw e;
         }
     }
 
     public HashMap<String, String> getSynonymTargetObjectMetadata(String synonymName) throws SQLException {
-        HashMap<String, String> targetObjectMetadata = new HashMap<String, String>();
+        HashMap<String, String> targetObjectMetadata = new HashMap<>();
 
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM \"SYS\".\"SYNONYMS\" WHERE \"SYNONYM_NAME\" = ?");
