@@ -11,14 +11,9 @@
  */
 package org.eclipse.dirigible.core.publisher.synchronizer;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.api.PublisherHandler;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
@@ -31,6 +26,9 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * The PublisherSynchronizer takes the requests for publish and perform the needed actions on the artifacts assigned.
@@ -174,10 +172,13 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				synchronizerCoreService.disableSynchronization();
 				
 				synchronizerCoreService.initializeSynchronizersStates();
+
+				ServiceLoader<PublisherHandler> publisherHandlers = ServiceLoader.load(PublisherHandler.class);
 				
 				for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
-		
-					// pre publish handlers
+					for (PublisherHandler next : publisherHandlers) {
+						next.beforePublish(entry.getKey());
+					}
 		
 					try {
 						// publish
@@ -185,8 +186,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 					} catch (SynchronizationException e) {
 						logger.error("Failed to publish: " + entry.getKey(), e);
 					}
-		
-					// post publish handlers
+
+					for (PublisherHandler next : publisherHandlers) {
+						next.afterPublish(entry.getKey());
+					}
 				}
 			} catch (SchedulerException e) {
 				throw new SynchronizationException(e);
@@ -254,10 +257,13 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				synchronizerCoreService.disableSynchronization();
 				
 				synchronizerCoreService.initializeSynchronizersStates();
-				
+
+				ServiceLoader<PublisherHandler> publisherHandlers = ServiceLoader.load(PublisherHandler.class);
+
 				for (String entry : unpublishLocations) {
-		
-					// TODO: pre unpublish handlers
+					for (PublisherHandler next : publisherHandlers) {
+						next.beforeUnpublish(entry);
+					}
 		
 					try {
 						// unpublish
@@ -265,8 +271,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 					} catch (SynchronizationException e) {
 						logger.error("Failed to unpublish: " + entry, e);
 					}
-		
-					// TODO: post unpublish handlers
+
+					for (PublisherHandler next : publisherHandlers) {
+						next.afterUnpublish(entry);
+					}
 				}
 			} catch (SchedulerException e) {
 				throw new SynchronizationException(e);
