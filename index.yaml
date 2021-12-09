@@ -3,10 +3,10 @@ entries:
   dirigible:
   - apiVersion: v2
     appVersion: 6.1.10
-    created: "2021-12-07T20:34:29.858091403Z"
+    created: "2021-12-09T17:54:03.228361+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 3217d5f23deaa517a96e152aefbdacec89e700549bb5f0b5befbd255987826d1
+    digest: fc1b61a5656469d3e26eee64f7710721a84688e3f4d3f41eb1c3505b85caf0cc
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -33,10 +33,11 @@ entries:
     version: 6.1.10
   - apiVersion: v2
     appVersion: 6.1.9
-    created: "2021-12-07T20:34:29.86712339Z"
+    created: "2021-12-09T17:54:03.234923+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 59c65bb329634bcd1629a2aef8282fe5c4c6a8888d04c6b035e438da38045a46
+    digest: 34938893ac54e45c9b28999060bc2f1664c55b5775f6849114bda363b6781452
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -63,10 +64,11 @@ entries:
     version: 6.1.9
   - apiVersion: v2
     appVersion: 6.1.8
-    created: "2021-12-07T20:34:29.866121202Z"
+    created: "2021-12-09T17:54:03.234034+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: f1c29066bac952e44c2d50ce81c8e1a4723c6b3a2605d5e3f1e10e283ee32011
+    digest: 206ae48cafab4d285fafb05ba6894c6279d38a96333ce56a122d768e50ba8227
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -93,7 +95,7 @@ entries:
     version: 6.1.8
   - apiVersion: v2
     appVersion: 6.1.7
-    created: "2021-12-07T20:34:29.865137915Z"
+    created: "2021-12-09T17:54:03.233227+02:00"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: a2dc0cede004fe0e9b96c0b7dafc55bb2c1c5ea414ca13ea4922235b76aecf6c
@@ -123,10 +125,11 @@ entries:
     version: 6.1.7
   - apiVersion: v2
     appVersion: 6.1.6
-    created: "2021-12-07T20:34:29.864131927Z"
+    created: "2021-12-09T17:54:03.232488+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: daae82ce38dc99feec52eb06c69f78c6fe6263dcce7f41e9fcba4e5f6b9d4484
+    digest: 5b3aeaf96e7ce7db01bd3a144429c6896cc0a7918acf14b0b7a16d99f4f23aa9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -153,10 +156,11 @@ entries:
     version: 6.1.6
   - apiVersion: v2
     appVersion: 6.1.5
-    created: "2021-12-07T20:34:29.863200639Z"
+    created: "2021-12-09T17:54:03.231825+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 339eef1b38d0795b17c3a6906d65efa66c85271281d4eee623ea1fa8c2f8826e
+    digest: 5511183a18b59017d9d39f77fb83a5aea519ba58b75be982574d0f0976457be9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -183,10 +187,11 @@ entries:
     version: 6.1.5
   - apiVersion: v2
     appVersion: 6.1.4
-    created: "2021-12-07T20:34:29.86227705Z"
+    created: "2021-12-09T17:54:03.231157+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: e2205aa3fbca324ffa10bab4f64f93c8292bf8f829755e81cc34c7c454f669e9
+    digest: 4d39c5e7595310527065d156ba895c6b9ca97202b1704a8edbc75dd6f129d741
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -213,10 +218,11 @@ entries:
     version: 6.1.4
   - apiVersion: v2
     appVersion: 6.1.3
-    created: "2021-12-07T20:34:29.860663271Z"
+    created: "2021-12-09T17:54:03.230482+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 744eec8d79722cda3fb36016def500715263c4df5f7ce93b5229640d90bbb193
+    digest: 4ea6ade3c31c89b76f982bb01542a0b6f11ff4a446e660320839d8392bc588a0
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -243,10 +249,11 @@ entries:
     version: 6.1.3
   - apiVersion: v2
     appVersion: 6.1.2
-    created: "2021-12-07T20:34:29.859034291Z"
+    created: "2021-12-09T17:54:03.229774+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: a364cfcc95e536e639477f67d777ce10f1acdf674d882a2c2cab3b022c3d003c
+    digest: b9a1c2dae2c1d656d536e6630f56a1894c98034215dd45221bfd8a810f7267d6
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -273,10 +280,11 @@ entries:
     version: 6.1.2
   - apiVersion: v2
     appVersion: 6.1.1
-    created: "2021-12-07T20:34:29.857057016Z"
+    created: "2021-12-09T17:54:03.227583+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 13a193b50fcc73a81af837721953e98e3dad03d65234d51108253d99bc23fecd
+    digest: 9da37e76bcdcd274274ad2abc4dd5fec0d3784d3758dd5643f43ff6170676e53
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -303,10 +311,11 @@ entries:
     version: 6.1.1
   - apiVersion: v2
     appVersion: 6.1.0
-    created: "2021-12-07T20:34:29.856133027Z"
+    created: "2021-12-09T17:54:03.226872+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 886478533894906215d1d310edcd0535f2098ac55096b4be80519d3a77b3fe51
+    digest: c90e0006a916c1ebf5a11319fe2b4ee8336eef9289f49940ac9644c80eb0e6d9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -333,10 +342,11 @@ entries:
     version: 6.1.0
   - apiVersion: v2
     appVersion: 6.0.0
-    created: "2021-12-07T20:34:29.855222838Z"
+    created: "2021-12-09T17:54:03.226194+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: c944201027997d604e55f9587b3093e9361d25cb1871e34a8c8e27984a0f12bc
+    digest: c3393953604e69fd486e4c51c93c5abcb6530a57253602aedc49ff3b27c1ebcc
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -363,10 +373,11 @@ entries:
     version: 6.0.0
   - apiVersion: v2
     appVersion: 5.12.20
-    created: "2021-12-07T20:34:29.838339649Z"
+    created: "2021-12-09T17:54:03.21447+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 7a131503102804cdd943061de98ab66c89b126683f21dd4021b08bbd2f66c5b8
+    digest: a8a6a179e12359e8b4f79b9e32a78537b9cb4efad331f2d2c48ac1afbd52fa5e
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -393,10 +404,11 @@ entries:
     version: 5.12.20
   - apiVersion: v2
     appVersion: 5.12.19
-    created: "2021-12-07T20:34:29.836180976Z"
+    created: "2021-12-09T17:54:03.212975+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: a1e406f8ed348c4ddef6ba4d81e8ab7e1c2bfe3047521df19d0399e75505a3c7
+    digest: f774ca19563a3d79a99a6ebb79662b7e0cba7e6f0badcdd7a34fffa68fa618ba
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -423,10 +435,11 @@ entries:
     version: 5.12.19
   - apiVersion: v2
     appVersion: 5.12.18
-    created: "2021-12-07T20:34:29.834801693Z"
+    created: "2021-12-09T17:54:03.212312+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 2a0a09bb06c79ff45c61fcce19dc661c63ffe97b4dda4205f155a20fd28f3b8d
+    digest: 96ca09ff39c5f9c6ba6ccdeadae1a20a7908aba0cc95e95e9e9dc305b6131e02
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -453,10 +466,11 @@ entries:
     version: 5.12.18
   - apiVersion: v2
     appVersion: 5.12.17
-    created: "2021-12-07T20:34:29.833335611Z"
+    created: "2021-12-09T17:54:03.211585+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 405930c8347edb40805464e41e5fc984de3a6d8e4cc89c8a11bed292fbca03a3
+    digest: 303934b3e176d0308f47871e530718b39e10cc1b77824c5e9a5bea1dabbe86be
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -483,10 +497,11 @@ entries:
     version: 5.12.17
   - apiVersion: v2
     appVersion: 5.12.16
-    created: "2021-12-07T20:34:29.832342324Z"
+    created: "2021-12-09T17:54:03.210824+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 5780ef1d3aacc4d4047cdb11f6e69e8cee3a87051a6849a228fe16da9ef5a074
+    digest: 66fd1055da88fa5b8c7349900301493b3e485ff9750bd950fc9189b9b12de7f9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -513,10 +528,11 @@ entries:
     version: 5.12.16
   - apiVersion: v2
     appVersion: 5.12.15
-    created: "2021-12-07T20:34:29.831253837Z"
+    created: "2021-12-09T17:54:03.210044+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 4d6df1fe60544a833f39a402d61570732902c2870432cdbd133860e001b6c334
+    digest: 68eae38cae3cf2c2462a819936b7d723e4f2ebd5b17f40e845ed4a671fe59f2b
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -543,10 +559,11 @@ entries:
     version: 5.12.15
   - apiVersion: v2
     appVersion: 5.12.14
-    created: "2021-12-07T20:34:29.830289349Z"
+    created: "2021-12-09T17:54:03.208617+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 776b3a7516734bc2b221bec83e00712ac8982f473f5e95c1bde3234bfe89403b
+    digest: 60dae8bcb7f60dff13159178814123610a3ca16d341bb1775ba80042e8c7f869
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -573,10 +590,11 @@ entries:
     version: 5.12.14
   - apiVersion: v2
     appVersion: 5.12.13
-    created: "2021-12-07T20:34:29.829372761Z"
+    created: "2021-12-09T17:54:03.207873+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 6360addf7a7dae0c54ada4cbf97a6f1bfda3344f87ba4fc895323328686cc2c0
+    digest: 511a830ce230df3c293bbbca8e4e9be0d41fd45d00df0177600a966b7a375ad1
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -603,10 +621,11 @@ entries:
     version: 5.12.13
   - apiVersion: v2
     appVersion: 5.12.12
-    created: "2021-12-07T20:34:29.828422773Z"
+    created: "2021-12-09T17:54:03.207143+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 16112ec24d1488421c7739eb7e9cab60a16bc4ed63a3d8d6686831b030061c9f
+    digest: 57c2e3f575bc9682edbe3c365ed16dc3cb2055fa7011e6eb2d520eb0532b4314
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -633,10 +652,11 @@ entries:
     version: 5.12.12
   - apiVersion: v2
     appVersion: 5.12.11
-    created: "2021-12-07T20:34:29.827452385Z"
+    created: "2021-12-09T17:54:03.206341+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: c293188510da6481222c1317e614810bc59da2a3c4d8bcfb23ed99d028202aa2
+    digest: 1676866e0b8310f269f4dc79bde93f1b3c73f4efaf302ac62ffd748f6a8bb159
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -663,10 +683,11 @@ entries:
     version: 5.12.11
   - apiVersion: v2
     appVersion: 5.12.10
-    created: "2021-12-07T20:34:29.826418498Z"
+    created: "2021-12-09T17:54:03.205381+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 923774ab9af3431f82eedb301eaf2491e15f7c178891627b1919da4682ba7bc5
+    digest: 5e435422f7d66e1a5d0487fb01c2cf545c5e43c29fd246963f03f495d7055684
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -693,10 +714,11 @@ entries:
     version: 5.12.10
   - apiVersion: v2
     appVersion: 5.12.9
-    created: "2021-12-07T20:34:29.844312075Z"
+    created: "2021-12-09T17:54:03.218682+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 2ded0c0d445823ad34ec1fddbe3c923ae71ba733f6d4f8a7c3f2f9812196b187
+    digest: d569bf2f6c62885e5cbbc0846a95c234f8a40cb47c4b3a7682937aa1a6b25090
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -723,10 +745,11 @@ entries:
     version: 5.12.9
   - apiVersion: v2
     appVersion: 5.12.8
-    created: "2021-12-07T20:34:29.843362786Z"
+    created: "2021-12-09T17:54:03.217942+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 25c4574632b75a21dc19fc7dfa41c94d7e26acc84ebae50ef83033d8f3a778cf
+    digest: cb94a8d500544c8f14810accb0d287f8ccea739ad8bf8f035a588c4e0bb55680
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -753,10 +776,11 @@ entries:
     version: 5.12.8
   - apiVersion: v2
     appVersion: 5.12.6
-    created: "2021-12-07T20:34:29.842430398Z"
+    created: "2021-12-09T17:54:03.217206+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: b34b89776a317c3424cf31a34e5f46098e023188061554e118f5de08240d69a9
+    digest: 5162a0747b0c6c63918646ae40b6f65609425ae7b22034b850601355aeb406f9
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -783,10 +807,11 @@ entries:
     version: 5.12.6
   - apiVersion: v2
     appVersion: 5.12.5
-    created: "2021-12-07T20:34:29.841410411Z"
+    created: "2021-12-09T17:54:03.21654+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: d9cbb86cdda052958ed491941ed9dbdd2eca3f986d838747795055c562aaa262
+    digest: 95441df1db5ab00c7b601d9586852a1eef61795c462aa6baa9a1e5f4c8b81a85
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -813,10 +838,11 @@ entries:
     version: 5.12.5
   - apiVersion: v2
     appVersion: 5.12.4
-    created: "2021-12-07T20:34:29.840352724Z"
+    created: "2021-12-09T17:54:03.215811+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 8640a635b0b232cee4118cd9062157bf75ad9157599854fae2b178a1c34c933c
+    digest: b1b1bc4648b16e9c65d74b539249998587c2f6dd4d7df3079d0586600b36c6bc
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -843,10 +869,11 @@ entries:
     version: 5.12.4
   - apiVersion: v2
     appVersion: 5.12.3
-    created: "2021-12-07T20:34:29.839320237Z"
+    created: "2021-12-09T17:54:03.215148+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 463bfb4540a6e57c050089631948798e8d00f347d0e7a4473a5d055af8435b28
+    digest: cae1c55b97553f793046cb9703e2958c9f5e4647000869da5c2ac8030575ee77
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -873,10 +900,11 @@ entries:
     version: 5.12.3
   - apiVersion: v2
     appVersion: 5.12.2
-    created: "2021-12-07T20:34:29.837370461Z"
+    created: "2021-12-09T17:54:03.213733+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 1bcf9a154f04caad1d6d1e2b4bdbb14a830f98137dc94d8d2e11cdfa057c15ad
+    digest: 91d7d732a6f1a8fe685af64180b0833ef85baa81dd9d3415081b7d6b1cd79564
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -903,10 +931,11 @@ entries:
     version: 5.12.2
   - apiVersion: v2
     appVersion: 5.12.1
-    created: "2021-12-07T20:34:29.825520809Z"
+    created: "2021-12-09T17:54:03.204682+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 8a750aae65a20155fa9e45fff239512a9ae4e221a1777bdfe7dea58846e07f3f
+    digest: 40be276422ca2842ff33793b0a4aa8f87442e08001ddae8d46968109d7a69190
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -933,10 +962,11 @@ entries:
     version: 5.12.1
   - apiVersion: v2
     appVersion: 5.12.0
-    created: "2021-12-07T20:34:29.824580421Z"
+    created: "2021-12-09T17:54:03.203976+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 07907c8b8d9a3356ae79102b6fbb3bd8bf02f14fcb7748ed5dab61cdb99b1d84
+    digest: dce1b048958d8dac10c37f0c287fe4aeccd110ad29566cbbbd3687345573e995
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -963,10 +993,11 @@ entries:
     version: 5.12.0
   - apiVersion: v2
     appVersion: 5.11.8
-    created: "2021-12-07T20:34:29.822583146Z"
+    created: "2021-12-09T17:54:03.203187+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: b21a3e5fac8a99e181ce5f6dd5091bb716162941934aa9752465d9de79a94e52
+    digest: ef793a892123778b9fbda3614e9d6ce8e4a6534e1d9b54c78aa0928197ec688e
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -993,10 +1024,11 @@ entries:
     version: 5.11.8
   - apiVersion: v2
     appVersion: 5.11.7
-    created: "2021-12-07T20:34:29.821012765Z"
+    created: "2021-12-09T17:54:03.202513+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: d0c27cb9cfb15e34068545b8993e87fc3276cac4de4d65647ab69b276ae1ed85
+    digest: 55f1158d183c11b7ee2e6566340b6e8e6a761f5a13c1c58717eb74ab10ac5dd1
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1023,10 +1055,11 @@ entries:
     version: 5.11.7
   - apiVersion: v2
     appVersion: 5.11.6
-    created: "2021-12-07T20:34:29.819888979Z"
+    created: "2021-12-09T17:54:03.201851+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 411aed8d907c8feb344498dab439b41340882edb0d2b3984c7ac50178ed63b0e
+    digest: cf5454f4bb56901cf7d4311ddcdf1f87495ce96eaa83ff0c6bcfe87c32da0d9f
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1053,10 +1086,11 @@ entries:
     version: 5.11.6
   - apiVersion: v2
     appVersion: 5.11.5
-    created: "2021-12-07T20:34:29.818917891Z"
+    created: "2021-12-09T17:54:03.201174+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 52b1e20a2bb1ae8ab482661cc9d0a34905c3e4b9393f6d1e9fe9df0960253440
+    digest: f9bc03dfa0eb1eed210448d3a02d0513ecc672fb8df39555227423c117136e7f
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1083,10 +1117,11 @@ entries:
     version: 5.11.5
   - apiVersion: v2
     appVersion: 5.11.4
-    created: "2021-12-07T20:34:29.817901404Z"
+    created: "2021-12-09T17:54:03.200472+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 845f9fba888fa39e6896abd1c0c5030594344e47a0eeba89b9494e0d4a7fbbcd
+    digest: 1f29f8cb79baf3b1851d73678324b47f69e11164e0f3f41795ebc8168e7e31ef
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1113,10 +1148,11 @@ entries:
     version: 5.11.4
   - apiVersion: v2
     appVersion: 5.11.3
-    created: "2021-12-07T20:34:29.816947516Z"
+    created: "2021-12-09T17:54:03.198819+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 1c4fdf007d62c48d5d189ba1798c50b6405079528fc1c4cf9b8c72588bf93b2b
+    digest: 4ec1da21b76b169069147764b229cf525414a33181be636ce42709edc9ea6adb
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1143,10 +1179,11 @@ entries:
     version: 5.11.3
   - apiVersion: v2
     appVersion: 5.11.2
-    created: "2021-12-07T20:34:29.815972228Z"
+    created: "2021-12-09T17:54:03.198021+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 92147661ec142c3e6bb695d97ea6bae251e648e274ca1211d322c13edcd6ed3d
+    digest: beaf40bbf6a9758eb1b4692d8bcd22c83a4a5a0dcafcc43b53dde1d9a41f1d35
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1173,10 +1210,11 @@ entries:
     version: 5.11.2
   - apiVersion: v2
     appVersion: 5.11.1
-    created: "2021-12-07T20:34:29.814945641Z"
+    created: "2021-12-09T17:54:03.197224+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 81df532b01cb6c8651325b3313c328521dbbfd79ed81c06415f9397b0afb7a9d
+    digest: 2bc9371c919de6beb03dd5a481bb62567b82daa6cca29cc033d8f741daeeda69
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1203,10 +1241,11 @@ entries:
     version: 5.11.1
   - apiVersion: v2
     appVersion: 5.11.0
-    created: "2021-12-07T20:34:29.813902954Z"
+    created: "2021-12-09T17:54:03.196369+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 85ffce05c2b96edeed5f8c1aa94f9b6d44f76902ffd29f6027a0eafe6059f441
+    digest: 761e5a9a2a57486f0f3bd779f35ecd9a67f8057fd8b4264645127e09c70df07c
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1233,10 +1272,11 @@ entries:
     version: 5.11.0
   - apiVersion: v2
     appVersion: 5.10.3
-    created: "2021-12-07T20:34:29.812872367Z"
+    created: "2021-12-09T17:54:03.195524+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 0c1a0488ab738ea068c7301acaf906f781003e3ed587ad5744560b5f34632af4
+    digest: 277f01a82d996948c2444583e3d27f9521b784a25a0887f2e338f98ccc30612b
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1263,10 +1303,11 @@ entries:
     version: 5.10.3
   - apiVersion: v2
     appVersion: 5.10.2
-    created: "2021-12-07T20:34:29.811886079Z"
+    created: "2021-12-09T17:54:03.19463+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 8477a82b25e15edccb4f54d9402229bd646747d73a5f603d918335bc5dd22912
+    digest: 0980b1a9a47c817b620a7d7669c0d680372dbd2aca410f0f9f6e393f9b5f4f03
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1293,10 +1334,11 @@ entries:
     version: 5.10.2
   - apiVersion: v2
     appVersion: 5.10.1
-    created: "2021-12-07T20:34:29.809708906Z"
+    created: "2021-12-09T17:54:03.19375+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 83f230a6bea65ae9e6d49f4efa104f09e0b4382bd7f94fe73f8047234077c4f9
+    digest: 5ace9495d12f5be2ab695518d0a5ecbead094de4b9487f41213552eb92b93409
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1323,10 +1365,11 @@ entries:
     version: 5.10.1
   - apiVersion: v2
     appVersion: 5.10.0
-    created: "2021-12-07T20:34:29.808368023Z"
+    created: "2021-12-09T17:54:03.192941+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: a3b03b2365c365caacb74615c97a6453955030eb16a56dae5989378f70a7db1c
+    digest: f39bb06655c1120d88bd827257532cb08ae9f8972bc9d875b07b5f17a0795d3c
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1353,10 +1396,11 @@ entries:
     version: 5.10.0
   - apiVersion: v2
     appVersion: 5.9.3
-    created: "2021-12-07T20:34:29.85432115Z"
+    created: "2021-12-09T17:54:03.22548+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 4725a42e8a0144f7ad53b1706e00881ae3a0db420655a5cdf7491dbb001155f2
+    digest: c32bb591a90de045923d3dd333ab3f56b7fecf9430bd03425c94bd399d5e6446
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1383,10 +1427,11 @@ entries:
     version: 5.9.3
   - apiVersion: v2
     appVersion: 5.9.2
-    created: "2021-12-07T20:34:29.853415561Z"
+    created: "2021-12-09T17:54:03.224721+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 0bb2e95802c4d627a1c2c30fc450ba3e0b81a2cbca822b3ccb70a7306f11baab
+    digest: dbd2a57d94dde0ccce6e0ac2353306fddc09c68ddd51a2842d798ca2214dd63e
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1413,10 +1458,11 @@ entries:
     version: 5.9.2
   - apiVersion: v2
     appVersion: 5.9.1
-    created: "2021-12-07T20:34:29.852335874Z"
+    created: "2021-12-09T17:54:03.224043+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 2d7f0b69584390f58732c67fdc11f04499d0d0429930cb6e5e208b87c8c6bde4
+    digest: 8544975570f885787fd1bc272a626a79646b4e1c185fc4aac521b2c69bcabb32
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1443,10 +1489,11 @@ entries:
     version: 5.9.1
   - apiVersion: v2
     appVersion: 5.9.0
-    created: "2021-12-07T20:34:29.851256288Z"
+    created: "2021-12-09T17:54:03.223396+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 12f3bf67af7d840eb065cb0fa608b2b011e6745b1763f0d6fc3b71b9bf376072
+    digest: 4a82df74928287d298fe30f560936fe0b67a836cc9afd72efac796186d0e8269
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1473,10 +1520,11 @@ entries:
     version: 5.9.0
   - apiVersion: v2
     appVersion: 5.8.4
-    created: "2021-12-07T20:34:29.8503026Z"
+    created: "2021-12-09T17:54:03.222754+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 5975f67b763e24ddf0897fdd08abd3593c7cca4ed46fcbd8350bcaad638c35f3
+    digest: 40b46c11cae15143f17e13f92ca8813852547e1d9fa8c54fa99baa4e70959a37
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1503,10 +1551,11 @@ entries:
     version: 5.8.4
   - apiVersion: v2
     appVersion: 5.8.3
-    created: "2021-12-07T20:34:29.848762119Z"
+    created: "2021-12-09T17:54:03.222108+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: f50e4fd08de66ca1aace1f2a8aa111b9ac31aedf870494d0cd489026a237310e
+    digest: a1ecf2637dbdc3bad9a1695a036e6af89c987bddb7dff5d8cd0976b443634fd1
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1533,10 +1582,11 @@ entries:
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
-    created: "2021-12-07T20:34:29.84709634Z"
+    created: "2021-12-09T17:54:03.22144+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 5f7cb4e5c15b939b07313711fbde3c7ff2f5eef7a00b8cb52d2b4c2b96e4a3f6
+    digest: e872553ed26293d4d1938268e9e79f407e07e43850bf6116bca0ccb300e57d9c
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1563,10 +1613,11 @@ entries:
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
-    created: "2021-12-07T20:34:29.846145552Z"
+    created: "2021-12-09T17:54:03.220754+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 50b77514a2e35fda69b918eaf0e9bb1ca2fdbe73b06d5ae8207e14946becf83f
+    digest: 3da0d53ce9c2fdf39c71891c409db9717cd137ac28145fee82b7a6cf606e80c0
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1593,10 +1644,11 @@ entries:
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
-    created: "2021-12-07T20:34:29.845238463Z"
+    created: "2021-12-09T17:54:03.220025+02:00"
+    deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
-    digest: 6ea84ce98f85fbc580fa3b8eb2df590511291506e50c07c15ab0a1f0baf9129d
+    digest: 68fca7754626f4ebe6250438198fb21a5d24f2abf221ff10e7e6865d5ba53dd6
     home: https://www.dirigible.io
     icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
     keywords:
@@ -1621,4 +1673,4 @@ entries:
     urls:
     - https://eclipse.github.io/dirigible/charts/dirigible-5.8.0.tgz
     version: 5.8.0
-generated: "2021-12-07T20:34:29.806603345Z"
+generated: "2021-12-09T17:54:03.192006+02:00"
