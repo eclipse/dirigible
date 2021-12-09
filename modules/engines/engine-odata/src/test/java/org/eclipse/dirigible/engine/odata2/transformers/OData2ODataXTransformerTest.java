@@ -403,7 +403,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(viewModel);
         when(dbMetadataUtil.getTableMetadata("EmployeesView", null)).thenReturn(synonymModel);
-        when(dbMetadataUtil.getSynonymTargetObjectMetadata(synonymModel.getTableName())).thenReturn(synonymTargetObjectMetadata);
+        when(dbMetadataUtil.getSynonymTargetObjectMetadata(synonymModel.getTableName(), null)).thenReturn(synonymTargetObjectMetadata);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +

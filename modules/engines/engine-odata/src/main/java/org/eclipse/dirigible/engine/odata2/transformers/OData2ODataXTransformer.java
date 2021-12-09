@@ -53,7 +53,7 @@ public class OData2ODataXTransformer {
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
 
             if (ISqlKeywords.METADATA_SYNONYM.equals(tableMetadata.getTableType())) {
-                HashMap<String, String> targetObjectMetadata = dbMetadataUtil.getSynonymTargetObjectMetadata(tableMetadata.getTableName());
+                HashMap<String, String> targetObjectMetadata = dbMetadataUtil.getSynonymTargetObjectMetadata(tableMetadata.getTableName(), tableMetadata.getSchemaName());
 
                 if (targetObjectMetadata.isEmpty()) {
                     logger.error("Failed to get details for synonym - " + tableMetadata.getTableName());

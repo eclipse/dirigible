@@ -248,12 +248,13 @@ public class DBMetadataUtil {
         }
     }
 
-    public HashMap<String, String> getSynonymTargetObjectMetadata(String synonymName) throws SQLException {
+    public HashMap<String, String> getSynonymTargetObjectMetadata(String synonymName, String schemaName) throws SQLException {
         HashMap<String, String> targetObjectMetadata = new HashMap<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM \"SYS\".\"SYNONYMS\" WHERE \"SYNONYM_NAME\" = ?");
+            PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM \"SYS\".\"SYNONYMS\" WHERE \"SYNONYM_NAME\" = ? AND \"SCHEMA_NAME\" = ?");
             prepareStatement.setString(1, synonymName);
+            prepareStatement.setString(2, schemaName);
 
             try (ResultSet resultSet = prepareStatement.executeQuery()) {
                 if (resultSet.next()) {
