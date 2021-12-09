@@ -1,224 +1,232 @@
 <!DOCTYPE html>
 <html id="ng-app" ng-app="app">
 
-<head>
-    <title>Documents</title>
-    <!-- Fix for old browsers -->
-    <script type="text/javascript" src="js/es5-shim.min.js"></script>
-    <script type="text/javascript" src="https://nervgh.github.io/js/es5-sham.min.js"></script>
-    <!-- scripts/angular.js -->
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-route.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
-    <!-- end -->
-    <script type="text/javascript" src="js/angular-file-upload.min.js"></script>
-    <script type="text/javascript" src="controllers.js"></script>
-    <style>
-        .my-drop-zone {
-            border: dotted 3px lightgray;
-        }
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+        <title>Documents</title>
+        <!-- Fix for old browsers -->
+        <script type="text/javascript" src="js/es5-shim.min.js"></script>
+        <script type="text/javascript" src="https://nervgh.github.io/js/es5-sham.min.js"></script>
+        <!-- scripts/angular.js -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-route.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
+        <!-- end -->
+        <script type="text/javascript" src="js/angular-file-upload.min.js"></script>
+        <script type="text/javascript" src="controllers.js"></script>
+        <style>
+            .my-drop-zone {
+                border: dotted 3px lightgray;
+            }
 
-        .nv-file-over {
-            border: dotted 3px red;
-        }
+            .nv-file-over {
+                border: dotted 3px red;
+            }
 
-        /* Default class applied to drop zones on over */
-        .my-list-item:hover {
-            background-color: #E9E9E9;
-        }
+            /* Default class applied to drop zones on over */
+            .my-list-item:hover {
+                background-color: #E9E9E9;
+            }
 
-        .btn-space {
-            margin-right: 2px !important;
-            margin-left: 2px !important;
-        }
+            .btn-space {
+                margin-right: 2px !important;
+                margin-left: 2px !important;
+            }
 
-        html,
-        body {
-            height: 100%;
-        }
-    </style>
+            html,
+            body {
+                height: 100%;
+            }
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        </style>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <!-- Twitter Bootstrap with Theme Support -->
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-</head>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-<body>
-    <div class="container" ng-controller="DocServiceCtrl" nv-file-drop="" uploader="uploader"
-        filters="queueLimit, customFilter">
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header">Documents</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-11">
-                <div class="input-group list-group">
-                    <input type="text" class="form-control" placeholder="Search in folder" ng-model="search">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default documents-folder-button" type="button"
-                            ng-click="search = undefined">Clear</button>
-                    </span>
-                </div>
-                <div class="" ng-show="searchError && search">
-                    <div class="alert alert-danger"> <strong>Oh snap!</strong>
-                        {{ searchError.status }} - {{ searchError.data }}
-                    </div>
-                </div>
-                <div class="input-group list-group">
-                    <ol class="breadcrumb form-control">
-                        <li ng-repeat="path in breadcrumbs.crumbs">
-                            <a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
-                        </li>
-                    </ol>
-                    <div class="input-group-btn">
-                        <button class="btn btn-default documents-folder-button" data-toggle="modal"
-                            data-target="#newFolderModal" type="button">New Folder</button>
-                        <a href="{{ downloadZipPath }}?path={{ folder.path }}"
-                            class="btn btn-default documents-folder-button">Download Zip</a>
-                        <button class="btn btn-default documents-folder-button" ng-show="!inDeleteSession"
-                            ng-disabled="!folder.children.length" ng-click="enterDeleteSession()" type="button">Delete
-                            Items</button>
-                        <button class="btn btn-danger" ng-show="inDeleteSession" ng-click="handleDeleteButton()"
-                            type="button">Delete</button>
-                        <button class="btn btn-default" ng-show="inDeleteSession" ng-click="exitDeleteSession()"
-                            type="button">Cancel</button>
-                    </div>
-                </div>
-                <div id="errorModal" class="modal fade" ng-include="'dialogs/errorDialog.html'"></div>
-                <div id="newFolderModal" class="modal fade" role="dialog" ng-include="'dialogs/newFolderDialog.html'">
-                </div>
-                <div id="confirmDeleteModal" class="modal fade" ng-include="'dialogs/confirmDialog.html'"></div>
-                <div id="renameModal" class="modal fade" ng-include="'dialogs/renameDialog.html'"></div>
-                <div class="list-group">
-                    <div class="list-group-item my-list-item" style="cursor: pointer;"
-                        ng-repeat="single in folder.children | filter: search | orderBy: ['-type', 'name']"
-                        ng-click="handleExplorerClick(single)" ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
-                        <input ng-show="inDeleteSession" ng-model="single['selected']" type="checkbox">
-                        <span
-                            class="badge-right fa fa-{{ (single.type === 'cmis:folder') ? (single.restrictedAccess ? 'folder' : 'folder-open-o' ) : (single.restrictedAccess ? 'file' : 'file-o' ) }}"></span>
-                        <a href="{{ previewPath }}?path={{ getFullPath(single.name) }}" target="_blank"
-                            ng-show="single.type === 'cmis:document'">{{ single.name }}</a>
-                        <span ng-show="single.type === 'cmis:folder'">{{ single.name }}</span>
-                        <a ng-click="handleSingleDelete($event, single)" class="badge pull-right" target="_blank"
-                            ng-show="writeAccessAllowed(single)">
-                            <span title="Delete" class="fa fa-remove"></span>
-                        </a>
-                        <a ng-click="handleRenameButton($event, single)" class="badge pull-right"
-                            ng-show="writeAccessAllowed(single)">
-                            <span title="Rename" class="fa fa-pencil"></span>
-                        </a>
-                        <a href="{{ downloadPath }}?path={{ getFullPath(single.name) }}" class="badge pull-right"
-                            ng-show="single.type === 'cmis:document'">
-                            <span title="Download" class="fa fa-cloud-download"></span>
-                        </a>
-                        <a href="{{ previewPath }}?path={{ getFullPath(single.name) }}" class="badge pull-right"
-                            target="_blank" ng-show="single.type === 'cmis:document'">
-                            <span title="Preview" class="fa fa-search"></span>
-                        </a>
-                    </div>
-                    <div class="alert alert-warning" role="alert" ng-show="!folder.children.length">No content.</div>
+    </head>
+
+    <body>
+        <div class="container" ng-controller="DocServiceCtrl" nv-file-drop="" uploader="uploader"
+            filters="queueLimit, customFilter">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">Documents</h3>
                 </div>
             </div>
-            <div class="col-md-3">
-                <h3>Upload files</h3>
-                <div ng-show="uploader.isHTML5">
-                    <!-- 3. nv-file-over uploader="link" over-class="className" -->
-                    <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
-                        Drop files here
+            <div class="row">
+                <div class="col-lg-11">
+                    <div class="input-group list-group">
+                        <input type="text" class="form-control" placeholder="Search in folder" ng-model="search">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default documents-folder-button" type="button"
+                                ng-click="search = undefined">Clear</button>
+                        </span>
                     </div>
-                </div>
-                <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                or browse your file system
-                <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
-                <div>
-                    <label><input type="checkbox" ng-init="unpackZips=false" ng-model="unpackZips"> Unpack zips in
-                        current folder</label>
-                    <label><input type="checkbox" ng-init="overwrite=false" ng-model="overwrite"> Overwrite if
-                        existing</label>
-                </div>
-            </div>
-            <div class="col-md-6" style="margin-bottom: 40px">
-                <h3>Upload queue</h3>
-                <p>Queue length: {{ uploader.queue.length }}</p>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th width="50%">Name</th>
-                            <th ng-show="uploader.isHTML5">Size</th>
-                            <th ng-show="uploader.isHTML5">Progress</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in uploader.queue">
-                            <td><strong>{{ item.file.name }}</strong></td>
-                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-                            <td ng-show="uploader.isHTML5">
-                                <div class="progress" style="margin-bottom: 0;">
-                                    <div class="progress-bar" role="progressbar"
-                                        ng-style="{ 'width': item.progress + '%' }"></div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span ng-show="item.isSuccess"><i class="fa fa-ok"></i></span>
-                                <span ng-show="item.isCancel"><i class="fa fa-ban"></i></span>
-                                <span ng-show="item.isError"><i class="fa fa-remove"></i></span>
-                            </td>
-                            <td nowrap>
-                                <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
-                                    ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                    <span class="fa fa-upload"></span> Upload
-                                </button>
-                                <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()"
-                                    ng-disabled="!item.isUploading">
-                                    <span class="fa fa-ban"></span> Cancel
-                                </button>
-                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                    <span class="fa fa-trash"></span> Remove
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div>
-                    <div>
-                        Queue progress:
-                        <div class="progress" style="">
-                            <div class="progress-bar" role="progressbar"
-                                ng-style="{ 'width': uploader.progress + '%' }"></div>
+                    <div class="" ng-show="searchError && search">
+                        <div class="alert alert-danger"> <strong>Oh snap!</strong>
+                            {{ searchError.status }} - {{ searchError.data }}
                         </div>
                     </div>
-                    <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
-                        ng-disabled="!uploader.getNotUploadedItems().length">
-                        <span class="fa fa-upload"></span> Upload All
-                    </button>
-                    <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()"
-                        ng-disabled="!uploader.isUploading">
-                        <span class="fa fa-ban"></span> Cancel All
-                    </button>
-                    <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()"
-                        ng-disabled="!uploader.queue.length">
-                        <span class="fa fa-trash"></span> Remove All
-                    </button>
+                    <div class="input-group list-group">
+                        <ol class="breadcrumb form-control">
+                            <li ng-repeat="path in breadcrumbs.crumbs">
+                                <a href="" ng-click="crumbsChanged(path)">{{ path.name }}</a>
+                            </li>
+                        </ol>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default documents-folder-button" data-toggle="modal"
+                                data-target="#newFolderModal" type="button">New Folder</button>
+                            <a href="{{ downloadZipPath }}?path={{ folder.path }}"
+                                class="btn btn-default documents-folder-button">Download Zip</a>
+                            <button class="btn btn-default documents-folder-button" ng-show="!inDeleteSession"
+                                ng-disabled="!folder.children.length" ng-click="enterDeleteSession()"
+                                type="button">Delete
+                                Items</button>
+                            <button class="btn btn-danger" ng-show="inDeleteSession" ng-click="handleDeleteButton()"
+                                type="button">Delete</button>
+                            <button class="btn btn-default" ng-show="inDeleteSession" ng-click="exitDeleteSession()"
+                                type="button">Cancel</button>
+                        </div>
+                    </div>
+                    <div id="errorModal" class="modal fade" ng-include="'dialogs/errorDialog.html'"></div>
+                    <div id="newFolderModal" class="modal fade" role="dialog"
+                        ng-include="'dialogs/newFolderDialog.html'">
+                    </div>
+                    <div id="confirmDeleteModal" class="modal fade" ng-include="'dialogs/confirmDialog.html'"></div>
+                    <div id="renameModal" class="modal fade" ng-include="'dialogs/renameDialog.html'"></div>
+                    <div class="list-group">
+                        <div class="list-group-item my-list-item" style="cursor: pointer;"
+                            ng-repeat="single in folder.children | filter: search | orderBy: ['-type', 'name']"
+                            ng-click="handleExplorerClick(single)" ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
+                            <input ng-show="inDeleteSession" ng-model="single['selected']" type="checkbox">
+                            <span
+                                class="badge-right fa fa-{{ (single.type === 'cmis:folder') ? (single.restrictedAccess ? 'folder' : 'folder-open-o' ) : (single.restrictedAccess ? 'file' : 'file-o' ) }}"></span>
+                            <a href="{{ previewPath }}?path={{ getFullPath(single.name) }}" target="_blank"
+                                ng-show="single.type === 'cmis:document'">{{ single.name }}</a>
+                            <span ng-show="single.type === 'cmis:folder'">{{ single.name }}</span>
+                            <a ng-click="handleSingleDelete($event, single)" class="badge pull-right" target="_blank"
+                                ng-show="writeAccessAllowed(single)">
+                                <span title="Delete" class="fa fa-remove"></span>
+                            </a>
+                            <a ng-click="handleRenameButton($event, single)" class="badge pull-right"
+                                ng-show="writeAccessAllowed(single)">
+                                <span title="Rename" class="fa fa-pencil"></span>
+                            </a>
+                            <a href="{{ downloadPath }}?path={{ getFullPath(single.name) }}" class="badge pull-right"
+                                ng-show="single.type === 'cmis:document'">
+                                <span title="Download" class="fa fa-cloud-download"></span>
+                            </a>
+                            <a href="{{ previewPath }}?path={{ getFullPath(single.name) }}" class="badge pull-right"
+                                target="_blank" ng-show="single.type === 'cmis:document'">
+                                <span title="Preview" class="fa fa-search"></span>
+                            </a>
+                        </div>
+                        <div class="alert alert-warning" role="alert" ng-show="!folder.children.length">No content.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3>Upload files</h3>
+                    <div ng-show="uploader.isHTML5">
+                        <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                            Drop files here
+                        </div>
+                    </div>
+                    <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                    or browse your file system
+                    <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
+                    <div>
+                        <label><input type="checkbox" ng-init="unpackZips=false" ng-model="unpackZips"> Unpack zips in
+                            current folder</label>
+                        <label><input type="checkbox" ng-init="overwrite=false" ng-model="overwrite"> Overwrite if
+                            existing</label>
+                    </div>
+                </div>
+                <div class="col-md-6" style="margin-bottom: 40px">
+                    <h3>Upload queue</h3>
+                    <p>Queue length: {{ uploader.queue.length }}</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="uploader.isHTML5">Size</th>
+                                <th ng-show="uploader.isHTML5">Progress</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                                <td><strong>{{ item.file.name }}</strong></td>
+                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td ng-show="uploader.isHTML5">
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar" role="progressbar"
+                                            ng-style="{ 'width': item.progress + '%' }"></div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="fa fa-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i class="fa fa-ban"></i></span>
+                                    <span ng-show="item.isError"><i class="fa fa-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
+                                        ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="fa fa-upload"></span> Upload
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()"
+                                        ng-disabled="!item.isUploading">
+                                        <span class="fa fa-ban"></span> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                        <span class="fa fa-trash"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div>
+                            Queue progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar"
+                                    ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
+                            ng-disabled="!uploader.getNotUploadedItems().length">
+                            <span class="fa fa-upload"></span> Upload All
+                        </button>
+                        <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()"
+                            ng-disabled="!uploader.isUploading">
+                            <span class="fa fa-ban"></span> Cancel All
+                        </button>
+                        <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()"
+                            ng-disabled="!uploader.queue.length">
+                            <span class="fa fa-trash"></span> Remove All
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 
 </html>

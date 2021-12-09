@@ -9,70 +9,76 @@
   ~ SAP - initial API and implementation
   -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-	<meta charset="utf-8" />
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Eclipse Dirigible - Git</title>
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-	<script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+		<title>Eclipse Dirigible - Git</title>
 
-	<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
 
-	<!-- jQuery -->
-	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+		<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-	<!-- AngularJS -->
-	<script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-	<script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-	<script src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
-	<script src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
+		<!-- jQuery -->
+		<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-	<!-- jsTree -->
-	<link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
-	<script src="/webjars/jstree/3.3.5/jstree.min.js"></script>
+		<!-- AngularJS -->
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
 
-	<!-- Twitter Bootstrap with Theme Support -->
-	<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-	<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<!-- jsTree -->
+		<link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
+		<script type="text/javascript" src="/webjars/jstree/3.3.5/jstree.min.js"></script>
 
-	<!-- Custom IDE Styles -->
-	<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+		<!-- Twitter Bootstrap with Theme Support -->
+		<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-	<script src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+		<!-- Custom IDE Styles -->
+		<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-	<script src="history.js"></script>
+		<script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
+		<script type="text/javascript" src="history.js"></script>
 
 
-</head>
+	</head>
 
-<body border="1px" ng-app="historyApp" ng-controller="HistoryContoller as history">
-	<div class="view-fixed-top">
-		<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshRepository()"><i class="fa fa-refresh"></i></button>
-		Project: <b> {{selectedProject}} </b>
-	</div>
-	<div class="workspace" style="height: 100%">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th class="col-md-1">Id</th>
-					<th class="col-md-6">Message</th>
-					<th class="col-md-2">Author</th>
-					<th class="col-md-3">Date Time</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="next in history">
-					<td class="col-md-1">{{next.shortId}}</td>
-					<td class="col-md-6">{{next.message}}</td>
-					<td class="col-md-2">{{next.author}} <{{next.emailAddress}}></td>
-					<td class="col-md-3">{{next.dateTime}}</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	<body border="1px" ng-app="historyApp" ng-controller="HistoryContoller as history">
+		<div class="view-fixed-top">
+			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshRepository()"><i
+					class="fa fa-refresh"></i></button>
+			Project: <b> {{selectedProject}} </b>
+		</div>
+		<div class="workspace" style="height: 100%">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="col-md-1">Id</th>
+						<th class="col-md-6">Message</th>
+						<th class="col-md-2">Author</th>
+						<th class="col-md-3">Date Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="next in history">
+						<td class="col-md-1">{{next.shortId}}</td>
+						<td class="col-md-6">{{next.message}}</td>
+						<td class="col-md-2">{{next.author}}
+							<{{next.emailAddress}}>
+						</td>
+						<td class="col-md-3">{{next.dateTime}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-</body>
+	</body>
 
 </html>

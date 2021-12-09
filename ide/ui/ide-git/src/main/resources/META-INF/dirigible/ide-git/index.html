@@ -11,104 +11,104 @@
 
 <html lang="en" ng-app="git" ng-controller="GitController as git">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title brandtitle perspective-name="Git"></title>
+        <title brandtitle perspective-name="Git"></title>
 
-    <link brandicon/>
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brandicon />
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- GoldenLayout with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css"/>
-    <link type="text/css" rel="stylesheet"
-          href="/services/v4/js/theme/resources.js/goldenlayout-theme.css"/>
+        <!-- GoldenLayout with Theme Support -->
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css"/>
-</head>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+    </head>
 
-<body>
+    <body>
 
-<div menu menu-data-url="/services/v4/js/ide-git/services/menu-git.js"></div>
+        <div menu menu-data-url="/services/v4/js/ide-git/services/menu-git.js"></div>
 
-<div class="shell">
-    <div class="sidebar list-group" sidebar active="Git"></div>
-    <div id="git" class="plane" views-layout views-layout-model="git.layoutModel"></div>
-</div>
-<div alert></div>
-<div class="statusbar" status-bar>{{message}}</div>
+        <div class="shell">
+            <div class="sidebar list-group" sidebar active="Git"></div>
+            <div id="git" class="plane" views-layout views-layout-model="git.layoutModel"></div>
+        </div>
+        <div alert></div>
+        <div class="statusbar" status-bar>{{message}}</div>
 
-<!-- jQuery -->
-<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-<!-- Twitter Bootstrap with Theme Support -->
-<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<!-- AngularJS -->
-<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-<!-- GoldenLayout with Theme Support -->
-<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
+        <!-- GoldenLayout with Theme Support -->
+        <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
-<script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-<script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
-<script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 
-<script type="text/javascript">
-    angular.module('git', ['ngResource', 'ideUiCore'])
-        .config(["messageHubProvider", function (messageHubProvider) {
-            messageHubProvider.evtNamePrefix = 'git';
-        }])
-        .controller('GitController', ['Layouts', function (Layouts) {
+        <script type="text/javascript">
+            angular.module('git', ['ngResource', 'ideUiCore'])
+            .config(["messageHubProvider", function (messageHubProvider) {
+                messageHubProvider.evtNamePrefix = 'git';
+            }])
+            .controller('GitController', ['Layouts', function (Layouts) {
 
-            this.layoutModel = {
-                views: ['git', 'diff', 'staging', 'history', 'console'],
-                viewSettings: {
-                    'git': {isClosable: false},
-                    'diff': {isClosable: false},
-                    'staging': {isClosable: false},
-                    'history': {isClosable: false}
+                this.layoutModel = {
+                    views: ['git', 'diff', 'staging', 'history', 'console'],
+                    viewSettings: {
+                        'git': {isClosable: false},
+                        'diff': {isClosable: false},
+                        'staging': {isClosable: false},
+                        'history': {isClosable: false}
+                    }
+                };
+
+                let getParameterByName = function (name) {
+                    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                        results = regex.exec(location.search);
+                    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+                };
+
+                let messageHub = new FramesMessageHub();
+                let send = function (evtName, data, absolute) {
+                    messageHub.post({data: data}, (absolute ? '' : 'git.') + evtName);
+                };
+                let run = function () {
+                    send("repository.run", metadata, false);
                 }
-            };
+                let metadata = {};
+                metadata.repository = getParameterByName("repository");
+                metadata.username = getParameterByName("username");
+                metadata.password = getParameterByName("password");
+                metadata.uri = getParameterByName("uri");
+                metadata.branch = getParameterByName("branch");
+                metadata.env = getParameterByName("env");
+                metadata.env = metadata.env ? JSON.parse(metadata.env) : metadata.env;
+                if (metadata.repository) {
+                    window.setTimeout(run, 2000);
+                }
 
-            let getParameterByName = function (name) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                    results = regex.exec(location.search);
-                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-            };
+            }]);
+        </script>
 
-            let messageHub = new FramesMessageHub();
-            let send = function (evtName, data, absolute) {
-                messageHub.post({data: data}, (absolute ? '' : 'git.') + evtName);
-            };
-            let run = function () {
-                send("repository.run", metadata, false);
-            }
-            let metadata = {};
-            metadata.repository = getParameterByName("repository");
-            metadata.username = getParameterByName("username");
-            metadata.password = getParameterByName("password");
-            metadata.uri = getParameterByName("uri");
-            metadata.branch = getParameterByName("branch");
-            metadata.env = getParameterByName("env");
-            metadata.env = metadata.env ? JSON.parse(metadata.env) : metadata.env;
-            if (metadata.repository) {
-                window.setTimeout(run, 2000);
-            }
-
-        }]);
-</script>
-
-</body>
+    </body>
 
 </html>

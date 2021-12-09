@@ -11,66 +11,66 @@
 
 <html lang="en" ng-app="configurations">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible &trade; | View </title>
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
+        <title>Eclipse Dirigible &trade; | View </title>
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-</head>
+    </head>
 
-<body ng-controller="ConfigurationsController">
+    <body ng-controller="ConfigurationsController">
 
-    <table class="table table-striped tableFixHead">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Runtime</th>
-                <th>Environment</th>
-                <th>Deployment</th>
-                <th>Module</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="configuration in configurations">
-                <td>{{$index + 1}}</td>
-                <td>
-                    <div class="tdSingleLine">{{configuration[0]}}</div>
-                </td>
-                <td>
-                    <div class="tdSingleLine">{{configuration[1]}}</div>
-                </td>
-                <td>
-                    <div class="tdSingleLine">{{configuration[2]}}</div>
-                </td>
-                <td>
-                    <div class="tdSingleLine">{{configuration[3]}}</div>
-                </td>
-                <td>
-                    <div class="tdSingleLine">{{configuration[4]}}</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table table-striped tableFixHead">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Runtime</th>
+                    <th>Environment</th>
+                    <th>Deployment</th>
+                    <th>Module</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="configuration in configurations">
+                    <td>{{$index + 1}}</td>
+                    <td>
+                        <div class="tdSingleLine">{{configuration[0]}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{configuration[1]}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{configuration[2]}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{configuration[3]}}</div>
+                    </td>
+                    <td>
+                        <div class="tdSingleLine">{{configuration[4]}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <script>
-        angular.module('configurations', [])
+        <script>
+            angular.module('configurations', [])
             .controller('ConfigurationsController', function ($scope, $http) {
 
                 let configurationsApi = '/services/v4/core/configurations';
@@ -84,7 +84,7 @@
 
                 loadConfigurations();
             });
-    </script>
-</body>
+        </script>
+    </body>
 
 </html>
