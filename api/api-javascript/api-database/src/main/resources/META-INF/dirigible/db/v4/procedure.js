@@ -11,11 +11,10 @@
  */
 /**
  * API v4 Procedure
- * 
+ *
  */
-
-var update = require("db/v4/update");
-var database = require("db/v4/database");
+const update = require("db/v4/update");
+const database = require("db/v4/database");
 
 exports.create = function(sql, databaseType, datasourceName) {
     let parameters = [];

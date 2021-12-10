@@ -32,6 +32,7 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.when;
@@ -375,6 +376,52 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
     }
 
     @Test
+    public void testTransformOnSynonym() throws IOException, SQLException {
+        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeSynonym.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeSynonym.odata", employee);
+        definition.getEntities().get(0).getKeys().add("ADDRESS_ID");
+
+        definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
+        definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+
+        PersistenceTableModel viewModel = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
+        viewModel.setTableType(ISqlKeywords.METADATA_VIEW);
+
+        PersistenceTableModel synonymModel = new PersistenceTableModel("EmployeesView", Arrays.asList(column1, column2, column3, column4),
+                new ArrayList<>());
+        synonymModel.setTableType(ISqlKeywords.METADATA_SYNONYM);
+
+        HashMap<String, String> synonymTargetObjectMetadata = new HashMap<String, String>();
+        synonymTargetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE, "EMPLOYEES");
+        synonymTargetObjectMetadata.put(ISqlKeywords.KEYWORD_SCHEMA, null);
+        synonymTargetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE_TYPE, ISqlKeywords.METADATA_VIEW);
+
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(viewModel);
+        when(dbMetadataUtil.getTableMetadata("EmployeesView", null)).thenReturn(synonymModel);
+        when(dbMetadataUtil.getSynonymTargetObjectMetadata(synonymModel.getTableName())).thenReturn(synonymTargetObjectMetadata);
+
+        String entitySchema = "<Schema Namespace=\"np\"\n" +
+                "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
+                "\t<EntityType Name=\"employeeType\">\n" +
+                "\t\t<Key>\n" +
+                "\t\t\t<PropertyRef Name=\"myADDRESS_ID\" />\n" +
+                "\t\t</Key>\n" +
+                "\t\t<Property Name=\"myORDER_ID\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"myADDRESS_ID\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t</EntityType>\n" +
+                "</Schema>\n";
+        String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n";
+
+        String[] actualResult = odata2ODataXTransformer.transform(definition);
+        assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
+    }
+
+    @Test
     public void testTransformWithUnsupportedObjectType() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
@@ -384,7 +431,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
         PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
-        model.setTableType(ISqlKeywords.METADATA_SYNONYM);
+        model.setTableType(ISqlKeywords.METADATA_SYSTEM_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
         String entitySchema = "<Schema Namespace=\"np\"\n" +
                 "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +

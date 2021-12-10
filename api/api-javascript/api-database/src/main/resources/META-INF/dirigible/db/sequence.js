@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var sequence = require('db/v4/sequence');
-for(var propertyName in sequence) {
+const sequence = require('db/v4/sequence');
+for(let propertyName in sequence) {
 	exports[propertyName] = sequence[propertyName];
 }

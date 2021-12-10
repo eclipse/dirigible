@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Threads
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -79,7 +79,7 @@ exports.current = function() {
 function getClassObject(clazz) {
 	var objClazz;
 	if (engine === "nashorn") {
-		var objType = Java.type(clazz);
+		let objType = Java.type(clazz);
 		objClazz = new objType().getClass();
 	} else {
 		objClazz = java.lang.Class.forName(clazz);

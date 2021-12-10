@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0">
+    <edmx:DataServices m:DataServiceVersion="1.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="org.eclipse.dirigible.engine.odata2.sql.entities.northwind" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Product">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="true"/>
+                <Property Name="ReleaseDate" Type="Edm.DateTime" Nullable="false"/>
+                <Property Name="DiscontinuedDate" Type="Edm.DateTime" Nullable="true"/>
+                <Property Name="Rating" Type="Edm.Int16" Nullable="false"/>
+                <Property Name="Price" Type="Edm.Double" Nullable="false"/>
+                <NavigationProperty Name="Categories" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Categories_Category_Products" FromRole="Product_Categories" ToRole="Category_Products"/>
+                <NavigationProperty Name="Supplier" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Supplier_Supplier_Products" FromRole="Product_Supplier" ToRole="Supplier_Products"/>
+                <NavigationProperty Name="ProductDetail" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_ProductDetail_ProductDetail_Product" FromRole="Product_ProductDetail" ToRole="ProductDetail_Product"/>
+            </EntityType>
+            <EntityType Name="FeaturedProduct" BaseType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product">
+                <NavigationProperty Name="Advertisement" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct" FromRole="FeaturedProduct_Advertisement" ToRole="Advertisement_FeaturedProduct"/>
+            </EntityType>
+            <EntityType Name="ProductDetail">
+                <Key>
+                    <PropertyRef Name="ProductID"/>
+                </Key>
+                <Property Name="ProductID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Details" Type="Edm.String" Nullable="true"/>
+                <NavigationProperty Name="Product" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_ProductDetail_ProductDetail_Product" FromRole="ProductDetail_Product" ToRole="Product_ProductDetail"/>
+            </EntityType>
+            <EntityType Name="Category">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="true"/>
+                <NavigationProperty Name="Products" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Categories_Category_Products" FromRole="Category_Products" ToRole="Product_Categories"/>
+            </EntityType>
+            <EntityType Name="Person">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="true"/>
+                <NavigationProperty Name="PersonDetail" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person_PersonDetail_PersonDetail_Person" FromRole="Person_PersonDetail" ToRole="PersonDetail_Person"/>
+            </EntityType>
+            <EntityType Name="Supplier">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="true"/>
+                <Property Name="Address" Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Address" Nullable="true"/>
+                <Property Name="Concurrency" Type="Edm.Int32" Nullable="false" ConcurrencyMode="Fixed"/>
+                <NavigationProperty Name="Products" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Supplier_Supplier_Products" FromRole="Supplier_Products" ToRole="Product_Supplier"/>
+            </EntityType>
+            <EntityType Name="Customer" BaseType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person">
+                <Property Name="TotalExpense" Type="Edm.Decimal" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="Employee" BaseType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person">
+                <Property Name="EmployeeID" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="HireDate" Type="Edm.DateTime" Nullable="false"/>
+                <Property Name="Salary" Type="Edm.Single" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="PersonDetail">
+                <Key>
+                    <PropertyRef Name="PersonID"/>
+                </Key>
+                <Property Name="PersonID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="Age" Type="Edm.Byte" Nullable="false"/>
+                <Property Name="Gender" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="Phone" Type="Edm.String" Nullable="true"/>
+                <Property Name="Address" Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Address" Nullable="true"/>
+                <NavigationProperty Name="Person" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person_PersonDetail_PersonDetail_Person" FromRole="PersonDetail_Person" ToRole="Person_PersonDetail"/>
+            </EntityType>
+            <EntityType Name="Advertisement">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="true"/>
+                <Property Name="AirDate" Type="Edm.DateTime" Nullable="false"/>
+                <NavigationProperty Name="FeaturedProduct" Relationship="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct" FromRole="Advertisement_FeaturedProduct" ToRole="FeaturedProduct_Advertisement"/>
+            </EntityType>
+            <ComplexType Name="Address">
+                <Property Name="Street" Type="Edm.String" Nullable="true"/>
+                <Property Name="City" Type="Edm.String" Nullable="true"/>
+                <Property Name="State" Type="Edm.String" Nullable="true"/>
+                <Property Name="ZipCode" Type="Edm.String" Nullable="true"/>
+                <Property Name="Country" Type="Edm.String" Nullable="true"/>
+            </ComplexType>
+            <Association Name="Product_ProductDetail_ProductDetail_Product">
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product" Multiplicity="0..1" Role="Product_ProductDetail"/>
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductDetail" Multiplicity="0..1" Role="ProductDetail_Product"/>
+            </Association>
+            <Association Name="Product_Supplier_Supplier_Products">
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product" Multiplicity="*" Role="Product_Supplier"/>
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier" Multiplicity="0..1" Role="Supplier_Products"/>
+            </Association>
+            <Association Name="FeaturedProduct_Advertisement_Advertisement_FeaturedProduct">
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.FeaturedProduct" Multiplicity="0..1" Role="FeaturedProduct_Advertisement"/>
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Advertisement" Multiplicity="0..1" Role="Advertisement_FeaturedProduct"/>
+            </Association>
+            <Association Name="Person_PersonDetail_PersonDetail_Person">
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person" Multiplicity="0..1" Role="Person_PersonDetail"/>
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.PersonDetail" Multiplicity="0..1" Role="PersonDetail_Person"/>
+            </Association>
+            <Association Name="Product_Categories_Category_Products">
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product" Multiplicity="*" Role="Product_Categories"/>
+                <End Type="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Category" Multiplicity="*" Role="Category_Products"/>
+            </Association>
+            <EntityContainer Name="DemoService" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Products" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product"/>
+                <EntitySet Name="Products" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.FeaturedProduct"/>
+                <EntitySet Name="ProductDetails" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductDetail"/>
+                <EntitySet Name="Categories" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Category"/>
+                <EntitySet Name="Persons" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person"/>
+                <EntitySet Name="Suppliers" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier"/>
+                <EntitySet Name="Person" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Customer"/>
+                <EntitySet Name="Person" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Employee"/>
+                <EntitySet Name="PersonDetails" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.PersonDetail"/>
+                <EntitySet Name="Advertisements" EntityType="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Advertisement"/>
+                <AssociationSet Name="Product_ProductDetail_ProductDetail_Product" Association="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_ProductDetail_ProductDetail_Product">
+                    <End EntitySet="Products" Role="Product_ProductDetail"/>
+                    <End EntitySet="ProductDetails" Role="ProductDetail_Product"/>
+                </AssociationSet>
+                <AssociationSet Name="Product_Supplier_Supplier_Products" Association="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Supplier_Supplier_Products">
+                    <End EntitySet="Products" Role="Product_Supplier"/>
+                    <End EntitySet="Suppliers" Role="Supplier_Products"/>
+                </AssociationSet>
+                <AssociationSet Name="FeaturedProduct_Advertisement_Advertisement_FeaturedProduct" Association="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct">
+                    <End EntitySet="Products" Role="FeaturedProduct_Advertisement"/>
+                    <End EntitySet="Advertisements" Role="Advertisement_FeaturedProduct"/>
+                </AssociationSet>
+                <AssociationSet Name="Person_PersonDetail_PersonDetail_Person" Association="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Person_PersonDetail_PersonDetail_Person">
+                    <End EntitySet="Persons" Role="Person_PersonDetail"/>
+                    <End EntitySet="PersonDetails" Role="PersonDetail_Person"/>
+                </AssociationSet>
+                <AssociationSet Name="Product_Categories_Category_Products" Association="org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product_Categories_Category_Products">
+                    <End EntitySet="Products" Role="Product_Categories"/>
+                    <End EntitySet="Categories" Role="Category_Products"/>
+                </AssociationSet>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

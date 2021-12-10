@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 "use strict";
-var dao = require('db/v4/dao');
-for(var propertyName in dao) {
+const dao = require('db/v4/dao');
+for(let propertyName in dao) {
 	exports[propertyName] = dao[propertyName];
 }

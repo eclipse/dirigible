@@ -16,7 +16,9 @@
 	<modules>
 		<module>odata-all</module>
 		<module>odata-api</module>
-        <module>odata-core</module>
+		<module>odata-core</module>
+		<module>odata-core-test</module>
+		<module>odata-samples-northwind</module>
 	</modules>
 
 	<properties>

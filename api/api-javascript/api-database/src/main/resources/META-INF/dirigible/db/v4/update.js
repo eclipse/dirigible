@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Update
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 exports.execute = function(sql, parameters, databaseType, datasourceName) {
-	var result = {};
+	let result = {};
 	if (parameters) {
-		var params = JSON.stringify(parameters);
+		const params = JSON.stringify(parameters);
 		if (databaseType) {
 			if (datasourceName) {
 				result = org.eclipse.dirigible.api.v3.db.DatabaseFacade.update(sql, params, databaseType, datasourceName);
