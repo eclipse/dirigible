@@ -9,48 +9,52 @@
   ~ SAP - initial API and implementation
   -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <meta charset="utf-8"/>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible - Logs</title>
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+        <title>Eclipse Dirigible - Logs</title>
 
-    <!-- AngularJS -->
-    <script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="logs.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css"/>
-    <link href="css/fluid-media.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="logs.js"></script>
 
-</head>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
 
-<body ng-app="logs" ng-controller="LogsController as logs" class="view">
+    </head>
 
-<div class="form-horizontal">
-    <div class="col-sm-12" style="padding: 0">
-        <div class="input-group logs-dropdown logs-dropdown">
-            <div class="input-group-addon view-toolbar form-group sticky-top">
-                <select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
-                        class="dropdown dropdown-toggle dropdown-top form-control logs-dropdown" title="Logs"></select>
+    <body ng-app="logs" ng-controller="LogsController as logs" class="view">
+
+        <div class="form-horizontal">
+            <div class="col-sm-12" style="padding: 0">
+                <div class="input-group logs-dropdown logs-dropdown">
+                    <div class="input-group-addon view-toolbar form-group sticky-top">
+                        <select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
+                            class="dropdown dropdown-toggle dropdown-top form-control logs-dropdown"
+                            title="Logs"></select>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<pre class="form-control col-lg-12 logs-area">{{ logContent }}</pre>
+        <pre class="form-control col-lg-12 logs-area">{{ logContent }}</pre>
 
-</body>
+    </body>
 
 </html>

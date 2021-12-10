@@ -16,6 +16,4 @@ angular.module('access', [])
 			$scope.accessList = response.data;
 		});
 
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

@@ -10,22 +10,23 @@
   -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Image View</title>
-	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-	<script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-	<script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-	<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-	<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-	<!-- Project-specific stuff -->
-	<script src="js/editor.js"></script>
-</head>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+		<title>Image View</title>
+		<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+		<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+		<!-- Project-specific stuff -->
+		<script type="text/javascript" src="js/editor.js"></script>
+	</head>
 
-<body ng-app="image-app" ng-controller="ImageViewController" class="view flex-center">
-	<img id="image-view" class="checkered contain-image" ng-src="{{imageLink}}" alt="Image" ng-show="dataLoaded" />
-</body>
+	<body ng-app="image-app" ng-controller="ImageViewController" class="view flex-center">
+		<img id="image-view" class="checkered contain-image" ng-src="{{imageLink}}" alt="Image" ng-show="dataLoaded" />
+	</body>
 
 </html>

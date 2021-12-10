@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getView = function () {
-	let view = {
+	return {
 		"id": "debugger",
 		"name": "Debugger",
 		"factory": "frame",
@@ -18,5 +18,4 @@ exports.getView = function () {
 		"label": "Debugger",
 		"link": "../ide-debugger/views/debugger/index.html"
 	};
-	return view;
 };
