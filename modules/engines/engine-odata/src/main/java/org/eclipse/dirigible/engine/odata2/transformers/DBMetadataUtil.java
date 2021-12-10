@@ -11,17 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
-import com.google.common.base.CaseFormat;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
-import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -30,6 +19,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 
 
 public class DBMetadataUtil {
@@ -40,15 +40,9 @@ public class DBMetadataUtil {
 
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 
-    public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
-    public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
-    public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
-    public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
-    public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
-    public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
-    public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
-    public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     public static final Map<String, String> sqlToOdataEdmColumnTypes = new HashMap<>();
+    
+    private static final DatabaseMetadataUtil DATABASE_METADATA_UTIL = new DatabaseMetadataUtil();
 
     static {
         sqlToOdataEdmColumnTypes.put("TIME", "Edm.Time");
@@ -85,10 +79,10 @@ public class DBMetadataUtil {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
-            addFields(databaseMetadata, connection, tableMetadata, schemaName);
-            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            DatabaseMetadataUtil.addFields(databaseMetadata, connection, tableMetadata, schemaName);
+            DatabaseMetadataUtil.addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
+            DatabaseMetadataUtil.addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+            DatabaseMetadataUtil.addTableType(databaseMetadata, connection, tableMetadata, schemaName);
             tableMetadata.setSchemaName(schemaName);
         } catch (SQLException e) {
             throw e;
@@ -98,60 +92,8 @@ public class DBMetadataUtil {
         return tableMetadata;
     }
 
-    private void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
-        ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
-        if (!foreignKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
-        }
-        while (foreignKeys.next()) {
-            PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-                    foreignKeys.getString(JDBC_PK_NAME_PROPERTY)
-            );
-            tableMetadata.getRelations().add(relationMetadata);
-        }
-    }
-
     private void convertSqlTypesToOdataEdmTypes(List<PersistenceTableColumnModel> columnsMetadata) {
         columnsMetadata.forEach(column -> column.setType(sqlToOdataEdmColumnTypes.get(column.getType().toUpperCase())));
-    }
-
-    private void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
-        ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
-        if (!primaryKeys.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
-        }
-        while (primaryKeys.next()) {
-            setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
-        }
-    }
-
-    private void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel) {
-        tableModel.getColumns().forEach(column -> {
-            if (column.getName().equals(columnName)) {
-                column.setPrimaryKey(true);
-            }
-        });
-    }
-
-    private void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
-        if (!columns.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
-        }
-        while (columns.next()) {
-            tableMetadata.getColumns().add(
-                    new PersistenceTableColumnModel(
-                            columns.getString(JDBC_COLUMN_PROPERTY),
-                            columns.getString(JDBC_COLUMN_TYPE),
-                            false));
-        }
     }
 
     public static String getPropertyNameFromDbColumnName(String DbColumnName, List<ODataProperty> oDataProperties, boolean prettyPrint) {
@@ -160,7 +102,7 @@ public class DBMetadataUtil {
                 return next.getName();
             }
         }
-        return prettyPrint ? addCorrectFormatting(DbColumnName) : DbColumnName;
+        return prettyPrint ? DatabaseMetadataUtil.addCorrectFormatting(DbColumnName) : DbColumnName;
     }
 
     public static boolean isPropColumnValidDBColumn(String propColumn, List<PersistenceTableColumnModel> dbColumns) {
@@ -192,28 +134,6 @@ public class DBMetadataUtil {
             }
         }
         return column.getType();
-    }
-
-    public static String addCorrectFormatting(String columnName) {
-        return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
-    }
-
-    public static String normalizeTableName(String table) {
-        if (table != null && table.startsWith("\"") && table.endsWith("\"")) {
-            table = table.substring(1, table.length() - 1);
-        }
-        return table;
-    }
-
-    private void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
-        ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
-        if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
-            // Fallback for PostgreSQL
-            tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
-        }
-        while (tables.next()) {
-            tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
-        }
     }
 
     /**
