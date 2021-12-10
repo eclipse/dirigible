@@ -1,15 +1,18 @@
 {
 	"edmType": "Product",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product",
-	"sqlTable": "PUBLIC.PRODUCT",
+	"sqlTable": " PUBLIC.PRODUCT",
 
-	"ID": "ID",
-	"Name": "NAME",
-	"Description": "DESCRIPTION",
-	"ReleaseDate": "RELEASE_DATE",
-	"DiscontinuedDate": "DISCONTINUED_DATE",
-	"Rating": "RATING",
-	"Price": "PRICE",
+	"ProductID": "PRODUCT_ID",
+	"ProductName": "PRODUCT_NAME",
+	"SupplierId": "SUPPLIER_ID",
+	"CategoryID": "CATEGORY_ID",
+	"QuantityPerUnit": "QUANTITY_PER_UNIT",
+	"UnitPrice": "UNIT_PRICE",
+	"UnitsInStock": "UNITS_IN_STOCK",
+	"UnitsOnOrder": "UNITS_ON_ORDER",
+	"ReorderLevel": "REORDER_LEVEL",
+	"Discontinued": "DISCONTINUED",
 
-	"_pk_": "ID"
+	"_pk_": "PRODUCT_ID"
 }

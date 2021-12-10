@@ -93,7 +93,7 @@ public abstract class AbstractSQLPropcessorTest {
     }
 
 
-    protected String loadExpectedData(String fileName) throws IOException {
+    protected String loadResource(String fileName) throws IOException {
 		return IOUtils.toString(AbstractSQLPropcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
 	}
 

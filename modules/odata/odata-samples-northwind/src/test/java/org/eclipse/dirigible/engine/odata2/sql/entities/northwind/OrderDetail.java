@@ -15,26 +15,27 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
-import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
-@EdmEntityType(name = "Person")
-@EdmEntitySet(name = "Persons", container = "DemoService")
-public class Person {
+@EdmEntityType(name = "Order_Detail")
+@EdmEntitySet(name = "Order_Details", container = "NorthwindEntities")
+public class OrderDetail {
 
-	@EdmKey
-	@EdmProperty(name = "ID", facets = @EdmFacets(nullable = false))
-	private Integer id;
+    @EdmKey
+    @EdmProperty(name = "OrderID", facets = @EdmFacets(nullable = false))
+    private Integer orderId;
 
-	@EdmProperty
-	private String name;
+    @EdmKey
+    @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+    private Integer productId;
 
-	@EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
-			toType = PersonDetail.class, //
-			toRole = "PersonDetail_Person", //
-			association = INorthwindODataAssociations.Person_PersonDetail_PersonDetail_Person //
-	)
-	private PersonDetail personDetail;
+    @EdmProperty(type = EdmType.DECIMAL, facets = @EdmFacets(nullable = false, precision = 19, scale = 4))
+    private Double unitPrice;
+
+    @EdmProperty(facets = @EdmFacets(nullable = false))
+    private Short quantity;
+
+    @EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
+    private Integer discount;
 }

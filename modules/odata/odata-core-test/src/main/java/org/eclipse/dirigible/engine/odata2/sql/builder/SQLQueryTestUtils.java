@@ -13,6 +13,10 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 
+/**
+ * SQLQueryTestUtils
+ *
+ */
 public class SQLQueryTestUtils {
 
     private SQLQueryTestUtils() {
@@ -20,8 +24,8 @@ public class SQLQueryTestUtils {
     }
 
     /**
-     * @param sqlQuery
-     * @param structuralType
+     * @param sqlQuery the query
+     * @param structuralType the type
      */
     public static void grantTableAliasForStructuralTypeInQuery(final SQLSelectBuilder sqlQuery, final EdmStructuralType structuralType) {
         sqlQuery.grantTableAliasForStructuralTypeInQuery(structuralType);

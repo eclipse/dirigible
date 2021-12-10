@@ -1,8 +1,18 @@
 {
-	"edmType" : "Customer",
+	"edmType": "Customer",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Customer",
-	"sqlTable" : " PUBLIC.PERSON",
-	"Name" : "NAME",
-	"Id" : "ID",
-	"_pk_" : "ID"
+	"sqlTable": " PUBLIC.CUSTOMER",
+
+	"CompanyName": "COMPANY_NAME",
+	"ContactName": "CONTACT_NAME",
+	"ContactTitle": "CONTACT_TITLE",
+	"Address": "ADDRESS",
+	"City": "CITY",
+	"Region": "REGION",
+	"PostalCode": "POSTAL_CODE",
+	"Country": "COUNTRY",
+	"Phone": "PHONE",
+	"Fax": "FAX",
+
+	"_pk_": "CUSTOMER_ID"
 }

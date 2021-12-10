@@ -28,26 +28,49 @@ import java.util.List;
 
 import static org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor.DEFAULT_DATA_SOURCE_CONTEXT_KEY;
 
+/**
+ * OData2TestServiceFactory
+ *
+ */
 public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.ODataServiceFactory {
 
     private final DataSource ds;
     private final Class<?>[] edmAnnotatedClasses;
     private final List<SQLInterceptor> interceptorList = new ArrayList<>();
 
+    /**
+     * @param ds the data source
+     * @param edmAnnotatedClasses the classes
+     * @throws ODataException in case of error
+     */
     public OData2TestServiceFactory(DataSource ds, Class<?>... edmAnnotatedClasses) throws ODataException {
        this(ds, Collections.emptyList(), edmAnnotatedClasses);
     }
+
+    /**
+     * @param ds the data source
+     * @param interceptorList the interceptor list
+     * @param edmAnnotatedClasses the classes
+     * @throws ODataException in case of error
+     */
     public OData2TestServiceFactory(DataSource ds, List<SQLInterceptor> interceptorList, Class<?>... edmAnnotatedClasses) throws ODataException {
         this.ds = ds;
         this.edmAnnotatedClasses = edmAnnotatedClasses;
         addInterceptors(interceptorList);
     }
 
+    /**
+     * @return AnnotationEdmProvider
+     * @throws ODataException in case of error
+     */
     public AnnotationEdmProvider createAnnotationEdmProvider() throws ODataException {
         return new AnnotationEdmProvider(Collections.unmodifiableList(Arrays.asList(edmAnnotatedClasses)));
 
     }
 
+    /**
+     * @param interceptorList the interceptor list
+     */
     public void addInterceptors(List<SQLInterceptor> interceptorList){
         this.interceptorList.addAll(interceptorList);
     }
@@ -67,6 +90,10 @@ public class OData2TestServiceFactory extends org.apache.olingo.odata2.api.OData
         }
     }
 
+    /**
+     * @param ctx the context
+     * @throws ODataException in case of error
+     */
     public void setDefaultDataSource(ODataContext ctx) throws ODataException {
         ctx.setParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY, ds);
     }
