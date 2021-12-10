@@ -13,7 +13,7 @@ angular.module('preview', [])
     .factory('$messageHub', [function () {
         let messageHub = new FramesMessageHub();
         let message = function (evtName, data) {
-            messageHub.post({data: data}, evtName);
+            messageHub.post({ data: data }, evtName);
         };
         let on = function (topic, callback) {
             messageHub.subscribe(callback, topic);
@@ -162,6 +162,4 @@ angular.module('preview', [])
             }
         };
 
-    }]).config(function ($sceProvider) {
-    $sceProvider.enabled(false);
-});
+    }]);

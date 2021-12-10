@@ -38,8 +38,9 @@
         <div class="container">
             <div ng-repeat="next in depots">
                 <h4>
-                    <label>Depot:</label> <a href="{{next.depot}}" title="{{next.depot}}"
-                        target="_blank">{{next.name}}</a>
+                    <label>Depot:</label>
+                    <a href="{{next.depot}}" title="{{next.depot}}" target="_blank"
+                        rel="noopener noreferrer">{{next.name}}</a>
                 </h4>
                 <h4>
                     <i>{{next.description}}</i>
@@ -58,12 +59,13 @@
                         <tbody>
                             <tr ng-repeat="plugin in next.plugins">
                                 <td>{{$index + 1}}</td>
-                                <td><a href="{{plugin.site}}" title="{{plugin.description}}"
-                                        target="_blank">{{plugin.name}}</a></td>
+                                <td><a href="{{plugin.site}}" title="{{plugin.description}}" target="_blank"
+                                        rel="noopener noreferrer">{{plugin.name}}</a></td>
                                 <td>{{plugin.version}}</td>
                                 <td><a class="btn btn-primary btn-xs"
                                         href="/services/v4/web/ide-git/index.html?repository={{plugin.repository}}"
-                                        title="Install {{plugin.name}}" target="_blank">install</a></td>
+                                        title="Install {{plugin.name}}" target="_blank"
+                                        rel="noopener noreferrer">install</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -73,25 +75,25 @@
 
         <script>
             angular.module('plugins', [])
-        .controller('PluginsController', function ($scope, $http) {
+            .controller('PluginsController', function ($scope, $http) {
 
-            let pluginsApi = 'https://www.dirigible.io/depots.json';
+                let pluginsApi = 'https://www.dirigible.io/depots.json';
 
-            function loadPlugins() {
-                $http.get(pluginsApi)
-                    .then(function (data) {
-                        $scope.depots = data.data;
-                        $scope.depots.forEach(function (depot) {
-                            $http.get(depot.depot)
-                                .then(function (data) {
-                                    depot.plugins = data.data;
-                                });
+                function loadPlugins() {
+                    $http.get(pluginsApi)
+                        .then(function (data) {
+                            $scope.depots = data.data;
+                            $scope.depots.forEach(function (depot) {
+                                $http.get(depot.depot)
+                                    .then(function (data) {
+                                        depot.plugins = data.data;
+                                    });
+                            });
                         });
-                    });
-            }
+                }
 
-            loadPlugins();
-        });
+                loadPlugins();
+            });
         </script>
     </body>
 
