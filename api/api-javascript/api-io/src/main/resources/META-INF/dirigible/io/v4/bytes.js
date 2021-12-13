@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Bytes
- * 
+ *
  * Bytes module is supported only with the Mozilla Rhino engine
  */
 
@@ -19,8 +19,8 @@
  * Convert the native JavaScript byte array to Java one. To be used internally by the API layer
  */
 exports.toJavaBytes = function(bytes) {
-	var internalBytes = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, bytes.length);
-	for (var i=0; i<bytes.length; i++) {
+	const internalBytes = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, bytes.length);
+	for (let i=0; i<bytes.length; i++) {
 		internalBytes[i] = bytes[i];
 	}
 	return internalBytes;
@@ -30,8 +30,8 @@ exports.toJavaBytes = function(bytes) {
  * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
  */
 exports.toJavaScriptBytes = function(internalBytes) {
-	var bytes = [];
-	for (var i=0; i<internalBytes.length; i++) {
+	const bytes = [];
+	for (let i=0; i<internalBytes.length; i++) {
 		bytes.push(internalBytes[i]);
 	}
 	return bytes;
@@ -41,8 +41,8 @@ exports.toJavaScriptBytes = function(internalBytes) {
  * Converts a text to a byte array
  */
 exports.textToByteArray = function(text) {
-	var javaString = new java.lang.String(text);
-	var native = org.eclipse.dirigible.api.v3.io.BytesFacade.textToByteArray(text);
+	const javaString = new java.lang.String(text);
+	const native = org.eclipse.dirigible.api.v3.io.BytesFacade.textToByteArray(text);
 	return exports.toJavaScriptBytes(native);
 };
 
@@ -50,7 +50,7 @@ exports.textToByteArray = function(text) {
  * Converts a text to a byte array
  */
 exports.byteArrayToText = function(data) {
-	var native = exports.toJavaBytes(data);
+	const native = exports.toJavaBytes(data);
 	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(native));
 };
 

@@ -42,6 +42,6 @@ declare module "@dirigible/indexing" {
          * @param lastModified
          * @param parameters
          */
-        function add(index, location, contents, lastModified, parameters);
+        function add(index, location, contents, lastModified?, parameters?);
     }
 }

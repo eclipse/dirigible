@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var streams = require('io/v4/streams');
-for(var propertyName in streams) {
+const streams = require('io/v4/streams');
+for(const propertyName in streams) {
 	exports[propertyName] = streams[propertyName];
 }
