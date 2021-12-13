@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getMenu = function () {
-	let menu = {
+	return {
 		"name": "Debugger",
 		"link": "#",
 		"order": "100",
@@ -24,5 +24,4 @@ exports.getMenu = function () {
 			}
 		]
 	};
-	return menu;
 }

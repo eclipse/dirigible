@@ -31,7 +31,7 @@ angular.module('problems', [])
         $scope.openedProblem = {};
 
         function fetchData() {
-            $http.get('/services/v4/ops/problems/search', {params: {'condition': $scope.searchText, 'limit': $scope.limit}}).then(function (response) {
+            $http.get('/services/v4/ops/problems/search', { params: { 'condition': $scope.searchText, 'limit': $scope.limit } }).then(function (response) {
                 $scope.problemsList = response.data.result;
                 $scope.selectedRows = response.data.selectedRows;
                 $scope.totalRows = response.data.totalRows;
@@ -119,13 +119,11 @@ angular.module('problems', [])
             $messageHub.message('ide-core.openEditor', msg);
         }
 
-        $scope.showInfo = function(problem){
+        $scope.showInfo = function (problem) {
             $scope.openedProblem = problem;
         }
 
-        $('#problemContent').on('hidden.bs.modal', function() {
+        $('#problemContent').on('hidden.bs.modal', function () {
             $scope.openedProblem = {};
         });
-    }]).config(function ($sceProvider) {
-        $sceProvider.enabled(false);
-    });
+    }]);

@@ -11,58 +11,59 @@
 
 <html lang="en" ng-app="terminal" ng-controller="TerminalController as db">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title brandtitle perspective-name="Terminal"></title>
+        <title brandtitle perspective-name="Terminal"></title>
 
-    <link brandicon />
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brandicon />
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- GoldenLayout with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
+        <!-- GoldenLayout with Theme Support -->
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- AngularJS -->
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- GoldenLayout with Theme Support -->
-    <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
+        <!-- GoldenLayout with Theme Support -->
+        <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
-</head>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
+    </head>
 
-<body>
+    <body>
 
-    <div menu menu-data-url="/services/v4/js/ide-terminal/services/menu-terminal.js"></div>
+        <div menu menu-data-url="/services/v4/js/ide-terminal/services/menu-terminal.js"></div>
 
-    <div class="shell">
-        <div class="sidebar list-group" sidebar active="Terminal"></div>
-        <div id="terminal" class="plane" views-layout views-layout-model="db.layoutModel"></div>
-    </div>
-    <div class="statusbar" status-bar>{{message}}</div>
+        <div class="shell">
+            <div class="sidebar list-group" sidebar active="Terminal"></div>
+            <div id="terminal" class="plane" views-layout views-layout-model="db.layoutModel"></div>
+        </div>
+        <div class="statusbar" status-bar>{{message}}</div>
 
-    <script type="text/javascript">
-        angular.module('terminal', ['ngResource', 'ideUiCore'])
+        <script type="text/javascript">
+            angular.module('terminal', ['ngResource', 'ideUiCore'])
             .config(["messageHubProvider", function (messageHubProvider) {
                 messageHubProvider.evtNamePrefix = 'terminal';
             }])
@@ -84,15 +85,15 @@
                 };
 
             }]);
-    </script>
+        </script>
 
-    <script language="JavaScript">
-        window.addEventListener('beforeunload', function (e) {
-            e.preventDefault();
-            e.returnValue = '';
-        });
-    </script>
+        <script type="text/javascript">
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
+        </script>
 
-</body>
+    </body>
 
 </html>

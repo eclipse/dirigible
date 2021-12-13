@@ -137,6 +137,4 @@ angular.module('preview', [])
 				$scope.previewForm.preview.$rollbackViewValue();
 			}
 		};
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

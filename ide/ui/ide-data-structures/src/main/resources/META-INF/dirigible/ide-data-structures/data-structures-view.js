@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getView = function () {
-	let view = {
+	return {
 		"id": "datastructures",
 		"name": "DataStructures",
 		"factory": "frame",
@@ -18,5 +18,4 @@ exports.getView = function () {
 		"label": "Data Structures",
 		"link": "../ide-data-structures/data-structures.html"
 	};
-	return view;
 }
