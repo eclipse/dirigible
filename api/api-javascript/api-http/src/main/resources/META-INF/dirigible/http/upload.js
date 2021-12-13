@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var upload = require('http/v4/upload');
-for(var propertyName in upload) {
+const upload = require('http/v4/upload');
+for(const propertyName in upload) {
 	exports[propertyName] = upload[propertyName];
 }

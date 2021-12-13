@@ -14,19 +14,16 @@
  *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require("io/v4/streams");
-var bytes = require("io/v4/bytes");
+const streams = require("io/v4/streams");
+const bytes = require("io/v4/bytes");
 
 exports.isMultipartContent = function() {
-	var result = org.eclipse.dirigible.api.v3.http.HttpUploadFacade.isMultipartContent();
-	return result;
+	return org.eclipse.dirigible.api.v3.http.HttpUploadFacade.isMultipartContent();
 };
 
 exports.parseRequest = function() {
-	var fileItems = new FileItems();
-	var native = org.eclipse.dirigible.api.v3.http.HttpUploadFacade.parseRequest();
-	fileItems.native = native;
+	const fileItems = new FileItems();
+	fileItems.native = org.eclipse.dirigible.api.v3.http.HttpUploadFacade.parseRequest();
 	return fileItems;
 };
 
@@ -36,9 +33,8 @@ exports.parseRequest = function() {
 function FileItems() {
 
 	this.get = function(index) {
-		var fileItem = new FileItem();
-		var native = this.native.get(index);
-		fileItem.native = native;
+		const fileItem = new FileItem();
+		fileItem.native = this.native.get(index);
 		return fileItem;
 	};
 
@@ -53,9 +49,8 @@ function FileItems() {
 function FileItem() {
 
 	this.getInputStream = function() {
-		var inputStream = new streams.InputStream();
-		var native = this.native.getInputStream();
-		inputStream.native = native;
+		const inputStream = new streams.InputStream();
+		inputStream.native = this.native.getInputStream();
 		return inputStream;
 	};
 
@@ -94,9 +89,8 @@ function FileItem() {
 	};
 
 	this.getHeaders = function() {
-		var headers = new Headers();
-		var native = this.native.getHeaders();
-		headers.native = native;
+		const headers = new Headers();
+		headers.native = this.native.getHeaders();
 		return headers;
 	};
 
@@ -114,5 +108,5 @@ function Headers() {
 	this.getHeader = function(headerName) {
 		return this.native.getHeader(headerName);
 	}
-};
+}
 
