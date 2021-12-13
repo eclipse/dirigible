@@ -159,6 +159,7 @@ public class DBMetadataUtil {
                     new PersistenceTableColumnModel(
                             columns.getString(JDBC_COLUMN_PROPERTY),
                             columns.getString(JDBC_COLUMN_TYPE),
+                            columns.getBoolean("NULLABLE"),
                             false));
         }
     }
