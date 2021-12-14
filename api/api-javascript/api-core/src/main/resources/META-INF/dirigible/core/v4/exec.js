@@ -9,7 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const console = require('core/v4/console');
-for(const propertyName in console) {
-	exports[propertyName] = console[propertyName];
-}
+/**
+ * API v4 Exec
+ * 
+ */
+
+exports.exec = function(commandLine, toAdd, toRemove) {
+	return org.eclipse.dirigible.api.v3.core.ExecFacade.exec(commandLine, toAdd, toRemove);
+};

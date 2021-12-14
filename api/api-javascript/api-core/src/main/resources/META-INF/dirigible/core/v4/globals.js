@@ -9,7 +9,20 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const console = require('core/v4/console');
-for(const propertyName in console) {
-	exports[propertyName] = console[propertyName];
-}
+/**
+ * API v4 Globals
+ * 
+ * Note: This module is supported only with the Mozilla Rhino engine
+ */
+
+exports.get = function(name) {
+	return org.eclipse.dirigible.api.v3.core.GlobalsFacade.get(name);
+};
+
+exports.set = function(name, value) {
+	org.eclipse.dirigible.api.v3.core.GlobalsFacade.set(name, value);
+};
+
+exports.list = function() {
+	return org.eclipse.dirigible.api.v3.core.GlobalsFacade.list();
+};

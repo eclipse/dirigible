@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var threads = require('core/v4/threads');
-for(var propertyName in threads) {
+const threads = require('core/v4/threads');
+for(const propertyName in threads) {
 	exports[propertyName] = threads[propertyName];
 }
