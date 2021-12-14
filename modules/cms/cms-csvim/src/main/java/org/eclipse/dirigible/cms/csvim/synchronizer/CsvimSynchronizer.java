@@ -59,30 +59,31 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 
 	private static final Map<String, CsvimDefinition> CSVIM_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, CsvimDefinition>());
-	
+
 	private static final Map<String, CsvDefinition> CSV_PREDELIVERED = Collections
 			.synchronizedMap(new HashMap<String, CsvDefinition>());
 
 	private static final List<String> CSVIM_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
-	
+
 	private static final List<String> CSV_SYNCHRONIZED = Collections.synchronizedList(new ArrayList<String>());
 
 	private CsvimCoreService csvimCoreService = new CsvimCoreService();
-	
+
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
-	
+
 	private static final CsvimSynchronizationArtefactType CSVIM_ARTEFACT = new CsvimSynchronizationArtefactType();
-	
+
 	private static final CsvSynchronizationArtefactType CSV_ARTEFACT = new CsvSynchronizationArtefactType();
-	
+
 	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-	
+
 	private static final Map<String, CsvimDefinition> CSVIM_MODELS = new LinkedHashMap<>();
-	
+
 	private CsvimProcessor csvimProcessor = new CsvimProcessor();
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.dirigible.core.scheduler.api.ISynchronizer#synchronize()
 	 */
 	@Override
@@ -92,7 +93,8 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 				logger.trace("Synchronizing CSVIM files...");
 				try {
 					if (isSynchronizationEnabled()) {
-						if (isSynchronizerSuccessful("org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
+						if (isSynchronizerSuccessful(
+								"org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer")) {
 							startSynchronization(SYNCHRONIZER_NAME);
 							clearCache();
 							synchronizePredelivered();
@@ -104,10 +106,12 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 							int mutableCsvsCount = CSV_SYNCHRONIZED.size();
 							cleanup();
 							clearCache();
-							successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable CSVIM: {0}, Mutable CSVIM: {1}, Immutable CSV: {2}, Mutable CSV: {3}", 
+							successfulSynchronization(SYNCHRONIZER_NAME, format(
+									"Immutable CSVIM: {0}, Mutable CSVIM: {1}, Immutable CSV: {2}, Mutable CSV: {3}",
 									immutableCsvimsCount, mutableCsvimsCount, immutableCsvsCount, mutableCsvsCount));
 						} else {
-							failedSynchronization(SYNCHRONIZER_NAME, "Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
+							failedSynchronization(SYNCHRONIZER_NAME,
+									"Skipped due to dependency: org.eclipse.dirigible.database.ds.synchronizer.DataStructuresSynchronizer");
 						}
 					} else {
 						logger.debug("Synchronization has been disabled");
@@ -142,10 +146,8 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register pre-delivered extension point.
 	 *
-	 * @param csvimPath
-	 *            the extension point path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param csvimPath the extension point path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredCsvim(String csvimPath) throws IOException {
 		InputStream in = CsvimSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + csvimPath);
@@ -164,10 +166,8 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 	/**
 	 * Register pre-delivered CSVIM.
 	 *
-	 * @param csvPath
-	 *            the csvim path
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param csvPath the csvim path
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void registerPredeliveredCsv(String csvPath) throws IOException {
 		InputStream in = CsvimSynchronizer.class.getResourceAsStream("/META-INF/dirigible" + csvPath);
@@ -224,7 +224,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 	}
-	
+
 	private void synchronizeCsv(CsvDefinition csvDefinition) throws SynchronizationException {
 		try {
 			if (!csvimCoreService.existsCsv(csvDefinition.getLocation())) {
@@ -234,7 +234,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 			} else {
 				CsvDefinition existing = csvimCoreService.getCsv(csvDefinition.getLocation());
 				if (!csvDefinition.equals(existing)) {
-					csvimCoreService.updateCsv(csvDefinition.getLocation(), csvDefinition.getHash());
+					csvimCoreService.updateCsv(csvDefinition.getLocation(), csvDefinition.getHash(), false);
 					logger.info("Synchronized a modified CSV file from location: {}", csvDefinition.getLocation());
 					applyArtefactState(csvDefinition, CSV_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
@@ -248,7 +248,9 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeRegistry()
+	 * 
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#
+	 * synchronizeRegistry()
 	 */
 	@Override
 	protected void synchronizeRegistry() throws SynchronizationException {
@@ -261,8 +263,9 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#synchronizeResource(org.eclipse.dirigible.
-	 * repository.api.IResource)
+	 * 
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#
+	 * synchronizeResource(org.eclipse.dirigible. repository.api.IResource)
 	 */
 	@Override
 	protected void synchronizeResource(IResource resource) throws SynchronizationException {
@@ -279,15 +282,17 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 			CsvDefinition csvDefinition = new CsvDefinition();
 			csvDefinition.setLocation(getRegistryPath(resource));
 			csvDefinition.setHash(DigestUtils.md5Hex(resource.getContent()));
+			csvDefinition.setImported(false);
 			csvDefinition.setCreatedBy(UserFacade.getName());
 			csvDefinition.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			
+
 			synchronizeCsv(csvDefinition);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer#cleanup()
 	 */
 	@Override
@@ -317,30 +322,33 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 
 		logger.trace("Done cleaning up CSVIM files.");
 	}
-	
+
 	private void processCsvimArtefacts() {
-	    try (Connection connection = dataSource.getConnection()) {
-	      for (String csvimArtifactKey : CSVIM_MODELS.keySet()) {
-	        executeCsvim(CSVIM_MODELS.get(csvimArtifactKey), connection);
-	      }
-	    } catch (SQLException e) {
-	      logger.error("Error occurred while importing the data from CSVIM files", e);
-	    }
-	  }
+		try (Connection connection = dataSource.getConnection()) {
+			for (String csvimArtifactKey : CSVIM_MODELS.keySet()) {
+				executeCsvim(CSVIM_MODELS.get(csvimArtifactKey), connection);
+			}
+		} catch (SQLException e) {
+			logger.error("Error occurred while importing the data from CSVIM files", e);
+		}
+	}
 
-	  private void executeCsvim(CsvimDefinition csvimDefinition, Connection connection) {
-	    List<CsvFileDefinition> configurationDefinitions = csvimDefinition.getCsvFileDefinitions();
+	private void executeCsvim(CsvimDefinition csvimDefinition, Connection connection) {
+		List<CsvFileDefinition> configurationDefinitions = csvimDefinition.getCsvFileDefinitions();
 
-	    List<CsvFileDefinition> sortedConfigurationDefinitions = new ArrayList<>();
+		List<CsvFileDefinition> sortedConfigurationDefinitions = new ArrayList<>();
 
-	    CsvimDefinitionsTopologicalSorter.sort(configurationDefinitions, sortedConfigurationDefinitions, connection);
+		CsvimDefinitionsTopologicalSorter.sort(configurationDefinitions, sortedConfigurationDefinitions, connection);
 
-	    for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
-	      try {
-	        csvimProcessor.process(csvFileDefinition, connection);
-	      } catch (SQLException | CsvimException e) {
-	        logger.error(String.format("An error occurred while trying to execute the data import: %s", e.getMessage()), e);
-	      }
-	    }
-	  }
+		for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
+			try {
+				csvimProcessor.process(csvFileDefinition, connection);
+				csvimCoreService.updateCsv(csvFileDefinition.getFile(), null, true);
+			} catch (SQLException | CsvimException e) {
+				logger.error(
+						String.format("An error occurred while trying to execute the data import: %s", e.getMessage()),
+						e);
+			}
+		}
+	}
 }

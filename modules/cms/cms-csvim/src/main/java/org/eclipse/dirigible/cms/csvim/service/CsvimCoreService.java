@@ -44,15 +44,17 @@ public class CsvimCoreService implements ICsvimCoreService {
 	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
 	private PersistenceManager<CsvimDefinition> csvimPersistenceManager = new PersistenceManager<CsvimDefinition>();
-	
+
 	private PersistenceManager<CsvDefinition> csvPersistenceManager = new PersistenceManager<CsvDefinition>();
 
 	// CSVIM
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#createCsvim(java.lang.String,
-	 * java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#createCsvim(java.lang.
+	 * String, java.lang.String)
 	 */
 	@Override
 	public CsvimDefinition createCsvim(String location, String hash) throws CsvimException {
@@ -80,7 +82,10 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsvim(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsvim(java.lang.
+	 * String)
 	 */
 	@Override
 	public CsvimDefinition getCsvim(String location) throws CsvimException {
@@ -101,7 +106,10 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#removeCsvim(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#removeCsvim(java.lang.
+	 * String)
 	 */
 	@Override
 	public void removeCsvim(String location) throws CsvimException {
@@ -122,8 +130,10 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#updateCsvim(java.lang.String,
-	 * java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#updateCsvim(java.lang.
+	 * String, java.lang.String)
 	 */
 	@Override
 	public void updateCsvim(String location, String hash) throws CsvimException {
@@ -146,6 +156,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsvims()
 	 */
 	@Override
@@ -167,7 +178,10 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#existsCsvim(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#existsCsvim(java.lang.
+	 * String)
 	 */
 	@Override
 	public boolean existsCsvim(String location) throws CsvimException {
@@ -176,12 +190,16 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#parseCsvim(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#parseCsvim(java.lang.
+	 * String)
 	 */
 	@Override
 	public CsvimDefinition parseCsvim(String json) {
 		CsvimDefinition definition = new CsvimDefinition();
-		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>(){}.getType();
+		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>() {
+		}.getType();
 		definition.setCsvFileDefinitions(GsonHelper.GSON.fromJson(json, csvListType));
 		definition.setHash(DigestUtils.md5Hex(json.getBytes()));
 		return definition;
@@ -189,156 +207,172 @@ public class CsvimCoreService implements ICsvimCoreService {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#parseCsvim(byte[])
 	 */
 	@Override
 	public CsvimDefinition parseCsvim(byte[] json) {
 		CsvimDefinition definition = new CsvimDefinition();
-		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>(){}.getType();
-		definition.setCsvFileDefinitions(GsonHelper.GSON.fromJson(
-				new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8),
-				csvListType));
+		Type csvListType = new TypeToken<ArrayList<CsvFileDefinition>>() {
+		}.getType();
+		definition.setCsvFileDefinitions(GsonHelper.GSON
+				.fromJson(new InputStreamReader(new ByteArrayInputStream(json), StandardCharsets.UTF_8), csvListType));
 		definition.setHash(DigestUtils.md5Hex(json));
 		return definition;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see
-	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#serializeCsvim(org.eclipse.dirigible.
-	 * core.extensions.definition.CsvimDefinition)
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#serializeCsvim(org.
+	 * eclipse.dirigible. core.extensions.definition.CsvimDefinition)
 	 */
 	@Override
 	public String serializeCsvim(CsvimDefinition csvimDefinition) {
 		return GsonHelper.GSON.toJson(csvimDefinition.getCsvFileDefinitions());
 	}
-	
-	
+
 	// CSV
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#createCsv(java.lang.String,
-		 * java.lang.String)
-		 */
-		@Override
-		public CsvDefinition createCsv(String location, String hash) throws CsvimException {
-			CsvDefinition csvDefinition = new CsvDefinition();
-			csvDefinition.setLocation(location);
-			csvDefinition.setHash(hash);
-			csvDefinition.setCreatedBy(UserFacade.getName());
-			csvDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#createCsv(java.lang.
+	 * String, java.lang.String)
+	 */
+	@Override
+	public CsvDefinition createCsv(String location, String hash) throws CsvimException {
+		CsvDefinition csvDefinition = new CsvDefinition();
+		csvDefinition.setLocation(location);
+		csvDefinition.setHash(hash);
+		csvDefinition.setCreatedBy(UserFacade.getName());
+		csvDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
+		try {
+			Connection connection = null;
 			try {
-				Connection connection = null;
-				try {
-					connection = dataSource.getConnection();
-					csvPersistenceManager.insert(connection, csvDefinition);
-					return csvDefinition;
-				} finally {
-					if (connection != null) {
-						connection.close();
-					}
+				connection = dataSource.getConnection();
+				csvPersistenceManager.insert(connection, csvDefinition);
+				return csvDefinition;
+			} finally {
+				if (connection != null) {
+					connection.close();
 				}
-			} catch (SQLException e) {
-				throw new CsvimException(e);
 			}
+		} catch (SQLException e) {
+			throw new CsvimException(e);
 		}
+	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsv(java.lang.String)
-		 */
-		@Override
-		public CsvDefinition getCsv(String location) throws CsvimException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsv(java.lang.
+	 * String)
+	 */
+	@Override
+	public CsvDefinition getCsv(String location) throws CsvimException {
+		try {
+			Connection connection = null;
 			try {
-				Connection connection = null;
-				try {
-					connection = dataSource.getConnection();
-					return csvPersistenceManager.find(connection, CsvDefinition.class, location);
-				} finally {
-					if (connection != null) {
-						connection.close();
-					}
+				connection = dataSource.getConnection();
+				return csvPersistenceManager.find(connection, CsvDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
 				}
-			} catch (SQLException e) {
-				throw new CsvimException(e);
 			}
+		} catch (SQLException e) {
+			throw new CsvimException(e);
 		}
+	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#removeCsv(java.lang.String)
-		 */
-		@Override
-		public void removeCsv(String location) throws CsvimException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#removeCsv(java.lang.
+	 * String)
+	 */
+	@Override
+	public void removeCsv(String location) throws CsvimException {
+		try {
+			Connection connection = null;
 			try {
-				Connection connection = null;
-				try {
-					connection = dataSource.getConnection();
-					csvPersistenceManager.delete(connection, CsvDefinition.class, location);
-				} finally {
-					if (connection != null) {
-						connection.close();
-					}
+				connection = dataSource.getConnection();
+				csvPersistenceManager.delete(connection, CsvDefinition.class, location);
+			} finally {
+				if (connection != null) {
+					connection.close();
 				}
-			} catch (SQLException e) {
-				throw new CsvimException(e);
 			}
+		} catch (SQLException e) {
+			throw new CsvimException(e);
 		}
+	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#updateCsv(java.lang.String,
-		 * java.lang.String)
-		 */
-		@Override
-		public void updateCsv(String location, String hash) throws CsvimException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#updateCsv(java.lang.
+	 * String, java.lang.String, java.lang.Boolean)
+	 */
+	@Override
+	public void updateCsv(String location, String hash, Boolean imported) throws CsvimException {
+		try {
+			Connection connection = null;
 			try {
-				Connection connection = null;
-				try {
-					connection = dataSource.getConnection();
-					CsvDefinition csvDefinition = getCsv(location);
+				connection = dataSource.getConnection();
+				CsvDefinition csvDefinition = getCsv(location);
+				if (hash != null) {
 					csvDefinition.setHash(hash);
-					csvPersistenceManager.update(connection, csvDefinition);
-				} finally {
-					if (connection != null) {
-						connection.close();
-					}
 				}
-			} catch (SQLException e) {
-				throw new CsvimException(e);
+				csvPersistenceManager.update(connection, csvDefinition);
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
 			}
+		} catch (SQLException e) {
+			throw new CsvimException(e);
 		}
+	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsvs()
-		 */
-		@Override
-		public List<CsvDefinition> getCsvs() throws CsvimException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#getCsvs()
+	 */
+	@Override
+	public List<CsvDefinition> getCsvs() throws CsvimException {
+		try {
+			Connection connection = null;
 			try {
-				Connection connection = null;
-				try {
-					connection = dataSource.getConnection();
-					return csvPersistenceManager.findAll(connection, CsvDefinition.class);
-				} finally {
-					if (connection != null) {
-						connection.close();
-					}
+				connection = dataSource.getConnection();
+				return csvPersistenceManager.findAll(connection, CsvDefinition.class);
+			} finally {
+				if (connection != null) {
+					connection.close();
 				}
-			} catch (SQLException e) {
-				throw new CsvimException(e);
 			}
+		} catch (SQLException e) {
+			throw new CsvimException(e);
 		}
+	}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#existsCsv(java.lang.String)
-		 */
-		@Override
-		public boolean existsCsv(String location) throws CsvimException {
-			return getCsv(location) != null;
-		}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dirigible.cms.csvim.api.ICsvimCoreService#existsCsv(java.lang.
+	 * String)
+	 */
+	@Override
+	public boolean existsCsv(String location) throws CsvimException {
+		return getCsv(location) != null;
+	}
 
 }

@@ -80,7 +80,7 @@ public class CsvDefinition implements IArtefactDefinition {
 	/**
 	 * Getter for imported flag
 	 * 
-	 * @return
+	 * @return whether is imported already
 	 */
 	public boolean getImported() {
 		return imported;
