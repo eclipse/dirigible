@@ -41,6 +41,7 @@ public class DatabaseMetadataUtil {
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
+    public static final String JDBC_NULLABLE = "NULLABLE";
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
@@ -151,6 +152,7 @@ public class DatabaseMetadataUtil {
 		            new PersistenceTableColumnModel(
 		                    columns.getString(JDBC_COLUMN_PROPERTY),
 		                    columns.getString(JDBC_COLUMN_TYPE),
+                            columns.getBoolean(JDBC_NULLABLE),
 		                    false));
 		} while (columns.next());
 	}
