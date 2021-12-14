@@ -33,7 +33,7 @@ import com.google.common.base.CaseFormat;
 
 public class DatabaseMetadataUtil {
 
-	public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
+    public static final String DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE = "DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE";
 
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
@@ -73,54 +73,54 @@ public class DatabaseMetadataUtil {
     public static void addForeignKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (foreignKeys.next()) {
-        	iterateForeignKeys(tableMetadata, foreignKeys);
+            iterateForeignKeys(tableMetadata, foreignKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
             foreignKeys = databaseMetadata.getImportedKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
             if (!foreignKeys.next()) {
-            	return;
+                return;
             } else {
-            	iterateForeignKeys(tableMetadata, foreignKeys);
+                iterateForeignKeys(tableMetadata, foreignKeys);
             }
         }
     }
 
-	private static void iterateForeignKeys(PersistenceTableModel tableMetadata, ResultSet foreignKeys)
-			throws SQLException {
-		do {
-		    PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
-		            foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
-		            foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY),
-		            foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY),
-		            foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
-		            foreignKeys.getString(JDBC_PK_NAME_PROPERTY)
-		    );
-		    tableMetadata.getRelations().add(relationMetadata);
-		} while (foreignKeys.next());
-	}
+    private static void iterateForeignKeys(PersistenceTableModel tableMetadata, ResultSet foreignKeys)
+            throws SQLException {
+        do {
+            PersistenceTableRelationModel relationMetadata = new PersistenceTableRelationModel(foreignKeys.getString(JDBC_FK_TABLE_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_TABLE_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_FK_COLUMN_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_COLUMN_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_FK_NAME_PROPERTY),
+                    foreignKeys.getString(JDBC_PK_NAME_PROPERTY)
+            );
+            tableMetadata.getRelations().add(relationMetadata);
+        } while (foreignKeys.next());
+    }
 
     public static void addPrimaryKeys(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schema) throws SQLException {
         ResultSet primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName()));
         if (primaryKeys.next()) {
-        	iteratePrimaryKeys(tableMetadata, primaryKeys);
+            iteratePrimaryKeys(tableMetadata, primaryKeys);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
             primaryKeys = databaseMetadata.getPrimaryKeys(connection.getCatalog(), schema, normalizeTableName(tableMetadata.getTableName().toLowerCase()));
             if (!primaryKeys.next()) {
-            	return;
+                return;
             } else {
-            	iteratePrimaryKeys(tableMetadata, primaryKeys);
+                iteratePrimaryKeys(tableMetadata, primaryKeys);
             }
         }
-        
+
     }
 
-	private static void iteratePrimaryKeys(PersistenceTableModel tableMetadata, ResultSet primaryKeys)
-			throws SQLException {
-		do {
-		    setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
-		} while (primaryKeys.next());
-	}
+    private static void iteratePrimaryKeys(PersistenceTableModel tableMetadata, ResultSet primaryKeys)
+            throws SQLException {
+        do {
+            setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
+        } while (primaryKeys.next());
+    }
 
     public static void setColumnPrimaryKey(String columnName, PersistenceTableModel tableModel) {
         tableModel.getColumns().forEach(column -> {
@@ -133,29 +133,29 @@ public class DatabaseMetadataUtil {
     public static void addFields(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (columns.next()) {
-        	iterateFields(tableMetadata, columns);
+            iterateFields(tableMetadata, columns);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
             columns = databaseMetadata.getColumns(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
             if (!columns.next()) {
-            	throw new SQLException("Error in getting the information about the columns.");
+                throw new SQLException("Error in getting the information about the columns.");
             } else {
-            	iterateFields(tableMetadata, columns);
+                iterateFields(tableMetadata, columns);
             }
         }
-        
+
     }
 
-	private static void iterateFields(PersistenceTableModel tableMetadata, ResultSet columns) throws SQLException {
-		do {
-		    tableMetadata.getColumns().add(
-		            new PersistenceTableColumnModel(
-		                    columns.getString(JDBC_COLUMN_PROPERTY),
-		                    columns.getString(JDBC_COLUMN_TYPE),
+    private static void iterateFields(PersistenceTableModel tableMetadata, ResultSet columns) throws SQLException {
+        do {
+            tableMetadata.getColumns().add(
+                    new PersistenceTableColumnModel(
+                            columns.getString(JDBC_COLUMN_PROPERTY),
+                            columns.getString(JDBC_COLUMN_TYPE),
                             columns.getBoolean(JDBC_NULLABLE),
-		                    false));
-		} while (columns.next());
-	}
+                            false));
+        } while (columns.next());
+    }
 
     public static String addCorrectFormatting(String columnName) {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
@@ -171,24 +171,24 @@ public class DatabaseMetadataUtil {
     public static void addTableType(DatabaseMetaData databaseMetadata, Connection connection, PersistenceTableModel tableMetadata, String schemaPattern) throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName()), null);
         if (tables.next()) {
-        	iterateTables(tableMetadata, tables);
+            iterateTables(tableMetadata, tables);
         } else if (!IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL
             tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(tableMetadata.getTableName().toLowerCase()), null);
             if (!tables.next()) {
-            	throw new SQLException("Error in getting the information about the tables.");
+                throw new SQLException("Error in getting the information about the tables.");
             } else {
-            	iterateTables(tableMetadata, tables);
+                iterateTables(tableMetadata, tables);
             }
         }
     }
 
-	private static void iterateTables(PersistenceTableModel tableMetadata, ResultSet tables) throws SQLException {
-		do {
-		    tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
-		} while (tables.next());
-	}
-    
+    private static void iterateTables(PersistenceTableModel tableMetadata, ResultSet tables) throws SQLException {
+        do {
+            tableMetadata.setTableType(tables.getString("TABLE_TYPE"));
+        } while (tables.next());
+    }
+
     public static String getTableSchema(DataSource dataSource, String tableName) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
