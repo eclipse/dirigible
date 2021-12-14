@@ -8,8 +8,10 @@ let codeCompletionAssignments = {};
 let _editor;
 let resourceApiUrl;
 let editorUrl;
+let gitApiUrl;
 let loadingOverview = document.getElementsByClassName('loading-overview')[0];
 let loadingMessage = document.getElementsByClassName('loading-message')[0];
+let lineDecorations = [];
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -17,10 +19,27 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+function highlight_changed(lines, editor) {
+    return editor.deltaDecorations(lineDecorations, [
+        ...lines.map((line) => {
+            return {
+                range: new monaco.Range(line, 1, line, 1),
+                options: {
+                    isWholeLine: true,
+                    linesDecorationsClassName: 'monacoLineDecoration'
+                },
+            };
+        }),
+    ]);
+}
+
 function FileIO() {
 
     this.isReadOnly = function () {
         return editorUrl.searchParams.get('readOnly') || false;
+    };
+    this.resolveGitProjectName = function () {
+        return editorUrl.searchParams.get('gitName');
     };
     this.resolveFileName = function () {
         this.readOnly = editorUrl.searchParams.get('readOnly') || false;
@@ -163,19 +182,38 @@ function FileIO() {
 
         return 'text';
     };
-    this.loadText = function (fileName) {
+
+    this.loadText = function (file) {
         return new Promise((resolve, reject) => {
-            if (!fileName) {
-                reject(`HTTP ${400} - 'fileName' parameter cannot be '${fileName}'`);
-            } else {
+            if (file) {
+                let project = this.resolveGitProjectName();
+                let url;
+                if (project) {
+                    let workspace = file.replace('\\', '/').split('/')[1];
+                    url = `${gitApiUrl}/${workspace}/${project}/diff?path=${file.replace(`/${workspace}/`, '')}`;
+                } else {
+                    url = resourceApiUrl + file;
+                }
                 const xhr = new XMLHttpRequest();
-                fileName = fileName || this.resolveFileName();
-                xhr.open('GET', resourceApiUrl + fileName);
-                xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
+                xhr.open("GET", url);
+                xhr.setRequestHeader("X-CSRF-Token", "Fetch");
                 xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
                 xhr.onload = () => {
                     if (xhr.status === 200) {
-                        resolve(xhr.responseText);
+                        if (project) {
+                            let fileObject = JSON.parse(xhr.responseText);
+                            resolve({
+                                isGit: true,
+                                git: fileObject.original || "", // Means it`s not in git
+                                modified: fileObject.modified,
+                            });
+                        } else {
+                            resolve({
+                                isGit: false,
+                                git: "",
+                                modified: xhr.responseText,
+                            });
+                        }
                     } else {
                         reject(`HTTP ${xhr.status} - ${xhr.statusText}`)
                     }
@@ -183,9 +221,12 @@ function FileIO() {
                 };
                 xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
                 xhr.send();
+            } else {
+                reject(`HTTP ${400} - 'fileName' parameter cannot be '${fileName}'`);
             }
         });
     };
+
     this.saveText = function (text, fileName) {
         return new Promise((resolve, reject) => {
             fileName = fileName || this.resolveFileName();
@@ -214,6 +255,7 @@ function FileIO() {
 };
 
 function setResourceApiUrl() {
+    gitApiUrl = "/services/v4/ide/git";
     editorUrl = new URL(window.location.href);
     let rtype = editorUrl.searchParams.get('rtype');
     if (rtype === "workspace") resourceApiUrl = "/services/v4/ide/workspaces";
@@ -234,7 +276,7 @@ function createEditorInstance(readOnly = false) {
                 let editor = monaco.editor.create(containerEl, {
                     value: "let x = 0;",
                     automaticLayout: true,
-                    readOnly: readOnly
+                    readOnly: readOnly,
                 });
                 resolve(editor);
                 window.onresize = function () {
@@ -509,10 +551,11 @@ function traverseAssignment(assignment, assignmentInfo) {
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
-        let _fileText;
+        let _fileObject;
+
         fileIO.loadText(fileName)
-            .then((fileText) => {
-                _fileText = fileText;
+            .then((fileObject) => {
+                _fileObject = fileObject;
                 return createEditorInstance(readOnly);
             })
             .catch((status) => {
@@ -521,7 +564,7 @@ function traverseAssignment(assignment, assignmentInfo) {
             })
             .then((editor) => {
                 _editor = editor;
-                return _fileText;
+                return _fileObject.modified;
             })
             .then((fileText) => {
                 if (fileName) {
@@ -538,6 +581,14 @@ function traverseAssignment(assignment, assignmentInfo) {
                         }
                     }, "workbench.editor.save");
 
+                    _editor.onDidChangeModel(function () {
+                        if (_fileObject.isGit) {
+                            lineDecorations = highlight_changed(
+                                computeNewLines(_fileObject.git, fileText, true),
+                                _editor
+                            );
+                        }
+                    });
                     let model = monaco.editor.createModel(fileText, fileType || 'text');
                     _editor.setModel(model);
                     if (!readOnly) {
@@ -554,6 +605,11 @@ function traverseAssignment(assignment, assignmentInfo) {
                     _editor.onDidChangeModelContent(function (e) {
                         if (e.changes && e.changes[0].text === ".") {
                             codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
+                        }
+                        if (_fileObject.isGit && e.changes) {
+                            let content = _editor.getValue();
+                            let diffLines = computeNewLines(_fileObject.git, content, true);
+                            lineDecorations = highlight_changed(diffLines, _editor);
                         }
                         let newModuleImports = getModuleImports(_editor.getValue());
                         if (e && !dirty) {
@@ -577,6 +633,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                             }
                         });
                     });
+
                     monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
                     monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
                     loadDTS();
@@ -632,8 +689,8 @@ function traverseAssignment(assignment, assignmentInfo) {
                                 endColumn: position.column
                             })
 
-                            let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "\." + "([a-zA-Z0-9]+)?", "g")))[0];
-                            let afterDotToken = token.substring(token.indexOf(".") + 1);
+                            let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
+                            // let afterDotToken = token.substring(token.indexOf(".") + 1);
                             let tokenParts = token.split(".");
                             let moduleName = moduleImport ? moduleImport.module : null;
                             if (tokenParts != null && tokenParts.length > 2) {

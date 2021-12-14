@@ -84,7 +84,16 @@
                         },
                         events: {
                             'workspace.file.open': function (msg) {
-                                Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
+                                let extraArgs = null;
+                                if (msg.data.file.hasOwnProperty("gitName"))
+                                    extraArgs = { "gitName": msg.data.file.gitName };
+                                Layouts.manager.openEditor(
+                                    msg.data.file.path,
+                                    msg.data.file.label,
+                                    msg.data.file.contentType,
+                                    msg.data.editor,
+                                    extraArgs
+                                );
                             },
                             'workspace.file.deleted': function (msg) {
                                 //TODO: check if deleted file is currently open in editor and close the editor window
