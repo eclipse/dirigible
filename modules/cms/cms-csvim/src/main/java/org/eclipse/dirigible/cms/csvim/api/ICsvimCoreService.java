@@ -34,7 +34,7 @@ public interface ICsvimCoreService extends ICoreService {
 	 * Creates the CSVIM.
 	 *
 	 * @param location the location
-	 * @param name     the name
+	 * @param hash     the hash
 	 * @return the CSVIM definition
 	 * @throws CsvimException the extensions exception
 	 */
@@ -70,7 +70,7 @@ public interface ICsvimCoreService extends ICoreService {
 	 * Update CSVIM.
 	 *
 	 * @param location the location
-	 * @param name     the name
+	 * @param hash     the hash
 	 * @throws CsvimException the extensions exception
 	 */
 	public void updateCsvim(String location, String hash) throws CsvimException;
@@ -113,7 +113,7 @@ public interface ICsvimCoreService extends ICoreService {
 	 * Creates the CSV.
 	 *
 	 * @param location the location
-	 * @param name     the name
+	 * @param hash     the hash
 	 * @return the CSV definition
 	 * @throws CsvimException the extensions exception
 	 */
@@ -149,10 +149,11 @@ public interface ICsvimCoreService extends ICoreService {
 	 * Update CSV.
 	 *
 	 * @param location the location
-	 * @param name     the name
+	 * @param hash     the hash
+	 * @param imported the flag whether it is already imported
 	 * @throws CsvimException the extensions exception
 	 */
-	public void updateCsv(String location, String hash) throws CsvimException;
+	public void updateCsv(String location, String hash, Boolean imported) throws CsvimException;
 
 	/**
 	 * Gets the CSVs.
