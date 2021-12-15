@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
-	
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private DBMetadataUtil dbMetadataUtil;
 
@@ -51,8 +51,8 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithWrongMultiplicity.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithWrongMultiplicity.odata", employee);
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -65,17 +65,17 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithProp.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithProp.odata", employee);
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", false, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", false, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
-        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", true, false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
@@ -95,9 +95,9 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
                 "\t\t<Key>\n" +
                 "\t\t\t<PropertyRef Name=\"Number\" />\n" +
                 "\t\t</Key>\n" +
-                "\t\t<Property Name=\"Number\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"FkCompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"FkEmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"Number\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"FkCompanyId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"FkEmployeeNumber\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
                 "\t</EntityType>\n" +
                 "</Schema>\n";
         String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n" +
@@ -112,8 +112,8 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithProp.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithProp.odata", employee);
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -136,15 +136,15 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         definition.getAssociations().get(0).getAnnotationsAssociationSet().put("sap:creatable", "true");
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
-        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", false);
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("FK_COMPANY_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("FK_EMPLOYEE_NUMBER", "Edm.Int32", true, false);
         model = new PersistenceTableModel("PHONES", Arrays.asList(column5, column6, column7), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_TABLE);
         when(dbMetadataUtil.getTableMetadata("PHONES", null)).thenReturn(model);
@@ -190,10 +190,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
         definition.getEntities().get(0).getKeys().add("GEN_ID");
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -205,10 +205,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
                 "\t\t\t<PropertyRef Name=\"GEN_ID\" />\n" +
                 "\t\t</Key>\n" +
                 "\t\t<Property Name=\"GEN_ID\" Type=\"Edm.String\" Nullable=\"false\" MaxLength=\"2147483647\" sap:filterable=\"false\"/>\n" +
-                "\t\t<Property Name=\"CompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"OrderId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"AddressId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"CompanyId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"OrderId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"AddressId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
                 "\t</EntityType>\n" +
                 "</Schema>\n";
         String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n";
@@ -224,10 +224,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         definition.getEntities().get(0).getKeys().add("COMPANY_ID");
         definition.getEntities().get(0).getKeys().add("EMPLOYEE_NUMBER");
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -239,10 +239,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
                 "\t\t\t<PropertyRef Name=\"CompanyId\" />\n" +
                 "\t\t\t<PropertyRef Name=\"EmployeeNumber\" />\n" +
                 "\t\t</Key>\n" +
-                "\t\t<Property Name=\"CompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"OrderId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"AddressId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"CompanyId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"OrderId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"AddressId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
                 "\t</EntityType>\n" +
                 "</Schema>\n";
         String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n";
@@ -262,10 +262,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myCOMPANY_ID").setType("Edm.Int32").setNullable(false).setColumn("COMPANY_ID"));
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myEMPLOYEE_NUMBER").setType("Edm.Int32").setNullable(false).setColumn("EMPLOYEE_NUMBER"));
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -294,11 +294,11 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
         definition.getEntities().get(0).getKeys().add("ADDRESS_ID");
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4, column5), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -309,11 +309,11 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
                 "\t\t<Key>\n" +
                 "\t\t\t<PropertyRef Name=\"AddressId\" />\n" +
                 "\t\t</Key>\n" +
-                "\t\t<Property Name=\"CompanyId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"OrderId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"AddressId\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"Id\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"CompanyId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"EmployeeNumber\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"OrderId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"AddressId\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"Id\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
                 "\t</EntityType>\n" +
                 "</Schema>\n";
         String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n";
@@ -331,10 +331,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -364,10 +364,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myERROR_ID").setType("Edm.Int32").setNullable(false).setColumn("ERROR_ID"));
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -384,10 +384,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
         definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myADDRESS_ID").setType("Edm.Int32").setNullable(false).setColumn("ADDRESS_ID"));
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
 
         PersistenceTableModel viewModel = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         viewModel.setTableType(ISqlKeywords.METADATA_VIEW);
@@ -426,10 +426,10 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
 
-        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true);
-        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", false);
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ADDRESS_ID", "Edm.Int32", true, false);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3, column4), new ArrayList<>());
         model.setTableType(ISqlKeywords.METADATA_SYSTEM_TABLE);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
@@ -472,8 +472,8 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
                 "\t\t<Key>\n" +
                 "\t\t\t<PropertyRef Name=\"Entity3_id\" />\n" +
                 "\t\t</Key>\n" +
-                "\t\t<Property Name=\"Entity3_id\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
-                "\t\t<Property Name=\"Name_id\" Nullable=\"false\" Type=\"Edm.String\"/>\n" +
+                "\t\t<Property Name=\"Entity3_id\" Nullable=\"true\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"Name_id\" Nullable=\"true\" Type=\"Edm.String\"/>\n" +
                 "\t</EntityType>\n" +
                 "\t<Association Name=\"Entity1Entity2Type\">\n" +
                 "\t\t<End Type=\"mytest.Entity1Type\" Role=\"Entity1Principal\" Multiplicity=\"1\"/>\n" +
