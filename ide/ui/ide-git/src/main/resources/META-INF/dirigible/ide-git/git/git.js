@@ -272,11 +272,10 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceName, work
 
 	//subscribe event listeners
 	jstree.on('select_node.jstree', function (e, data) {
-		if (data.type === 'project') {
-			workspaceController.selectedProject = data.name;
-
-		} else if (data.type === 'local' || data.type === 'remote') {
-			workspaceController.selectedProject = data.node.parent.name;
+		if (data.node.type === 'project') {
+			workspaceController.selectedProject = data.node.text;
+		} else if (data.node.type === 'local' || data.node.type === 'remote') {
+			workspaceController.selectedProject = data.node.parent.text;
 		}
 
 		this.clickNode(this.jstree.get_node(data.node));

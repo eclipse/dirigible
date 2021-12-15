@@ -44,3 +44,8 @@ body {
   border: 1px solid black;
   border-radius: 4px;
 }
+.monacoLineDecoration {
+  background: steelblue;
+  width: 3px !important;
+  margin-left: 5px;
+}
