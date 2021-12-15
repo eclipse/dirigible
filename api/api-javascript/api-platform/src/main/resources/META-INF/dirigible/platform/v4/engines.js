@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
+
 /**
  * Get engine by type
  */
@@ -23,8 +23,8 @@ function Engine(type) {
 	this.type = type;
 
 	this.execute = function(module, context) {
-		var mapInstance = new java.util.HashMap();
-			for (var property in context) {
+		const mapInstance = new java.util.HashMap();
+		for (const property in context) {
 				if (context.hasOwnProperty(property)) {
 					mapInstance.put(property, context[property]);
 				}
@@ -34,8 +34,8 @@ function Engine(type) {
 	}
 
 	this.executeCode = function(module, context) {
-		var mapInstance = new java.util.HashMap();
-			for (var property in context) {
+		const mapInstance = new java.util.HashMap();
+		for (const property in context) {
 				if (context.hasOwnProperty(property)) {
 					mapInstance.put(property, context[property]);
 				}
@@ -46,6 +46,6 @@ function Engine(type) {
 }
 
 exports.getTypes = function() {
-	var json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
+	const json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
 	return JSON.parse(json);
 }

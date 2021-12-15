@@ -1,30 +1,30 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
-var streams = require("io/v4/streams");
-var request = require('http/v4/request');
-var base64 = require("utils/v4/base64");
+
+const streams = require("io/v4/streams");
+const request = require('http/v4/request');
+const base64 = require("utils/v4/base64");
 
 exports.createMessage = function() {
-	var internalFactory = javax.xml.soap.MessageFactory.newInstance();
-	var internalMessage = internalFactory.createMessage();
+	const internalFactory = javax.xml.soap.MessageFactory.newInstance();
+	const internalMessage = internalFactory.createMessage();
 	return new Message(internalMessage);
 };
 
 exports.parseMessage = function(mimeHeaders, inputStream) {
-	var internalFactory = javax.xml.soap.MessageFactory.newInstance();
+	const internalFactory = javax.xml.soap.MessageFactory.newInstance();
 	if (inputStream.native) {
 		try {
-			var internalMessage = internalFactory.createMessage(mimeHeaders.native, inputStream.native);
-			var internalPart = internalMessage.getSOAPPart();
+			const internalMessage = internalFactory.createMessage(mimeHeaders.native, inputStream.native);
+			const internalPart = internalMessage.getSOAPPart();
 			internalPart.getEnvelope();
 			return new Message(internalMessage);
 		} catch(e) {
@@ -37,16 +37,16 @@ exports.parseMessage = function(mimeHeaders, inputStream) {
 
 exports.parseRequest = function() {
 	if (request.getMethod().toUpperCase() !== "POST") {
-		throw new Error("HTTP method used must be POST.");	
+		throw new Error("HTTP method used must be POST.");
 	}
 
-	var inputStream = request.getInputStream();
-	var mimeHeaders = {};//exports.createMimeHeaders();
+	const inputStream = request.getInputStream();
+	const mimeHeaders = {};//exports.createMimeHeaders();
 	return exports.parseMessage(mimeHeaders, inputStream);
 };
 
 exports.createMimeHeaders = function() {
-	var internalMimeHeaders = javax.xml.soap.MimeHeaders();
+	const internalMimeHeaders = javax.xml.soap.MimeHeaders();
 	return new MimeHeaders(internalMimeHeaders);
 };
 
@@ -59,12 +59,12 @@ function Message(internalMessage) {
     this.native = internalMessage;
 
 	this.getPart = function() {
-		var internalPart = this.internalMessage.getSOAPPart();
+		const internalPart = this.internalMessage.getSOAPPart();
 		return new Part(internalPart);
 	};
 
 	this.getMimeHeaders = function() {
-		var internalMimeHeaders = this.internalMessage.getMimeHeaders();
+		const internalMimeHeaders = this.internalMessage.getMimeHeaders();
 		return new MimeHeaders(internalMimeHeaders);
 	};
 
@@ -73,7 +73,7 @@ function Message(internalMessage) {
 	};
 
 	this.getText = function() {
-		var outputStream = streams.createByteArrayOutputStream();
+		const outputStream = streams.createByteArrayOutputStream();
 		this.internalMessage.writeTo(outputStream.native);
 		return outputStream.getText();
 	};
@@ -87,7 +87,7 @@ function Part(internalPart) {
     this.native = internalPart;
 
 	this.getEnvelope = function() {
-		var internalEnvelope = this.internalPart.getEnvelope();
+		const internalEnvelope = this.internalPart.getEnvelope();
 		return new Envelope(internalEnvelope);
 	};
 }
@@ -104,8 +104,8 @@ function MimeHeaders(internalMimeHeaders) {
 	};
 
 	this.addBasicAuthenticationHeader = function(username, password) {
-		var userAndPassword = `${username}:${password}`;
-		var basicAuth = base64.encode(userAndPassword);
+		const userAndPassword = `${username}:${password}`;
+		const basicAuth = base64.encode(userAndPassword);
 		this.internalMimeHeaders.addHeader("Authorization", "Basic " + basicAuth);
 	};
 }
@@ -122,17 +122,17 @@ function Envelope(internalEnvelope) {
 	};
 
 	this.getBody = function() {
-		var internalBody = this.internalEnvelope.getBody();
+		const internalBody = this.internalEnvelope.getBody();
 		return new Body(internalBody);
 	};
 
 	this.getHeader = function() {
-		var internalHeader = this.internalEnvelope.getHeader();
+		const internalHeader = this.internalEnvelope.getHeader();
 		return new Header(internalHeader);
 	};
 
 	this.createName = function(localName, prefix, uri) {
-		var internalName = this.internalEnvelope.createName(localName, prefix, uri);
+		const internalName = this.internalEnvelope.createName(localName, prefix, uri);
 		return new Name(internalName);
 	};
 }
@@ -145,15 +145,15 @@ function Body(internalBody) {
     this.native = internalBody;
 
 	this.addChildElement = function(localName, prefix) {
-		var internalElement = this.internalBody.addChildElement(localName, prefix);
+		const internalElement = this.internalBody.addChildElement(localName, prefix);
 		return new Element(internalElement);
 	};
 
 	this.getChildElements = function() {
-		var childElements = [];
-		var internalElementsIterator = this.internalBody.getChildElements();
+		const childElements = [];
+		const internalElementsIterator = this.internalBody.getChildElements();
 		while (internalElementsIterator.hasNext()) {
-			var internalElement = internalElementsIterator.next();
+			const internalElement = internalElementsIterator.next();
 			childElements.push(new Element(internalElement));
 		}
 		return childElements;
@@ -168,7 +168,7 @@ function Header(internalHeader) {
     this.native = internalHeader;
 
 	this.addHeaderElement = function(name) {
-		var internalElement = this.internalHeader.addHeaderElement(name.native);
+		const internalElement = this.internalHeader.addHeaderElement(name.native);
 		return new Element(internalElement);
 	};
 }
@@ -205,25 +205,25 @@ function Element(element) {
     this.native = element;
 
 	this.addChildElement = function(localName, prefix) {
-		var internalElement = this.internalElement.addChildElement(localName, prefix);
+		const internalElement = this.internalElement.addChildElement(localName, prefix);
 		return new Element(internalElement);
 	};
 
 	this.addTextNode = function(text) {
-		var internalElement = this.internalElement.addTextNode(text);
+		const internalElement = this.internalElement.addTextNode(text);
 		return new Element(internalElement);
 	};
 
 	this.addAttribute = function(name, value) {
-		var internalElement = this.internalElement.addAttribute(name.native, value);
+		const internalElement = this.internalElement.addAttribute(name.native, value);
 		return new Element(internalElement);
 	};
 
 	this.getChildElements = function() {
-		var childElements = [];
-		var internalElementsIterator = this.internalElement.getChildElements();
+		const childElements = [];
+		const internalElementsIterator = this.internalElement.getChildElements();
 		while (internalElementsIterator.hasNext()) {
-			var internalElement = internalElementsIterator.next();
+			const internalElement = internalElementsIterator.next();
 			childElements.push(new Element(internalElement));
 		}
 		return childElements;
@@ -231,7 +231,7 @@ function Element(element) {
 
 	this.getElementName = function() {
 		try {
-			var internalName = this.internalElement.getElementName();
+			const internalName = this.internalElement.getElementName();
 			return new Name(internalName);
 		} catch(e) {
 		//  can we assume that always an exception here means the element is not an SOAPElement
@@ -253,9 +253,9 @@ function Element(element) {
  * Call a given SOAP endpoint with a given request message
  */
 exports.call = function(message, url) {
-	var soapConnectionFactory = javax.xml.soap.SOAPConnectionFactory.newInstance();
-	var internalConnection = soapConnectionFactory.createConnection();
-	var internalResponse = internalConnection.call(message.native, url);
+	const soapConnectionFactory = javax.xml.soap.SOAPConnectionFactory.newInstance();
+	const internalConnection = soapConnectionFactory.createConnection();
+	const internalResponse = internalConnection.call(message.native, url);
 	return new Message(internalResponse);
 };
 

@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Writer
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -19,7 +19,7 @@ exports.add = function(index, location, contents, lastModified, parameters) {
 	if (!lastModified) {
 		lastModified = new Date();
 	}
-	var map = "{}";
+	let map = "{}";
 	if (parameters) {
 		map = JSON.stringify(parameters);
 	}

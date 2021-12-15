@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getConsole = function() {
-	var console = require('core/v4/console');
+	const console = require('core/v4/console');
 	return console;
 };
 
