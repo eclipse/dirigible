@@ -11,17 +11,16 @@
  */
 /**
  * API v4 Files
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require("io/v4/streams");
-var bytes = require("io/v4/bytes");
+const streams = require("io/v4/streams");
+const bytes = require("io/v4/bytes");
 
 exports.exists = function(path){
 	return org.eclipse.dirigible.api.v3.io.FilesFacade.exists(path);
 };
-    
+
 exports.isExecutable = function(path) {
 	return org.eclipse.dirigible.api.v3.io.FilesFacade.isExecutable(path);
 };
@@ -63,8 +62,8 @@ exports.getParentPath = function(path) {
 };
 
 exports.readBytes = function(path){
-	var native = org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
-	var data = bytes.toJavaScriptBytes(native);
+	const native = org.eclipse.dirigible.api.v3.io.FilesFacade.readBytes(path);
+	const data = bytes.toJavaScriptBytes(native);
 	return data;
 };
 
@@ -77,7 +76,7 @@ exports.readText = function(path){
 };
 
 exports.writeBytes = function(path, data){
-	var native = bytes.toJavaBytes(data);
+	const native = bytes.toJavaBytes(data);
 	org.eclipse.dirigible.api.v3.io.FilesFacade.writeBytesNative(path, native);
 };
 
@@ -150,9 +149,8 @@ exports.createTempDirectory = function(prefix) {
 };
 
 exports.createInputStream = function(path) {
-	var inputStream = new streams.InputStream();
-	var native = org.eclipse.dirigible.api.v3.io.FilesFacade.createInputStream(path);
-	inputStream.native = native;
+	const inputStream = new streams.InputStream();
+	inputStream.native = org.eclipse.dirigible.api.v3.io.FilesFacade.createInputStream(path);
 	return inputStream;
 };
 

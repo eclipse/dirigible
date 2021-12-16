@@ -11,7 +11,7 @@
  */
 /**
  * API v4 ClientAsync
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -70,8 +70,8 @@ function buildUrl(url, options) {
 	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
 		return url;
 	}
-	var newUrl = url;
-	for (var i = 0; i < options.params.length; i ++) {
+	let newUrl = url;
+	for (let i = 0; i < options.params.length; i ++) {
 		if (i === 0) {
 			newUrl += '?' + options.params[i].name + '=' + options.params[i].value;
 		} else {
@@ -82,12 +82,12 @@ function buildUrl(url, options) {
 }
 
 function HttpAsyncClient() {
-	
+
 	this.httpClient = new org.eclipse.dirigible.api.v3.http.HttpClientAsyncFacade();
 
 	this.getAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -101,8 +101,8 @@ function HttpAsyncClient() {
 	};
 
 	this.postAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -116,8 +116,8 @@ function HttpAsyncClient() {
 	};
 
 	this.putAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -131,8 +131,8 @@ function HttpAsyncClient() {
 	};
 
 	this.patchAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -146,8 +146,8 @@ function HttpAsyncClient() {
 	};
 
 	this.deleteAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -161,8 +161,8 @@ function HttpAsyncClient() {
 	};
 
 	this.headAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,
@@ -176,8 +176,8 @@ function HttpAsyncClient() {
 	};
 
 	this.traceAsync = function(url, config, options) {
-		var newUrl = buildUrl(url, options);
-		var callback = createHttpResponseCallback(
+		const newUrl = buildUrl(url, options);
+		const callback = createHttpResponseCallback(
 			this.httpClient,
 			config.success,
 			config.error,

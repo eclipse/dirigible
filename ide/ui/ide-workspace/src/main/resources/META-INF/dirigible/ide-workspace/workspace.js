@@ -332,6 +332,7 @@ let WorkspaceTreeAdapter = function (treeConfig, workspaceService, publishServic
             "children": children,
             "type": f.type,
             "git": f.git,
+            "gitName": f.gitName,
             "icon": icon,
             "_file": f
         };
@@ -579,6 +580,12 @@ WorkspaceTreeAdapter.prototype.copyNode = function (sourceParentNode, node) {
 };
 WorkspaceTreeAdapter.prototype.dblClickNode = function (node) {
     let type = node.original.type;
+    let parent = node;
+    for (let i = 0; i < node.parents.length - 1; i++) {
+        parent = this.jstree.get_node(parent.parent);
+    }
+    if (parent.original.git)
+        node.original._file["gitName"] = parent.original.gitName;
     if (['folder', 'project'].indexOf(type) < 0)
         this.messageHub.announceFileOpen(node.original._file);
 };
@@ -823,6 +830,12 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             let onOpenWithEditorAction = function (editor, data) {
                 let tree = $.jstree.reference(data.reference);
                 let node = tree.get_node(data.reference);
+                let parent = node;
+                for (let i = 0; i < node.parents.length - 1; i++) {
+                    parent = tree.get_node(parent.parent);
+                }
+                if (parent.original.git)
+                    node.original._file["gitName"] = parent.original.gitName;
                 tree.element.trigger(openWithEventName, [node.original._file, editor]);
             };
 
@@ -1441,7 +1454,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     }]);
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
-const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job','xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
 function getIcon(f) {
     let icon;
@@ -1449,7 +1462,7 @@ function getIcon(f) {
         icon = "fa fa-git-square";
     } else if (f.type === 'file') {
         let ext = getFileExtension(f.name);
-        if (ext === 'js'|| ext === 'mjs'|| ext==='xsjs') {
+        if (ext === 'js' || ext === 'mjs' || ext === 'xsjs') {
             icon = "fa fa-file-code-o";
         } else if (ext === 'html') {
             icon = "fa fa-html5";

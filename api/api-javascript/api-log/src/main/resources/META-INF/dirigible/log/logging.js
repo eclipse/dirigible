@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var log = require('log/v4/logging');
-for(var propertyName in log) {
+const log = require('log/v4/logging');
+for(const propertyName in log) {
 	exports[propertyName] = log[propertyName];
 }

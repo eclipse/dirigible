@@ -11,6 +11,9 @@ version: #{DirigibleVersion}#
 # Eclipse Dirigible version
 appVersion: #{DirigibleVersion}#
 
+#Require kubernetes version
+kubeVersion: "> 1.18.20"
+
 keywords:
   - kyma
   - dirigible

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var files = require('io/v4/files');
-for(var propertyName in files) {
+const files = require('io/v4/files');
+for(const propertyName in files) {
 	exports[propertyName] = files[propertyName];
 }
