@@ -536,7 +536,7 @@ jobs:
     - id: install-secret-key
       name: Install gpg secret key
       run: |
-        cat <(echo -e "${{ secrets.GPG_SIGN_KEY }}") | gpg --batch --import
+        cat <(echo -e "${{ secrets.GPG_SIGN_KEY }}") | gpg --batch --import --no-tty --batch --yes
 
     - name: Helm Charts Release
       run: |
