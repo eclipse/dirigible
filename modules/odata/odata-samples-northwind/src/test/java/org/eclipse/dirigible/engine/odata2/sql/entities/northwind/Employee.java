@@ -1,13 +1,16 @@
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 
 @EdmEntityType(name = "Employee")
 @EdmEntitySet(name = "Employees", container = "NorthwindEntities")
@@ -67,4 +70,36 @@ public class Employee {
 
 	@EdmProperty(facets = @EdmFacets(maxLength = 255))
 	private String photoPath;
+
+	@EdmNavigationProperty( //
+			name = "Employees1", //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Employee.class, //
+			toRole = "Employees" //
+	)
+	private List<Employee> employees;
+
+	@EdmNavigationProperty( //
+			name = "Employee1", //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Employee.class, //
+			toRole = "Employees1" //
+	)
+	private List<Employee> employees1;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Order.class, //
+			toRole = "Orders", //
+			association = "FK_Orders_Employees" //
+	)
+	private List<Order> orders;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Territory.class, //
+			toRole = "Territories", //
+			association = "EmployeeTerritories" //
+	)
+	private List<Territory> territories;
 }
