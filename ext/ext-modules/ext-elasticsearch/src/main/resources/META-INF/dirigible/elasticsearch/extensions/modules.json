@@ -1,0 +1,13 @@
+[{
+  "name": "@dirigible/elasticsearch",
+  "description": "Elasticsearch API",
+  "isPackageDescription": true,
+  "dtsPath": "elasticsearch/extensions/elasticsearch.d.ts"
+},
+  {
+    "name": "elasticsearch/client",
+    "description": "Elasticsearch Client API",
+    "api": "client",
+    "versionedPaths": [ "elasticsearch/client"],
+    "pathDefault": "elasticsearch/client"
+  }]
