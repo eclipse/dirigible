@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var zip = require('io/v4/zip');
-for(var propertyName in zip) {
+const zip = require('io/v4/zip');
+for(const propertyName in zip) {
 	exports[propertyName] = zip[propertyName];
 }

@@ -11,101 +11,100 @@
 
 <html lang="en" ng-app="extensions">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-    <title>Eclipse Dirigible &trade; | View </title>
+        <title>Eclipse Dirigible &trade; | View </title>
 
-    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    </head>
 
-</head>
+    <body ng-controller="ExtensionsController">
 
-<body ng-controller="ExtensionsController">
-
-    <div ng-repeat="next in extensionPoints">
-        <hr>
-        <h4>
-            <div>
-                <label>Name:</label> <span class="extension-name">{{next.extensionPoint.name}}</span>
-            </div>
-            <div>
-                <label>Location:</label> <span>{{next.extensionPoint.location}}</span>
-            </div>
-        </h4>
-        <h4>
-            <i>{{next.extensionPoint.description}}</i>
-        </h4>
-        <hr>
-        <!--
+        <div ng-repeat="next in extensionPoints">
+            <hr>
+            <h4>
+                <div>
+                    <label>Name:</label> <span class="extension-name">{{next.extensionPoint.name}}</span>
+                </div>
+                <div>
+                    <label>Location:</label> <span>{{next.extensionPoint.location}}</span>
+                </div>
+            </h4>
+            <h4>
+                <i>{{next.extensionPoint.description}}</i>
+            </h4>
+            <hr>
+            <!--
 		<td>{{next.extensionPoint.createdBy}}</td>
 		<td>{{next.extensionPoint.createdAt}}</td>
 		-->
-        <td>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Location</th>
-                        <th>Module</th>
-                        <th>Description</th>
-                        <!--
+            <td>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Location</th>
+                            <th>Module</th>
+                            <th>Description</th>
+                            <!--
 						<th>Created By</th>
 						<th>Created At</th>
 						-->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="extension in next.extensions">
-                        <td>{{$index + 1}}</td>
-                        <td>
-                            <div class="tdSingleLine">{{extension.location}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{extension.module}}</div>
-                        </td>
-                        <td>
-                            <div class="tdSingleLine">{{extension.description}}</div>
-                        </td>
-                        <!--
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="extension in next.extensions">
+                            <td>{{$index + 1}}</td>
+                            <td>
+                                <div class="tdSingleLine">{{extension.location}}</div>
+                            </td>
+                            <td>
+                                <div class="tdSingleLine">{{extension.module}}</div>
+                            </td>
+                            <td>
+                                <div class="tdSingleLine">{{extension.description}}</div>
+                            </td>
+                            <!--
 						<td>{{extension.createdBy}}</td>
 						<td>{{extension.createdAt}}</td>
 						-->
-                    </tr>
-                </tbody>
-            </table>
-        </td>
-    </div>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </div>
 
-    <script>
-        angular.module('extensions', []);
-        angular.module('extensions').controller('ExtensionsController', function ($scope, $http) {
+        <script>
+            angular.module('extensions', []);
+            angular.module('extensions').controller('ExtensionsController', function ($scope, $http) {
 
-            let extensionsApi = '/services/v4/core/extensions';
+                let extensionsApi = '/services/v4/core/extensions';
 
-            function loadExtensions() {
-                $http.get(extensionsApi)
-                    .then(function (data) {
-                        $scope.extensionPoints = data.data;
-                    });
-            }
+                function loadExtensions() {
+                    $http.get(extensionsApi)
+                        .then(function (data) {
+                            $scope.extensionPoints = data.data;
+                        });
+                }
 
-            loadExtensions();
-        });
-    </script>
-</body>
+                loadExtensions();
+            });
+        </script>
+    </body>
 
 </html>

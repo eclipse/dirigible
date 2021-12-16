@@ -11,53 +11,48 @@
  */
 /**
  * API v4 Zip
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require("io/v4/streams");
-var bytes = require("io/v4/bytes");
+const streams = require("io/v4/streams");
+const bytes = require("io/v4/bytes");
 
 exports.createZipInputStream = function(inputStream) {
 
 	/**
 	 * ZipInputStream object
 	 */
-	var ZipInputStream = function () {
+	const ZipInputStream = function () {
 
-		this.getNextEntry = function() {
-			var zipEntry = new ZipEntry();
-			var native = this.native.getNextEntry();
+		this.getNextEntry = function () {
+			const zipEntry = new ZipEntry();
+			const native = this.native.getNextEntry();
 			zipEntry.native = native;
 			zipEntry.input = this;
 			return zipEntry;
 		};
 
-		this.read = function() {
-			var native = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
-			var data = bytes.toJavaScriptBytes(native);
-			return data;
+		this.read = function () {
+			const native = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
+			return bytes.toJavaScriptBytes(native);
 		};
 
-		this.readNative = function() {
-			let data = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
-			return data;
+		this.readNative = function () {
+			return org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
 		};
 
-		this.readText = function() {
-			var text = org.eclipse.dirigible.api.v3.io.ZipFacade.readText(this.native);
-			return text;
+		this.readText = function () {
+			return org.eclipse.dirigible.api.v3.io.ZipFacade.readText(this.native);
 		};
 
-		this.close = function() {
+		this.close = function () {
 			this.native.close();
 		};
 
 	};
 
-	var zipInputStream = new ZipInputStream();
-	var native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
-	zipInputStream.native = native;
+	const zipInputStream = new ZipInputStream();
+	zipInputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
 	return zipInputStream;
 };
 
@@ -66,34 +61,33 @@ exports.createZipOutputStream = function(outputStream) {
 	/**
 	 * ZipOutputStream object
 	 */
-	var ZipOutputStream = function() {
+	const ZipOutputStream = function () {
 
-		this.createZipEntry = function(name) {
-			var zipEntry = new ZipEntry();
-			var native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipEntry(name);
-			zipEntry.native = native;
+		this.createZipEntry = function (name) {
+			const zipEntry = new ZipEntry();
+			zipEntry.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipEntry(name);
 			this.native.putNextEntry(zipEntry.native);
 			return zipEntry;
 		};
 
-		this.write = function(data) {
-			var native = bytes.toJavaBytes(data);
+		this.write = function (data) {
+			const native = bytes.toJavaBytes(data);
 			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, native);
 		};
 
-		this.writeNative = function(data) {
+		this.writeNative = function (data) {
 			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, data);
 		};
 
-		this.writeText = function(text) {
+		this.writeText = function (text) {
 			org.eclipse.dirigible.api.v3.io.ZipFacade.writeText(this.native, text);
 		};
 
-		this.closeEntry = function() {
+		this.closeEntry = function () {
 			this.native.closeEntry();
 		};
 
-		this.close = function() {
+		this.close = function () {
 			this.native.finish();
 			this.native.flush();
 			this.native.close();
@@ -101,9 +95,8 @@ exports.createZipOutputStream = function(outputStream) {
 
 	};
 
-	var zipOutputStream = new ZipOutputStream();
-	var native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipOutputStream(outputStream.native);
-	zipOutputStream.native = native;
+	const zipOutputStream = new ZipOutputStream();
+	zipOutputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipOutputStream(outputStream.native);
 	return zipOutputStream;
 };
 

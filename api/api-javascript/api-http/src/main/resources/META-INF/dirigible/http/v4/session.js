@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Session
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -24,7 +24,7 @@ exports.getAttribute = function(name) {
 };
 
 exports.getAttributeNames = function() {
-	var attrNames = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getAttributeNamesJson();
+	const attrNames = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getAttributeNamesJson();
 	if (attrNames) {
 		return JSON.parse(attrNames);
 	}
@@ -32,7 +32,7 @@ exports.getAttributeNames = function() {
 };
 
 exports.getCreationTime = function() {
-	var time = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getCreationTime();
+	const time = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getCreationTime();
 	return new Date(time);
 };
 
@@ -41,7 +41,7 @@ exports.getId = function() {
 };
 
 exports.getLastAccessedTime = function() {
-	var time = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getLastAccessedTime();
+	const time = org.eclipse.dirigible.api.v3.http.HttpSessionFacade.getLastAccessedTime();
 	return new Date(time);
 };
 

@@ -1,4 +1,8 @@
 1. Assign the required roles to your user.
+1.1 Run test and status for the deployment.  
+For testing - helm test dirigible
+For status - helm status dirigible
+
 {{- if .Values.ingress.enabled }}
 
 2. Access the Eclipse Dirigible instance at: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Release.Name }}.{{ .Values.ingress.host }}

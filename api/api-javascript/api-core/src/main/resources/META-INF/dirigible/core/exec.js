@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var exec = require('core/v4/exec');
-for(var propertyName in exec) {
+const exec = require('core/v4/exec');
+for(const propertyName in exec) {
 	exports[propertyName] = exec[propertyName];
 }

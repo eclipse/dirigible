@@ -9,68 +9,68 @@
   ~ SAP - initial API and implementation
   -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <meta charset="utf-8"/>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+        <!-- <title>Eclipse Dirigible - Websockets</title> -->
 
-    <!-- <title>Eclipse Dirigible - Websockets</title> -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
-    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- AngularJS -->
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <script type="text/javascript" src="websockets.js"></script>
 
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-    <script type="text/javascript" src="websockets.js"></script>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css"/>
+    </head>
 
-</head>
+    <body ng-app="websockets" ng-controller="WebsocketsController as websockets" class="view">
+        <div class="tableFixHead">
+            <table class="table table-striped" ng-cloak>
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Endpoint</th>
+                        <th>Handler</th>
+                        <th width="180px">Created</th>
+                        <th width="150px">Creator</th>
 
-<body ng-app="websockets" ng-controller="WebsocketsController as websockets" class="view">
-<div class="tableFixHead">
-    <table class="table table-striped" ng-cloak>
-        <thead>
-        <tr>
-            <th>Location</th>
-            <th>Endpoint</th>
-            <th>Handler</th>
-            <th width="180px">Created</th>
-            <th width="150px">Creator</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="next in websocketsList">
-            <td>
-                <div class="tdSingleLine">{{next.location}}</div>
-            </td>
-            <td>
-                <div class="tdSingleLine">{{next.endpoint}}</div>
-            </td>
-            <td>
-                <div class="tdSingleLine">{{next.handler}}</div>
-            </td>
-            <td width="180px">
-                <div class="tdSingleLine">{{next.createdAt}}</div>
-            </td>
-            <td width="150px">
-                <div class="tdSingleLine">{{next.createdBy}}</div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</body>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="next in websocketsList">
+                        <td>
+                            <div class="tdSingleLine">{{next.location}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.endpoint}}</div>
+                        </td>
+                        <td>
+                            <div class="tdSingleLine">{{next.handler}}</div>
+                        </td>
+                        <td width="180px">
+                            <div class="tdSingleLine">{{next.createdAt}}</div>
+                        </td>
+                        <td width="150px">
+                            <div class="tdSingleLine">{{next.createdBy}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
 
 </html>

@@ -16,6 +16,4 @@ angular.module('websockets', [])
 			$scope.websocketsList = response.data;
 		});
 
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

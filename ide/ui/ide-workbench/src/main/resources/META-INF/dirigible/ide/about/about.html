@@ -9,108 +9,111 @@
   ~ SAP - initial API and implementation
   -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <meta charset="utf-8" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible - About</title>
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+        <title>Eclipse Dirigible - About</title>
 
-	<!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- AngularJS -->
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-    <script type="text/javascript" src="about.js"></script>
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <script type="text/javascript" src="about.js"></script>
 
-</head>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-<body ng-app="about" ng-controller="AboutController as about" class="view">
+    </head>
 
-    <div class="container">
-        <div class="page-header">
-            <h1>{{version.productName}}</h1>
+    <body ng-app="about" ng-controller="AboutController as about" class="view">
+
+        <div class="container">
+            <div class="page-header">
+                <h1>{{version.productName}}</h1>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>Version:</label> <strong class="badge">{{version.productVersion}}</strong>
+                </div>
+                <div class="form-group">
+                    <label>Commit Id:</label> <strong class="badge"><a style="color:inherit"
+                            href="{{version.productRepository}}/commit/{{version.productCommitId}}" target="_blank"
+                            rel="noopener noreferrer">{{version.productCommitId}}</a></strong>
+                </div>
+                <div class="form-group">
+                    <label>Type:</label> <strong class="badge">{{version.productType}}</strong>
+                </div>
+                <div class="form-group">
+                    <label>Instance:</label> <strong class="badge">{{version.instanceName}}</strong>
+                </div>
+                <div class="form-group">
+                    <label>Repository:</label> <strong class="badge">{{version.repositoryProvider}}</strong>
+                </div>
+                <div class="form-group">
+                    <label>Database:</label> <strong class="badge">{{version.databaseProvider}}</strong>
+                </div>
+                <div class="form-group">
+                    <table class="table table-striped" ng-cloak>
+                        <thead>
+                            <tr>
+                                <th>Modules</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="next in version.modules">
+                                <td>{{next}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group">
+                    <table class="table table-striped" ng-cloak>
+                        <thead>
+                            <tr>
+                                <th>Engines</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="next in version.engines">
+                                <td>{{next}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-group">
+                    <table class="table table-striped" ng-cloak>
+                        <thead>
+                            <tr>
+                                <th>Synchronizer</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="job in jobs">
+                                <td>{{job.name}}</td>
+                                <td class="{{job.status}}">{{job.status}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </form>
         </div>
-        <form>
-            <div class="form-group">
-                <label>Version:</label> <strong class="badge">{{version.productVersion}}</strong>
-            </div>
-            <div class="form-group">
-                <label>Commit Id:</label> <strong class="badge"><a style="color:inherit"
-                        href="{{version.productRepository}}/commit/{{version.productCommitId}}"
-                        target="_blank">{{version.productCommitId}}</a></strong>
-            </div>
-            <div class="form-group">
-                <label>Type:</label> <strong class="badge">{{version.productType}}</strong>
-            </div>
-            <div class="form-group">
-                <label>Instance:</label> <strong class="badge">{{version.instanceName}}</strong>
-            </div>
-            <div class="form-group">
-                <label>Repository:</label> <strong class="badge">{{version.repositoryProvider}}</strong>
-            </div>
-            <div class="form-group">
-                <label>Database:</label> <strong class="badge">{{version.databaseProvider}}</strong>
-            </div>
-            <div class="form-group">
-                <table class="table table-striped" ng-cloak>
-                    <thead>
-                        <tr>
-                            <th>Modules</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="next in version.modules">
-                            <td>{{next}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="form-group">
-                <table class="table table-striped" ng-cloak>
-                    <thead>
-                        <tr>
-                            <th>Engines</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="next in version.engines">
-                            <td>{{next}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="form-group">
-                <table class="table table-striped" ng-cloak>
-                    <thead>
-                        <tr>
-                            <th>Synchronizer</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="job in jobs">
-                            <td>{{job.name}}</td>
-                            <td class="{{job.status}}">{{job.status}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </form>
-    </div>
-</body>
+    </body>
 
 </html>

@@ -1,490 +1,18 @@
 declare module "@dirigible/http" {
-    interface url {
-    }
-    class byte {
-    }
-    /**
-     * HTTP Session object provided to the scripting services implementation to hold session attributes for multiple client requests.
-     */
-    module session {
-        /**
-         * Returns the HTTP session attribute by name
-         * @param name
-         */
-        function getAttribute(name: string): string;
-
-        /**
-         * Returns true if the current execution context is in a HTTP call
-         */
-        function isValid(): boolean;
-
-        /**
-         * Returns all the HTTP session attributes names
-         */
-        function getAttributeNames(): string [];
-
-        /**
-         * Returns the time when the HTTP session has been initialized
-         */
-        function getCreationTime(): Date;
-
-        /**
-         * Returns the HTTP session ID
-         */
-        function getId(): string;
-
-        /**
-         * Returns the time when the HTTP session has been last accessed
-         */
-        function getLastAccessedTime(): Date;
-
-        /**
-         * Returns the maximum inactive interval of this HTTP session
-         */
-        function getMaxInactiveInterval(): number;
-
-        /**
-         * Invalidates this HTTP session
-         */
-        function invalidate();
-
-        /**
-         * Returns true, if the HTTP session is created during this HTTP call and false otherwise
-         */
-        function isNew(): boolean;
-
-        /**
-         * Sets the HTTP session attribute by name and value
-         * @param name
-         * @param value
-         */
-        function setAttribute(name: string, value: any): string;
-
-        /**
-         * Removes the HTTP session attribute by name
-         * @param name
-         */
-        function removeAttribute(name: string);
-
-        /**
-         * Sets the maximum inactive interval of this HTTP session
-         * @param interval
-         */
-        function setMaxInactiveInterval(interval: number);
-    }
-    /**
-     * HTTP Upload is used to consume files posted as multipart request.
-     */
-    module upload {
-        /**
-         * Returns true if the HTTP request contains files content and false otherwise
-         */
-        function isMultipartContent(): boolean;
-
-        /**
-         * Returns a HttpFileItems object by parsing the HTTP request
-         */
-        function parseRequest(): HttpFileItems;
-    }
-    /**
-     * HttpFileItems object
-     */
-    interface HttpFileItems {
-        /**
-         * The HttpFileItem object by the index
-         * @param index
-         */
-        get(index: number): HttpFileItem;
-
-        /**
-         * The size of the list of HttpFileItem objects
-         */
-        size(): number;
-    }
-    /**
-     * HttpFileItem object
-     */
-    interface HttpFileItem {
-
-        /**
-         * Return the input stream of the HttpFileItem's content
-         */
-        getInputStream(): [];
-
-        /**
-         * The HttpFileItem's data content type
-         */
-        getContentType(): string;
-
-        /**
-         * The HttpFileItem's name
-         */
-        getName(): string;
-
-        /**
-         * The HttpFileItem's size
-         */
-        getSize(): number;
-
-        /**
-         * Return the HttpFileItem's content as byte array
-         */
-        getBytes(): [];
-
-        getBytesNative();
-
-        /**
-         * Return the HttpFileItem's content as string
-         */
-        getText(): string;
-
-        /**
-         * Whether the HttpFileItem represents a form field
-         */
-        isFormField(): boolean;
-
-        /**
-         * The HttpFileItem's field name
-         */
-        getFieldName(): string;
-
-        /**
-         * The HttpFileItem's headers
-         */
-        getHeaders(): HttpFileItemHeaders;
-    }
-    /**
-     * HttpFileItemHeaders object
-     */
-    interface HttpFileItemHeaders {
-        /**
-         * The HttpFileItemHeader's names
-         */
-        getHeaderNames(): string [];
-
-        /**
-         * The HttpFileItemHeader's value for the given header name
-         */
-        getHeader(headerName: string);
-    }
-    interface HttpAsyncClient {
-        execute();
-
-        /**
-         * Makes a HTTP GET Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        getAsync(url: string, config: object, options?: string);
-
-        /**
-         * Makes a HTTP POST Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        postAsync(url: url, config: string, options?: string);
-
-        /**
-         * Makes a HTTP PUT Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        patchAsync(url: url, config: string, options?: string);
-
-        /**
-         * Makes a HTTP DELETE Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        deleteAsync(url: url, config: string, options?: string);
-
-        /**
-         * Makes a HTTP HEAD Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        headAsync(url: url, config: string, options: string);
-
-        /**
-         * Makes a HTTP TRACE Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
-         * @param url
-         * @param config
-         * @param options
-         */
-        traceAsync(url: url, config: string, options: string);
-
-        execute(): any;
-
-    }
-    /**
-     *
-     */
-    module rsdata {
-
-        interface DataService {
-            /**
-             * Returns the mapping REST mappings for this data service. The protocol mappings are already setup and the returned object can be used to configure additional mappings or override protocol standard ones. The returned object is of type RestAPI (see http/rs for details)
-             */
-            mappings()
-
-            /**
-             * This is an optional method provided by the default protocol handler adapter in this data service instance. Note that a data service instance can be initialized with various adapters. An adapter can contribute methods to the DataService API that are specific to their configuration needs. The defualt adapter is based on the dao framework (see db/dao for details) and exposes this mehtod as a getter/setter for the dao ORM configuraiton that will be used to setup dao backend used by this data service verb handlers. If no argument is provided the method acts like getter and returns the ORM configuration if any. If an ORM config object is supplied as argument, it will use it to create the backing dao for this data service instance and return the data service instance for method chaining.
-             * @param ormConfig
-             */
-            dao(ormConfig?): DataService;
-
-            /**
-             * the logger instance used by this data service. Defaults to logger with name 'http.rs.data.service' and can be provided with an argument provided to the module service method.
-             */
-            logger();
-
-            /**
-             * Creates an http controller instance for the mappings in htis data service instance and executes it, with the provided request/response arguments if any
-             * @param oRequest
-             * @param oResponse
-             */
-            execute(oRequest?, oResponse?);
-        }
-
-        /**
-         * Creates a new Data Service instance ready to be further configured and executed. Optionally, the instance could be supplied with: configuration (oConfiguration) that will be merged after protocol mappings are initiallized; oProtocolHandlersAdapter object for data-to-protocol mapping; oDataProtocolDefinition object for protocol mappings definition; sLoggerName string to provide logger name for an instance.
-         * @param oConfiguration
-         * @param oProtocolHandlersAdapter
-         * @param oDataProtocolDefinition
-         * @param sLoggerName
-         */
-        function service(oConfiguration?, oProtocolHandlersAdapter?, oDataProtocolDefinition?, sLoggerName?): DataService;
-    }
-    /**
-     *
-     */
-    module rs {
-        interface HttpController {
-            /**
-             * Returns the mappings configured for this controller instance.
-             */
-            mappings(): ResourceMappings;
-
-            /**
-             * processes HTTP requests, to match path, method and constraints to resource mappings and invoke callback handler functions accordingly and generate response.
-             * @param oRequest
-             * @param oResponse
-             */
-            execute(oRequest?, oResponse?);
-        }
-
-        interface ResourceMappings {
-            /**
-             * Returns the resource configuration object optionally initialized with oConfiguration
-             * @param oConfiguration
-             */
-            resource(oConfiguration?): Resource;
-
-            /**
-             * Returns the configuration for this ResourceMappings object
-             */
-            configuration(): Object;
-
-            /**
-             * Disables all but GET requests to this API
-             */
-            readonly(): ResourceMappings;
-
-            /**
-             * Disables the handling of requests sent to path sPath with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
-             * @param sPath
-             * @param sVerb
-             * @param arrConsumes
-             * @param arrProduces
-             */
-            disable(sPath, sVerb, arrConsumes, arrProduces): ResourceMappings;
-
-            /**
-             * Finds a request handler for requests sent to path sPath with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
-             * @param sPath
-             * @param sVerb
-             * @param arrConsumes
-             * @param arrProduces
-             */
-
-            find(sPath, sVerb, arrConsumes, arrProduces): ResourceMethod;
-
-            /**
-             * Executes the service
-             * @param oRequest
-             * @param oResponse
-             */
-            execute(oRequest?, oResponse?);
-        }
-
-        interface Resource {
-            /**
-             * Returns the get method configuration object, optionally configured with fServeCallback for serving requests
-             * @param fServeCallback
-             */
-            get(fServeCallback?): ResourceMethod;
-
-            /**
-             * Returns the post method configuration object, optionally configured with fServeCallback for serving requests
-             * @param fServeCallback
-             */
-
-            post(fServeCallback?): ResourceMethod;
-
-            /**
-             * Returns the put method configuration object, optionally configured with fServeCallback for serving requests
-             * @param fServeCallback
-             */
-            put(fServeCallback?): ResourceMethod;
-
-            /**
-             * Returns the delete method configuration object, optionally configured with fServeCallback for serving requests
-             * @param fServeCallback
-             */
-            delete(fServeCallback?): ResourceMethod;
-
-            /**
-             * Returns the delete method configuration object, optionally configured with fServeCallback for serving requests
-             * @param fServeCallback
-             */
-            remove(fServeCallback?): ResourceMethod;
-
-            /**
-             * Returns the a method configuration object for the sHttpVerb HTTP method name and optionally initialized with oConfiguration object
-             * @param sHttpVerb
-             * @param oConfiguration
-             */
-            method(sHttpVerb, oConfiguration?): ResourceMethod;
-
-            /**Returns the configuration for this Resource object
-             *
-             */
-            configuration(): Object;
-
-            /**
-             * Disables all but GET requests to this resource
-             */
-            readonly(): ResourceMappings;
-
-            /**
-             * Disables the handling of requests sent to this resource path with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
-             * @param sVerb
-             * @param arrConsumesTypeStrings
-             * @param arrProducesTypeStrings
-             */
-            disable(sVerb, arrConsumesTypeStrings, arrProducesTypeStrings): ResourceMappings;
-
-            /**
-             * Finds a request handler for requests sent to this resource path with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
-             * @param sVerb
-             * @param arrConsumesMimeTypeStrings
-             * @param arrProducesMimeTypeStrings
-             */
-            find(sVerb, arrConsumesMimeTypeStrings: any[], arrProducesMimeTypeStrings: any[]): ResourceMethod;
-
-            /**
-             * Executes the service
-             * @param oRequest
-             * @param oResponse
-             */
-            execute(oRequest?, oResponse?);
-        }
-
-        interface ResourceMethod {
-            /**
-             * Returns the configuration for this ResourceMethod object
-             */
-            configuration(): Object
-
-            /**
-             * Assigns a consumes constraint for this verb handler configuration.
-             * @param arrMediaTypeStrings
-             */
-            consumes(arrMediaTypeStrings): ResourceMethod;
-
-            /**
-             * Assigns a produces constraint for this verb handler configuration.
-             * @param arrMediaTypeStrings
-             */
-            produces(arrMediaTypeStrings): ResourceMethod;
-
-            /**
-             * Assign a before callback function for this verb handler configuration
-             * @param somefunc
-             */
-            before(somefunc): ResourceMethod;
-
-            /**
-             * Assign a verb handler function for this verb handler configuration
-             * @param somefunc
-             */
-            serve(somefunc): ResourceMethod;
-
-            /**
-             * Assign a catch on error callback function for this verb handler configuration
-             * @param somefunc
-             */
-            catch(somefunc): ResourceMethod
-
-            /**
-             * Assign a finally callback function for this verb handler configuration
-             * @param somefunc
-             */
-
-            finally(somefunc): ResourceMethod
-
-            /**
-             * Executes the service
-             * @param oRequest
-             * @param oResponse
-             */
-            execute(oRequest?, oResponse?);
-        }
-
-        /**
-         * Creates an HttpController instance, optionally initialized with a JS configuration or ResourceMappings object
-         * @param oMappings
-         */
-        function service(oMappings?): HttpController;
-    }
-    /**
-     * Client is used by scripting services to call external services via HTTP.
-     */
-    module client {
-        function get(url: string, options: string): object;
-
-        function post(url: string, options: string): object;
-
-        function put(url: string, options: string): object;
-
-        function patch(url: string, options: string): object;
-
-        // function delete(url: string, options: string): object;
-        function head(url: string, options: string): object;
-
-        function trace(url: string, options: string): object;
-
-        function buildUrl(url: string, options: string): object;
-    }
     module clientAsync {
-        /**
-         * Returns HttpAsyncClient instance
-         */
-        function getInstance(): HttpAsyncClient;
+    /**
+     * Returns HttpAsyncClient instance
+     */
+    function getInstance(): HttpAsyncClient;
 
-        //need to be deleted
-        /**
-         * Returns HttpAsyncClient instance
-         */
-        function getInstnace(): HttpAsyncClient;
+    //need to be deleted
+    /**
+     * Returns HttpAsyncClient instance
+     */
+    function getInstnace(): HttpAsyncClient;
 
 
-    }
+}
     module request {
         interface HttpCookie {
             /**
@@ -592,12 +120,12 @@ declare module "@dirigible/http" {
         /**
          * Returns the names of all the attribute
          */
-        function getAttributeNames(): string [];
+        function getAttributeNames(): string[];
 
         /**
          * Returns all the cookies from the request
          */
-        function getCookies(): HttpCookie [];
+        function getCookies(): HttpCookie[];
 
         /**
          * Returns the character encoding
@@ -607,7 +135,7 @@ declare module "@dirigible/http" {
         /**
          * Returns the array of headers
          */
-        function getHeaders(): HttpHeader [];
+        function getHeaders(): HttpHeader[];
 
         /**
          * Returns the content type
@@ -618,7 +146,7 @@ declare module "@dirigible/http" {
         /**
          * Returns the content as byte array
          */
-        function getBytes(): byte [];
+        function getBytes(): byte[];
 
         /**
          * Returns the content as text
@@ -908,7 +436,7 @@ declare module "@dirigible/http" {
          * Returns the array of header values by name
          * @param name
          */
-        function getHeaders(name: string): string [];
+        function getHeaders(name: string): string[];
 
         /**
          * Returns the names of all the headers
@@ -1019,5 +547,690 @@ declare module "@dirigible/http" {
         const UNSUPPORTED_MEDIA_TYPE = 415;
         const USE_PROXY = 305;
         let HttpCodesReasons: HttpCodesReasons;
+    }
+    /**
+     *
+     */
+    module rsdata {
+
+        interface DataService {
+            /**
+             * Returns the mapping REST mappings for this data service. The protocol mappings are already setup and the returned object can be used to configure additional mappings or override protocol standard ones. The returned object is of type RestAPI (see http/rs for details)
+             */
+            mappings()
+
+            /**
+             * This is an optional method provided by the default protocol handler adapter in this data service instance. Note that a data service instance can be initialized with various adapters. An adapter can contribute methods to the DataService API that are specific to their configuration needs. The defualt adapter is based on the dao framework (see db/dao for details) and exposes this mehtod as a getter/setter for the dao ORM configuraiton that will be used to setup dao backend used by this data service verb handlers. If no argument is provided the method acts like getter and returns the ORM configuration if any. If an ORM config object is supplied as argument, it will use it to create the backing dao for this data service instance and return the data service instance for method chaining.
+             * @param ormConfig
+             */
+            dao(ormConfig?): DataService;
+
+            /**
+             * the logger instance used by this data service. Defaults to logger with name 'http.rs.data.service' and can be provided with an argument provided to the module service method.
+             */
+            logger();
+
+            /**
+             * Creates an http controller instance for the mappings in htis data service instance and executes it, with the provided request/response arguments if any
+             * @param oRequest
+             * @param oResponse
+             */
+            execute(oRequest?, oResponse?);
+        }
+
+        /**
+         * Creates a new Data Service instance ready to be further configured and executed. Optionally, the instance could be supplied with: configuration (oConfiguration) that will be merged after protocol mappings are initiallized; oProtocolHandlersAdapter object for data-to-protocol mapping; oDataProtocolDefinition object for protocol mappings definition; sLoggerName string to provide logger name for an instance.
+         * @param oConfiguration
+         * @param oProtocolHandlersAdapter
+         * @param oDataProtocolDefinition
+         * @param sLoggerName
+         */
+        function service(oConfiguration?, oProtocolHandlersAdapter?, oDataProtocolDefinition?, sLoggerName?): DataService;
+    }
+    /**
+     *
+     */
+    module rs {
+        function service(oConfig?: ResourceMappings): HttpController
+
+        interface HttpController {
+            /**
+             * Returns the mappings configured for this controller instance.
+             */
+            mappings(): ResourceMappings;
+
+            /**
+             * processes HTTP requests, to match path, method and constraints to resource mappings and invoke callback handler functions accordingly and generate response.
+             * @param oRequest
+             * @param oResponse
+             */
+            execute(oRequest?, oResponse?);
+
+            /**
+             * Returns Resource with oConfigurations if provided
+             * @param oConfiguration
+             */
+            resource(oConfiguration?): Resource;
+
+        }
+
+        interface ResourceMappings {
+            /**
+             * Returns the resource configuration object optionally initialized with oConfiguration
+             * @param oConfiguration
+             */
+            resource(oConfiguration?): Resource;
+
+            /**
+             * Returns the configuration for this ResourceMappings object
+             */
+            configuration(): Object;
+
+            /**
+             * Disables all but GET requests to this API
+             */
+            readonly(): ResourceMappings;
+
+            /**
+             * Disables the handling of requests sent to path sPath with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
+             * @param sPath
+             * @param sVerb
+             * @param arrConsumes
+             * @param arrProduces
+             */
+            disable(sPath, sVerb, arrConsumes, arrProduces): ResourceMappings;
+
+            /**
+             * Finds a request handler for requests sent to path sPath with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
+             * @param sPath
+             * @param sVerb
+             * @param arrConsumes
+             * @param arrProduces
+             */
+
+            find(sPath, sVerb, arrConsumes, arrProduces): ResourceMethod;
+
+            /**
+             * Executes the service
+             * @param oRequest
+             * @param oResponse
+             */
+            execute(oRequest?, oResponse?);
+        }
+
+        interface Resource {
+            /**
+             * Returns the get method configuration object, optionally configured with fServeCallback for serving requests
+             * @param fServeCallback
+             */
+            get(fServeCallback?): ResourceMethod;
+
+            /**
+             * Returns the post method configuration object, optionally configured with fServeCallback for serving requests
+             * @param fServeCallback
+             */
+
+            post(fServeCallback?): ResourceMethod;
+
+            /**
+             * Returns the put method configuration object, optionally configured with fServeCallback for serving requests
+             * @param fServeCallback
+             */
+            put(fServeCallback?): ResourceMethod;
+
+            /**
+             * Returns the delete method configuration object, optionally configured with fServeCallback for serving requests
+             * @param fServeCallback
+             */
+            delete(fServeCallback?): ResourceMethod;
+
+            /**
+             * Returns the delete method configuration object, optionally configured with fServeCallback for serving requests
+             * @param fServeCallback
+             */
+            remove(fServeCallback?): ResourceMethod;
+
+            /**
+             * Returns the a method configuration object for the sHttpVerb HTTP method name and optionally initialized with oConfiguration object
+             * @param sHttpVerb
+             * @param oConfiguration
+             */
+            method(sHttpVerb, oConfiguration?): ResourceMethod;
+
+            /**Returns the configuration for this Resource object
+             *
+             */
+            configuration(): Object;
+
+            /**
+             * Disables all but GET requests to this resource
+             */
+            readonly(): ResourceMappings;
+
+            /**
+             * Disables the handling of requests sent to this resource path with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
+             * @param sVerb
+             * @param arrConsumesTypeStrings
+             * @param arrProducesTypeStrings
+             */
+            disable(sVerb, arrConsumesTypeStrings, arrProducesTypeStrings): ResourceMappings;
+
+            /**
+             * Finds a request handler for requests sent to this resource path with HTTP method sVerb and with consumes media type arrConsumes and produces media type arrProduces media type constraints
+             * @param sVerb
+             * @param arrConsumesMimeTypeStrings
+             * @param arrProducesMimeTypeStrings
+             */
+            find(sVerb, arrConsumesMimeTypeStrings: any[], arrProducesMimeTypeStrings: any[]): ResourceMethod;
+
+            /**
+             * Executes the service
+             * @param oRequest
+             * @param oResponse
+             */
+            execute(oRequest?, oResponse?);
+        }
+
+        interface ResourceMethod {
+            /**
+             * Returns the configuration for this ResourceMethod object
+             */
+            configuration(): Object
+
+            /**
+             * Assigns a consumes constraint for this verb handler configuration.
+             * @param arrMediaTypeStrings
+             */
+            consumes(arrMediaTypeStrings): ResourceMethod;
+
+            /**
+             * Assigns a produces constraint for this verb handler configuration.
+             * @param arrMediaTypeStrings
+             */
+            produces(arrMediaTypeStrings): ResourceMethod;
+
+            /**
+             * Assign a before callback function for this verb handler configuration
+             * @param somefunc
+             */
+            before(somefunc): ResourceMethod;
+
+            /**
+             * Assign a verb handler function for this verb handler configuration
+             * @param somefunc
+             */
+            serve(somefunc): ResourceMethod;
+
+            /**
+             * Assign a catch on error callback function for this verb handler configuration
+             * @param somefunc
+             */
+            catch(somefunc): ResourceMethod
+
+            /**
+             * Assign a finally callback function for this verb handler configuration
+             * @param somefunc
+             */
+
+            finally(somefunc): ResourceMethod
+
+            /**
+             * Executes the service
+             * @param oRequest
+             * @param oResponse
+             */
+            execute(oRequest?, oResponse?);
+        }
+
+        /**
+         * Creates an HttpController instance, optionally initialized with a JS configuration or ResourceMappings object
+         * @param oMappings
+         */
+        function service(oMappings?): HttpController;
+    }
+    /**
+     * Client is used by scripting services to call external services via HTTP.
+     */
+    module client {
+        /**
+         * Makes a HTTP GET request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+        function get(url: string, options?: HttpOptions): HttpResponse;
+
+        /**
+         * Makes a HTTP POST request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+
+        function post(url: string, options?: HttpOptions): HttpResponse;
+
+        /**
+         * Makes a HTTP PUT request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+
+        function put(url: string, options?: HttpOptions): HttpResponse;
+
+        /**
+         * Makes a HTTP DELETE request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+        function patch(url: string, options?: HttpOptions): HttpResponse;
+
+        /**
+         * Makes a HTTP HEAD request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+        function head(url: string, options?: HttpOptions): HttpResponse;
+        /**
+         * Makes a HTTP TRACE request to a remote service at the URL by the HttpOptions and returns the result
+         * @param url
+         * @param options
+         */
+        function trace(url: string, options?: HttpOptions): HttpResponse;
+
+        //TODO resolve name of the function delete because its reserved word in d.ts
+        // /**
+        //  * Makes a HTTP DELETE request to a remote service at the URL by the HttpOptions and returns the result
+        //  */
+        // function delete(url: string, options?: HttpOptions): HttpResponse;
+
+    }
+    module session {
+        /**
+         * Returns the HTTP session attribute by name
+         * @param name
+         */
+        function getAttribute(name: string): string;
+
+        /**
+         * Returns true if the current execution context is in a HTTP call
+         */
+        function isValid(): boolean;
+
+        /**
+         * Returns all the HTTP session attributes names
+         */
+        function getAttributeNames(): string[];
+
+        /**
+         * Returns the time when the HTTP session has been initialized
+         */
+        function getCreationTime(): Date;
+
+        /**
+         * Returns the HTTP session ID
+         */
+        function getId(): string;
+
+        /**
+         * Returns the time when the HTTP session has been last accessed
+         */
+        function getLastAccessedTime(): Date;
+
+        /**
+         * Returns the maximum inactive interval of this HTTP session
+         */
+        function getMaxInactiveInterval(): number;
+
+        /**
+         * Invalidates this HTTP session
+         */
+        function invalidate();
+
+        /**
+         * Returns true, if the HTTP session is created during this HTTP call and false otherwise
+         */
+        function isNew(): boolean;
+
+        /**
+         * Sets the HTTP session attribute by name and value
+         * @param name
+         * @param value
+         */
+        function setAttribute(name: string, value: any): string;
+
+        /**
+         * Removes the HTTP session attribute by name
+         * @param name
+         */
+        function removeAttribute(name: string);
+
+        /**
+         * Sets the maximum inactive interval of this HTTP session
+         * @param interval
+         */
+        function setMaxInactiveInterval(interval: number);
+    }
+    /**
+     * HTTP Upload is used to consume files posted as multipart request.
+     */
+    module upload {
+        /**
+         * Returns true if the HTTP request contains files content and false otherwise
+         */
+        function isMultipartContent(): boolean;
+
+        /**
+         * Returns a HttpFileItems object by parsing the HTTP request
+         */
+        function parseRequest(): HttpFileItems;
+    }
+    interface url {
+    }
+    class byte {
+    }
+    /**
+     * HTTP Session object provided to the scripting services implementation to hold session attributes for multiple client requests.
+     */
+
+    /**
+     * HttpFileItems object
+     */
+    interface HttpFileItems {
+        /**
+         * The HttpFileItem object by the index
+         * @param index
+         */
+        get(index: number): HttpFileItem;
+
+        /**
+         * The size of the list of HttpFileItem objects
+         */
+        size(): number;
+    }
+    /**
+     * HttpFileItem object
+     */
+    interface HttpFileItem {
+
+        /**
+         * Return the input stream of the HttpFileItem's content
+         */
+        getInputStream(): [];
+
+        /**
+         * The HttpFileItem's data content type
+         */
+        getContentType(): string;
+
+        /**
+         * The HttpFileItem's name
+         */
+        getName(): string;
+
+        /**
+         * The HttpFileItem's size
+         */
+        getSize(): number;
+
+        /**
+         * Return the HttpFileItem's content as byte array
+         */
+        getBytes(): [];
+
+        getBytesNative();
+
+        /**
+         * Return the HttpFileItem's content as string
+         */
+        getText(): string;
+
+        /**
+         * Whether the HttpFileItem represents a form field
+         */
+        isFormField(): boolean;
+
+        /**
+         * The HttpFileItem's field name
+         */
+        getFieldName(): string;
+
+        /**
+         * The HttpFileItem's headers
+         */
+        getHeaders(): HttpFileItemHeaders;
+    }
+    /**
+     * HttpFileItemHeaders object
+     */
+    interface HttpFileItemHeaders {
+        /**
+         * The HttpFileItemHeader's names
+         */
+        getHeaderNames(): HttpFileItemHeaderNames;
+
+        /**
+         * The HttpFileItemHeader's value for the given header name
+         */
+        getHeader(headerName: string): string;
+    }
+    /**
+     * HttpFileItemHeaderNames object
+     */
+    interface HttpFileItemHeaderNames {
+        /**
+         * Size of HttpFileItemHeaderNames array
+         */
+        size(): number;
+
+        /**
+         * Get HeaderName by index
+         * @param index
+         */
+        get(index): string;
+    }
+    interface HttpAsyncClient {
+        execute();
+
+        /**
+         * Makes a HTTP GET Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        getAsync(url: string, config: object, options?: string);
+
+        /**
+         * Makes a HTTP POST Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        postAsync(url: url, config: string, options?: string);
+
+        /**
+         * Makes a HTTP PUT Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        patchAsync(url: url, config: string, options?: string);
+
+        /**
+         * Makes a HTTP DELETE Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        deleteAsync(url: url, config: string, options?: string);
+
+        /**
+         * Makes a HTTP HEAD Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        headAsync(url: url, config: string, options: string);
+
+        /**
+         * Makes a HTTP TRACE Async request to a remote service at the URL by the HttpOptions and returns HttpResponse to the HttpResponseCallback
+         * @param url
+         * @param config
+         * @param options
+         */
+        traceAsync(url: url, config: string, options: string);
+
+        execute(): any;
+
+    }
+    class HttpResponse {
+        /**
+         * The Response status code
+         */
+        statusCode: number;
+        /**
+         * The Response status message
+         */
+        statusMessage: string;
+        /**
+         * The Response data
+         */
+        data: byte[];
+        /**
+         * The Response data as text
+         */
+        text: string;
+        /**
+         * Whether the Response data is binary in data or string in text
+         */
+        binary: boolean;
+        /**
+         * The HTTP version of the Response
+         */
+        protocol: string;
+        /**
+         * The Response headers
+         */
+        headers: HttpHeader[];
+    }
+    interface HttpHeader {
+        /**
+         * The name of the header
+         */
+        name: string
+        /**
+         * The value of the header
+         */
+        value: string
+    }
+    class HttpParam {
+        /**
+         * The name of the param
+         */
+        name: string
+        /**
+         * The value of the param
+         */
+        value: string
+    }
+    class HttpOptions {
+        /**
+         * The body of the HTTP Request as binary
+         */
+        data?: byte[];
+        /**
+         * The body of the HTTP Request as text
+         */
+        text?: string;
+        /**
+         * The body of the HTTP Request as files (for POST)
+         */
+        files?: string[];
+        /**
+         * The body of the HTTP Request as form parameters
+         */
+        params?: HttpParam[];
+
+        /**
+         * Whether the body of the HTTP Request is binary
+         */
+        binary?: boolean;
+        /**
+         * The character encoding enabled parameter. Default is true
+         */
+        characterEncodingEnabled?: boolean;
+        /**
+         * The character encoding parameter. Default is UTF-8
+         */
+        characterEncoding?: string;
+        /**
+         * The content type parameter. Default is plain/text
+         */
+        contentType?: string;
+        /**
+         * The Response headers
+         */
+        headers?: HttpHeader[];
+        /**
+         * The proxy host parameter
+         */
+        proxyHost?: string;
+        /**
+         * The proxy port parameter
+         */
+        proxyPort?: number;
+        /**
+         * The continue enabled parameter
+         */
+        expectContinueEnabled?: boolean;
+        /**
+         * The cookieSpec parameter
+         */
+        cookieSpec?: string;
+        /**
+         * The redirects enabled parameter
+         */
+        redirectsEnabled?: boolean;
+        /**
+         * The relative redirects allowed parameter
+         */
+        relativeRedirectsAllowed?: boolean;
+        /**
+         * The circular redirects allowed parameter
+         */
+        circularRedirectsAllowed?: boolean;
+        /**
+         * The max redirects parameter
+         */
+        maxRedirects?: number;
+        /**
+         * The authentication enabled parameter
+         */
+        authenticationEnabled?: boolean;
+        /**
+         * The target preferred authentication schemes parameter
+         */
+        targetPreferredAuthSchemes?: string[];
+        /**
+         * The proxy preferred authentication schemes parameter
+         */
+        proxyPreferredAuthSchemes?: string[];
+        /**
+         * The connection request timeout parameter
+         */
+        connectionRequestTimeout?: number;
+        /**
+         * The connect timeout parameter
+         */
+        connectTimeout?: number;
+        /**
+         * The socket timeout parameter
+         */
+        socketTimeout?: number;
+        /**
+         * The content compression enabled parameter
+         */
+        contentCompressionEnabled?: boolean;
+        /**
+         * The SSL trust all enabled parameter
+         */
+        sslTrustAllEnabled?: boolean;
     }
 }

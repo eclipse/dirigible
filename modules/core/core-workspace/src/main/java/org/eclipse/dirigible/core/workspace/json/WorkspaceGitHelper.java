@@ -16,34 +16,39 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 public class WorkspaceGitHelper {
-	
+
 	private static final String DOT_GIT = ".git";
-	
+
 	/**
-	 * Get the git flag
-	 * 
+	 * Get the git info. Returns a Pair.
+	 * Left value is boolean indicating the existence of the git directory
+	 * Right value contains the path to the root git project folder name
+	 *
 	 * @param repository the repository
 	 * @param repositoryPath the path
-	 * 
-	 * @return if the project is git aware
+	 *
+	 * @return if the project is git aware and project root folder name
 	 */
-	public static boolean getGitAware(IRepository repository, String repositoryPath) {
+	public static Pair<Boolean, String> getGitAware(IRepository repository, String repositoryPath) {
 		File gitFolder = getGitFolderForProject(repository, repositoryPath);
-		return gitFolder != null && gitFolder.exists();
+		if (gitFolder != null && gitFolder.exists()) {
+			return Pair.of(true, gitFolder.getParentFile().getName());
+		}
+		return Pair.of(false, null);
 	}
-	
+
 	/**
 	 * Get the git folder
-	 * 
+	 *
 	 * @param repository the repository
 	 * @param repositoryPath the path
-	 * 
+	 *
 	 * @return the git folder
 	 */
 	public static File getGitFolderForProject(IRepository repository, String repositoryPath) {
@@ -77,7 +82,7 @@ public class WorkspaceGitHelper {
 		List<File> folders = allFiles.stream().filter(e -> !e.isFile()).collect(Collectors.toList());
 		List<File> files = allFiles.stream().filter(e -> e.isFile()).collect(Collectors.toList());
 		for (File next : folders) {
-			if (!next.isFile() && !next.getName().equals(DOT_GIT)) {				
+			if (!next.isFile() && !next.getName().equals(DOT_GIT)) {
 				project.getFolders().add(describeFolder(next));
 			}
 		}
@@ -91,7 +96,7 @@ public class WorkspaceGitHelper {
 
 		return project;
 	}
-	
+
 	/**
 	 * Describe folder.
 	 *

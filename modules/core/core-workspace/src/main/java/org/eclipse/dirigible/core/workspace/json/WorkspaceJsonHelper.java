@@ -12,7 +12,9 @@
 package org.eclipse.dirigible.core.workspace.json;
 
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -86,8 +88,11 @@ public class WorkspaceJsonHelper {
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
-		
-		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString()));
+
+		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
+
+		projectPojo.setGit(gitInfo.getLeft());
+		projectPojo.setGitName(gitInfo.getRight());
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -122,8 +127,11 @@ public class WorkspaceJsonHelper {
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
-		
-		projectPojo.setGit(WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString()));
+
+		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
+
+		projectPojo.setGit(gitInfo.getLeft());
+		projectPojo.setGitName(gitInfo.getRight());
 		
 		return projectPojo;
 	}

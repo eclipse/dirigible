@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let templates = require("platform/v4/templates");
-for (var propertyName in templates) {
+const templates = require("platform/v4/templates");
+for (const propertyName in templates) {
     exports[propertyName] = templates[propertyName];
 }

@@ -11,15 +11,14 @@
  */
 /**
  * API v4 Image
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require("io/v4/streams");
+const streams = require("io/v4/streams");
 
 exports.resize = function(original, type, width, height) {
-	var native = org.eclipse.dirigible.api.v3.io.ImageFacade(original, type, width, height);
-	var inputStream = new streams.InputStream();
+	const native = org.eclipse.dirigible.api.v3.io.ImageFacade(original, type, width, height);
+	const inputStream = new streams.InputStream();
 	inputStream.native = native;
 	return inputStream;
 };

@@ -11,14 +11,14 @@
  */
 /**
  * API v4 Client
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-exports.get = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.get = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -26,10 +26,10 @@ exports.get = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.post = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.post = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -37,10 +37,10 @@ exports.post = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.put = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.put = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -48,10 +48,10 @@ exports.put = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.patch = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.patch = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -59,10 +59,10 @@ exports.patch = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.delete = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.delete = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -70,10 +70,10 @@ exports.delete = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.head = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.head = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -81,10 +81,10 @@ exports.head = function(url, options) {
 	return JSON.parse(result);
 };
 
-exports.trace = function(url, options) {
-	var url = buildUrl(url, options);
-	var result = {};
-	var opts = '{}';
+exports.trace = function(_url, options) {
+	let url = buildUrl(_url, options);
+	let result = {};
+	let opts = '{}';
 	if (options) {
 		opts = JSON.stringify(options);
 	}
@@ -96,7 +96,7 @@ function buildUrl(url, options) {
 	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
 		return url;
 	}
-	for (var i = 0; i < options.params.length; i ++) {
+	for (let i = 0; i < options.params.length; i ++) {
 		if (i === 0) {
 			url += '?' + options.params[i].name + '=' + options.params[i].value;
 		} else {
