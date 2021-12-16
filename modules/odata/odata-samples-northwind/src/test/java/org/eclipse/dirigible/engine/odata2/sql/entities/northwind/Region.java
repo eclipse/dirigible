@@ -11,10 +11,14 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
+import java.util.List;
+
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 
 @EdmEntityType(name = "Region")
@@ -27,4 +31,12 @@ public class Region {
 
     @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 50))
     private String regionDescription;
+
+    @EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Territory.class, //
+			toRole = "Territories", //
+			association = "FK_Territories_Region" //
+	)
+	private List<Territory> territories;
 }

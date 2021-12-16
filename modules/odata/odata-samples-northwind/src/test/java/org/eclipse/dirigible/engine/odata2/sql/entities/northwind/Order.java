@@ -85,4 +85,21 @@ public class Order {
 			association = "FK_Orders_Employees" //
 	)
 	private Employee employee;
+
+	@EdmNavigationProperty( //
+			name = "Order_Details", //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = OrderDetail.class, //
+			toRole = "Order_Details", //
+			association = "FK_Order_Details_Orders" //
+	)
+    private List<OrderDetail> orderDetails;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
+			toType = Shipper.class, //
+			toRole = "Shippers", //
+			association = "FK_Orders_Shippers" //
+	)
+	private Shipper shipper;
 }

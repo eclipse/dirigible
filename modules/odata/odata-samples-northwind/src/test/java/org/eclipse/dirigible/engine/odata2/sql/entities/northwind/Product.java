@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
+import java.util.List;
+
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
@@ -62,4 +64,21 @@ public class Product {
 			association = "FK_Products_Categories" //
 	)
 	private Category category;
+
+	@EdmNavigationProperty( //
+			name = "Order_Details", //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = OrderDetail.class, //
+			toRole = "Order_Details", //
+			association = "FK_Order_Details_Products" //
+	)
+    private List<OrderDetail> orderDetails;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
+			toType = Supplier.class, //
+			toRole = "Suppliers", //
+			association = "FK_Products_Suppliers" //
+	)
+	private Supplier supplier;
 }

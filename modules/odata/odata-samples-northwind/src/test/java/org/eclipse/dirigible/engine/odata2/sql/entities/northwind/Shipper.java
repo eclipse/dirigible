@@ -11,11 +11,15 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
+import java.util.List;
+
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 
 @EdmEntityType(name = "Shipper")
 @EdmEntitySet(name = "Shippers", container = "NorthwindEntities")
@@ -31,4 +35,11 @@ public class Shipper {
 	@EdmProperty(facets = @EdmFacets(maxLength = 24))
     private String phone;
 
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = OrderDetail.class, //
+			toRole = "Orders", //
+			association = "FK_Orders_Shippers" //
+	)
+    private List<Order> orders;
 }
