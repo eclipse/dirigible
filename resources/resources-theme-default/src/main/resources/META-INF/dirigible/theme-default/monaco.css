@@ -49,3 +49,24 @@ body {
   width: 3px !important;
   margin-left: 5px;
 }
+.deletedLine {
+  width: 3px !important;
+  margin-left: 5px;
+}
+.deletedLine::after {
+  content: "";
+  border: solid red;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  top: 100%;
+  left: 100;
+  margin-left: 2px;
+  width: 5px;
+  height: 5px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  margin-top: -9px;
+}

@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getTemplate = function () {
-	return {
-		"name": "html",
-		"label": "HTML5 Page",
-		"extension": "html",
-		"data": '<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'
-	};
+    return {
+        "name": "cvsim",
+        "label": "CSVIM file",
+        "extension": "csvim",
+        "data": '[]'
+    };
 };
