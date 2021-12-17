@@ -543,9 +543,8 @@ jobs:
 
         cp charts/* charts-temp/helm-charts/
         cd charts-temp/helm-charts/
-
-        gpg --export > ~/.gnupg/pubring.gpg                             
-        gpg --export-secret-keys > ~/.gnupg/secring.gpg
+                            
+        gpg --no-tty --batch --export-secret-keys > ~/.gnupg/secring.gpg
 
         helm package --sign --key "Dirigible-gpg" --keyring /home/runner/.gnupg/secring.gpg dirigible
         
