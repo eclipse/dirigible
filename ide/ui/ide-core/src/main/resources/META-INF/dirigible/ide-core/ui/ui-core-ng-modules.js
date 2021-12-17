@@ -81,12 +81,12 @@ angular.module('ideUiCore', ['ngResource'])
 		let editorsForContentType = {};
 		let editorsList = getEditors();
 		editorsList.forEach(function (editor) {
-			editorProviders[editor.id] = editor.link;
+			editorProviders[editor.label] = editor.link;
 			editor.contentTypes.forEach(function (contentType) {
 				if (!editorsForContentType[contentType]) {
-					editorsForContentType[contentType] = [editor.id];
+					editorsForContentType[contentType] = [editor.label];
 				} else {
-					editorsForContentType[contentType].push(editor.id);
+					editorsForContentType[contentType].push(editor.label);
 				}
 			});
 		});

@@ -19,18 +19,63 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-function highlight_changed(lines, editor) {
-    return editor.deltaDecorations(lineDecorations, [
-        ...lines.map((line) => {
-            return {
+const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
+    if (
+        oldText[oldText.length - 1] !== "\n" ||
+        newText[newText.length - 1] !== "\n"
+    ) {
+        oldText += "\n";
+        newText += "\n";
+    }
+    let lineDiff;
+    if (isWhitespaceIgnored) {
+        lineDiff = diffTrimmedLines(oldText, newText);
+    } else {
+        lineDiff = diffLines(oldText, newText);
+    }
+    let addedCount = 0;
+    let addedLines = [];
+    let removedLines = [];
+    lineDiff.forEach((part) => {
+        let { added, removed, value } = part;
+        let count = value.split("\n").length - 1;
+        if (!added && !removed) {
+            addedCount += count;
+        } else if (added) {
+            for (let i = 0; i < count; i++) {
+                addedLines.push(addedCount + i + 1);
+            }
+            addedCount += count;
+        } else if (removed && !addedLines.includes(addedCount + count)) {
+            removedLines.push(addedCount);
+        }
+    });
+    return { updated: addedLines, removed: removedLines };
+};
+
+const highlight_changed = (lines, editor) => {
+    let new_decorations = [];
+    lines.updated.forEach((line) => {
+        new_decorations.push({
+            range: new monaco.Range(line, 1, line, 1),
+            options: {
+                isWholeLine: true,
+                linesDecorationsClassName: 'monacoLineDecoration' + (
+                    lines.removed.includes(line) ? ' deletedLine' : '')
+            },
+        });
+    });
+    lines.removed.forEach((line) => {
+        if (!lines.updated.includes(line + 1))
+            new_decorations.push({
                 range: new monaco.Range(line, 1, line, 1),
                 options: {
                     isWholeLine: true,
-                    linesDecorationsClassName: 'monacoLineDecoration'
+                    linesDecorationsClassName: 'deletedLine'
                 },
-            };
-        }),
-    ]);
+            });
+    });
+    return editor.deltaDecorations(lineDecorations, new_decorations);
 }
 
 function FileIO() {
@@ -608,6 +653,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                         }
                         if (_fileObject.isGit && e.changes) {
                             let content = _editor.getValue();
+
                             let diffLines = computeNewLines(_fileObject.git, content, true);
                             lineDecorations = highlight_changed(diffLines, _editor);
                         }

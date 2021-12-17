@@ -12,10 +12,10 @@
 exports.getEditor = function () {
 	return {
 		"id": "job",
-		"name": "Job",
+		"name": "Job Editor",
 		"factory": "frame",
 		"region": "center-top",
-		"label": "Job",
+		"label": "Job Editor",
 		"link": "../ide-jobs/editor/editor.html",
 		"contentTypes": ["application/json+job"]
 	};

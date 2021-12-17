@@ -11,10 +11,10 @@
 exports.getEditor = function () {
 	return {
 		"id": "monaco",
-		"name": "Monaco",
+		"name": "Code Editor",
 		"factory": "frame",
 		"region": "center-top",
-		"label": "Monaco",
+		"label": "Code Editor",
 		"link": "../ide-monaco/editor.html",
 		"defaultEditor": true,
 		"contentTypes": [
