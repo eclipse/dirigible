@@ -23,21 +23,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.CheckoutCommand;
-import org.eclipse.jgit.api.CommitCommand;
-import org.eclipse.jgit.api.CreateBranchCommand;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.PullCommand;
-import org.eclipse.jgit.api.PushCommand;
-import org.eclipse.jgit.api.RebaseCommand;
 import org.eclipse.jgit.api.RebaseCommand.Operation;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.RmCommand;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
@@ -504,4 +493,5 @@ public class GitConnector implements IGitConnector {
 			throw new GitConnectorException(e);
 		}
 	}
+
 }

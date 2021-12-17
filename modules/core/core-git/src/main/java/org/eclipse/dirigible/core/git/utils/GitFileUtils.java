@@ -97,6 +97,12 @@ public class GitFileUtils {
 		return FileSystemUtils.forceCreateDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
 	}
 
+	public static void deleteGitDirectory(String user, String workspace, String repositoryURI) throws IOException {
+		String repositoryName = generateGitRepositoryName(repositoryURI);
+
+		FileSystemUtils.deleteDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+	}
+
 	/**
 	 * Import project.
 	 *

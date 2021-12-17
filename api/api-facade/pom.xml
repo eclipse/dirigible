@@ -30,6 +30,7 @@
 		<module>api-indexing</module>
 		<module>api-log</module>
 		<module>api-net</module>
+		<module>api-git</module>
 	</modules>
 
 	<properties>
