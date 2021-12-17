@@ -2,17 +2,26 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+#Set replica count
 replicaCount: 1
 
+
 image:
+  # Repository for basic deployment
   repository: dirigiblelabs/dirigible-all
+  # Repository with Kyma configuration
   repositoryKyma: dirigiblelabs/dirigible-sap-kyma
+  # Repository with Keycloak configuration
   repositoryKeycloak: dirigiblelabs/dirigible-keycloak
+  # Pull policy for the repositories
   pullPolicy: IfNotPresent
 
+# Image pull secrets if you have 
 imagePullSecrets: []
+# Name override the Dirigible deployment
 nameOverride: ""
-fullnameOverride: ""
+# Full name override Dirigible deployment
+fullNameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -26,7 +35,12 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  # Allow privileged escalation required to effectively enforce MustRunAsNonRoot.
+  allowPrivilegeEscalation: false
+  seccompProfile:
+    # Enable seccomp profile
+    type: RuntimeDefault
   # capabilities:
   #   drop:
   #   - ALL
@@ -34,16 +48,24 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+
 service:
+  # Type of service when you expose
   type: ClusterIP
+  # Port dor the Dirigible instance
   port: 8080
 
+
 ingress:
+  # Enable ingress configuration
   enabled: false
+  # Annotation for ingress
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  # Host where can access Dirigible 
   host: ""
+  # TLS for ingress configuration
   tls: false
 
 resources: {}
@@ -58,48 +80,79 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+#The nodeSelector property  
 nodeSelector: {}
 
+#The toleration property
 tolerations: []
 
+#The affinity property
 affinity: {}
 
 dirigible:
+  # Image for custom Dirigible installation
   image: ""
 
 volume:
+  # Enable volume for Dirigible
   enabled: true
   storage: 2Gi
 
 database:
+  # Enable Postgre installation
   enabled: false
+  # Image for Postgre
   image: postgres:13
+  # Driver for Postgre 
   driver: org.postgresql.Driver
+  # Username for database
   username: dirigible
+  # Password for database username
   password: dirigible
+  # Storage for Postgre database
   storage: 2Gi
 
+
 kyma:
+  # Enable Kyma configuration
   enabled: false
   apirule:
+    # Enable Kyma api rule
     enabled: true
+    # Host where Kyma to expose Dirigible  
     host: ""
 
+
 keycloak:
+  # Enable keycloak configuration
   enabled: false
+  # Install keycloak
   install: false
+  # Name for the instance
   name: keycloak
+  # Image for Keycloak installation
   image: jboss/keycloak:12.0.4
+  # Username for Keycloak administrator
   username: admin
+  # Password for Keycloak administrator
   password: admin
+  # Replica count for Keycloak
   replicaCount: 1
+  # Realm is property which realm to use
   realm: master
+  # ClientId is property for client 
   clientId: dirigible
+  # Database for the Keycloak
   database:
+    # Enabled property to install Postgre  
     enabled: true
+    # Image for Postgre database  
     image: postgres:13
+    # Storage for Postgre database
     storage: 2Gi
+    # Username for Postgre database
     username: keycloak
+    # Password for Posgre username
     password: keycloak
 
 # Enable Istio configuration

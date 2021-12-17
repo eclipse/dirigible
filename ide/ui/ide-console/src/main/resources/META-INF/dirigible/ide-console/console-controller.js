@@ -140,6 +140,4 @@ angular.module('console', [])
             }
         };
 
-    }]).config(function ($sceProvider) {
-        $sceProvider.enabled(false);
-    });
+    }]);

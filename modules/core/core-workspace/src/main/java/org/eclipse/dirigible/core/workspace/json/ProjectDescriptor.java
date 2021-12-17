@@ -24,8 +24,10 @@ public class ProjectDescriptor {
 	private String path;
 
 	private String type = "project";
-	
+
 	private boolean git;
+
+	private String gitName;
 
 	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
@@ -68,10 +70,10 @@ public class ProjectDescriptor {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	/**
 	 * Get the type
-	 * 
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -118,7 +120,7 @@ public class ProjectDescriptor {
 
 	/**
 	 * Is Git enabled
-	 * 
+	 *
 	 * @return the git
 	 */
 	public boolean isGit() {
@@ -127,13 +129,30 @@ public class ProjectDescriptor {
 
 	/**
 	 * Set it Git enabled
-	 * 
+	 *
 	 * @param git the git to set
 	 */
 	public void setGit(boolean git) {
 		this.git = git;
 	}
-	
-	
+
+	/**
+	 * Gets the git project name, which is the root folder or the repo.
+	 *
+	 * @return the gitName
+	 */
+	public String getGitName() {
+		return gitName;
+	}
+
+	/**
+	 * Sets the git project name, which is the root folder or the repo.
+	 *
+	 * @param name
+	 *            the new name
+	 */
+	public void setGitName(String name) {
+		this.gitName = name;
+	}
 
 }

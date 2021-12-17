@@ -18,25 +18,32 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
 import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
+import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
 @EdmEntityType(name = "Category")
-@EdmEntitySet(name = "Categories", container = "DemoService")
+@EdmEntitySet(name = "Categories", container = "NorthwindEntities")
 public class Category {
 
 	@EdmKey
-	@EdmProperty(name = "ID", facets = @EdmFacets(nullable = false))
-	private Integer id;
+	@EdmProperty(name = "CategoryID", facets = @EdmFacets(nullable = false))
+	private Integer categoryId;
+
+	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
+	private String categoryName;
 
 	@EdmProperty
-	private String name;
+	private String description;
+
+	@EdmProperty(type = EdmType.BINARY)
+	private String picture;
 
 	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.MANY, //
 			toType = Product.class, //
-			toRole = "Product_Categories", //
-			association = INorthwindODataAssociations.Product_Categories_Category_Products //
+			toRole = "Products", //
+			association = "FK_Products_Categories" //
 	)
 	private List<Product> products;
 }

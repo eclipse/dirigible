@@ -11,16 +11,15 @@
  */
 /**
  * API v4 FTP
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var bytes = require("io/v4/bytes");
-var streams = require("io/v4/streams");
+const bytes = require("io/v4/bytes");
+const streams = require("io/v4/streams");
 
 /**
  * Returns a FTP Client
- * 
+ *
  * @param {host} the ftp host
  * @param {port} the ftp port
  * @param {userName} the ftp user
@@ -28,13 +27,13 @@ var streams = require("io/v4/streams");
  * @return {FTPClient} the FTP Client
  */
 exports.getClient = function(host, port, userName, password) {
-	var manager = new FTPClientManager(host, port, userName, password);
+	const manager = new FTPClientManager(host, port, userName, password);
 	return new FTPClient(manager);
 };
 
 /**
  * Internal FTP Client Manager
- * 
+ *
  * @private
  */
 function FTPClientManager(host, port, userName, password) {
@@ -61,7 +60,7 @@ function FTPClientManager(host, port, userName, password) {
 	this.getFileStream = function(path, fileName) {
 		try {
 			checkConnection(this);
-			var inputStream = new streams.InputStream();
+			const inputStream = new streams.InputStream();
 			inputStream.native = this.instance.retrieveFileStream(this.getFullPath(path, fileName));
 			return inputStream;
 		} finally {
@@ -149,7 +148,7 @@ function FTPClient(manager) {
 
 	/**
 	 * Returns the root folder
-	 * 
+	 *
 	 * @return {FTPFolder} the root folder
 	 */
 	this.getRootFolder = function() {
@@ -158,7 +157,7 @@ function FTPClient(manager) {
 
 	/**
 	 * Returns the content of the file as an Input Stream
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @return {InputStream} the file content as an input stream
@@ -169,43 +168,43 @@ function FTPClient(manager) {
 
 	/**
 	 * Returns the content of the file as Byte Array
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @return {Array} the file content as byte array
 	 */
 	this.getFileBinary = function(path, fileName) {
-		var inputStream = this.getFile(path, fileName);
+		const inputStream = this.getFile(path, fileName);
 		return inputStream.isValid() ? inputStream.readBytes() : null;
 	};
 
 	/**
 	 * Returns the content of the file as String
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @return {String} the file content as string
 	 */
 	this.getFileText = function(path, fileName) {
-		var inputStream = this.getFile(path, fileName);
+		const inputStream = this.getFile(path, fileName);
 		return inputStream.isValid() ? inputStream.readText() : null;
 	};
 
 	/**
 	 * Returns the folder
-	 * 
+	 *
 	 * @param {path} the path to the folder
 	 * @param {folderName} the name of the folder
 	 * @return {FTPFolder} the folder
 	 */
 	this.getFolder = function(path, folderName) {
-		var exists = this.manager.setCurrentFolder(path, folderName);
+		const exists = this.manager.setCurrentFolder(path, folderName);
 		return exists ? new FTPFolder(this.manager, path, folderName) : null;
 	};
 
 	/**
 	 * Create file from input stream
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {inputStream} the input stream
@@ -217,33 +216,33 @@ function FTPClient(manager) {
 
 	/**
 	 * Create file from byte array
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {bytes} the bytes
 	 * @return {Boolean} true if the file was created successfully
 	 */
 	this.createFileBinary = function(path, fileName, bytes) {
-		var inputStream = streams.createByteArrayInputStream(bytes);
+		const inputStream = streams.createByteArrayInputStream(bytes);
 		return this.createFile(path, fileName, inputStream);
 	};
 
 	/**
 	 * Create file from text
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {text} the text
 	 * @return {Boolean} true if the file was created successfully
 	 */
 	this.createFileText = function(path, fileName, text) {
-		var inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
+		const inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
 		return this.createFile(path, fileName, inputStream);
 	};
 
 	/**
 	 * Append input stream to file
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {inputStream} the input stream
@@ -255,27 +254,27 @@ function FTPClient(manager) {
 
 	/**
 	 * Append byte array to file
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {bytes} the bytes
 	 * @return {Boolean} true if the file was created successfully
 	 */
 	this.appendFileBinary = function(path, fileName, bytes) {
-		var inputStream = streams.createByteArrayInputStream(bytes);
+		const inputStream = streams.createByteArrayInputStream(bytes);
 		return this.appendFile(path, fileName, inputStream);
 	};
 
 	/**
 	 * Append text to file
-	 * 
+	 *
 	 * @param {path} the path to the file
 	 * @param {fileName} the name of the file
 	 * @param {text} the text
 	 * @return {Boolean} true if the file was created successfully
 	 */
 	this.appendFileText = function(path, fileName, text) {
-		var inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
+		const inputStream = streams.createByteArrayInputStream(bytes.textToByteArray(text));
 		return this.appendFile(path, fileName, inputStream);
 	};
 
@@ -351,8 +350,8 @@ function FTPFolder(manager, path, name) {
 	};
 
 	this.getFile = function(fileName) {
-		var files = this.listFiles();
-		for (var i = 0; i < files.length; i ++) {
+		const files = this.listFiles();
+		for (let i = 0; i < files.length; i ++) {
 			if (files[i].getName() === fileName) {
 				return files[i];
 			}
@@ -361,24 +360,24 @@ function FTPFolder(manager, path, name) {
 	};
 
 	this.getFolder = function(folderName) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.getFolder(folderPath, folderName);
 	};
 
 	this.list = function() {
-		var objects = [];
-		var internalObjects = this.manager.list();
-		for (var i = 0; i < internalObjects.length; i ++) {
+		let objects = [];
+		const internalObjects = this.manager.list();
+		for (let i = 0; i < internalObjects.length; i ++) {
 			objects.push(new FTPObject(this.manager, internalObjects[i], this.path, internalObjects[i].getName()));
 		}
 		return objects;
 	};
 
 	this.listFiles = function() {
-		var files = [];
+		const files = [];
 		this.manager.setCurrentFolder(this.path, this.name);
-		var internalObjects = this.manager.list();
-		for (var i = 0; i < internalObjects.length; i ++) {
+		const internalObjects = this.manager.list();
+		for (let i = 0; i < internalObjects.length; i ++) {
 			if (internalObjects[i].isFile()) {
 				files.push(new FTPFile(this.manager, internalObjects[i], this.path, internalObjects[i].getName()));
 			}
@@ -387,9 +386,9 @@ function FTPFolder(manager, path, name) {
 	};
 
 	this.listFolders = function() {
-		var folders = [];
+		const folders = [];
 		this.manager.setCurrentFolder(this.path, this.name);
-		var internalObjects = this.manager.list();
+		const internalObjects = this.manager.list();
 		for (var i = 0; i < internalObjects.length; i ++) {
 			if (internalObjects[i].isDirectory()) {
 				folders.push(new FTPFolder(this.manager, this.path, internalObjects[i].getName()));
@@ -399,22 +398,22 @@ function FTPFolder(manager, path, name) {
 	};
 
 	this.createFile = function(fileName, inputStream) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.createFile(folderPath, fileName, inputStream);
 	};
 
 	this.createFileBinary = function(fileName, bytes) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.createFileBinary(folderPath, fileName, bytes);
 	};
 
 	this.createFileText = function(fileName, text) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.createFileText(folderPath, fileName, text);
 	};
 
 	this.createFolder = function(folderName) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.createFolder(folderPath, folderName);
 	};
 
@@ -423,12 +422,12 @@ function FTPFolder(manager, path, name) {
 	};
 
 	this.deleteFile = function(fileName) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.deleteFile(folderPath, fileName);
 	};
 
 	this.deleteFolder = function(folderName) {
-		var folderPath = this.manager.getFullPath(this.path, this.name);
+		const folderPath = this.manager.getFullPath(this.path, this.name);
 		return this.client.deleteFolder(folderPath, folderName);
 	};
 }

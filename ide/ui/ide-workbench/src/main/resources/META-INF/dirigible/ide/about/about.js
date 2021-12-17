@@ -36,6 +36,4 @@ angular.module('about', [])
 
 		}, 10000);
 
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

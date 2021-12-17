@@ -13,7 +13,9 @@ package org.eclipse.dirigible.engine.odata2.sql.clause;
 
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
@@ -26,6 +28,7 @@ import org.eclipse.dirigible.engine.odata2.sql.mapping.DefaultEdmTableMappingPro
 import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 
@@ -53,7 +56,17 @@ public class SQLJoinClauseTest {
     }
 
     @Test
-    public void testSimpleJoin() throws Exception {
+    public void testSimpleJoinWithCaseSensitiveNames() throws Exception {
+        testSimpleJoin(true, "LEFT JOIN \"MPLHEADER\" AS \"T0\" ON \"T0\".\"ID\" = \"T1\".\"HEADER_ID\"");
+    }
+
+    @Test
+    public void testSimpleJoinWithNoCaseSensitiveNames() throws Exception {
+        testSimpleJoin(false, "LEFT JOIN MPLHEADER AS T0 ON T0.ID = T1.HEADER_ID");
+    }
+
+    public void testSimpleJoin(boolean caseSensitiveNames, String expectedJoinStatement) throws Exception {
+        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", String.valueOf(caseSensitiveNames));
         EdmEntityType mpl = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
         EdmEntityType uda = edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName());
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
@@ -63,7 +76,7 @@ public class SQLJoinClauseTest {
         SQLQueryTestUtils.grantTableAliasForStructuralTypeInQuery(noop, mpl);
         SQLQueryTestUtils.grantTableAliasForStructuralTypeInQuery(noop, uda);
         //Use the left join to tolerate null elements
-        assertEquals("LEFT JOIN MPLHEADER AS T0 ON T0.ID = T1.HEADER_ID", join.evaluate(context));
+        assertEquals(expectedJoinStatement, join.evaluate(context));
 
     }
 
@@ -84,5 +97,28 @@ public class SQLJoinClauseTest {
         SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
         SQLJoinClause join = new SQLJoinClause(noop, from, from);
         assertEquals("", join.evaluate(context));
+    }
+
+    @Test
+    public void testSurroundWithDoubleQuotes_noNeed() {
+        SQLJoinClause join = createJoinClouse();
+        String TABLE_NAME = "\"MY_TABLE\"";
+        String surroundedValue = join.surroundWithDoubleQuotes(TABLE_NAME);
+        assertEquals("Unexpected escaped/surrounded with double quotes value", TABLE_NAME, surroundedValue);
+    }
+
+    @Test
+    public void testSurroundWithDoubleQuotes() {
+        SQLJoinClause join = createJoinClouse();
+        String TABLE_NAME = "MY_TABLE";
+        String surroundedValue = join.surroundWithDoubleQuotes(TABLE_NAME);
+        String exoectedValue = "\"" + TABLE_NAME + "\"";
+        assertEquals("Unexpected escaped/surrounded with double quotes value", exoectedValue, surroundedValue);
+    }
+
+    private SQLJoinClause createJoinClouse() {
+        EdmEntityType entityType1 = Mockito.mock(EdmEntityType.class);
+        EdmEntityType entityType2 = Mockito.mock(EdmEntityType.class);
+        return new SQLJoinClause(null, entityType1, entityType2);
     }
 }

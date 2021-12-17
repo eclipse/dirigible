@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 let mail = require("mail/v4/client");
-for(var propertyName in mail) {
+for(const propertyName in mail) {
 	exports[propertyName] = mail[propertyName];
 }

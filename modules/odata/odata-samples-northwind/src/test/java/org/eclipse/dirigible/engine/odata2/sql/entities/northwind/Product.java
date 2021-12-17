@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
@@ -24,52 +23,62 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 
 @EdmEntityType(name = "Product")
-@EdmEntitySet(name = "Products", container = "DemoService")
+@EdmEntitySet(name = "Products", container = "NorthwindEntities")
 public class Product {
 
-    @EdmKey
-    @EdmProperty(name = "ID", facets = @EdmFacets(nullable = false))
-    private Integer id;
+	@EdmKey
+    @EdmProperty(name = "ProductID", facets = @EdmFacets(nullable = false))
+    private Integer productId;
 
-    @EdmProperty(facets = @EdmFacets(nullable = false))
-    private String name;
+	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 40))
+	private String productName;
 
-    @EdmProperty
-    private String description;
+	@EdmProperty(name = "SupplierID")
+    private Integer supplierId;
 
-    @EdmProperty(facets = @EdmFacets(nullable = false))
-    private Date releaseDate = null;
+	@EdmProperty(name = "CategoryID")
+    private Integer categoryId;
 
-    @EdmProperty
-    private Date discontinuedDate;
+	@EdmProperty(facets = @EdmFacets(maxLength = 20))
+	private String quantityPerUnit;
 
-    @EdmProperty(type = EdmType.INT16, facets = @EdmFacets(nullable = false))
-    private Integer rating;
+	@EdmProperty(type = EdmType.DECIMAL,facets = @EdmFacets(precision = 19, scale = 4))
+	private Double unitPrice;
 
-    @EdmProperty(facets = @EdmFacets(nullable = false))
-    private Double price;
+	@EdmProperty
+	private Short unitsInStock;
 
-    @EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.MANY, //
+	@EdmProperty
+	private Short unitsOnOrder;
+
+	@EdmProperty
+	private Short reorderLevel;
+
+	@EdmProperty(facets = @EdmFacets(nullable = false))
+	private Boolean discontinued;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
 			toType = Category.class, //
-			toRole = "Category_Products", //
-			association = INorthwindODataAssociations.Product_Categories_Category_Products //
+			toRole = "Categories", //
+			association = "FK_Products_Categories" //
 	)
-    private List<Category> categories;
+	private Category category;
 
-    @EdmNavigationProperty( //
+	@EdmNavigationProperty( //
+			name = "Order_Details", //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = OrderDetail.class, //
+			toRole = "Order_Details", //
+			association = "FK_Order_Details_Products" //
+	)
+    private List<OrderDetail> orderDetails;
+
+	@EdmNavigationProperty( //
 			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
 			toType = Supplier.class, //
-			toRole = "Supplier_Products", //
-			association = INorthwindODataAssociations.Product_Supplier_Supplier_Products //
+			toRole = "Suppliers", //
+			association = "FK_Products_Suppliers" //
 	)
-    private Supplier supplier;
-
-    @EdmNavigationProperty( //
-			toMultiplicity = Multiplicity.ZERO_OR_ONE, //
-			toType = ProductDetail.class, //
-			toRole = "ProductDetail_Product", //
-			association = INorthwindODataAssociations.Product_ProductDetail_ProductDetail_Product //
-	)
-    private ProductDetail productDetail;
+	private Supplier supplier;
 }

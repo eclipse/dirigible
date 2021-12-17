@@ -108,8 +108,8 @@ angular.module('page', [])
                     }
                 };
                 xhr.send(text);
-                messageHub.post({data: $scope.file}, 'editor.file.saved');
-                messageHub.post({data: 'File [' + $scope.file + '] saved.'}, 'status.message');
+                messageHub.post({ data: $scope.file }, 'editor.file.saved');
+                messageHub.post({ data: 'File [' + $scope.file + '] saved.' }, 'status.message');
             } else {
                 console.error('file parameter is not present in the request');
             }
@@ -124,7 +124,7 @@ angular.module('page', [])
         $scope.$watch(function () {
             let roles = agular.toJson($scope.roles);
             if (contents !== roles) {
-                messageHub.post({data: $scope.file}, 'editor.file.dirty');
+                messageHub.post({ data: $scope.file }, 'editor.file.dirty');
             }
         });
 

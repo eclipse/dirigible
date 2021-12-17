@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var context = require('core/v4/context');
-for(var propertyName in context) {
+const context = require('core/v4/context');
+for(const propertyName in context) {
 	exports[propertyName] = context[propertyName];
 }

@@ -19,17 +19,9 @@ exports.execute = function(sql, parameters, databaseType, datasourceName) {
 	let resultset = [];
 	if (parameters) {
 		const params = JSON.stringify(parameters);
-		if (databaseType) {
-			if (datasourceName) {
-				resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql, params, databaseType, datasourceName);
-			} else {
-				resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql, params, databaseType);
-			}
-		} else {
-			resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql, params);
-		}
+		resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql,params,databaseType,datasourceName);
 	} else {
-		resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql);
+		resultset = org.eclipse.dirigible.api.v3.db.DatabaseFacade.query(sql,null,databaseType,datasourceName);
 	}
 	if (resultset) {
 		return JSON.parse(resultset);

@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getClient = function (options) {
-    var native = null;
+    let native = null;
     if (options) {
         native = org.eclipse.dirigible.api.v3.mail.MailFacade.getInstance(toJavaProperties(options));
     } else {
@@ -20,19 +20,19 @@ exports.getClient = function (options) {
 };
 
 exports.sendMultipart = function (from, recipients, subject, parts) {
-    var mailClient = this.getClient();
+    const mailClient = this.getClient();
     mailClient.sendMultipart(from, recipients, subject, parts);
 };
 
 exports.send = function (from, recipients, subject, text, subType) {
-    var mailClient = this.getClient();
+    const mailClient = this.getClient();
     mailClient.send(from, recipients, subject, text, subType);
 };
 
 function MailClient(native) {
     this.native = native;
 
-    this.send = function (from, recipients, subject, text, contentType) {
+    this.send = function (from, _recipients, subject, text, contentType) {
         switch (contentType) {
             case "html":
                 contentType = "text/html";
@@ -42,13 +42,13 @@ function MailClient(native) {
                 break
         }
 
-        var recipients = processRecipients(recipients)
+        const recipients = processRecipients(_recipients);
 
-        var part = {
+        const part = {
             contentType: contentType,
             text: text,
             type: 'text'
-        }
+        };
 
         try {
             this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, [part]);
@@ -58,8 +58,8 @@ function MailClient(native) {
         }
     };
 
-    this.sendMultipart = function (from, recipients, subject, parts) {
-        var recipients = processRecipients(recipients);
+    this.sendMultipart = function (from, _recipients, subject, parts) {
+        let recipients = processRecipients(_recipients);
         try {
             return this.native.send(from, recipients.to, recipients.cc, recipients.bcc, subject, stringifyPartData(parts));
         } catch (error) {
@@ -80,9 +80,9 @@ function stringifyPartData(parts) {
 }
 
 function processRecipients(recipients) {
-    var to = [];
-    var cc = [];
-    var bcc = [];
+    let to = [];
+    let cc = [];
+    let bcc = [];
     if (typeof recipients === "string") {
         to.push(recipients);
     } else if (typeof recipients === "object") {
@@ -90,7 +90,7 @@ function processRecipients(recipients) {
         cc = parseRecipients(recipients, "cc");
         bcc = parseRecipients(recipients, "bcc");
     } else {
-        var errorMessage = "Invalid 'recipients' format: " + JSON.stringify(recipients);
+        const errorMessage = "Invalid 'recipients' format: " + JSON.stringify(recipients);
         console.error(errorMessage);
         throw new Error(errorMessage);
     }
@@ -99,7 +99,7 @@ function processRecipients(recipients) {
 }
 
 function toJavaProperties(properties) {
-    var javaProperties = new java.util.Properties();
+    const javaProperties = new java.util.Properties();
     Object.keys(properties).forEach(function (e) {
         javaProperties.put(e, properties[e]);
     });
@@ -107,7 +107,7 @@ function toJavaProperties(properties) {
 }
 
 function parseRecipients(recipients, type) {
-    var objectType = typeof recipients[type];
+    const objectType = typeof recipients[type];
     if (objectType === "string") {
         return [recipients[type]];
     } else if (Array.isArray(recipients[type])) {
@@ -115,7 +115,7 @@ function parseRecipients(recipients, type) {
     } else if (objectType === "undefined") {
         return [];
     }
-    var errorMessage = "Invalid 'recipients." + type + "' format: [" + recipients[type] + "|" + objectType + "]";
+    const errorMessage = "Invalid 'recipients." + type + "' format: [" + recipients[type] + "|" + objectType + "]";
     console.error(errorMessage);
     throw new Error(errorMessage);
 }

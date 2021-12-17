@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var client = require('http/v4/clientAsync');
-for(var propertyName in client) {
+const client = require('http/v4/clientAsync');
+for(const propertyName in client) {
 	exports[propertyName] = client[propertyName];
 }

@@ -1,55 +1,45 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
 exports.getBase64 = function() {
-	var base64 = require('utils/v4/base64');
-	return base64;
+	return require('utils/v4/base64');
 };
 
 exports.getDigest = function() {
-	var digest = require('utils/v4/digest');
-	return digest;
+	return require('utils/v4/digest');
 };
 
 exports.getHex = function() {
-	var hex = require('utils/v4/hex');
-	return hex;
+	return require('utils/v4/hex');
 };
 
 exports.getUuid = function() {
-	var uuid = require('utils/v4/uuid');
-	return uuid;
+	return require('utils/v4/uuid');
 };
 
 exports.getXml = function() {
-	var xml = require('utils/v4/xml');
-	return xml;
+	return require('utils/v4/xml');
 };
 
 exports.getUrl = function() {
-	var url = require('utils/v4/url');
-	return url;
+	return require('utils/v4/url');
 };
 
 exports.getEscape = function() {
-	var url = require('utils/v4/escape');
-	return url;
+	return require('utils/v4/escape');
 };
 
 exports.getAlphanumeric = function() {
-	var alphanumeric = require('utils/v4/alphanumeric');
-	return alphanumeric;
+	return require('utils/v4/alphanumeric');
 };
 
 exports.getJsonPath = function() {
-	var jsonpath = require('utils/v4/jsonpath');
-	return jsonpath;
+	return require('utils/v4/jsonpath');
 };
