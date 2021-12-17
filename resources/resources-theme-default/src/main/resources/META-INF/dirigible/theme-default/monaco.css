@@ -44,29 +44,26 @@ body {
   border: 1px solid black;
   border-radius: 4px;
 }
-.monacoLineDecoration {
+.modified-line {
   background: steelblue;
   width: 3px !important;
   margin-left: 5px;
 }
-.deletedLine {
+.deleted-line {
   width: 3px !important;
   margin-left: 5px;
 }
-.deletedLine::after {
-  content: "";
-  border: solid red;
-  border-width: 0 3px 3px 0;
+.deleted-line::after {
   display: inline-block;
-  width: 4px;
-  height: 4px;
   position: absolute;
+  box-sizing: border-box;
+  width: 0px;
+  height: 0px;
   top: 100%;
-  left: 100;
-  margin-left: 2px;
-  width: 5px;
-  height: 5px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  margin-top: -9px;
+  content: "";
+  border-top: 4px solid transparent;
+  border-left: 4px solid #94151b;
+  border-bottom: 4px solid transparent;
+  margin-left: 5px;
+  margin-top: -4px;
 }

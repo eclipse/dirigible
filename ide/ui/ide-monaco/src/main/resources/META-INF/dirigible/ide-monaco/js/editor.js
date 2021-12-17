@@ -19,18 +19,63 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
+    if (
+        oldText[oldText.length - 1] !== "\n" ||
+        newText[newText.length - 1] !== "\n"
+    ) {
+        oldText += "\n";
+        newText += "\n";
+    }
+    let lineDiff;
+    if (isWhitespaceIgnored) {
+        lineDiff = diffTrimmedLines(oldText, newText);
+    } else {
+        lineDiff = diffLines(oldText, newText);
+    }
+    let addedCount = 0;
+    let addedLines = [];
+    let removedLines = [];
+    lineDiff.forEach((part) => {
+        let { added, removed, value } = part;
+        let count = value.split("\n").length - 1;
+        if (!added && !removed) {
+            addedCount += count;
+        } else if (added) {
+            for (let i = 0; i < count; i++) {
+                addedLines.push(addedCount + i + 1);
+            }
+            addedCount += count;
+        } else if (removed && !addedLines.includes(addedCount + count)) {
+            removedLines.push(addedCount);
+        }
+    });
+    return { updated: addedLines, removed: removedLines };
+};
+
 function highlight_changed(lines, editor) {
-    return editor.deltaDecorations(lineDecorations, [
-        ...lines.map((line) => {
-            return {
+    let new_decorations = [];
+    lines.updated.forEach((line) => {
+        new_decorations.push({
+            range: new monaco.Range(line, 1, line, 1),
+            options: {
+                isWholeLine: true,
+                linesDecorationsClassName: 'modified-line' + (
+                    lines.removed.includes(line) ? ' deleted-line' : '')
+            },
+        });
+    });
+    lines.removed.forEach((line) => {
+        if (!lines.updated.includes(line + 1))
+            new_decorations.push({
                 range: new monaco.Range(line, 1, line, 1),
                 options: {
                     isWholeLine: true,
-                    linesDecorationsClassName: 'monacoLineDecoration'
+                    linesDecorationsClassName: 'deleted-line'
                 },
-            };
-        }),
-    ]);
+            });
+    });
+    return editor.deltaDecorations(lineDecorations, new_decorations);
 }
 
 function FileIO() {
@@ -584,7 +629,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                     _editor.onDidChangeModel(function () {
                         if (_fileObject.isGit) {
                             lineDecorations = highlight_changed(
-                                computeNewLines(_fileObject.git, fileText, true),
+                                getNewLines(_fileObject.git, fileText),
                                 _editor
                             );
                         }
@@ -608,8 +653,10 @@ function traverseAssignment(assignment, assignmentInfo) {
                         }
                         if (_fileObject.isGit && e.changes) {
                             let content = _editor.getValue();
-                            let diffLines = computeNewLines(_fileObject.git, content, true);
-                            lineDecorations = highlight_changed(diffLines, _editor);
+                            lineDecorations = highlight_changed(
+                                getNewLines(_fileObject.git, content),
+                                _editor
+                            );
                         }
                         let newModuleImports = getModuleImports(_editor.getValue());
                         if (e && !dirty) {
