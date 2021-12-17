@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public abstract class PublisherHandler {
+public abstract class AbstractPublisherHandler implements IPublisherHandler {
 
     protected final String REGISTRY_PUBLIC = "/registry/public/";
 
@@ -29,15 +29,22 @@ public abstract class PublisherHandler {
 
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 
-    public abstract void beforePublish(String location) throws SchedulerException;
+    protected void removeMetadata(PersistenceManager persistenceManager, String table, String column, String location, boolean includeLeadingSeparator) throws SchedulerException {
+        try (Connection connection = dataSource.getConnection()) {
+            SqlFactory sqlFactory = SqlFactory.getNative(connection);
 
-    public abstract void afterPublish(String location) throws SchedulerException;
+            if (sqlFactory.exists(connection, table)) {
+                String sql = sqlFactory.delete().from(table).where(new StringBuilder().append(column).append(" LIKE ?").toString()).build();
+                String locationQueryParam = getLocationQueryParam(location, includeLeadingSeparator);
 
-    public abstract void beforeUnpublish(String location) throws SchedulerException;
+                persistenceManager.execute(connection, sql, locationQueryParam);
+            }
+        } catch (SQLException e) {
+            throw new SchedulerException(e);
+        }
+    }
 
-    public abstract void afterUnpublish(String location) throws SchedulerException;
-
-    protected String getLocationQueryParam(String location, boolean includeLeadingSeparator) {
+    private String getLocationQueryParam(String location, boolean includeLeadingSeparator) {
         StringBuilder locationQueryParamSB = new StringBuilder();
 
         if (includeLeadingSeparator) {
@@ -49,19 +56,6 @@ public abstract class PublisherHandler {
         locationQueryParamSB.append(PERCENT);
 
         return locationQueryParamSB.toString();
-    }
-
-    protected void removeMetadata(PersistenceManager persistenceManager, String table, String column, String locationQueryParam) throws SchedulerException {
-        try (Connection connection = dataSource.getConnection()) {
-            SqlFactory sqlFactory = SqlFactory.getNative(connection);
-
-            if (sqlFactory.exists(connection, table)) {
-                String sql = sqlFactory.delete().from(table).where(new StringBuilder().append(column).append(" LIKE ?").toString()).build();
-                persistenceManager.execute(connection, sql, locationQueryParam);
-            }
-        } catch (SQLException e) {
-            throw new SchedulerException(e);
-        }
     }
 
 }

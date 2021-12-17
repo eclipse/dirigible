@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.core.publisher.synchronizer;
 
 import org.eclipse.dirigible.commons.config.ResourcesCache;
+import org.eclipse.dirigible.core.publisher.api.IPublisherHandler;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
-import org.eclipse.dirigible.core.publisher.api.PublisherHandler;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
@@ -173,10 +173,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				
 				synchronizerCoreService.initializeSynchronizersStates();
 
-				ServiceLoader<PublisherHandler> publisherHandlers = ServiceLoader.load(PublisherHandler.class);
+				ServiceLoader<IPublisherHandler> publisherHandlers = ServiceLoader.load(IPublisherHandler.class);
 				
 				for (Map.Entry<String, String> entry : resourceLocations.entrySet()) {
-					for (PublisherHandler next : publisherHandlers) {
+					for (IPublisherHandler next : publisherHandlers) {
 						next.beforePublish(entry.getKey());
 					}
 		
@@ -187,7 +187,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 						logger.error("Failed to publish: " + entry.getKey(), e);
 					}
 
-					for (PublisherHandler next : publisherHandlers) {
+					for (IPublisherHandler next : publisherHandlers) {
 						next.afterPublish(entry.getKey());
 					}
 				}
@@ -258,10 +258,10 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 				
 				synchronizerCoreService.initializeSynchronizersStates();
 
-				ServiceLoader<PublisherHandler> publisherHandlers = ServiceLoader.load(PublisherHandler.class);
+				ServiceLoader<IPublisherHandler> publisherHandlers = ServiceLoader.load(IPublisherHandler.class);
 
 				for (String entry : unpublishLocations) {
-					for (PublisherHandler next : publisherHandlers) {
+					for (IPublisherHandler next : publisherHandlers) {
 						next.beforeUnpublish(entry);
 					}
 		
@@ -272,7 +272,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 						logger.error("Failed to unpublish: " + entry, e);
 					}
 
-					for (PublisherHandler next : publisherHandlers) {
+					for (IPublisherHandler next : publisherHandlers) {
 						next.afterUnpublish(entry);
 					}
 				}
