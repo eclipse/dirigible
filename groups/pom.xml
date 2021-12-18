@@ -29,7 +29,7 @@
 		<module>commons-all</module>
 		<module>core-all</module>
 		<module>database-all</module>
-		<module>engines-all</module>
+		<module>engine-all</module>
 		<module>odata-all</module>
 		<module>repository-all</module>
 		<module>security-all</module>
