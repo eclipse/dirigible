@@ -30,6 +30,9 @@
 		<module>api-log</module>
 		<module>api-net</module>
 		<module>api-git</module>
+		<module>api-bpm</module>
+		<module>api-cms</module>
+		<module>api-documents</module>
 	</modules>
 
 	<properties>

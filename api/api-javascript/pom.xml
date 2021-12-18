@@ -30,6 +30,9 @@
         <module>api-test</module>
         <module>api-net</module>
         <module>api-platform</module>
+        <module>api-bpm</module>
+        <module>api-cms</module>
+        <module>api-documents</module>
     </modules>
 
     <properties>

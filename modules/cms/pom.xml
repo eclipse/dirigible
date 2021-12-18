@@ -18,9 +18,6 @@
         <module>cms-internal</module>
 		<module>cms-managed</module>
 		<module>cms-database</module>
-		<module>api-cms</module>
-		<module>api-documents</module>
-		<module>cms-resources</module>
 		<module>cms-csvim</module>
 	</modules>
 

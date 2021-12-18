@@ -55,6 +55,12 @@
 		<module>ide-form-builder</module>
 		<module>ide-form-builder-menu</module>
 		<module>ide-image</module>
+		<module>ide-bpm</module>
+		<module>ide-bpm-menu</module>
+		<module>ide-csv</module>
+		<module>ide-csvim</module>
+		<module>ide-documents</module>
+		<module>ide-documents-ext-content-type-ms</module>
 	</modules>
 
 	<properties>

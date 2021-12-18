@@ -23,6 +23,7 @@
 		<module>resources-themes</module>
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
+		<module>resources-flowable-libs</module>
 	</modules>
 
 	<properties>

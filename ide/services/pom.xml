@@ -22,6 +22,7 @@
 		<module>ide-publisher</module>
 		<module>ide-terminal</module>
 		<module>ide-workspaces</module>
+		<module>ide-bpm</module>
 	</modules>
 
 	<properties>

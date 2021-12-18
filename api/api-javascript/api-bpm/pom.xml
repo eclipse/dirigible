@@ -4,22 +4,22 @@
 	
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-cms-resources-parent</artifactId>
+		<artifactId>dirigible-api-javascript-parent</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>API - JavaScript - Documents</name>
-	<artifactId>dirigible-api-javascript-documents</artifactId>
-	<description>Core Modules</description>
+	<name>API - JavaScript - BPM</name>
+	<artifactId>dirigible-api-javascript-bpm</artifactId>
+	<description>BPM Modules</description>
     <packaging>jar</packaging>
 
 	<properties>
 		<profile.content.phase>generate-sources</profile.content.phase> 
-		<content.repository.name>api-documents</content.repository.name>
-		<content.project.name>documents</content.project.name>
+		<content.repository.name>api-bpm</content.repository.name>
+		<content.project.name>bpm</content.project.name>
 
-		<license.header.location>../../../../licensing-header.txt</license.header.location>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
 </project>
