@@ -11,14 +11,10 @@
 
 	<name>IDE - UI - Parent</name>
 	<artifactId>dirigible-ide-ui-parent</artifactId>
-	<description>WebIDE Plugins</description>
+	<description>WebIDE UI Plugins</description>
     <packaging>pom</packaging>
 
 	<modules>
-		<!-- Grouping Modules -->
-		<module>ide-group-all</module>
-
-		<!-- Plugin Modules -->
 		<module>ide-branding</module>
 		<module>ide-console</module>
 		<module>ide-core</module>

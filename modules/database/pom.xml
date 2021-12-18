@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>database-all</module>
 		<module>database-api</module>
         <module>database-custom</module>
 		<module>database-data-models</module>

@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-        <module>api-all</module>
 		<module>api-facade</module>
 		<module>api-javascript</module>
 	</modules>

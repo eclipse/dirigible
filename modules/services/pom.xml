@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>service-all</module>
 		<module>service-anonymous</module>
         <module>service-core</module>
 		<module>service-extensions</module>

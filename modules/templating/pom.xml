@@ -15,7 +15,6 @@
 
 	<modules>
 		<module>api-facade-templating</module>
-		<module>templating-all</module>
 		<module>templating-core</module>
 		<module>templating-javascript</module>
 		<module>templating-mustache</module>

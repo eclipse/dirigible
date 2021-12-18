@@ -17,7 +17,6 @@
 
     <modules>
         <!-- Content - API -->
-        <module>api-all</module>
         <module>api-core</module>
         <module>api-http</module>
         <module>api-utils</module>

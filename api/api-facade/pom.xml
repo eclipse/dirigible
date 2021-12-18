@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>api-all</module>
 		<module>api-security</module>
 		<module>api-core</module>
 		<module>api-database</module>
