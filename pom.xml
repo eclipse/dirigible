@@ -502,6 +502,7 @@
 		<module>templates</module>
 		<module>resources</module>
 		<module>ext</module>
+		<module>groups</module>
 		<module>releng</module>
     </modules>
 	<dependencies>
