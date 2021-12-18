@@ -64,7 +64,7 @@
     </dependencies>
 
     <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
+        <license.header.location>../../licensing-header.txt</license.header.location>
     </properties>
 
 </project>
