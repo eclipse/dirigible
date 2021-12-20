@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
+exports.getTemplate = function () {
 	return {
-			"name":"html",
-			"label":"HTML5 Page",
-			"extension":"html",
-			"data":'<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'
+		"name": "html",
+		"label": "HTML5 Page",
+		"extension": "html",
+		"data": '<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'
 	};
 };

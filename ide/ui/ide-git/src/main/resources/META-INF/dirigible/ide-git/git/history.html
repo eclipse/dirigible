@@ -50,13 +50,13 @@
 
 	</head>
 
-	<body border="1px" ng-app="historyApp" ng-controller="HistoryContoller as history">
+	<body ng-app="historyApp" ng-controller="HistoryContoller as history" class="sidepanel">
 		<div class="view-fixed-top">
 			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshRepository()"><i
 					class="fa fa-refresh"></i></button>
 			Project: <b> {{selectedProject}} </b>
 		</div>
-		<div class="workspace" style="height: 100%">
+		<div class="workspace scrollpanel" style="height: 100%">
 			<table class="table table-striped">
 				<thead>
 					<tr>

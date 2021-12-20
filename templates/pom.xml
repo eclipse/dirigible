@@ -16,7 +16,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>template-all</module>
 		<module>template-hello-world</module>
 		<module>template-http-client</module>
 		<module>template-html</module>

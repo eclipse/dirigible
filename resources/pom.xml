@@ -16,7 +16,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>resources-all</module>
 		<module>resources-goldenlayout</module>
 		<module>resources-fonts</module>
 		<module>resources-dev-tools</module>
@@ -24,6 +23,7 @@
 		<module>resources-themes</module>
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
+		<module>resources-flowable-libs</module>
 	</modules>
 
 	<properties>

@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>api-all</module>
 		<module>api-security</module>
 		<module>api-core</module>
 		<module>api-database</module>
@@ -30,6 +29,10 @@
 		<module>api-indexing</module>
 		<module>api-log</module>
 		<module>api-net</module>
+		<module>api-git</module>
+		<module>api-bpm</module>
+		<module>api-cms</module>
+		<module>api-documents</module>
 	</modules>
 
 	<properties>
