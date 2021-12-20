@@ -12,6 +12,7 @@
  * Provides key microservices for constructing and managing the IDE UI
  *
  */
+let defaultEditorId = "monaco";
 angular.module('ideUiCore', ['ngResource'])
 	.provider('messageHub', function MessageHubProvider() {
 		this.evtNamePrefix = '';
@@ -81,19 +82,23 @@ angular.module('ideUiCore', ['ngResource'])
 		let editorsForContentType = {};
 		let editorsList = getEditors();
 		editorsList.forEach(function (editor) {
-			editorProviders[editor.label] = editor.link;
+			editorProviders[editor.id] = editor.link;
 			editor.contentTypes.forEach(function (contentType) {
 				if (!editorsForContentType[contentType]) {
-					editorsForContentType[contentType] = [editor.label];
+					editorsForContentType[contentType] = [{
+						'id': editor.id,
+						'label': editor.label
+					}];
 				} else {
-					editorsForContentType[contentType].push(editor.label);
+					editorsForContentType[contentType].push({
+						'id': editor.id,
+						'label': editor.label
+					});
 				}
 			});
 		});
 
-		let defaultEditorId = this.defaultEditorId = "monaco";
 		this.$get = [function editorsFactory() {
-
 			return {
 				defaultEditorId: defaultEditorId,
 				editorProviders: editorProviders,
@@ -125,7 +130,7 @@ angular.module('ideUiCore', ['ngResource'])
 						} else {
 							if (self.editors.editorsForContentType[componentState.contentType].length > 1) {
 								let formEditors = self.editors.editorsForContentType[componentState.contentType].filter(function (e) {
-									switch (e) {
+									switch (e.id) {
 										case "orion":
 										case "monaco":
 										case "ace":
@@ -135,12 +140,12 @@ angular.module('ideUiCore', ['ngResource'])
 									}
 								});
 								if (formEditors.length > 0) {
-									componentState.editorId = formEditors[0];
+									componentState.editorId = formEditors[0].id;
 								} else {
-									componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+									componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0].id;
 								}
 							} else {
-								componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0];
+								componentState.editorId = self.editors.editorsForContentType[componentState.contentType][0].id;
 							}
 							editorPath = self.editors.editorProviders[componentState.editorId];
 						}
@@ -268,7 +273,7 @@ angular.module('ideUiCore', ['ngResource'])
 						msg.data.file.path,
 						msg.data.file.label,
 						msg.data.file.contentType,
-						msg.data.editor || "editor",
+						msg.data.editor || defaultEditorId,
 						msg.data.extraArgs
 					);
 				});
