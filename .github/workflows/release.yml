@@ -538,6 +538,15 @@ jobs:
       run: |
         cat <(echo -e "${{ secrets.GPG_SIGN_KEY }}") | gpg --batch --import --no-tty --batch --yes
 
+    - name: GPG configuration
+      run: |
+        echo use-agent >> ~/.gnupg/gpg.conf
+        echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
+        echo no-tty >> ~/.gnupg/gpg.conf
+        echo batch >> ~/.gnupg/gpg.conf
+        echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
+        echo RELOADAGENT | gpg-connect-agent
+
     - name: Helm Charts Release
       run: |
 
