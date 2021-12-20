@@ -28,7 +28,12 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrderDetailsEx
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrderSubtotal;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrdersQry;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Product;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductSalesFor1997;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductsAboveAveragePrice;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductsByCategory;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Region;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SalesByCategory;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SalesTotalsByAmounts;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Shipper;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory;
@@ -56,7 +61,12 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLPropcessorTe
 				CustomerAndSuppliersByCity.class, //
 				OrderDetailsExtended.class, //
 				OrderSubtotal.class, //
-				OrdersQry.class //
+				OrdersQry.class, //
+				ProductSalesFor1997.class, //
+				ProductsAboveAveragePrice.class, //
+				ProductsByCategory.class, //
+				SalesByCategory.class, //
+				SalesTotalsByAmounts.class //
 		};
 		return classes;
 	}
