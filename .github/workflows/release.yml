@@ -533,29 +533,13 @@ jobs:
         cd charts-temp/helm-charts/dirigible/
         find *.yaml -type f -exec sed -i ''s/#{DirigibleVersion}#/${{ env.DIRIGIBLE_VERSION }}/g'' {} \;
 
-    - id: install-secret-key
-      name: Install gpg secret key
-      run: |
-        cat <(echo -e "${{ secrets.GPG_SIGN_KEY }}") | gpg --batch --import --no-tty --batch --yes
-
-    - name: GPG configuration
-      run: |
-        echo use-agent >> ~/.gnupg/gpg.conf
-        echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
-        echo no-tty >> ~/.gnupg/gpg.conf
-        echo batch >> ~/.gnupg/gpg.conf
-        echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
-        echo RELOADAGENT | gpg-connect-agent
-
     - name: Helm Charts Release
       run: |
 
         cp charts/* charts-temp/helm-charts/
         cd charts-temp/helm-charts/
-                            
-        gpg --no-tty --batch --export-secret-keys > ~/.gnupg/secring.gpg
 
-        helm package --sign --key "Dirigible-gpg" --keyring /home/runner/.gnupg/secring.gpg dirigible
+        helm package dirigible
         
         cd ..
         helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
