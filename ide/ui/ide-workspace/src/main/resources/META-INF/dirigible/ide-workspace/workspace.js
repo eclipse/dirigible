@@ -841,17 +841,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 
             let createOpenEditorMenuItem = function (editorId, label) {
                 return {
-                    "label": label || editorId.charAt(0).toUpperCase() + editorId.slice(1),
+                    "label": label,
                     "action": onOpenWithEditorAction.bind(this, editorId)
                 };
             };
 
-            let createOpenWithSubmenu = function (contentType) {
+            let createOpenWithSubmenu = function (editors) {
                 editorsSubmenu = {};
-                let editors = getEditorsForContentType(contentType);
                 if (editors) {
-                    editors.forEach(function (editorId) {
-                        editorsSubmenu[editorId] = createOpenEditorMenuItem(editorId);
+                    editors.forEach(function (editor) {
+                        editorsSubmenu[editor.id] = createOpenEditorMenuItem(editor.id, editor.label);
                     }.bind(this));
                 }
                 return editorsSubmenu;
@@ -862,18 +861,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
              * will create Open (singular eidtor) or Open with... choice dropdown for multiple editors.
              */
             this.createOpenFileMenuItem = function (ctxmenu, node) {
-                let contentType = node.original._file.contentType;
-                let editors = getEditorsForContentType(contentType || "");
-                if (!editors) {
-                    return;
-                }
+                let contentType = node.original._file.contentType || "";
+                let editors = getEditorsForContentType(contentType);
+                if (!editors) editors = [{ id: Editors.defaultEditorId }];
                 if (editors.length > 1) {
                     ctxmenu.openWith = {
                         "label": "Open with...",
-                        "submenu": createOpenWithSubmenu.call(this, contentType)
+                        "submenu": createOpenWithSubmenu.call(this, editors)
                     };
                 } else {
-                    ctxmenu.open = createOpenEditorMenuItem(editors[0], 'Open');
+                    ctxmenu.open = createOpenEditorMenuItem(editors[0].id, 'Open');
                 }
             };
         };

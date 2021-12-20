@@ -19,7 +19,9 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+
 function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
+
     if (
         oldText[oldText.length - 1] !== "\n" ||
         newText[newText.length - 1] !== "\n"
@@ -53,13 +55,17 @@ function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
     return { updated: addedLines, removed: removedLines };
 };
 
+
 function highlight_changed(lines, editor) {
-    let new_decorations = [];
+
+   let new_decorations = [];
     lines.updated.forEach((line) => {
         new_decorations.push({
             range: new monaco.Range(line, 1, line, 1),
             options: {
                 isWholeLine: true,
+
+
                 linesDecorationsClassName: 'modified-line' + (
                     lines.removed.includes(line) ? ' deleted-line' : '')
             },
@@ -71,7 +77,9 @@ function highlight_changed(lines, editor) {
                 range: new monaco.Range(line, 1, line, 1),
                 options: {
                     isWholeLine: true,
+
                     linesDecorationsClassName: 'deleted-line'
+
                 },
             });
     });
@@ -653,10 +661,13 @@ function traverseAssignment(assignment, assignmentInfo) {
                         }
                         if (_fileObject.isGit && e.changes) {
                             let content = _editor.getValue();
+
+
                             lineDecorations = highlight_changed(
                                 getNewLines(_fileObject.git, content),
                                 _editor
                             );
+
                         }
                         let newModuleImports = getModuleImports(_editor.getValue());
                         if (e && !dirty) {

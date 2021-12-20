@@ -134,6 +134,12 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
 };
 WorkspaceTreeAdapter.prototype.dblClickNode = function (node) {
 	let type = node.original.type;
+	let parent = node;
+	for (let i = 0; i < node.parents.length - 1; i++) {
+		parent = this.jstree.get_node(parent.parent);
+	}
+	if (parent.original.git)
+		node.original._file["gitName"] = parent.original.gitName;
 	if (['folder', 'project'].indexOf(type) < 0)
 		this.messageHub.announceFileOpen(node.original._file);
 }
@@ -141,7 +147,6 @@ WorkspaceTreeAdapter.prototype.openWith = function (node, editor) {
 	this.messageHub.announceFileOpen(node, editor);
 }
 WorkspaceTreeAdapter.prototype.clickNode = function (node) {
-	let type = node.original.type;
 	this.messageHub.announceFileSelected(node.original._file);
 };
 WorkspaceTreeAdapter.prototype.raw = function () {
@@ -240,6 +245,12 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 			let onOpenWithEditorAction = function (editor, data) {
 				let tree = $.jstree.reference(data.reference);
 				let node = tree.get_node(data.reference);
+				let parent = node;
+				for (let i = 0; i < node.parents.length - 1; i++) {
+					parent = tree.get_node(parent.parent);
+				}
+				if (parent.original.git)
+					node.original._file["gitName"] = parent.original.gitName;
 				tree.element.trigger(openWithEventName, [node.original._file, editor]);
 			};
 
@@ -250,12 +261,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 				};
 			};
 
-			let createOpenWithSubmenu = function (contentType) {
+			let createOpenWithSubmenu = function (editors) {
 				editorsSubmenu = {};
-				let editors = getEditorsForContentType(contentType);
 				if (editors) {
-					editors.forEach(function (editorId) {
-						editorsSubmenu[editorId] = createOpenEditorMenuItem(editorId);
+					editors.forEach(function (editor) {
+						editorsSubmenu[editor.id] = createOpenEditorMenuItem(editor.id, editor.label);
 					}.bind(this));
 				}
 				return editorsSubmenu;
@@ -266,15 +276,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 			 * will create Open (singular eidtor) or Open with... choice dropdown for multiple editors.
 			 */
 			this.createOpenFileMenuItem = function (ctxmenu, node) {
-				let contentType = node.original._file.contentType;
-				let editors = getEditorsForContentType(contentType || "");
+				let contentType = node.original._file.contentType || "";
+				let editors = getEditorsForContentType(contentType);
+				if (!editors) editors = [{ id: Editors.defaultEditorId }];
 				if (editors.length > 1) {
 					ctxmenu.openWith = {
 						"label": "Open with...",
-						"submenu": createOpenWithSubmenu.call(this, contentType)
+						"submenu": createOpenWithSubmenu.call(this, editors)
 					};
 				} else {
-					ctxmenu.open = createOpenEditorMenuItem(editors[0], 'Open');
+					ctxmenu.open = createOpenEditorMenuItem(editors[0].id, 'Open');
 				}
 			}
 		};
