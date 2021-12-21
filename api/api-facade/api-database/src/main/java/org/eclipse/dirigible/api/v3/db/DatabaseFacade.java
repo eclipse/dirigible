@@ -39,6 +39,7 @@ import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
+import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +55,8 @@ public class DatabaseFacade implements IScriptingFacade {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
 	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
+
+    private static final String DATABASE_NAME_HDB = "HDB";
 
 	/**
 	 * Gets the database types.
@@ -82,7 +85,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final String getDataSources() {
 		return GsonHelper.GSON.toJson(database.getDataSources().keySet());
 	}
-	
+
 	/**
 	 * Gets the default data source.
 	 *
@@ -91,10 +94,10 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final DataSource getDefaultDataSource() {
 		return database.getDataSource();
 	}
-	
+
 	/**
 	 * Create a data source
-	 * 
+	 *
 	 * @param name the name of the datasource
 	 * @param driver the driver of the datasource
 	 * @param url the url of the datasource
@@ -124,7 +127,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return metadata;
 	}
-	
+
 	/**
 	 * Gets the metadata.
 	 *
@@ -157,7 +160,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
 		return metadata;
 	}
-	
+
 	/**
 	 * Gets the product name of the database.
 	 *
@@ -175,7 +178,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		String productName = DatabaseMetadataHelper.getProductName(dataSource);
 		return productName;
 	}
-	
+
 	/**
 	 * Gets the product name of the database.
 	 *
@@ -192,7 +195,7 @@ public class DatabaseFacade implements IScriptingFacade {
 		String productName = DatabaseMetadataHelper.getProductName(dataSource);
 		return productName;
 	}
-	
+
 	/**
 	 * Gets the product name of the database.
 	 *
@@ -231,7 +234,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	}
 
 	//  ============  Query  ===========
-	
+
 	/**
 	 * Executes SQL query.
 	 *
@@ -305,7 +308,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final String query(String sql) throws SQLException {
 		return query(sql, null, null, null);
 	}
-	
+
 	//  ===========  Update  ===========
 
 	/**
@@ -445,10 +448,10 @@ public class DatabaseFacade implements IScriptingFacade {
 					JsonObject jsonObject = parameterElement.getAsJsonObject();
 					JsonElement typeElement = jsonObject.get("type");
 					JsonElement valueElement = jsonObject.get("value");
-					
+
 					if (typeElement.isJsonPrimitive() && typeElement.getAsJsonPrimitive().isString()) {
 						String dataType = typeElement.getAsJsonPrimitive().getAsString();
-						
+
 						if(valueElement.isJsonNull()){
 							Integer sqlType = DataTypeUtils.getSqlTypeByDataType(dataType);
 							preparedStatement.setNull(i++, sqlType);
@@ -636,6 +639,9 @@ public class DatabaseFacade implements IScriptingFacade {
 			throw new IllegalArgumentException(error);
 		}
 		Connection connection = dataSource.getConnection();
+		if(connection.getMetaData().getDatabaseProductName().equals(DATABASE_NAME_HDB)) {
+            connection.setClientInfo("APPLICATIONUSER", UserFacade.getName());
+		}
 		return connection;
 	}
 
@@ -659,10 +665,10 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static final Connection getConnection() throws SQLException {
 		return getConnection(null, null);
 	}
-	
+
 	//  =========  Sequence  ===========
-	
-	
+
+
 	/**
 	 * Nextval.
 	 *
@@ -690,7 +696,7 @@ public class DatabaseFacade implements IScriptingFacade {
 				return getNextVal(sequence, connection);
 			} catch (IllegalStateException e) {
 				// assuming the sequence objects are not supported by the underlying database
-				PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor = 
+				PersistenceNextValueIdentityProcessor persistenceNextValueIdentityProcessor =
 						new PersistenceNextValueIdentityProcessor(null);
 				long id = persistenceNextValueIdentityProcessor.nextval(connection, sequence);
 				return  id;
@@ -767,7 +773,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static long nextval(String sequence) throws SQLException {
 		return nextval(sequence, null, null);
 	}
-	
+
 	/**
 	 * Creates the sequence.
 	 *
@@ -813,7 +819,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static void createSequence(String sequence) throws SQLException {
 		createSequence(sequence, null, null);
 	}
-	
+
 	/**
 	 * Drop sequence.
 	 *
@@ -867,11 +873,11 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static void dropSequence(String sequence) throws SQLException {
 		dropSequence(sequence, null, null);
 	}
-	
-	
+
+
 	//  =========== SQL ===========
-	
-	
+
+
 	/**
 	 * Gets the default SQL factory.
 	 *
@@ -892,5 +898,5 @@ public class DatabaseFacade implements IScriptingFacade {
 	public static SqlFactory getNative(Connection connection) throws SQLException {
 		return SqlFactory.getNative(connection);
 	}
-	
+
 }
