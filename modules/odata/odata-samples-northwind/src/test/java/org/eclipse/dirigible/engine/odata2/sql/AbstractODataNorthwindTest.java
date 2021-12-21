@@ -35,6 +35,8 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Region;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SalesByCategory;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SalesTotalsByAmounts;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Shipper;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SummaryOfSalesByQuarters;
+import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SummaryOfSalesByYears;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory;
 
@@ -66,7 +68,9 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLPropcessorTe
 				ProductsAboveAveragePrice.class, //
 				ProductsByCategory.class, //
 				SalesByCategory.class, //
-				SalesTotalsByAmounts.class //
+				SalesTotalsByAmounts.class, //
+				SummaryOfSalesByQuarters.class, //
+				SummaryOfSalesByYears.class //
 		};
 		return classes;
 	}
