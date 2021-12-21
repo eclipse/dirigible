@@ -193,12 +193,12 @@
 		<dependency>
 			<artifactId>dirigible-ide-ui-git</artifactId>
 			<groupId>org.eclipse.dirigible</groupId>
-			<version>4.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<artifactId>dirigible-ide-ui-terminal</artifactId>
 			<groupId>org.eclipse.dirigible</groupId>
-			<version>4.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Templating Core -->
