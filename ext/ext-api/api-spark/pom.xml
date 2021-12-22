@@ -180,7 +180,7 @@
 <!--		<dependency>-->
 <!--			<groupId>org.eclipse.dirigible</groupId>-->
 <!--			<artifactId>dirigible-engine-javascript-graalvm</artifactId>-->
-<!--			<version>5.11.0-SNAPSHOT</version>-->
+<!--			<version>7.0.0-SNAPSHOT</version>-->
 <!--			<scope>test</scope>-->
 <!--		</dependency>-->
 		<dependency>
