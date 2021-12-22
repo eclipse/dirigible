@@ -52,13 +52,13 @@ public class GitFacadeTest extends AbstractDirigibleTest {
         IProject project = workspace.createProject(projectName);
         project.createFile("www/oldFile", "str".getBytes(StandardCharsets.UTF_8));
         GitFacade.initRepository(user, email, workspaceName, projectName, repository, "Initial commit");
-        List<ProjectDescriptor> repos = GitFacade.getGitRepositories(user, workspaceName);
+        List<ProjectDescriptor> repos = GitFacade.getGitRepositories(workspaceName);
         assertTrue(repos.size() == 1);
 
         project.createFile("www/newFile", "str".getBytes(StandardCharsets.UTF_8));
         String message = "Second commit";
         GitFacade.commit(username, email, workspaceName, repository, message, true);
-        List<GitCommitInfo> history = GitFacade.getHistory(user, repository, workspaceName, projectName);
+        List<GitCommitInfo> history = GitFacade.getHistory(repository, workspaceName, projectName);
         assertTrue(history.size() == 2);
         assertTrue(history.get(0).getMessage().equals(message));
         GitFacade.deleteRepository(workspaceName, repository);
