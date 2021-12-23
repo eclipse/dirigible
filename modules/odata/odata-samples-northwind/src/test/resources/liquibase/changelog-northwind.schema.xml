@@ -38,7 +38,7 @@
             <column name="SUPPLIER_ID" type="INT"></column>
             <column name="CATEGORY_ID" type="INT"></column>
             <column name="QUANTITY_PER_UNIT" type="VARCHAR(20)"></column>
-            <column name="UNIT_PRICE" type="DECIMAL"></column>
+            <column name="UNIT_PRICE" type="DECIMAL(19, 4)"></column>
             <column name="UNITS_IN_STOCK" type="SMALLINT"></column>
             <column name="UNITS_ON_ORDER" type="SMALLINT"></column>
             <column name="REORDER_LEVEL" type="SMALLINT"></column>
