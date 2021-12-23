@@ -33,6 +33,8 @@ public class WrappedDataSource implements DataSource {
 
 	private static final Logger logger = LoggerFactory.getLogger(WrappedDataSource.class);
 
+	private String databaseName;
+
 	private DataSource originalDataSource;
 
 	private static final Collection<WrappedConnection> connections = Collections.synchronizedCollection(new ArrayList<WrappedConnection>());
@@ -64,6 +66,11 @@ public class WrappedDataSource implements DataSource {
 		super();
 		this.originalDataSource = originalDataSource;
 	}
+
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
 
 	/**
 	 * Inits the auto commit enabled.
@@ -114,6 +121,11 @@ public class WrappedDataSource implements DataSource {
 		logger.trace("entering - getConnection()");
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(), this);
+
+		if(this.databaseName == null) {
+			this.databaseName = wrappedConnection.getMetaData().getDatabaseProductName();
+		}
+
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
 		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
@@ -130,6 +142,11 @@ public class WrappedDataSource implements DataSource {
 		logger.trace("entering - getConnection(String username, String password)");
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(username, password), this);
+
+		if(this.databaseName == null) {
+			this.databaseName = wrappedConnection.getMetaData().getDatabaseProductName();
+		}
+
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
 		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());

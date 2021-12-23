@@ -33,6 +33,7 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
+import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.eclipse.dirigible.database.dynamic.DynamicDatabase;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
@@ -639,9 +640,11 @@ public class DatabaseFacade implements IScriptingFacade {
 			throw new IllegalArgumentException(error);
 		}
 		Connection connection = dataSource.getConnection();
-		if(connection.getMetaData().getDatabaseProductName().equals(DATABASE_NAME_HDB)) {
+
+		if(((WrappedDataSource) dataSource).getDatabaseName().equals(DATABASE_NAME_HDB)) {
             connection.setClientInfo("APPLICATIONUSER", UserFacade.getName());
 		}
+
 		return connection;
 	}
 
