@@ -42,6 +42,16 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.After;
 import org.junit.Before;
 
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
+
 /*
  * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
@@ -53,7 +63,7 @@ import org.junit.Before;
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-public abstract class AbstractSQLPropcessorTest {
+public abstract class AbstractSQLProcessorTest {
 
     protected DataSource ds;
 
@@ -69,8 +79,24 @@ public abstract class AbstractSQLPropcessorTest {
         edm = new AnnotationEdmProvider(Arrays.asList(classes));
         edm.getSchemas();
         sf = new OData2TestServiceFactory(ds, classes);
-        OData2TestUtils.initLiquibase(ds);
+        initLiquibase(ds);
     }
+
+	private void initLiquibase(DataSource ds) throws SQLException {
+		try (Connection connection = ds.getConnection()) {
+			Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+			Liquibase liquibase = new liquibase.Liquibase(getChangelogLocation(), new ClassLoaderResourceAccessor(), database);
+			liquibase.update(new Contexts(), new LabelExpression());
+		} catch (DatabaseException e) {
+			throw new SQLException("Unable to initilize liquibase", e);
+		} catch (LiquibaseException e) {
+			throw new SQLException("Unable to load the liquibase resources", e);
+		}
+	}
+
+	protected String getChangelogLocation() {
+		return "liquibase/changelog.xml";
+	}
 
 	protected abstract Class<?>[] getODataEntities();
 
@@ -94,7 +120,7 @@ public abstract class AbstractSQLPropcessorTest {
 
 
     protected String loadResource(String fileName) throws IOException {
-		return IOUtils.toString(AbstractSQLPropcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
+		return IOUtils.toString(AbstractSQLProcessorTest.class.getResourceAsStream(fileName), Charset.defaultCharset());
 	}
 
     OData2RequestBuilder modifyingRequestBuilder(ODataServiceFactory sf, String content) {

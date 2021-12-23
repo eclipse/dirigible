@@ -21,15 +21,17 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.helpers.IOUtils;
 import org.junit.Test;
 
-public class ODataNorthwindMetadataTest extends AbstractODataNorthwindTest {
+public class MetadataODataNorthwindTest extends AbstractODataNorthwindTest {
 
+	/**
+	 * HTTP GET: https://services.odata.org/V2/Northwind/Northwind.svc/$metadata
+	 */
 	@Test
 	public void testMetadataResponse() throws Exception {
 		Response response = OData2RequestBuilder.createRequest(sf) //
 				.segments("$metadata") //
 				.executeRequest(GET);
 		String content = IOUtils.toString((InputStream) response.getEntity());
-		System.err.println(content);
-//		assertEquals(loadExpectedMetadata(), content);
+		assertEquals(loadExpectedMetadata(), content);
 	}
 }

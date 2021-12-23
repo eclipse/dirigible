@@ -4,37 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="Products" author="dirigible">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="PRODUCT"/>
-            </not>
-        </preConditions>
-        <createTable tableName="PRODUCT">
-            <column name="ID" type="INT">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
-            </column>
-            <column name="NAME" type="VARCHAR(200)">
-                <constraints nullable="false" primaryKey="false" unique="false"/>
-            </column>
-            <column name="DESCRIPTION" type="VARCHAR(200)">
-                <constraints nullable="true" primaryKey="false" unique="false"/>
-            </column>
-            <column name="RELEASE_DATE" type="DATE">
-                <constraints nullable="false" primaryKey="false" unique="false"/>
-            </column>
-            <column name="DISCONTINUED_DATE" type="DATE">
-                <constraints nullable="true" primaryKey="false" unique="false"/>
-            </column>
-            <column name="RATING" type="INT">
-                <constraints nullable="false" primaryKey="false" unique="false"/>
-            </column>
-            <column name="PRICE" type="FLOAT">
-                <constraints nullable="false" primaryKey="false" unique="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
     <changeSet id="Categories" author="dirigible">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -42,13 +11,57 @@
             </not>
         </preConditions>
         <createTable tableName="CATEGORY">
-            <column name="ID" type="INT">
+            <column name="CATEGORY_ID" type="INT">
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
-            <column name="NAME" type="VARCHAR(200)">
-                <constraints nullable="false" primaryKey="false" unique="false"/>
+            <column name="CATEGORY_NAME" type="VARCHAR(15)">
+                <constraints nullable="false"/>
             </column>
+            <column name="DESCRIPTION" type="NVARCHAR"></column>
+            <column name="PICTURE" type="BLOB"></column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="Products" author="dirigible">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="PRODUCT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="PRODUCT">
+            <column name="PRODUCT_ID" type="INT">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="PRODUCT_NAME" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUPPLIER_ID" type="INT"></column>
+            <column name="CATEGORY_ID" type="INT"></column>
+            <column name="QUANTITY_PER_UNIT" type="VARCHAR(20)"></column>
+            <column name="UNIT_PRICE" type="DECIMAL"></column>
+            <column name="UNITS_IN_STOCK" type="SMALLINT"></column>
+            <column name="UNITS_ON_ORDER" type="SMALLINT"></column>
+            <column name="REORDER_LEVEL" type="SMALLINT"></column>
+            <column name="DISCONTINUED" type="BOOLEAN"></column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet author="dirigible" id="category-products">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_PRODUCT_CATEGORY"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint
+            baseColumnNames="CATEGORY_ID"
+            baseTableName="PRODUCT"
+            constraintName="FK_PRODUCT_CATEGORY"
+            referencedColumnNames="CATEGORY_ID"
+            referencedTableName="CATEGORY"
+            validate="true"
+        />
+
     </changeSet>
 <!-- 
     <changeSet author="dirigible" id="DRIVERS">

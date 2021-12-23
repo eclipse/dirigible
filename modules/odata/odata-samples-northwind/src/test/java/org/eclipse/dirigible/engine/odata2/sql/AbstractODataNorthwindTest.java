@@ -40,7 +40,12 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SummaryOfSales
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier;
 import org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory;
 
-public abstract class AbstractODataNorthwindTest extends AbstractSQLPropcessorTest {
+public abstract class AbstractODataNorthwindTest extends AbstractSQLProcessorTest {
+
+	@Override
+	protected String getChangelogLocation() {
+		return "liquibase/changelog-northwind.xml";
+	}
 
 	@Override
 	protected Class<?>[] getODataEntities() {
@@ -84,6 +89,7 @@ public abstract class AbstractODataNorthwindTest extends AbstractSQLPropcessorTe
 		return data //
 				.replaceAll("\n", "") //
 				.replaceAll("[^\\S\\r]{2,}", "")
-				.replaceAll(": ", ":");
+				.replaceAll(": ", ":")
+				.replaceAll(" />", "/>");
 	}
 }
