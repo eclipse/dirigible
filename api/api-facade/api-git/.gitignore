@@ -4,6 +4,7 @@ dist/
 target/
 derby/
 dirigible_local/
+.git/
 
 # files
 .DS_Store
