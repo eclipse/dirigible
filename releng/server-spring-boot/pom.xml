@@ -11,7 +11,7 @@
 	</parent>
 
 	<name>Releng - Server - Spring - Boot</name>
-	<artifactId>dirigible-spring-boot</artifactId>
+	<artifactId>dirigible-server-spring-boot</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
