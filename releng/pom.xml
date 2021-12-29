@@ -36,6 +36,7 @@
 		<module>trial-all</module>
 		<module>server-minimal</module>
 		<module>server-spring-boot</module>
+		<module>server-picocli</module>
 	</modules>
 
 	<properties>
