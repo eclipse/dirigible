@@ -10,7 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Releng - Spring - Boot</name>
+	<name>Releng - Server - Spring - Boot</name>
 	<artifactId>dirigible-spring-boot</artifactId>
 	<packaging>jar</packaging>
 
