@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.services.spring.boot.picocli;
 
+import org.eclipse.dirigible.runtime.core.embed.EmbeddedDirigible;
+import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,11 @@ import picocli.CommandLine;
 
 @SpringBootApplication
 public class DirigibleCLIApplication implements CommandLineRunner {
+	
+	static EmbeddedDirigible DIRIGIBLE = new EmbeddedDirigible();
+	static {
+		DirigibleInitializer initializer = DIRIGIBLE.initialize();
+	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(DirigibleCLIApplication.class);
 

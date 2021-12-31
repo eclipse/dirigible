@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.runtime.core.embed.EmbeddedDirigible;
 import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ import picocli.CommandLine.RunLast;
 public class ExecuteCommand implements Runnable {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExecuteCommand.class);
+	
+	/** The Constant DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER. */
+	public static final String DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE = "DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE"; //$NON-NLS-1$
 	
 	@Option(names = {"-w", "--workspace"})
 	private String workspace;
@@ -62,9 +66,12 @@ public class ExecuteCommand implements Runnable {
 
     @Override
     public void run() {
-    	if (file == null) {
-    		logger.error("Workspace parameter is missing\nUsage: -w or --workspace");
-    		return;
+    	if (workspace == null) {
+    		workspace = Configuration.get(DIRIGIBLE_REGISTRY_IMPORT_WORKSPACE);
+			if (workspace == null) {
+	    		logger.error("Workspace parameter is missing\nUsage: -w or --workspace");
+	    		return;
+			}
     	}
     	if (file == null) {
     		logger.error("File parameter is missing\nUsage: -f or --file");
@@ -83,23 +90,21 @@ public class ExecuteCommand implements Runnable {
     			}
     	     }
     	}
-    	EmbeddedDirigible dirigible = new EmbeddedDirigible();
-        DirigibleInitializer initializer = dirigible.initialize();
     	if (type == null) {
 			type = "javascript";
 		}
     	try {
-			dirigible.load(workspace);
+    		DirigibleCLIApplication.DIRIGIBLE.load(workspace);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
     	try {
-			dirigible.execute(type, file, properties);
+    		DirigibleCLIApplication.DIRIGIBLE.execute(type, file, properties);
 		} catch (ScriptingException | ContextException e) {
 			logger.error(e.getMessage(), e);
 		}
     	if (exit != null && exit) {
-	    	dirigible.destroy();
+    		DirigibleCLIApplication.DIRIGIBLE.destroy();
 	    	System.exit(0);
     	}
     }

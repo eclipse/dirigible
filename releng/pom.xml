@@ -37,6 +37,7 @@
 		<module>server-minimal</module>
 		<module>server-spring-boot</module>
 		<module>server-picocli</module>
+		<module>server-vertx</module>
 	</modules>
 
 	<properties>
