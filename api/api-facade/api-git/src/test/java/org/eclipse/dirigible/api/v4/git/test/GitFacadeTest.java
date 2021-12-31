@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.platform.WorkspaceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v4.git.GitFacade;
@@ -64,6 +65,8 @@ public class GitFacadeTest extends AbstractDirigibleTest {
         GitFacade.deleteRepository(workspaceName, repository);
 
         assertTrue(GitFileUtils.getGitDirectory(user, workspaceName, repository) == null);
+        
+        FileUtils.deleteDirectory(new File("./target/.git"));
     }
 
 }
