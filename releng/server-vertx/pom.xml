@@ -11,7 +11,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.eclipse.dirigible.vertx</groupId>
+	<name>Releng - Server - Vert.x</name>
 	<artifactId>dirigible-server-vertx</artifactId>
 
 	<properties>
