@@ -134,7 +134,7 @@ public class DebuggerWebsocketService {
 	 */
 	private DebuggerWebsocketClientEndpoint startClientWebsocket(Session session, String path) throws URISyntaxException {
 		
-		String port = Configuration.get(GraalVMJavascriptEngineExecutor.DIRIGBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, GraalVMJavascriptEngineExecutor.DEFAULT_DEBUG_PORT);
+		String port = Configuration.get(GraalVMJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT, GraalVMJavascriptEngineExecutor.DEFAULT_DEBUG_PORT);
 		
 		final DebuggerWebsocketClientEndpoint clientEndPoint =
 				new DebuggerWebsocketClientEndpoint(new URI("ws://localhost:" + port + path));
