@@ -18,7 +18,7 @@ exports.commit = function (user, userEmail, workspaceName, repositoryName, commi
     return org.eclipse.dirigible.api.v4.git.GitFacade.commit(user, userEmail, workspaceName, repositoryName, commitMessage, add);
 }
 
-exports.getGitRepositories = function (String workspaceName) {
+exports.getGitRepositories = function (workspaceName) {
     return org.eclipse.dirigible.api.v4.git.GitFacade.getGitRepositories(workspaceName);
 }
 
@@ -62,7 +62,7 @@ exports.status = function(workspaceName, repositoryName) {
     return org.eclipse.dirigible.api.v4.git.GitFacade.status(workspaceName, repositoryName);
 }
 
-exports.getBranch = function(String workspaceName, String repositoryName) {
+exports.getBranch = function(workspaceName, repositoryName) {
     return org.eclipse.dirigible.api.v4.git.GitFacade.getBranch(workspaceName, repositoryName);
 }
 

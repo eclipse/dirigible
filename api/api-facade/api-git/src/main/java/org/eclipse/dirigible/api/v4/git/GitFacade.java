@@ -39,26 +39,26 @@ public class GitFacade implements IScriptingFacade {
         IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspaceName);
         IProject projectObject = workspaceObject.getProject(projectName);
         String user = UserFacade.getName();
-        File tempGitDirectory = GitFileUtils.getGitDirectory(user, workspaceName, repositoryName);
-        boolean isExistingGitRepository = tempGitDirectory != null;
+        File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspaceName, repositoryName);
+        boolean isExistingGitRepository = gitDirectory != null;
 
         if (!isExistingGitRepository) {
-            tempGitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryName);
+            gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryName);
         } else {
             throw new RefAlreadyExistsException("Git repository already exists");
         }
-        GitFileUtils.copyProjectToDirectory(projectObject, tempGitDirectory);
+        GitFileUtils.copyProjectToDirectory(projectObject, gitDirectory);
 
         projectObject.delete();
 
-        File projectGitDirectory = new File(tempGitDirectory, projectObject.getName());
+        File projectGitDirectory = new File(gitDirectory, projectObject.getName());
         GitFileUtils gitFileUtils = new GitFileUtils();
 
-        GitConnectorFactory.initRepository(tempGitDirectory.getCanonicalPath(), false);
+        GitConnectorFactory.initRepository(gitDirectory.getCanonicalPath(), false);
         gitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectObject.getPath());
 
         //the code below is needed because otherwise getHistory method will throw an error in the git perspective
-        IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
+        IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
         gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
         gitConnector.commit(commitMessage, username, email, true);
     }
