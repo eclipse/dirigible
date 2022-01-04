@@ -103,6 +103,9 @@ angular.module('preview', [])
                     case 'command':
                         url += '/command';
                         break;
+                    case 'xsodata':
+                        url += '/web';
+                        break;
                     case 'edm':
                     case 'dsm':
                     case 'bpmn':
@@ -123,7 +126,6 @@ angular.module('preview', [])
                     case 'xsaccess':
                     case 'xsprivileges':
                     case 'xshttpdest':
-                    case 'xsodata':
                     case 'listener':
                     case 'extensionpoint':
                     case 'extension':
