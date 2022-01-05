@@ -79,12 +79,12 @@
 	</licenses>
 
 	<url>http://www.dirigible.io</url>
-	
+
 	<organization>
 		<name>Eclipse Foundation</name>
 		<url>http://www.eclipse.org</url>
 	</organization>
-	
+
 	<scm>
 		<url>${content.scm.url}</url>
 		<connection>${content.scm.connection}</connection>
@@ -451,7 +451,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 	</profiles>
 
 	<repositories>
@@ -502,6 +502,7 @@
 		<module>templates</module>
 		<module>resources</module>
 		<module>ext</module>
+		<module>groups</module>
 		<module>releng</module>
     </modules>
 	<dependencies>
@@ -713,19 +714,19 @@
 		<mongodb.version>3.12.7</mongodb.version>
 		<caffeine.version>3.0.3</caffeine.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		
+
 		<profile.content.phase>none</profile.content.phase>
-		
+
 		<content.scm.url>https://github.com/dirigiblelabs/${content.repository.name}</content.scm.url>
 		<content.scm.connection>scm:git:git://github.com/dirigiblelabs/${content.repository.name}.git</content.scm.connection>
 		<content.scm.developerConnection>scm:git:https://github.com/dirigiblelabs/${content.repository.name}</content.scm.developerConnection>
 		<content.repository.branch>master</content.repository.branch>
-		
+
 		<content.scm.server>github</content.scm.server>
 		<content.scm.checkoutDirectory>target</content.scm.checkoutDirectory>
 		<content.source.directory>target/${content.project.name}</content.source.directory>
 		<content.output.directory>${basedir}/src/main/resources/META-INF/dirigible/${content.project.name}</content.output.directory>
-	
+
 		<license.header.location>licensing-header.txt</license.header.location>
 	</properties>
 

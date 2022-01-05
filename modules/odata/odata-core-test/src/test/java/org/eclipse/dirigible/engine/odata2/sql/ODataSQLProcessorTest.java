@@ -12,6 +12,10 @@
 package org.eclipse.dirigible.engine.odata2.sql;
 
 import com.google.gson.Gson;
+
+import liquibase.resource.AbstractResourceAccessor;
+import liquibase.resource.ClassLoaderResourceAccessor;
+
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
@@ -41,7 +45,7 @@ import java.util.Map;
 import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.*;
 import static org.junit.Assert.*;
 
-public class ODataSQLProcessorTest extends AbstractSQLPropcessorTest {
+public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
 	@Override
 	protected Class<?>[] getODataEntities() {

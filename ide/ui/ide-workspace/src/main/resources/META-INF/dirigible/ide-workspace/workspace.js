@@ -332,6 +332,7 @@ let WorkspaceTreeAdapter = function (treeConfig, workspaceService, publishServic
             "children": children,
             "type": f.type,
             "git": f.git,
+            "gitName": f.gitName,
             "icon": icon,
             "_file": f
         };
@@ -579,6 +580,12 @@ WorkspaceTreeAdapter.prototype.copyNode = function (sourceParentNode, node) {
 };
 WorkspaceTreeAdapter.prototype.dblClickNode = function (node) {
     let type = node.original.type;
+    let parent = node;
+    for (let i = 0; i < node.parents.length - 1; i++) {
+        parent = this.jstree.get_node(parent.parent);
+    }
+    if (parent.original.git)
+        node.original._file["gitName"] = parent.original.gitName;
     if (['folder', 'project'].indexOf(type) < 0)
         this.messageHub.announceFileOpen(node.original._file);
 };
@@ -823,22 +830,27 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             let onOpenWithEditorAction = function (editor, data) {
                 let tree = $.jstree.reference(data.reference);
                 let node = tree.get_node(data.reference);
+                let parent = node;
+                for (let i = 0; i < node.parents.length - 1; i++) {
+                    parent = tree.get_node(parent.parent);
+                }
+                if (parent.original.git)
+                    node.original._file["gitName"] = parent.original.gitName;
                 tree.element.trigger(openWithEventName, [node.original._file, editor]);
             };
 
             let createOpenEditorMenuItem = function (editorId, label) {
                 return {
-                    "label": label || editorId.charAt(0).toUpperCase() + editorId.slice(1),
+                    "label": label,
                     "action": onOpenWithEditorAction.bind(this, editorId)
                 };
             };
 
-            let createOpenWithSubmenu = function (contentType) {
+            let createOpenWithSubmenu = function (editors) {
                 editorsSubmenu = {};
-                let editors = getEditorsForContentType(contentType);
                 if (editors) {
-                    editors.forEach(function (editorId) {
-                        editorsSubmenu[editorId] = createOpenEditorMenuItem(editorId);
+                    editors.forEach(function (editor) {
+                        editorsSubmenu[editor.id] = createOpenEditorMenuItem(editor.id, editor.label);
                     }.bind(this));
                 }
                 return editorsSubmenu;
@@ -849,18 +861,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
              * will create Open (singular eidtor) or Open with... choice dropdown for multiple editors.
              */
             this.createOpenFileMenuItem = function (ctxmenu, node) {
-                let contentType = node.original._file.contentType;
-                let editors = getEditorsForContentType(contentType || "");
-                if (!editors) {
-                    return;
-                }
+                let contentType = node.original._file.contentType || "";
+                let editors = getEditorsForContentType(contentType);
+                if (!editors) editors = [{ id: Editors.defaultEditorId }];
                 if (editors.length > 1) {
                     ctxmenu.openWith = {
                         "label": "Open with...",
-                        "submenu": createOpenWithSubmenu.call(this, contentType)
+                        "submenu": createOpenWithSubmenu.call(this, editors)
                     };
                 } else {
-                    ctxmenu.open = createOpenEditorMenuItem(editors[0], 'Open');
+                    ctxmenu.open = createOpenEditorMenuItem(editors[0].id, 'Open');
                 }
             };
         };
@@ -1441,7 +1451,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     }]);
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
-const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job','xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
 function getIcon(f) {
     let icon;
@@ -1449,7 +1459,7 @@ function getIcon(f) {
         icon = "fa fa-git-square";
     } else if (f.type === 'file') {
         let ext = getFileExtension(f.name);
-        if (ext === 'js'|| ext === 'mjs'|| ext==='xsjs') {
+        if (ext === 'js' || ext === 'mjs' || ext === 'xsjs') {
             icon = "fa fa-file-code-o";
         } else if (ext === 'html') {
             icon = "fa fa-html5";

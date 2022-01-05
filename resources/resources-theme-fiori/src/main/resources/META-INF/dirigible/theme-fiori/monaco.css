@@ -44,3 +44,25 @@ body {
   border: 1px solid #d5d7d7;
   border-radius: 4px;
 }
+.modified-line {
+  background: skyblue;
+  width: 3px !important;
+  margin-left: 5px;
+}
+.deleted-line {
+  width: 3px !important;
+  margin-left: 5px;
+}
+.deleted-line::after {
+  display: inline-block;
+  position: absolute;
+  box-sizing: border-box;
+  width: 0px;
+  height: 0px;
+  top: 100%;
+  content: "";
+  border-top: 4px solid transparent;
+  border-left: 4px solid #ca4b51;
+  border-bottom: 4px solid transparent;
+  margin-top: -4px;
+}

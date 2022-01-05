@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var repository = require("platform/v4/repository");
-for (var propertyName in repository) {
+const repository = require("platform/v4/repository");
+for (const propertyName in repository) {
 	exports[propertyName] = repository[propertyName];
 }

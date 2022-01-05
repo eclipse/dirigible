@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="debugger" ng-controller="DebuggerController as debugger">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title brandtitle perspective-name="Debugger"></title>
+        <title brandtitle perspective-name="Debugger"></title>
 
-    <link brandicon />
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brandicon />
 
-    <!-- FontAwesome icon set -->
-    <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- FontAwesome icon set -->
+        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
 
-    <!-- GoldenLayout with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
+        <!-- GoldenLayout with Theme Support -->
+        <link type="text/css" rel="stylesheet"
+            href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-</head>
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+    </head>
 
-<body>
+    <body>
 
-    <div menu menu-data-url="/services/v4/js/ide-debugger/services/menu-debugger.js"></div>
+        <div menu menu-data-url="/services/v4/js/ide-debugger/services/menu-debugger.js"></div>
 
-    <div class="shell">
-        <div class="sidebar list-group" sidebar active="Debugger"></div>
-        <div id="debugger" class="plane" views-layout views-layout-model="debugger.layoutModel"></div>
-    </div>
-    <div class="statusbar" status-bar>{{message}}</div>
+        <div class="shell">
+            <div class="sidebar list-group" sidebar active="Debugger"></div>
+            <div id="debugger" class="plane" views-layout views-layout-model="debugger.layoutModel"></div>
+        </div>
+        <div class="statusbar" status-bar>{{message}}</div>
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- AngularJS -->
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- GoldenLayout with Theme Support -->
-    <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
+        <!-- GoldenLayout with Theme Support -->
+        <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
 
-    <script type="text/javascript">
-        angular.module('debugger', ['ngResource', 'ideUiCore'])
+        <script type="text/javascript">
+            angular.module('debugger', ['ngResource', 'ideUiCore'])
             .config(["messageHubProvider", function (messageHubProvider) {
                 messageHubProvider.evtNamePrefix = 'debugger';
             }])
@@ -76,15 +77,15 @@
                 };
 
             }]);
-    </script>
+        </script>
 
-    <script language="JavaScript">
-        window.addEventListener('beforeunload', function (e) {
+        <script language="JavaScript">
+            window.addEventListener('beforeunload', function (e) {
             e.preventDefault();
             e.returnValue = '';
         });
-    </script>
+        </script>
 
-</body>
+    </body>
 
 </html>

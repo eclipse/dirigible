@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var uuid = require('utils/v4/uuid');
-for(var propertyName in uuid) {
+const uuid = require('utils/v4/uuid');
+for(const propertyName in uuid) {
 	exports[propertyName] = uuid[propertyName];
 }

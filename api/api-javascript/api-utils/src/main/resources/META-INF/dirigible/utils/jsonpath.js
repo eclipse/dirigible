@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var jp = require('utils/v4/jsonpath');
-for(var propertyName in jp) {
+const jp = require('utils/v4/jsonpath');
+for(const propertyName in jp) {
 	exports[propertyName] = jp[propertyName];
 }

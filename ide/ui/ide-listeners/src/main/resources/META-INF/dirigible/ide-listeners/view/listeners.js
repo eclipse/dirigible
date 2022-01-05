@@ -16,6 +16,4 @@ angular.module('listeners', [])
 			$scope.listenersList = response.data;
 		});
 
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

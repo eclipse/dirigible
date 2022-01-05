@@ -13,10 +13,10 @@
  * Transforms a string to an alphanumeric sequence, stripping non-conformant characters for it.
  * @param string {String} the string to transform
  */
- 
-var LOWERCASEASCII = "abcdefghijklmnopqrstuvwxyz";
-var UPPERCASEASCII = LOWERCASEASCII.toUpperCase();
-var NUMBERS = "1234567890";
+
+let LOWERCASEASCII = "abcdefghijklmnopqrstuvwxyz";
+const UPPERCASEASCII = LOWERCASEASCII.toUpperCase();
+const NUMBERS = "1234567890";
 
 exports.toAlphanumeric = function(string){
 	return string.replace(/[^A-Za-z0-9_]/g, '');
@@ -28,7 +28,7 @@ exports.toAlphanumeric = function(string){
 exports.randomstring = function(length, charset){
   let text = "";
   if(length<1)
-	length = 4;  
+	length = 4;
   for (var i = 0; i < length; i++)
     text += charset.charAt(Math.floor(Math.random() * charset.length));
   return text;
@@ -71,8 +71,8 @@ exports.numeric = function(length){
 exports.isNumeric = function(str){
 	// a faster alternative to checking with  /[^a-zA-Z0-9]/.test(str)
 	// copy from public domain at: https://stackoverflow.com/a/25352300
-	var code, i, len;
-    for (i = 0, len = str.length; i < len; i++) {
+	let code, i, len;
+	for (i = 0, len = str.length; i < len; i++) {
 		code = str.charCodeAt(i);
 		if (!(code > 47 && code < 58)) { // numeric (0-9)
 		  return false;
@@ -87,8 +87,8 @@ exports.isNumeric = function(str){
 exports.isAlphanumeric = function(str){
 	// a faster alternative to checking with  /[^a-zA-Z0-9]/.test(str)
 	// copy from public domain at: https://stackoverflow.com/a/25352300
-	var code, i, len;
-    for (i = 0, len = str.length; i < len; i++) {
+	let code, i, len;
+	for (i = 0, len = str.length; i < len; i++) {
 		code = str.charCodeAt(i);
 		if (!(code > 47 && code < 58) && // numeric (0-9)
 			!(code > 64 && code < 91) && // upper alpha (A-Z)

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var oauth = require('security/v4/oauth');
-for(var propertyName in oauth) {
+const oauth = require('security/v4/oauth');
+for(const propertyName in oauth) {
 	exports[propertyName] = oauth[propertyName];
 }

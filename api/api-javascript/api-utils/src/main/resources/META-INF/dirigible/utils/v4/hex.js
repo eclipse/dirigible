@@ -11,12 +11,11 @@
  */
 /**
  * API v4 Files
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require('io/v4/streams');
-var bytes = require("io/v4/bytes");
+const streams = require('io/v4/streams');
+const bytes = require("io/v4/bytes");
 
 /**
  * Encode the input (text or byte array) as text
@@ -36,17 +35,17 @@ exports.encodeAsBytes = function(input) {
  * Encode the input (text or byte array) as java native byte array
  */
 exports.encodeAsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.HexFacade.encodeNative(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.HexFacade.encodeNative(native);
 	return output;
 };
 
@@ -54,10 +53,9 @@ exports.encodeAsNativeBytes = function(input) {
  * Decode the input (text or byte array) as text
  */
 exports.decode = function(input) {
-	var output = exports.decodeAsNativeBytes(input);
-	if (output && output !== null) {
-		var result = bytes.toJavaScriptBytes(output);
-		return result;
+	const output = exports.decodeAsNativeBytes(input);
+	if (output) {
+		return bytes.toJavaScriptBytes(output);
 	}
 	return output;
 };
@@ -66,15 +64,14 @@ exports.decode = function(input) {
  * Decode the input (text or byte array) as java native byte array
  */
 exports.decodeAsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	var output = org.eclipse.dirigible.api.v3.utils.HexFacade.decodeNative(native);
-	return output;
+	return org.eclipse.dirigible.api.v3.utils.HexFacade.decodeNative(native);
 };

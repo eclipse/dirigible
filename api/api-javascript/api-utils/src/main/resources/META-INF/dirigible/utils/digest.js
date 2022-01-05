@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var digest = require('utils/v4/digest');
-for(var propertyName in digest) {
+const digest = require('utils/v4/digest');
+for(const propertyName in digest) {
 	exports[propertyName] = digest[propertyName];
 }

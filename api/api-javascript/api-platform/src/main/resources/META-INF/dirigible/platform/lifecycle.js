@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var lifecycle = require("platform/v4/lifecycle");
-for (var propertyName in lifecycle) {
+const lifecycle = require("platform/v4/lifecycle");
+for (const propertyName in lifecycle) {
 	exports[propertyName] = lifecycle[propertyName];
 }

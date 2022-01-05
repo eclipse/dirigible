@@ -540,6 +540,7 @@ jobs:
         cd charts-temp/helm-charts/
 
         helm package dirigible
+        
         cd ..
         helm repo index helm-charts/ --url https://eclipse.github.io/dirigible/charts
         

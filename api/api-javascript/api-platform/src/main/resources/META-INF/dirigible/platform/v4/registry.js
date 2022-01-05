@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var bytes = require("io/v4/bytes");
+const bytes = require("io/v4/bytes");
 
 exports.getContent = function(path) {
-	var nativeContent = org.eclipse.dirigible.api.v3.platform.RegistryFacade.getContent(path);
+	const nativeContent = org.eclipse.dirigible.api.v3.platform.RegistryFacade.getContent(path);
 	return bytes.toJavaScriptBytes(nativeContent);
 };
 

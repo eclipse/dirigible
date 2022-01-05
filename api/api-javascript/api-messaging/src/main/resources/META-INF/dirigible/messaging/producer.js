@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var producer = require('messaging/v4/producer');
-for(var propertyName in producer) {
+const producer = require('messaging/v4/producer');
+for(const propertyName in producer) {
 	exports[propertyName] = producer[propertyName];
 }

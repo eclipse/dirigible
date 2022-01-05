@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var registry = require("platform/v4/registry");
-for (var propertyName in registry) {
+const registry = require("platform/v4/registry");
+for (const propertyName in registry) {
 	exports[propertyName] = registry[propertyName];
 }

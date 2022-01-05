@@ -34,24 +34,24 @@ public class OData2ODataTransformerTestUtil {
         String orders = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/entityproperty/Entities.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/entityproperty/Entities.odata", orders);
 
-        PersistenceTableColumnModel column11 = new PersistenceTableColumnModel("ENTITY1ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column12 = new PersistenceTableColumnModel("PROPERTY2", "Edm.String", false);
-        PersistenceTableColumnModel column13 = new PersistenceTableColumnModel("PROPERTY3", "Edm.String", false);
-        PersistenceTableColumnModel column14 = new PersistenceTableColumnModel("Country.Id", "Edm.String", false);
+        PersistenceTableColumnModel column11 = new PersistenceTableColumnModel("ENTITY1ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column12 = new PersistenceTableColumnModel("PROPERTY2", "Edm.String", true, false);
+        PersistenceTableColumnModel column13 = new PersistenceTableColumnModel("PROPERTY3", "Edm.String", true, false);
+        PersistenceTableColumnModel column14 = new PersistenceTableColumnModel("Country.Id", "Edm.String", true, false);
         PersistenceTableModel model = new PersistenceTableModel("ENTITY1", Arrays.asList(column11, column12, column13, column14), new ArrayList<>());
         when(dbMetadataUtil.getTableMetadata("ENTITY1", null)).thenReturn(model);
 
-        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ENTITY2ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("PROPERTY2", "Edm.Int32", false);
-        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("PROPERTY3", "Edm.Int32", false);
-        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("PROPERTY4_5", "Edm.Int32", false);
-        PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("ENTITY1ENTITY1ID", "Edm.Int32", false);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("ENTITY2ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column5 = new PersistenceTableColumnModel("PROPERTY2", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column6 = new PersistenceTableColumnModel("PROPERTY3", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column7 = new PersistenceTableColumnModel("PROPERTY4_5", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column8 = new PersistenceTableColumnModel("ENTITY1ENTITY1ID", "Edm.Int32", true, false);
         PersistenceTableRelationModel rel = new PersistenceTableRelationModel("ENTITY2ID", "ENTITY1ID", "ENTITY1ENTITY1ID", "ENTITY1ID", "fkName", "PRIMARY_KEY_8B");
         model = new PersistenceTableModel("ENTITY2", Arrays.asList(column13, column4, column5, column6, column7, column8), Collections.singletonList(rel));
         when(dbMetadataUtil.getTableMetadata("ENTITY2", null)).thenReturn(model);
 
-        PersistenceTableColumnModel column24 = new PersistenceTableColumnModel("ENTITY3.ID", "Edm.Int32", true);
-        PersistenceTableColumnModel column25 = new PersistenceTableColumnModel("NAME.ID", "Edm.String", false);
+        PersistenceTableColumnModel column24 = new PersistenceTableColumnModel("ENTITY3.ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column25 = new PersistenceTableColumnModel("NAME.ID", "Edm.String", true, false);
         model = new PersistenceTableModel("ENTITY3", Arrays.asList(column24, column25), new ArrayList<>());
         when(dbMetadataUtil.getTableMetadata("ENTITY3", null)).thenReturn(model);
 

@@ -35,7 +35,9 @@
 		<module>server-runtime-keycloak</module>
 		<module>trial-all</module>
 		<module>server-minimal</module>
-		<module>spring-boot</module>
+		<module>server-spring-boot</module>
+		<module>server-picocli</module>
+		<module>server-vertx</module>
 	</modules>
 
 	<properties>

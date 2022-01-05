@@ -15,10 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<!-- Grouping Modules -->
-        <module>ide-all</module>
-        
-        <!-- Plugin Modules -->
 		<module>services</module>
 		<module>ui</module>
 	</modules>

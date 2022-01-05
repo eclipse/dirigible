@@ -23,8 +23,8 @@ function Engine(type) {
 	this.type = type;
 
 	this.execute = function(module, context) {
-		var mapInstance = new java.util.HashMap();
-			for (var property in context) {
+		const mapInstance = new java.util.HashMap();
+		for (const property in context) {
 				if (context.hasOwnProperty(property)) {
 					mapInstance.put(property, context[property]);
 				}
@@ -34,8 +34,8 @@ function Engine(type) {
 	}
 
 	this.executeCode = function(module, context) {
-		var mapInstance = new java.util.HashMap();
-			for (var property in context) {
+		const mapInstance = new java.util.HashMap();
+		for (const property in context) {
 				if (context.hasOwnProperty(property)) {
 					mapInstance.put(property, context[property]);
 				}
@@ -46,6 +46,6 @@ function Engine(type) {
 }
 
 exports.getTypes = function() {
-	var json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
+	const json = org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager.getEngineTypesAsJson();
 	return JSON.parse(json);
 }

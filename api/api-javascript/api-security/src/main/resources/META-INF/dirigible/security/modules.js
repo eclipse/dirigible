@@ -10,11 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getUser = function() {
-	var user = require('security/v4/user');
+	const user = require('security/v4/user');
 	return user;
 };
 
 exports.getOAuth = function() {
-	var oauth = require('security/v4/oauth');
+	const oauth = require('security/v4/oauth');
 	return oauth;
 };

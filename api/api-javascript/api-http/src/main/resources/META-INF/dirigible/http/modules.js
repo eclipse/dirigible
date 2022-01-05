@@ -10,36 +10,29 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getClient = function() {
-	var client = require('http/v4/client');
-	return client;
+	return require('http/v4/client');
 };
 
 exports.getRequest = function() {
-	var request = require('http/v4/request');
-	return request;
+	return require('http/v4/request');
 };
 
 exports.getResponse = function() {
-	var response = require('http/v4/response');
-	return response;
+	return require('http/v4/response');
 };
 
 exports.getSession = function() {
-	var session = require('http/v4/session');
-	return session;
+	return require('http/v4/session');
 };
 
 exports.getUpload = function() {
-	var upload = require('http/v4/upload');
-	return upload;
+	return require('http/v4/upload');
 };
 
 exports.getRest = function() {
-	var rest = require('http/v4/rs');
-	return rest;
+	return require('http/v4/rs');
 };
 
 exports.getRestData = function() {
-	var restData = require('http/v4/rs-data');
-	return restData;
+	return require('http/v4/rs-data');
 };

@@ -11,10 +11,14 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.entities.northwind;
 
+import java.util.List;
+
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
@@ -22,16 +26,24 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 @EdmEntitySet(name = "Categories", container = "NorthwindEntities")
 public class Category {
 
-    @EdmKey
-    @EdmProperty(name = "CategoryID", facets = @EdmFacets(nullable = false))
-    private Integer categoryId;
+	@EdmKey
+	@EdmProperty(name = "CategoryID", facets = @EdmFacets(nullable = false))
+	private Integer categoryId;
 
-    @EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
-    private String categoryName;
+	@EdmProperty(facets = @EdmFacets(nullable = false, maxLength = 15))
+	private String categoryName;
 
-    @EdmProperty
-    private String description;
+	@EdmProperty
+	private String description;
 
-    @EdmProperty(type = EdmType.BINARY)
-    private String picture;
+	@EdmProperty(type = EdmType.BINARY)
+	private String picture;
+
+	@EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.MANY, //
+			toType = Product.class, //
+			toRole = "Products", //
+			association = "FK_Products_Categories" //
+	)
+	private List<Product> products;
 }

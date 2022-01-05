@@ -82,7 +82,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 			try {
 				connection = dataSource.getConnection();
 				JobDefinition existing = getJob(jobDefinition.getName());
-				if (existing != null && !jobDefinition.equals(existing)) {
+				if (existing != null) {
 					jobPersistenceManager.update(connection, jobDefinition);
 				} else {
 					jobPersistenceManager.insert(connection, jobDefinition);

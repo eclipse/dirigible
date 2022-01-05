@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var env = require('core/v4/env');
-for(var propertyName in env) {
+const env = require('core/v4/env');
+for(const propertyName in env) {
 	exports[propertyName] = env[propertyName];
 }

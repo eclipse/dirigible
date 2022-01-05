@@ -11,12 +11,12 @@
  */
 /**
  * API v4 Files
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 exports.fromJson = function(input) {
-	var data = input;
+	let data = input;
 	if(typeof data !== "string"){
 		data = JSON.stringify(input);
 	}
@@ -24,7 +24,7 @@ exports.fromJson = function(input) {
 };
 
 exports.toJson = function(input) {
-	var data = input;
+	let data = input;
 	if(typeof data !== "string"){
 		data = JSON.stringify(input);
 	}

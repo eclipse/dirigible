@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var globals = require('core/v4/globals');
-for(var propertyName in globals) {
+const globals = require('core/v4/globals');
+for(const propertyName in globals) {
 	exports[propertyName] = globals[propertyName];
 }

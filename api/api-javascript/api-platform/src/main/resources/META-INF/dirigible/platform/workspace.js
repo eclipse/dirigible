@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var workspace = require("platform/v4/workspace");
-for (var propertyName in workspace) {
+const workspace = require("platform/v4/workspace");
+for (const propertyName in workspace) {
 	exports[propertyName] = workspace[propertyName];
 }

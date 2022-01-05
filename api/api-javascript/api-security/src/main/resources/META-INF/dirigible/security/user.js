@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var user = require('security/v4/user');
-for(var propertyName in user) {
+const user = require('security/v4/user');
+for(const propertyName in user) {
 	exports[propertyName] = user[propertyName];
 }

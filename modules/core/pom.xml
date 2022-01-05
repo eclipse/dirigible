@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>core-all</module>
 		<module>core-extensions</module>
         <module>core-git</module>
 		<module>core-indexing</module>

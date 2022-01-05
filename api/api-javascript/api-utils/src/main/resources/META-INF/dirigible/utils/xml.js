@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var xml = require('utils/v4/xml');
-for(var propertyName in xml) {
+const xml = require('utils/v4/xml');
+for(const propertyName in xml) {
 	exports[propertyName] = xml[propertyName];
 }

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var soap = require('net/v4/soap');
-for(var propertyName in soap) {
+const soap = require('net/v4/soap');
+for(const propertyName in soap) {
 	exports[propertyName] = soap[propertyName];
 }

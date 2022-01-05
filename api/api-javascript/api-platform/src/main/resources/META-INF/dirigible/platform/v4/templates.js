@@ -25,17 +25,17 @@ exports.getDefaultEngine = function () {
 };
 
 exports.getMustacheEngine = function () {
-    var engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getMustacheEngine();
+    const engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getMustacheEngine();
     return new TemplateEngine(engine, "mustache");
 };
 
 exports.getVelocityEngine = function () {
-    var engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getVelocityEngine();
+    const engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getVelocityEngine();
     return new TemplateEngine(engine, "velocity");
 };
 
 exports.getJavascriptEngine = function () {
-    var engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getJavascriptEngine();
+    const engine = org.eclipse.dirigible.api.v3.platform.TemplateEnginesFacade.getJavascriptEngine();
     return new TemplateEngine(engine, "javascript");
 };
 
@@ -44,11 +44,11 @@ exports.generate = function (template, parameters) {
 };
 
 exports.generateFromFile = function (location, parameters) {
-    var resource = repository.getResource(REGISTRY_PUBLIC + location);
+    const resource = repository.getResource(REGISTRY_PUBLIC + location);
     if (resource.exists()) {
-        var isMustacheTemplate = location.endsWith(MUSTACHE_FILE_EXTENSION);
-        var engine = isMustacheTemplate ? exports.getMustacheEngine() : exports.getDefaultEngine();
-        var template = resource.getText();
+        const isMustacheTemplate = location.endsWith(MUSTACHE_FILE_EXTENSION);
+        const engine = isMustacheTemplate ? exports.getMustacheEngine() : exports.getDefaultEngine();
+        const template = resource.getText();
         return engine.generate(template, parameters);
     }
     return null;

@@ -11,12 +11,11 @@
  */
 /**
  * API v4 Files
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-
-var streams = require('io/v4/streams');
-var bytes = require("io/v4/bytes");
+const streams = require('io/v4/streams');
+const bytes = require("io/v4/bytes");
 
 /**
  * Calculate MD5 digest from input (text or byte array) and return result as byte array
@@ -29,8 +28,8 @@ exports.md5 = function(input) {
  * Calculate MD5 digest from input (text or byte array) and return result as 16 elements java native byte array
  */
 exports.md5AsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
 		var baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
@@ -38,8 +37,8 @@ exports.md5AsNativeBytes = function(input) {
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.md5(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.md5(native);
 	return output;
 };
 
@@ -47,17 +46,17 @@ exports.md5AsNativeBytes = function(input) {
  * Calculate MD5 digest from input (text or byte array) and return result as 32 character hex string
  */
 exports.md5Hex = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.md5Hex(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.md5Hex(native);
 	return output;
 };
 
@@ -72,17 +71,17 @@ exports.sha1 = function(input) {
  * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements java native byte array
  */
 exports.sha1AsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha1(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha1(native);
 	return output;
 };
 
@@ -97,17 +96,17 @@ exports.sha256 = function(input) {
  * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements java native byte array
  */
 exports.sha256AsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha256(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha256(native);
 	return output;
 };
 
@@ -122,17 +121,17 @@ exports.sha384 = function(input) {
  * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements java native byte array
  */
 exports.sha384AsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha384(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha384(native);
 	return output;
 };
 
@@ -147,17 +146,17 @@ exports.sha512 = function(input) {
  * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements java native byte array
  */
 exports.sha512AsNativeBytes = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha512(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha512(native);
 	return output;
 };
 
@@ -165,16 +164,16 @@ exports.sha512AsNativeBytes = function(input) {
  * Calculate SHA1 digest from input (text or byte array) and return result as 40 character hex string
  */
 exports.sha1Hex = function(input) {
-	var data = input;
-	var native;
+	const data = input;
+	let native;
 	if (typeof data === 'string') {
-		var baos = streams.createByteArrayOutputStream();
+		const baos = streams.createByteArrayOutputStream();
 		baos.writeText(data);
 		native = baos.getBytesNative();
 	} else if (Array.isArray(data)) {
 		native = bytes.toJavaBytes(data);
 	}
-	
-	var output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha1Hex(native);
+
+	const output = org.eclipse.dirigible.api.v3.utils.DigestFacade.sha1Hex(native);
 	return output;
 };

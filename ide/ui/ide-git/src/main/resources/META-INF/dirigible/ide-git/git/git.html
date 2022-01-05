@@ -9,45 +9,52 @@
   ~ SAP - initial API and implementation
   -->
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
     <title>Eclipse Dirigible - Git</title>
 
-    <script src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
 
     <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- jQuery -->
-    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- AngularJS -->
-    <script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-    <script src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
-    <script src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
 
     <!-- jsTree -->
     <link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
-    <script src="/webjars/jstree/3.3.5/jstree.min.js"></script>
+    <script type="text/javascript" src="/webjars/jstree/3.3.5/jstree.min.js"></script>
 
     <!-- Twitter Bootstrap with Theme Support -->
     <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Custom IDE Styles -->
     <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <script src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
 
-    <script src="git.js"></script>
+    <script type="text/javascript" src="git.js"></script>
 </head>
 
-<body ng-app="workspace" ng-controller="WorkspaceController as workspace" class="workspace-body">
+<body ng-app="workspace" ng-controller="WorkspaceController as workspace" class="sidepanel">
+
 
     <div class="view-fixed-top">
+	  <div class="loading-overview">
+                <div class="loading-message">Loading...</div>
+            </div>
         <div class="btn-toolbar-top">
             <div class="btn-group pull-right" role="group" aria-label="toolbar">
 
@@ -86,7 +93,8 @@
         </div>
     </div>
 
-    <div class="workspace"></div>
+
+    <div class="workspace scrollpanel"></div>
 
     <!-- Clone -->
     <div class="dirigible-modal modal fade" id="dialogClone" tabindex="-1" role="dialog"
@@ -146,7 +154,8 @@
         </div>
         <div class="modal-body">
             <div class="form-group row">
-                <label class="col-xs-12 col-form-label">Do you want to Pull all the Projects in the Workspace from Git?</label>
+                <label class="col-xs-12 col-form-label">Do you want to Pull all the Projects in the Workspace from
+                    Git?</label>
             </div>
             <form class="" style="padding: 1em;">
                 <div class="form-group row">
@@ -356,8 +365,8 @@
                 <div class="small col-xs-12 checkbox">
                     <label><input type="checkbox" value="" ng-model="unpublishOnDelete">Unpublish</label>
                 </div>
-                <label class="col-xs-12 small">If you don't unpublish the repository, it will remain active but you will
-                    not be able to see or change it.</label>
+                <label class="col-xs-12 small">If you don't unpublish the repository, it will remain active but you
+                    will not be able to see or change it.</label>
             </div>
         </div>
         <div class="modal-footer">
@@ -437,7 +446,8 @@
         </div>
         <div class="modal-body">
             <div class="form-group row">
-                <label class="col-xs-12 col-form-label">Do you want to checkout the selected Branch from Git?</label>
+                <label class="col-xs-12 col-form-label">Do you want to checkout the selected Branch from
+                    Git?</label>
             </div>
             <div class="form-group row">
                 <label class="col-xs-3 col-form-label">Username</label>
@@ -515,8 +525,6 @@
             <button class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
     </div>
-
-
 </body>
 
 </html>

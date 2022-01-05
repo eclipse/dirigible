@@ -14,7 +14,7 @@
 **Eclipse Dirigible** is a High-Productivity Application Platform as a Service (hpaPaaS). It provides an application server consisting of pre-selected execution engines and built-in development tools as WebIDE. It is suitable for rapid development of business applications by also leveraging the Low Code / No Code techniques.
 
 <p align="center">
-  <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-2Kx2K-rounded.png" width="40%" alt="dirigible logo"/>
+  <img src="https://github.com/eclipse/dirigible/blob/master/logo/dirigible-logo-2Kx2K.png" width="40%" alt="dirigible logo"/>
 </p>
 
 > Enjoy Programming Like Never Before
@@ -207,20 +207,16 @@ If you like to contribute to Dirigible, please read the [Contributor's guide](CO
 
 ### References
 
-- Project Home
-[http://www.dirigible.io](http://www.dirigible.io)
+- Project Home: [https://www.dirigible.io](https://www.dirigible.io)
 
-- Help Portal
-[http://help.dirigible.io](http://www.dirigible.io/help)
+- Help Portal: [https://help.dirigible.io](https://www.dirigible.io/help)
 
-- Samples
-[http://samples.dirigible.io](http://samples.dirigible.io)
+- Samples: [https://samples.dirigible.io](https://samples.dirigible.io)
 
-- Trial Instance
-[http://trial.dirigible.io](http://trial.dirigible.io) or [http://dirigible.eclipse.org](http://dirigible.eclipse.org)
+- Trial Instance: [https://trial.dirigible.io](https://trial.dirigible.io)
 
-- Mailing List
-[https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
+- Mailing List: [https://dev.eclipse.org/mailman/listinfo/dirigible-dev](https://dev.eclipse.org/mailman/listinfo/dirigible-dev)
 
-- Issues
-[https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
+- Issues: [https://github.com/eclipse/dirigible/issues](https://github.com/eclipse/dirigible/issues)
+
+- Eclipse Foundation Help Desk: https://gitlab.eclipse.org/eclipsefdn/helpdesk

@@ -9,5 +9,5 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var handler = require(__context.get("handler"));
+const handler = require(__context.get("handler"));
 handler.onMessage(__context.get("message"));

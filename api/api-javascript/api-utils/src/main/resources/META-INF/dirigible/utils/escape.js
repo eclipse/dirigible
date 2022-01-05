@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var escape = require('utils/v4/escape');
-for(var propertyName in escape) {
+const escape = require('utils/v4/escape');
+for(const propertyName in escape) {
 	exports[propertyName] = escape[propertyName];
 }

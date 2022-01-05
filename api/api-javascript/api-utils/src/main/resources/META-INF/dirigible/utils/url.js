@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var url = require('utils/v4/url');
-for(var propertyName in url) {
+const url = require('utils/v4/url');
+for(const propertyName in url) {
 	exports[propertyName] = url[propertyName];
 }

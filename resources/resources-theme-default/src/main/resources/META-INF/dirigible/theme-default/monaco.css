@@ -44,3 +44,26 @@ body {
   border: 1px solid black;
   border-radius: 4px;
 }
+.modified-line {
+  background: steelblue;
+  width: 3px !important;
+  margin-left: 5px;
+}
+.deleted-line {
+  width: 3px !important;
+  margin-left: 5px;
+}
+.deleted-line::after {
+  display: inline-block;
+  position: absolute;
+  box-sizing: border-box;
+  width: 0px;
+  height: 0px;
+  top: 100%;
+  content: "";
+  border-top: 4px solid transparent;
+  border-left: 4px solid #94151b;
+  border-bottom: 4px solid transparent;
+  margin-left: 5px;
+  margin-top: -4px;
+}

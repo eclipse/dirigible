@@ -16,7 +16,4 @@ angular.module('roles', [])
 			$scope.rolesList = response.data;
 		});
 
-
-	}]).config(function ($sceProvider) {
-		$sceProvider.enabled(false);
-	});
+	}]);

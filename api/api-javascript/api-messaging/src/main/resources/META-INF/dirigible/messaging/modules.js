@@ -10,11 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getProducer = function() {
-	var producer = require('messaging/v4/producer');
-	return producer;
+	return require('messaging/v4/producer');
 };
 
 exports.getConsumer = function() {
-	var consumer = require('messaging/v4/consumer');
-	return consumer;
+	return require('messaging/v4/consumer');
 };

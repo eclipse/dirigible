@@ -11,12 +11,6 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
-import static java.text.MessageFormat.format;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -28,6 +22,12 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.text.MessageFormat.format;
 
 /**
  * The AbstractSynchronizer.
@@ -248,15 +248,30 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 			String artefactType = type.getId();
 			String artefactState = state.getValue();
 			String artefactStateMessage = type.getStateMessage(state, message);
-			try {
-				if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
-					synchronizerCoreService.updateSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
-				} else {
-					synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
-				}
-			} catch (SchedulerException e) {
-				logger.error(e.getMessage(), e);
+			checkSynchronizerStateArtefactCurrentState(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+		} else {
+			logger.error("Can't apply artefact state to \"null\" artefact object.");
+		}
+	}
+
+	private void checkSynchronizerStateArtefactCurrentState(String artefactName, String artefactLocation, String artefactType, String artefactState, String artefactStateMessage) {
+		try {
+			if (synchronizerCoreService.existsSynchronizerStateArtefact(artefactName, artefactLocation)) {
+				synchronizerCoreService.updateSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
+			} else {
+				synchronizerCoreService.createSynchronizerStateArtefact(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
 			}
+		} catch (SchedulerException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void applyArtefactState(String artefactName, String artefactLocation, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
+		if (artefactName != null && artefactLocation != null && type != null && state != null) {
+			String artefactType = type.getId();
+			String artefactState = state.getValue();
+			String artefactStateMessage = type.getStateMessage(state, message);
+			checkSynchronizerStateArtefactCurrentState(artefactName, artefactLocation, artefactType, artefactState, artefactStateMessage);
 		} else {
 			logger.error("Can't apply artefact state to \"null\" artefact object.");
 		}

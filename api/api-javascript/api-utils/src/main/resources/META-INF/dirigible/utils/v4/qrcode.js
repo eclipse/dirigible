@@ -10,6 +10,6 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.generateQRCode = function(text){
-    var bytes = require("io/v4/bytes");
+    const bytes = require("io/v4/bytes");
     return bytes.toJavaScriptBytes(org.eclipse.dirigible.api.v3.utils.QRCodeFacade.generateQRCode(text));
 };

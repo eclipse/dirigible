@@ -480,6 +480,12 @@ public class FileSystemUtils {
 		return Files.createDirectories(dir).toFile();
 	}
 
+	public static void deleteDirectory(String firstSegment, String ...segments) throws IOException  {
+		Path dir = Paths.get(firstSegment, segments);
+		File file = new File(String.valueOf(dir));
+		FileUtils.deleteDirectory(file);
+	}
+
 	/**
 	 * Returns the directory by segments
 	 *

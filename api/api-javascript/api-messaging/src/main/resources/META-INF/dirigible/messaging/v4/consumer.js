@@ -11,18 +11,18 @@
  */
 /**
  * API v4 Consumer
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
 exports.queue = function(destination) {
-	var queue = new Queue();
+	const queue = new Queue();
 	queue.destination = destination;
 	return queue;
 };
 
 exports.topic = function(destination) {
-	var topic = new Topic();
+	const topic = new Topic();
 	topic.destination = destination;
 	return topic;
 };

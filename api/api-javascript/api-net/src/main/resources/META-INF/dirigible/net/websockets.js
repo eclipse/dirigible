@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var websockets = require('net/v4/websockets');
-for(var propertyName in websockets) {
+const websockets = require('net/v4/websockets');
+for(const propertyName in websockets) {
 	exports[propertyName] = websockets[propertyName];
 }

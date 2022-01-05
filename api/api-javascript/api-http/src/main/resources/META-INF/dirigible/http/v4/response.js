@@ -11,7 +11,7 @@
  */
 /**
  * API v4 Response
- * 
+ *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
@@ -21,16 +21,16 @@ exports.isValid = function() {
 
 exports.print = function(text) {
 	text = (text && text.toString()) || "";
-	var out = this.getOutputStream().native;
-	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
+	const out = this.getOutputStream().native;
+	const writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
 	writer.flush();
 };
 
 exports.println = function(text) {
 	text = (text && text.toString()) || "";
-	var out = this.getOutputStream().native;
-	var writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
+	const out = this.getOutputStream().native;
+	const writer = new java.io.OutputStreamWriter(out, java.nio.charset.StandardCharsets.UTF_8);
 	writer.write(text);
 	writer.write("\n");
 	writer.flush();
@@ -69,11 +69,11 @@ exports.containsHeader = function(name) {
 exports.encodeURL = function(url) {
 	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeURL(url);
 };
-	
+
 exports.getCharacterEncoding = function() {
 	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getCharacterEncoding();
 };
-	
+
 exports.encodeRedirectURL = function(url) {
 	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.encodeRedirectURL(url);
 };
@@ -125,19 +125,15 @@ exports.getHeader = function(name) {
 exports.setLocale = function(language, country, variant) {
 	return org.eclipse.dirigible.api.v3.http.HttpResponseFacade.setLocale(language, country, variant);
 };
-	
+
 exports.getHeaders = function(name) {
-	var headersJson;
-	headersJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaders(name);
-	var headers = JSON.parse(headersJson);
-	return headers;
+	const headersJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaders(name);
+	return JSON.parse(headersJson);
 };
 
 exports.getHeaderNames = function() {
-	var headerNamesJson;
-	headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaderNames();
-	var headerNames = JSON.parse(headerNamesJson);
-	return headerNames;
+	const headerNamesJson = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getHeaderNames();
+	return JSON.parse(headerNamesJson);
 };
 
 exports.getLocale = function() {
@@ -145,10 +141,9 @@ exports.getLocale = function() {
 };
 
 exports.getOutputStream = function() {
-    var streams = require("io/v4/streams");
-    var outputStream = new streams.OutputStream();
-	var native = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getOutputStream();
-	outputStream.native = native;
+	const streams = require("io/v4/streams");
+	const outputStream = new streams.OutputStream();
+	outputStream.native = org.eclipse.dirigible.api.v3.http.HttpResponseFacade.getOutputStream();
 	return outputStream;
 };
 
@@ -360,50 +355,50 @@ exports.USE_PROXY = 305;
 /**
  * Mapping between HTTP response codes (string) and reason-pharses as defiend in rfc7231 section 6.1 (https://tools.ietf.org/html/rfc7231#section-6.1).
  * (See HttpCodesReasons.getReason for number based retrieval of reason-phrase for code)
- * 
+ *
  */
 var HttpCodesReasons = exports.HttpCodesReasons = {
-	"100": "Continue",	
+	"100": "Continue",
 	"101": "Switching Protocols",
-	"200": "OK",	
-	"201": "Created",	
+	"200": "OK",
+	"201": "Created",
 	"202": "Accepted",
-	"203": "Non-Authoritative Information",	
-	"204": "No Content",	
-	"205": "Reset Content",		
+	"203": "Non-Authoritative Information",
+	"204": "No Content",
+	"205": "Reset Content",
 	"206": "Partial Content",
-	"300": "Multiple Choices",			
+	"300": "Multiple Choices",
 	"301": "Moved Permanently",
-	"302": "Found",	
+	"302": "Found",
 	"303": "See Other",
-	"304": "Not Modified",	
-	"305": "Use Proxy",	
+	"304": "Not Modified",
+	"305": "Use Proxy",
 	"307": "Temporary Redirect",
 	"400": "Bad Request",
 	"401": "Unauthorized",
 	"402": "Payment Required",
 	"403": "Forbidden",
 	"404": "Not Found",
-	"405": "Method Not Allowed",	
-	"406": "Not Acceptable",		
+	"405": "Method Not Allowed",
+	"406": "Not Acceptable",
 	"407": "Proxy Authentication Required",
-	"408": "Request Timeout",			
+	"408": "Request Timeout",
 	"409": "Conflict",
-	"410": "Gone",	
-	"411": "Length Required",		
-	"412": "Precondition Failed",			
-	"413": "Payload Too Large",	
-	"414": "URI Too Large",	
-	"415": "Unsupported Media Type",		
+	"410": "Gone",
+	"411": "Length Required",
+	"412": "Precondition Failed",
+	"413": "Payload Too Large",
+	"414": "URI Too Large",
+	"415": "Unsupported Media Type",
 	"416": "Range Not Satisfiable",
 	"417": "Expectation Failed",
-	"426": "Upgrade Required",	
-	"500": "Internal Server Error",	
-	"501": "Not Implemented",		
-	"502": "Bad Gateway",		
-	"503": "Service Unavailable",			
+	"426": "Upgrade Required",
+	"500": "Internal Server Error",
+	"501": "Not Implemented",
+	"502": "Bad Gateway",
+	"503": "Service Unavailable",
 	"504": "Gateway Timmeout",
-	"505": "HTTP Version Not Supported"				
+	"505": "HTTP Version Not Supported"
 };
 
 /**

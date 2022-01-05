@@ -9,52 +9,53 @@
   ~ SAP - initial API and implementation
   -->
 
-<html>
+<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Eclipse Dirigible &trade; | Properties</title>
+        <title>Eclipse Dirigible &trade; | Properties</title>
 
-    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <style>
+            body {
+                margin: 5px;
+            }
 
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-</head>
+        </style>
 
-<body ng-app="properties" ng-controller="PropertiesController as propsVm">
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-    <style>
-        body {
-            margin: 5px;
-        }
-    </style>
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    </head>
 
-    <div class="striped-container">
-        <div class="row striped-item" ng-repeat="(key, value) in propsVm.properties">
-            <div class="key">{{key}}</div>
-            <div class="value">{{value}}</div>
+    <body ng-app="properties" ng-controller="PropertiesController as propsVm">
+
+        <div class="striped-container">
+            <div class="row striped-item" ng-repeat="(key, value) in propsVm.properties">
+                <div class="key">{{key}}</div>
+                <div class="value">{{value}}</div>
+            </div>
         </div>
-    </div>
 
-    <script>
-        angular.module('properties', [])
+        <script>
+            angular.module('properties', [])
             .factory('$messageHub', [function () {
                 let messageHub = new FramesMessageHub();
                 let message = function (evtName, data) {
@@ -80,7 +81,7 @@
                     $scope.$apply();
                 }.bind(this));
             }]);
-    </script>
-</body>
+        </script>
+    </body>
 
 </html>

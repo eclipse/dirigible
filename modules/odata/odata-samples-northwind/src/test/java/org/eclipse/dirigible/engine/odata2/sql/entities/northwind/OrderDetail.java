@@ -15,6 +15,8 @@ import org.apache.olingo.odata2.api.annotation.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.annotation.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.annotation.edm.EdmFacets;
 import org.apache.olingo.odata2.api.annotation.edm.EdmKey;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.annotation.edm.EdmNavigationProperty.Multiplicity;
 import org.apache.olingo.odata2.api.annotation.edm.EdmProperty;
 import org.apache.olingo.odata2.api.annotation.edm.EdmType;
 
@@ -38,4 +40,21 @@ public class OrderDetail {
 
     @EdmProperty(type = EdmType.SINGLE, facets = @EdmFacets(nullable = false))
     private Integer discount;
+
+    @EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.ONE, //
+			toType = Order.class, //
+			toRole = "Orders", //
+			association = "FK_Order_Details_Orders" //
+	)
+    private Order order;
+
+    @EdmNavigationProperty( //
+			toMultiplicity = Multiplicity.ONE, //
+			toType = Product.class, //
+			toRole = "Products", //
+			association = "FK_Order_Details_Products" //
+	)
+    private Product product;
+    
 }

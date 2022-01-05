@@ -12,11 +12,10 @@
 /**
  * API v4 OAuth
  */
-
-var httpClient = require("http/v4/client");
-var url = require("utils/v4/url");
-var base64 = require("utils/v4/base64");
-var bytes = require("io/v4/bytes");
+const httpClient = require("http/v4/client");
+const url = require("utils/v4/url");
+const base64 = require("utils/v4/base64");
+const bytes = require("io/v4/bytes");
 
 exports.getToken = function() {
     let request = org.eclipse.dirigible.api.v3.http.HttpRequestFacade.getRequest();

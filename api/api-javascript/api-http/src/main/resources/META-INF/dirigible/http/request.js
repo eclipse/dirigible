@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var request = require('http/v4/request');
-for(var propertyName in request) {
+const request = require('http/v4/request');
+for(const propertyName in request) {
 	exports[propertyName] = request[propertyName];
 }

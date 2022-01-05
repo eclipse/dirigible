@@ -11,17 +11,17 @@
  */
 exports.createWebsocket = function(uri, handler, engine) {
 	engine = !engine ? "javascript" : engine;
-	var session = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.createWebsocket(uri, handler, engine);
+	const session = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.createWebsocket(uri, handler, engine);
 	return new WebsocketClient(session, uri, handler, engine);
 };
 
 exports.getClients = function() {
-	var json = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClientsAsJson();
+	const json = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClientsAsJson();
 	return JSON.parse(json);
 };
 
 exports.getClient = function(id) {
-	var native = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClient(id);
+	const native = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClient(id);
 	if (native === null) {
 		return null;
 	}
@@ -29,7 +29,7 @@ exports.getClient = function(id) {
 };
 
 exports.getClientByHandler = function(handler) {
-	var native = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClientByHandler(handler);
+	const native = org.eclipse.dirigible.api.v4.websockets.WebsocketsFacade.getClientByHandler(handler);
 	if (native === null) {
 		return null;
 	}

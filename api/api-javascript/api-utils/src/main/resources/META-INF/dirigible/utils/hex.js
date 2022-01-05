@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var hex = require('utils/v4/hex');
-for(var propertyName in hex) {
+const hex = require('utils/v4/hex');
+for(const propertyName in hex) {
 	exports[propertyName] = hex[propertyName];
 }

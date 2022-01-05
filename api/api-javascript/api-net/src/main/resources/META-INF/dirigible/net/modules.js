@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getSoap = function() {
-	var soap = require('net/v4/soap');
+	const soap = require('net/v4/soap');
 	return soap;
 };
 

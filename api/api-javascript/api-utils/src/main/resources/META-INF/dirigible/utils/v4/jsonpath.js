@@ -86,7 +86,7 @@ function unshift (item, arr) {
  * @param {*} value The evaluated scalar value
  */
 var NewError = function (value) {
-    var error = Error.call(this, 'JSONPath should not be called with "new" (it prevents return of (unwrapped) scalar values)');
+    const error = Error.call(this, 'JSONPath should not be called with "new" (it prevents return of (unwrapped) scalar values)');
     this.message = error.message;
     this.stack = error.stack;
     this.avoidNew = true;

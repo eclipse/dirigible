@@ -9,24 +9,24 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var bytes = require("io/v4/bytes");
+const bytes = require("io/v4/bytes");
 
 exports.createWorkspace = function(name) {
-	var native = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.createWorkspace(name);
-	var workspace = new Workspace();
+	const native = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.createWorkspace(name);
+	const workspace = new Workspace();
 	workspace.native = native;
 	return workspace;
 };
 
 exports.getWorkspace = function(name) {
-	var native = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getWorkspace(name);
-	var workspace = new Workspace();
+	const native = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getWorkspace(name);
+	const workspace = new Workspace();
 	workspace.native = native;
 	return workspace;
 };
 
 exports.getWorkspacesNames = function() {
-	var workspacesNames = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getWorkspacesNames();
+	const workspacesNames = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getWorkspacesNames();
 	if (workspacesNames) {
 		return JSON.parse(workspacesNames);
 	}
@@ -43,22 +43,22 @@ exports.deleteWorkspace = function(name) {
 function Workspace() {
 
 	this.getProjects = function() {
-		var native = this.native.getProjects();
-		var projects = new Projects();
+		const native = this.native.getProjects();
+		const projects = new Projects();
 		projects.native = native;
 		return projects;
 	};
 
 	this.createProject = function(name) {
-		var native = this.native.createProject(name);
-		var project = new Project();
+		const native = this.native.createProject(name);
+		const project = new Project();
 		project.native = native;
 		return project;
 	};
 
 	this.getProject = function(name) {
-		var native = this.native.getProject(name);
-		var project = new Project();
+		const native = this.native.getProject(name);
+		const project = new Project();
 		project.native = native;
 		return project;
 	};
@@ -93,19 +93,18 @@ function Workspace() {
  * Projects object
  */
 function Projects() {
-	
+
 	this.size = function() {
-		var size = this.native.size();
-		return size;
+		return this.native.size();
 	};
-	
+
 	this.get = function(index) {
-		var native = this.native.get(index);
-		var project = new Project();
+		const native = this.native.get(index);
+		const project = new Project();
 		project.native = native;
 		return project;
 	};
-	
+
 }
 
 /**
@@ -114,20 +113,18 @@ function Projects() {
 function Project() {
 
 	this.getName = function() {
-		var collection = this.native.getInternal();
-		var name = collection.getName();
-		return name;
+		const collection = this.native.getInternal();
+		return collection.getName();
 	};
-	
+
 	this.getPath = function() {
-		var collection = this.native.getInternal();
-		var name = collection.getPath();
-		return name;
+		const collection = this.native.getInternal();
+		return collection.getPath();
 	};
-	
+
 	this.createFolder = function(path) {
-		var native = this.native.createFolder(path);
-		var folder = new Folder();
+		const native = this.native.createFolder(path);
+		const folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
@@ -139,92 +136,92 @@ function Project() {
 	this.existsFolder = function(path) {
 		return this.native.existsFolder(path);
 	};
-	
+
 	this.getFolder = function(path) {
-		var native = this.native.getFolder(path);
-		var folder = new Folder();
+		const native = this.native.getFolder(path);
+		const folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
-	
+
 	this.getFolders = function(path) {
-		var native = this.native.getFolders(path);
-		var folders = new Folders();
+		const native = this.native.getFolders(path);
+		const folders = new Folders();
 		folders.native = native;
 		return folders;
 	};
-	
+
 	this.deleteFolder = function(path) {
 		return this.native.deleteFolder(path);
 	};
-	
+
 	this.createFile = function(path, input) {
-		var native = this.native.createFile(path, input);
-		var file = new File();
+		const native = this.native.createFile(path, input);
+		const file = new File();
 		file.native = native;
 		return file;
 	};
-	
+
 	this.existsFile = function(path) {
 		return this.native.existsFile(path);
 	};
-	
+
 	this.getFile = function(path) {
-		var native = this.native.getFile(path);
-		var file = new File();
+		const native = this.native.getFile(path);
+		const file = new File();
 		file.native = native;
 		return file;
 	};
-	
+
 	this.getFiles = function(path) {
-		var native = this.native.getFiles(path);
-		var files = new Files();
+		const native = this.native.getFiles(path);
+		const files = new Files();
 		files.native = native;
 		return files;
 	};
-	
+
 	this.deleteFile = function(path) {
 		return this.native.deleteFile(path);
 	};
-	
+
 }
 
 /**
  * Folders object
  */
 function Folders() {
-	
+
 	this.size = function() {
-		var size = this.native.size();
+		const size = this.native.size();
 		return size;
 	};
-	
+
 	this.get = function(index) {
-		var native = this.native.get(index);
-		var folder = new Folder();
+		const native = this.native.get(index);
+		const folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
-	
+
 }
 
 /**
  * Files object
  */
 function Files() {
-	
+
 	this.size = function() {
-		var size = this.native.size();
+		const size = this.native.size();
 		return size;
 	};
-	
+
 	this.get = function(index) {
-		var native = this.native.get(index);
-		var folder = new File();
+		const native = this.native.get(index);
+		const folder = new File();
 		folder.native = native;
 		return folder;
 	};
-	
+
 }
 
 /**
@@ -233,20 +230,19 @@ function Files() {
 function Folder() {
 
 	this.getName = function() {
-		var collection = this.native.getInternal();
-		var name = collection.getName();
+		const collection = this.native.getInternal();
+		const name = collection.getName();
 		return name;
 	};
-	
+
 	this.getPath = function() {
-		var collection = this.native.getInternal();
-		var path = collection.getPath();
-		return path;
+		const collection = this.native.getInternal();
+		return collection.getPath();
 	};
-	
+
 	this.createFolder = function(path) {
-		var native = this.native.createFolder(path);
-		var folder = new Folder();
+		const native = this.native.createFolder(path);
+		const folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
@@ -258,54 +254,54 @@ function Folder() {
 	this.existsFolder = function(path) {
 		return this.native.existsFolder(path);
 	};
-	
+
 	this.getFolder = function(path) {
-		var native = this.native.getFolder(path);
-		var folder = new Folder();
+		const native = this.native.getFolder(path);
+		const folder = new Folder();
 		folder.native = native;
 		return folder;
 	};
-	
+
 	this.getFolders = function(path) {
-		var native = this.native.getFolders(path);
-		var folders = new Folders();
+		const native = this.native.getFolders(path);
+		const folders = new Folders();
 		folders.native = native;
 		return folders;
 	};
-	
+
 	this.deleteFolder = function(path) {
 		return this.native.deleteFolder(path);
 	};
-	
+
 	this.createFile = function(path, input) {
-		var native = this.native.createFile(path, input);
-		var file = new File();
+		const native = this.native.createFile(path, input);
+		const file = new File();
 		file.native = native;
 		return file;
 	};
-	
+
 	this.existsFile = function(path) {
 		return this.native.existsFile(path);
 	};
-	
+
 	this.getFile = function(path) {
-		var native = this.native.getFile(path);
-		var file = new File();
+		const native = this.native.getFile(path);
+		const file = new File();
 		file.native = native;
 		return file;
 	};
-	
+
 	this.getFiles = function(path) {
-		var native = this.native.getFiles(path);
-		var files = new Files();
+		const native = this.native.getFiles(path);
+		const files = new Files();
 		files.native = native;
 		return files;
 	};
-	
+
 	this.deleteFile = function(path) {
 		return this.native.deleteFile(path);
 	};
-	
+
 }
 
 /**
@@ -314,45 +310,43 @@ function Folder() {
 function File() {
 
 	this.getName = function() {
-		var collection = this.native.getInternal();
-		var name = collection.getName();
-		return name;
+		const collection = this.native.getInternal();
+		return collection.getName();
 	};
-	
+
 	this.getPath = function() {
-		var collection = this.native.getInternal();
-		var path = collection.getPath();
-		return path;
+		const collection = this.native.getInternal();
+		return collection.getPath();
 	};
-	
+
 	this.getContentType = function() {
 		return this.native.getContentType();
 	};
-	
+
 	this.isBinary = function() {
 		return this.native.isBinary();
 	};
-	
+
 	this.getContent = function() {
-		var output = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getContent(this.native);
-		if (output && output !== null) {
+		const output = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.getContent(this.native);
+		if (output) {
 			output;
 		}
 		return output;
 	};
 
 	this.getText = function() {
-		var bytesOutput = this.getContent();
+		const bytesOutput = this.getContent();
 		return bytes.byteArrayToText(bytesOutput);
 	};
 
 	this.setContent = function(input) {
-		var output = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.setContent(this.native, input);
+		const output = org.eclipse.dirigible.api.v3.platform.WorkspaceFacade.setContent(this.native, input);
 		return output;
 	};
 
 	this.setText = function(input) {
-		var bytesInput = bytes.textToByteArray(input);
+		const bytesInput = bytes.textToByteArray(input);
 		return this.setContent(bytesInput);
 	};
 

@@ -1,18 +1,23 @@
 <svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" width="2000" height="2000">
-	<title>dirigible-logo-2Kx2K-final</title>
+	<title>dirigible-logo-2Kx2K-svg</title>
+	<defs>
+		<image  width="1666" height="60" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABoIAAAA8AQMAAAB4uDr4AAAAAXNSR0IB2cksfwAAAANQTFRF/swEeAI/WwAAACNJREFUeJztwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAMCnATE4AAFkcoGEAAAAAElFTkSuQmCC"/>
+		<image  width="1666" height="60" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABoIAAAA8AQMAAAB4uDr4AAAAAXNSR0IB2cksfwAAAANQTFRF/swEeAI/WwAAACNJREFUeJztwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAMCnATE4AAFkcoGEAAAAAElFTkSuQmCC"/>
+		<image  width="1666" height="60" id="img3" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABoIAAAA8AQMAAAB4uDr4AAAAAXNSR0IB2cksfwAAAANQTFRF/swEeAI/WwAAACNJREFUeJztwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAMCnATE4AAFkcoGEAAAAAElFTkSuQmCC"/>
+	</defs>
 	<style>
 		tspan { white-space:pre }
-		.shp0 { fill: #fecc04 } 
-		.shp1 { fill: #000000 } 
+		.s0 { fill: #fecc04 } 
+		.s1 { fill: #000000 } 
 	</style>
-	<path id="Layer" class="shp0" d="M1000 2000C447 2000 0 1553 0 1000C0 447 447 0 1000 0C1553 0 2000 447 2000 1000C2000 1553 1553 2000 1000 2000Z" />
+	<path id="Layer" class="s0" d="m1000 2000c-553 0-1000-447-1000-1000c0-553 447-1000 1000-1000c553 0 1000 447 1000 1000c0 553-447 1000-1000 1000z" />
 	<g id="Layer_1">
-		<path id="Layer" class="shp1" d="M956.31 1452.37C555.76 1452.37 231.98 1242.32 231.98 982.46C231.98 722.6 555.76 512.55 956.31 512.55C1356.86 512.55 1680.64 722.6 1680.64 982.46C1680.64 1242.32 1356.86 1452.37 956.31 1452.37Z" />
-		<path id="Layer" class="shp1" d="M656.94 1402.86C659.3 1439.88 667.74 1493.47 699.05 1532.36C724.74 1564.27 755.36 1574.48 933.44 1573.49C1083.99 1572.65 1116.58 1565.18 1147.62 1532.36C1181.15 1496.9 1195.92 1449.78 1202.94 1418.68" />
-		<path id="Layer" class="shp1" d="M1361.66 621.78L1564.17 523.13L1730.32 572.46L1615.54 846.47" />
-		<path id="Layer copy" class="shp1" d="M1359.66 1337.82L1562.17 1436.47L1728.32 1387.14L1613.54 1113.13" />
-		<path id="Shape 5" class="shp0" d="M581 1099C514.64 1099 461 1045.36 461 979C461 912.64 514.64 859 581 859C647.36 859 701 912.64 701 979C701 1045.36 647.36 1099 581 1099Z" />
-		<path id="Shape 5 copy" class="shp0" d="M945 1099C878.64 1099 825 1045.36 825 979C825 912.64 878.64 859 945 859C1011.36 859 1065 912.64 1065 979C1065 1045.36 1011.36 1099 945 1099Z" />
-		<path id="Shape 5 copy 2" class="shp0" d="M1308 1099C1241.64 1099 1188 1045.36 1188 979C1188 912.64 1241.64 859 1308 859C1374.36 859 1428 912.64 1428 979C1428 1045.36 1374.36 1099 1308 1099Z" />
+		<path id="Layer" class="s1" d="m956.31 1452.37c-400.55 0-724.33-210.05-724.33-469.91c0-259.86 323.78-469.91 724.33-469.91c400.55 0 724.33 210.05 724.33 469.91c0 259.86-323.78 469.91-724.33 469.91z" />
+		<path id="Layer" class="s1" d="m1202.94 1418.68c-7.02 31.1-21.79 78.22-55.32 113.68c-31.04 32.82-63.63 40.29-214.18 41.13c-178.08 0.99-208.7-9.22-234.39-41.13c-31.31-38.89-39.75-92.48-42.11-129.5" />
+		<path id="Layer" class="s1" d="m1361.66 621.78l202.51-98.65l166.15 49.33l-114.78 274.01" />
+		<path id="Layer copy" class="s1" d="m1613.54 1113.13l114.78 274.01l-166.15 49.33l-202.51-98.65" />
+		<use id="Layer 1" href="#img1" x="123" y="836" />
+		<use id="Layer 2" href="#img2" x="119" y="952" />
+		<use id="Layer 3" href="#img3" x="120" y="1068" />
 	</g>
 </svg>

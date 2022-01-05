@@ -13,7 +13,7 @@ angular.module('preview', [])
     .factory('$messageHub', [function () {
         let messageHub = new FramesMessageHub();
         let message = function (evtName, data) {
-            messageHub.post({data: data}, evtName);
+            messageHub.post({ data: data }, evtName);
         };
         let on = function (topic, callback) {
             messageHub.subscribe(callback, topic);
@@ -103,6 +103,9 @@ angular.module('preview', [])
                     case 'command':
                         url += '/command';
                         break;
+                    case 'xsodata':
+                        url += '/web';
+                        break;
                     case 'edm':
                     case 'dsm':
                     case 'bpmn':
@@ -123,7 +126,6 @@ angular.module('preview', [])
                     case 'xsaccess':
                     case 'xsprivileges':
                     case 'xshttpdest':
-                    case 'xsodata':
                     case 'listener':
                     case 'extensionpoint':
                     case 'extension':
@@ -162,6 +164,4 @@ angular.module('preview', [])
             }
         };
 
-    }]).config(function ($sceProvider) {
-    $sceProvider.enabled(false);
-});
+    }]);
