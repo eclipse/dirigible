@@ -34,7 +34,9 @@ public class ThreadContextFacade {
 	private static final ThreadLocal<Map<String, AutoCloseable>> CLOSEABLES = new ThreadLocal<Map<String, AutoCloseable>>();
 
 	private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
-
+	
+	private static final ThreadLocal<Integer> STACK_ID = new ThreadLocal<Integer>();
+	
 	/**
 	 * Initializes the context. This has to be called at the very first (as possible) place at the service entry point
 	 *
@@ -48,6 +50,11 @@ public class ThreadContextFacade {
 		}
 		if (CLOSEABLES.get() == null || CLOSEABLES.get().size() == 0) {
 			CLOSEABLES.set(new HashMap<String, AutoCloseable>());
+		}
+		if (STACK_ID.get() == null) {
+			STACK_ID.set(0);
+		} else {
+			STACK_ID.set(STACK_ID.get() + 1);
 		}
 		logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
 	}
@@ -66,16 +73,23 @@ public class ThreadContextFacade {
 			PROXIES.remove();
 		}
 		if (CLOSEABLES.get() != null && CLOSEABLES.get().size() > 0) {
+			int stackId = STACK_ID.get();
 			for (Entry<String, AutoCloseable> closeable : CLOSEABLES.get().entrySet()) {
 				try {
-					logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
-					closeable.getValue().close();
+					String prefix = stackId + "_";
+					if (closeable.getKey().startsWith(prefix)) {
+						logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
+						closeable.getValue().close();
+					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
 			}
-			CLOSEABLES.get().clear();
-			CLOSEABLES.remove();
+			if (stackId == 0) {
+				CLOSEABLES.get().clear();
+				CLOSEABLES.remove();
+			}
+			STACK_ID.set(stackId - 1);
 		}
 		logger.trace("Scripting context {} has been torn down", Thread.currentThread().hashCode());
 	}
@@ -239,7 +253,7 @@ public class ThreadContextFacade {
 	 */
 	public static final void addCloseable(AutoCloseable closeable) {
 		if (CLOSEABLES.get() != null) {
-			CLOSEABLES.get().put(closeable.hashCode() + "", closeable);
+			CLOSEABLES.get().put(STACK_ID.get() + "_" + closeable.hashCode(), closeable);
 			logger.trace("Closeable object has been added to {} with hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
 		}
 	}
@@ -251,7 +265,7 @@ public class ThreadContextFacade {
 	 */
 	public static final void removeCloseable(AutoCloseable closeable) {
 		if (CLOSEABLES.get() != null) {
-			CLOSEABLES.get().remove(closeable.hashCode() + "");
+			CLOSEABLES.get().remove(STACK_ID.get() + "_" + closeable.hashCode());
 			logger.trace("Proxy object has been removes - hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
 		}
 	}
