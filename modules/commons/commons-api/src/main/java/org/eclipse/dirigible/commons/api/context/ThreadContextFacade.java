@@ -234,7 +234,6 @@ public class ThreadContextFacade {
 	 * Add a closeable object to the map
 	 * 
 	 * @param closeable the closeable object
-	 * @throws ContextException in case of an error
 	 */
 	public static final void addCloseable(AutoCloseable closeable) {
 		if (CLOSEABLES.get() != null) {
@@ -247,7 +246,6 @@ public class ThreadContextFacade {
 	 * Remove a closeable object.
 	 *
 	 * @param closeable the closeable object
-	 * @throws ContextException in case of an error
 	 */
 	public static final void removeCloseable(AutoCloseable closeable) {
 		if (CLOSEABLES.get() != null) {
