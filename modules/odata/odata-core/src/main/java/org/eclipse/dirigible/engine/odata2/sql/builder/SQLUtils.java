@@ -67,7 +67,7 @@ public final class SQLUtils {
     public static boolean setInteger(final PreparedStatement preparedStatement, int i, Object value) throws SQLException {
         try {
             Object checkedValue = (value == null ? 0 : value);
-            preparedStatement.setInt(i + 1, Integer.valueOf(checkedValue.toString()));
+            preparedStatement.setInt(i + 1, Integer.parseInt(checkedValue.toString()));
         } catch (NumberFormatException e) {
             return false;
         }
@@ -77,7 +77,7 @@ public final class SQLUtils {
     public static boolean setLong(final PreparedStatement preparedStatement, int i, Object value) throws SQLException {
         try {
             Object checkedValue = (value == null ? 0l : value);
-            preparedStatement.setLong(i + 1, Long.valueOf(checkedValue.toString()));
+            preparedStatement.setLong(i + 1, Long.parseLong(checkedValue.toString()));
             return true;
         } catch (NumberFormatException e) {
             return false;

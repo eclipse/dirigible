@@ -84,6 +84,9 @@ public class HttpClientResponse {
 	 * @return the data
 	 */
 	public byte[] getData() {
+		if (data == null) {
+			return null;
+		}
 		return data.clone();
 	}
 

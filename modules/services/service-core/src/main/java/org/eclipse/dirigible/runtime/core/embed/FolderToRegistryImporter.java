@@ -26,12 +26,11 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	
 	    private Path sourceDir;
-	    private Path targetDir = Paths.get("/");
+	    private Path targetDir = Paths.get(IRepositoryStructure.SEPARATOR);
 	    IRepository repository;
 	 
 	    public FolderToRegistryImporter(Path sourceDir, IRepository repository) {
 	        this.sourceDir = sourceDir;
-//	        this.targetDir = targetDir;
 	        this.repository = repository;
 	    }
 	 
@@ -40,7 +39,6 @@ public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	    	FileInputStream input = null;
 	        try {
 	            Path targetFile = targetDir.resolve(sourceDir.relativize(file));
-//	            Files.copy(file, targetFile);
 	            input = new FileInputStream(file.toFile());
 				byte[] bytes = IOUtils.toByteArray(input);
 	           // create the provided source code as module in the Dirigible's registry
@@ -64,13 +62,6 @@ public class FolderToRegistryImporter extends SimpleFileVisitor<Path> {
 	    @Override
 	    public FileVisitResult preVisitDirectory(Path dir,
 	            BasicFileAttributes attributes) {
-//	        try {
-//	            Path newDir = targetDir.resolve(sourceDir.relativize(dir));
-//	            Files.createDirectory(newDir);
-//	        } catch (IOException ex) {
-//	            System.err.println(ex);
-//	        }
-	 
 	        return FileVisitResult.CONTINUE;
 	    }
 }

@@ -11,29 +11,28 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
 
-import com.google.gson.Gson;
-import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
-import org.eclipse.dirigible.engine.api.script.Module;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
+import org.eclipse.dirigible.engine.api.script.Module;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+
+import com.google.gson.Gson;
+
 public class ExportGenerator {
 
     private final IScriptEngineExecutor executor;
-    private final String apiModuleJsonPath = "/extensions/modules.json";
+    private static final String apiModuleJsonPath = "/extensions/modules.json";
 
-    private final String NAME_PLACEHOLDER = "<name_placeholder>";
-    private final String PATH_PLACEHOLDER = "<path_placeholder>";
-    private final String NAMES_LIST_PLACEHOLDER = "<names_list_placeholder>";
+    private static final String NAME_PLACEHOLDER = "<name_placeholder>";
+    private static final String PATH_PLACEHOLDER = "<path_placeholder>";
+    private static final String NAMES_LIST_PLACEHOLDER = "<names_list_placeholder>";
 
-    private final String DEFAULT_EXPORT_PATTERN = "export default { " + NAMES_LIST_PLACEHOLDER + " }";
-    private final String EXPORT_PATTERN =
+    private static final String DEFAULT_EXPORT_PATTERN = "export default { " + NAMES_LIST_PLACEHOLDER + " }";
+    private static final String EXPORT_PATTERN =
             "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
 
 

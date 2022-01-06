@@ -74,6 +74,9 @@ public class DirigibleCallDelegate implements JavaDelegate {
 			if (type == null) {
 				type = new FixedValue(IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT);
 			}
+			if (handler == null) {
+				throw new BpmnError("Handler cannot be null at the call delegate.");
+			}
 			ScriptEngineExecutorsManager.executeServiceModule(this.type.getExpressionText(), this.handler.getExpressionText(), context);
 		} catch (ScriptingException e) {
 			throw new BpmnError(e.getMessage());

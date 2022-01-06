@@ -1703,6 +1703,51 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     public TABLE_BUILDER columnBit(String name) {
         return columnBit(name, false, new String[]{});
     }
+    
+    /**
+     * Column varbinary.
+     *
+     * @param name       the name
+     * @param isNullable the is nullable
+     * @param args       the args
+     * @return the creates the table builder
+     */
+    public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable, String... args) {
+        return this.column(name, DataType.VARBINARY, false, isNullable, false, args);
+    }
+
+    /**
+     * Column varbinary.
+     *
+     * @param name       the name
+     * @param isNullable the is nullable
+     * @param args       the args
+     * @return the creates the table builder
+     */
+    public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable, String args) {
+        return columnBlob(name, isNullable, splitValues(args));
+    }
+
+    /**
+     * Column varbinary.
+     *
+     * @param name       the name
+     * @param isNullable the is nullable
+     * @return the creates the table builder
+     */
+    public TABLE_BUILDER columnVarbinary(String name, Boolean isNullable) {
+        return columnBlob(name, isNullable, new String[]{});
+    }
+
+    /**
+     * Column varbinary.
+     *
+     * @param name the name
+     * @return the creates the table builder
+     */
+    public TABLE_BUILDER columnVarbinary(String name) {
+        return columnBlob(name, false, new String[]{});
+    }
 
     /**
      * Generate table.

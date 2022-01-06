@@ -23,9 +23,9 @@ import java.sql.SQLException;
 
 public abstract class AbstractPublisherHandler implements IPublisherHandler {
 
-    protected final String REGISTRY_PUBLIC = "/registry/public/";
+    protected static final String REGISTRY_PUBLIC = IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR;
 
-    private final String PERCENT = "%";
+    private static final String PERCENT = "%";
 
     private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 

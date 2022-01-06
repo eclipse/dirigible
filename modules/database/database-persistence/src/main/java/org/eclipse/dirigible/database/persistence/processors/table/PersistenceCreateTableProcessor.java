@@ -120,6 +120,11 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 				case BIT:
 					createTableBuilder.columnBit(columnModel.getName(), columnModel.isNullable());
 					break;
+				case VARBINARY:
+					createTableBuilder.columnVarbinary(columnModel.getName(), columnModel.isNullable());
+					break;
+				default:
+					throw new PersistenceException("Unknown data type: " + dataType);
 			}
 		}
 

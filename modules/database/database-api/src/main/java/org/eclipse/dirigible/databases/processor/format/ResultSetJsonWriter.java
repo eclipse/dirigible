@@ -55,7 +55,7 @@ public class ResultSetJsonWriter implements ResultSetWriter<String> {
 	@Override
 	public String write(ResultSet resultSet) throws SQLException {
 
-		StringBuilder tableSb = new StringBuilder();
+//		StringBuilder tableSb = new StringBuilder();
 
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
@@ -72,7 +72,7 @@ public class ResultSetJsonWriter implements ResultSetWriter<String> {
 			records.add(record);
 
 			if (this.isLimited() && (++count > LIMIT)) {
-				tableSb.append("..."); //$NON-NLS-1$
+//				tableSb.append("..."); //$NON-NLS-1$
 				break;
 			}
 		}

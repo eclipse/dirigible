@@ -530,27 +530,27 @@ public class DatabaseFacade implements IScriptingFacade {
 								Integer value = valueElement.getAsJsonPrimitive().getAsInt();
 								preparedStatement.setInt(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Integer value = new Integer(Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString()));
+								Integer value = Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setInt(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type INTEGER");
 							}
 						} else if (DataTypeUtils.isTinyint(dataType)) {
 							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								byte value = new Integer(valueElement.getAsJsonPrimitive().getAsInt()).byteValue();
+								byte value = (byte) valueElement.getAsJsonPrimitive().getAsInt();
 								preparedStatement.setByte(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								byte value = new Integer(Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString())).byteValue();
+								byte value = (byte) Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setByte(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type TINYINT");
 							}
 						} else if (DataTypeUtils.isSmallint(dataType)) {
 							if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isNumber()) {
-								short value = new Integer(valueElement.getAsJsonPrimitive().getAsInt()).shortValue();
+								short value = (short) valueElement.getAsJsonPrimitive().getAsInt();
 								preparedStatement.setShort(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								short value = new Integer(Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString())).shortValue();
+								short value = (short) Integer.parseInt(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setShort(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type SHORT");
@@ -560,7 +560,7 @@ public class DatabaseFacade implements IScriptingFacade {
 								Long value = valueElement.getAsJsonPrimitive().getAsBigInteger().longValue();
 								preparedStatement.setLong(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Long value = new Long(Long.parseLong(valueElement.getAsJsonPrimitive().getAsString()));
+								Long value = Long.parseLong(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setLong(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type LONG");
@@ -570,7 +570,7 @@ public class DatabaseFacade implements IScriptingFacade {
 								Float value = valueElement.getAsJsonPrimitive().getAsNumber().floatValue();
 								preparedStatement.setFloat(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Float value = new Float(Float.parseFloat(valueElement.getAsJsonPrimitive().getAsString()));
+								Float value = Float.parseFloat(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setFloat(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type REAL");
@@ -580,7 +580,7 @@ public class DatabaseFacade implements IScriptingFacade {
 								Double value = valueElement.getAsJsonPrimitive().getAsNumber().doubleValue();
 								preparedStatement.setDouble(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Double value = new Double(Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString()));
+								Double value = Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setDouble(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type DOUBLE");
@@ -590,7 +590,7 @@ public class DatabaseFacade implements IScriptingFacade {
 								Double value = valueElement.getAsJsonPrimitive().getAsNumber().doubleValue();
 								preparedStatement.setDouble(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Double value = new Double(Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString()));
+								Double value = Double.parseDouble(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setDouble(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type DECIMAL");
@@ -600,7 +600,7 @@ public class DatabaseFacade implements IScriptingFacade {
 								Boolean value = valueElement.getAsJsonPrimitive().getAsBoolean();
 								preparedStatement.setBoolean(i++, value);
 							} else if (valueElement.isJsonPrimitive() && valueElement.getAsJsonPrimitive().isString()) {
-								Boolean value = new Boolean(Boolean.parseBoolean(valueElement.getAsJsonPrimitive().getAsString()));
+								Boolean value = Boolean.parseBoolean(valueElement.getAsJsonPrimitive().getAsString());
 								preparedStatement.setBoolean(i++, value);
 							} else {
 								throw new IllegalArgumentException("Wrong value of the parameter of type BOOLEAN");
