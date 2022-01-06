@@ -704,7 +704,7 @@
 		<flowable.version>6.3.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
-		<license-maven-plugin.version>4.0.rc2</license-maven-plugin.version>
+		<license-maven-plugin.version>4.2.rc1</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>5.5.0.201909110433-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
