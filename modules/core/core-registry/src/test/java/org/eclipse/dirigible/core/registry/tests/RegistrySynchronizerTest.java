@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 
-	private static final String DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER = System.getProperty("user.dir") + "/target";
+	private static final String DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER = System.getProperty("user.dir") + "/target";
 
 	/** The synchronizer. */
 	private RegistrySynchronizer synchronizer;
@@ -43,7 +43,7 @@ public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 		this.synchronizer = new RegistrySynchronizer();
 		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
-		System.setProperty("DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER", DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER);
+		System.setProperty("DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER", DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER);
 		Configuration.update();
 	}
 
@@ -54,7 +54,7 @@ public class RegistrySynchronizerTest extends AbstractDirigibleTest {
 		synchronizer.synchronize();
 		
 		byte[] fileContent = FileSystemUtils.loadFile(
-				DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER
+				DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER
 				+ IRepositoryStructure.PATH_REGISTRY_PUBLIC
 				+ "/user1/workspace1/project1/folder1/file.txt");
 

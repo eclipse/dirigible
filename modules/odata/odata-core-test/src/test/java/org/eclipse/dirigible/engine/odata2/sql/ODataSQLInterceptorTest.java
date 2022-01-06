@@ -50,7 +50,10 @@ import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
 import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
 import org.junit.Test;
 
-public class ODataSQLInterceptorTest extends AbstractSQLPropcessorTest {
+import liquibase.resource.AbstractResourceAccessor;
+import liquibase.resource.ClassLoaderResourceAccessor;
+
+public class ODataSQLInterceptorTest extends AbstractSQLProcessorTest {
 
 	@Override
 	protected Class<?>[] getODataEntities() {

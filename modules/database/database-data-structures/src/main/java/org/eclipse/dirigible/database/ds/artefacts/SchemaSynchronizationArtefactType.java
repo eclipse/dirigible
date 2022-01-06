@@ -32,7 +32,7 @@ public class SchemaSynchronizationArtefactType extends AbstractSynchronizationAr
 		case SUCCESSFUL_CREATE:
 			return "Processing for create database schema layout was successful";
 		case SUCCESSFUL_CREATE_UPDATE:
-			return "Processing Create or update table was successful";
+			return "Processing Create or update database schema layout was successful";
 		case SUCCESSFUL_UPDATE:
 			return "Processing for update database schema layout was successful";
 		default:

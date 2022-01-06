@@ -13,6 +13,7 @@ package org.eclipse.dirigible.commons.api.context;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
@@ -29,6 +30,8 @@ public class ThreadContextFacade {
 	private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<Map<String, Object>>();
 
 	private static final ThreadLocal<Map<String, Object>> PROXIES = new ThreadLocal<Map<String, Object>>();
+	
+	private static final ThreadLocal<Map<String, AutoCloseable>> CLOSEABLES = new ThreadLocal<Map<String, AutoCloseable>>();
 
 	private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
 
@@ -45,6 +48,9 @@ public class ThreadContextFacade {
 		if (PROXIES.get() == null || PROXIES.get().size() == 0) {
 			PROXIES.set(new HashMap<String, Object>());
 		}
+		if (CLOSEABLES.get() == null || CLOSEABLES.get().size() == 0) {
+			CLOSEABLES.set(new HashMap<String, AutoCloseable>());
+		}
 		logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
 	}
 
@@ -59,7 +65,17 @@ public class ThreadContextFacade {
 		CONTEXT.remove();
 		PROXIES.get().clear();
 		PROXIES.remove();
-		logger.trace("Scripting context {} has been torn up", Thread.currentThread().hashCode());
+		for (Entry<String, AutoCloseable> closeable : CLOSEABLES.get().entrySet()) {
+			try {
+				logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
+				closeable.getValue().close();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
+		CLOSEABLES.get().clear();
+		CLOSEABLES.remove();
+		logger.trace("Scripting context {} has been torn down", Thread.currentThread().hashCode());
 	}
 
 	/**
@@ -212,5 +228,29 @@ public class ThreadContextFacade {
 		checkContext();
 		PROXIES.get().remove(key);
 		logger.trace("Proxy object has been removes - key {}", Thread.currentThread().hashCode(), key);
+	}
+	
+	/**
+	 * Add a closeable object to the map
+	 * 
+	 * @param closeable the closeable object
+	 */
+	public static final void addCloseable(AutoCloseable closeable) {
+		if (CLOSEABLES.get() != null) {
+			CLOSEABLES.get().put(closeable.hashCode() + "", closeable);
+			logger.trace("Closeable object has been added to {} with hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
+		}
+	}
+	
+	/**
+	 * Remove a closeable object.
+	 *
+	 * @param closeable the closeable object
+	 */
+	public static final void removeCloseable(AutoCloseable closeable) {
+		if (CLOSEABLES.get() != null) {
+			CLOSEABLES.get().remove(closeable.hashCode() + "");
+			logger.trace("Proxy object has been removes - hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
+		}
 	}
 }

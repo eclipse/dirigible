@@ -11,45 +11,51 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-        <title>Eclipse Dirigible - Git</title>
+    <title>Eclipse Dirigible - Git</title>
 
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
 
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+    <!-- jQuery -->
+    <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
+    <!-- AngularJS -->
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
 
-        <!-- jsTree -->
-        <link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
-        <script type="text/javascript" src="/webjars/jstree/3.3.5/jstree.min.js"></script>
+    <!-- jsTree -->
+    <link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
+    <script type="text/javascript" src="/webjars/jstree/3.3.5/jstree.min.js"></script>
 
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <!-- Custom IDE Styles -->
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-        <script type="text/javascript" src="staging.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
 
-    </head>
+    <script type="text/javascript" src="staging.js"></script>
 
-    <body ng-app="stagingApp" ng-controller="StagingContoller as staging">
+</head>
+
+
+<body ng-app="stagingApp" ng-controller="StagingContoller as staging">
+    <div>
+        <div class="loading-overview">
+            <div class="loading-message">Loading...</div>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="revertModal" tabindex="-1" role="dialog" aria-labelledby="revertModalLabel">
             <div class="modal-dialog" role="document">
@@ -139,20 +145,23 @@
                             <!-- <label class="col-sm-2 col-form-label">Committer:</label>
 						<input class="col-sm-6 form-control" type="text" placeholder="" ng-model="committer" required="required"> -->
                         </div>
-                        <div>
-                            <div class="btn-group pull-right" role="group" style="padding: 1em;">
-                                <button type="button" class="btn btn-default btn-top"
-                                    ng-click="okCommitAndPushClicked()"><i class="fa fa-upload"></i> Commit &
-                                    Push</button>
-                                <button type="button" class="btn btn-default btn-top" ng-click="okCommitClicked()"><i
-                                        class="fa fa-pencil"></i> Commit</button>
-                            </div>
+
+
+
+
+                        <div class="btn-group pull-right" role="group" style="padding: 1em;">
+                            <button type="button" class="btn btn-default btn-top" ng-click="okCommitAndPushClicked()"><i
+                                    class="fa fa-upload"></i> Commit &
+                                Push</button>
+                            <button type="button" class="btn btn-default btn-top" ng-click="okCommitClicked()"><i
+                                    class="fa fa-pencil"></i> Commit</button>
                         </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
+    </div>
 
-    </body>
+</body>
 
 </html>

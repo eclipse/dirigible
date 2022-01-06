@@ -8,5 +8,8 @@
 	"Description": "DESCRIPTION",
 	"Picture": "PICTURE",
 
-	"_pk_": "CATEGORY_ID"
+	"_pk_": "CATEGORY_ID",
+	"_ref_Product" : {
+		"joinColumn" :["CATEGORY_ID"]
+	}
 }

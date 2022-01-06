@@ -40,6 +40,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import liquibase.resource.AbstractResourceAccessor;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 /**
@@ -187,10 +188,10 @@ public class OData2TestUtils {
      * @param ds data source
      * @throws SQLException in case of error
      */
-    public static void initLiquibase(DataSource ds) throws SQLException {
+    public static void initLiquibase(DataSource ds, AbstractResourceAccessor resourceAccessor) throws SQLException {
         try (Connection connection = ds.getConnection()) {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            Liquibase liquibase = new liquibase.Liquibase("liquibase/changelog.xml", new ClassLoaderResourceAccessor(), database);
+            Liquibase liquibase = new liquibase.Liquibase("liquibase/changelog.xml", resourceAccessor, database);
             liquibase.update(new Contexts(), new LabelExpression());
         } catch (DatabaseException e) {
             throw new SQLException("Unable to initilize liquibase", e);
@@ -198,6 +199,5 @@ public class OData2TestUtils {
             throw new SQLException("Unable to load the liquibase resources", e);
         }
     }
-    
-    
+
 }

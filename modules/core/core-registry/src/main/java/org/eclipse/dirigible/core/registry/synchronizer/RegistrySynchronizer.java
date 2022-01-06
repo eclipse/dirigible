@@ -34,8 +34,8 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegistrySynchronizer.class);
 
-	/** The Constant DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER. */
-	public static final String DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER = "DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER"; //$NON-NLS-1$
+	/** The Constant DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER. */
+	public static final String DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER = "DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER"; //$NON-NLS-1$
 
 	private Map<String, String> resourceLocations = Collections.synchronizedMap(new HashMap<String, String>());
 	private Map<String, Boolean> targetLocations = Collections.synchronizedMap(new HashMap<String, Boolean>());
@@ -48,7 +48,7 @@ public class RegistrySynchronizer extends AbstractSynchronizer {
 	public void synchronize() {
 		synchronized(RegistrySynchronizer.class) {
 			try {
-				rootFolder = Configuration.get(DIRIGIBLE_REGISTRY_SYNCH_ROOT_FOLDER);
+				rootFolder = Configuration.get(DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER);
 				if (rootFolder != null) {
 					logger.trace("Synchronizing registry.");
 					synchronizeRegistry();
