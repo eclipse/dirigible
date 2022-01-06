@@ -693,7 +693,7 @@
 		<okhttp.version>2.7.5</okhttp.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.2.10</logback.version>
 		<h2database.version>1.4.200</h2database.version>
 		<derby.version>10.12.1.1</derby.version>
 		<activemq.version>5.16.0</activemq.version>
