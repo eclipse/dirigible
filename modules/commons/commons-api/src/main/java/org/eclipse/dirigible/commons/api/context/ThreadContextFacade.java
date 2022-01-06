@@ -266,7 +266,7 @@ public class ThreadContextFacade {
 	public static final void removeCloseable(AutoCloseable closeable) {
 		if (CLOSEABLES.get() != null) {
 			CLOSEABLES.get().remove(STACK_ID.get() + "_" + closeable.hashCode());
-			logger.trace("Proxy object has been removes - hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
+			logger.trace("Closeable object has been removes - hash {}", Thread.currentThread().hashCode(), closeable.hashCode());
 		}
 	}
 }
