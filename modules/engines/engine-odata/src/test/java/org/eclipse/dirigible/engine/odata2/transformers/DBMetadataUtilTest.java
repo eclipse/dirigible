@@ -39,7 +39,7 @@ public class DBMetadataUtilTest {
     public static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
     public static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
 
-    public static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
+    private static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
 
     static {
         SQL_TO_EDM_TYPE_MAP.put("TIME", "Edm.Time");

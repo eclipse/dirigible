@@ -48,8 +48,7 @@ public class DatabaseMetadataUtil {
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
-    public static final Map<String, String> sqlToOdataEdmColumnTypes = new HashMap<>();
-
+    
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }

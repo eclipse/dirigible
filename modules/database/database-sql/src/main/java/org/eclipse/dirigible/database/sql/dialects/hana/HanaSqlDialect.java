@@ -44,12 +44,13 @@ public class HanaSqlDialect extends
         } else {
             sql = "ALTER SEQUENCE \"" + sequence + "\"";
         }
-        PreparedStatement statement = connection.prepareStatement(sql);
-        try {
-            statement.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            return false;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	        try {
+	            statement.executeUpdate();
+	            return true;
+	        } catch (Exception e) {
+	            return false;
+	        }
         }
     }
 
@@ -84,16 +85,18 @@ public class HanaSqlDialect extends
         } else {
             sql = "SELECT IS_USER_DEFINED_TYPE FROM SYS.\"" + "TABLES" + "\" WHERE TABLE_NAME LIKE '" + tableType + "' AND IS_USER_DEFINED_TYPE LIKE " + "'TRUE'";
         }
-        PreparedStatement statement = connection.prepareStatement(sql);
-        String value = null;
-        try {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                value = resultSet.getString(1);
-            }
-            return value.equals("TRUE");
-        } catch (Exception e) {
-            return false;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	        String value = null;
+	        try {
+	            try (ResultSet resultSet = statement.executeQuery()) {
+		            while (resultSet.next()) {
+		                value = resultSet.getString(1);
+		            }
+		            return value.equals("TRUE");
+	            }
+	        } catch (Exception e) {
+	            return false;
+	        }
         }
     }
 

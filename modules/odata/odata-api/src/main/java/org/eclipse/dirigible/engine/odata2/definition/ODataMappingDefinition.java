@@ -129,7 +129,7 @@ public class ODataMappingDefinition {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((content == null) ? 0 : content.hashCode());
+		result = (prime * result) + ((content == null) ? 0 : java.util.Arrays.hashCode(content));
 		result = (prime * result) + ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
@@ -154,7 +154,7 @@ public class ODataMappingDefinition {
 			if (other.content != null) {
 				return false;
 			}
-		} else if (!content.equals(other.content)) {
+		} else if (!java.util.Arrays.equals(content, other.content)) {
 			return false;
 		}
 		if (location == null) {

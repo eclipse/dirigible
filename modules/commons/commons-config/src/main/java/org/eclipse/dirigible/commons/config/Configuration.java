@@ -351,7 +351,7 @@ public class Configuration {
 		return new HashMap<String, String>(MODULE_VARIABLES);
 	}
 	
-	public static final String[] CONFIGURATION_PARAMETERS = new String[] {
+	private static final String[] CONFIGURATION_PARAMETERS = new String[] {
 			"DIRIGIBLE_ANONYMOUS_USER_NAME_PROPERTY_NAME",
 			"DIRIGIBLE_BRANDING_NAME",
 			"DIRIGIBLE_BRANDING_BRAND",
@@ -481,6 +481,10 @@ public class Configuration {
 
 	public static boolean isOSSolaris() {
 		return (getOS().indexOf("sunos") >= 0);
+	}
+	
+	public static String[] getConfigurationParameters() {
+		return CONFIGURATION_PARAMETERS.clone();
 	}
 
 }

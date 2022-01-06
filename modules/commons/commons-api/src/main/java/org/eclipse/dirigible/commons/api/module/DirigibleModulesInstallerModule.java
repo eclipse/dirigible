@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class DirigibleModulesInstallerModule {
 	}
 	
 	public static Set<String> getModules() {
-		return modules;
+		return modules.stream().collect(Collectors.toSet());
 	}
 
 }

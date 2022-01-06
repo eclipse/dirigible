@@ -11,19 +11,20 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.table.CreateTablePrimaryKeyBuilder;
-import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.SqlException;
+import org.eclipse.dirigible.database.sql.builders.table.CreateTablePrimaryKeyBuilder;
+import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableTypeBuilder.class);
@@ -173,6 +174,11 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
     public CreateTableTypeBuilder column(String name, DataType type, Boolean isPrimaryKey, Boolean isNullable, String args) {
         logger.trace("column: " + name + ", type: " + (type != null ? type.name() : null) + ", isPrimaryKey: " + isPrimaryKey + ", isNullable: "
                 + isNullable + OPEN + args + CLOSE );
+        
+        if (type == null) {
+        	throw new SqlException("The type of the column cannot be null.");
+        }
+        
         String[] definition;
 
         if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)

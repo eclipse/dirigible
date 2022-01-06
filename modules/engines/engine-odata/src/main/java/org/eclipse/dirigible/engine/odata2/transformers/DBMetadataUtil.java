@@ -46,7 +46,8 @@ public class DBMetadataUtil {
     public static final String JDBC_PK_TABLE_NAME_PROPERTY = "PKTABLE_NAME";
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
-    public static final Map<String, String> SQL_TO_ODATA_EDM_TYPES = new HashMap<>();
+    
+    private static final Map<String, String> SQL_TO_ODATA_EDM_TYPES = new HashMap<>();
 
     static {
         SQL_TO_ODATA_EDM_TYPES.put("TIME", "Edm.Time");

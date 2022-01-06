@@ -56,7 +56,7 @@ public class ConfigurationsRestService implements IRestService {
 		Map<String, String> moduleVariables = Configuration.getModuleVariables();
 		
 		List<List<String>> result = new ArrayList<List<String>>();
-		for (String parameter : Configuration.CONFIGURATION_PARAMETERS) {
+		for (String parameter : Configuration.getConfigurationParameters()) {
 			List<String> row = new ArrayList<String>();
 			row.add(parameter);
 			row.add(runtimeVariables.get(parameter));

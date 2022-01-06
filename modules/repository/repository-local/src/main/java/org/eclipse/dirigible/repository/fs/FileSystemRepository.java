@@ -618,7 +618,7 @@ public abstract class FileSystemRepository implements IRepository {
 				list.forEach(item -> {
 						String truncated = item.substring(repositoryRootLength);
 						if (!IRepository.SEPARATOR.equals(File.separator)) {
-							truncated.replace(File.separator, IRepository.SEPARATOR);
+							truncated = truncated.replace(File.separator, IRepository.SEPARATOR);
 						}
 						prepared.add(truncated);
 					});
