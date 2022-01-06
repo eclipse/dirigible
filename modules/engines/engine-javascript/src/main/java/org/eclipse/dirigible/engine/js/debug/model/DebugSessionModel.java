@@ -104,7 +104,7 @@ public class DebugSessionModel {
 	}
 	
 	public DebugSessionMetadata getMetadata() {
-		DebugSessionMetadata metadata = new DebugSessionMetadata(this.getSessionId(), this.getExecutionId(), this.getUserId(), this.getExecutionId() == this.model.getActiveSession().getExecutionId());
+		DebugSessionMetadata metadata = new DebugSessionMetadata(this.getSessionId(), this.getExecutionId(), this.getUserId(), this.getExecutionId().equals(this.model.getActiveSession().getExecutionId()));
 		return  metadata;
 	}
 	
