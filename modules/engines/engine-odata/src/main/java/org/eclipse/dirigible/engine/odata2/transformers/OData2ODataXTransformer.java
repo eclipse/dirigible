@@ -12,10 +12,10 @@
 package org.eclipse.dirigible.engine.odata2.transformers;
 
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.engine.odata2.api.ITableMetadataProvider;
 import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
@@ -23,12 +23,7 @@ import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,9 +35,9 @@ public class OData2ODataXTransformer {
 
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
-    private TableMetadataProvider tableMetadataProvider;
+    private ITableMetadataProvider tableMetadataProvider;
 
-    public OData2ODataXTransformer(TableMetadataProvider tableMetadataProvider) {
+    public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider) {
         this.tableMetadataProvider = tableMetadataProvider;
     }
 
@@ -56,7 +51,7 @@ public class OData2ODataXTransformer {
         StringBuilder entitySets = new StringBuilder();
         StringBuilder associationsSets = new StringBuilder();
         for (ODataEntityDefinition entity : model.getEntities()) {
-            PersistenceTableModel tableMetadata = tableMetadataProvider.getPersistenceTableModel(entity, buff);
+            PersistenceTableModel tableMetadata = tableMetadataProvider.getPersistenceTableModel(entity);
 
             if (tableMetadata == null) {
                 continue;

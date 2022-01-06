@@ -27,7 +27,7 @@ import org.eclipse.dirigible.engine.odata2.service.ODataCoreService;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataHTransformer;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataMTransformer;
 import org.eclipse.dirigible.engine.odata2.transformers.OData2ODataXTransformer;
-import org.eclipse.dirigible.engine.odata2.transformers.TableMetadataProvider;
+import org.eclipse.dirigible.engine.odata2.transformers.DefaultTableMetadataProvider;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -72,7 +72,7 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 	
 	private OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer();
 
-	private OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer(new TableMetadataProvider());
+	private OData2ODataXTransformer odata2ODataXTransformer = new OData2ODataXTransformer(new DefaultTableMetadataProvider());
 	
 	private OData2ODataHTransformer odata2ODataHTransformer = new OData2ODataHTransformer();
 	
