@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,7 @@ public class WrappedConnection implements Connection {
 		this.originalConnection = originalConnection;
 		this.timeAcquired = GregorianCalendar.getInstance().getTime().getTime();
 		this.dataSource = dataSource;
+		ThreadContextFacade.addCloseable(this);
 	}
 
 	/**
@@ -108,6 +110,7 @@ public class WrappedConnection implements Connection {
 		}
 		originalConnection.close();
 		dataSource.closedConnection(this);
+		ThreadContextFacade.removeCloseable(this);
 		logger.trace("exiting - close()");
 	}
 
