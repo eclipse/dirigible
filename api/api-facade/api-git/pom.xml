@@ -44,8 +44,14 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-core</artifactId>
+            <artifactId>dirigible-core-git</artifactId>
             <version>6.1.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-test</artifactId>
+            <version>6.1.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
