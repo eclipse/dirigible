@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.security.api.AccessException;
 import org.eclipse.dirigible.core.security.api.ISecurityCoreService;
 import org.eclipse.dirigible.core.security.definition.AccessDefinition;
@@ -83,19 +82,24 @@ public class OAuthFilter extends AbstractOAuthFilter {
 				return;
 			}
 		}
-
+		
 		try {
-			ThreadContextFacade.setUp();
-			ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
-			ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
-
-			if (jwt != null) {
-				UserFacade.setName(JwtUtils.getClaim(jwt).getUserName());
+			try {
+				ThreadContextFacade.setUp();
+				ThreadContextFacade.set(HttpServletRequest.class.getCanonicalName(), request);
+				ThreadContextFacade.set(HttpServletResponse.class.getCanonicalName(), response);
+		
+				if (jwt != null) {
+					UserFacade.setName(JwtUtils.getClaim(jwt).getUserName());
+				}
+				
+				chain.doFilter(request, response);
+			} finally {
+				ThreadContextFacade.tearDown();
 			}
 		} catch (ContextException e) {
 			logger.info("Error while setting userName from XSUAA Filter.", e);
 		}
-		chain.doFilter(request, response);
 	}
 
 	private boolean isPublicEnabledAccess(ServletRequest servletRequest) {

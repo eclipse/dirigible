@@ -16,6 +16,7 @@ import static java.text.MessageFormat.format;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 
@@ -40,17 +41,37 @@ public class ScriptEngineExecutorsManager {
 	public static Object executeServiceModule(String engineType, String module, Map<Object, Object> executionContext) throws ScriptingException {
 		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
 		if (scriptEngineExecutor != null) {
-			return scriptEngineExecutor.executeServiceModule(module, executionContext);
+			try {
+				ThreadContextFacade.setUp();
+				
+				return scriptEngineExecutor.executeServiceModule(module, executionContext);
+			} finally {
+				ThreadContextFacade.tearDown();
+			}
 		}
 
 		throw new ScriptingException(
 				format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
 	}
 
+	/**
+	 * Evaluate a code snippet
+	 * 
+	 * @param code the code snippet
+	 * @param executionContext the execution context 
+	 * @return the result object
+	 * @throws ScriptingException in case of exception
+	 */
 	public static Object evalModule(String code, Map<Object, Object> executionContext) throws ScriptingException {
 		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor("javascript");
 		if (scriptEngineExecutor != null) {
-			return scriptEngineExecutor.evalModule(code, executionContext);
+			try {
+				ThreadContextFacade.setUp();
+				
+				return scriptEngineExecutor.evalModule(code, executionContext);
+			} finally {
+				ThreadContextFacade.tearDown();
+			}
 		}
 
 		throw new ScriptingException(
@@ -73,7 +94,13 @@ public class ScriptEngineExecutorsManager {
 	public static Object executeServiceCode(String engineType, String code, Map<Object, Object> executionContext) throws ScriptingException {
 		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
 		if (scriptEngineExecutor != null) {
-			return scriptEngineExecutor.evalCode(code, executionContext);
+			try {
+				ThreadContextFacade.setUp();
+				
+				return scriptEngineExecutor.evalCode(code, executionContext);
+			} finally {
+				ThreadContextFacade.tearDown();
+			}
 		}
 
 		throw new ScriptingException(

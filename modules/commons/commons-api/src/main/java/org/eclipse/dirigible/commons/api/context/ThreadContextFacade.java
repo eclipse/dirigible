@@ -38,10 +38,8 @@ public class ThreadContextFacade {
 	/**
 	 * Initializes the context. This has to be called at the very first (as possible) place at the service entry point
 	 *
-	 * @throws ContextException
-	 *             in case of an error
 	 */
-	public static final void setUp() throws ContextException {
+	public static final void setUp() {
 		if (CONTEXT.get() == null || CONTEXT.get().size() == 0) {
 			CONTEXT.set(new HashMap<String, Object>());
 		}
@@ -57,24 +55,28 @@ public class ThreadContextFacade {
 	/**
 	 * IMPORTANT! This have to be added at the finally block to clean up objects after the execution of the service.
 	 *
-	 * @throws ContextException
-	 *             in case of an error
 	 */
-	public static final void tearDown() throws ContextException {
-		CONTEXT.get().clear();
-		CONTEXT.remove();
-		PROXIES.get().clear();
-		PROXIES.remove();
-		for (Entry<String, AutoCloseable> closeable : CLOSEABLES.get().entrySet()) {
-			try {
-				logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
-				closeable.getValue().close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+	public static final void tearDown() {
+		if (CONTEXT.get() != null && CONTEXT.get().size() > 0) {
+			CONTEXT.get().clear();
+			CONTEXT.remove();
 		}
-		CLOSEABLES.get().clear();
-		CLOSEABLES.remove();
+		if (PROXIES.get() != null && PROXIES.get().size() > 0) {
+			PROXIES.get().clear();
+			PROXIES.remove();
+		}
+		if (CLOSEABLES.get() != null && CLOSEABLES.get().size() > 0) {
+			for (Entry<String, AutoCloseable> closeable : CLOSEABLES.get().entrySet()) {
+				try {
+					logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
+					closeable.getValue().close();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+			CLOSEABLES.get().clear();
+			CLOSEABLES.remove();
+		}
 		logger.trace("Scripting context {} has been torn down", Thread.currentThread().hashCode());
 	}
 

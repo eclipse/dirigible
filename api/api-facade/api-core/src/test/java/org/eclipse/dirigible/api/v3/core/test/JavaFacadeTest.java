@@ -57,26 +57,11 @@ public class JavaFacadeTest extends AbstractDirigibleTest {
 	/**
 	 * Test call.
 	 *
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 * @throws ClassNotFoundException
-	 *             the class not found exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws IllegalArgumentException
-	 *             the illegal argument exception
-	 * @throws InvocationTargetException
-	 *             the invocation target exception
-	 * @throws NoSuchMethodException
-	 *             the no such method exception
-	 * @throws SecurityException
-	 *             the security exception
-	 * @throws ContextException
-	 *             the context exception
+	 * @throws Exception
+	 *             Signals that an exception has occurred.
 	 */
 	@Test
-	public void testCall() throws IOException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, ContextException {
+	public void testCall() throws Exception {
 
 		ThreadContextFacade.setUp();
 		try {

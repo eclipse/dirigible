@@ -37,7 +37,7 @@ public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 	}
 	
 	@Test
-	public void generate() throws IOException, ContextException {
+	public void generate() throws Exception {
 		try {
 			ThreadContextFacade.setUp();
 			IGenerationEngine generationEngine = new JavascriptGenerationEngine();
