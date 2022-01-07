@@ -31,8 +31,6 @@ public class OData2ODataXTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataXTransformer.class);
 
-    private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
-
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
     private ITableMetadataProvider tableMetadataProvider;
