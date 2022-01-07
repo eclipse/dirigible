@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const git = require('utils/v4/git');
+const git = require('git/v4/client');
 const assertTrue = require('utils/v4/assert').assertTrue;
 const workspaceManager = require("platform/v4/workspace");
 
