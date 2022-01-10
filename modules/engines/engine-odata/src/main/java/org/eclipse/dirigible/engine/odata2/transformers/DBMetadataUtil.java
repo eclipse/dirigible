@@ -66,6 +66,7 @@ public class DBMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("NVARCHAR", "Edm.String");
+        SQL_TO_ODATA_EDM_TYPES.put("CHARACTER VARYING", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("CHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("NCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("BINARY", "Edm.Binary");
