@@ -57,8 +57,6 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 
-    private static final String DATABASE_NAME_HDB = "HDB";
-
 	/**
 	 * Gets the database types.
 	 *
