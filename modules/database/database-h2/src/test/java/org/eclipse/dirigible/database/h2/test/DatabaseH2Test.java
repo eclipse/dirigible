@@ -97,11 +97,11 @@ public class DatabaseH2Test {
 			connection = dataSource.getConnection();
 			List<TableMetadata> tables = DatabaseMetadataHelper.listTables(connection, null, "INFORMATION_SCHEMA", null);
 			for (TableMetadata table : tables) {
-				if ("CATALOGS".equals(table.getName())) {
+				if ("USERS".equals(table.getName())) {
 					return;
 				}
 			}
-			fail("No SYSKEYS table present");
+			fail("No USERS table present");
 		} finally {
 			if (connection != null) {
 				connection.close();
