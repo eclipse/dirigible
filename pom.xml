@@ -670,7 +670,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
-		<maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
+		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
 		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -704,13 +704,14 @@
 		<jaxws.version>2.3.3</jaxws.version>
 		<license-maven-plugin.version>4.2.rc1</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
-		<jgit.version>5.5.0.201909110433-r</jgit.version>
+		<jgit.version>6.0.0.202111291000-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
 		<olingo.version>2.0.11</olingo.version>
 		<kafka.version>2.6.0</kafka.version>
 		<git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<caffeine.version>3.0.3</caffeine.version>
+		<liquibase-core.version>4.6.2</liquibase-core.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 
 		<profile.content.phase>none</profile.content.phase>

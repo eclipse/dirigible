@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
-			<version>${liquibase.version}</version>
+			<version>${liquibase-core.version}</version>
 		</dependency>
 
 		<dependency>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>2.0.206</version>
+			<version>${h2database.version}</version>
 		</dependency>
 
 		<dependency>
@@ -103,6 +103,5 @@
 		<!-- Required to enable usage in projects that run on java 1.8 -->
 		<custom.java.build.version>1.8</custom.java.build.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
-		<liquibase.version>3.8.1</liquibase.version>
 	</properties>
 </project>

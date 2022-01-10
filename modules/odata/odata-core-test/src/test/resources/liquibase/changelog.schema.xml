@@ -21,7 +21,7 @@
             <column name="MODEL" type="VARCHAR(200)" defaultValueComputed="${now}">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
-            <column name="YEAR" type="INT">
+            <column name="PRODUCTION_YEAR" type="INT">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
             <column name="UPDATED" type="TIMESTAMP" defaultValueComputed="${now}">

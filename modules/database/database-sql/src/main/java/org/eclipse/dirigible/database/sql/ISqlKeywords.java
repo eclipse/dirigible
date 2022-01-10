@@ -457,6 +457,11 @@ public interface ISqlKeywords {
     public static final String METADATA_SYSTEM_TABLE = "SYSTEM TABLE"; //$NON-NLS-1$
 
     /**
+     * The Constant METADATA_BASE_TABLE.
+     */
+    public static final String METADATA_BASE_TABLE = "BASE TABLE"; //$NON-NLS-1$
+
+    /**
      * The Constant METADATA_LOCAL_TEMPORARY.
      */
     public static final String METADATA_LOCAL_TEMPORARY = "LOCAL TEMPORARY"; //$NON-NLS-1$
@@ -495,7 +500,7 @@ public interface ISqlKeywords {
      * The Constant METADATA_TABLE_TYPES.
      */
     public static final List<String> METADATA_TABLE_TYPES = Collections.unmodifiableList(Arrays.asList(METADATA_TABLE, METADATA_VIEW, METADATA_ALIAS,
-            METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE));
+            METADATA_SYNONYM, METADATA_GLOBAL_TEMPORARY, METADATA_LOCAL_TEMPORARY, METADATA_SYSTEM_TABLE, METADATA_BASE_TABLE));
 
     /**
      * The Constant KEYWORD_COLUMNSTORE.
