@@ -122,10 +122,6 @@ public class WrappedDataSource implements DataSource {
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(), this);
 
-		if(this.databaseName == null) {
-			this.databaseName = wrappedConnection.getMetaData().getDatabaseProductName();
-		}
-
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
 		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
@@ -142,10 +138,6 @@ public class WrappedDataSource implements DataSource {
 		logger.trace("entering - getConnection(String username, String password)");
 		checkConnections();
 		WrappedConnection wrappedConnection = new WrappedConnection(originalDataSource.getConnection(username, password), this);
-
-		if(this.databaseName == null) {
-			this.databaseName = wrappedConnection.getMetaData().getDatabaseProductName();
-		}
 
 		addConnection(wrappedConnection);
 		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);

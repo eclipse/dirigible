@@ -641,10 +641,6 @@ public class DatabaseFacade implements IScriptingFacade {
 		}
 		Connection connection = dataSource.getConnection();
 
-		if(((WrappedDataSource) dataSource).getDatabaseName().equals(DATABASE_NAME_HDB)) {
-            connection.setClientInfo("APPLICATIONUSER", UserFacade.getName());
-		}
-
 		return connection;
 	}
 
