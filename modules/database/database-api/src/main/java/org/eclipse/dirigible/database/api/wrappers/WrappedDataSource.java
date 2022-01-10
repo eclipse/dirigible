@@ -116,6 +116,7 @@ public class WrappedDataSource implements DataSource {
 	@Override
 	public Connection getConnection() throws SQLException {
 		logger.trace("entering - getConnection()");
+
 		return getConnection(null, null);
 	}
 

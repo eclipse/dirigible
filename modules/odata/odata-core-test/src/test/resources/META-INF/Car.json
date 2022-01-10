@@ -3,7 +3,7 @@
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Car",
 	"sqlTable" : "CARS",
 	"Make" : "MAKE",
-	"Year" : "YEAR",
+	"Year" : "PRODUCTION_YEAR",
 	"Model" : "MODEL",
 	"Price" : "PRICE",
 	"Updated" : "UPDATED",
