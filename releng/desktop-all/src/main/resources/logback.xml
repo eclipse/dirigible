@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration packagingData="true">
 
+	<!-- 
+		Try to set LOGS_DIR for the file appenders to the environment variables 
+		"DIRIGIBLE_LOGS_DIR -> CATALINA_BASE ->  CATALINA_HOME" in this order 
+		or use ".." if none of the environment variables exist
+	-->
+	<property name="LOGS_DIR" value="${DIRIGIBLE_LOGS_DIR:-${CATALINA_BASE:-${CATALINA_HOME:-..}}}" />
+
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
 		<resetJUL>true</resetJUL>
 	</contextListener>
@@ -17,21 +24,21 @@
 	</appender>
 	
 	<appender name="FILE_CORE" class="ch.qos.logback.core.FileAppender">
-	    <file>../logs/dirigible-core-${date}.log</file>
+	    <file>${LOGS_DIR}/logs/dirigible-core-${date}.log</file>
 	    <encoder>
 	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
 	    </encoder>
 	</appender>
 	
 	<appender name="FILE_APPS" class="ch.qos.logback.core.FileAppender">
-	    <file>../logs/dirigible-apps-${date}.log</file>
+	    <file>${LOGS_DIR}/logs/dirigible-apps-${date}.log</file>
 	    <encoder>
 	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
 	    </encoder>
 	</appender>
 	
 	<appender name="FILE_BASE" class="ch.qos.logback.core.FileAppender">
-	    <file>../logs/dirigible-base-${date}.log</file>
+	    <file>${LOGS_DIR}/logs/dirigible-base-${date}.log</file>
 	    <encoder>
 	      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
 	    </encoder>
