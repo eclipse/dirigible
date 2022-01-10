@@ -57,8 +57,6 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
 
-    private static final String DATABASE_NAME_HDB = "HDB";
-
 	/**
 	 * Gets the database types.
 	 *
@@ -640,10 +638,6 @@ public class DatabaseFacade implements IScriptingFacade {
 			throw new IllegalArgumentException(error);
 		}
 		Connection connection = dataSource.getConnection();
-
-		if(((WrappedDataSource) dataSource).getDatabaseName().equals(DATABASE_NAME_HDB)) {
-            connection.setClientInfo("APPLICATIONUSER", UserFacade.getName());
-		}
 
 		return connection;
 	}
