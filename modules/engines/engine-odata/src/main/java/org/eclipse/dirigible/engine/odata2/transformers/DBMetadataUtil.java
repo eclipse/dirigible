@@ -251,27 +251,4 @@ public class DBMetadataUtil {
             return null;
         }
     }
-
-    public HashMap<String, String> getSynonymTargetObjectMetadata(String synonymName) throws SQLException {
-        HashMap<String, String> targetObjectMetadata = new HashMap<>();
-
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM \"SYS\".\"SYNONYMS\" WHERE \"SYNONYM_NAME\" = ?");
-            prepareStatement.setString(1, synonymName);
-
-            try (ResultSet resultSet = prepareStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    String name = resultSet.getString("OBJECT_NAME");
-                    String schema = resultSet.getString("OBJECT_SCHEMA");
-                    String type = resultSet.getString("OBJECT_TYPE");
-
-                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE, name);
-                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_SCHEMA, schema);
-                    targetObjectMetadata.put(ISqlKeywords.KEYWORD_TABLE_TYPE, type);
-                }
-            }
-        }
-
-        return targetObjectMetadata;
-    }
 }
