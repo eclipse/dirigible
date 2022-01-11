@@ -60,7 +60,7 @@
 		<dependency>
 		    <groupId>org.eclipse.mylyn.docs</groupId>
 		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
-		    <version>3.0.18</version>
+		    <version>3.0.42</version>
 		</dependency>
     </dependencies>
 
