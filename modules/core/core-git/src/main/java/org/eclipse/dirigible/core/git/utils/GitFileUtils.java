@@ -50,8 +50,9 @@ public class GitFileUtils {
 
 	public static final String SLASH = "/"; //$NON-NLS-1$
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	
-	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + DOT_GIT; //$NON-NLS-1$
+
+	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
+	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
 
 	private static final int MINIMUM_URL_LENGTH = 25;
 
@@ -66,7 +67,7 @@ public class GitFileUtils {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
 			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER);
 		} else if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER))) {
-			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + DOT_GIT;
+			GIT_ROOT_FOLDER = Configuration.get(DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER) + File.separator + REPOSITORY_GIT_FOLDER;
 		} else {
 			GIT_ROOT_FOLDER = DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER;
 		}
