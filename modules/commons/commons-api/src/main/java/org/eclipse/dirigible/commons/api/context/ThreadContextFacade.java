@@ -29,8 +29,6 @@ public class ThreadContextFacade {
 
 	private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<Map<String, Object>>();
 
-	private static final ThreadLocal<Map<String, Object>> PROXIES = new ThreadLocal<Map<String, Object>>();
-	
 	private static final ThreadLocal<Map<String, AutoCloseable>> CLOSEABLES = new ThreadLocal<Map<String, AutoCloseable>>();
 
 	private static final AtomicLong UUID_GENERATOR = new AtomicLong(Long.MIN_VALUE);
@@ -44,9 +42,6 @@ public class ThreadContextFacade {
 	public static final void setUp() {
 		if (CONTEXT.get() == null || CONTEXT.get().size() == 0) {
 			CONTEXT.set(new HashMap<String, Object>());
-		}
-		if (PROXIES.get() == null || PROXIES.get().size() == 0) {
-			PROXIES.set(new HashMap<String, Object>());
 		}
 		if (CLOSEABLES.get() == null || CLOSEABLES.get().size() == 0) {
 			CLOSEABLES.set(new HashMap<String, AutoCloseable>());
@@ -67,10 +62,6 @@ public class ThreadContextFacade {
 		if (CONTEXT.get() != null && CONTEXT.get().size() > 0) {
 			CONTEXT.get().clear();
 			CONTEXT.remove();
-		}
-		if (PROXIES.get() != null && PROXIES.get().size() > 0) {
-			PROXIES.get().clear();
-			PROXIES.remove();
 		}
 		if (CLOSEABLES.get() != null && CLOSEABLES.get().size() > 0) {
 			int stackId = STACK_ID.get();
@@ -175,36 +166,7 @@ public class ThreadContextFacade {
 	public static boolean isValid() {
 		return (CONTEXT.get() != null);
 	}
-
-	/**
-	 * Get a proxy scripting object.
-	 *
-	 * @param key
-	 *            the key
-	 * @return the value by this key
-	 * @throws ContextException
-	 *             in case of an error
-	 */
-	public static final Object getProxy(String key) throws ContextException {
-		checkContext();
-		return PROXIES.get().get(key);
-	}
-
-	/**
-	 * Set a proxy scripting object.
-	 *
-	 * @param value
-	 *            the value
-	 * @return the UUID of the object
-	 * @throws ContextException
-	 *             in case of an error
-	 */
-	public static final String setProxy(Object value) throws ContextException {
-		final String uuid = generateObjectId();
-		setProxy(uuid, value);
-		return uuid;
-	}
-
+	
 	/**
 	 * Generate object id.
 	 *
@@ -212,38 +174,6 @@ public class ThreadContextFacade {
 	 */
 	private static String generateObjectId() {
 		return Long.toString(UUID_GENERATOR.incrementAndGet(), Character.MAX_RADIX);
-	}
-
-	/**
-	 * Set a proxy scripting object. If proxy object
-	 * with this key exists, it will be replaced with
-	 * the new object
-	 *
-	 * @param key
-	 *            the key
-	 * @param value
-	 *            the value
-	 * @throws ContextException
-	 *             in case of an error
-	 */
-	public static final void setProxy(String key, Object value) throws ContextException {
-		checkContext();
-		PROXIES.get().put(key, value);
-		logger.trace("Proxy object has been added to {} with key {}", Thread.currentThread().hashCode(), key);
-	}
-
-	/**
-	 * Remove a proxy scripting object.
-	 *
-	 * @param key
-	 *            the key
-	 * @throws ContextException
-	 *             in case of an error
-	 */
-	public static final void removeProxy(String key) throws ContextException {
-		checkContext();
-		PROXIES.get().remove(key);
-		logger.trace("Proxy object has been removes - key {}", Thread.currentThread().hashCode(), key);
 	}
 	
 	/**
