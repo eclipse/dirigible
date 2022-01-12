@@ -1,0 +1,17 @@
+[
+  {
+    "name": "@dirigible/git",
+    "description": "Dirigible Git Module",
+    "isPackageDescription": true,
+    "dtsPath": "git/extensions/git.d.ts"
+  },
+  {
+    "name": "git/v4/client",
+    "description": "Client API",
+    "api": "client",
+    "versionedPaths": [
+      "git/v3/client",
+      "git/v4/client"
+    ],
+    "pathDefault": "git/v4/client"
+  }]
