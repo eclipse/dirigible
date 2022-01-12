@@ -11,7 +11,9 @@
  */
 package org.eclipse.dirigible.commons.api.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,21 +42,36 @@ public class ThreadContextFacade {
 	 *
 	 */
 	public static void setUp() {
-		if (STACKED_CONTEXT.get() == null || STACKED_CONTEXT.get().size() == 0) {
+		if (stackedContextIsEmpty()) {
 			STACKED_CONTEXT.set(new HashMap<>());
 		}
-		if (STACKED_CLOSEABLES.get() == null || STACKED_CLOSEABLES.get().size() == 0) {
+		if (stackedCloseablesIsEmpty()) {
 			STACKED_CLOSEABLES.set(new HashMap<>());
 		}
-		if (STACK_ID.get() == null) {
+
+		Integer currentStackId = STACK_ID.get();
+		if (currentStackId == null) {
 			STACK_ID.set(0);
 		} else {
-			STACK_ID.set(STACK_ID.get() + 1);
+			STACK_ID.set(currentStackId + 1);
+
 		}
-		STACKED_CONTEXT.get().put(STACK_ID.get(), new HashMap<>());
+
+		STACKED_CONTEXT.get().put(STACK_ID.get(), collectParentObjects());
 		STACKED_CLOSEABLES.get().put(STACK_ID.get(), new HashMap<>());
 		
 		logger.trace("Scripting context {} has been set up", Thread.currentThread().hashCode());
+	}
+
+	private static Map<String, Object> collectParentObjects() {
+		Map<String, Object> allParentObjects = new HashMap<>();
+
+		for (int parentStackId = STACK_ID.get() - 1; parentStackId >= 0; parentStackId -= 1) {
+			Map<String, Object> parentStackObjects = STACKED_CONTEXT.get().get(parentStackId);
+			allParentObjects.putAll(parentStackObjects);
+		}
+
+		return allParentObjects;
 	}
 
 	/**
@@ -62,15 +79,17 @@ public class ThreadContextFacade {
 	 *
 	 */
 	public static void tearDown() {
-		if (STACK_ID.get() == null) {
-			return;
+        Integer stackId = STACK_ID.get();
+		if (stackId == null) {
+            return;
+        }
+
+		if (stackedContextIsNotEmpty()) {
+			STACKED_CONTEXT.get().get(stackId).clear();
 		}
-		int stackId = STACK_ID.get();
-		if (STACKED_CONTEXT.get() != null && STACKED_CONTEXT.get().size() > 0) {
-			STACKED_CONTEXT.get().get(STACK_ID.get()).clear();
-		}
-		if (STACKED_CLOSEABLES.get() != null && STACKED_CLOSEABLES.get().size() > 0) {
-			Map<String, AutoCloseable> CLOSEABLES = STACKED_CLOSEABLES.get().get(STACK_ID.get());
+
+		if (stackedCloseablesIsNotEmpty()) {
+			Map<String, AutoCloseable> CLOSEABLES = STACKED_CLOSEABLES.get().get(stackId);
 			for (Entry<String, AutoCloseable> closeable : CLOSEABLES.entrySet()) {
 				try {
 					logger.error("Object of type {} from the context {} has not been closed properly.", closeable.getValue().getClass().getCanonicalName(), Thread.currentThread().hashCode());
@@ -79,8 +98,9 @@ public class ThreadContextFacade {
 					logger.error(e.getMessage(), e);
 				}
 			}
-			STACKED_CLOSEABLES.get().get(STACK_ID.get()).clear();
+			STACKED_CLOSEABLES.get().get(stackId).clear();
 		}
+
 		if (stackId == 0) {
 			STACKED_CONTEXT.remove();
 			STACKED_CLOSEABLES.remove();
@@ -142,16 +162,15 @@ public class ThreadContextFacade {
 	/**
 	 * Remove a context scripting object.
 	 *
-	 * @param key
-	 *            the key
-	 * @throws ContextException
-	 *             in case of an error
+	 * @param key the key
+	 * @throws ContextException in case of an error
 	 */
 	public static void remove(String key) throws ContextException {
 		checkContext();
 		STACKED_CONTEXT.get().get(STACK_ID.get()).remove(key);
 		logger.trace("Context object has been removed - key {}", key);
 	}
+
 
 	/**
 	 * Check context.
@@ -206,4 +225,24 @@ public class ThreadContextFacade {
 			logger.trace("Closeable object has been removed - hash {}", closeable.hashCode());
 		}
 	}
+
+    private static boolean stackedContextIsEmpty() {
+        Map<Integer, Map<String, Object>> stackedContext = STACKED_CONTEXT.get();
+        return stackedContext == null || stackedContext.isEmpty();
+    }
+
+	private static boolean stackedContextIsNotEmpty() {
+	    Map<Integer, Map<String, Object>> stackedContext = STACKED_CONTEXT.get();
+	    return stackedContext != null && !stackedContext.isEmpty();
+    }
+
+    private static boolean stackedCloseablesIsEmpty() {
+        Map<Integer, Map<String, AutoCloseable>> stackedCloseables = STACKED_CLOSEABLES.get();
+        return stackedCloseables == null || stackedCloseables.isEmpty();
+    }
+
+    private static boolean stackedCloseablesIsNotEmpty() {
+        Map<Integer, Map<String, AutoCloseable>> stackedCloseables = STACKED_CLOSEABLES.get();
+        return stackedCloseables != null && !stackedCloseables.isEmpty();
+    }
 }
