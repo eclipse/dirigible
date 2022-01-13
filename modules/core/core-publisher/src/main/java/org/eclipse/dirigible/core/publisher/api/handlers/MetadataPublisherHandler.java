@@ -9,9 +9,10 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.core.publisher.api;
+package org.eclipse.dirigible.core.publisher.api.handlers;
 
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.publisher.api.IPublisherHandler;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
@@ -21,7 +22,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public abstract class AbstractPublisherHandler implements IPublisherHandler {
+public class MetadataPublisherHandler implements IPublisherHandler {
 
     protected static final String REGISTRY_PUBLIC = IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR;
 
@@ -57,5 +58,25 @@ public abstract class AbstractPublisherHandler implements IPublisherHandler {
 
         return locationQueryParamSB.toString();
     }
+
+	@Override
+	public void beforePublish(String location) throws SchedulerException {
+		
+	}
+
+	@Override
+	public void afterPublish(String location) throws SchedulerException {
+		
+	}
+
+	@Override
+	public void beforeUnpublish(String location) throws SchedulerException {
+		
+	}
+
+	@Override
+	public void afterUnpublish(String location) throws SchedulerException {
+		
+	}
 
 }

@@ -11,27 +11,12 @@
  */
 package org.eclipse.dirigible.engine.odata2.synchronizer;
 
-import org.eclipse.dirigible.core.publisher.api.AbstractPublisherHandler;
+import org.eclipse.dirigible.core.publisher.api.handlers.MetadataPublisherHandler;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 
-public class ODataSynchronizerPublisherHandler extends AbstractPublisherHandler {
-
-    @Override
-    public void beforePublish(String location) {
-
-    }
-
-    @Override
-    public void afterPublish(String location) {
-
-    }
-
-    @Override
-    public void beforeUnpublish(String location) {
-
-    }
+public class ODataSynchronizerPublisherHandler extends MetadataPublisherHandler {
 
     @Override
     public void afterUnpublish(String location) throws SchedulerException {
