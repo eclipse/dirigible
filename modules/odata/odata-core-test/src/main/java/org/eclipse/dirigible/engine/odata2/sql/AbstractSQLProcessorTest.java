@@ -11,7 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql;
 
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -195,5 +198,16 @@ public abstract class AbstractSQLProcessorTest {
     protected ODataEntry retrieveODataEntry(final Response response, final String entitySetName) throws IOException, ODataException {
         EdmEntitySet entitySet = new EdmImplProv(edm).getDefaultEntityContainer().getEntitySet(entitySetName);
         return OData2TestUtils.retrieveODataEntryFromResponse(response, entitySet);
+    }
+
+    public void assertCarHasPrice(String segment, double expectedPrice) throws IOException, ODataException {
+        Response existingCar = OData2RequestBuilder.createRequest(sf) //
+                .segments(segment) //
+                .accept("application/json").executeRequest(GET);
+
+        assertEquals(200, existingCar.getStatus());
+        ODataEntry resultEntry  = retrieveODataEntry(existingCar, "Cars");
+        Map<String, Object> properties  = resultEntry.getProperties();
+        assertEquals(expectedPrice, properties.get("Price"));
     }
 }

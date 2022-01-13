@@ -86,7 +86,10 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
             }
             context = parent;
         }
-        DataSource ds = (DataSource) context.getParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY);
+        DataSource ds = super.getDataSource();
+        if (ds == null) {
+            ds = (DataSource) context.getParameter(DEFAULT_DATA_SOURCE_CONTEXT_KEY);
+        }
         if (ds == null) {
             throw new OData2Exception("Unable to get the dataSource from the context. Please provide the datasource.",
                     INTERNAL_SERVER_ERROR);

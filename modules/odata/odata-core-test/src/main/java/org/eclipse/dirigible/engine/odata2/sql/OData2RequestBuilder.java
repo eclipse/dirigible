@@ -17,8 +17,12 @@ import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.PUT;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,12 +41,23 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.impl.MetadataMap;
 import org.apache.cxf.jaxrs.impl.PathSegmentImpl;
 import org.apache.cxf.jaxrs.utils.HttpUtils;
 import org.apache.olingo.odata2.api.ODataServiceFactory;
+import org.apache.olingo.odata2.api.client.batch.BatchPart;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
+import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.apache.olingo.odata2.api.processor.ODataRequest;
+import org.apache.olingo.odata2.api.processor.ODataResponse;
+import org.apache.olingo.odata2.core.ODataContextImpl;
+import org.apache.olingo.odata2.core.ODataPathSegmentImpl;
+import org.apache.olingo.odata2.core.PathInfoImpl;
+import org.apache.olingo.odata2.core.batch.BatchHandlerImpl;
+import org.apache.olingo.odata2.core.processor.ODataSingleProcessorService;
 import org.apache.olingo.odata2.core.rest.ODataSubLocator;
 import org.apache.olingo.odata2.core.rest.SubLocatorParameter;
 import org.easymock.Capture;
@@ -50,6 +65,7 @@ import org.easymock.CaptureType;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.easymock.IAnswer;
+import org.eclipse.dirigible.engine.odata2.sql.processor.DefaultSQLProcessor;
 
 
 /**
@@ -174,12 +190,7 @@ public class OData2RequestBuilder {
         expect(httpHeaders.getRequestHeaders()).andReturn(headersMap);
         final Capture<String> nameCapture = Capture.newInstance(CaptureType.LAST);
         //
-        final IAnswer<List<String>> getRequestHeaderAnswer = new IAnswer<List<String>>() {
-            @Override
-            public List<String> answer() throws Throwable {
-                return headersMap.get(nameCapture.getValue());
-            }
-        };
+        final IAnswer<List<String>> getRequestHeaderAnswer = () -> headersMap.get(nameCapture.getValue());
         //
         expect(httpHeaders.getRequestHeader(capture(nameCapture))).andAnswer(getRequestHeaderAnswer).anyTimes();
         subLocatorParam.setHttpHeaders(httpHeaders);
@@ -248,6 +259,30 @@ public class OData2RequestBuilder {
         return response;
     }
 
+
+
+    public  ODataResponse executeBatchRequest(List<BatchPart> batch) throws IOException, URISyntaxException, ODataException {
+        InputStream body = EntityProvider.writeBatchRequest(batch, "batch_1");
+        String batchRequestBody = IOUtils.toString(body);
+
+        PathInfoImpl pathInfo = new PathInfoImpl();
+        pathInfo.setServiceRoot(new URI("https://localhost:8080/odata/v2"));
+        pathInfo.setODataPathSegment(Collections.singletonList(new ODataPathSegmentImpl("$batch", null)));
+        ODataRequest batchRequest = ODataRequest.method(POST).contentType("application/json").pathInfo(pathInfo)
+                .acceptableLanguages(Collections.singletonList(Locale.ENGLISH)).build();
+
+        ODataContext testContext = new ODataContextImpl(batchRequest, serviceFactory);
+
+        ODataSingleProcessorService service = (ODataSingleProcessorService)serviceFactory.createService(testContext);
+        DefaultSQLProcessor proc = (DefaultSQLProcessor) service.getProcessor();
+        proc.setContext(testContext);
+        BatchHandlerImpl handler = new BatchHandlerImpl(serviceFactory, service);
+
+        return proc.executeBatch(handler, "multipart/mixed; boundary=batch_1",
+                new ByteArrayInputStream(batchRequestBody.getBytes(StandardCharsets.UTF_8)));
+    }
+
+
     /**
      * @param method the method
      * @param easyMockSupport the easyMockSupport 
@@ -261,10 +296,10 @@ public class OData2RequestBuilder {
         if (method.equals(POST) || method.equals(PUT)) {
             expect(contentInputStream.available()).andReturn(0).anyTimes();
             if (contentSize > 0) {
-                expect(contentInputStream.read((byte[]) EasyMock.anyObject())).andReturn(contentSize).times(1).andReturn(-1).times(1)
+                expect(contentInputStream.read(EasyMock.anyObject())).andReturn(contentSize).times(1).andReturn(-1).times(1)
                         .andReturn(0).anyTimes();
             } else {
-                expect(contentInputStream.read((byte[]) EasyMock.anyObject())).andReturn(contentSize).times(1);
+                expect(contentInputStream.read(EasyMock.anyObject())).andReturn(contentSize).times(1);
             }
         }
         expect(servletRequest.getInputStream()).andReturn(contentInputStream).atLeastOnce();
@@ -284,9 +319,8 @@ public class OData2RequestBuilder {
      * 
      * @param servletContext
      *            the EasyMock instance of the {@link ServletContext}.
-     * @throws ODataException in case of error
      */
-    protected void enrichServletContextMock(final ServletContext servletContext) throws ODataException {
+    protected void enrichServletContextMock(final ServletContext servletContext) {
         // default implementation is empty
     }
 
@@ -309,7 +343,7 @@ public class OData2RequestBuilder {
                 if (queryString.length() > 0) {
                     queryString.append('&');
                 }
-                queryString.append(entry.getKey() + '=' + paramValue);
+                queryString.append(entry.getKey()).append('=').append(paramValue);
             }
         }
         return HttpUtils.pathEncode(queryString.toString());
