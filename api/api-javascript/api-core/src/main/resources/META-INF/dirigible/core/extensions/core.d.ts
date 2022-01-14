@@ -1,5 +1,5 @@
 declare module "@dirigible/core" {
-    module configuration {
+    module configurations {
         /**
          * Returns the value for the specified key, or the default value
          * @param key
