@@ -125,22 +125,21 @@ public class SQLQueryBuilder {
         if (effectiveSkip != null && effectiveTop != null) {
             effectiveTop += effectiveSkip;
         }
+
+        q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
+        q.filter(uri.getTargetEntitySet(), uri.getFilter())
+                .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
+        //adds additional joins on the navigation properties required for correct ordering
         List<EdmEntitySet> additionalJoins = new ArrayList<>();
         for (ArrayList<NavigationPropertySegment> segments : uri.getExpand()){
             for (NavigationPropertySegment nav: segments){
                 additionalJoins.add(nav.getTargetEntitySet());
             }
         }
-        q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
-        q.filter(uri.getTargetEntitySet(), uri.getFilter())
-                .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
-
         for (EdmEntitySet joinType: additionalJoins){
             q.join(joinType, uri.getTargetEntitySet(), Collections.emptyList());
         }
-        //if the query is expanded, the order by is not necessary, because first the IDs will be selected
         q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
-
         return chain.onRead(q, uri, context);
     }
 
