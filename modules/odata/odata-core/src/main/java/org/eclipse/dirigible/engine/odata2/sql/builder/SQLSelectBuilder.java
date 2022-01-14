@@ -170,7 +170,8 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     public SQLJoinClause join(final EdmEntitySet start, final EdmEntitySet target, final List<NavigationSegment> expands)
             throws ODataException {
-        return this.join(start.getEntityType(), target.getEntityType());
+        SQLJoinClause clause = this.join(start.getEntityType(), target.getEntityType());
+        return clause;
     }
 
     // Do NOT use this method; For Unit testing purposes ONLY
@@ -313,7 +314,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
             }
 
             @Override
-            public List<SQLStatementParam> getStatementParams() throws EdmException {
+            public List<SQLStatementParam> getStatementParams() {
                 return SQLSelectBuilder.this.getStatementParams();
             }
 

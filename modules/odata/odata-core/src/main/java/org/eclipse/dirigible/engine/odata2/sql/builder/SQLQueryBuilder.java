@@ -15,10 +15,7 @@ import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
-import org.apache.olingo.odata2.api.uri.KeyPredicate;
-import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
-import org.apache.olingo.odata2.api.uri.SelectItem;
-import org.apache.olingo.odata2.api.uri.UriInfo;
+import org.apache.olingo.odata2.api.uri.*;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLInterceptor;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
@@ -77,22 +74,22 @@ public class SQLQueryBuilder {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
 
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
+        final boolean needsServersidePaging = calculateNeedsServersidePaging(uri);
+        Integer effectiveTop;
+        if (needsServersidePaging) {
+            effectiveTop = getEntityPagingSize(target);
+            q.setServersidePaging(true);
+        } else {
+            effectiveTop = uri.getTop();
+        }
+
+        final Integer effectiveSkip = calculateEffectiveSkip(uri);
+
+        if (effectiveSkip != null && effectiveTop != null) {
+            effectiveTop += effectiveSkip;
+        }
         if (readIdsForExpand == null || readIdsForExpand.isEmpty()) {
             //no expand, we filter as usual
-            final boolean needsServersidePaging = calculateNeedsServersidePaging(uri);
-            Integer effectiveTop;
-            if (needsServersidePaging) {
-                effectiveTop = getEntityPagingSize(target);
-                q.setServersidePaging(true);
-            } else {
-                effectiveTop = uri.getTop();
-            }
-
-            final Integer effectiveSkip = calculateEffectiveSkip(uri);
-
-            if (effectiveSkip != null && effectiveTop != null) {
-                effectiveTop += effectiveSkip;
-            }
             q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target);
             q.filter(uri.getTargetEntitySet(), uri.getFilter());
         } else {
@@ -100,7 +97,7 @@ public class SQLQueryBuilder {
             //and then we do filter on these IDS with the expand, with no top and skip 
             // SELECT TOP XXX FROM TTTT AS M WHERE FILTER
             // SELECT XXX WHERE XXX.ID IN (...)
-            q.select(uri.getSelect(), uri.getExpand()).from(target);
+            q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target);
             q.filter(uri.getTargetEntitySet(), getKeyProperty(target), readIdsForExpand);
         }
         q.join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
@@ -132,10 +129,17 @@ public class SQLQueryBuilder {
         q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
         q.filter(uri.getTargetEntitySet(), uri.getFilter())
                 .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
-        //if the query is expanded, the order by is not necessary, because first the IDs will be selected
-        if (uri.getExpand().isEmpty()) {
-            q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
+        //adds additional joins on the navigation properties required for correct ordering
+        List<EdmEntitySet> additionalJoins = new ArrayList<>();
+        for (ArrayList<NavigationPropertySegment> segments : uri.getExpand()){
+            for (NavigationPropertySegment nav: segments){
+                additionalJoins.add(nav.getTargetEntitySet());
+            }
         }
+        for (EdmEntitySet joinType: additionalJoins){
+            q.join(joinType, uri.getTargetEntitySet(), Collections.emptyList());
+        }
+        q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
         return chain.onRead(q, uri, context);
     }
 
