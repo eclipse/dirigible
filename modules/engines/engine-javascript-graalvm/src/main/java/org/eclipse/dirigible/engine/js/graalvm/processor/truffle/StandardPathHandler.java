@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor.truffle;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.engine.api.script.IScriptEngineExecutor;
 import org.eclipse.dirigible.engine.api.script.Module;
 
@@ -37,6 +38,11 @@ class StandardPathHandler {
     Path handlePossibleRepositoryPath(Path path) {
         String pathString = path.toString();
         pathString = pathString.replace("\\", "/");
+
+        String maybeDirigibleScope = tryExtractDirigibleScope(pathString);
+        if (maybeDirigibleScope != null) {
+            return Paths.get(maybeDirigibleScope);
+        }
 
         if (pathString.startsWith(Constants.CURRENT_DIRECTORY)
                 || pathString.startsWith(Constants.PARENT_DIRECTORY)) {
@@ -74,5 +80,14 @@ class StandardPathHandler {
 
     private Module getModuleFromRepository(String root, String pathString, IScriptEngineExecutor executor) {
         return executor.retrieveModule(root, pathString, Constants.MJS_EXTENSION);
+    }
+
+    private String tryExtractDirigibleScope(String pathString) {
+        int maybeDirigibleScopeIndex = pathString.indexOf("/@dirigible/");
+        if (maybeDirigibleScopeIndex == -1) {
+            return null;
+        }
+
+        return pathString.substring(maybeDirigibleScopeIndex);
     }
 }

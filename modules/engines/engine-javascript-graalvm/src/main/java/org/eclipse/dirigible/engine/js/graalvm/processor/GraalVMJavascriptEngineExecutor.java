@@ -113,7 +113,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         }
 
         if (isModule) {
-            ResourcePath resourcePath = getResourcePath(moduleOrCode, MODULE_EXT_JS, MODULE_EXT_GRAALVM);
+            ResourcePath resourcePath = getResourcePath(moduleOrCode, MODULE_EXT_JS, MODULE_EXT_MJS, MODULE_EXT_GRAALVM);
             moduleOrCode = resourcePath.getModule();
             if (HttpRequestFacade.isValid()) {
                 HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, resourcePath.getPath());
