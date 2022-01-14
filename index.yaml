@@ -2,8 +2,39 @@ apiVersion: v1
 entries:
   dirigible:
   - apiVersion: v2
+    appVersion: 6.1.18
+    created: "2022-01-14T18:45:06.045708018Z"
+    description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
+      environment for In-System Development and Low-Code/No-Code Development.
+    digest: 159637a8d7b4b79ee8565ffef0126553928d15d0110d7bb04f4e82414db0571c
+    home: https://www.dirigible.io
+    icon: https://raw.githubusercontent.com/eclipse/dirigible/master/logo/dirigible-logo-symbol.png
+    keywords:
+    - kyma
+    - dirigible
+    - platform
+    - eclipse
+    - development
+    - applications
+    - in-system
+    - low-code
+    - no-code
+    - lcnc
+    kubeVersion: '> 1.18.20'
+    maintainers:
+    - email: yordan.pavlov@sap.com
+      name: Yordan Pavlov
+      url: https://github.com/ThuF
+    name: dirigible
+    sources:
+    - https://github.com/eclipse/dirigible/
+    type: application
+    urls:
+    - https://eclipse.github.io/dirigible/charts/dirigible-6.1.18.tgz
+    version: 6.1.18
+  - apiVersion: v2
     appVersion: 6.1.17
-    created: "2022-01-13T10:33:19.398356157Z"
+    created: "2022-01-14T18:45:06.044145211Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: 4f2117242b537333517507bf7e7d76d3c4e78f7e050e5451d00feb81031c6925
@@ -34,7 +65,7 @@ entries:
     version: 6.1.17
   - apiVersion: v2
     appVersion: 6.1.16
-    created: "2022-01-13T10:33:19.39735835Z"
+    created: "2022-01-14T18:45:06.042749005Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: 0fc98bf8e4cc73008a0bccfa2a2ca6fcf3ec2bcef4f3cc8ad4a8f65706844206
@@ -65,7 +96,7 @@ entries:
     version: 6.1.16
   - apiVersion: v2
     appVersion: 6.1.15
-    created: "2022-01-13T10:33:19.396347642Z"
+    created: "2022-01-14T18:45:06.041401699Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: 3088bb74ba68d9407f0ddb5d9b25cbdd6663954c9558e4c4b14299c310c86d79
@@ -96,7 +127,7 @@ entries:
     version: 6.1.15
   - apiVersion: v2
     appVersion: 6.1.14
-    created: "2022-01-13T10:33:19.395332335Z"
+    created: "2022-01-14T18:45:06.040025993Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: 6f782fdceaa7d7e76f518075dca5cf6de6bf15ccb59bd145c9cbac505589a2e0
@@ -127,7 +158,7 @@ entries:
     version: 6.1.14
   - apiVersion: v2
     appVersion: 6.1.13
-    created: "2022-01-13T10:33:19.393580322Z"
+    created: "2022-01-14T18:45:06.036765379Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: b17dafbcbe0e2f205bfb5b2cf172977d9a01e6049711e47c3a7a115cc05d9d97
@@ -158,7 +189,7 @@ entries:
     version: 6.1.13
   - apiVersion: v2
     appVersion: 6.1.12
-    created: "2022-01-13T10:33:19.39202331Z"
+    created: "2022-01-14T18:45:06.035386773Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: e67544161faa555b88e4c71fab621188596d0e81b8aeb37b4b17c7aeb6cbaac0
@@ -189,7 +220,7 @@ entries:
     version: 6.1.12
   - apiVersion: v2
     appVersion: 6.1.11
-    created: "2022-01-13T10:33:19.391129703Z"
+    created: "2022-01-14T18:45:06.033897466Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: a63b352299d68c87626691abca35c306321355c03c02d35e7a2ef09a3a396f85
@@ -220,7 +251,7 @@ entries:
     version: 6.1.11
   - apiVersion: v2
     appVersion: 6.1.10
-    created: "2022-01-13T10:33:19.389918394Z"
+    created: "2022-01-14T18:45:06.03254926Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: ae941d18d7be136646c2d6e9977da754bf4bb47aa65755734c29edfa7314f8ec
@@ -250,7 +281,7 @@ entries:
     version: 6.1.10
   - apiVersion: v2
     appVersion: 6.1.9
-    created: "2022-01-13T10:33:19.405934314Z"
+    created: "2022-01-14T18:45:06.055583561Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -281,7 +312,7 @@ entries:
     version: 6.1.9
   - apiVersion: v2
     appVersion: 6.1.8
-    created: "2022-01-13T10:33:19.404745305Z"
+    created: "2022-01-14T18:45:06.054256355Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -312,7 +343,7 @@ entries:
     version: 6.1.8
   - apiVersion: v2
     appVersion: 6.1.7
-    created: "2022-01-13T10:33:19.403466295Z"
+    created: "2022-01-14T18:45:06.052643348Z"
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
     digest: a2dc0cede004fe0e9b96c0b7dafc55bb2c1c5ea414ca13ea4922235b76aecf6c
@@ -342,7 +373,7 @@ entries:
     version: 6.1.7
   - apiVersion: v2
     appVersion: 6.1.6
-    created: "2022-01-13T10:33:19.402398087Z"
+    created: "2022-01-14T18:45:06.05081044Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -373,7 +404,7 @@ entries:
     version: 6.1.6
   - apiVersion: v2
     appVersion: 6.1.5
-    created: "2022-01-13T10:33:19.401715382Z"
+    created: "2022-01-14T18:45:06.049838336Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -404,7 +435,7 @@ entries:
     version: 6.1.5
   - apiVersion: v2
     appVersion: 6.1.4
-    created: "2022-01-13T10:33:19.400992877Z"
+    created: "2022-01-14T18:45:06.048765331Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -435,7 +466,7 @@ entries:
     version: 6.1.4
   - apiVersion: v2
     appVersion: 6.1.3
-    created: "2022-01-13T10:33:19.400221871Z"
+    created: "2022-01-14T18:45:06.047722727Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -466,7 +497,7 @@ entries:
     version: 6.1.3
   - apiVersion: v2
     appVersion: 6.1.2
-    created: "2022-01-13T10:33:19.399366165Z"
+    created: "2022-01-14T18:45:06.046722322Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -497,7 +528,7 @@ entries:
     version: 6.1.2
   - apiVersion: v2
     appVersion: 6.1.1
-    created: "2022-01-13T10:33:19.388975987Z"
+    created: "2022-01-14T18:45:06.031435755Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -528,7 +559,7 @@ entries:
     version: 6.1.1
   - apiVersion: v2
     appVersion: 6.1.0
-    created: "2022-01-13T10:33:19.388279282Z"
+    created: "2022-01-14T18:45:06.029978349Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -559,7 +590,7 @@ entries:
     version: 6.1.0
   - apiVersion: v2
     appVersion: 6.0.0
-    created: "2022-01-13T10:33:19.387585877Z"
+    created: "2022-01-14T18:45:06.028941944Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -590,7 +621,7 @@ entries:
     version: 6.0.0
   - apiVersion: v2
     appVersion: 5.12.20
-    created: "2022-01-13T10:33:19.371643058Z"
+    created: "2022-01-14T18:45:06.009874161Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -621,7 +652,7 @@ entries:
     version: 5.12.20
   - apiVersion: v2
     appVersion: 5.12.19
-    created: "2022-01-13T10:33:19.370020246Z"
+    created: "2022-01-14T18:45:06.001460024Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -652,7 +683,7 @@ entries:
     version: 5.12.19
   - apiVersion: v2
     appVersion: 5.12.18
-    created: "2022-01-13T10:33:19.368764237Z"
+    created: "2022-01-14T18:45:06.000369419Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -683,7 +714,7 @@ entries:
     version: 5.12.18
   - apiVersion: v2
     appVersion: 5.12.17
-    created: "2022-01-13T10:33:19.367654029Z"
+    created: "2022-01-14T18:45:05.998949213Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -714,7 +745,7 @@ entries:
     version: 5.12.17
   - apiVersion: v2
     appVersion: 5.12.16
-    created: "2022-01-13T10:33:19.36650932Z"
+    created: "2022-01-14T18:45:05.997976409Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -745,7 +776,7 @@ entries:
     version: 5.12.16
   - apiVersion: v2
     appVersion: 5.12.15
-    created: "2022-01-13T10:33:19.365816715Z"
+    created: "2022-01-14T18:45:05.996812504Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -776,7 +807,7 @@ entries:
     version: 5.12.15
   - apiVersion: v2
     appVersion: 5.12.14
-    created: "2022-01-13T10:33:19.36513561Z"
+    created: "2022-01-14T18:45:05.995790899Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -807,7 +838,7 @@ entries:
     version: 5.12.14
   - apiVersion: v2
     appVersion: 5.12.13
-    created: "2022-01-13T10:33:19.364426705Z"
+    created: "2022-01-14T18:45:05.994524494Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -838,7 +869,7 @@ entries:
     version: 5.12.13
   - apiVersion: v2
     appVersion: 5.12.12
-    created: "2022-01-13T10:33:19.363724599Z"
+    created: "2022-01-14T18:45:05.991715581Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -869,7 +900,7 @@ entries:
     version: 5.12.12
   - apiVersion: v2
     appVersion: 5.12.11
-    created: "2022-01-13T10:33:19.362850793Z"
+    created: "2022-01-14T18:45:05.990561276Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -900,7 +931,7 @@ entries:
     version: 5.12.11
   - apiVersion: v2
     appVersion: 5.12.10
-    created: "2022-01-13T10:33:19.362137688Z"
+    created: "2022-01-14T18:45:05.989496572Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -931,7 +962,7 @@ entries:
     version: 5.12.10
   - apiVersion: v2
     appVersion: 5.12.9
-    created: "2022-01-13T10:33:19.376969998Z"
+    created: "2022-01-14T18:45:06.017464394Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -962,7 +993,7 @@ entries:
     version: 5.12.9
   - apiVersion: v2
     appVersion: 5.12.8
-    created: "2022-01-13T10:33:19.376174292Z"
+    created: "2022-01-14T18:45:06.016396189Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -993,7 +1024,7 @@ entries:
     version: 5.12.8
   - apiVersion: v2
     appVersion: 5.12.6
-    created: "2022-01-13T10:33:19.375374886Z"
+    created: "2022-01-14T18:45:06.015348785Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1024,7 +1055,7 @@ entries:
     version: 5.12.6
   - apiVersion: v2
     appVersion: 5.12.5
-    created: "2022-01-13T10:33:19.374316678Z"
+    created: "2022-01-14T18:45:06.014048179Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1055,7 +1086,7 @@ entries:
     version: 5.12.5
   - apiVersion: v2
     appVersion: 5.12.4
-    created: "2022-01-13T10:33:19.373495072Z"
+    created: "2022-01-14T18:45:06.012701073Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1086,7 +1117,7 @@ entries:
     version: 5.12.4
   - apiVersion: v2
     appVersion: 5.12.3
-    created: "2022-01-13T10:33:19.372600565Z"
+    created: "2022-01-14T18:45:06.011282067Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1117,7 +1148,7 @@ entries:
     version: 5.12.3
   - apiVersion: v2
     appVersion: 5.12.2
-    created: "2022-01-13T10:33:19.370899153Z"
+    created: "2022-01-14T18:45:06.00274553Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1148,7 +1179,7 @@ entries:
     version: 5.12.2
   - apiVersion: v2
     appVersion: 5.12.1
-    created: "2022-01-13T10:33:19.361437782Z"
+    created: "2022-01-14T18:45:05.988443967Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1179,7 +1210,7 @@ entries:
     version: 5.12.1
   - apiVersion: v2
     appVersion: 5.12.0
-    created: "2022-01-13T10:33:19.360654677Z"
+    created: "2022-01-14T18:45:05.987275362Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1210,7 +1241,7 @@ entries:
     version: 5.12.0
   - apiVersion: v2
     appVersion: 5.11.8
-    created: "2022-01-13T10:33:19.359911571Z"
+    created: "2022-01-14T18:45:05.985162353Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1241,7 +1272,7 @@ entries:
     version: 5.11.8
   - apiVersion: v2
     appVersion: 5.11.7
-    created: "2022-01-13T10:33:19.357837256Z"
+    created: "2022-01-14T18:45:05.982459241Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1272,7 +1303,7 @@ entries:
     version: 5.11.7
   - apiVersion: v2
     appVersion: 5.11.6
-    created: "2022-01-13T10:33:19.356261244Z"
+    created: "2022-01-14T18:45:05.980977634Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1303,7 +1334,7 @@ entries:
     version: 5.11.6
   - apiVersion: v2
     appVersion: 5.11.5
-    created: "2022-01-13T10:33:19.355514438Z"
+    created: "2022-01-14T18:45:05.979317127Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1334,7 +1365,7 @@ entries:
     version: 5.11.5
   - apiVersion: v2
     appVersion: 5.11.4
-    created: "2022-01-13T10:33:19.354616132Z"
+    created: "2022-01-14T18:45:05.978150422Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1365,7 +1396,7 @@ entries:
     version: 5.11.4
   - apiVersion: v2
     appVersion: 5.11.3
-    created: "2022-01-13T10:33:19.353880026Z"
+    created: "2022-01-14T18:45:05.976747016Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1396,7 +1427,7 @@ entries:
     version: 5.11.3
   - apiVersion: v2
     appVersion: 5.11.2
-    created: "2022-01-13T10:33:19.35311242Z"
+    created: "2022-01-14T18:45:05.975738911Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1427,7 +1458,7 @@ entries:
     version: 5.11.2
   - apiVersion: v2
     appVersion: 5.11.1
-    created: "2022-01-13T10:33:19.352394315Z"
+    created: "2022-01-14T18:45:05.971441393Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1458,7 +1489,7 @@ entries:
     version: 5.11.1
   - apiVersion: v2
     appVersion: 5.11.0
-    created: "2022-01-13T10:33:19.351359607Z"
+    created: "2022-01-14T18:45:05.970311388Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1489,7 +1520,7 @@ entries:
     version: 5.11.0
   - apiVersion: v2
     appVersion: 5.10.3
-    created: "2022-01-13T10:33:19.3503301Z"
+    created: "2022-01-14T18:45:05.969306783Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1520,7 +1551,7 @@ entries:
     version: 5.10.3
   - apiVersion: v2
     appVersion: 5.10.2
-    created: "2022-01-13T10:33:19.349487193Z"
+    created: "2022-01-14T18:45:05.968309879Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1551,7 +1582,7 @@ entries:
     version: 5.10.2
   - apiVersion: v2
     appVersion: 5.10.1
-    created: "2022-01-13T10:33:19.348358285Z"
+    created: "2022-01-14T18:45:05.967124174Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1582,7 +1613,7 @@ entries:
     version: 5.10.1
   - apiVersion: v2
     appVersion: 5.10.0
-    created: "2022-01-13T10:33:19.345591064Z"
+    created: "2022-01-14T18:45:05.964628663Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1613,7 +1644,7 @@ entries:
     version: 5.10.0
   - apiVersion: v2
     appVersion: 5.9.3
-    created: "2022-01-13T10:33:19.386914972Z"
+    created: "2022-01-14T18:45:06.02797514Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1644,7 +1675,7 @@ entries:
     version: 5.9.3
   - apiVersion: v2
     appVersion: 5.9.2
-    created: "2022-01-13T10:33:19.386216567Z"
+    created: "2022-01-14T18:45:06.026862035Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1675,7 +1706,7 @@ entries:
     version: 5.9.2
   - apiVersion: v2
     appVersion: 5.9.1
-    created: "2022-01-13T10:33:19.385559562Z"
+    created: "2022-01-14T18:45:06.025893031Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1706,7 +1737,7 @@ entries:
     version: 5.9.1
   - apiVersion: v2
     appVersion: 5.9.0
-    created: "2022-01-13T10:33:19.384873257Z"
+    created: "2022-01-14T18:45:06.024807826Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1737,7 +1768,7 @@ entries:
     version: 5.9.0
   - apiVersion: v2
     appVersion: 5.8.4
-    created: "2022-01-13T10:33:19.383870549Z"
+    created: "2022-01-14T18:45:06.02343702Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1768,7 +1799,7 @@ entries:
     version: 5.8.4
   - apiVersion: v2
     appVersion: 5.8.3
-    created: "2022-01-13T10:33:19.382396538Z"
+    created: "2022-01-14T18:45:06.022039314Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1799,7 +1830,7 @@ entries:
     version: 5.8.3
   - apiVersion: v2
     appVersion: 5.8.2
-    created: "2022-01-13T10:33:19.381084629Z"
+    created: "2022-01-14T18:45:06.020411307Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1830,7 +1861,7 @@ entries:
     version: 5.8.2
   - apiVersion: v2
     appVersion: 5.8.1
-    created: "2022-01-13T10:33:19.37856981Z"
+    created: "2022-01-14T18:45:06.019469403Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1861,7 +1892,7 @@ entries:
     version: 5.8.1
   - apiVersion: v2
     appVersion: 5.8.0
-    created: "2022-01-13T10:33:19.377763804Z"
+    created: "2022-01-14T18:45:06.018504499Z"
     deprecated: true
     description: Eclipse Dirigible provides both development tools (Web IDE) and runtime
       environment for In-System Development and Low-Code/No-Code Development.
@@ -1890,4 +1921,4 @@ entries:
     urls:
     - https://eclipse.github.io/dirigible/charts/dirigible-5.8.0.tgz
     version: 5.8.0
-generated: "2022-01-13T10:33:19.344562857Z"
+generated: "2022-01-14T18:45:05.962302053Z"
