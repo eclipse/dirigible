@@ -11,10 +11,14 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import org.apache.olingo.odata2.api.batch.BatchHandler;
+import org.apache.olingo.odata2.api.batch.BatchRequestPart;
+import org.apache.olingo.odata2.api.batch.BatchResponsePart;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.commons.InlineCount;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
+import org.apache.olingo.odata2.api.ep.EntityProviderBatchProperties;
 import org.apache.olingo.odata2.api.ep.EntityProviderReadProperties;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
@@ -23,10 +27,12 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.exception.ODataNotFoundException;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.apache.olingo.odata2.api.processor.ODataRequest;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.processor.ODataSingleProcessor;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
+import org.apache.olingo.odata2.api.uri.PathInfo;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.info.*;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
@@ -37,9 +43,11 @@ import org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2ResultSetEntity;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
+import org.eclipse.dirigible.engine.odata2.sql.utils.SingleConnectionDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,6 +64,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractSQLProcessor.class);
 	
 	private final OData2EventHandler odata2EventHandler;
+    private DataSource dataSource;
 
 	public AbstractSQLProcessor() {
 		this.odata2EventHandler = new DummyOData2EventHandler();
@@ -635,4 +644,100 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		LOG.debug("SQL Params: {}", params);
 		SQLUtils.setParamsOnStatement(preparedStatement, params);
 	}
+
+    @Override
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public ODataResponse executeBatch(final BatchHandler handler, final String contentType, final InputStream content) throws ODataException {
+        try {
+            ODataResponse batchResponse;
+            PathInfo pathInfo = getContext().getPathInfo();
+            EntityProviderBatchProperties batchProperties = EntityProviderBatchProperties.init().pathInfo(pathInfo).build();
+            List<BatchRequestPart> batchParts = EntityProvider.parseBatchRequest(contentType, content, batchProperties);
+            List<BatchResponsePart> parts = new ArrayList<>();
+            for (BatchRequestPart batchPart : batchParts) {
+                parts.add(handler.handleBatchPart(batchPart));
+            }
+            batchResponse = EntityProvider.writeBatchResponse(parts);
+            return batchResponse;
+        } catch (ODataException e) {
+            LOG.error("Problem during batch processing", e);
+            throw e;
+        } catch (Exception e) {
+            throw new ODataException("Problem during batch processing", e);
+        }
+    }
+
+    @Override
+    public BatchResponsePart executeChangeSet(final BatchHandler handler, final List<ODataRequest> requests) throws ODataException {
+        DataSource originalDataSource = this.getDataSource();
+        try (Connection connection = getDataSource().getConnection()) {
+            SingleConnectionDataSource singleConnectionDataSource = new SingleConnectionDataSource(connection);
+            boolean originalAutoCommit = connection.getAutoCommit();
+            try {
+                //override the setDataSource so that all requests in a change set run in the same connection
+                this.setDataSource(singleConnectionDataSource);
+                BatchResponsePart result = doExecuteChangeSet(handler, requests);
+                return result;
+            } finally {
+                connection.setAutoCommit(originalAutoCommit);
+            }
+        } catch (ODataException e) {
+            LOG.error("Unable to execute chnange set", e);
+            throw e;
+        } catch (Exception e) {
+            LOG.error("Unable to execute chnange set", e);
+            throw new ODataException("Unable to execute the change set ", e);
+        } finally {
+            //restore the original data source
+            this.setDataSource(originalDataSource);
+        }
+    }
+
+    public BatchResponsePart doExecuteChangeSet(final BatchHandler handler, final List<ODataRequest> requests) throws ODataException, SQLException {
+        boolean changeSetFailed = false;
+        try (Connection nonClosableConnectionUsedForChangeSet = this.getDataSource().getConnection()) { //
+            try {
+                if (nonClosableConnectionUsedForChangeSet.getAutoCommit()) {
+                    nonClosableConnectionUsedForChangeSet.setAutoCommit(false);
+                }
+                List<ODataResponse> responses = new ArrayList<>();
+                for (ODataRequest request : requests) {
+                    ODataResponse response = handler.handleRequest(request);
+                    //erroneous requests are >= 400 (BAD_REQUEST)
+                    if (response.getStatus().getStatusCode() >= HttpStatusCodes.BAD_REQUEST.getStatusCode()) {
+                        List<ODataResponse> errorResponses = new ArrayList<>();
+                        errorResponses.add(response);
+                        changeSetFailed = true;
+                        return BatchResponsePart.responses(errorResponses).changeSet(false).build();
+                    }
+                    responses.add(response);
+                }
+                return BatchResponsePart.responses(responses).changeSet(true).build();
+            } catch (ODataException e) {
+                changeSetFailed = true;
+                throw e;
+            } catch (RuntimeException e) {
+                changeSetFailed = true;
+                throw new ODataException("Unable to process change set", e);
+            } finally {
+                if (!nonClosableConnectionUsedForChangeSet.getAutoCommit()) {
+                    if (changeSetFailed) {
+                        nonClosableConnectionUsedForChangeSet.rollback();
+                    } else {
+                        nonClosableConnectionUsedForChangeSet.commit();
+                    }
+                } else {
+                    throw new IllegalStateException("Invalid implementation - the OData operations must not unset the auto commit to false on the connection!");
+                }
+            }
+        }
+    }
 }
