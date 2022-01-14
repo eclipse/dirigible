@@ -22,6 +22,9 @@ public abstract class AbstractJavascriptExecutor extends AbstractScriptExecutor 
 	/** The Constant MODULE_EXT_JS. */
 	public static final String MODULE_EXT_JS = ".js/";
 
+	/** The Constant MODULE_EXT_MJS. */
+	public static final String MODULE_EXT_MJS = ".mjs/";
+
 	/** The Constant MODULE_EXT_RHINO. */
 	public static final String MODULE_EXT_RHINO = ".rhino/";
 
