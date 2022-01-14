@@ -510,15 +510,13 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
 	public final ODataEntry parseEntry(final EdmEntitySet entitySet, final InputStream content,
 			final String requestContentType, final boolean merge) throws ODataBadRequestException {
-		ODataEntry entryValues;
 		try {
 			EntityProviderReadProperties entityProviderProperties = EntityProviderReadProperties.init()
 					.mergeSemantic(merge).build();
-			entryValues = EntityProvider.readEntry(requestContentType, entitySet, content, entityProviderProperties);
+			return EntityProvider.readEntry(requestContentType, entitySet, content, entityProviderProperties);
 		} catch (Exception e) {
 			throw new ODataBadRequestException(ODataBadRequestException.BODY, e);
 		}
-		return entryValues;
 	}
 
 	@Override
@@ -640,7 +638,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		return preparedStatement;
 	}
 
-	public void setParamsOnStatement(PreparedStatement preparedStatement, List<SQLStatementParam> params) throws EdmException, SQLException {
+	public void setParamsOnStatement(PreparedStatement preparedStatement, List<SQLStatementParam> params) throws SQLException {
 		LOG.debug("SQL Params: {}", params);
 		SQLUtils.setParamsOnStatement(preparedStatement, params);
 	}
@@ -680,12 +678,11 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         DataSource originalDataSource = this.getDataSource();
         try (Connection connection = getDataSource().getConnection()) {
             SingleConnectionDataSource singleConnectionDataSource = new SingleConnectionDataSource(connection);
-            boolean originalAutoCommit = connection.getAutoCommit();
+			this.setDataSource(singleConnectionDataSource);
+			boolean originalAutoCommit = connection.getAutoCommit();
             try {
                 //override the setDataSource so that all requests in a change set run in the same connection
-                this.setDataSource(singleConnectionDataSource);
-                BatchResponsePart result = doExecuteChangeSet(handler, requests);
-                return result;
+                return doExecuteChangeSet(handler, requests);
             } finally {
                 connection.setAutoCommit(originalAutoCommit);
             }
