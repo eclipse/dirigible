@@ -8,7 +8,7 @@
   {
     "name": "core/v4/configurations",
     "description": "Configurations API",
-    "api": "configuration",
+    "api": "configurations",
     "versionedPaths": [
       "core/v4/configurations",
       "core/v3/configurations"
