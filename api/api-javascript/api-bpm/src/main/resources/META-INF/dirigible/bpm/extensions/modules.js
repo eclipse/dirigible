@@ -9,15 +9,9 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getContent = function() {
-	return [{
-		name: "bpm/v4/deployer",
-		description: "BPM Deployer API"
-	}, {
-		name: "bpm/v4/process",
-		description: "BPM Process API"
-	}, {
-		name: "bpm/v4/tasks",
-		description: "BPM Tasks API"
-	}];
+let platform = require("platform/v4/registry")
+exports.getContent = function () {
+    let file = platform.getText("bpm/extensions/modules.json");
+    return JSON.parse(file);
 };
+
