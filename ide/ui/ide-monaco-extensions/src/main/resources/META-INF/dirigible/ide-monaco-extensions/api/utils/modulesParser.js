@@ -59,24 +59,16 @@ function isIgnoredModulePath(path) {
         || path.startsWith("http/") // Ignore system JavaScript API packages
         || path.startsWith("utils/") // Ignore system JavaScript API packages
         || path.startsWith("bpm/") // Ignore system JavaScript API packages
-        || path.startsWith("bpm/") // Ignore system JavaScript API packages
+        || path.startsWith("git/") // Ignore system JavaScript API packages
         || path.startsWith("log/") // Ignore system JavaScript API packages
         || path.startsWith("db/") // Ignore system JavaScript API packages
         || path.startsWith("security/") // Ignore system JavaScript API packages
         || path.startsWith("security/") // Ignore system JavaScript API packages
-
         || path.startsWith("cassandra/") // Ignore system JavaScript API packages
-        || path.startsWith("elasticsearch/") // Ignore system JavaScript API packages
-        || path.startsWith("etcd/") // Ignore system JavaScript API packages
-        || path.startsWith("kafka/") // Ignore system JavaScript API packages
-        || path.startsWith("mongodb/") // Ignore system JavaScript API packages
-        || path.startsWith("qunit/") // Ignore system JavaScript API packages
-        || path.startsWith("rabbitmq/") // Ignore system JavaScript API packages
-        || path.startsWith("redis/") // Ignore system JavaScript API packages
-        || path.startsWith("spark/") // Ignore system JavaScript API packages
 
 
         || path.startsWith("template-application-") // Ignore application templates
+
         || path.endsWith("/extensions/perspective.js") // Ignore generated application UI related components
         || path.endsWith("/extensions/view.js") // Ignore generated application UI related components
         || path.endsWith("/extensions/tile/tile.js") // Ignore generated application UI related components
