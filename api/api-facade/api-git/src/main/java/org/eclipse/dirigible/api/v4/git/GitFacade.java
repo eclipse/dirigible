@@ -92,16 +92,6 @@ public class GitFacade implements IScriptingFacade {
                 }
             }
         }
-        IRepository repository = workspaceObject.getRepository();
-        for (IProject next : workspaceObject.getProjects()) {
-            if (!repository.isLinkedPath(next.getPath())) {
-                ProjectDescriptor project = new ProjectDescriptor();
-                project.setGit(false);
-                project.setName(next.getName());
-                project.setPath(next.getPath());
-                gitRepositories.add(project);
-            }
-        }
         return gitRepositories;
     }
 
