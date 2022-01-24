@@ -13,8 +13,6 @@ package org.eclipse.dirigible.bpm.flowable.dto;
 
 import java.util.Date;
 
-import org.flowable.engine.common.impl.db.SuspensionState;
-
 public class ExecutionData {
 	
 	protected String id;
@@ -37,7 +35,7 @@ public class ExecutionData {
 	protected boolean isCountEnabled;
 	protected String eventName;
 	protected String deleteReason;
-	protected int suspensionState = SuspensionState.ACTIVE.getStateCode();
+	protected int suspensionState = 1;
 	protected String startActivityId;
 	protected String startUserId;
 	protected Date startTime;
