@@ -153,6 +153,13 @@
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- MAIL -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-mail</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+
 		<!-- IDE Plugins -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
