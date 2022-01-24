@@ -108,7 +108,7 @@ flowableModeler
             templateUrl: 'views/app-definition.html',
             controller: 'AppDefinitionCtrl'
         })
-        .when('/editor/:workspace/:project/:path', {
+        .when('/editor/:workspace/:project/:path*', {
             templateUrl: appResourceRoot + 'editor-app/editor.html',
             controller: 'EditorController'
         })
