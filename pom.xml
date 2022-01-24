@@ -507,7 +507,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -699,7 +699,7 @@
 		<jetty.version>9.4.12.v20180830</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
-		<flowable.version>6.3.0</flowable.version>
+		<flowable.version>6.7.2</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
 		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
