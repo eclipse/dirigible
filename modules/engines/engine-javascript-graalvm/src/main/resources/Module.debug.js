@@ -218,7 +218,7 @@ Module.prototype.loadScript = function (filename) {
       require.main = __context.get("main_module");
       // create wrapper function
       var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
-                  + "\ndebugger;\n\n" +
+                  + "\ndebugger;\n\n"
                   + content
                   + "\n}; __wrap__;";
 
@@ -248,7 +248,7 @@ Module.prototype.loadScriptString = function (script) {
       require.main = __context.get("main_module");
       // create wrapper function
       var wrapper = "var __wrap__ = function (exports, require, module, __filename, __dirname) { "
-                  + "\ndebugger;\n\n" +
+                  + "\ndebugger;\n\n"
                   + content
                   + "\n}; __wrap__;";
 
