@@ -702,6 +702,7 @@
 		<flowable.version>6.3.0</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
+		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
 		<license-maven-plugin.version>4.2.rc1</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>6.0.0.202111291000-r</jgit.version>
