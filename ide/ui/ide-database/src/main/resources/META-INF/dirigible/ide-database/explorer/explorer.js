@@ -106,6 +106,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 
 									// Select contents
 									if (node.original.type === 'table'
+										|| node.original.type === 'base table'
 										|| node.original.type === 'view') {
 										ctxmenu.contents = {
 											"separator_before": false,
@@ -118,7 +119,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 											}.bind(this)
 										};
 										// Drop table
-										if (node.original.type === 'table') {
+										if (node.original.type === 'table' || node.original.type === 'base table') {
 											ctxmenu.dropTable = {
 												"separator_before": true,
 												"label": "Drop Table",
@@ -301,7 +302,7 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 			children = children.concat(functionsChildren);
 
 			icon = 'fa fa-database';
-		} else if (f.kind == 'table' && f.type === 'TABLE') {
+		} else if (f.kind == 'table' && (f.type === 'TABLE' || f.type === 'BASE TABLE')) {
 			//children = ['Loading...'];
 			children = [
 				{ text: "Columns", "icon": "fa fa-columns", children: ['Loading Columns...'] },

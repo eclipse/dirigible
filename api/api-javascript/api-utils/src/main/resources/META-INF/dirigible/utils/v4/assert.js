@@ -9,7 +9,6 @@
  * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-
 exports.assertTrue = function (condition, message) {
     if (!condition) {
         throw(message || "Assertion failed");
