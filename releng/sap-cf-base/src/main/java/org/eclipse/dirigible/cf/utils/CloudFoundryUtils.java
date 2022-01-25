@@ -79,6 +79,12 @@ public class CloudFoundryUtils {
 		return vcapServicesEnv.getHanaSchemaEnv() != null ? vcapServicesEnv.getHanaSchemaEnv().get(0) : null;
 	}
 
+	public static DestinationEnv getDestinationEnv() {
+		String envJson = EnvFacade.get(VCAP_SERVICES);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getDestinationEnv().get(0) : null;
+	}
+
 	public static class VcapApplicationEnv {
 
 		private String name;
@@ -165,6 +171,8 @@ public class CloudFoundryUtils {
 		@SerializedName("hana")
 		private List<HanaSchemaEnv> hanaSchemaEnv;
 
+		private List<DestinationEnv> destinationEnv;
+
 		public List<XsuaaEnv> getXsuaa() {
 			return xsuaa;
 		}
@@ -207,6 +215,14 @@ public class CloudFoundryUtils {
 
 		public void setHanaSchemaEnv(List<HanaSchemaEnv> hanaSchemaEnv) {
 			this.hanaSchemaEnv = hanaSchemaEnv;
+		}
+
+		public List<DestinationEnv> getDestinationEnv() {
+			return destinationEnv;
+		}
+
+		public void setDestinationEnv(List<DestinationEnv> destinationEnv) {
+			this.destinationEnv = destinationEnv;
 		}
 	}
 
@@ -593,6 +609,59 @@ public class CloudFoundryUtils {
 
 			public void setPassword(String password) {
 				this.password = password;
+			}
+		}
+	}
+
+	public static class DestinationEnv {
+
+		private DestinationCredentialsEnv credentials;
+
+		public DestinationCredentialsEnv getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(DestinationCredentialsEnv credentials) {
+			this.credentials = credentials;
+		}
+
+		public static class DestinationCredentialsEnv {
+
+			private String clientId;
+			private String clientSecret;
+			private String url;
+			private String uri;
+
+			public String getClientId() {
+				return clientId;
+			}
+
+			public void setClientId(String clientId) {
+				this.clientId = clientId;
+			}
+
+			public String getClientSecret() {
+				return clientSecret;
+			}
+
+			public void setClientSecret(String clientSecret) {
+				this.clientSecret = clientSecret;
+			}
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getUri() {
+				return uri;
+			}
+
+			public void setUri(String uri) {
+				this.uri = uri;
 			}
 		}
 	}
