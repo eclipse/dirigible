@@ -13,7 +13,6 @@ package org.eclipse.dirigible.bpm.flowable.dto;
 
 import java.util.Date;
 
-import org.flowable.engine.common.impl.db.SuspensionState;
 import org.flowable.task.api.DelegationState;
 
 public class TaskData {
@@ -33,7 +32,7 @@ public class TaskData {
 	protected int priority = 50;
 	protected Date createTime;
 	protected Date dueDate;
-	protected int suspensionState = SuspensionState.ACTIVE.getStateCode();
+	protected int suspensionState = 1;
 	protected String category;
 	protected boolean isIdentityLinksInitialized;
 	protected String executionId;

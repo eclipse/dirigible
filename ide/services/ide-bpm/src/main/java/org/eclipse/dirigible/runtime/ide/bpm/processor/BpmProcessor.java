@@ -26,7 +26,7 @@ import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.flowable.bpmn.converter.BpmnXMLConverter;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.editor.language.json.converter.BpmnJsonConverter;
-import org.flowable.engine.common.impl.util.io.InputStreamSource;
+import org.flowable.common.engine.impl.util.io.InputStreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
