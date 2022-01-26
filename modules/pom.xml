@@ -26,6 +26,7 @@
 		<module>security</module>
 		<module>odata</module>
 		<module>templating</module>
+		<module>mail</module>
 	</modules>
 
 	<properties>

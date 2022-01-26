@@ -35,7 +35,8 @@
 		<module>security-all</module>
 		<module>service-all</module>
 		<module>templating-all</module>
-	</modules>
+        <module>mail-all</module>
+    </modules>
 
 	<properties>
 		<license.header.location>../licensing-header.txt</license.header.location>

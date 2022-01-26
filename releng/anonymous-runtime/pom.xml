@@ -191,6 +191,13 @@
 			<artifactId>dirigible-bpm</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
+
+		<!-- MAIL -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-mail</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
 		
 		<!-- Templating Core -->
 		<dependency>
@@ -229,7 +236,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>1.3.3</version>
+			<version>1.4</version>
 		</dependency>
 
 		<!-- External - Jetty -->

@@ -507,7 +507,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -693,16 +693,18 @@
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
 		<logback.version>1.2.10</logback.version>
 		<h2database.version>2.0.206</h2database.version>
-		<derby.version>10.12.1.1</derby.version>
+		<derby.version>10.15.2.0</derby.version>
+		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.16.0</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
-		<flowable.version>6.3.0</flowable.version>
+		<flowable.version>6.7.2</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jaxws.version>2.3.3</jaxws.version>
-		<license-maven-plugin.version>4.2.rc1</license-maven-plugin.version>
+		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
+		<license-maven-plugin.version>4.2.rc2</license-maven-plugin.version>
 		<persistence.api.version>2.2.2</persistence.api.version>
 		<jgit.version>6.0.0.202111291000-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>

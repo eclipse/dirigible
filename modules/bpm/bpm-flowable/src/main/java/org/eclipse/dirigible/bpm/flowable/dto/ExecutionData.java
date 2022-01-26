@@ -1,19 +1,17 @@
 /*
- * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 package org.eclipse.dirigible.bpm.flowable.dto;
 
 import java.util.Date;
-
-import org.flowable.engine.common.impl.db.SuspensionState;
 
 public class ExecutionData {
 	
@@ -37,7 +35,7 @@ public class ExecutionData {
 	protected boolean isCountEnabled;
 	protected String eventName;
 	protected String deleteReason;
-	protected int suspensionState = SuspensionState.ACTIVE.getStateCode();
+	protected int suspensionState = 1;
 	protected String startActivityId;
 	protected String startUserId;
 	protected Date startTime;

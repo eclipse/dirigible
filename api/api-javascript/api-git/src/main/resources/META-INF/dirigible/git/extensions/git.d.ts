@@ -137,7 +137,7 @@ declare module "@dirigible/git" {
          * @param workspaceName
          * @param repositoryName
          */
-       function getUnstagedChanges(workspaceName:string, repositoryName:string)
+        function getUnstagedChanges(workspaceName:string, repositoryName:string)
 
         /**
          * Get staged changes
@@ -153,7 +153,7 @@ declare module "@dirigible/git" {
          * @param filePath
          * @param revStr
          */
-      function  getFileContent(workspaceName:string, repositoryName:string, filePath:string, revStr:string):string
+        function  getFileContent(workspaceName:string, repositoryName:string, filePath:string, revStr:string):string
 
 
 
