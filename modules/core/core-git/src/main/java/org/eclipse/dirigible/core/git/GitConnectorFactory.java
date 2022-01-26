@@ -43,7 +43,7 @@ public class GitConnectorFactory {
 	 *            the path to an existing Git Repository
 	 * @return a newly created {@link IGitConnector} object
 	 * @throws GitConnectorException
-	 *             Git Connector Exception 
+	 *             Git Connector Exception
 	 */
 	public static IGitConnector getConnector(String repositoryDirectory) throws GitConnectorException {
 		try {
@@ -82,6 +82,7 @@ public class GitConnectorFactory {
 	public static IGitConnector cloneRepository(String repositoryDirectory, String repositoryUri, String username, String password, String branch)
 			throws InvalidRemoteException, TransportException, GitAPIException {
 		try {
+			branch = branchOrNull(branch);
 
 			CloneCommand cloneCommand = Git.cloneRepository();
 			cloneCommand.setURI(repositoryUri);
@@ -96,6 +97,10 @@ public class GitConnectorFactory {
 		} catch (Exception e) {
 			throw new TransportException(e.getMessage());
 		}
+	}
+
+	private static String branchOrNull(String branch) {
+		return (branch != null && !branch.isEmpty()) ? branch : null;
 	}
 
 	public static void initRepository(String repositoryDirectory, Boolean isBare) throws TransportException, GitAPIException {

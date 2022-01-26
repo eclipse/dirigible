@@ -91,8 +91,6 @@ public class ShareCommand {
 	private void shareToGitRepository(final String user, final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
 			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while sharing project [%s].", project.getName());
-		
-		String branch = gitRepositoryBranch != null ? gitRepositoryBranch : ProjectMetadataManager.BRANCH_MASTER;
 
 		projectMetadataManager.ensureProjectMetadata(workspace, project.getName());
 
@@ -107,12 +105,12 @@ public class ShareCommand {
 
 			if (!isExistingGitRepository) {
 				logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-						branch, tempGitDirectory.getCanonicalPath()));
-				GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, branch);
+						gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
+				GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
 				logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
 			} else {
 				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-						branch, tempGitDirectory.getCanonicalPath()));
+						gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
 			}
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
