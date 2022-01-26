@@ -53,9 +53,9 @@ public abstract class AbstractOAuthFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (IS_OAUTH_AUTHENTICATION_ENABLED) {
 			filter(request, response, chain);
+		} else {
+			chain.doFilter(request, response);
 		}
-		chain.doFilter(request, response);
-		
 	}
 
 	/**
