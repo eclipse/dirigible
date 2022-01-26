@@ -17,8 +17,7 @@ import org.eclipse.dirigible.commons.api.module.DirigibleModulesInstallerModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Test supporting class, enabling dependency injection.
