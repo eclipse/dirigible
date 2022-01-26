@@ -15,6 +15,7 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
+import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
@@ -30,12 +31,34 @@ public class TransportProcessor {
 	/**
 	 * Import project.
 	 *
-	 * @param workspace the workspace
+	 * @param workspaceName the workspace name
 	 * @param content the content
 	 */
-	public void importProject(String workspace, byte[] content) {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		repository.importZip(content, workspaceApi.getPath(), true, false, null);
+	public void importProjectInWorkspace(String workspaceName, byte[] content) {
+		IWorkspace workspace = getWorkspace(workspaceName);
+		String workspacePath = workspace.getPath();
+		importProject(workspacePath, content);
+	}
+
+	public void importProjectInPath(String path, byte[] content) {
+		ICollection importedZipFolder = getOrCreateCollection(path);
+		String importedZipFolderPath = importedZipFolder.getPath();
+		importProject(importedZipFolderPath, content);
+	}
+
+	private void importProject(String path, byte[] content) {
+		repository.importZip(content, path, true, false, null);
+	}
+
+	private ICollection getOrCreateCollection(String path) {
+		ICollection repositoryRootCollection = repository.getRoot();
+		ICollection importedZipFolder = repositoryRootCollection.getCollection(path);
+
+		if (!importedZipFolder.exists()) {
+			importedZipFolder = repositoryRootCollection.createCollection(path);
+		}
+
+		return importedZipFolder;
 	}
 
 	/**
