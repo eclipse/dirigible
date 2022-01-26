@@ -149,10 +149,6 @@ public class CloneCommand {
 	protected void cloneProject(final String user, final String repositoryURI, String repositoryBranch, final String username, final String password,
 			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects, String optionalProjectName) throws GitConnectorException {
 		try {
-			if (repositoryBranch == null || repositoryBranch.isEmpty()) {
-				repositoryBranch = getDefaultBranch(repositoryURI);
-			}
-			
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getCanonicalPath()));
 			GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryURI, username, password, repositoryBranch);
@@ -285,8 +281,6 @@ public class CloneCommand {
 	/**
 	 * Generate workspace path.
 	 *
-	 * @param user
-	 *            the user
 	 * @param workspace
 	 *            the workspace
 	 * @return the string builder
@@ -295,41 +289,6 @@ public class CloneCommand {
 		StringBuilder relativePath = new StringBuilder(IRepositoryStructure.PATH_USERS).append(IRepositoryStructure.SEPARATOR).append(UserFacade.getName())
 				.append(IRepositoryStructure.SEPARATOR).append(workspace);
 		return relativePath.toString();
-	}
-	
-	private String getDefaultBranch(String gitUrl) throws InvalidRemoteException, TransportException, GitAPIException {
-		
-		String result = "refs/heads/master";
-		String defaultId = "";
-		
-		Ref head = Git.lsRemoteRepository()
-				.setRemote(gitUrl)
-				.callAsMap()
-				.get("HEAD");
-		
-		if (head != null) {
-		   if(head.isSymbolic()) {
-		      Ref b = head.getTarget();
-		      defaultId = b.getName();
-		   } else {
-			   AnyObjectId id = head.getObjectId();
-			   defaultId = id.getName();
-		   }
-		}
-		
-		Map<String, Ref> refMap = Git.lsRemoteRepository()
-			    .setRemote(gitUrl)
-			    .setHeads(true)
-			    .setTags(true)
-			    .callAsMap();
-		
-		for (Map.Entry<String, Ref> entry : refMap.entrySet()) {
-			if (entry.getValue().getObjectId().getName().equals(defaultId)) {
-				result = entry.getKey();
-			}
-		}
-		
-		return result.substring(result.lastIndexOf('/') + 1);
 	}
 
 }
