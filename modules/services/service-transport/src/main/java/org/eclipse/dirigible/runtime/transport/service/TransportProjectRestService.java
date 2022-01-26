@@ -11,17 +11,14 @@
  */
 package org.eclipse.dirigible.runtime.transport.service;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -59,7 +56,27 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	private HttpServletResponse response;
 
 	/**
-	 * Import project.
+	 * Import project in a given path.
+	 *
+	 * @param path the path
+	 * @param files the files
+	 * @return the response
+	 * @throws RepositoryImportException the repository import exception
+	 */
+	@POST
+	@Path("/project")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Import Project from Zip into given path")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Project Imported") })
+	public Response importProjectInPath(@ApiParam(value = "Path to import into", required = true) @QueryParam("path") String path, //     /path/zipContent
+								  @ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
+		path = URLDecoder.decode(path, StandardCharsets.UTF_8);
+		return importProject(path, false, files);
+	}
+
+	/**
+	 * Import project in a given workspace.
 	 *
 	 * @param workspace the workspace
 	 * @param files the files
@@ -72,16 +89,24 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation("Import Project from Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Imported") })
-	public Response importProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+	public Response importProjectInWorkspace(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace, //     /workspaceName/zipName
 			@ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
+		return importProject(workspace, true, files);
+	}
+
+	private Response importProject(String path, boolean isPathWorkspace, List<byte[]> files) {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
-		
+
 		for (byte[] file : files) {
-			processor.importProject(workspace, file);
-		}		
+			if (isPathWorkspace) {
+				processor.importProjectInWorkspace(path, file);
+			} else {
+				processor.importProjectInPath(path, file);
+			}
+		}
 		return Response.ok().build();
 	}
 	

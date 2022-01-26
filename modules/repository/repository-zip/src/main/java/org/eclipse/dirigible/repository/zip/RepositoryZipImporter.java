@@ -154,13 +154,12 @@ public class RepositoryZipImporter {
 								String extension = ContentTypeHelper.getExtension(name);
 								String mimeType = ContentTypeHelper.getContentType(extension);
 								boolean isBinary = ContentTypeHelper.isBinary(mimeType);
+								logger.debug("importZip creating resource: " + outpath);
 								if (mimeType != null) {
-									logger.debug("importZip creating resource: " + outpath);
 									logger.debug("importZip creating resource is binary?: " + isBinary);
 									repository.createResource(outpath, content, isBinary, mimeType, override);
 
 								} else {
-									logger.debug("importZip creating resource: " + outpath);
 									repository.createResource(outpath, content, true, ContentTypeHelper.APPLICATION_OCTET_STREAM,
 											override);
 								}
