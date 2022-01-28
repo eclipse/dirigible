@@ -12,11 +12,15 @@
 package org.eclipse.dirigible.api.v3.core;
 
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
-import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
-import org.eclipse.dirigible.engine.command.processor.CommandEngineExecutor;
+import org.eclipse.dirigible.commons.process.execution.ProcessExecutor;
+import org.eclipse.dirigible.commons.process.execution.output.ProcessResult;
+import org.eclipse.dirigible.commons.process.execution.output.OutputsPair;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * The ExecFacade is used to execute command line code.
@@ -26,24 +30,31 @@ public class ExecFacade implements IScriptingFacade {
     /**
      * Execute service module.
      *
-     * @param command
-     *            the command line code
-     * @param forAdding
-     *            variables to be declared
-     * @param forRemoving
-     *            variables to be removed
-     * @return the output of the command or error message
+     * @param command     the command line code
+     * @param forAdding   variables to be declared
+     * @param forRemoving variables to be removed
+     * @return the output of the command
      */
 
-    public static String exec(String command, Map<String, String> forAdding, List<String> forRemoving) {
-        String result = null;
-        try {
-            CommandEngineExecutor engineExecutor = new CommandEngineExecutor();
-            result = engineExecutor.executeCommandLine(command, forAdding, forRemoving, false);
-        } catch (ScriptingException e) {
-            result = e.getMessage();
+    public static String exec(String command, Map<String, String> forAdding, List<String> forRemoving) throws ExecutionException, InterruptedException {
+        Map<String, String> environmentVariablesToUse = createEnvironmentVariables(forAdding, forRemoving);
+        ProcessExecutor<OutputsPair> processExecutor = ProcessExecutor.create();
+        Future<ProcessResult<OutputsPair>> outputFuture = processExecutor.executeProcess(command, environmentVariablesToUse);
+        ProcessResult<OutputsPair> output = outputFuture.get();
+        return output.getProcessOutputs().getStandardOutput();
+    }
+
+    private static Map<String, String> createEnvironmentVariables(Map<String, String> forAdding, List<String> forRemoving) {
+        if (forAdding == null) {
+            return new ProcessBuilder().environment();
         }
-        return result;
+
+        Map<String, String> environmentVariables = new HashMap<>(forAdding);
+        if (forRemoving != null) {
+            forRemoving.forEach(environmentVariables.keySet()::remove);
+        }
+
+        return environmentVariables;
     }
 
 }

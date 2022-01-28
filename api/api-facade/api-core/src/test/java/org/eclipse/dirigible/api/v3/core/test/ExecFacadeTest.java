@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.eclipse.dirigible.api.v3.core.ExecFacade;
 import org.eclipse.dirigible.commons.config.Configuration;
@@ -27,7 +28,7 @@ import org.junit.Test;
 public class ExecFacadeTest extends AbstractDirigibleTest {
 
     @Test
-    public void execTest() {
+    public void execTest() throws ExecutionException, InterruptedException {
         String commandLine = null;
         String expectedUnsetValue = null;
         if (Configuration.isOSUNIX() || Configuration.isOSMac()) {

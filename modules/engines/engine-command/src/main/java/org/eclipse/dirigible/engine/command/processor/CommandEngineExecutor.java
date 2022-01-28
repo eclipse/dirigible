@@ -11,12 +11,12 @@
  */
 package org.eclipse.dirigible.engine.command.processor;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import org.eclipse.dirigible.api.v3.http.HttpResponseFacade;
@@ -222,7 +222,7 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 			logger.error(e.getMessage(), e);
 			throw new ScriptingException(e);
 		}
-		result = new String(out.toByteArray());
+		result = out.toString(StandardCharsets.UTF_8);
 		return result;
 	}
 
