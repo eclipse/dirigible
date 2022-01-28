@@ -47,10 +47,14 @@ public class OData2ODataMTransformer {
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
             PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
-            List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
-
-            if (tableMetadata.getTableType() == null || (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType()))) {
+            if (tableMetadata.getTableType() == null) {
                 logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
+                continue;
+            }
+
+            List<PersistenceTableColumnModel> idColumns = tableMetadata.getColumns().stream().filter(PersistenceTableColumnModel::isPrimaryKey).collect(Collectors.toList());
+            if (idColumns.isEmpty() && ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType())) {
+                logger.error("Table {} doesn't have primary keys {}, so it will be skipped.", entity.getTable(), entity.getName());
                 continue;
             }
 
@@ -152,12 +156,12 @@ public class OData2ODataMTransformer {
         return null;
     }
 
-    private void validateAssociationProperties(ODataAssociationDefinition association, ODataDefinition model) throws SQLException {
+    private void validateAssociationProperties(ODataAssociationDefinition association, ODataDefinition model) {
         validateAssociationProperty(association.getFrom(), model, association);
         validateAssociationProperty(association.getTo(), model, association);
     }
 
-    private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model, ODataAssociationDefinition association) throws SQLException {
+    private void validateAssociationProperty(ODataAssociationEndDefinition assEndDefinition, ODataDefinition model, ODataAssociationDefinition association) {
         ODataEntityDefinition entity = ODataMetadataUtil.getEntity(model, assEndDefinition.getEntity(), association.getName());
         if (!entity.getProperties().isEmpty()) {
             ArrayList<String> invalidProps = new ArrayList<>();

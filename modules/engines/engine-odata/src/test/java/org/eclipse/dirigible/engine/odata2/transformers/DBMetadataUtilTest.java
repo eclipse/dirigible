@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.transformers;
 
+import com.google.common.base.Verify;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.junit.Assert;
@@ -33,11 +34,11 @@ import java.util.Map;
 @RunWith(MockitoJUnitRunner.class)
 public class DBMetadataUtilTest {
 
-    public static final String CATALOG = "Catalog";
-    public static final String MY_TABLE_NAME = "MY_TABLE";
-    public static final String MY_SCHEMA_NAME = "mySchema";
-    public static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
-    public static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
+    private static final String CATALOG = "Catalog";
+    private static final String MY_TABLE_NAME = "MY_TABLE";
+    private static final String MY_SCHEMA_NAME = "mySchema";
+    private static final String COLUMN_NAME_LABEL = "COLUMN_NAME";
+    private static final String COLUMN_TYPE_LABEL = "TYPE_NAME";
 
     private static final Map<String, String> SQL_TO_EDM_TYPE_MAP = new HashMap<>();
 
@@ -100,13 +101,33 @@ public class DBMetadataUtilTest {
         testGetTableMetadata_columnTypeConversion("NotSupportedSQLType", null);
     }
 
+    @Test
+    public void testArtifactNotFound() throws SQLException {
+        DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
+        Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
+        mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null));
+
+        PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(MY_TABLE_NAME, MY_SCHEMA_NAME);
+        Assert.assertNull("Unexpected metadata result for not existing DB artifact.", tableMetadata);
+
+        Mockito.verify(databaseMetaData).getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null);
+        Mockito.verifyNoMoreInteractions(databaseMetaData);
+    }
+
     private void testGetTableMetadata_columnTypeConversion(String sqlType, String expectedEdmType) {
         try {
             Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
 
             mockDBMetaDataQuery_noResult(databaseMetaData.getPrimaryKeys(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME));
             mockDBMetaDataQuery_noResult(databaseMetaData.getImportedKeys(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME));
-            mockDBMetaDataQuery_noResult(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null));
+
+            ResultSet tables = Mockito.mock(ResultSet.class);
+            Mockito.when(databaseMetaData.getTables(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null)).thenReturn(tables);
+            // to skip the PostgreSQL fallback logic
+            Mockito.when(tables.isBeforeFirst()).thenReturn(true);
+
+            Mockito.when(tables.next()).thenReturn(true).thenReturn(false);
+            Mockito.when(tables.getString("TABLE_TYPE")).thenReturn("VIEW");
 
             ResultSet columns = Mockito.mock(ResultSet.class);
             Mockito.when(databaseMetaData.getColumns(CATALOG, MY_SCHEMA_NAME, MY_TABLE_NAME, null)).thenReturn(columns);
