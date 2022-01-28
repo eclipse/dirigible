@@ -64,13 +64,13 @@ public class KymaModule extends AbstractDirigibleModule {
 	private void configureOAuth() {
 		String oauthPrefix = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_PREFIX, "");
 
-		String url = getWithPrefix(oauthPrefix, ENV_URL);
+		String url = getEnvWithPrefix(oauthPrefix, ENV_URL);
 		String authorizeUrl = url != null ? url + OAUTH_AUTHORIZE : null;
 		String tokenUrl = url != null ? url + OAUTH_TOKEN : null;
-		String clientId = getWithPrefix(oauthPrefix, ENV_CLIENT_ID);
-		String clientSecret = getWithPrefix(oauthPrefix, ENV_CLIENT_SECRET);
-		String verificationKey = getWithPrefix(oauthPrefix, ENV_VERIFICATION_KEY);
-		String applicationName = getWithPrefix(oauthPrefix, ENV_XS_APP_NAME);
+		String clientId = getEnvWithPrefix(oauthPrefix, ENV_CLIENT_ID);
+		String clientSecret = getEnvWithPrefix(oauthPrefix, ENV_CLIENT_SECRET);
+		String verificationKey = getEnvWithPrefix(oauthPrefix, ENV_VERIFICATION_KEY);
+		String applicationName = getEnvWithPrefix(oauthPrefix, ENV_XS_APP_NAME);
 		String applicationHost = Configuration.get(ENV_DIRIGIBLE_HOST);
 
 		if (url == null || clientId == null || clientSecret == null || verificationKey == null || applicationHost == null) {
@@ -90,10 +90,10 @@ public class KymaModule extends AbstractDirigibleModule {
 	private void configureDestination() {
 		String destinationPrefix = Configuration.get(DIRIGIBLE_DESTINATION_PREFIX, "");
 
-		String clientId = getWithPrefix(destinationPrefix, ENV_CLIENT_ID);
-		String clientSecret = getWithPrefix(destinationPrefix, ENV_CLIENT_SECRET);
-		String url = getWithPrefix(destinationPrefix, ENV_URL);
-		String uri = getWithPrefix(destinationPrefix, ENV_URI);
+		String clientId = getEnvWithPrefix(destinationPrefix, ENV_CLIENT_ID);
+		String clientSecret = getEnvWithPrefix(destinationPrefix, ENV_CLIENT_SECRET);
+		String url = getEnvWithPrefix(destinationPrefix, ENV_URL);
+		String uri = getEnvWithPrefix(destinationPrefix, ENV_URI);
 
 		if (url == null || clientId == null || clientSecret == null || url == null || uri == null) {
 			logger.error(ERROR_MESSAGE_NO_DESTINATION_CONFIGURATION);
@@ -106,7 +106,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 	}
 
-	private String getWithPrefix(String prefix, String variableName) {
+	private String getEnvWithPrefix(String prefix, String variableName) {
 		return prefix.isEmpty() ? Configuration.get(variableName) : Configuration.get(String.format("%s%s", prefix, variableName));
 	}
 
