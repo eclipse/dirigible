@@ -14,7 +14,6 @@ package org.eclipse.dirigible.kyma;
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
