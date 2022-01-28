@@ -65,7 +65,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	private void configureOAuth() {
 		String oauthPrefix = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_PREFIX, "");
 
-		String url = Configuration.get(ENV_URL);
+		String url = getWithPrefix(oauthPrefix, ENV_URL);
 		String authorizeUrl = url != null ? url + OAUTH_AUTHORIZE : null;
 		String tokenUrl = url != null ? url + OAUTH_TOKEN : null;
 		String clientId = getWithPrefix(oauthPrefix, ENV_CLIENT_ID);
@@ -108,7 +108,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	}
 
 	private String getWithPrefix(String prefix, String variableName) {
-		return prefix.isEmpty() ? Configuration.get(variableName) : Configuration.get(String.format("%s_%s", prefix, variableName));
+		return prefix.isEmpty() ? Configuration.get(variableName) : Configuration.get(String.format("%s%s", prefix, variableName));
 	}
 
 	@Override
