@@ -114,4 +114,10 @@ public class DefaultJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 		logger.error(format("Default Javascript Engine Executor not found."));
 		return null;
 	}
+
+	@Override
+	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext) {
+		IJavascriptEngineExecutor engine = getJavascriptEngine();
+		return engine.executeMethodFromModule(module, memberClass, memberClassMethod, executionContext);
+	}
 }

@@ -25,104 +25,112 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
  */
 public class ScriptEngineExecutorsManager {
 
-	/**
-	 * Execute service module.
-	 *
-	 * @param engineType
-	 *            the engine type
-	 * @param module
-	 *            the module
-	 * @param executionContext
-	 *            the execution context
-	 * @return the object
-	 * @throws ScriptingException
-	 *             the scripting exception
-	 */
-	public static Object executeServiceModule(String engineType, String module, Map<Object, Object> executionContext) throws ScriptingException {
-		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
-		if (scriptEngineExecutor != null) {
-			try {
-				ThreadContextFacade.setUp();
-				
-				return scriptEngineExecutor.executeServiceModule(module, executionContext);
-			} finally {
-				ThreadContextFacade.tearDown();
-			}
-		}
+    /**
+     * Execute service module.
+     *
+     * @param engineType       the engine type
+     * @param module           the module
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
+    public static Object executeServiceModule(String engineType, String module, Map<Object, Object> executionContext) throws ScriptingException {
+        IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
+        if (scriptEngineExecutor != null) {
+            try {
+                ThreadContextFacade.setUp();
 
-		throw new ScriptingException(
-				format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
-	}
+                return scriptEngineExecutor.executeServiceModule(module, executionContext);
+            } finally {
+                ThreadContextFacade.tearDown();
+            }
+        }
 
-	/**
-	 * Evaluate a code snippet
-	 * 
-	 * @param code the code snippet
-	 * @param executionContext the execution context 
-	 * @return the result object
-	 * @throws ScriptingException in case of exception
-	 */
-	public static Object evalModule(String code, Map<Object, Object> executionContext) throws ScriptingException {
-		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor("javascript");
-		if (scriptEngineExecutor != null) {
-			try {
-				ThreadContextFacade.setUp();
-				
-				return scriptEngineExecutor.evalModule(code, executionContext);
-			} finally {
-				ThreadContextFacade.tearDown();
-			}
-		}
+        throw new ScriptingException(
+                format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
+    }
 
-		throw new ScriptingException(
-				format("Script Executor of Type [{0}] does not exist, hence the Script [{1}] cannot be processed", "javascript", code));
-	}
+    /**
+     * Evaluate a code snippet
+     *
+     * @param code             the code snippet
+     * @param executionContext the execution context
+     * @return the result object
+     * @throws ScriptingException in case of exception
+     */
+    public static Object evalModule(String code, Map<Object, Object> executionContext) throws ScriptingException {
+        IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor("javascript");
+        if (scriptEngineExecutor != null) {
+            try {
+                ThreadContextFacade.setUp();
 
-	/**
-	 * Execute service code.
-	 *
-	 * @param engineType
-	 *            the engine type
-	 * @param code
-	 *            the code
-	 * @param executionContext
-	 *            the execution context
-	 * @return the object
-	 * @throws ScriptingException
-	 *             the scripting exception
-	 */
-	public static Object executeServiceCode(String engineType, String code, Map<Object, Object> executionContext) throws ScriptingException {
-		IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
-		if (scriptEngineExecutor != null) {
-			try {
-				ThreadContextFacade.setUp();
-				
-				return scriptEngineExecutor.evalCode(code, executionContext);
-			} finally {
-				ThreadContextFacade.tearDown();
-			}
-		}
+                return scriptEngineExecutor.evalModule(code, executionContext);
+            } finally {
+                ThreadContextFacade.tearDown();
+            }
+        }
 
-		throw new ScriptingException(
-				format("Script Executor of Type [{0}] does not exist, hence the code [{1}] cannot be processed", engineType, code));
-	}
-	
-	/**
-	 * Returns all the registered engine types
-	 * 
-	 * @return engine types
-	 */
-	public static Set<String> getEngineTypes() {
-		return ScriptEngineExecutorFactory.getEnginesTypes();
-	}
-	
-	/**
-	 * Returns all the registered engine types as JSON
-	 * 
-	 * @return engine types as JSON
-	 */
-	public static String getEngineTypesAsJson() {
-		return GsonHelper.GSON.toJson(getEngineTypes());
-	}
+        throw new ScriptingException(
+                format("Script Executor of Type [{0}] does not exist, hence the Script [{1}] cannot be processed", "javascript", code));
+    }
+
+    /**
+     * Execute service code.
+     *
+     * @param engineType       the engine type
+     * @param code             the code
+     * @param executionContext the execution context
+     * @return the object
+     * @throws ScriptingException the scripting exception
+     */
+    public static Object executeServiceCode(String engineType, String code, Map<Object, Object> executionContext) throws ScriptingException {
+        IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
+        if (scriptEngineExecutor != null) {
+            try {
+                ThreadContextFacade.setUp();
+
+                return scriptEngineExecutor.evalCode(code, executionContext);
+            } finally {
+                ThreadContextFacade.tearDown();
+            }
+        }
+
+        throw new ScriptingException(
+                format("Script Executor of Type [{0}] does not exist, hence the code [{1}] cannot be processed", engineType, code));
+    }
+
+    public static Object executeMethodFromModule(String engineType, String module, String memberClass, String memberMethod, Map<Object, Object> executionContext) throws ScriptingException {
+        IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
+        if (scriptEngineExecutor != null) {
+            try {
+                ThreadContextFacade.setUp();
+
+                return scriptEngineExecutor.executeMethodFromModule(module, memberClass, memberMethod, executionContext);
+            } finally {
+                ThreadContextFacade.tearDown();
+            }
+        }
+
+        throw new ScriptingException(
+                format("Script Executor of Type [{0}] does not exist, hence the Module [{1}] cannot be processed", engineType, module));
+    }
+
+    /**
+     * Returns all the registered engine types
+     *
+     * @return engine types
+     */
+    public static Set<String> getEngineTypes() {
+        return ScriptEngineExecutorFactory.getEnginesTypes();
+    }
+
+    /**
+     * Returns all the registered engine types as JSON
+     *
+     * @return engine types as JSON
+     */
+    public static String getEngineTypesAsJson() {
+        return GsonHelper.GSON.toJson(getEngineTypes());
+    }
 
 }
