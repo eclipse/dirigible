@@ -42,7 +42,6 @@ public class KymaModule extends AbstractDirigibleModule {
 	public static final String DIRIGIBLE_DESTINATION_URI = "DIRIGIBLE_DESTINATION_URI";
 
 	public static final String DEFAULT_DESTINATION_PREFIX = "destination_";
-	public static final String DEFAULT_OAUTH_PREFIX = "oauth_";
 
 	private static final String ERROR_MESSAGE_NO_OAUTH_CONFIGURATION = "No OAuth configuration provided";
 	private static final String ERROR_MESSAGE_NO_DESTINATION_CONFIGURATION = "No Destination configuration provided";
@@ -65,7 +64,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	}
 
 	private void configureOAuth() {
-		String oauthPrefix = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_PREFIX, DEFAULT_OAUTH_PREFIX);
+		String oauthPrefix = Configuration.get(OAuthService.DIRIGIBLE_OAUTH_PREFIX, "");
 
 		String url = getEnvWithPrefix(oauthPrefix, ENV_URL);
 		String authorizeUrl = url != null ? url + OAUTH_AUTHORIZE : null;
