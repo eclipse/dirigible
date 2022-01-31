@@ -171,6 +171,7 @@ public class CloudFoundryUtils {
 		@SerializedName("hana")
 		private List<HanaSchemaEnv> hanaSchemaEnv;
 
+		@SerializedName("destination")
 		private List<DestinationEnv> destinationEnv;
 
 		public List<XsuaaEnv> getXsuaa() {
