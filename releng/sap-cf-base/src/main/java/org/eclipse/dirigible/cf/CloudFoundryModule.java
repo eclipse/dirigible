@@ -14,6 +14,8 @@ package org.eclipse.dirigible.cf;
 import java.text.MessageFormat;
 
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.DestinationEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.DestinationEnv.DestinationCredentialsEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaCloudDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
@@ -38,6 +40,12 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	private static final String MODULE_NAME = "Cloud Foundry Module";
 
 	private static final String ERROR_MESSAGE_NO_XSUAA = "No XSUAA service instance is bound";
+	private static final String ERROR_MESSAGE_NO_DESTINATION = "No Destination service instance is bound";
+
+	public static final String DIRIGIBLE_DESTINATION_CLIENT_ID = "DIRIGIBLE_DESTINATION_CLIENT_ID";
+	public static final String DIRIGIBLE_DESTINATION_CLIENT_SECRET = "DIRIGIBLE_DESTINATION_CLIENT_SECRET";
+	public static final String DIRIGIBLE_DESTINATION_URL = "DIRIGIBLE_DESTINATION_URL";
+	public static final String DIRIGIBLE_DESTINATION_URI = "DIRIGIBLE_DESTINATION_URI";
 
 	private static final String DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE = "DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE";
 
@@ -65,6 +73,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		Configuration.loadModuleConfig("/dirigible-cloud-foundry.properties");
 		configureOAuth();
 		configureDatasource();
+		configureDestination();
 	}
 
 	private void configureOAuth() {
@@ -101,6 +110,26 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		bindHanaDb(CloudFoundryUtils.getHanaDbEnv());
 		bindHanaCloudDb(CloudFoundryUtils.getHanaCloudDbEnv());
 		bindHanaSchema(CloudFoundryUtils.getHanaSchemaEnv());
+	}
+
+	private void configureDestination() {
+		DestinationEnv destinationEnv = CloudFoundryUtils.getDestinationEnv();
+		if (destinationEnv == null || destinationEnv.getCredentials() == null) {
+			logger.error(ERROR_MESSAGE_NO_DESTINATION);
+			throw new InvalidStateException(ERROR_MESSAGE_NO_DESTINATION);
+		}
+
+		DestinationCredentialsEnv destinationCredentials = destinationEnv.getCredentials();
+
+		String clientId = destinationCredentials.getClientId();
+		String clientSecret = destinationCredentials.getClientSecret();
+		String url = destinationCredentials.getUrl();
+		String uri = destinationCredentials.getUri();
+
+		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
+		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
+		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
+		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 	}
 
 	private boolean bindPostgreDb(PostgreDbEnv env) {
