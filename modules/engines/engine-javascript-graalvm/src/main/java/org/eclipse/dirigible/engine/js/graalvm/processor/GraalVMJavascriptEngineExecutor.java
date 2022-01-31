@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import javax.script.Bindings;
@@ -91,6 +94,36 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
         return executeService(module, executionContext, true, false);
     }
 
+    @Override
+    public Object executeMethodFromModule(String module, String memberClass, String memberMethod, Map<Object, Object> executionContext) {
+        CompletableFuture<Object> res = new CompletableFuture<>();
+        executeService(module, executionContext, true, false,
+                (context, value) -> {
+                    if (memberClass != null && !memberClass.isEmpty()) {
+                        Value memberClassValue = value.getMember(memberClass);
+                        Value memberClassInstanceValue = memberClassValue.newInstance();
+                        Value memberClassMethodValue = memberClassInstanceValue.getMember(memberMethod);
+                        Value executionResult = memberClassMethodValue.execute();
+                        res.complete(executionResult);
+                    } else {
+                        Value memberMethodValue = value.getMember(memberMethod);
+                        Value executionResult = memberMethodValue.execute();
+                        res.complete(executionResult);
+                    }
+                });
+        try {
+            return res.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new ScriptingException(e);
+        }
+    }
+
+    public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
+        return executeService(moduleOrCode, executionContext, isModule, commonJSModule, (c, v) -> {
+        });
+    }
+
     /**
      * Execute service.
      *
@@ -100,7 +133,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
      * @return the object
      * @throws ScriptingException the scripting exception
      */
-    public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
+    public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule, BiConsumer<Context, Value> onAfterExecute) throws ScriptingException {
         if (moduleOrCode == null) {
             throw new ScriptingException("JavaScript module name cannot be null");
         }
@@ -140,7 +173,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 context.eval(ENGINE_JAVA_SCRIPT, "load(\"nashorn:mozilla_compat.js\")");
             }
 
-            String code = "";
+            String code;
             ExecutableFileType executableFileType = executableFileTypeResolver.resolveFileType(moduleOrCode, commonJSModule);
             if (executableFileType == ExecutableFileType.JAVASCRIPT_ESM) {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
@@ -153,7 +186,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build();
 
                 beforeEval(context);
-                result = context.eval(src).as(Object.class);
+                Value evaluated = context.eval(src);
+                onAfterExecute.accept(context, evaluated);
+                result = evaluated.as(Object.class);
             } else if (executableFileType == ExecutableFileType.JAVASCRIPT_NODE_CJS) {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
                 context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
@@ -163,10 +198,12 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
                 if (isModule) {
                     bindings.putMember("MODULE_FILENAME", moduleOrCode);
-                    context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+                    Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
+                    onAfterExecute.accept(context, evaluated);
                 } else {
                     bindings.putMember("SCRIPT_STRING", moduleOrCode);
-                    context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE).as(Object.class);
+                    Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE);
+                    onAfterExecute.accept(context, evaluated);
                 }
             } else {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
@@ -178,7 +215,9 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
                 beforeEval(context);
 
-                result = context.eval(ENGINE_JAVA_SCRIPT, code).as(Object.class);
+                Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, code);
+                onAfterExecute.accept(context, evaluated);
+                result = evaluated.as(Object.class);
             }
 
         } catch (IOException e) {
@@ -187,6 +226,10 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             e.printStackTrace();
         } catch (PolyglotException e) {
             e.printStackTrace();
+            if (e.isHostException()) {
+                Throwable hostException = e.asHostException();
+                throw new ScriptingException(hostException);
+            }
             logger.trace("exiting: executeServiceModule() with js exception");
             return e.getMessage(); // TODO: Create JSExecutionResult class and return it instead of Object instance
         } finally {

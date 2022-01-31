@@ -108,4 +108,6 @@ public interface IScriptEngineExecutor extends IEngineExecutor {
 
 	public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException;
 
+	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext);
+
 }

@@ -106,6 +106,11 @@ public class CommandEngineExecutor extends AbstractScriptExecutor implements ISc
 		return executeService(module, executionContext, true);
 	}
 
+	@Override
+	public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext) {
+		throw new RuntimeException(this.getClass().getSimpleName() + " does not support executing ES6 modules!");
+	}
+
 	/**
 	 * Execute service.
 	 *

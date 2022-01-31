@@ -53,6 +53,7 @@ class GraalVMJavaScriptContextBuilder {
             String project = StringUtils.substringBeforeLast(moduleOrCode, "/");
             RegistryTruffleFileSystem registryTruffleFileSystem = truffleFileSystemProvider.apply(project);
             contextBuilder.fileSystem(registryTruffleFileSystem);
+            contextBuilder.option("js.esm-eval-returns-exports", "true");
         }
 
 
