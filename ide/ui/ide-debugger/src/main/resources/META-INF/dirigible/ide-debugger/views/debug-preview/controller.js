@@ -91,6 +91,7 @@ angular.module('preview', [])
 					url += 'v8';
 					break;
 				case 'js':
+				case 'mjs':
 					url += '/js';
 					break;
 				case 'graalvm':
