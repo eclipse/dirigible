@@ -717,6 +717,7 @@
 		<caffeine.version>3.0.3</caffeine.version>
 		<liquibase-core.version>4.6.2</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
+		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 
 		<profile.content.phase>none</profile.content.phase>
