@@ -722,6 +722,7 @@
 		<classgraph.version>4.8.138</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.16.3</testcontainers.elasticsearch.version>
+		<logcaptor.version>2.7.8</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 
 		<profile.content.phase>none</profile.content.phase>
