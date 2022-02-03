@@ -16,13 +16,13 @@ let UriBuilder = function UriBuilder() {
 	this.pathSegments = [];
 	return this;
 };
-UriBuilder.prototype.path = function(_pathSegments) {
-	if (!Array.isArray(_pathSegments)) _pathSegments = [ _pathSegments ];
+UriBuilder.prototype.path = function (_pathSegments) {
+	if (!Array.isArray(_pathSegments)) _pathSegments = [_pathSegments];
 	_pathSegments = _pathSegments
-		.filter(function(segment) {
+		.filter(function (segment) {
 			return segment;
 		})
-		.map(function(segment) {
+		.map(function (segment) {
 			if (segment.length) {
 				if (segment.charAt(segment.length - 1) === '/') segment = segment.substring(0, segment.length - 2);
 				segment = encodeURIComponent(segment);
@@ -32,7 +32,7 @@ UriBuilder.prototype.path = function(_pathSegments) {
 	this.pathSegments = this.pathSegments.concat(_pathSegments);
 	return this;
 };
-UriBuilder.prototype.build = function(isBasePath = true) {
+UriBuilder.prototype.build = function (isBasePath = true) {
 	if (isBasePath) return '/' + this.pathSegments.join('/');
 	return this.pathSegments.join('/');
 };
@@ -42,13 +42,13 @@ angular.module('git.config', []).constant('GIT_SVC_URL', '/services/v4/ide/git')
 /**
  * Git Service API delegate
  */
-let GitService = function($http, $messageHub, gitServiceUrl) {
+let GitService = function ($http, $messageHub, gitServiceUrl) {
 	this.gitServiceUrl = gitServiceUrl;
 	this.$http = $http;
 	this.$messageHub = $messageHub;
 };
 
-GitService.prototype.commit = function(workspace, project, commitMessage, username, password, email, branch) {
+GitService.prototype.commit = function (workspace, project, commitMessage, username, password, email, branch) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('commit').build();
 	return this.$http
@@ -62,17 +62,17 @@ GitService.prototype.commit = function(workspace, project, commitMessage, userna
 			autoCommit: false
 		})
 		.then(
-			function(response) {
+			function (response) {
 				return response.data;
 			},
-			function(response) {
+			function (response) {
 				messageHub.message('action.complete', 'clone.project');
 				let errorMessage = JSON.parse(response.data.error).message;
 				messageHub.announceAlertError('Git Commit Error', errorMessage);
 			}
 		);
 };
-GitService.prototype.push = function(workspace, project, commitMessage, username, password, email, branch) {
+GitService.prototype.push = function (workspace, project, commitMessage, username, password, email, branch) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('push').build();
 
@@ -87,17 +87,19 @@ GitService.prototype.push = function(workspace, project, commitMessage, username
 			autoCommit: false
 		})
 		.then(
-			function(response) {
+			function (response) {
 				return response.data;
 			},
-			function(response) {
+			function (response) {
 				messageHub.message('action.complete', 'clone.project');
 				let errorMessage = JSON.parse(response.data.error).message;
 				messageHub.announceAlertError('Git Push Error', errorMessage);
+				console.log('GIT SERVICE ERROR RESULT', response);
+				return response;
 			}
 		);
 };
-GitService.prototype.getUnstagedFiles = function(workspace, project) {
+GitService.prototype.getUnstagedFiles = function (workspace, project) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder()
 		.path(this.gitServiceUrl.split('/'))
@@ -107,69 +109,69 @@ GitService.prototype.getUnstagedFiles = function(workspace, project) {
 		.build();
 
 	return this.$http.get(url, {}).then(
-		function(response) {
+		function (response) {
 			return response.data.files;
 		},
-		function(response) {
+		function (response) {
 			let errorMessage = JSON.parse(response.data.error).message;
 			messageHub.announceAlertError('Git Staging Error', errorMessage);
 		}
 	);
 };
-GitService.prototype.getStagedFiles = function(workspace, project) {
+GitService.prototype.getStagedFiles = function (workspace, project) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('staged').build();
 
 	return this.$http.get(url, {}).then(
-		function(response) {
+		function (response) {
 			return response.data.files;
 		},
-		function(response) {
+		function (response) {
 			let errorMessage = JSON.parse(response.data.error).message;
 			messageHub.announceAlertError('Git Staging Error', errorMessage);
 		}
 	);
 };
-GitService.prototype.addFiles = function(workspace, project, files) {
+GitService.prototype.addFiles = function (workspace, project, files) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('add').build();
 	let list = files.join(',');
 
 	return this.$http.post(url, JSON.stringify(list)).then(
-		function(response) {
+		function (response) {
 			return response.data;
 		},
-		function(response) {
+		function (response) {
 			let errorMessage = JSON.parse(response.data.error).message;
 			messageHub.announceAlertError('Git Staging Error', errorMessage);
 		}
 	);
 };
-GitService.prototype.revertFiles = function(workspace, project, files) {
+GitService.prototype.revertFiles = function (workspace, project, files) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('revert').build();
 	let list = files.join(',');
 
 	return this.$http.post(url, JSON.stringify(list)).then(
-		function(response) {
+		function (response) {
 			return response.data;
 		},
-		function(response) {
+		function (response) {
 			let errorMessage = JSON.parse(response.data.error).message;
 			messageHub.announceAlertError('Git Staging Error', errorMessage);
 		}
 	);
 };
-GitService.prototype.removeFiles = function(workspace, project, files) {
+GitService.prototype.removeFiles = function (workspace, project, files) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('remove').build();
 	let list = files.join(',');
 
 	return this.$http.post(url, JSON.stringify(list)).then(
-		function(response) {
+		function (response) {
 			return response.data;
 		},
-		function(response) {
+		function (response) {
 			let errorMessage = JSON.parse(response.data.error).message;
 			messageHub.announceAlertError('Git Staging Error', errorMessage);
 		}
@@ -177,16 +179,16 @@ GitService.prototype.removeFiles = function(workspace, project, files) {
 };
 
 let stagingApp = angular
-	.module('stagingApp', [ 'git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ])
-	.factory('httpRequestInterceptor', function() {
+	.module('stagingApp', ['git.config', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+	.factory('httpRequestInterceptor', function () {
 		let csrfToken = null;
 		return {
-			request: function(config) {
+			request: function (config) {
 				config.headers['X-Requested-With'] = 'Fetch';
 				config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
 				return config;
 			},
-			response: function(response) {
+			response: function (response) {
 				let token = response.headers()['x-csrf-token'];
 				if (token) {
 					csrfToken = token;
@@ -197,9 +199,9 @@ let stagingApp = angular
 	})
 	.config([
 		'$httpProvider',
-		function($httpProvider) {
+		function ($httpProvider) {
 			//check if response is error. errors currently are non-json formatted and fail too early
-			$httpProvider.defaults.transformResponse.unshift(function(data, headersGetter, status) {
+			$httpProvider.defaults.transformResponse.unshift(function (data, headersGetter, status) {
 				if (status > 399) {
 					data = {
 						error: data
@@ -212,15 +214,15 @@ let stagingApp = angular
 		}
 	])
 	.factory('$messageHub', [
-		function() {
+		function () {
 			let messageHub = new FramesMessageHub();
-			let message = function(evtName, data) {
+			let message = function (evtName, data) {
 				messageHub.post({ data: data }, 'git.' + evtName);
 			};
-			let announceFileDiff = function(fileDescriptor) {
+			let announceFileDiff = function (fileDescriptor) {
 				this.message('staging.file.diff', fileDescriptor);
 			};
-			let announceAlert = function(title, message, type) {
+			let announceAlert = function (title, message, type) {
 				messageHub.post(
 					{
 						data: {
@@ -232,16 +234,16 @@ let stagingApp = angular
 					'ide.alert'
 				);
 			};
-			let announceAlertSuccess = function(title, message) {
+			let announceAlertSuccess = function (title, message) {
 				announceAlert(title, message, 'success');
 			};
-			let announceAlertInfo = function(title, message) {
+			let announceAlertInfo = function (title, message) {
 				announceAlert(title, message, 'info');
 			};
-			let announceAlertWarning = function(title, message) {
+			let announceAlertWarning = function (title, message) {
 				announceAlert(title, message, 'warning');
 			};
-			let announceAlertError = function(title, message) {
+			let announceAlertError = function (title, message) {
 				announceAlert(title, message, 'error');
 			};
 			return {
@@ -252,7 +254,7 @@ let stagingApp = angular
 				announceAlertInfo: announceAlertInfo,
 				announceAlertWarning: announceAlertWarning,
 				announceAlertError: announceAlertError,
-				on: function(evt, cb) {
+				on: function (evt, cb) {
 					messageHub.subscribe(cb, evt);
 				}
 			};
@@ -262,7 +264,7 @@ let stagingApp = angular
 		'$http',
 		'$messageHub',
 		'GIT_SVC_URL',
-		function($http, $messageHub, GIT_SVC_URL) {
+		function ($http, $messageHub, GIT_SVC_URL) {
 			return new GitService($http, $messageHub, GIT_SVC_URL);
 		}
 	])
@@ -270,7 +272,7 @@ let stagingApp = angular
 		'gitService',
 		'$messageHub',
 		'$scope',
-		function(gitService, $messageHub, $scope) {
+		function (gitService, $messageHub, $scope) {
 			let revertWarnAccepted = false;
 
 			$scope.unstagedFiles = [];
@@ -303,7 +305,7 @@ let stagingApp = angular
 				return types[i];
 			}
 
-			$scope.okCommitAndPushClicked = function() {
+			$scope.okCommitAndPushClicked = function () {
 				if ($scope.commitMessage === undefined || $scope.commitMessage === '') {
 					$scope.commitMessage = null;
 				}
@@ -322,31 +324,39 @@ let stagingApp = angular
 						$scope.branch
 					)
 					.then(
-						function() {
-							gitService
-								.push(
-									$scope.selectedWorkspace,
-									$scope.selectedProject,
-									$scope.commitMessage,
-									$scope.username,
-									$scope.password,
-									$scope.email,
-									$scope.branch
-								)
-								.then(
-									function() {
-										$scope.commitMessage = '';
-										$messageHub.message('diff.view.clear');
-										if (loadingOverview) loadingOverview.classList.add('hide');
-										$scope.refresh();
-									}.bind(this)
-								);
+						function () {
+							$scope.okPushClicked();
 						}.bind(this)
 					);
 			};
 
-			$scope.okCommitClicked = function() {
-				console.log('Commit clicked');
+			$scope.okPushClicked = function () {
+				if ($scope.commitMessage === undefined || $scope.commitMessage === '') {
+					$scope.commitMessage = null;
+				}
+				loadingMessage.innerText = 'Pushing to project ' + $scope.selectedProject;
+				if (loadingOverview) loadingOverview.classList.remove('hide');
+				gitService
+					.push(
+						$scope.selectedWorkspace,
+						$scope.selectedProject,
+						$scope.commitMessage,
+						$scope.username,
+						$scope.password,
+						$scope.email,
+						$scope.branch
+					)
+					.then(
+						function (response) {
+							if (loadingOverview) loadingOverview.classList.add('hide');
+							$scope.commitMessage = '';
+							$messageHub.message('diff.view.clear');
+							$scope.refresh();
+						}.bind(this)
+					);
+			};
+
+			$scope.okCommitClicked = function () {
 				if ($scope.commitMessage === undefined || $scope.commitMessage === '') {
 					$scope.commitMessage = null;
 				}
@@ -363,7 +373,8 @@ let stagingApp = angular
 						$scope.branch
 					)
 					.then(
-						function() {
+						function () {
+							setTimeout(function () { if (loadingOverview) loadingOverview.classList.add('hide'); }, 500);
 							$scope.commitMessage = '';
 							$messageHub.message('diff.view.clear');
 							$scope.refresh();
@@ -371,14 +382,14 @@ let stagingApp = angular
 					);
 			};
 
-			$scope.refresh = function() {
+			$scope.refresh = function () {
 				if (!$scope.selectedWorkspace || !$scope.selectedProject) {
 					$scope.unstagedFiles = [];
 					$scope.stagedFiles = [];
 					return;
 				}
 				gitService.getUnstagedFiles($scope.selectedWorkspace, $scope.selectedProject).then(
-					function(files) {
+					function (files) {
 						$scope.unstagedFiles = files;
 						$scope.unstagedFiles.map((e) => {
 							e.label = typeIcon(e.type) + ' ' + e.path;
@@ -386,7 +397,7 @@ let stagingApp = angular
 					}.bind(this)
 				);
 				gitService.getStagedFiles($scope.selectedWorkspace, $scope.selectedProject).then(
-					function(files) {
+					function (files) {
 						$scope.stagedFiles = files;
 						$scope.stagedFiles.map((e) => {
 							e.label = typeIcon(e.type) + ' ' + e.path;
@@ -395,31 +406,31 @@ let stagingApp = angular
 				);
 			};
 
-			$scope.downClicked = function() {
+			$scope.downClicked = function () {
 				if ($scope.selectedUnstagedFiles.length > 0) {
 					gitService
 						.addFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedUnstagedFiles)
 						.then(
-							function() {
+							function () {
 								$scope.refresh();
 							}.bind(this)
 						);
 				}
 			};
 
-			$scope.upClicked = function() {
+			$scope.upClicked = function () {
 				if ($scope.selectedStagedFiles.length > 0) {
 					gitService
 						.removeFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedStagedFiles)
 						.then(
-							function() {
+							function () {
 								$scope.refresh();
 							}.bind(this)
 						);
 				}
 			};
 
-			$scope.diffClicked = function(file) {
+			$scope.diffClicked = function (file) {
 				if (!file) {
 					if ($scope.selectedUnstagedFiles.length > 0) file = $scope.selectedUnstagedFiles[0];
 					else return;
@@ -430,18 +441,18 @@ let stagingApp = angular
 				});
 			};
 
-			$scope.confirmRevert = function() {
+			$scope.confirmRevert = function () {
 				revertWarnAccepted = true;
 				$scope.revertClicked();
 			};
 
-			$scope.revertClicked = function() {
+			$scope.revertClicked = function () {
 				if ($scope.selectedUnstagedFiles.length > 0) {
 					if (revertWarnAccepted) {
 						gitService
 							.revertFiles($scope.selectedWorkspace, $scope.selectedProject, $scope.selectedUnstagedFiles)
 							.then(
-								function() {
+								function () {
 									$scope.refresh();
 								}.bind(this)
 							);
@@ -453,7 +464,7 @@ let stagingApp = angular
 
 			$messageHub.on(
 				'git.repository.selected',
-				function(msg) {
+				function (msg) {
 					if (msg.data.isGitProject) {
 						$scope.selectedWorkspace = msg.data.workspace;
 						$scope.selectedProject = msg.data.project;
@@ -466,7 +477,7 @@ let stagingApp = angular
 
 			$messageHub.on(
 				'git.action.complete',
-				function(msg) {
+				function (msg) {
 					if (msg.data === 'clone.project') {
 						$scope.$apply(() => {
 							if (loadingOverview) loadingOverview.classList.add('hide');
