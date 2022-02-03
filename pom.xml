@@ -672,7 +672,7 @@
 		<maven.resource.plugin.version>3.2.0</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
-		<maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.scm.plugin.version>1.12.2</maven.scm.plugin.version>
