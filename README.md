@@ -76,6 +76,10 @@ git config --system core.longpaths true
 
         mvn clean install
 
+ - Quick build with tests:
+
+        mvn -T 1C clean install -Dmaven.javadoc.skip=true -Dlicense.skip=true
+
  - If you don't want to trigger license updates:
 
         mvn clean install -Dlicense.skip=true
