@@ -720,6 +720,7 @@
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<classgraph.version>4.8.138</classgraph.version>
+		<commons-compress.version>1.21</commons-compress.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 
 		<profile.content.phase>none</profile.content.phase>
