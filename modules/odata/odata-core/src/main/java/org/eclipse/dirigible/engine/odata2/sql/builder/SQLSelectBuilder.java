@@ -28,11 +28,10 @@ import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.clause.*;
+import org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause.EvaluationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause.EvaluationType.*;
@@ -41,20 +40,18 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isOrderB
 public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(SQLSelectBuilder.class);
+    private static final String SPACE = " ";
 
-    private final Map<String, EdmStructuralType> tableAliasesForEntitiesInQuery;
     private final Set<String> structuralTypesInJoin;
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
     private SQLSelectClause selectExpression;
     private SQLOrderByClause orderByClause;
     private boolean serversidePaging;
-    private int row = 0;
 
     public SQLSelectBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
         selectExpression = null;
         orderByClause = null;
-        tableAliasesForEntitiesInQuery = new TreeMap<>();
         structuralTypesInJoin = new HashSet<>();
     }
 
@@ -190,66 +187,9 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
             if (join.isEmpty()) {
                 continue;
             }
-            builder.append(join.evaluate(context)).append(" ");
+            builder.append(join.evaluate(context)).append(SPACE);
         }
         return builder.toString();
-    }
-
-    /**
-     * Next row
-     *
-     * @param resultSet the result set
-     * @return true if there is a next row
-     * @throws SQLException in case of an error
-     */
-    public boolean next(final ResultSet resultSet) throws SQLException {
-        int top = selectExpression.getTop();
-        if (top > 0 && ++row > top)
-            return false;
-        return resultSet.next();
-    }
-
-    /**
-     * Set an offset
-     *
-     * @param resultSet the result set
-     * @throws SQLException in case of an error
-     */
-    public void setOffset(final ResultSet resultSet) throws SQLException {
-        if (selectExpression != null && selectExpression.getSkip() >= 1) {
-            // observation: next() needs to be invoked to get an entry as expected by relative()
-            //    the call sequence is not required by the JDBC specification but 
-            //    is working with the currently used jConnect JDBC driver 7.07.x
-            //    Also, we saw strange effects when relative() is called with numbers
-            //    larger than the fetchSize (specified on the statement;
-            //    see AbstractSQLProcessor.createStatement(SQLSelectBuilder, Connection)).
-            //    This is mitigated by calling resultSet.next() && resultSet.relative(fetchSize - 1)
-            //    in a loop (which requires some extra round trips to the database depending on the
-            //    chosen "skip" value).
-
-            int fetchSize = SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE;
-            int skip = selectExpression.getSkip();
-
-            int alreadySkipped = 0;
-            boolean hasMoreResults = true;
-
-            while (hasMoreResults && alreadySkipped < skip) {
-                if (alreadySkipped % fetchSize == 0) {
-                    hasMoreResults = resultSet.next();
-                    alreadySkipped += 1;
-                } else {
-                    final int relativeSize;
-                    if (skip - alreadySkipped < (fetchSize - 1)) {
-                        relativeSize = skip - alreadySkipped;
-                    } else {
-                        relativeSize = fetchSize - 1;
-                    }
-                    hasMoreResults = resultSet.relative(relativeSize);
-                    alreadySkipped += relativeSize;
-                }
-            }
-            row += alreadySkipped;
-        }
     }
 
     /**
@@ -267,27 +207,30 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         if (selectExpression == null)
             throw new IllegalStateException("Please initialize the select clause!");
         builder.append("SELECT ");
-        String selectPrefix = (String) selectExpression.evaluate(context, SELECT_PREFIX);
-        if (!selectPrefix.isEmpty()) {
-            builder.append(selectPrefix).append(" ");
-        }
         builder.append(selectExpression.evaluate(context, SELECT_COLUMN_LIST));
         builder.append(" FROM ");
-        builder.append(selectExpression.evaluate(context, FROM)).append(" ");
+        builder.append(selectExpression.evaluate(context, FROM)).append(SPACE);
         builder.append(evaluateJoins(context));
         if (!getWhereClause().isEmpty()) {
             builder.append(" WHERE ");
-            builder.append(getWhereClause().evaluate(context)).append(" ");
+            builder.append(getWhereClause().evaluate(context)).append(SPACE);
         }
         SQLOrderByClause ob = getOrderByClause();
-        if (ob != null && !ob.isEmpty()) {
-            builder.append("ORDER BY ").append(ob.evaluate(context)).append(" ");
+        if(null != ob) {
+            builder.append("ORDER BY ").append(ob.evaluate(context)).append(SPACE);
         }
-        String selectSuffix = (String) selectExpression.evaluate(context, SELECT_LIMIT);
-        if (!selectSuffix.isEmpty()) {
-            builder.append(selectSuffix);
-        }
+        addSelectOption(context, builder, SELECT_LIMIT);
+        addSelectOption(context, builder, SELECT_OFFSET);
+
         return SQLUtils.normalizeSQLExpression(builder);
+    }
+
+    private void addSelectOption(SQLContext context, StringBuilder statementBuilder, EvaluationType option)
+        throws EdmException {
+        String optionSupplement = selectExpression.evaluate(context, option);
+        if (!optionSupplement.isEmpty()) {
+            statementBuilder.append(optionSupplement).append(SPACE);
+        }
     }
 
     /**

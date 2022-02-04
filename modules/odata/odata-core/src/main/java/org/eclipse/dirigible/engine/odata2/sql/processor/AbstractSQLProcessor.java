@@ -128,23 +128,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			throws SQLException, ODataException {
 		String sql = selectQuery.buildSelect(createSQLContext(connection));
 		LOG.info(sql);
-		PreparedStatement preparedStatement;
-		if (selectQuery.getSelectExpression().getSkip() != SQLSelectClause.NOT_SET) {
-			preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			/*
-			 * Restrict fetch size to prevent OutOfMemoryErrors for huge page sizes. If no
-			 * fetch size is specified, jConnect will fetch all records up to the requested
-			 * page (in case of the last page, this would be the entire result set).
-			 * 
-			 * Internal Incident:
-			 * https://support.wdf.sap.corp/sap/support/message/1780258655
-			 */
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-			preparedStatement.setFetchSize(SQLQueryBuilder.DEFAULT_SERVER_PAGING_SIZE);
-
-		} else {
-			preparedStatement = connection.prepareStatement(sql);
-		}
 		setParamsOnStatement(preparedStatement, selectQuery.getStatementParams());
 		return preparedStatement;
 	}
@@ -165,8 +150,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		try (Connection connection = getDataSource().getConnection()){
 			try (PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
-					query.setOffset(resultSet);
-					while (query.next(resultSet)) {
+					while (resultSet.next()) {
 
 						if (resultEntity == null) {// TODO remove the duplication here with the readEntitySet
 							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
@@ -217,7 +201,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
-					query.setOffset(resultSet);
 					OData2ResultSetEntity currentResultSetEntity = null;
 
 					// we iterate the ResultSet rows here
@@ -226,7 +209,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 					// next target instance.
 					// Otherwise that row has only navigation properties, then in that iteration
 					// only the navigation properties are set
-					while (query.next(resultSet)) {// TODO remove the duplication here
+					while (resultSet.next()) {// TODO remove the duplication here
 
 						Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
 						OData2ResultSetEntity nextResultSetEntity = new OData2ResultSetEntity(data);
@@ -281,8 +264,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			SQLSelectBuilder queryForIdsInExpand = this.getSQLQueryBuilder().buildSelectEntitySetIdsForTopAndExpandQuery((UriInfo) uriInfo, getContext());
 			try (PreparedStatement statement = createSelectStatement(queryForIdsInExpand, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
-					queryForIdsInExpand.setOffset(resultSet);
-					while (queryForIdsInExpand.next(resultSet)) {// TODO remove the duplication here
+					while (resultSet.next()) {// TODO remove the duplication here
 						// we select only the ids here (we assume that only one key property is in the
 						// ID)
 						// Override this method if this is not the case
@@ -325,8 +307,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		try (Connection connection = getDataSource().getConnection()){
 			try (PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
-					query.setOffset(resultSet);
-					while (query.next(resultSet)) {
+					while (resultSet.next()) {
 						if (resultEntity == null) {// TODO remove the duplication here with the readEntitySet
 							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
 							resultEntity = new OData2ResultSetEntity(data);
@@ -354,8 +335,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		try (Connection connection = getDataSource().getConnection()){
 			try(PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
-					query.setOffset(resultSet);
-					while (query.next(resultSet)) {
+					while (resultSet.next()) {
 						if (resultEntity == null) {// TODO remove the duplication here with the readEntitySet
 							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
 							resultEntity = new OData2ResultSetEntity(data);
@@ -478,8 +458,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				try (Connection connection = getDataSource().getConnection()){
 					try (PreparedStatement statement = createSelectStatement(query, connection)){
 						try (ResultSet resultSet = statement.executeQuery()){
-							query.setOffset(resultSet);
-							while (query.next(resultSet)) {
+							while (resultSet.next()) {
 								if (resultEntity == null) {
 									Map<String, Object> data = readResultSet(query, entityType, properties, resultSet);
 									resultEntity = new OData2ResultSetEntity(data);
@@ -579,8 +558,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		try (Connection connection = getDataSource().getConnection()) {
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
-					query.setOffset(resultSet);
-					while (query.next(resultSet)) {
+					while (resultSet.next()) {
 						if (resultEntity == null) {
 							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
 							resultEntity = new OData2ResultSetEntity(data);

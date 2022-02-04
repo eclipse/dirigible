@@ -30,8 +30,10 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpan
 
 public final class SQLSelectClause {
 
+    private static final String EMPTY_STRING = "";
+
     public enum EvaluationType {
-        SELECT_PREFIX, SELECT_COLUMN_LIST, FROM, JOIN, WHERE, SELECT_LIMIT, INTO, VALUES, KEYS, TABLE
+        SELECT_COLUMN_LIST, FROM, JOIN, WHERE, SELECT_LIMIT, INTO, VALUES, KEYS, SELECT_OFFSET, TABLE
     }
 
     public static final int NOT_SET = -1;
@@ -62,19 +64,27 @@ public final class SQLSelectClause {
         skip = NOT_SET;
     }
 
-    public Object evaluate(final SQLContext context, final EvaluationType type) throws EdmException {
+    public String evaluate(final SQLContext context, final EvaluationType type) throws EdmException {
         switch (type) {
-        case SELECT_PREFIX:
-            return buildSelectPredicate(context);
         case SELECT_COLUMN_LIST:
             return buildColumnList(context);
         case FROM:
             return buildFrom(context);
         case SELECT_LIMIT:
             return buildLimit(context);
+        case SELECT_OFFSET:
+            return buildOffset(context);
         default:
             throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private String buildOffset(SQLContext context) {
+        if(skip <= 0){
+            return EMPTY_STRING;
+        }
+
+        return "OFFSET " + skip;
     }
 
     public boolean isEmpty() {
@@ -163,15 +173,15 @@ public final class SQLSelectClause {
 
     private String buildLimit(final SQLContext context) {
         if (isCount)
-            return "";
-        String selectPredicate = "";
+            return EMPTY_STRING;
+        String selectPredicate = EMPTY_STRING;
         if (top > 0) {
             if (context.getDatabaseProduct() == DatabaseProduct.DERBY) {
                 // Derby: FETCH { FIRST | NEXT } [integer-literal] {ROW | ROWS} ONLY
-                selectPredicate = String.format("FETCH FIRST %d ROWS ONLY", top);
-            } else if (context.getDatabaseProduct() == DatabaseProduct.POSTGRE_SQL || context.getDatabaseProduct() == DatabaseProduct.H2 || context.getDatabaseProduct() == DatabaseProduct.HANA) {
+                return String.format("FETCH FIRST %d ROWS ONLY", top);
+            } else {
                 // PostgreSQL: [LIMIT { number | ALL }] [OFFSET number]
-                selectPredicate = String.format("LIMIT %d", top);
+                return String.format("LIMIT %d", top);
             }
         }
 
@@ -242,18 +252,6 @@ public final class SQLSelectClause {
 
     private Object tableColumnForSelect(final EdmStructuralType type, final EdmProperty prop) {
         return query.getSQLTableColumn(type, prop) + " AS \"" + query.getSQLTableColumnAlias(type, prop)+"\"";
-    }
-
-    private String buildSelectPredicate(final SQLContext context) {
-        if (isCount)
-            return "";
-        String selectPredicate;
-        if (context.getDatabaseProduct() == DatabaseProduct.SYBASE_ASE && top > 0) {
-            selectPredicate = "TOP " + top;
-        } else {
-            selectPredicate = "";
-        }
-        return selectPredicate;
     }
 
     public static class SQLSelectBuilder {
