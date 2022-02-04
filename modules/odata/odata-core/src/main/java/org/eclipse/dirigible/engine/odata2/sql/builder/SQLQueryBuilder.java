@@ -85,9 +85,6 @@ public class SQLQueryBuilder {
 
         final Integer effectiveSkip = calculateEffectiveSkip(uri);
 
-        if (effectiveSkip != null && effectiveTop != null) {
-            effectiveTop += effectiveSkip;
-        }
         if (readIdsForExpand == null || readIdsForExpand.isEmpty()) {
             //no expand, we filter as usual
             q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target);
@@ -226,13 +223,7 @@ public class SQLQueryBuilder {
 
     private boolean calculateNeedsServersidePaging(UriInfo uri) throws EdmException {
         final Integer top = uri.getTop();
-        boolean needsServersidePaging;
-        if (top == null || top > getEntityPagingSize(uri.getTargetEntitySet().getEntityType())) {
-            needsServersidePaging = true;
-        } else {
-            needsServersidePaging = false;
-        }
-        return needsServersidePaging;
+        return top == null || top > getEntityPagingSize(uri.getTargetEntitySet().getEntityType());
     }
 
     /**
@@ -262,7 +253,7 @@ public class SQLQueryBuilder {
             effectiveSkip = skipToken + skip;
         } else if (skipToken == null && skip != null) {
             effectiveSkip = skip;
-        } else if (skipToken != null && skip == null) {
+        } else if (skipToken != null) {
             effectiveSkip = skipToken;
         } else {
             effectiveSkip = null;

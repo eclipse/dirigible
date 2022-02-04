@@ -72,7 +72,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
         assertEquals("SELECT T0.ID AS \"ID_T0\", T0.NAME AS \"NAME_T0\", T0.VALUE AS \"VALUE_T0\" " +
                 "FROM ITOP_MPLUSERDEFINEDATTRIBUTE AS T0 " +
                 "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T0.HEADER_ID WHERE T1.STATUS = ? " +
-                "AND T0.VALUE = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+                "AND T0.VALUE = ? ORDER BY T0.ID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
     //    @Test
@@ -137,7 +137,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
                 "FROM ENTITY3_TABLE AS T0 LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " +
                 "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " +
                 "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "WHERE T1.STATUS = ? AND T0.DESCRIPTION = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+                "WHERE T1.STATUS = ? AND T0.DESCRIPTION = ? ORDER BY T0.ID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class SQLSelectBuilderNavigationPropertiesTest {
                 "LEFT JOIN ITOP_MPLUSERDEFINEDATTRIBUTE AS T3 ON T3.ID = T0.ID_OF_ENTITY2 " +
                 "LEFT JOIN MPLHEADER AS T1 ON T1.ID = T3.HEADER_ID " +
                 "LEFT JOIN COMPLEX_TYPE_ENTITY_TABLE AS T2 ON T2.CT_ID = T0.COMPLEX_TYPE_JOIN_COLUMN " +
-                "WHERE T1.STATUS = ? AND T2.CT_DETAIL = ?" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
+                "WHERE T1.STATUS = ? AND T2.CT_DETAIL = ? ORDER BY T0.ID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX, q.buildSelect(context));
     }
 
 }

@@ -16,6 +16,8 @@ import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.uri.expression.*;
+import org.apache.olingo.odata2.core.uri.expression.ExpressionParserInternalError;
+import org.apache.olingo.odata2.core.uri.expression.OrderByParserImpl;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLClause;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
@@ -45,7 +47,7 @@ public class SQLOrderByClause implements SQLClause {
 
     @Override
     public String evaluate(final SQLContext context) throws EdmException {
-        return isEmpty() ? "" : parseExpression(context);
+        return isEmpty() ? getDefaultExpression(context) : parseExpression(context, orderByExpression);
     }
 
     @Override
@@ -53,13 +55,27 @@ public class SQLOrderByClause implements SQLClause {
         return orderByExpression == null || orderByExpression.getOrders() == null;
     }
 
-    private String parseExpression(SQLContext context) throws EdmException {
+    private String getDefaultExpression(SQLContext context)
+        throws EdmException {
+        List<String> keyPropertyNames = entityType.getKeyPropertyNames();
+        String defaultOrderByExpression = String.join(",", keyPropertyNames);
+        OrderByParserImpl orderByParser = new OrderByParserImpl(entityType);
+        OrderByExpression orderExpression;
+        try {
+            orderExpression = orderByParser.parseOrderByString(
+                defaultOrderByExpression);
+        } catch (ExpressionParserException | ExpressionParserInternalError e) {
+            throw new IllegalStateException("Failed to parse default OrderBy expression.", e);
+        }
+
+        return parseExpression(context, orderExpression);
+    }
+
+    private String parseExpression(SQLContext context, OrderByExpression orderExpression) throws EdmException {
         List<String> orderByClauses = new ArrayList<>();
-        if (!isEmpty()) {
-            List<OrderExpression> orderBys = orderByExpression.getOrders();
-            for (OrderExpression orderBy : orderBys) {
-                orderByClauses.add(orderByClause(context, orderBy));
-            }
+        List<OrderExpression> orderBys = orderExpression.getOrders();
+        for (OrderExpression orderBy : orderBys) {
+            orderByClauses.add(orderByClause(context, orderBy));
         }
         return SQLUtils.csv(orderByClauses);
     }
