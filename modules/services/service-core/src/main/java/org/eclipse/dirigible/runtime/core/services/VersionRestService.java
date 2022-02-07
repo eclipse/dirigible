@@ -40,7 +40,7 @@ import io.swagger.annotations.Authorization;
 @Api(value = "Version", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
-public class VersionRestService  extends AbstractRestService implements IRestService {
+public class VersionRestService extends AbstractRestService implements IRestService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(VersionRestService.class);
 	

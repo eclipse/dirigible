@@ -151,7 +151,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 				if (!websocketDefinition.equals(existing)) {
 					websocketsCoreService.updateWebsocket(websocketDefinition.getLocation(), websocketDefinition.getHandler(),
 							websocketDefinition.getEndpoint(), websocketDefinition.getDescription());
-					logger.info("Synchronized a modified Extension [{}] for Extension Point [{}] from location: {}", websocketDefinition.getHandler(),
+					logger.info("Synchronized a modified Websocket [{}] with Endpoint [{}] from location: {}", websocketDefinition.getHandler(),
 							websocketDefinition.getEndpoint(), websocketDefinition.getLocation());
 					applyArtefactState(websocketDefinition, WEBSOCKET_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
@@ -198,7 +198,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 	 */
 	@Override
 	protected void cleanup() throws SynchronizationException {
-		logger.trace("Cleaning up Extension Points and Extensions...");
+		logger.trace("Cleaning up Websockets...");
 		super.cleanup();
 
 		try {
@@ -206,7 +206,7 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			for (WebsocketDefinition websocketDefinition : websocketDefinitions) {
 				if (!WEBSOCKETS_SYNCHRONIZED.contains(websocketDefinition.getLocation())) {
 					websocketsCoreService.removeWebsocket(websocketDefinition.getLocation());
-					logger.warn("Cleaned up Extension for Module [{}] from location: {}", websocketDefinition.getHandler(),
+					logger.warn("Cleaned up Websocket for Module [{}] from location: {}", websocketDefinition.getHandler(),
 							websocketDefinition.getLocation());
 				}
 			}
@@ -214,6 +214,6 @@ public class WebsocketsSynchronizer extends AbstractSynchronizer {
 			throw new SynchronizationException(e);
 		}
 
-		logger.trace("Done cleaning up Extension Points and Extensions.");
+		logger.trace("Done cleaning up Websockets.");
 	}
 }

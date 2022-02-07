@@ -17,24 +17,24 @@ public class WebsocketSynchronizationArtefactType extends AbstractSynchronizatio
 
 	@Override
 	public String getId() {
-		return "Web Socket";
+		return "WebSocket";
 	}
 
 	@Override
 	protected String getArtefactStateMessage(ArtefactState state) {
 		switch (state) {
 		case FAILED_CREATE:
-			return "Create web socket has failed";
+			return "Create WebSocket has failed";
 		case FAILED_CREATE_UPDATE:
-			return "Create or update web socket has failed";
+			return "Create or update WebSocket has failed";
 		case FAILED_UPDATE:
-			return "Update web socket has failed";
+			return "Update WebSocket has failed";
 		case SUCCESSFUL_CREATE:
-			return "Create web socket was successful";
+			return "Create WebSocket was successful";
 		case SUCCESSFUL_CREATE_UPDATE:
-			return "Create or update web socket was successful";
+			return "Create or update WebSocket was successful";
 		case SUCCESSFUL_UPDATE:
-			return "Update web socket was successful";
+			return "Update WebSocket was successful";
 		default:
 			return state.getValue();
 		}
