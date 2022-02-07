@@ -1069,6 +1069,27 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         tree.element.trigger('jstree.workspace.delete', [node.original._file]);
                     }.bind(this)
 
+                    /*Publish*/
+                    ctxmenu.publish = {
+                        "separator_before": true,
+                        "label": "Publish",
+                        "action": function (data) {
+                            let tree = $.jstree.reference(data.reference);
+                            let node = tree.get_node(data.reference);
+                            tree.element.trigger('jstree.workspace.publish', [node.original._file]);
+                        }.bind(this)
+                    };
+                    /*Unpublish*/
+                    ctxmenu.unpublish = {
+                        "separator_before": false,
+                        "label": "Unpublish",
+                        "action": function (data) {
+                            let tree = $.jstree.reference(data.reference);
+                            let node = tree.get_node(data.reference);
+                            tree.element.trigger('jstree.workspace.unpublish', [node.original._file]);
+                        }.bind(this)
+                    };
+
                     if (this.get_type(node) !== "file") {
                         /*Generate*/
                         ctxmenu.generate = {
@@ -1081,26 +1102,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                             }.bind(this)
                         };
 
-                        /*Publish*/
-                        ctxmenu.publish = {
-                            "separator_before": true,
-                            "label": "Publish",
-                            "action": function (data) {
-                                let tree = $.jstree.reference(data.reference);
-                                let node = tree.get_node(data.reference);
-                                tree.element.trigger('jstree.workspace.publish', [node.original._file]);
-                            }.bind(this)
-                        };
-                        /*Publish*/
-                        ctxmenu.unpublish = {
-                            "separator_before": false,
-                            "label": "Unpublish",
-                            "action": function (data) {
-                                let tree = $.jstree.reference(data.reference);
-                                let node = tree.get_node(data.reference);
-                                tree.element.trigger('jstree.workspace.unpublish', [node.original._file]);
-                            }.bind(this)
-                        };
                         /*Upload*/
                         ctxmenu.upload = {
                             "separator_before": true,
