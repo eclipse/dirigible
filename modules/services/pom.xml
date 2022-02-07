@@ -24,6 +24,7 @@
 		<module>service-transport</module>
 		<module>service-operations</module>
 		<module>service-websockets</module>
+		<module>service-openapi</module>
 	</modules>
 
 	<properties>

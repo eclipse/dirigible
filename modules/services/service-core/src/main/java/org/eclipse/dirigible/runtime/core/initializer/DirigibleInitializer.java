@@ -168,15 +168,15 @@ public class DirigibleInitializer {
 		// customize some of the properties
 		feature.setBasePath("/services/v4");
 //		feature.setPrettyPrint(true);
-		feature.setDescription("Eclipse Dirigible API of the core RESTful services provided by the application development platform itself");
+		feature.setDescription("Eclipse Dirigible API of the core REST services provided by the application development platform itself");
 		try {
 			Version version = new VersionProcessor().getVersion();
 			feature.setVersion(version.getProductVersion());
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-			feature.setVersion("3.0.0");
+			feature.setVersion("6.0.0");
 		}
-		feature.setTitle("Eclipse Dirigible - RESTful Services API");
+		feature.setTitle("Eclipse Dirigible - Core REST Services API");
 		feature.setContact("dirigible-dev@eclipse.org");
 		feature.setLicense("Eclipse Public License - v 2.0");
 		feature.setLicenseUrl("https://www.eclipse.org/legal/epl-v20.html");
