@@ -131,22 +131,37 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
         }
     }
 
+    function getViewParameters() {
+        if (window.frameElement.hasAttribute("data-parameters")) {
+            let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+            $scope.file = params["file"];
+            if ("header" in params) $scope.papaConfig.header = params["header"];
+            if ("delimiter" in params) {
+                $scope.papaConfig.delimiter = params["delimiter"];
+                $scope.delimiter = params["delimiter"];
+            }
+            if ("quotechar" in params) $scope.papaConfig.quoteChar = params["quotechar"];
+        } else {
+            let searchParams = new URLSearchParams(window.location.search);
+            $scope.file = searchParams.get('file');
+            let header = searchParams.get('header');
+            let delimiter = searchParams.get('delimiter');
+            let quoteChar = searchParams.get('quotechar');
+            if (header) {
+                $scope.papaConfig.header = (header === 'true');
+            }
+            if (delimiter) {
+                $scope.papaConfig.delimiter = delimiter;
+                $scope.delimiter = delimiter;
+            }
+            if (quoteChar) {
+                $scope.papaConfig.quoteChar = quoteChar;
+            }
+        }
+    }
+
     function loadFileContents() {
-        let searchParams = new URLSearchParams(window.location.search);
-        $scope.file = searchParams.get('file');
-        let header = searchParams.get('header');
-        let delimiter = searchParams.get('delimiter');
-        let quoteChar = searchParams.get('quotechar');
-        if (header) {
-            $scope.papaConfig.header = (header === 'true');
-        }
-        if (delimiter) {
-            $scope.papaConfig.delimiter = delimiter;
-            $scope.delimiter = delimiter;
-        }
-        if (quoteChar) {
-            $scope.papaConfig.quoteChar = quoteChar;
-        }
+        getViewParameters();
         if ($scope.file) {
             $http.get('/services/v4/ide/workspaces' + $scope.file)
                 .then(function (response) {
@@ -161,7 +176,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
                     }
                 });
         } else {
-            console.error('file parameter is not present in the URL');
+            console.error("CSV Editor: file parameter is missing");
         }
     }
 
@@ -224,7 +239,6 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     }
 
     function saveContents(text) {
-        console.log('Save called...');
         if ($scope.file) {
             let xhr = new XMLHttpRequest();
             xhr.open('PUT', '/services/v4/ide/workspaces' + $scope.file);
@@ -232,16 +246,15 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
             xhr.setRequestHeader('X-CSRF-Token', csrfToken);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    console.log('file saved: ' + $scope.file);
+                    messageHub.post({ data: $scope.file }, 'editor.file.saved');
+                    messageHub.post({ data: 'File [' + $scope.file + '] saved.' }, 'status.message');
                 }
             };
             xhr.send(text);
             contents = text;
             isFileChanged = false;
-            messageHub.post({ data: $scope.file }, 'editor.file.saved');
-            messageHub.post({ data: 'File [' + $scope.file + '] saved.' }, 'status.message');
         } else {
-            console.error('file parameter is not present in the request');
+            console.error("CSV Editor: file parameter is missing");
         }
     }
 

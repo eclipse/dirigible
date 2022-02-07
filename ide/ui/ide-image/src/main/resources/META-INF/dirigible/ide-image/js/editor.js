@@ -15,9 +15,18 @@ editorView.controller('ImageViewController', ['$scope', '$http', function ($scop
     $scope.imageLink = "";
     $scope.dataLoaded = false;
 
+    function getViewParameters() {
+        if (window.frameElement.hasAttribute("data-parameters")) {
+            let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+            $scope.file = params["file"];
+        } else {
+            let searchParams = new URLSearchParams(window.location.search);
+            $scope.file = searchParams.get('file');
+        }
+    }
+
     function loadFileContents() {
-        let searchParams = new URLSearchParams(window.location.search);
-        $scope.file = searchParams.get('file');
+        getViewParameters();
         if ($scope.file) {
             $scope.imageLink = '/services/v4/ide/workspaces' + $scope.file;
             $scope.dataLoaded = true;

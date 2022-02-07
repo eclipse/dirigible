@@ -31,9 +31,18 @@ angular.module('page', [])
 			console.error('file parameter is not present in the URL');
 		}
 
+		function getViewParameters() {
+			if (window.frameElement.hasAttribute("data-parameters")) {
+				let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+				$scope.file = params["file"];
+			} else {
+				let searchParams = new URLSearchParams(window.location.search);
+				$scope.file = searchParams.get('file');
+			}
+		}
+
 		function load() {
-			let searchParams = new URLSearchParams(window.location.search);
-			$scope.file = searchParams.get('file');
+			getViewParameters();
 			contents = loadContents($scope.file);
 			$scope.view = JSON.parse(contents);
 		}

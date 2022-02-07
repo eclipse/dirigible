@@ -11,7 +11,7 @@
  */
 exports.getEditor = function () {
 	return {
-		"id": "CSVIM Editor",
+		"id": "csvim-editor",
 		"name": "CSVIM Editor",
 		"factory": "frame",
 		"region": "center-top",

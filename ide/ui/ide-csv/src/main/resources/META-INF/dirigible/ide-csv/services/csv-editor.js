@@ -11,7 +11,7 @@
  */
 exports.getEditor = function () {
 	return {
-		"id": "CSV Editor",
+		"id": "csv-editor",
 		"name": "CSV Editor",
 		"factory": "frame",
 		"region": "center-top",
