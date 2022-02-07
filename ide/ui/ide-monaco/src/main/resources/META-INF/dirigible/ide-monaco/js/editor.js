@@ -12,6 +12,14 @@ let gitApiUrl;
 let loadingOverview = document.getElementsByClassName('loading-overview')[0];
 let loadingMessage = document.getElementsByClassName('loading-message')[0];
 let lineDecorations = [];
+let useParameters = false; // Temp boolean used for transitioning to new parameter method.
+let parameters = {
+    resourceType: "",
+    contentType: "",
+    readOnly: false,
+    gitName: "",
+    file: ""
+};
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -81,14 +89,22 @@ function highlight_changed(lines, editor) {
 function FileIO() {
 
     this.isReadOnly = function () {
-        return editorUrl.searchParams.get('readOnly') || false;
+        if (useParameters) return parameters.readOnly || false;
+        else return editorUrl.searchParams.get('readOnly') || false;
     };
     this.resolveGitProjectName = function () {
+        if (useParameters) return parameters.gitName;
         return editorUrl.searchParams.get('gitName');
     };
     this.resolveFileName = function () {
-        this.readOnly = editorUrl.searchParams.get('readOnly') || false;
-        return editorUrl.searchParams.get('file');
+        if (useParameters) {
+            this.readOnly = parameters.readOnly || false;
+            return parameters.file;
+        }
+        else {
+            this.readOnly = editorUrl.searchParams.get('readOnly') || false;
+            return editorUrl.searchParams.get('file');
+        }
     };
     this.resolveFileType = function (fileName) {
         fileName = fileName || this.resolveFileName();
@@ -299,10 +315,27 @@ function FileIO() {
     };
 };
 
+function getViewParameters() {
+    if (window.frameElement.hasAttribute("data-parameters")) {
+        let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+        parameters.resourceType = params["resourceType"] || "/services/v4/ide/workspaces";
+        parameters.contentType = params["contentType"] || "";
+        parameters.readOnly = params["readOnly"] || false;
+        parameters.gitName = params["gitName"] || "";
+        parameters.file = params["file"] || "";
+        useParameters = true;
+    }
+}
+
 function setResourceApiUrl() {
     gitApiUrl = "/services/v4/ide/git";
     editorUrl = new URL(window.location.href);
-    let rtype = editorUrl.searchParams.get('rtype');
+    getViewParameters();
+    let rtype;
+    if (useParameters)
+        rtype = parameters.resourceType;
+    else
+        rtype = editorUrl.searchParams.get('rtype');
     if (rtype === "workspace") resourceApiUrl = "/services/v4/ide/workspaces";
     else if (rtype === "repository") resourceApiUrl = "/services/v4/core/repository";
     else if (rtype === "registry") resourceApiUrl = "/services/v4/core/registry";
