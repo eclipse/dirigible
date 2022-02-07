@@ -190,6 +190,9 @@ function FileIO() {
             extension: ".hdbsynonym",
             type: "json"
         }, {
+            extension: ".hdbpublicsynonym",
+            type: "json"
+        }, {
             extension: ".hdi",
             type: "json"
         }, {
