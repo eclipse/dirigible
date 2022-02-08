@@ -65,12 +65,14 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 	
 	private final OData2EventHandler odata2EventHandler;
     private DataSource dataSource;
+	private final ResultSetReader resultSetReader;
 
 	public AbstractSQLProcessor() {
-		this.odata2EventHandler = new DummyOData2EventHandler();
+		this(new DummyOData2EventHandler());
 	}
 	
 	public AbstractSQLProcessor(OData2EventHandler odata2EventHandler) {
+		this.resultSetReader = new ResultSetReader(this);
 		this.odata2EventHandler = odata2EventHandler;
 	}
 
@@ -134,31 +136,27 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 		return preparedStatement;
 	}
 
-
-	// TODO add unit tests for the expand functionality
 	@Override
 	public ODataResponse readEntity(final GetEntityUriInfo uriInfo, final String contentType) throws ODataException {
-		
+
 		final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
 		final EdmEntityType targetEntityType = targetEntitySet.getEntityType();
 
 		SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
-		OData2ResultSetEntity resultEntity = null;
-		// TODO change logic to read columns from ResultSet? (key has to be read even if
-		// it is now requested via $select)
+		ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
+
 		Collection<EdmProperty> properties = getSelectedProperties(uriInfo.getSelect(), targetEntityType);
 		try (Connection connection = getDataSource().getConnection()){
 			try (PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
 					while (resultSet.next()) {
-
-						if (resultEntity == null) {// TODO remove the duplication here with the readEntitySet
-							Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
-							resultEntity = new OData2ResultSetEntity(data);
+						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
+							currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
 						}
 						List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
 						if (hasExpand(expandEntities)) {
-							processExpand(targetEntityType, query, resultSet, resultEntity, expandEntities);
+							resultSetReader.accumulateExpandedEntities(targetEntitySet, query, resultSet, currentAccumulator, expandEntities);
 						}
 					}
 				}
@@ -167,10 +165,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			LOG.error("Unable to serve request", e);
 			throw new ODataException(e);
 		}
-		return OData2Utils.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, resultEntity, contentType);
+		return ExpandCallBack.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, currentAccumulator.renderForExpand(), contentType);
 	}
 
-	// TODO add unit tests for the expand functionality
+
+
+
 	@Override
 	public ODataResponse readEntitySet(final GetEntitySetUriInfo uriInfo, final String contentType)
 			throws ODataException {
@@ -180,7 +180,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
 		Collection<EdmProperty> properties = getSelectedProperties(uriInfo.getSelect(), targetEntityType);
 		List<OData2ResultSetEntity> targetEntitiesResult = new ArrayList<>();
-
+		List<ResultSetReader.ExpandAccumulator> result = new ArrayList<>();
 		Integer count;
 		String nextLink;
 		try (Connection connection = getDataSource().getConnection()) {
@@ -193,43 +193,28 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			SQLSelectBuilder query;
 			List<String> readIdsForExpand = new ArrayList<>();
 			if (OData2Utils.hasExpand((UriInfo) uriInfo)) {
-				LOG.info("Reading the ids that will be used for $expand");
+				LOG.debug("Reading the ids that will be used for $expand");
 				readIdsForExpand = readIdsForExpand(uriInfo);
 				LOG.info("Using IDs for $expand: {}", readIdsForExpand);
 			}
 			query = this.getSQLQueryBuilder().buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
-
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
-					OData2ResultSetEntity currentResultSetEntity = null;
-
-					// we iterate the ResultSet rows here
-					// for every row, we create one target entity instance and compare it with the
-					// previous one. If the key property values are different, then we move to the
-					// next target instance.
-					// Otherwise that row has only navigation properties, then in that iteration
-					// only the navigation properties are set
-					while (resultSet.next()) {// TODO remove the duplication here
-
-						Map<String, Object> data = readResultSet(query, targetEntityType, properties, resultSet);
-						OData2ResultSetEntity nextResultSetEntity = new OData2ResultSetEntity(data);
-
-						LOG.info("Current object is " + nextResultSetEntity);
-						if (OData2Utils.isEmpty(targetEntityType, nextResultSetEntity)) {
-							continue;
+					ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
+					while (resultSet.next()) {
+						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						LOG.info("Current entity set object is {}", currentTargetEntity);
+						if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
+							currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
+							result.add(currentAccumulator);
 						}
-						if (!OData2Utils.isSameInstance(targetEntityType, currentResultSetEntity,
-								nextResultSetEntity)) {
-							// now the result set has a new entity
-							currentResultSetEntity = nextResultSetEntity;
-							targetEntitiesResult.add(currentResultSetEntity);
-						}
+
 						List<ArrayList<NavigationPropertySegment>> expandEntities = uriInfo.getExpand();
 						if (hasExpand(expandEntities)) {
-							processExpand(targetEntityType, query, resultSet, currentResultSetEntity, expandEntities);
+							resultSetReader.accumulateExpandedEntities(targetEntitySet, query, resultSet, currentAccumulator, expandEntities);
 						}
 					}
-					boolean needsNextLink = query.isServersidePaging() && targetEntitiesResult.size() == this
+					boolean needsNextLink = query.isServersidePaging() && result.size() == this
 							.getSQLQueryBuilder().getEntityPagingSize(targetEntityType);
 					nextLink = needsNextLink ? generateNextLink(query, targetEntityType) : null;
 				}
@@ -238,8 +223,11 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			LOG.error("Unable to serve request", e);
 			throw new ODataException(e);
 		}
-		return OData2Utils.writeFeedWithExpand(getContext(), (UriInfo) uriInfo, targetEntitiesResult, contentType,
-				count, nextLink);
+		List<Map<String, Object>> expands = new ArrayList<>();
+		for (ResultSetReader.ExpandAccumulator acc: result){
+			expands.add(acc.renderForExpand());
+		}
+		return ExpandCallBack.writeFeedWithExpand(getContext(), (UriInfo) uriInfo, expands, contentType, count, nextLink);
 	}
 
 	private void processExpand(EdmEntityType targetEntityType, SQLSelectBuilder query, ResultSet resultSet, OData2ResultSetEntity currentResultSetEntity,

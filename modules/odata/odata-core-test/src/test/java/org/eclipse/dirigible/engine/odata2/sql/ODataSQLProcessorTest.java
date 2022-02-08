@@ -727,26 +727,6 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
     }
 
     @Test
-    @Ignore
-    public void testGetEntitySetExpandSubEntity() throws Exception {
-        Response response = OData2RequestBuilder.createRequest(sf) //
-                .segments("Cars") //
-                .param("$filter", "Id eq 'b4dc3e22-bacb-44ed-aa02-70273525fb73'") //
-                .param("$expand", "Drivers,Owners/Addresses") //
-                .accept("application/atom+xml").executeRequest(GET);
-        //TODO implmeent me
-        String content = IOUtils.toString((InputStream) response.getEntity());
-        System.out.println(content);
-
-        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
-        assertEquals(1, resultFeed.getEntries().size());
-        ODataEntry resultEntry = resultFeed.getEntries().get(0);
-        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
-        assertEquals(2, drivers.size());
-
-    }
-
-    @Test
     public void testOrderByExpandedEntityWithoutExpand() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
                 .segments("Cars") //
@@ -822,5 +802,50 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(1, drivers.size());
         Map<String, Object> firstDriverProperties = drivers.get(0).getProperties();
         assertEquals("Zahari", firstDriverProperties.get("FirstName"));
+    }
+
+    @Test
+    public void testGetEntitySetExpandSubEntity() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars") //
+                .param("$filter", "Id eq 'b4dc3e22-bacb-44ed-aa02-70273525fb73'") //
+                .param("$expand", "Drivers,Owners/Addresses") //
+                .accept("application/atom+xml").executeRequest(GET);
+        //System.out.println(IOUtils.toString((InputStream) response.getEntity())); //print the feed
+
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        assertEquals(1, resultFeed.getEntries().size());
+        ODataEntry resultEntry = resultFeed.getEntries().get(0);
+        List<ODataEntry> drivers = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Drivers"))).getEntries();
+        assertEquals(2, drivers.size());
+        assertEquals("Johnny", drivers.get(0).getProperties().get("FirstName"));
+        assertNull("No expand expected", drivers.get(0).getProperties().get("Addresses"));
+
+        assertEquals("Natalie", drivers.get(1).getProperties().get("FirstName"));
+        assertNull("No expand expected", drivers.get(1).getProperties().get("Addresses"));
+
+
+        List<ODataEntry> owners = ((ODataDeltaFeedImpl) (resultEntry.getProperties().get("Owners"))).getEntries();
+        assertEquals(4, owners.size());
+        assertEquals("Johnny", owners.get(0).getProperties().get("FirstName"));
+        assertEquals(0, ((ODataDeltaFeedImpl) (owners.get(0).getProperties().get("Addresses"))).getEntries().size());
+
+        assertEquals("Mihail", owners.get(1).getProperties().get("FirstName"));
+        List<ODataEntry> secondOwnerAddresses = ((ODataDeltaFeedImpl) (owners.get(1).getProperties().get("Addresses"))).getEntries();
+        assertEquals(1, secondOwnerAddresses.size());
+        assertEquals("Frankfurt", secondOwnerAddresses.get(0).getProperties().get("City"));
+
+        assertEquals("Morgan", owners.get(2).getProperties().get("FirstName"));
+        List<ODataEntry> thirdOwnerAddresses = ((ODataDeltaFeedImpl) (owners.get(2).getProperties().get("Addresses"))).getEntries();
+        assertEquals(1, thirdOwnerAddresses.size());
+        assertEquals("Paris", thirdOwnerAddresses.get(0).getProperties().get("City"));
+
+        ODataEntry lastOwner = owners.get(owners.size() - 1);
+        List<ODataEntry> lastOwnerAddresses = ((ODataDeltaFeedImpl) (lastOwner.getProperties().get("Addresses"))).getEntries();
+        assertEquals("Grigor", lastOwner.getProperties().get("FirstName"));
+        assertEquals("Dimitrov", lastOwner.getProperties().get("LastName"));
+        assertEquals(2, lastOwnerAddresses.size());
+        assertEquals("Monaco", lastOwnerAddresses.get(0).getProperties().get("City"));
+        assertEquals("Haskovo", lastOwnerAddresses.get(1).getProperties().get("City"));
     }
 }
