@@ -80,8 +80,8 @@ public class Require {
                 + "globalThis." + functionName + " = Require();";
     }
 
-    public static final String MODULE_CODE(Boolean isDebugEnabled) throws IOException {
-        return IOUtils.toString(Require.class.getResourceAsStream(isDebugEnabled ? "/Module.debug.js" : "/Module.js"), Charset.defaultCharset());
+    public static final String MODULE_CODE() throws IOException {
+        return IOUtils.toString(Require.class.getResourceAsStream("/Module.js"), Charset.defaultCharset());
     }
 
     public static final String MODULE_CREATE_CODE = "let mainModule = createModule(\".\");\n" +
