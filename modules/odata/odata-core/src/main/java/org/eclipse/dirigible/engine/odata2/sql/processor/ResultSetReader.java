@@ -14,7 +14,10 @@ package org.eclipse.dirigible.engine.odata2.sql.processor;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
-import org.apache.olingo.odata2.core.edm.*;
+import org.apache.olingo.odata2.core.edm.EdmDouble;
+import org.apache.olingo.odata2.core.edm.EdmInt16;
+import org.apache.olingo.odata2.core.edm.EdmInt32;
+import org.apache.olingo.odata2.core.edm.EdmInt64;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
@@ -56,17 +59,16 @@ public class ResultSetReader {
         if (dbValue instanceof BigDecimal) {
             BigDecimal dec = (BigDecimal) dbValue;
             if (property.getType().equals(EdmInt32.getInstance())) {
-                return Integer.valueOf(dec.toBigInteger().intValue());
+                return dec.toBigInteger().intValue();
             } else if (property.getType().equals(EdmInt64.getInstance())) {
-                return Long.valueOf(dec.toBigInteger().longValue());
+                return dec.toBigInteger().longValue();
             } else if (property.getType().equals(EdmInt16.getInstance())) {
-                return Short.valueOf(dec.toBigInteger().shortValue());
+                return dec.toBigInteger().shortValue();
             } else if (property.getType().equals(EdmDouble.getInstance())) {
                 return dec.doubleValue();
             }
         }
         return dbValue;
-
     }
 
     protected Object readProperty(EdmStructuralType entityType, EdmProperty property, SQLSelectBuilder selectEntityQuery,
@@ -99,19 +101,16 @@ public class ResultSetReader {
         }
     }
 
-    public void accumulateExpandedEntities(EdmEntitySet targetEntitySet, SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
+    public void accumulateExpandedEntities(SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
                                            List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException {
 
         for (List<NavigationPropertySegment> expandContents : expandEntities) {
-
-            EdmEntityType parentType = null;
             List<ResultSetEntity> parents = new ArrayList<>();
-            /**
+            /*
              * The inner loop is for nested expands e.g. Owner/Address, where the parent has a higher index.
              * If the resultset contains an Address, the Owner would be empty. If the result set contains an owner, it is added ot the accumulation
              */
-            for (int level = 0; level < expandContents.size(); level++) {
-                NavigationPropertySegment expandContent = expandContents.get(level);
+            for (NavigationPropertySegment expandContent : expandContents) {
                 EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
                 Map<String, Object> expandData = getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
                 if (OData2Utils.isEmpty(expandType, expandData)) {
@@ -125,7 +124,7 @@ public class ResultSetReader {
         }
     }
 
-    static class ExpandAccumulator {
+    public static class ExpandAccumulator {
         private final ResultSetEntity entity;
         private final LinkedHashMap<String, List<ExpandAccumulator>> expandData;
 
@@ -136,10 +135,6 @@ public class ResultSetReader {
         public ExpandAccumulator(ResultSetEntity entity) {
             this.entity = entity;
             this.expandData = new LinkedHashMap<>();
-        }
-
-        public LinkedHashMap<String, List<ExpandAccumulator>> getExpandData() {
-            return expandData;
         }
 
         public boolean isAccumulatorFor(ResultSetEntity entity) {

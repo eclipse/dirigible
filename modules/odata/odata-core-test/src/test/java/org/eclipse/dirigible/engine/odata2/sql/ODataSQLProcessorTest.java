@@ -483,6 +483,19 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
     }
 
     @Test
+    public void testGetProperty() throws IOException, ODataException {
+
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Cars('7990d49f-cfaf-48ab-8c6f-adbe7aaa069e')", "Make") //
+                .accept("application/json").executeRequest(GET);
+
+        assertEquals(200, response.getStatus());
+        InputStream res = (InputStream) response.getEntity();
+        String responseStr = IOUtils.toString(res);
+        assertEquals("Peugeot", responseStr);
+    }
+
+    @Test
     public void testTop2() throws Exception {
         Response response = OData2RequestBuilder.createRequest(sf) //
                 .segments("Drivers") //

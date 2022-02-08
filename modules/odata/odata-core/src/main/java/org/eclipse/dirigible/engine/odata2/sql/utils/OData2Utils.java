@@ -11,12 +11,9 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.utils;
 
-import org.apache.olingo.odata2.api.ODataCallback;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
-import org.apache.olingo.odata2.api.ep.EntityProviderException;
-import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.exception.ODataException;
@@ -25,10 +22,8 @@ import org.apache.olingo.odata2.api.exception.ODataRuntimeApplicationException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
-import org.apache.olingo.odata2.api.uri.ExpandSelectTreeNode;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
-import org.apache.olingo.odata2.api.uri.UriParser;
 import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
@@ -92,7 +87,7 @@ public class OData2Utils {
         if (inlineEntry.getType() instanceof EdmEntityType) {
             Object inlineEntryData = values.get(inlineEntry.getName());
             if (inlineEntryData instanceof ODataEntry) {
-                Map inlineEntryDataProperties = ((ODataEntry) inlineEntryData).getProperties();
+                Map<String, Object> inlineEntryDataProperties = ((ODataEntry) inlineEntryData).getProperties();
                 for (Object inlineEntityKeyName : inlineEntryDataProperties.keySet()) {
                     Object inlineKeyValue = inlineEntryDataProperties.get(inlinEntityKey.getName());
                     if (inlineKeyValue instanceof String) {
@@ -137,10 +132,7 @@ public class OData2Utils {
     }
 
     public static boolean hasExpand(List<ArrayList<NavigationPropertySegment>> expand) {
-        if (expand == null || expand.isEmpty()) {
-            return false;
-        }
-        return true;
+        return expand != null && !expand.isEmpty();
     }
 
 
@@ -181,9 +173,7 @@ public class OData2Utils {
             return false;
         if (propertyValue2 == null)
             return false;
-        if (!propertyValue1.equals(propertyValue2))
-            return false;
-        return true;
+        return propertyValue1.equals(propertyValue2);
     }
 
     public static HttpStatusCodes getStatusCodeForException(Exception e) {

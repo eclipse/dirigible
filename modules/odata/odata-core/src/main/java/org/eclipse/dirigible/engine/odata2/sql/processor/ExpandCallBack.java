@@ -12,19 +12,15 @@
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
 import org.apache.olingo.odata2.api.ODataCallback;
-import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
-import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties.ODataEntityProviderPropertiesBuilder;
 import org.apache.olingo.odata2.api.ep.callback.*;
 import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
-import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.ExpandSelectTreeNode;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
@@ -53,7 +49,14 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         return callbacks;
     }
 
-    public static <T> ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, Map<String, Object> entry, final String contentType) throws ODataException {
+    public static ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, ResultSetReader.ExpandAccumulator entryAccumulator, final String contentType) throws ODataException {
+        if (entryAccumulator == null) {
+            return OData2Utils.noContentResponse(contentType);
+        }
+        return writeEntryWithExpand(context, uriInfo, entryAccumulator.renderForExpand(), contentType);
+    }
+
+    public static ODataResponse writeEntryWithExpand(ODataContext context, UriInfo uriInfo, Map<String, Object> entry, final String contentType) throws ODataException {
         if (entry == null || entry.isEmpty()) {
             // Important NOTE:
             // If we use "Not found" and we return a payload, it has to be a standard
@@ -74,25 +77,27 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
                 .callbacks(ExpandCallBack.getCallbacks(context, uriInfo, Collections.singletonList(entry)))
                 .build();
 
-        final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry, writeProperties);
-        return response;
+        return EntityProvider.writeEntry(contentType, targetEntitySet, entry, writeProperties);
     }
 
 
-
-    public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<Map<String, Object>> entities,
+    public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<ResultSetReader.ExpandAccumulator> entitiesFeed,
                                                     final String contentType, Integer count, String nextLink) throws ODataException {
+
+        List<Map<String, Object>> entities = new ArrayList<>();
+        for (ResultSetReader.ExpandAccumulator acc : entitiesFeed) {
+            entities.add(acc.renderForExpand());
+        }
+
         EntityProviderWriteProperties feedProperties = EntityProviderWriteProperties
                 .serviceRoot(context.getPathInfo().getServiceRoot()).inlineCountType(uriInfo.getInlineCount()).inlineCount(count)
                 .expandSelectTree(UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand()))
                 .callbacks(ExpandCallBack.getCallbacks(context, uriInfo, entities))//
                 .nextLink(nextLink).build();
 
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (Map<String, Object> resultEntity : entities) {
-            result.add(resultEntity);
-        }
-        return EntityProvider.writeFeed(contentType, uriInfo.getTargetEntitySet(), result, feedProperties);
+        List<Map<String, Object>> feedEntities = new ArrayList<>();
+        feedEntities.addAll(entities);
+        return EntityProvider.writeFeed(contentType, uriInfo.getTargetEntitySet(), feedEntities, feedProperties);
     }
 
     private static Map<String, ODataCallback> getCallbacks(ODataContext context, UriInfo uriInfo, List<Map<String, Object>> feedData) throws ODataException {
@@ -135,10 +140,8 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
 
     private EntityProviderWriteProperties getInlineEntityProviderProperties(final WriteCallbackContext context) throws EdmException {
         return EntityProviderWriteProperties.serviceRoot(baseUri) //
-            .callbacks(getCallbacks(baseUri, context.getCurrentExpandSelectTreeNode(), expandList)) //
-            .expandSelectTree(context.getCurrentExpandSelectTreeNode()) //
-            .build();
+                .callbacks(getCallbacks(baseUri, context.getCurrentExpandSelectTreeNode(), expandList)) //
+                .expandSelectTree(context.getCurrentExpandSelectTreeNode()) //
+                .build();
     }
-
-
 }
