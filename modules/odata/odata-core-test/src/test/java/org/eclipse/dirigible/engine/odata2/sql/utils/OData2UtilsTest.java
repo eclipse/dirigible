@@ -16,8 +16,11 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
+import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.api.exception.ODataException;
@@ -26,6 +29,8 @@ import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.easymock.EasyMock;
+import org.eclipse.dirigible.engine.odata2.sql.processor.ExpandCallBack;
+import org.eclipse.dirigible.engine.odata2.sql.processor.ResultSetReader;
 import org.junit.Test;
 
 public class OData2UtilsTest {
@@ -38,8 +43,7 @@ public class OData2UtilsTest {
         String contentType = "application/json";
 
         // null written to response => valid error document has to be returned as response
-        ODataResponse response = OData2Utils.writeEntryWithExpand(ctx, uriInfo, null, contentType);
-
+        ODataResponse response = ExpandCallBack.writeEntryWithExpand(ctx, uriInfo, (Map<String, Object>) null, contentType);
         assertNotNull(response);
 
         // try to retrieve the error document from the response
@@ -48,11 +52,31 @@ public class OData2UtilsTest {
             errorResponse = EntityProvider.readErrorDocument(content, contentType);
         }
 
-        assertEquals("application/json", errorResponse.getContentType());
+        assertEquals(contentType, errorResponse.getContentType());
         assertEquals("No content", errorResponse.getMessage());
         assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
     }
+    @Test
+    public void testWriteEntryWithExpandNotFound2() throws EntityProviderException, ODataException, IOException {
+        ODataContext ctx = EasyMock.createMock(ODataContext.class);
+        UriInfo uriInfo = EasyMock.createMock(UriInfo.class);
+        EasyMock.replay(ctx, uriInfo);
+        String contentType = "application/json";
 
+        // null written to response => valid error document has to be returned as response
+        ODataResponse response = ExpandCallBack.writeEntryWithExpand(ctx, uriInfo, Collections.emptyMap(), contentType);
+        assertNotNull(response);
+
+        // try to retrieve the error document from the response
+        ODataErrorContext errorResponse = null;
+        try (InputStream content = response.getEntityAsStream()) {
+            errorResponse = EntityProvider.readErrorDocument(content, contentType);
+        }
+
+        assertEquals(contentType, errorResponse.getContentType());
+        assertEquals("No content", errorResponse.getMessage());
+        assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
+    }
     @Test
     public void testGetTenantNameFromContextMultipleBatchParents() {
         String resultTenantName = "TestName";

@@ -26,7 +26,6 @@ import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERV
 public final class EdmUtils {
 
     private EdmUtils() {
-
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(EdmUtils.class);
