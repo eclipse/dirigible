@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.interceptor.security.SecureAnnotationsInterceptor;
 import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.eclipse.dirigible.commons.api.content.ClasspathContentLoader;
@@ -88,6 +89,10 @@ public class DirigibleInitializer {
 		String[] keys = Configuration.getKeys();
 		for (String key : keys) {
 			String value = Configuration.get(key);
+			if(StringUtils.containsAnyIgnoreCase(key, "password", "secret"))
+			{
+				value = "******";
+			}
 			logger.info("Configuration: {}={}", key, value);
 		}
 		
