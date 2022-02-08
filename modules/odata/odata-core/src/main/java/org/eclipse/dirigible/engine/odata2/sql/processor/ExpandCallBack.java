@@ -16,6 +16,7 @@ import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmEntitySet;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmNavigationProperty;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
 import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties.ODataEntityProviderPropertiesBuilder;
@@ -63,13 +64,7 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
             // directly and not log the
             // error as 404 is usually not related to coding bugs but just not existent
             // keys.
-            ODataErrorContext errorContext = new ODataErrorContext();
-            errorContext.setContentType(contentType);
-            errorContext.setHttpStatus(HttpStatusCodes.NOT_FOUND);
-            errorContext.setErrorCode(HttpStatusCodes.NOT_FOUND.toString());
-            errorContext.setLocale(Locale.ENGLISH);
-            errorContext.setMessage("No content");
-            return EntityProvider.writeErrorDocument(errorContext);
+            return OData2Utils.noContentResponse(contentType);
         }
         final EdmEntitySet targetEntitySet = uriInfo.getTargetEntitySet();
         final ExpandSelectTreeNode expandSelectTree = UriParser.createExpandSelectTree(uriInfo.getSelect(), uriInfo.getExpand());
@@ -82,6 +77,8 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         final ODataResponse response = EntityProvider.writeEntry(contentType, targetEntitySet, entry, writeProperties);
         return response;
     }
+
+
 
     public static ODataResponse writeFeedWithExpand(ODataContext context, UriInfo uriInfo, List<Map<String, Object>> entities,
                                                     final String contentType, Integer count, String nextLink) throws ODataException {

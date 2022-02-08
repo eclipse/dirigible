@@ -14,13 +14,10 @@ package org.eclipse.dirigible.engine.odata2.sql.processor;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
-import org.apache.olingo.odata2.core.edm.EdmInt16;
-import org.apache.olingo.odata2.core.edm.EdmInt32;
-import org.apache.olingo.odata2.core.edm.EdmInt64;
+import org.apache.olingo.odata2.core.edm.*;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
-import org.eclipse.dirigible.engine.odata2.sql.utils.OData2ResultSetEntity;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
 import java.math.BigDecimal;
@@ -52,8 +49,7 @@ public class ResultSetReader {
         for (EdmProperty property : properties) {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
         }
-        ResultSetEntity entiy = new ResultSetEntity(entityType, data);
-        return entiy;
+        return new ResultSetEntity(entityType, data);
     }
 
     protected Object convertProperty(EdmProperty property, Object dbValue) throws EdmException {
@@ -65,6 +61,8 @@ public class ResultSetReader {
                 return Long.valueOf(dec.toBigInteger().longValue());
             } else if (property.getType().equals(EdmInt16.getInstance())) {
                 return Short.valueOf(dec.toBigInteger().shortValue());
+            } else if (property.getType().equals(EdmDouble.getInstance())) {
+                return dec.doubleValue();
             }
         }
         return dbValue;
@@ -101,24 +99,6 @@ public class ResultSetReader {
         }
     }
 
-
-    public void accumulateExpandedEntities(EdmEntityType targetEntityType, SQLSelectBuilder query, ResultSet resultSet, OData2ResultSetEntity currentResultSetEntity,
-                                           List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException {
-        for (List<NavigationPropertySegment> expandContents : expandEntities) {
-            for (NavigationPropertySegment expandContent : expandContents) {
-                EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
-                Map<String, Object> expandData = getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
-                if (OData2Utils.isEmpty(expandType, expandData)) {
-                    // nothing there, we need to find the next one
-                    continue;
-                }
-                Map<String, Object> customizedExpandData = callback.onCustomizeExpandedNavigatonProperty(targetEntityType, expandType, expandData);
-                currentResultSetEntity.addExpandedEntityProperties(expandType, customizedExpandData);
-            }
-        }
-    }
-
-
     public void accumulateExpandedEntities(EdmEntitySet targetEntitySet, SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
                                            List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException {
 
@@ -143,19 +123,6 @@ public class ResultSetReader {
                 }
             }
         }
-    }
-
-    @Deprecated
-    private void addExpandData(EdmEntitySet targetEntitySet, SQLSelectBuilder query, ResultSet resultSet, OData2ResultSetEntity currentResultSetEntity, NavigationPropertySegment expandContent) throws SQLException, ODataException {
-        EdmEntityType expandType = expandContent.getTargetEntitySet().getEntityType();
-        Map<String, Object> expandData = getEntityDataFromResultSet(query, expandType, EdmUtils.getProperties(expandType), resultSet);
-
-        if (OData2Utils.isEmpty(expandType, expandData)) {
-            // nothing there, we need to find the next one
-            return;
-        }
-        Map<String, Object> customizedExpandData = callback.onCustomizeExpandedNavigatonProperty(targetEntitySet.getEntityType(), expandType, expandData);
-        currentResultSetEntity.addExpandedEntityProperties(expandType, customizedExpandData);
     }
 
     static class ExpandAccumulator {
@@ -186,9 +153,7 @@ public class ResultSetReader {
         public boolean addExpandEntity(ResultSetEntity entity, List<ResultSetEntity> parents) {
             if (parents.isEmpty()) {
                 String fqn = OData2Utils.fqn(entity.entityType);
-                if (expandData.get(fqn) == null) {
-                    expandData.put(fqn, new ArrayList<>());
-                }
+                expandData.computeIfAbsent(fqn, k -> new ArrayList<>());
                 List<ExpandAccumulator> accumulators = expandData.get(fqn);
                 ExpandAccumulator last = lastAccumulator(accumulators);
                 if (last == null || !last.isAccumulatorFor(entity)) {
@@ -202,9 +167,8 @@ public class ResultSetReader {
                 return true;
             } else {  //recursion on the parents
                 ResultSetEntity firstParent = parents.get(0);
-                String firstParentFqn = OData2Utils.fqn(firstParent.entityType);
                 ExpandAccumulator firstParentAccumulator = accumulatorFor(firstParent);
-                ArrayList<ResultSetEntity> nextParents = new ArrayList(parents);
+                ArrayList<ResultSetEntity> nextParents = new ArrayList<>(parents);
                 nextParents.remove(0);//firstParent
                 return firstParentAccumulator.addExpandEntity(entity, nextParents);
             }
@@ -233,8 +197,7 @@ public class ResultSetReader {
         }
 
         public Map<String, Object> renderForExpand(ExpandAccumulator input) {
-            Map<String, Object> result = new HashMap<>();
-            result.putAll(input.getResultSetEntity().data);
+            Map<String, Object> result = new HashMap<>(input.getResultSetEntity().data);
             for (String key : input.expandData.keySet()) {
                 List<ExpandAccumulator> accumulators = input.expandData.get(key);
                 List<Map<String, Object>> expandData = new ArrayList<>();
