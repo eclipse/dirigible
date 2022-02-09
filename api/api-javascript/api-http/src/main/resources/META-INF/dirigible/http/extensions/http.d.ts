@@ -1232,5 +1232,9 @@ declare module "@dirigible/http" {
          * The SSL trust all enabled parameter
          */
         sslTrustAllEnabled?: boolean;
+        /**
+         * Whether to put params in the body. If not set or set to false, params are put in the URL
+         */
+        paramsInBody?: boolean;
     }
 }
