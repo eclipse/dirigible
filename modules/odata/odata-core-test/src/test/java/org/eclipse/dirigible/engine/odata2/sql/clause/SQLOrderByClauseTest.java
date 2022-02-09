@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.uri.UriParser;
@@ -65,10 +67,19 @@ public class SQLOrderByClauseTest {
         assertEquals("T0.STATUS DESC, T0.LOGEND ASC, T0.LOGSTART DESC", sqlOrderBy.evaluate(null));
     }
 
+    @Test
+    public void testOrderByWithNoOrderBy() throws Exception {
+        OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>()).getOrderBy();
+        EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
+        SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
+        SQLOrderByClause sqlOrderBy = new SQLOrderByClause(noop, type, orderBy);
+
+        assertEquals("T0.MESSAGEGUID ASC", sqlOrderBy.evaluate(null));
+    }
+
     private SQLOrderByClause createOrderByExpression(final String expression) {
-        OrderByExpression orderBy;
         try {
-            orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName()),
+            OrderByExpression orderBy = UriParser.parseOrderBy(edm, edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName()),
                     expression);
             EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
             SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);

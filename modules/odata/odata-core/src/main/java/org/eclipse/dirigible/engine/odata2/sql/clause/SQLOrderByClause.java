@@ -33,6 +33,7 @@ import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERV
 
 public class SQLOrderByClause implements SQLClause {
 
+    private static final String EMPTY_STRING = "";
     private final OrderByExpression orderByExpression;
     private final SQLSelectBuilder query;
     private final EdmEntityType entityType;
@@ -58,6 +59,10 @@ public class SQLOrderByClause implements SQLClause {
     private String getDefaultExpression(SQLContext context)
         throws EdmException {
         List<String> keyPropertyNames = entityType.getKeyPropertyNames();
+        if (null == keyPropertyNames || keyPropertyNames.isEmpty()){
+            return EMPTY_STRING;
+        }
+
         String defaultOrderByExpression = String.join(",", keyPropertyNames);
         OrderByParserImpl orderByParser = new OrderByParserImpl(entityType);
         OrderByExpression orderExpression;
