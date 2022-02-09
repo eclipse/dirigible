@@ -68,16 +68,6 @@ public class SQLOrderByClauseTest {
     }
 
     @Test
-    public void testOrderByWithNoCols() throws Exception {
-        OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>()).getOrderBy();
-        EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
-        SQLSelectBuilder noop = new SQLSelectBuilder(tableMappingProvider);
-        SQLOrderByClause sqlOrderBy = new SQLOrderByClause(noop, type, orderBy);
-
-        assertEquals("T0.MESSAGEGUID ASC", sqlOrderBy.evaluate(null));
-    }
-
-    @Test
     public void testOrderByWithNoOrderBy() throws Exception {
         OrderByExpression orderBy = UriParser.parse(edm, new ArrayList<>(), new HashMap<>()).getOrderBy();
         EdmEntityType type = edm.getEntityType(Entity1.class.getPackage().getName(), Entity1.class.getSimpleName());
