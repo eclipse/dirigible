@@ -44,7 +44,8 @@ class GraalVMJavaScriptContextBuilder {
         Context.Builder contextBuilder = Context.newBuilder("js")
                 .allowEnvironmentAccess(EnvironmentAccess.INHERIT)
                 .allowExperimentalOptions(true)
-                .option("js.ecmascript-version", "2021");
+                .option("js.ecmascript-version", "2022")
+                .option("engine.WarnInterpreterOnly", "false");
 
         if (moduleOrCode.endsWith(".mjs")) {
             if (moduleOrCode.startsWith("/")) {

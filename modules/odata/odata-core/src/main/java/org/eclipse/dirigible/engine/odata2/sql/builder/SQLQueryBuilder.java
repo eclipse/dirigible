@@ -126,15 +126,16 @@ public class SQLQueryBuilder {
         q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
         q.filter(uri.getTargetEntitySet(), uri.getFilter())
                 .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
-        //adds additional joins on the navigation properties required for correct ordering
-        List<EdmEntitySet> additionalJoins = new ArrayList<>();
+
+        //adds additional joins on the navigation properties required for correct ordering of the result set
         for (ArrayList<NavigationPropertySegment> segments : uri.getExpand()){
-            for (NavigationPropertySegment nav: segments){
-                additionalJoins.add(nav.getTargetEntitySet());
+            EdmEntitySet joinTarget = uri.getTargetEntitySet();
+            for (NavigationPropertySegment nav: segments) {
+                //when we have Owners/Addresses the addresses needs to be joined with the Owners.
+                //The joinTarget would be Owner when nav.getTargetEntitySet is Address
+                q.join(nav.getTargetEntitySet(), joinTarget, Collections.emptyList());
+                joinTarget = nav.getTargetEntitySet();
             }
-        }
-        for (EdmEntitySet joinType: additionalJoins){
-            q.join(joinType, uri.getTargetEntitySet(), Collections.emptyList());
         }
         q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
         return chain.onRead(q, uri, context);

@@ -191,7 +191,7 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
                 result = null; // always return null as the evaluation of `evaluated.as(Object.class)` returns a PolyglotMap dying with the context
             } else if (executableFileType == ExecutableFileType.JAVASCRIPT_NODE_CJS) {
                 context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
-                context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(isDebugEnabled));
+                context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE());
                 Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);
                 executionContext.put("main_module", mainModule);
                 beforeEval(context);
