@@ -89,7 +89,7 @@ public class DirigibleInitializer {
 		String[] keys = Configuration.getKeys();
 		for (String key : keys) {
 			String value = Configuration.get(key);
-			if(StringUtils.containsAnyIgnoreCase(key, "password", "secret"))
+			if(StringUtils.containsAnyIgnoreCase(key, "password", "secret", "_user", "username"))
 			{
 				value = "******";
 			}
