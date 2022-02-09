@@ -93,7 +93,9 @@ exports.trace = function(_url, options) {
 };
 
 function buildUrl(url, options) {
-	if (options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0) {
+    let noParams = options === undefined || options === null || options.params === undefined || options.params === null || options.params.length === 0;
+    let paramsInBody = options.paramsInBody !== undefined && options.paramsInBody == true;
+	if (noParams || paramsInBody) {
 		return url;
 	}
 	for (let i = 0; i < options.params.length; i ++) {
