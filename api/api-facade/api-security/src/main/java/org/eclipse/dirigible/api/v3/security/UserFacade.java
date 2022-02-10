@@ -41,6 +41,7 @@ public class UserFacade implements IScriptingFacade {
 	private static final String NO_VALID_REQUEST = "Trying to use HTTP Session Facade without a valid Session (HTTP Request/Response)";
 	private static final String INVOCATION_COUNT = "invocation.count";
 	private static final String LANGUAGE_HEADER = "accept-language";
+	private static final String ANY_LANGUAGE = "*";
 
 	private static final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 
@@ -202,6 +203,9 @@ public class UserFacade implements IScriptingFacade {
 	public static String getLanguage() {
 		if (HttpRequestFacade.isValid()) {
 			String language = HttpRequestFacade.getHeader(LANGUAGE_HEADER);
+			if(language == null || language.isEmpty()){
+				language = ANY_LANGUAGE;
+			}
 			List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(language);
 			return  ranges == null || ranges.isEmpty() ? "" : ranges.get(0).getRange();
 		} else {
