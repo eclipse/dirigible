@@ -34,9 +34,10 @@ import javax.sql.DataSource;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
-import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.database.changelog.artefacts.ChangelogSynchronizationArtefactType;
 import org.eclipse.dirigible.database.ds.api.DataStructuresException;
 import org.eclipse.dirigible.database.ds.model.DataStructureChangelogModel;
@@ -57,7 +58,7 @@ import liquibase.exception.LiquibaseException;
 /**
  * The Changelogs Synchronizer.
  */
-public class ChangelogSynchronizer extends AbstractSynchronizer {
+public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
 	private static final Logger logger = LoggerFactory.getLogger(ChangelogSynchronizer.class);
 
@@ -366,6 +367,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer {
 			buff.append(s).append(separator);
 		}
 		return buff.toString();
+	}
+
+	@Override
+	public int getPriority() {
+		return 100;
 	}
 
 }

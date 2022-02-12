@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.odata2.synchronizer;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -47,7 +48,7 @@ import static java.text.MessageFormat.format;
 /**
  * The OData Synchronizer.
  */
-public class ODataSynchronizer extends AbstractSynchronizer {
+public class ODataSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
 	private static final Logger logger = LoggerFactory.getLogger(ODataSynchronizer.class);
 
@@ -485,6 +486,11 @@ public class ODataSynchronizer extends AbstractSynchronizer {
 			buff.append(s).append(separator);
 		}
 		return buff.toString();
+	}
+
+	@Override
+	public int getPriority() {
+		return 500;
 	}
 	
 }

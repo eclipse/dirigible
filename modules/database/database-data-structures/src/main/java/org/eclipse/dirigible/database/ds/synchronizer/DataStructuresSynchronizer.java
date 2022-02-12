@@ -36,6 +36,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -80,7 +81,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Data Structures Synchronizer.
  */
-public class DataStructuresSynchronizer extends AbstractSynchronizer {
+public class DataStructuresSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataStructuresSynchronizer.class);
 
@@ -1391,6 +1392,11 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer {
 				connection.close();
 			}
 		}
+	}
+
+	@Override
+	public int getPriority() {
+		return 200;
 	}
 
 }

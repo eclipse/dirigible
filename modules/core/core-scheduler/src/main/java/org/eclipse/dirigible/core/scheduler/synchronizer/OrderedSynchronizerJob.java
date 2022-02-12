@@ -9,23 +9,31 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.core.registry.synchronizer;
+package org.eclipse.dirigible.core.scheduler.synchronizer;
 
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
-public class RegistrySynchronizerJob extends AbstractSynchronizerJob {
+/**
+ * The OrderedSynchronizerJob.
+ */
+public class OrderedSynchronizerJob extends AbstractSynchronizerJob {
 
-	private RegistrySynchronizer synchronizer = new RegistrySynchronizer();
+	/** The ordered synchronizer. */
+	private OrderedSynchronizer orderedSynchronizer = new OrderedSynchronizer();
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob#getSynchronizer()
+	 */
 	@Override
 	public ISynchronizer getSynchronizer() {
-		return synchronizer;
+		return orderedSynchronizer;
 	}
 
 	@Override
 	public String getName() {
-		return RegistrySynchronizerJobDefinitionProvider.REGISTRY_SYNCHRONIZER_JOB;
+		return OrderedSynchronizerJobDefinitionProvider.ORDERED_SYNCHRONIZER_JOB;
 	}
 
 }

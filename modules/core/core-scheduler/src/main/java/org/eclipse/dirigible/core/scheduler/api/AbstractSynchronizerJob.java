@@ -27,15 +27,9 @@ import org.slf4j.LoggerFactory;
 /**
  * The base class for all the Synchronizer Jobs.
  */
-public abstract class AbstractSynchronizerJob implements Job {
+public abstract class AbstractSynchronizerJob implements Job, ISynchronizerJob {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizerJob.class);
-
-	/**
-	 * Getter for the name of the Synchronizer Job
-	 * @return the name
-	 */
-	public abstract String getName();
 
 	/*
 	 * (non-Javadoc)
@@ -73,12 +67,5 @@ public abstract class AbstractSynchronizerJob implements Job {
 	protected TimeUnit getTimeoutUnit() {
 		return TimeUnit.MINUTES;
 	}
-
-	/**
-	 * Gets the synchronizer.
-	 *
-	 * @return the synchronizer
-	 */
-	protected abstract ISynchronizer getSynchronizer();
 
 }

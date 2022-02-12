@@ -43,6 +43,7 @@ import org.eclipse.dirigible.cms.csvim.service.CsvimDefinitionsTopologicalSorter
 import org.eclipse.dirigible.cms.csvim.service.CsvimProcessor;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
+import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -53,7 +54,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class CSVIM Synchronizer.
  */
-public class CsvimSynchronizer extends AbstractSynchronizer {
+public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedSynchronizerContribution {
 
 	private static final Logger logger = LoggerFactory.getLogger(CsvimSynchronizer.class);
 
@@ -350,5 +351,10 @@ public class CsvimSynchronizer extends AbstractSynchronizer {
 						e);
 			}
 		}
+	}
+
+	@Override
+	public int getPriority() {
+		return 400;
 	}
 }
