@@ -58,7 +58,7 @@
         <dependency>
 		    <groupId>org.webjars.npm</groupId>
 		    <artifactId>mxgraph</artifactId>
-		    <version>3.9.8</version>
+		    <version>4.1.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars.bower</groupId>
