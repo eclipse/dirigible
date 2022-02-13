@@ -12,30 +12,28 @@
 package org.eclipse.dirigible.repository.api;
 
 import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 
 public class RepositoryCache implements IRepositoryCache {
 
 	private static IRepositoryCache cache;
-
-	public RepositoryCache() {
-		initialize();
-	}
-
-	private void initialize() {
-		if (Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString()))) {
-			ServiceLoader<IRepositoryCache> services = ServiceLoader.load(IRepositoryCache.class);
-			for (IRepositoryCache next : services) {
-				cache = next;
-				break;
-			}
+	
+	private static final AtomicBoolean ENABLED = new AtomicBoolean(false);
+	
+	static {
+		ServiceLoader<IRepositoryCache> services = ServiceLoader.load(IRepositoryCache.class);
+		for (IRepositoryCache next : services) {
+			cache = next;
+			break;
 		}
+		ENABLED.set(Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString())));
 	}
 
 	@Override
 	public byte[] get(String path) {
-		if (cache != null) {
+		if (ENABLED.get() && cache != null) {
 			return cache.get(path);
 		}
 		return null;
@@ -43,35 +41,40 @@ public class RepositoryCache implements IRepositoryCache {
 
 	@Override
 	public void put(String path, byte[] content) {
-		if (cache != null) {
+		if (ENABLED.get() && cache != null) {
 			cache.put(path, content);
 		}
 	}
 
 	@Override
 	public void remove(String path) {
-		if (cache != null) {
+		if (ENABLED.get() && cache != null) {
 			cache.remove(path);
 		}
 	}
 
 	@Override
 	public void clear() {
-		if (cache != null) {
+		if (ENABLED.get() && cache != null) {
 			cache.clear();
 		}
 	}
-
-	@Override
-	public void enable() {
+	
+	public static void enable() {
 		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString());
-		initialize();
+		ENABLED.set(true);
 	}
 
-	@Override
-	public void disable() {
+	public static void disable() {
 		Configuration.set(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString());
-		initialize();
+		ENABLED.set(false);
+		if (ENABLED.get() && cache != null) {
+			cache.clear();
+		}
+	}
+	
+	public static boolean isEnabled() {
+		return ENABLED.get();
 	}
 
 }

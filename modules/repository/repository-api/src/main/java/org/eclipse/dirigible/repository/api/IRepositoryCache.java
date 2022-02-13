@@ -45,13 +45,4 @@ public interface IRepositoryCache {
 	 */
 	public void clear();
 
-	/**
-	 * Enable repository cache.
-	 */
-	public void enable();
-
-	/**
-	 * Disable repository cache.
-	 */
-	public void disable();
 }

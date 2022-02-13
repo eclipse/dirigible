@@ -59,6 +59,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 
 		IResource resource1 = null;
 		IResource resource2 = null;
+		RepositoryCache.enable();
 		try {
 			resource1 = repository.createResource("/testCollection/toBeRemoved1Cached.txt", "cached file".getBytes()); //$NON-NLS-1$
 			assertNotNull(resource1);
@@ -83,7 +84,7 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 			assertEquals("cached file", content);
 
 			try {
-				new RepositoryCache().disable();
+				RepositoryCache.disable();
 				resource2 = repository.getResource("/testCollection/toBeRemoved1Cached2.txt"); //$NON-NLS-1$
 				assertNotNull(resource2);
 				assertTrue(resource2.exists());
@@ -98,10 +99,10 @@ public class LocalRepositoryCacheTest extends RepositoryGenericCacheTest {
 
 				resource1 = repository.getResource("/testCollection/toBeRemoved1Cached.txt"); //$NON-NLS-1$
 				content = new String(resource1.getContent());
-				assertEquals("cached file changed", content);
+				assertEquals("cached file changed 2", content);
 
 			} finally {
-				Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString());
+				RepositoryCache.enable();
 			}
 
 

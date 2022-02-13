@@ -66,14 +66,4 @@ public class CaffeineRepositoryCache implements IRepositoryCache {
 		cache.invalidateAll();
 	}
 
-	@Override
-	public void enable() {
-		// Do nothing
-	}
-
-	@Override
-	public void disable() {
-		// Do nothing
-	}
-
 }
