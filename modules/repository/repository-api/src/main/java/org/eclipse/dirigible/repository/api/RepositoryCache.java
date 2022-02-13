@@ -24,7 +24,7 @@ public class RepositoryCache implements IRepositoryCache {
 	}
 
 	private void initialize() {
-		if (Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.TRUE.toString()))) {
+		if (Boolean.parseBoolean(Configuration.get(IRepository.DIRIGIBLE_REPOSITORY_CACHE_ENABLED, Boolean.FALSE.toString()))) {
 			ServiceLoader<IRepositoryCache> services = ServiceLoader.load(IRepositoryCache.class);
 			for (IRepositoryCache next : services) {
 				cache = next;
