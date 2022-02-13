@@ -122,7 +122,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.1.1</version>
+						<version>3.3.2</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -405,7 +405,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.1.1</version>
+						<version>3.3.2</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -428,7 +428,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -695,7 +695,7 @@
 		<logback.version>1.2.10</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.0.206</h2database.version>
-		<postgresql.version>42.2.25</postgresql.version>
+		<postgresql.version>42.3.2</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.16.3</activemq.version>
