@@ -25,17 +25,17 @@ import java.util.stream.Collectors;
 /**
  * The Create Table Builder.
  */
-public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder> {
+public class CreateTableBuilder<TABLE_BUILDER extends CreateTableBuilder> extends AbstractTableBuilder<TABLE_BUILDER> {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateTableBuilder.class);
 
     private CreateTablePrimaryKeyBuilder primaryKey;
 
-    private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
+    private final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<>();
 
-    private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
+    private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
-    private List<CreateTableCheckBuilder> checks = new ArrayList<>();
+    private final List<CreateTableCheckBuilder> checks = new ArrayList<>();
 
     /**
      * Instantiates a new creates the table builder.
@@ -54,7 +54,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param columns the columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder primaryKey(String name, String[] columns) {
+    public TABLE_BUILDER primaryKey(String name, String[] columns) {
         logger.trace("primaryKey: " + name + ", columns" + Arrays.toString(columns));
         if (this.primaryKey != null) {
             throw new SqlException("Setting of primary key must be called only once");
@@ -63,7 +63,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
         for (String column : columns) {
             this.primaryKey.column(column);
         }
-        return this;
+        return (TABLE_BUILDER) this;
     }
 
     /**
@@ -73,7 +73,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param columns the columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder primaryKey(String name, String columns) {
+    public TABLE_BUILDER primaryKey(String name, String columns) {
         logger.trace("primaryKey: " + name + ", columns" + columns);
         String[] array = splitValues(columns);
         return primaryKey(name, array);
@@ -85,7 +85,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param columns the columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder primaryKey(String[] columns) {
+    public TABLE_BUILDER primaryKey(String[] columns) {
         logger.trace("primaryKey: <unnamed>, columns" + Arrays.toString(columns));
         return primaryKey(null, columns);
     }
@@ -96,7 +96,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param columns the columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder primaryKey(String columns) {
+    public TABLE_BUILDER primaryKey(String columns) {
         logger.trace("primaryKey: <unnamed>, columns" + columns);
         return primaryKey(null, splitValues(columns));
     }
@@ -110,11 +110,11 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param referencedColumns the referenced columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
+    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String[] referencedColumns) {
         return foreignKey(name, columns, referencedTable, null, referencedColumns);
     }
 
-    public CreateTableBuilder foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
+    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
         logger.trace("foreignKey: " + name + ", columns" + Arrays.toString(columns) + ", referencedTable: " + referencedTable
                 + ", referencedTableSchema: " + referencedTableSchema + ", referencedColumns: " + Arrays.toString(referencedColumns));
         CreateTableForeignKeyBuilder foreignKey = new CreateTableForeignKeyBuilder(this.getDialect(), name);
@@ -127,7 +127,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
         }
         foreignKey.referencedTableSchema(referencedTableSchema);
         this.foreignKeys.add(foreignKey);
-        return this;
+        return (TABLE_BUILDER) this;
     }
 
 
@@ -140,7 +140,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param referencedColumns the referenced columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder foreignKey(String name, String columns, String referencedTable, String referencedTableSchema, String referencedColumns) {
+    public TABLE_BUILDER foreignKey(String name, String columns, String referencedTable, String referencedTableSchema, String referencedColumns) {
         logger.trace("foreignKey: " + name + ", columns" + columns + ", referencedTable: " + referencedTable + ", referencedColumns: "
                 + referencedColumns);
         return foreignKey(name, splitValues(columns), referencedTable, referencedTableSchema, splitValues(referencedColumns));
@@ -154,14 +154,14 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @return the creates the table builder
      */
     @Override
-    public CreateTableBuilder unique(String name, String[] columns) {
+    public TABLE_BUILDER unique(String name, String[] columns) {
         logger.trace("unique: " + name + ", columns" + Arrays.toString(columns));
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
             uniqueIndex.column(column);
         }
         this.uniqueIndices.add(uniqueIndex);
-        return this;
+        return (TABLE_BUILDER) this;
     }
 
     /**
@@ -171,7 +171,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param columns the columns
      * @return the creates the table builder
      */
-    public CreateTableBuilder unique(String name, String columns) {
+    public TABLE_BUILDER unique(String name, String columns) {
         logger.trace("unique: " + name + ", columns" + columns);
         return unique(name, splitValues(columns));
     }
@@ -186,7 +186,7 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @return the creates the table builder
      */
     @Override
-    public CreateTableBuilder unique(String name, String[] columns, String type, String order){
+    public TABLE_BUILDER unique(String name, String[] columns, String type, String order){
         return unique(name, columns);
     }
 
@@ -197,12 +197,12 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param expression the expression
      * @return the creates the table builder
      */
-    public CreateTableBuilder check(String name, String expression) {
+    public TABLE_BUILDER check(String name, String expression) {
         logger.trace("check: " + name + ", expression" + expression);
         CreateTableCheckBuilder check = new CreateTableCheckBuilder(this.getDialect(), name);
         check.expression(expression);
         this.checks.add(check);
-        return this;
+        return (TABLE_BUILDER) this;
     }
 
     /**
@@ -215,8 +215,8 @@ public class CreateTableBuilder extends AbstractTableBuilder<CreateTableBuilder>
      * @param indexColumns the indexColumns
      * @return the creates the table builder
      */
-    public CreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
-        return this;
+    public TABLE_BUILDER index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
+        return (TABLE_BUILDER) this;
     }
 
     /*

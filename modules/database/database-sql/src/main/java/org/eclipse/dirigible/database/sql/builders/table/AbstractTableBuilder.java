@@ -30,10 +30,11 @@ import java.util.stream.Stream;
 public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBuilder> extends AbstractCreateSqlBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractTableBuilder.class);
+    private static final String OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR = "Operation not supported for this Database type!";
 
-    private String table;
+    private final String table;
 
-    private List<String[]> columns = new ArrayList<>();
+    private final List<String[]> columns = new ArrayList<>();
 
     /**
      * Instantiates a new creates the table builder.
@@ -46,12 +47,28 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         this.table = table;
     }
 
-    public AbstractTableBuilder unique(String name, String[] columns) {
-        return this;
+    public TABLE_BUILDER unique(String name, String[] columns) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
-    public AbstractTableBuilder unique(String name, String[] columns, String type, String order) {
-        return this;
+    public TABLE_BUILDER unique(String name, String[] columns, String type, String order) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
+    }
+
+    public TABLE_BUILDER primaryKey(String name, String[] columns) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
+    }
+
+    public TABLE_BUILDER primaryKey(String[] columns) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
+    }
+
+    public TABLE_BUILDER foreignKey(String name, String[] columns, String referencedTable, String referencedTableSchema, String[] referencedColumns) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
+    }
+
+    public TABLE_BUILDER check(String name, String expression) {
+        throw new IllegalStateException(OPERATION_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE_ERROR);
     }
 
     /**
@@ -662,7 +679,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnChar(String name, int length, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnChar(name, length, isPrimaryKey, isNullable, isUnique, false, new String[]{});
+        return columnChar(name, length, isPrimaryKey, isNullable, isUnique, false);
     }
 
     /**
@@ -965,7 +982,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnInteger(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnInteger(name, isPrimaryKey, isNullable, isUnique, false, new String[]{});
+        return columnInteger(name, isPrimaryKey, isNullable, isUnique, false);
     }
 
     /**
@@ -1116,7 +1133,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnBigint(String name, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnBigint(name, isPrimaryKey, isNullable, isUnique, false, new String[]{});
+        return columnBigint(name, isPrimaryKey, isNullable, isUnique, false);
     }
 
     /**
@@ -1617,7 +1634,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnDecimal(name, precision, scale, isPrimaryKey, isNullable, isUnique, false, new String[]{});
+        return columnDecimal(name, precision, scale, isPrimaryKey, isNullable, isUnique, false);
     }
 
     /**

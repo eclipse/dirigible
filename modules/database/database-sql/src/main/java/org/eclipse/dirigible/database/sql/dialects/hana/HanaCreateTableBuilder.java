@@ -11,7 +11,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.hana;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.Table;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableIndexBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableUniqueIndexBuilder;
@@ -26,12 +30,13 @@ import java.util.Set;
 /**
  * The HANA Create Table Builder.
  */
-public class HanaCreateTableBuilder extends CreateTableBuilder {
+public class HanaCreateTableBuilder extends CreateTableBuilder<HanaCreateTableBuilder> {
 
 	private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableBuilder.class);
-	private boolean isColumnTable = true;
-	private List<CreateTableIndexBuilder> indexes = new ArrayList<>();
-	private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
+	private static final String DELIMITER = "; ";
+	private final boolean isColumnTable;
+	private final List<CreateTableIndexBuilder> indices = new ArrayList<>();
+	private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<>();
 
 	/**
 	 * Instantiates a new hana create table builder.
@@ -61,7 +66,24 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 
 	@Override
 	public String generate() {
+		Table table = buildTable();
 
+		String generated = table.getCreateTableStatement();
+		if(!table.getCreateIndicesStatements().isEmpty()) {
+			String uniqueIndices = table.getCreateIndicesStatements().stream().collect(Collectors.joining(DELIMITER));
+			generated = String.join(DELIMITER, generated, uniqueIndices);
+		}
+
+		logger.trace("generated: " + generated);
+
+		return generated;
+	}
+
+	/**
+	 * Build {@link Table} object containing the SQL statements.
+	 * @return Table
+	 */
+	public Table buildTable(){
 		StringBuilder sql = new StringBuilder();
 
 		// CREATE
@@ -86,41 +108,39 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 
 		sql.append(CLOSE);
 
-		// UNIQUE INDICES
-		generateUniqueIndices(sql);
+		String createTableStatement = sql.toString();
 
-		//INDEXES
-		generateIndexes(sql);
+		Collection<String> createIndicesStatements = new HashSet<>();
+		createIndicesStatements.addAll(generateIndices());
+		createIndicesStatements.addAll(generateUniqueIndices());
 
-		String generated = sql.toString();
-
-		logger.trace("generated: " + generated);
-
-		return generated;
+		return new Table(createTableStatement, createIndicesStatements);
 	}
 
 	/**
-	 * Generate unique indices.
-	 *
-	 * @param sql the sql
+	 * Generate create statements for indices
+	 * @return Collection of create index statements
 	 */
-	protected void generateUniqueIndices(StringBuilder sql) {
+	protected Collection<String> generateUniqueIndices() {
+		Collection<String> indices = new HashSet<>();
 		for (CreateTableUniqueIndexBuilder uniqueIndex : this.uniqueIndices) {
-			generateUniqueIndex(sql, uniqueIndex);
+			indices.add(generateUniqueIndex(uniqueIndex));
 		}
+
+		return indices;
 	}
 
 
 	/**
 	 * Generate unique index.
 	 *
-	 * @param sql         the sql
 	 * @param uniqueIndex the unique index
+	 * @return Create index statement
 	 */
-	@Override
-	protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
+	protected String generateUniqueIndex(CreateTableUniqueIndexBuilder uniqueIndex) {
+		StringBuilder sql = new StringBuilder();
 		if(uniqueIndex != null){
-			sql.append(SEMICOLON).append(SPACE).append(KEYWORD_CREATE).append(SPACE);
+			sql.append(KEYWORD_CREATE).append(SPACE);
 			sql.append(KEYWORD_UNIQUE).append(SPACE);
 			if(uniqueIndex.getIndexType() != null) {
 				sql.append(uniqueIndex.getIndexType()).append(SPACE);
@@ -134,29 +154,34 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 			if (uniqueIndex.getOrder() != null) {
 				sql.append(SPACE).append(uniqueIndex.getOrder());
 			}
+
 		}
+
+		return sql.toString();
 	}
 
 	/**
-	 * Generate indexes.
-	 *
-	 * @param sql the sql
+	 * Generate create statements for indices
+	 * @return Collection of create index statements
 	 */
-	protected void generateIndexes(StringBuilder sql) {
-		for (CreateTableIndexBuilder index : this.indexes) {
-			generateIndex(sql, index);
+	protected Collection<String> generateIndices() {
+		Collection<String> indices = new HashSet<>();
+		for (CreateTableIndexBuilder index : this.indices) {
+			indices.add(generateIndex(index));
 		}
+
+		return indices;
 	}
 
 	/**
-	 * Generate index.
-	 *
-	 * @param sql the sql
-	 * @param index the index
+	 * Generate index create statement
+	 * @param index IndexBuilder
+	 * @return Generated statement
 	 */
-	protected void generateIndex(StringBuilder sql, CreateTableIndexBuilder index) {
+	protected String generateIndex(CreateTableIndexBuilder index) {
+		StringBuilder sql = new StringBuilder();
 		if (index != null && !index.isUnique()) {
-			sql.append(SEMICOLON).append(SPACE).append(KEYWORD_CREATE).append(SPACE);
+			sql.append(KEYWORD_CREATE).append(SPACE);
 			if(index.getIndexType() != null) {
 				sql.append(index.getIndexType()).append(SPACE);
 			}
@@ -166,6 +191,8 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 				sql.append(SPACE).append(index.getOrder());
 			}
 		}
+
+		return sql.toString();
 	}
 
 	/**
@@ -178,7 +205,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
      * @return the creates the table builder
      */
     @Override
-    public CreateTableBuilder unique(String name, String[] columns, String type, String order){
+    public HanaCreateTableBuilder unique(String name, String[] columns, String type, String order){
         logger.trace("unique: " + name + ", columns" + Arrays.toString(columns) + ", indexType " + type + ", order " + order);
         CreateTableUniqueIndexBuilder uniqueIndex = new CreateTableUniqueIndexBuilder(this.getDialect(), name);
         for (String column : columns) {
@@ -201,7 +228,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 	 * @param indexColumns the indexColumns
 	 * @return the creates the table builder
 	 */
-	public CreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
+	public HanaCreateTableBuilder index(String name, Boolean isUnique, String order, String indexType, Set<String> indexColumns) {
 
 			logger.trace("index: " + name + ", columns" + indexColumns);
 			CreateTableIndexBuilder index = new CreateTableIndexBuilder(this.getDialect(), name);
@@ -209,7 +236,7 @@ public class HanaCreateTableBuilder extends CreateTableBuilder {
 			index.setOrder(order);
 			index.setIndexColumns(indexColumns);
 			index.setUnique(isUnique);
-			this.indexes.add(index);
+			this.indices.add(index);
 
 		return this;
 	}
