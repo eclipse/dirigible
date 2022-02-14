@@ -11,6 +11,10 @@
  */
 package org.eclipse.dirigible.api.v3.io;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,17 +23,31 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.helpers.BytesHelper;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-
 /**
  * Facade for working with ZIP files
  */
 public class ZipFacade {
-	
+
+	/**
+	 * Unzip zip archive from proivided zipPath to targetPath folder
+	 * @param zipPath
+	 * @param targetPath
+	 */
+	public static void importZip(String zipPath, String targetPath) {
+		ZipProcessor.unzip(zipPath, targetPath);
+	}
+	/**
+	 * Creates zip archive from the provided folderPath and puts it to zipPath
+	 * @param folderPath
+	 * @param zipPath
+	 */
+	public static void exportZip(String folderPath,String zipPath ) {
+		ZipProcessor.zip(folderPath, zipPath);
+	}
+
 	/**
 	 * Create a {@link ZipInputStream} from the provided {@link InputStream}
+	 *
 	 * @param in the provided input stream
 	 * @return the created ZipInputStream
 	 * @throws IOException in case of failure in underlying layer
@@ -40,6 +58,7 @@ public class ZipFacade {
 
 	/**
 	 * Create a {@link ZipOutputStream} from the provided {@link OutputStream}
+	 *
 	 * @param out the provided output stream
 	 * @return the created ZipOutputStream
 	 * @throws IOException in case of failure in underlying layer
@@ -50,6 +69,7 @@ public class ZipFacade {
 
 	/**
 	 * Create a {@link ZipEntry} with the provided name
+	 *
 	 * @param name the name of teh ZipEntry
 	 * @return the created ZipEntry
 	 * @throws IOException in case of failure in underlying layer
@@ -60,8 +80,9 @@ public class ZipFacade {
 
 	/**
 	 * Write data to the provided zip output stream
+	 *
 	 * @param output OutputStream to write to
-	 * @param bytes The data to be written
+	 * @param bytes  The data to be written
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void write(ZipOutputStream output, byte[] bytes) throws IOException {
@@ -70,19 +91,21 @@ public class ZipFacade {
 
 	/**
 	 * Write data to the provided zip output stream
+	 *
 	 * @param output OutputStream to write to
-	 * @param data The data to be written
+	 * @param data   The data to be written
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void write(ZipOutputStream output, String data) throws IOException {
 		byte[] bytes = BytesHelper.jsonToBytes(data);
 		write(output, bytes);
 	}
-	
+
 	/**
 	 * Write data to the provided zip output stream
+	 *
 	 * @param output OutputStream to write to
-	 * @param data The data to be written
+	 * @param data   The data to be written
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void writeNative(ZipOutputStream output, byte[] data) throws IOException {
@@ -91,8 +114,9 @@ public class ZipFacade {
 
 	/**
 	 * Write text to the provided zip output stream
+	 *
 	 * @param output OutputStream to write to
-	 * @param text The text to be written
+	 * @param text   The text to be written
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final void writeText(ZipOutputStream output, String text) throws IOException {
@@ -101,6 +125,7 @@ public class ZipFacade {
 
 	/**
 	 * Read data from the provided {@link InputStream}
+	 *
 	 * @param input The input stream to read from
 	 * @return The read data
 	 * @throws IOException in case of failure in underlying layer
@@ -109,9 +134,10 @@ public class ZipFacade {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return GsonHelper.GSON.toJson(bytes);
 	}
-	
+
 	/**
 	 * Read data from the provided {@link InputStream}
+	 *
 	 * @param input The input stream to read from
 	 * @return The read data
 	 * @throws IOException in case of failure in underlying layer
@@ -123,6 +149,7 @@ public class ZipFacade {
 
 	/**
 	 * Read text from the provided {@link InputStream}
+	 *
 	 * @param input The input stream to read from
 	 * @return The read text
 	 * @throws IOException in case of failure in underlying layer

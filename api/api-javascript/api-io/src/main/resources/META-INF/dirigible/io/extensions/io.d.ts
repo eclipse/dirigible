@@ -305,10 +305,24 @@ declare module "@dirigible/io" {
     }
     module zip {
         /**
+        * Creates zip archive from sourcePath in zipTargetPath path
+        * @param sourcePath
+          * @param zipTargetPath
+        */
+        function zip(sourcePath: string, zipTargetPath: string);
+
+        /**
+            * Unzips zip archive in zipPath to targetPath path
+            * @param zipPath
+             * @param targetPath
+                 */
+        function unzip(zipPath: string, targetPath: string);
+
+        /**
          * Returns the Zip archive reader object
          * @param inputStream
          */
-        function createZipInputStream(inputStream:InputStream): ZipInputStream;
+        function createZipInputStream(inputStream: InputStream): ZipInputStream;
 
         /**
          * Returns the Zip archive writer object
@@ -317,7 +331,7 @@ declare module "@dirigible/io" {
         function createZipOutputStream(outputStream: OutputStream): ZipOutputStream;
 
         interface ZipInputStream {
-            isValid():boolean;
+            isValid(): boolean;
             /**
              * Returns the next entry from the archive or null if no more entries found
              */
@@ -326,17 +340,17 @@ declare module "@dirigible/io" {
             /**
              * Reads from the zip input stream at the current entry point and returns the result as array of bytes
              */
-            read():byte[];
+            read(): byte[];
 
             /**
              * Reads from the zip input stream at the current entry point and returns the result as array of Java bytes
              */
-            readNative():byte[];
+            readNative(): byte[];
 
             /**
              * Reads from the zip input stream at the current entry point and returns the result as text
              */
-            readText():string;
+            readText(): string;
 
             /**
              * Closes the zip input stream
@@ -370,7 +384,7 @@ declare module "@dirigible/io" {
             /**
              * Writes a text to the zip output stream at the current entry point
              */
-            writeText(text:string);
+            writeText(text: string);
 
             /**
              * Closes the current entry (optional)
@@ -402,12 +416,12 @@ declare module "@dirigible/io" {
             /**
              * Returns the CRC sum of the entry
              */
-            getCrc():number;
+            getCrc(): number;
 
             /**
              * Returns the comment text of the entry
              */
-            getComment():number;
+            getComment(): number;
 
             /**
              * Returns true if the entry represents a directory and false otherwise
@@ -467,7 +481,7 @@ declare module "@dirigible/io" {
          * Writes the array of bytes to this OutputStream
          * @param bytes
          */
-        writeBytes(bytes: byte[]):byte[];
+        writeBytes(bytes: byte[]): byte[];
 
         /**
          * Writes the array of NativeBytes to this OutputStream
@@ -479,12 +493,12 @@ declare module "@dirigible/io" {
          * Writes the text to this OutputStream
          * @param text
          */
-        writeText(text:string);
+        writeText(text: string);
 
         /**
          * Returns a string representation of the array of bytes contained in this InputStream
          */
-        readText():string
+        readText(): string
 
         /**
          * Close this OutputStream
