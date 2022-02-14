@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
     private static final Logger logger = LoggerFactory.getLogger(HanaCreateTableTypeBuilder.class);
+    private static final List<DataType> ARGS_DATA_TYPES = new ArrayList<>(
+        List.of(DataType.VARCHAR, DataType.CHAR, DataType.NVARCHAR, DataType.ALPHANUM, DataType.SHORTTEXT, DataType.DECIMAL));
 
     private String tableType;
     private List<String[]> columns = new ArrayList<>();
@@ -181,10 +183,7 @@ public class HanaCreateTableTypeBuilder extends CreateTableTypeBuilder {
         
         String[] definition;
 
-        if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)
-                || type.name().equalsIgnoreCase("NVARCHAR")
-                || type.name().equalsIgnoreCase("ALPHANUM")
-                || type.name().equalsIgnoreCase("SHORTTEXT") || type.equals(DataType.DECIMAL)) {
+        if (ARGS_DATA_TYPES.contains(type)) {
             args = OPEN + args + CLOSE;
             definition = new String[]{name, getDialect().getDataTypeName(type), args};
         } else {
