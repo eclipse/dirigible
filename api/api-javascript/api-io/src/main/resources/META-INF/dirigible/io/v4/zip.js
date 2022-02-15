@@ -16,88 +16,94 @@
  */
 const streams = require("io/v4/streams");
 const bytes = require("io/v4/bytes");
-
-exports.createZipInputStream = function(inputStream) {
-
-	/**
-	 * ZipInputStream object
-	 */
-	const ZipInputStream = function () {
-
-		this.getNextEntry = function () {
-			const zipEntry = new ZipEntry();
-			const native = this.native.getNextEntry();
-			zipEntry.native = native;
-			zipEntry.input = this;
-			return zipEntry;
-		};
-
-		this.read = function () {
-			const native = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
-			return bytes.toJavaScriptBytes(native);
-		};
-
-		this.readNative = function () {
-			return org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
-		};
-
-		this.readText = function () {
-			return org.eclipse.dirigible.api.v3.io.ZipFacade.readText(this.native);
-		};
-
-		this.close = function () {
-			this.native.close();
-		};
-
-	};
-
-	const zipInputStream = new ZipInputStream();
-	zipInputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
-	return zipInputStream;
+exports.zip = function (sourcePath, zipTargetPath) {
+    org.eclipse.dirigible.api.v3.io.ZipFacade.exportZip(sourcePath, zipTargetPath);
+};
+exports.unzip = function (zipPath, targetPath) {
+    org.eclipse.dirigible.api.v3.io.ZipFacade.importZip(zipPath, targetPath);
 };
 
-exports.createZipOutputStream = function(outputStream) {
+exports.createZipInputStream = function (inputStream) {
 
-	/**
-	 * ZipOutputStream object
-	 */
-	const ZipOutputStream = function () {
+    /**
+     * ZipInputStream object
+     */
+    const ZipInputStream = function () {
 
-		this.createZipEntry = function (name) {
-			const zipEntry = new ZipEntry();
-			zipEntry.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipEntry(name);
-			this.native.putNextEntry(zipEntry.native);
-			return zipEntry;
-		};
+        this.getNextEntry = function () {
+            const zipEntry = new ZipEntry();
+            const native = this.native.getNextEntry();
+            zipEntry.native = native;
+            zipEntry.input = this;
+            return zipEntry;
+        };
 
-		this.write = function (data) {
-			const native = bytes.toJavaBytes(data);
-			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, native);
-		};
+        this.read = function () {
+            const native = org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
+            return bytes.toJavaScriptBytes(native);
+        };
 
-		this.writeNative = function (data) {
-			org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, data);
-		};
+        this.readNative = function () {
+            return org.eclipse.dirigible.api.v3.io.ZipFacade.readNative(this.native);
+        };
 
-		this.writeText = function (text) {
-			org.eclipse.dirigible.api.v3.io.ZipFacade.writeText(this.native, text);
-		};
+        this.readText = function () {
+            return org.eclipse.dirigible.api.v3.io.ZipFacade.readText(this.native);
+        };
 
-		this.closeEntry = function () {
-			this.native.closeEntry();
-		};
+        this.close = function () {
+            this.native.close();
+        };
 
-		this.close = function () {
-			this.native.finish();
-			this.native.flush();
-			this.native.close();
-		};
+    };
 
-	};
+    const zipInputStream = new ZipInputStream();
+    zipInputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
+    return zipInputStream;
+};
 
-	const zipOutputStream = new ZipOutputStream();
-	zipOutputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipOutputStream(outputStream.native);
-	return zipOutputStream;
+exports.createZipOutputStream = function (outputStream) {
+
+    /**
+     * ZipOutputStream object
+     */
+    const ZipOutputStream = function () {
+
+        this.createZipEntry = function (name) {
+            const zipEntry = new ZipEntry();
+            zipEntry.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipEntry(name);
+            this.native.putNextEntry(zipEntry.native);
+            return zipEntry;
+        };
+
+        this.write = function (data) {
+            const native = bytes.toJavaBytes(data);
+            org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, native);
+        };
+
+        this.writeNative = function (data) {
+            org.eclipse.dirigible.api.v3.io.ZipFacade.writeNative(this.native, data);
+        };
+
+        this.writeText = function (text) {
+            org.eclipse.dirigible.api.v3.io.ZipFacade.writeText(this.native, text);
+        };
+
+        this.closeEntry = function () {
+            this.native.closeEntry();
+        };
+
+        this.close = function () {
+            this.native.finish();
+            this.native.flush();
+            this.native.close();
+        };
+
+    };
+
+    const zipOutputStream = new ZipOutputStream();
+    zipOutputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipOutputStream(outputStream.native);
+    return zipOutputStream;
 };
 
 /**
@@ -105,36 +111,36 @@ exports.createZipOutputStream = function(outputStream) {
  */
 function ZipEntry() {
 
-	this.getName = function() {
-		return this.native.getName();
-	};
+    this.getName = function () {
+        return this.native.getName();
+    };
 
-	this.getSize = function() {
-		return this.native.getSize();
-	};
+    this.getSize = function () {
+        return this.native.getSize();
+    };
 
-	this.getCompressedSize = function() {
-		return this.native.getCompressedSize();
-	};
+    this.getCompressedSize = function () {
+        return this.native.getCompressedSize();
+    };
 
-	this.getTime = function() {
-		return this.native.getTime();
-	};
+    this.getTime = function () {
+        return this.native.getTime();
+    };
 
-	this.getCrc = function() {
-		return this.native.getCrc();
-	};
+    this.getCrc = function () {
+        return this.native.getCrc();
+    };
 
-	this.getComment = function() {
-		return this.native.getComment();
-	};
+    this.getComment = function () {
+        return this.native.getComment();
+    };
 
-	this.isDirectory = function() {
-		return this.native.isDirectory();
-	};
+    this.isDirectory = function () {
+        return this.native.isDirectory();
+    };
 
-	this.isValid = function() {
-		return this.native !== null;
-	};
+    this.isValid = function () {
+        return this.native !== null;
+    };
 
 }
