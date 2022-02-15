@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.api.v3.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,15 +26,15 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipProcessor {
 
+    private static final Logger logger = LoggerFactory.getLogger(ZipProcessor.class);
 
     public static void zip(String path, String zipTargetPath) {
         Path source = Paths.get(path);
         Path target = Paths.get(zipTargetPath);
         try {
             zipFolder(source, target);
-            System.out.println("Done");
         } catch (Exception e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 
@@ -40,9 +43,8 @@ public class ZipProcessor {
         Path target = Paths.get(targetPath);
         try {
             unzipFolder(source, target);
-            System.out.println("Done");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
     }
