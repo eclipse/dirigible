@@ -61,4 +61,13 @@ public class Document extends CmisObject {
 				new ByteArrayInputStream(content));
 	}
 
+	/**
+	 * Returns the Path of this Document
+	 *
+	 * @return the path
+	 */
+	public String getPath() {
+		return this.internalResource.getPath();
+	}
+
 }
