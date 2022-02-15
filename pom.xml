@@ -705,7 +705,7 @@
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
-		<jaxws.version>2.3.3</jaxws.version>
+		<jaxws.version>3.0.1</jaxws.version>
 		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
 		<license-maven-plugin.version>4.2.rc2</license-maven-plugin.version>
 		<persistence.api.version>2.2.3</persistence.api.version>
