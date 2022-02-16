@@ -5,7 +5,7 @@ declare module "@dirigible/core" {
          * @param key
          * @param defaultValue
          */
-        function get(key, defaultValue): string;
+        function get(key, defaultValue?): string;
 
         /**
          * Sets a value, for the specified key
@@ -121,16 +121,16 @@ declare module "@dirigible/core" {
     module globals {
         /**
          * Returns the value per key from the global parameters
-         * @param name
+         * @param key
          */
         function get(key: string): string;
 
         /**
          * Sets the value per key to the global parameters
-         * @param ame
+         * @param name
          * @param value
          */
-        function set(ame, value);
+        function set(name, value);
 
         /**
          * Returns list of globals
