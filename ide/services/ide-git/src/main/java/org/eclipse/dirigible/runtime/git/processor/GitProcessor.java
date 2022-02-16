@@ -21,10 +21,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.core.git.GitCommitInfo;
-import org.eclipse.dirigible.core.git.GitConnectorException;
-import org.eclipse.dirigible.core.git.GitConnectorFactory;
-import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.*;
 import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.CommitCommand;
@@ -425,6 +422,11 @@ public class GitProcessor {
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
+	}
+
+	public OriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		return gitConnector.getOriginUrls();
 	}
 
 	/**

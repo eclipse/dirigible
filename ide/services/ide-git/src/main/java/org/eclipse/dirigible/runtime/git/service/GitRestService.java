@@ -36,6 +36,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.OriginUrls;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
@@ -619,6 +620,18 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		processor.removeFileFromIndex(workspace, project, paths);
 		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/{project}/origin-urls")
+	public Response getOriginUrl(@PathParam("workspace") String workspace, @PathParam("project") String project) throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		OriginUrls originUrls = processor.getOriginUrls(workspace, project);
+		return Response.ok(originUrls).build();
 	}
 
 	/**
