@@ -30,6 +30,7 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -129,7 +130,7 @@ public class GitProcessor {
 	}
 
 	/**
-	 * Reset.
+	 * Delete.
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repositoryName
@@ -153,6 +154,26 @@ public class GitProcessor {
 			throw new GitConnectorException("Unable to delete Git repository [" + repositoryName + "]", e);
 		}
 	}
+
+	/**
+	 * Remote.
+	 *
+	 * @param workspace the workspace
+	 * @param repositoryName the repositoryName
+	 * @throws GitConnectorException in case of exception
+	 */
+//	public void remote(String workspace, String repositoryName) throws GitConnectorException {
+//		try {
+//			File gitRepository = getGitRepository(workspace, repositoryName);
+////			GitCommand remoteConfig = new GitCommand();
+////			remoteConfig.call();
+//
+//
+//		} catch (IOException e) {
+//			throw new GitConnectorException("Unable to delete Git repository [" + repositoryName + "]", e);
+//		}
+//	}
+
 
 	/**
 	 * Share.
@@ -424,7 +445,7 @@ public class GitProcessor {
 		}
 	}
 
-	public OriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
+	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		return gitConnector.getOriginUrls();
 	}

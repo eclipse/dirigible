@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
@@ -86,7 +87,7 @@ public class GitConnector implements IGitConnector {
 	}
 
 	@Override
-	public OriginUrls getOriginUrls() {
+	public ProjectOriginUrls getOriginUrls() {
 		StoredConfig gitConfig = repository.getConfig();
 
 		String fetchUrl = gitConfig.getString("remote", "origin", "url");
@@ -97,7 +98,7 @@ public class GitConnector implements IGitConnector {
 			pushUrl = fetchUrl; // fallback to fetch url if no explicit pushurl is configured
 		}
 
-		return new OriginUrls(fetchUrl, pushUrl);
+		return new ProjectOriginUrls(fetchUrl, pushUrl);
 	}
 
 	/**

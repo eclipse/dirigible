@@ -9,14 +9,22 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.commons.api.topology;
+package org.eclipse.dirigible.core.git.project;
 
-import java.util.List;
+public class ProjectOriginUrls {
+    private final String fetchUrl;
+    private final String pushUrl;
 
-public interface ITopologicallySortable {
-	
-	public String getId();
-	
-	public List<ITopologicallySortable> getDependencies();
+    public ProjectOriginUrls(String fetchUrl, String pushUrl) {
+        this.fetchUrl = fetchUrl;
+        this.pushUrl = pushUrl;
+    }
 
+    public String getFetchUrl() {
+        return fetchUrl;
+    }
+
+    public String getPushUrl() {
+        return pushUrl;
+    }
 }

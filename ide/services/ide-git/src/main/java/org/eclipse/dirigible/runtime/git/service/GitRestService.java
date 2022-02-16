@@ -36,7 +36,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
-import org.eclipse.dirigible.core.git.OriginUrls;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
@@ -67,7 +67,8 @@ import io.swagger.annotations.Authorization;
 @Api(value = "IDE - Git", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class GitRestService extends AbstractRestService implements IRestService {
-	
+
+
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
 	private GitProcessor processor = new GitProcessor();
@@ -103,7 +104,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
-	 * @return the response
+	 * @return the responseF
 	 * @throws GitConnectorException 
 	 */
 	@POST
@@ -540,7 +541,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		GitProjectChangedFiles gitProjectFiles = processor.getStagedFiles(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
-	
+
 	/**
 	 * Add file to index.
 	 *
@@ -624,13 +625,16 @@ public class GitRestService extends AbstractRestService implements IRestService 
 
 	@GET
 	@Path("/{project}/origin-urls")
+	@Produces("application/json")
+	@ApiOperation("Get Project Repo URLs")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Repo URLs") })
 	public Response getOriginUrl(@PathParam("workspace") String workspace, @PathParam("project") String project) throws GitConnectorException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		OriginUrls originUrls = processor.getOriginUrls(workspace, project);
+		ProjectOriginUrls originUrls = processor.getOriginUrls(workspace, project);
 		return Response.ok(originUrls).build();
 	}
 

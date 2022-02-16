@@ -14,6 +14,7 @@ package org.eclipse.dirigible.core.git;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
@@ -54,7 +55,7 @@ public interface IGitConnector {
 	/** The Constant GIT_ADD_ALL_FILE_PATTERN. */
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
-	OriginUrls getOriginUrls();
+	ProjectOriginUrls getOriginUrls();
 
 	/**
 	 * Adds file(s) to the staging index.
