@@ -11,12 +11,10 @@
  */
 package org.eclipse.dirigible.commons.api.topology;
 
-import java.util.List;
-
-public interface ITopologicallySortable {
+public interface ITopologicallyDepletable {
 	
 	public String getId();
 	
-	public List<ITopologicallySortable> getDependencies();
+	public boolean complete();
 
 }
