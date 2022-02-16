@@ -11,8 +11,8 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
 
-class MultipleMatchingApiPathsException extends RuntimeException {
-    MultipleMatchingApiPathsException(String errorMessage) {
+public class MultipleMatchingApiPathsException extends RuntimeException {
+    public MultipleMatchingApiPathsException(String errorMessage) {
         super(errorMessage);
     }
 }
