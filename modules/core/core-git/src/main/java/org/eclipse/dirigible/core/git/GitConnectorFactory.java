@@ -22,7 +22,6 @@ import java.io.IOException;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
-import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -52,6 +51,7 @@ public class GitConnectorFactory {
 			repositoryBuilder.findGitDir(current);
 			Repository repository = repositoryBuilder.build();
 			repository.getConfig().setString(GIT_BRANCH, GIT_MASTER, GIT_MERGE, GIT_REFS_HEADS_MASTER);
+//			repository.getConfig().get
 			return new GitConnector(repository);
 		} catch (IOException e) {
 			throw new GitConnectorException(e);

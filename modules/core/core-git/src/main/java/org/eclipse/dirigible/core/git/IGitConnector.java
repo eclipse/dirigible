@@ -54,6 +54,8 @@ public interface IGitConnector {
 	/** The Constant GIT_ADD_ALL_FILE_PATTERN. */
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
+	OriginUrls getOriginUrls();
+
 	/**
 	 * Adds file(s) to the staging index.
 	 *
