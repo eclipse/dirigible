@@ -5,26 +5,37 @@ declare module "@dirigible/bpm" {
         function undeployProcess(processId: string);
     }
     module process {
+        function getVariable(processInstanceId: string, variableName: string): string
+
+        function start(key: string, parameters: string): string
+
         function getProcessEngine(): ProcessEngine
+
+        function getExecutionContext(): ExecutionContext;
+
+        function setVariable(processInstanceId: string, variableName: string, variableValue: string)
+
+        function removeVariable(processInstanceId: string, variableName: string)
     }
     module tasks {
         /**
          * Returns list of tasks
          */
         function list(): string[]
+
         /**
          * Set the task's variables
          *
          * @param taskId the task id
          */
-        function getTaskVariables(taskId: string):string[]
+        function getTaskVariables(taskId: string): string[]
 
         /**
          * Set a variable in the process execution context
          * @param taskId
          * @param variables
          */
-        function setTaskVariables(taskId:string,variables:string)
+        function setTaskVariables(taskId: string, variables: string)
 
         /**
          * Complete the task with variables
@@ -32,21 +43,11 @@ declare module "@dirigible/bpm" {
          * @param taskId the task id
          * @param variables serialized as JSON string
          */
-       function completeTask(taskId,variables:string)
+        function completeTask(taskId, variables: string)
     }
 
     class ProcessEngine {
-        /**
-         * Starts a process by its key and initial parameters and returns the process instance id
-         * @param key
-         * @param parameters
-         */
-        start(key: string, parameters?: string): string
 
-        /**
-         * Returns the execution context object
-         */
-        getExecutionContext(): ExecutionContext;
     }
 
     class ExecutionContext {

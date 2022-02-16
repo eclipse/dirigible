@@ -670,7 +670,7 @@ declare module "@dirigible/http" {
              * @param fServeCallback
              */
 
-            post(fServeCallback?): ResourceMethod;
+           post(fServeCallback?): ResourceMappings;
 
             /**
              * Returns the put method configuration object, optionally configured with fServeCallback for serving requests
