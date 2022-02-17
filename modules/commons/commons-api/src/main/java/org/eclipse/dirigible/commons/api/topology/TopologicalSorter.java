@@ -17,41 +17,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-public class TopologicalSorter {
+public class TopologicalSorter<T extends ITopologicallySortable> {
 	
 	
-    private Stack<TopologicalSorterNode> stack;
+    private Stack<TopologicalSorterNode<T>> stack;
  
     public TopologicalSorter() {
         this.stack = new Stack<>();
     }
     
-    public List<ITopologicallySortable> sort(List<ITopologicallySortable> list) {
-    	Map<String, TopologicalSorterNode> nodes = new HashMap<>();
+    public List<T> sort(List<T> list) {
+    	Map<String, TopologicalSorterNode<T>> nodes = new HashMap<>();
     	for (ITopologicallySortable sortable : list) {
-    		TopologicalSorterNode node = new TopologicalSorterNode(sortable, nodes);
+    		TopologicalSorterNode<T> node = new TopologicalSorterNode(sortable, nodes);
     		nodes.put(sortable.getId(), node);
     	}
     	
-    	for (TopologicalSorterNode node : nodes.values()) {
+    	for (TopologicalSorterNode<T> node : nodes.values()) {
 	        topologicalSort(node);
     	}
     	
-    	List<ITopologicallySortable> results = new ArrayList<>();
-    	for (TopologicalSorterNode node : stack) {
+    	List<T> results = new ArrayList<>();
+    	for (TopologicalSorterNode<T> node : stack) {
     		results.add(node.getData());
     	}
     	
     	return results;
     }
 
-	private void topologicalSort(TopologicalSorterNode node) {
-		List<TopologicalSorterNode> dependencies = node.getDependencies();
+	private void topologicalSort(TopologicalSorterNode<T> node) {
+		List<TopologicalSorterNode<T>> dependencies = node.getDependencies();
 		for (int i = 0; i < dependencies.size(); i++) {
-			TopologicalSorterNode n = dependencies.get(i);
+			TopologicalSorterNode<T> n = dependencies.get(i);
 		    if (n != null && !n.isVisited()) {
+		    	n.setVisited(true);
 		    	topologicalSort(n);
-		        n.setVisited(true);
 		    }
 		}
 		if (!stack.contains(node)) {

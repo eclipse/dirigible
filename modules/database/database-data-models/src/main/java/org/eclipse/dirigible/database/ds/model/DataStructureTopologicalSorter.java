@@ -16,8 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
+
 /**
  * Data models sorter utility.
+ * @deprecated use {@link TopologicalSorter} instead
  */
 public class DataStructureTopologicalSorter {
 

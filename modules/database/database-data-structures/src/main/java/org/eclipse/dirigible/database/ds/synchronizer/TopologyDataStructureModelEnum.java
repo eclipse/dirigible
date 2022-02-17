@@ -9,12 +9,12 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.commons.api.topology;
+package org.eclipse.dirigible.database.ds.synchronizer;
 
-public interface ITopologicallyDepletable {
+public enum TopologyDataStructureModelEnum {
 	
-	public String getId();
-	
-	public boolean complete(String flow);
+	EXECUTE_TABLE_UPDATE, EXECUTE_TABLE_CREATE, EXECUTE_TABLE_FOREIGN_KEYS_CREATE, 
+	EXECUTE_TABLE_ALTER, EXECUTE_TABLE_DROP, EXECUTE_TABLE_FOREIGN_KEYS_DROP, 
+	EXECUTE_VIEW_CREATE, EXECUTE_VIEW_DROP
 
 }

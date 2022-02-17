@@ -34,9 +34,12 @@ import javax.sql.DataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.DataStructuresUtils;
+import org.eclipse.dirigible.commons.api.topology.TopologicalDepleter;
+import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizer;
 import org.eclipse.dirigible.core.scheduler.api.IOrderedSynchronizerContribution;
+import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType.ArtefactState;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.api.SynchronizationException;
@@ -55,7 +58,6 @@ import org.eclipse.dirigible.database.ds.model.DataStructureDataUpdateModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureSchemaModel;
 import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
-import org.eclipse.dirigible.database.ds.model.DataStructureTopologicalSorter;
 import org.eclipse.dirigible.database.ds.model.DataStructureViewModel;
 import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.ds.model.processors.TableAlterProcessor;
@@ -809,138 +811,77 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			Connection connection = null;
 			try {
 				connection = dataSource.getConnection();
-				// topology sort of dependencies
-				List<String> sorted = new ArrayList<String>();
-				List<String> external = new ArrayList<String>();
+				
+				TopologicalSorter<TopologyDataStructureModelWrapper> sorter = new TopologicalSorter<>();
+				TopologicalDepleter<TopologyDataStructureModelWrapper> depleter = new TopologicalDepleter<>();
+				
+				List<TopologyDataStructureModelWrapper> list = new ArrayList<TopologyDataStructureModelWrapper>();
+				Map<String, TopologyDataStructureModelWrapper> wrappers = new HashMap<String, TopologyDataStructureModelWrapper>();
+				for (DataStructureModel model : DATA_STRUCTURE_MODELS.values()) {
+					TopologyDataStructureModelWrapper wrapper = new TopologyDataStructureModelWrapper(this, connection, model, wrappers);
+					list.add(wrapper);
+				}
+				
+				// Topological sorting by dependencies
+				list = sorter.sort(list);
+				
+				// Reverse the order
+				Collections.reverse(list);
+				
+				// drop views in a reverse order
 				try {
-					DataStructureTopologicalSorter.sort(DATA_STRUCTURE_MODELS, sorted, external);
-
-					logger.trace("topological sorting");
-
-					for (String location : sorted) {
-						logger.trace("location: " + location);
-					}
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_VIEW_DROP.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_VIEW_DROP.toString(), VIEW_ARTEFACT, ArtefactState.FAILED_DELETE);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					errors.add(e.getMessage());
-					sorted.clear();
 				}
-
-				if (sorted.isEmpty()) {
-					// something wrong happened with the sorting - probably cyclic dependencies
-					// we go for the back-up list and try to apply what would succeed
-					logger.warn("Probably there are cyclic dependencies!");
-					sorted.addAll(DATA_STRUCTURE_MODELS.keySet());
-				}
-
-				// drop views first in a reverse order
-				for (int i = sorted.size() - 1; i >= 0; i--) {
-					String dsName = sorted.get(i);
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (model instanceof DataStructureViewModel) {
-							executeViewDrop(connection, (DataStructureViewModel) model);
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-					}
+				
+				// drop tables' foreign keys in a reverse order
+				try {
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_DROP.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_DROP.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_DELETE);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					errors.add(e.getMessage());
 				}
 				
 				// drop tables in a reverse order
-				for (int i = sorted.size() - 1; i >= 0; i--) {
-					String dsName = sorted.get(i);
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (model instanceof DataStructureTableModel) {
-							if (SqlFactory.getNative(connection).exists(connection, model.getName())) {
-								executeTableForeignKeysDrop(connection, (DataStructureTableModel) model);
-							}
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-					}
+				try {
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_DROP.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_DROP.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_DELETE);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					errors.add(e.getMessage());
 				}
 				
-				// drop tables in a reverse order
-				for (int i = sorted.size() - 1; i >= 0; i--) {
-					String dsName = sorted.get(i);
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (model instanceof DataStructureTableModel) {
-							if (SqlFactory.getNative(connection).exists(connection, model.getName())) {
-								if (SqlFactory.getNative(connection).count(connection, model.getName()) == 0) {
-									executeTableDrop(connection, (DataStructureTableModel) model);
-								} else {
-									String message = format("Table [{1}] cannot be deleted during the update process, because it is not empty", dsName);
-									logger.warn(message);
-									applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED, message);
-								}
-							}
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-					}
-				}
-				
-				
-				// process tables in the proper order
-				for (String dsName : sorted) {
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
-							if (model instanceof DataStructureTableModel) {
-								executeTableCreate(connection, (DataStructureTableModel) model);
-								applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
-							}
-						} else {
-							logger.warn(format("Table [{0}] already exists during the update process", dsName));
-							if (model instanceof DataStructureTableModel && SqlFactory.getNative(connection).count(connection, model.getName()) != 0) {
-								executeTableAlter(connection, (DataStructureTableModel) model);
-								applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
-							}
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-						applyArtefactState(model, TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
-					}
+				// process tables
+				try {
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_CREATE.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_CREATE.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					errors.add(e.getMessage());
 				}
 				
 				// process tables foreign keys
-				for (String dsName : sorted) {
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (model instanceof DataStructureTableModel) {
-							executeTableForeignKeysCreate(connection, (DataStructureTableModel) model);
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-					}
+				try {
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_CREATE.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_TABLE_FOREIGN_KEYS_CREATE.toString(), TABLE_ARTEFACT, ArtefactState.FAILED_CREATE);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					errors.add(e.getMessage());
 				}
 				
-				// process views in the proper order
-				for (String dsName : sorted) {
-					DataStructureModel model = DATA_STRUCTURE_MODELS.get(dsName);
-					try {
-						if (!SqlFactory.getNative(connection).exists(connection, model.getName())) {
-							if (model instanceof DataStructureViewModel) {
-								executeViewCreate(connection, (DataStructureViewModel) model);
-								applyArtefactState(model, VIEW_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
-							}
-						} else {
-							logger.warn(format("View [{0}] already exists during the update process", dsName));
-						}
-					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
-						errors.add(e.getMessage());
-						applyArtefactState(model, VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
-					}
+				// process tables foreign keys
+				try {
+					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString());
+					printErrors(errors, results, TopologyDataStructureModelEnum.EXECUTE_VIEW_CREATE.toString(), VIEW_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+					errors.add(e.getMessage());
 				}
-
+				
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -954,127 +895,18 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		}
 	}
 
-	/**
-	 * Execute table update.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		logger.info("Processing Update Table: " + tableModel.getName());
-		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
-			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
-				executeTableDrop(connection, tableModel);
-				executeTableCreate(connection, tableModel);
-			} else {
-				executeTableAlter(connection, tableModel);
+	private void printErrors(List<String> errors, List<TopologyDataStructureModelWrapper> results, String flow, ISynchronizerArtefactType artefact, ISynchronizerArtefactType.ArtefactState state) {
+		if (results.size() > 0) {
+			for (TopologyDataStructureModelWrapper result : results) {
+				String errorMessage = String.format("Undepleted: %s in operation: %s", result.getId(), flow);
+				logger.error(errorMessage);
+				errors.add(errorMessage);
+				applyArtefactState(result.getModel(), artefact, state, errorMessage);
 			}
-		} else {
-			executeTableCreate(connection, tableModel);
 		}
 	}
 
-	/**
-	 * Execute table create.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	private void executeTableCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		TableCreateProcessor.execute(connection, tableModel, true);
-	}
-	
-	/**
-	 * Execute table foreign keys create.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void executeTableForeignKeysCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		TableForeignKeysCreateProcessor.execute(connection, tableModel);
-	}
 
-	/**
-	 * Execute table alter.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException 
-	 */
-	private void executeTableAlter(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-//		throw new NotImplementedException("Altering of a non-empty table is not implemented yet.");
-		TableAlterProcessor.execute(connection, tableModel);
-	}
-
-	/**
-	 * Execute table drop.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		TableDropProcessor.execute(connection, tableModel);
-	}
-	
-	/**
-	 * Execute table foreign keys drop.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param tableModel
-	 *            the table model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	private void executeTableForeignKeysDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
-		TableForeignKeysDropProcessor.execute(connection, tableModel);
-	}
-
-	/**
-	 * Execute view create.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param viewModel
-	 *            the view model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void executeViewCreate(Connection connection, DataStructureViewModel viewModel) throws SQLException {
-		ViewCreateProcessor.execute(connection, viewModel);
-	}
-
-	/**
-	 * Execute view drop.
-	 *
-	 * @param connection
-	 *            the connection
-	 * @param viewModel
-	 *            the view model
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	public void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
-		ViewDropProcessor.execute(connection, viewModel);
-	}
 
 	/**
 	 * Concatenate list of strings.
@@ -1397,6 +1229,127 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	@Override
 	public int getPriority() {
 		return 200;
+	}
+	
+	/**
+	 * Execute table update.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableUpdate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		logger.info("Processing Update Table: " + tableModel.getName());
+		if (SqlFactory.getNative(connection).exists(connection, tableModel.getName())) {
+			if (SqlFactory.getNative(connection).count(connection, tableModel.getName()) == 0) {
+				executeTableDrop(connection, tableModel);
+				executeTableCreate(connection, tableModel);
+			} else {
+				executeTableAlter(connection, tableModel);
+			}
+		} else {
+			executeTableCreate(connection, tableModel);
+		}
+	}
+
+	/**
+	 * Execute table create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableCreateProcessor.execute(connection, tableModel, true);
+	}
+	
+	/**
+	 * Execute table foreign keys create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableForeignKeysCreate(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableForeignKeysCreateProcessor.execute(connection, tableModel);
+	}
+
+	/**
+	 * Execute table alter.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException 
+	 */
+	public void executeTableAlter(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableAlterProcessor.execute(connection, tableModel);
+	}
+
+	/**
+	 * Execute table drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableDropProcessor.execute(connection, tableModel);
+	}
+	
+	/**
+	 * Execute table foreign keys drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param tableModel
+	 *            the table model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeTableForeignKeysDrop(Connection connection, DataStructureTableModel tableModel) throws SQLException {
+		TableForeignKeysDropProcessor.execute(connection, tableModel);
+	}
+
+	/**
+	 * Execute view create.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param viewModel
+	 *            the view model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeViewCreate(Connection connection, DataStructureViewModel viewModel) throws SQLException {
+		ViewCreateProcessor.execute(connection, viewModel);
+	}
+
+	/**
+	 * Execute view drop.
+	 *
+	 * @param connection
+	 *            the connection
+	 * @param viewModel
+	 *            the view model
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public void executeViewDrop(Connection connection, DataStructureViewModel viewModel) throws SQLException {
+		ViewDropProcessor.execute(connection, viewModel);
 	}
 
 }

@@ -15,22 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TopologicalSorterNode {
+public class TopologicalSorterNode<T extends ITopologicallySortable> {
 	
-	private ITopologicallySortable data;
+	private T data;
 	
-	private Map<String, TopologicalSorterNode> nodes;
+	private Map<String, TopologicalSorterNode<T>> nodes;
 	
     private boolean visited;
     
-    private List<TopologicalSorterNode> dependencies;
+    private List<TopologicalSorterNode<T>> dependencies;
 
-    public TopologicalSorterNode(ITopologicallySortable data, Map<String, TopologicalSorterNode> nodes) {
+    public TopologicalSorterNode(T data, Map<String, TopologicalSorterNode<T>> nodes) {
         this.data = data;
         this.nodes = nodes;
     }
     
-    public ITopologicallySortable getData() {
+    public T getData() {
 		return data;
 	}
     
@@ -42,7 +42,7 @@ public class TopologicalSorterNode {
 		this.visited = visited;
 	}
     
-    public List<TopologicalSorterNode> getDependencies() {
+    public List<TopologicalSorterNode<T>> getDependencies() {
     	if (this.dependencies == null) {
     		this.dependencies = new ArrayList<>();
     		for (ITopologicallySortable sortable : this.data.getDependencies()) {
@@ -52,7 +52,7 @@ public class TopologicalSorterNode {
         return this.dependencies;
     }
     
-    public void setDependencies(List<TopologicalSorterNode> dependencies) {
+    public void setDependencies(List<TopologicalSorterNode<T>> dependencies) {
         this.dependencies = dependencies;
     }
     

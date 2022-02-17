@@ -15,18 +15,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TopologicalDepleter {
+public class TopologicalDepleter<T extends ITopologicallyDepletable> {
 	
-	public List<ITopologicallyDepletable> deplete(List<ITopologicallyDepletable> list) {
-		List<ITopologicallyDepletable> depletables = new ArrayList<ITopologicallyDepletable>();
+	public List<T> deplete(List<T> list, String flow) {
+		List<T> depletables = new ArrayList<>();
 		depletables.addAll(list);
 		int count = depletables.size();
 		boolean repeat = true;
 		do {
-			Iterator<ITopologicallyDepletable> iterator = depletables.iterator();
+			Iterator<T> iterator = depletables.iterator();
 			while (iterator.hasNext()) {
 				ITopologicallyDepletable depletable = iterator.next();
-				if (depletable.complete()) {
+				if (depletable.complete(flow)) {
 					iterator.remove();
 				}
 			}

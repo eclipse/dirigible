@@ -34,7 +34,7 @@ public class TopologicalDepleterTest {
 		DepletableNode nodeH = new DepletableNode("H", 1);
 		DepletableNode nodeI = new DepletableNode("I", 1);
 		
-		List<ITopologicallyDepletable> list = new ArrayList<>();
+		List<DepletableNode> list = new ArrayList<>();
 		list.add(nodeG);
 		list.add(nodeB);
 		list.add(nodeH);
@@ -55,8 +55,8 @@ public class TopologicalDepleterTest {
 //		E
 //		G
 		
-		TopologicalDepleter depleter = new TopologicalDepleter();
-		List<ITopologicallyDepletable> results = depleter.deplete(list);
+		TopologicalDepleter<DepletableNode> depleter = new TopologicalDepleter<>();
+		List<DepletableNode> results = depleter.deplete(list, "");
 		for (ITopologicallyDepletable depletable : results) {
 			System.out.println(depletable.getId());
 		}
@@ -79,7 +79,7 @@ public class TopologicalDepleterTest {
 		DepletableNode nodeH = new DepletableNode("H", 1);
 		DepletableNode nodeI = new DepletableNode("I", 1);
 		
-		List<ITopologicallyDepletable> list = new ArrayList<>();
+		List<DepletableNode> list = new ArrayList<>();
 		list.add(nodeG);
 		list.add(nodeB);
 		list.add(nodeH);
@@ -100,8 +100,8 @@ public class TopologicalDepleterTest {
 //		G
 //		D
 		
-		TopologicalDepleter depleter = new TopologicalDepleter();
-		List<ITopologicallyDepletable> results = depleter.deplete(list);
+		TopologicalDepleter<DepletableNode> depleter = new TopologicalDepleter<>();
+		List<DepletableNode> results = depleter.deplete(list, "");
 		for (ITopologicallyDepletable depletable : results) {
 			System.out.println(depletable.getId() + " remained");
 		}
@@ -127,7 +127,7 @@ public class TopologicalDepleterTest {
 		}
 
 		@Override
-		public boolean complete() {
+		public boolean complete(String flow) {
 			if (completable == 0) {
 				System.out.println(this.id);
 				return true;

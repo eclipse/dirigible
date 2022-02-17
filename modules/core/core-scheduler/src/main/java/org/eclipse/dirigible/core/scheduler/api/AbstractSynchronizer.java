@@ -237,11 +237,26 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 		return SynchronizerCoreService.isSynchronizationEnabled();
 	}
 
-	public void applyArtefactState(IArtefactDefinition artefact, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state) {
+	/**
+	 * Apply the state
+	 * 
+	 * @param artefact the artefact
+	 * @param type the type
+	 * @param state the state
+	 */
+	public void applyArtefactState(IArtefactDefinition artefact, ISynchronizerArtefactType type, ISynchronizerArtefactType.ArtefactState state) {
 		applyArtefactState(artefact, type, state, null);
 	}
 
-	public void applyArtefactState(IArtefactDefinition artefact, AbstractSynchronizationArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
+	/**
+	 * Apply the state
+	 * 
+	 * @param artefact the artefact
+	 * @param type the type
+	 * @param state the state
+	 * @param message the message
+	 */
+	public void applyArtefactState(IArtefactDefinition artefact, ISynchronizerArtefactType type, ISynchronizerArtefactType.ArtefactState state, String message) {
 		if (artefact != null && type != null && state != null) {
 			String artefactName = artefact.getArtefactName();
 			String artefactLocation = artefact.getArtefactLocation();
