@@ -593,7 +593,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.10.5.1</version>
+			<version>2.13.1</version>
 		</dependency>
 
 		<!-- Java 11 Dependencies -->
@@ -698,7 +698,7 @@
 		<postgresql.version>42.3.2</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
-		<activemq.version>5.16.3</activemq.version>
+		<activemq.version>5.16.4</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
@@ -719,7 +719,7 @@
 		<liquibase-core.version>4.6.2</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
-		<classgraph.version>4.8.138</classgraph.version>
+		<classgraph.version>4.8.139</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.16.3</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.8</logcaptor.version>
