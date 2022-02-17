@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.git.service;
 
 import static java.text.MessageFormat.format;
 
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.runtime.git.processor.GitProcessor;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -636,6 +638,20 @@ public class GitRestService extends AbstractRestService implements IRestService 
 
 		ProjectOriginUrls originUrls = processor.getOriginUrls(workspace, project);
 		return Response.ok(originUrls).build();
+	}
+
+	@GET
+	@Path("/{project}/set-fetch-url")
+	@Produces("application/json")
+	@ApiOperation("Set origin URL")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response setFecthUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.setFetchUrl(workspace, project, url);
+		return Response.ok().entity(url).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	/**

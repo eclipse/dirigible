@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
@@ -34,6 +35,7 @@ import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.transport.URIish;
 
 /**
  * The IGitConnector provides the simplified methods for communicating with a Git SCM server.
@@ -56,6 +58,10 @@ public interface IGitConnector {
 	public static final String GIT_ADD_ALL_FILE_PATTERN = "."; //$NON-NLS-1$
 
 	ProjectOriginUrls getOriginUrls();
+
+	String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException;
+
+	String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException;
 
 	/**
 	 * Adds file(s) to the staging index.

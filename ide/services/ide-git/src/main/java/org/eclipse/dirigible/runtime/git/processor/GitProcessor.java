@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.git.processor;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -56,7 +57,9 @@ import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.transport.URIish;
 
 /**
  * Processing the Git Service incoming requests.
@@ -448,6 +451,16 @@ public class GitProcessor {
 	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		return gitConnector.getOriginUrls();
+	}
+
+	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitConnector.setFetchUrl(url);
+	}
+
+	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitConnector.setPushUrl(url);
 	}
 
 	/**

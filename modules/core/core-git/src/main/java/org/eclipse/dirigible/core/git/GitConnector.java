@@ -13,6 +13,7 @@ package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,22 +24,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
-import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.CheckoutCommand;
-import org.eclipse.jgit.api.CommitCommand;
-import org.eclipse.jgit.api.CreateBranchCommand;
+import org.eclipse.dirigible.core.git.utils.RemoteUrl;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.PullCommand;
-import org.eclipse.jgit.api.PushCommand;
-import org.eclipse.jgit.api.RebaseCommand;
 import org.eclipse.jgit.api.RebaseCommand.Operation;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.RmCommand;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
@@ -60,9 +53,13 @@ import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+
+import javax.ws.rs.core.Response;
 
 /**
  * The GitConnector utility is used for simplified communication with Git SCM server.
@@ -99,6 +96,34 @@ public class GitConnector implements IGitConnector {
 		}
 
 		return new ProjectOriginUrls(fetchUrl, pushUrl);
+	}
+
+	@Override
+	public String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
+		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
+		remoteGit.setUriType(RemoteSetUrlCommand.UriType.FETCH);
+		URIish newUrl = new URIish(fetchUrl);
+		remoteGit.setRemoteUri(newUrl);
+		remoteGit.call();
+
+		StoredConfig gitConfig = repository.getConfig();
+		gitConfig.setString("remote", "origin", "fetchurl", fetchUrl);
+		String updatedURL = gitConfig.getString("remote", "origin", "fetchurl");
+		return updatedURL;
+	}
+
+	@Override
+	public String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
+		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
+		remoteGit.setUriType(RemoteSetUrlCommand.UriType.PUSH);
+		URIish newUrl = new URIish(pushUrl);
+		remoteGit.setRemoteUri(newUrl);
+		remoteGit.call();
+
+		StoredConfig gitConfig = repository.getConfig();
+		gitConfig.setString("remote", "origin", "fetchurl", pushUrl);
+		String updatedURL = gitConfig.getString("remote", "origin", "pushUrl");
+		return updatedURL;
 	}
 
 	/**
