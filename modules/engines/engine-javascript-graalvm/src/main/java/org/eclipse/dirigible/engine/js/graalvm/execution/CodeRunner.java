@@ -6,4 +6,6 @@ import java.nio.file.Path;
 
 public interface CodeRunner {
     Value run(Path codeFilePath);
+
+    void runLooped(Path codeFilePath);
 }

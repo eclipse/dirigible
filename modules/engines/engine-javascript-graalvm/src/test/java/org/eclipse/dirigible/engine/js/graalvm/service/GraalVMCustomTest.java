@@ -61,6 +61,15 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	}
 
 	@Test
+	public void testNewEngineWithEventLooper() {
+		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/timers");
+		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+
+		Path codePath = Path.of("timers-test.mjs");
+		codeRunner.runLooped(codePath);
+	}
+
+	@Test
 	public void testNewEngineWithDirigibleImports() {
 		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
 		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);

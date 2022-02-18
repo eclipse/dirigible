@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.execution.js;
 
 import org.eclipse.dirigible.engine.js.graalvm.execution.CodeRunner;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.eventloop.EventLoop;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSContextCreator;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSEngineCreator;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSSourceCreator;
@@ -54,6 +55,16 @@ public class GraalJSCodeRunner implements CodeRunner {
         Value result = graalContext.eval(codeSource);
         rethrowIfError(result);
         return result;
+    }
+
+    @Override
+    public void runLooped(Path codeFilePath) {
+        Path relativeCodeFilePath = currentWorkingDirectoryPath.resolve(codeFilePath);
+        Source codeSource = GraalJSSourceCreator.createSource(relativeCodeFilePath);
+
+        Value initialScriptExecutable = graalContext.parse(codeSource);
+        EventLoop eventLoop = new EventLoop(initialScriptExecutable);
+        eventLoop.loop();
     }
 
     private static void rethrowIfError(Value maybeError) {
