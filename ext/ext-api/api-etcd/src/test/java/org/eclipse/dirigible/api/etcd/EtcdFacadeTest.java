@@ -39,7 +39,7 @@ public class EtcdFacadeTest {
 	@Before
 	public void setUp() {
 		etcd.start();
-		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.getClientEndpoints().get(0).toString());
+		Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", etcd.clientEndpoints().get(0).toString());
 	}
 
 	@Test
