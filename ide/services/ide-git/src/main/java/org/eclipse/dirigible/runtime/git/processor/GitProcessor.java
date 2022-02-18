@@ -456,11 +456,13 @@ public class GitProcessor {
 	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitConnector.setFetchUrl(url);
+		gitConnector.getOriginUrls();
 	}
 
 	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitConnector.setPushUrl(url);
+		gitConnector.getOriginUrls();
 	}
 
 	/**

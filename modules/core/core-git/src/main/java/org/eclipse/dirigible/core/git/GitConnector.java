@@ -102,13 +102,14 @@ public class GitConnector implements IGitConnector {
 	public String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.FETCH);
+		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(fetchUrl);
 		remoteGit.setRemoteUri(newUrl);
 		remoteGit.call();
 
 		StoredConfig gitConfig = repository.getConfig();
-		gitConfig.setString("remote", "origin", "fetchurl", fetchUrl);
-		String updatedURL = gitConfig.getString("remote", "origin", "fetchurl");
+		gitConfig.setString("remote", "origin", "url", fetchUrl);
+		String updatedURL = gitConfig.getString("remote", "origin", "url");
 		return updatedURL;
 	}
 
@@ -116,13 +117,14 @@ public class GitConnector implements IGitConnector {
 	public String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.PUSH);
+		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(pushUrl);
 		remoteGit.setRemoteUri(newUrl);
 		remoteGit.call();
 
 		StoredConfig gitConfig = repository.getConfig();
-		gitConfig.setString("remote", "origin", "fetchurl", pushUrl);
-		String updatedURL = gitConfig.getString("remote", "origin", "pushUrl");
+		gitConfig.setString("remote", "origin", "pushurl", pushUrl);
+		String updatedURL = gitConfig.getString("remote", "origin", "pushurl");
 		return updatedURL;
 	}
 

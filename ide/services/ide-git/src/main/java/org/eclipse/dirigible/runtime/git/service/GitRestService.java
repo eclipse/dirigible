@@ -30,6 +30,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.oracle.truffle.tools.utils.json.JSONObject;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -643,15 +644,35 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@GET
 	@Path("/{project}/set-fetch-url")
 	@Produces("application/json")
-	@ApiOperation("Set origin URL")
+	@ApiOperation("Set origin fetch URL")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
-	public Response setFecthUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+	public Response setFetchUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		processor.setFetchUrl(workspace, project, url);
-		return Response.ok().entity(url).type(ContentTypeHelper.APPLICATION_JSON).build();
+		JSONObject res = new JSONObject();
+		res.put("status", "success");
+		res.put("url", url);
+		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+
+	@GET
+	@Path("/{project}/set-push-url")
+	@Produces("application/json")
+	@ApiOperation("Set origin push URL")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response setPushUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		processor.setPushUrl(workspace, project, url);
+		JSONObject res = new JSONObject();
+		res.put("status", "success");
+		res.put("url", url);
+		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	/**

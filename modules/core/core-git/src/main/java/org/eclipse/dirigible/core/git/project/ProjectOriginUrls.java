@@ -12,8 +12,8 @@
 package org.eclipse.dirigible.core.git.project;
 
 public class ProjectOriginUrls {
-    private final String fetchUrl;
-    private final String pushUrl;
+    private String fetchUrl;
+    private String pushUrl;
 
     public ProjectOriginUrls(String fetchUrl, String pushUrl) {
         this.fetchUrl = fetchUrl;
@@ -23,8 +23,16 @@ public class ProjectOriginUrls {
     public String getFetchUrl() {
         return fetchUrl;
     }
-
     public String getPushUrl() {
         return pushUrl;
+    }
+
+    public String setFetchUrl(String fetchURL) {
+        this.fetchUrl = fetchURL;
+        return this.fetchUrl;
+    }
+    public String setPushUrl(String pushURL) {
+        this.pushUrl = pushURL;
+        return this.pushUrl;
     }
 }
