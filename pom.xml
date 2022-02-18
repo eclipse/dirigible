@@ -695,7 +695,7 @@
 		<logback.version>1.2.10</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.0.206</h2database.version>
-		<postgresql.version>42.3.2</postgresql.version>
+		<postgresql.version>42.3.3</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.16.4</activemq.version>
