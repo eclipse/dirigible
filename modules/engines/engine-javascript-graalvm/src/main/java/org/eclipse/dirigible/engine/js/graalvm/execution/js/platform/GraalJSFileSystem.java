@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.execution.js.platform;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.dependencies.DependencyProvider;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.modules.DirigibleCoreModuleResolver;
 import org.graalvm.polyglot.io.FileSystem;
 
@@ -17,16 +18,18 @@ public class GraalJSFileSystem implements FileSystem {
     private static final FileSystemProvider DELEGATE = FileSystems.getDefault().provider();
     private Path currentWorkingDirectoryPath;
     private final DirigibleCoreModuleResolver dirigibleCoreModuleResolver;
+    private DependencyProvider dependencyProvider;
 
     public GraalJSFileSystem(Path currentWorkingDirectoryPath, DirigibleCoreModuleResolver dirigibleCoreModuleResolver) {
         this.currentWorkingDirectoryPath = currentWorkingDirectoryPath;
         this.dirigibleCoreModuleResolver = dirigibleCoreModuleResolver;
+        this.dependencyProvider = new DependencyProvider();
     }
-
 
     @Override
     public Path parsePath(URI uri) {
-        throw new ScriptingException("URIs are currently not supported!");
+        Path dependencyPath = dependencyProvider.provideDependency(uri);
+        return dependencyPath;
     }
 
     /**

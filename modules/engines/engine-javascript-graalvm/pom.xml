@@ -266,6 +266,11 @@
 			<artifactId>dirigible-engine-javascript</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.3</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.websocket</groupId>
@@ -297,22 +302,6 @@
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-core</artifactId>-->
-<!--			<version>0.5.0</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-launcher</artifactId>-->
-<!--			<version>0.5.4</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-test</artifactId>-->
-<!--			<version>0.5.4</version>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>

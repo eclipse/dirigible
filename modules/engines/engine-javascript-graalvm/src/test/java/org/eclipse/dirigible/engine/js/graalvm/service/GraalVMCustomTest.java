@@ -21,11 +21,11 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.GraalJSCodeRunner;
-import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.nodejs.RequirePolyfill;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.cjs.RequirePolyfill;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.timers.TimersPolyfill;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -61,6 +61,15 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	}
 
 	@Test
+	public void testDownloadFirebaseDependency() {
+		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/dependencies");
+		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+
+		Path codePath = Path.of("firebase-test.mjs");
+		codeRunner.runLooped(codePath);
+	}
+
+	@Test
 	public void testNewEngineWithEventLooper() {
 		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/timers");
 		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
@@ -90,6 +99,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
 	private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
 		return new GraalJSCodeRunner.Builder(workingDir)
                 .addJSPolyfill(new RequirePolyfill())
+				.addJSPolyfill(new TimersPolyfill())
 				.waitForDebugger(false)
                 .build();
 	}

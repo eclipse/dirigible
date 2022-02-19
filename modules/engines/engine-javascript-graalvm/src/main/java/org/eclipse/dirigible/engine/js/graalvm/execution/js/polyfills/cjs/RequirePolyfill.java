@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.nodejs;
+package org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.cjs;
 
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.JSPolyfill;
 
