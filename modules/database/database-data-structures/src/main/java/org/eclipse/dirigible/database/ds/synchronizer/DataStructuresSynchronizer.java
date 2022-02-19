@@ -855,6 +855,9 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 					errors.add(e.getMessage());
 				}
 				
+				// Return back to the sorted the order 
+				Collections.reverse(list);
+				
 				// process tables
 				try {
 					List<TopologyDataStructureModelWrapper> results = depleter.deplete(list, TopologyDataStructureModelEnum.EXECUTE_TABLE_CREATE.toString());
