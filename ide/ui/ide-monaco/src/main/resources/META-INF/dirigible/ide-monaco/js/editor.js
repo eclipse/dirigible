@@ -624,18 +624,18 @@ function setupPrettier(fileName) {
     })
     .catch((error) => {
         let defaultConfigJson = {
-              "trailingComma": "es5",
-              "tabWidth": 4,
-              "semi": false,
-              "singleQuote": true,
+              trailingComma: "es5",
+              tabWidth: 4,
+              semi: false,
+              singleQuote: true,
         };
         registerPrettierFormatter(defaultConfigJson, "javascript");
     });
 }
 
 function registerPrettierFormatter(configJson, language) {
-    configJson["plugins"] = [parserBabel];
-    configJson["parser"] = "babel";
+    configJson.plugins = [parserBabel];
+    configJson.parser = "babel";
 
     monaco.languages.registerDocumentFormattingEditProvider(language, {
         provideDocumentFormattingEdits: function (model, options, token) {
@@ -646,7 +646,7 @@ function registerPrettierFormatter(configJson, language) {
                 sourceCode = prettier.format(sourceCode, configJson);
             }
             catch(formatError) {
-                console.log(formatError.stack);
+                console.error(formatError.stack);
             }
 
             return [

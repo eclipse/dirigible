@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.commons.config.StaticObjects;
@@ -37,12 +36,7 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -56,6 +50,9 @@ public class EditorRestService extends AbstractRestService implements IRestServi
     private static final Logger logger = LoggerFactory.getLogger(EditorRestService.class);
 
     private final IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+
+    private static final String PRETTIER_CONFIG_FILE_NAME = ".prettierrc.json";
+    private static final String PRETTIER_CONFIG_CONTENT_TYPE = "application/json";
 
     @Context
     private HttpServletResponse response;
@@ -80,12 +77,8 @@ public class EditorRestService extends AbstractRestService implements IRestServi
             return createErrorResponseForbidden(NO_LOGGED_IN_USER);
         }
 
-        String configFileName = ".prettierrc.json";
-        String configContentType = "application/json";
-        String separator = IRepository.SEPARATOR;
-
-        String projectPath = joinPathParts(separator, "users", user, workspaceName, projectName);
-        String queryPath = joinPathParts(separator, "prettier", "config", workspaceName, projectName, filePath);
+        String projectPath = joinPathParts(IRepository.SEPARATOR, "users", user, workspaceName, projectName);
+        String queryPath = joinPathParts(IRepository.SEPARATOR, "prettier", "config", workspaceName, projectName, filePath);
 
         RepositoryPath sourceFilePath = new RepositoryPath(projectPath + IRepository.SEPARATOR + filePath);
         RepositoryPath sourceFolder = sourceFilePath.getParentPath();
@@ -93,29 +86,26 @@ public class EditorRestService extends AbstractRestService implements IRestServi
         ICollection lookupDirectory = repository.getCollection(sourceFolder.getPath());
 
         if (!isPathNormalized(queryPath) || !isResourceInDirectory(lookupDirectory, sourceFileName)) {
-            return createErrorResponseNotFound(
-                    logMessage("There is resource at the specified path", queryPath)
-            );
+            return createPrettierConfigNotFoundErrorResponse("There is no resource at specified path", queryPath);
         }
 
         while (isSubPath(projectPath, lookupDirectory.getPath())) {
-            String content = getConfigFileContent(lookupDirectory, configFileName);
+            String content = getConfigFileContent(lookupDirectory, PRETTIER_CONFIG_FILE_NAME);
             if(content != null && !content.isEmpty()) {
-                return Response.ok(content).type(configContentType).build();
+                return Response.ok(content).type(PRETTIER_CONFIG_CONTENT_TYPE).build();
             }
 
             lookupDirectory = lookupDirectory.getParent();
         }
 
-        return createErrorResponseNotFound(
-                logMessage("There is no config file for resource", queryPath)
-        );
+        return createPrettierConfigNotFoundErrorResponse("There is no config file for resource", queryPath);
+
     }
 
-    private String logMessage(String reason, String queryPath) {
-        final String message = String.format("%s: %s", reason, queryPath);
-        logger.error(message);
-        return message;
+    private Response createPrettierConfigNotFoundErrorResponse(String reason, String queryPath) {
+        String errorMessage = String.format("%s: %s", reason, queryPath);
+        logger.error(errorMessage);
+        return createErrorResponseNotFound(errorMessage);
     }
 
     private boolean isPathNormalized(String queryPath) {
