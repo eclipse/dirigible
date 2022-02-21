@@ -41,18 +41,6 @@
             <artifactId>dirigible-core-git</artifactId>
             <version>6.2.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.graalvm.tools</groupId>
-            <artifactId>profiler</artifactId>
-            <version>22.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang.modules</groupId>
-            <artifactId>scala-parser-combinators_2.12</artifactId>
-            <version>1.1.2</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 	<properties>
