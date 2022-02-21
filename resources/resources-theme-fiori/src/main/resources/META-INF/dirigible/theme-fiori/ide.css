@@ -389,14 +389,11 @@ h6 {
   height: calc(100% - 3px);
 }
 .panel-heading {
-  /*background: url(../../web/resources/images/clouds.jpg) no-repeat center center;*/
   color: #777777;
 }
 .panel>header {
   background-color: #314455;
   color: #e1e6ea;
-  /*background: url(../../web/resources/images/clouds.jpg) no-repeat center center;*/
-  background-size: cover;
 }
 .leading {
   font-family: Helvetica Neue, Arial;

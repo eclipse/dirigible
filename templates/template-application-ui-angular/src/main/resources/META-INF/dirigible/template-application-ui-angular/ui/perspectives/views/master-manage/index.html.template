@@ -20,20 +20,20 @@
     <title>${brand}</title>
 
     <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="../../../../../../../../../services/v4/core/theme/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
 
     <!-- GoldenLayout with Theme Support -->
     <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="../../../../../../../../../services/v4/core/theme/goldenlayout-theme.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/core/theme/goldenlayout-theme.css" />
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="../../../../../../../../../services/v4/core/theme/ide.css" />
-    <link type="text/css" rel="stylesheet" href="../../../../../../../../../services/v4/core/theme/master.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/core/theme/master.css" />
 
     <!-- FontAwesome icon set -->
     <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <link rel="shortcut icon" type="image/png" href="../../../../../../../../../services/v4/web/resources/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
 </head>
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
@@ -44,7 +44,7 @@
 	<!-- div class="statusbar" status-bar></div -->
 	
 	<!-- jQuery -->
-	<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 	
 	<!-- Twitter Bootstrap with Theme Support -->
 	<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
@@ -57,14 +57,14 @@
 	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
 #if($includeLaunchpad)
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${projectName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${projectName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-core-ng-modules.js"></script>
 
 #else
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${launchpadName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="../../../../../../../../../services/v4/web/${launchpadName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-core-ng-modules.js"></script>
 #end
 
 	<script type="text/javascript">
@@ -99,9 +99,9 @@
 			};
 
 #if($includeLaunchpad)
-			${dollar}http.get('../../../../../../../../../services/v4/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
 #else
-			${dollar}http.get('../../../../../../../../../services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-${name}-view&pathSegments=6')
 #end
 			.then(function(views) {
 				var master = [];

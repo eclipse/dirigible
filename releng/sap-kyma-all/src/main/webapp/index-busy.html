@@ -3,10 +3,10 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
-		
+
 		<!-- Twitter Bootstrap with Theme Support -->
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
-	
+
 		<!-- FontAwesome icon set -->
     	<link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -95,7 +95,7 @@
 			    transform: rotate(360deg);
 			  }
 			}
-			
+
 			.Running:before {
 			    font-family: 'FontAwesome';
 			    font-size:1.3em;
@@ -103,7 +103,7 @@
 			    content: '\f054';  /* the chevron right icon */
 			    padding-right: 4px; /* plus 4px spacing */
 			}
-			
+
 			.Succeeded:before {
 			    font-family: 'FontAwesome';
 			    font-size:1.3em;
@@ -111,7 +111,7 @@
 			    content: '\f00c';  /* the check icon */
 			    padding-right: 4px; /* plus 4px spacing */
 			}
-			
+
 			.Failed:before {
 			    font-family: 'FontAwesome';
 			    font-size:1.3em;
@@ -119,20 +119,20 @@
 			    content: '\f00d';  /* the times icon */
 			    padding-right: 4px; /* plus 4px spacing */
 			}
-			
+
 		</style>
-		
-		
+
+
 		<!-- jQuery -->
-		<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-		
+		<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
 		<!-- Twitter Bootstrap with Theme Support -->
 		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
-		
+
 		<!-- AngularJS -->
 		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
 		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-		
+
 	</head>
 
 	<body>
@@ -140,7 +140,7 @@
 			<br><br><br><br><br>
 			<h1>Preparing Eclipse Dirigible Instance <span class="badge badge-secondary"><div class="busy-indicator">
 			<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></span></h1>
-			
+
 			<table class="table table-striped">
 			    <thead>
 			        <tr>
@@ -160,12 +160,12 @@
 	</body>
 
 	<script>
-		
+
 		angular.module('busy', ['ngResource'])
 			.controller('BusyController', ['$scope', '$http', function ($scope, $http) {
-			
+
 			setInterval(function() {
-				
+
 				$http({
 		            method: 'GET',
 		            url: 'services/v4/healthcheck'
@@ -173,9 +173,9 @@
 		        	if (healthStatus.data.status === "Ready") {
 						window.location='home';
 					}
-					var jobs = [];
+					let jobs = [];
 					for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
-						var job = new Object();
+						let job = new Object();
 						job.name = key;
 						job.status = value;
 						jobs.push(job);
@@ -186,7 +186,7 @@
 		        });
 
 			}, 1000);
-					
+
 		}]);
 	</script>
 </html>

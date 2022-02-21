@@ -220,6 +220,9 @@ function FileIO() {
             extension: ".hdbdd",
             type: "sql"
         }, {
+            extension: ".hdbflowgraph",
+            type: "xml"
+        }, {
             extension: ".xsodata",
             type: "sql"
         }, {

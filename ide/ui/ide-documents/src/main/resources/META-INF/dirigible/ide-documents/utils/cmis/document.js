@@ -12,6 +12,7 @@
 let cmis = require("cms/v4/cmis");
 let streams = require("io/v4/streams");
 let objectUtils = require("ide-documents/utils/cmis/object");
+const path = org.eclipse.dirigible.repository.api.RepositoryPath;
 
 let cmisSession = cmis.getSession();
 
@@ -21,7 +22,8 @@ function DocumentSerializer(cmisDocument) {
 }
 
 exports.uploadDocument = function (folder, document) {
-	let fileName = document.getName();
+	//check for .name first as it's passed from uploadDocumentOverwrite. Refactor
+	let fileName = document.name ?? document.getName();
 	let mimetype = document.getContentType();
 	let size = document.getSize();
 	let inputStream = document.getInputStream();
@@ -43,13 +45,14 @@ exports.uploadDocumentOverwrite = function (folder, document) {
 	exports.uploadDocument(folder, document);
 
 	try {
-		let oldDoc = objectUtils.getObject(folder.getPath() + "/" + oldName);
+		let docPath = path.normalizePath(folder.getPath(), oldName)
+		let oldDoc = objectUtils.getObject(docPath);
 		objectUtils.deleteObject(oldDoc);
 	} catch (e) {
 		//do nothing
 	}
-
-	let newDoc = objectUtils.getObject(folder.getPath() + "/" + newName);
+	let docPath = path.normalizePath(folder.getPath(), newName)
+	let newDoc = objectUtils.getObject(docPath);
 	objectUtils.renameObject(newDoc, oldName);
 };
 

@@ -325,17 +325,14 @@ h6 {
   height: calc(100% - 1em);
 }
 .panel-heading {
-  background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
   opacity: 0.85;
   filter: grayscale(100%);
 }
 .panel>header {
   background-color: #337ab7;
   color: #e1e6ea;
-  background: url(../../web/resources/images/clouds.jpg) no-repeat center center;
   opacity: 0.85;
   filter: grayscale(100%);
-  background-size: cover;
   border-color: #ba950e;
 }
 .leading {

@@ -19,20 +19,33 @@
 
     <title>${brand} | ${perspectiveName}</title>
 
+	<!-- jQuery -->
+	<script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
     <!-- Twitter Bootstrap with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="../../../../../../services/v4/core/theme/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+	<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js">
+	</script>
 
     <!-- GoldenLayout with Theme Support -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href="../../../../../../services/v4/core/theme/goldenlayout-theme.css" />
+    <link type="text/css" rel="stylesheet"
+            href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
+	<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
+	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js">
+	</script>
+
+	<!-- AngularJS -->
+	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js">
+	</script>
 
     <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="../../../../../../services/v4/core/theme/ide.css" />
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
     <!-- FontAwesome icon set -->
     <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <link rel="shortcut icon" type="image/png" href="../../../../../../services/v4/web/resources/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/services/v4/web/resources/images/favicon.png" />
 </head>
 
 <body ng-app="workbench" ng-controller="WorkbenchController">
@@ -44,29 +57,16 @@
 		<div id="${perspectiveName}" class="plane" views-layout views-layout-model="layoutModel" views-extension-point="launchpad-${extensionName}-${perspectiveName}-view""></div>
 	</div>
 	<!-- div class="statusbar" status-bar>${message}</div -->
-	
-	<!-- jQuery -->
-	<script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
-	
-	<!-- Twitter Bootstrap with Theme Support -->
-	<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" async></script>
-	
-	<!-- AngularJS -->
-	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-
-	<!-- GoldenLayout with Theme Support -->
-	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
 #if($includeLaunchpad)
-	<script type="text/javascript" src="../../../../../../services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="../../../../../../services/v4/web/${projectName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="../../../../../../services/v4/web/${projectName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-core-ng-modules.js"></script>
 
 #else
-	<script type="text/javascript" src="../../../../../../services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="../../../../../../services/v4/web/${launchpadName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="../../../../../../services/v4/web/${launchpadName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-core-ng-modules.js"></script>
 #end
 
 	<script type="text/javascript">
@@ -101,9 +101,9 @@
 			};
 
 #if($includeLaunchpad)
-			${dollar}http.get('../../../../../../services/v4/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
 #else
-			${dollar}http.get('../../../../../../services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
 #end
 			.then(function(views) {
 				for (var i = 0 ; i < views.data.length; i ++) {
