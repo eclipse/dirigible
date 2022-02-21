@@ -5,6 +5,7 @@ let dirty = false;
 let modulesSuggestions = [];
 let codeCompletionSuggestions = {};
 let codeCompletionAssignments = {};
+let linters = {};
 let _editor;
 let resourceApiUrl;
 let editorUrl;
@@ -20,6 +21,7 @@ let parameters = {
     gitName: "",
     file: ""
 };
+
 
 const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
     if (oldText[oldText.length - 1] !== "\n" || newText[newText.length - 1] !== "\n") {
@@ -49,6 +51,86 @@ const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
             }
     });
     return addedLines
+
+const eslintConfig = {
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2018,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "rules": {
+        "valid-jsdoc": 1,
+        "block-scoped-var": 2,
+        "curly": 2,
+        "default-case": 2,
+        "dot-location": [2, "property"],
+        "eqeqeq": 2,
+        "no-else-return": 1,
+        "no-eval": 2,
+        "no-loop-func": 1,
+        "no-multi-spaces": 1,
+        "no-param-reassign": 2,
+        "no-unused-expressions": 1,
+        "no-unused-vars": 2,
+        "no-warning-comments": 1,
+        "no-with": 2,
+        "strict": 1,
+        "no-shadow": 1,
+        "no-undef": 2,
+        "no-undefined": 2,
+        "no-use-before-define": 2,
+        "no-sync": 1,
+        "array-bracket-spacing": 2,
+        "block-spacing": 2,
+        "brace-style": [2, "1tbs"],
+        "comma-spacing": 2,
+        "comma-style": 2,
+        "computed-property-spacing": 2,
+        "eol-last": 1,
+        "func-call-spacing": 2,
+        "indent": ["error", 4],
+        "key-spacing": 2,
+        "keyword-spacing": 2,
+        "line-comment-position": 1,
+        "linebreak-style": 2,
+        "lines-around-comment": 2,
+        "lines-between-class-members": 2,
+        "new-parens": 2,
+        "no-array-constructor": 2,
+        "no-whitespace-before-property": 2,
+        "object-curly-newline": [2, {
+            "consistent": true
+        }],
+        "object-curly-spacing": 2,
+        "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+        "semi": 2,
+        "space-before-blocks": 2,
+        "space-before-function-paren": [2, {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
+        "space-in-parens": 2,
+        "space-infix-ops": 2,
+        "space-unary-ops": 2,
+        "spaced-comment": 1,
+        "switch-colon-spacing": 2,
+        "arrow-spacing": 2,
+        "prefer-const": 1,
+        "prefer-destructuring": 1,
+        "prefer-rest-params": 1,
+        "prefer-spread": 1,
+        "prefer-template": 1,
+        "require-await": 2,
+        "rest-spread-spacing": 2,
+        "template-curly-spacing": 2
+    }
 };
 
 /*eslint-disable no-extend-native */
@@ -292,92 +374,6 @@ function createEditorInstance(readOnly = false) {
     });
 };
 
-function eslintVerify(code){
-    const config = {
-        "env": {
-           "browser": true,
-           "node": true
-        },
-        "parserOptions": {
-           "sourceType": "module",
-           "ecmaVersion": 2018,
-           "ecmaFeatures": {
-               "impliedStrict": true
-           }
-        },
-        "rules": {
-           "valid-jsdoc": 1,
-           "block-scoped-var": 2,
-           "curly": 2,
-           "default-case": 2,
-           "dot-location": [2, "property"],
-           "eqeqeq": 2,
-           "no-else-return": 1,
-           "no-eval": 2,
-           "no-loop-func": 1,
-           "no-multi-spaces": 1,
-           "no-param-reassign": 2,
-           "no-unused-expressions": 1,
-           "no-unused-vars": 2,
-           "no-warning-comments": 1,
-           "no-with": 2,
-           "strict": 1,
-           "no-shadow": 1,
-           "no-undef": 2,
-           "no-undefined": 2,
-           "no-use-before-define": 2,
-           "no-sync": 1,
-           "array-bracket-spacing": 2,
-           "block-spacing": 2,
-           "brace-style": [2, "1tbs"],
-           "comma-spacing": 2,
-           "comma-style": 2,
-           "computed-property-spacing": 2,
-           "eol-last": 1,
-           "func-call-spacing": 2,
-           "indent": ["error", "tab"],
-           "key-spacing": 2,
-           "keyword-spacing": 2,
-           "line-comment-position": 1,
-           "linebreak-style": 2,
-           "lines-around-comment": 2,
-           "lines-between-class-members": 2,
-           "new-parens": 2,
-           "no-array-constructor": 2,
-           "no-whitespace-before-property": 2,
-           "object-curly-newline": [2, {
-               "consistent": true
-           }],
-           "object-curly-spacing": 2,
-           "quotes": 1,
-           "semi": 2,
-           "space-before-blocks": 2,
-           "space-before-function-paren": [2, {
-               "anonymous": "always",
-               "named": "never",
-               "asyncArrow": "always"
-           }],
-           "space-in-parens": 2,
-           "space-infix-ops": 2,
-           "space-unary-ops": 2,
-           "spaced-comment": 1,
-           "switch-colon-spacing": 2,
-           "arrow-spacing": 2,
-           "prefer-const": 1,
-           "prefer-destructuring": 1,
-           "prefer-rest-params": 1,
-           "prefer-spread": 1,
-           "prefer-template": 1,
-           "require-await": 2,
-           "rest-spread-spacing": 2,
-           "template-curly-spacing": 2
-        }
-    };
-    console.log(eslintBundle);
-    const result = eslintBundle.runEslint(code, config);
-    console.error(result);
-}
-
 function createSaveAction() {
     return {
         // An unique identifier of the contributed action.
@@ -409,7 +405,7 @@ function createSaveAction() {
             editor.getAction('editor.action.formatDocument').run().then(() => {
                 let fileIO = new FileIO();
                 fileIO.saveText(editor.getModel().getValue());
-                eslintVerify(editor.getModel().getValue());
+                //eslintVerify(editor.getModel().getValue());
                 if (loadingOverview) loadingOverview.classList.add("hide");
             });
         }
@@ -625,64 +621,226 @@ function traverseAssignment(assignment, assignmentInfo) {
     }
 }
 
+function runEslint(fileName) {
+    // Check for errors and set them as model markers.
+    const editorModel = _editor.getModel();
+    const code = editorModel.getValue();
+    const errors = linters.eslint.verify(code, eslintConfig);
+    const monacoMarkers = linters.eslint.convetToMonacoModelMarkers(errors);
+    monaco.editor.setModelMarkers(editorModel, "ESLint", monacoMarkers);
+
+    // Log errors in console.
+    const stringErrors = linters.eslint.stringFormat(errors, fileName);
+    stringErrors.forEach(error => {
+        console.error(error)
+    });
+}
+
+function createQuickfixCodeAction(title, marker, model, fix) {
+    const start = model.getPositionAt(fix.range[0])
+    const end = model.getPositionAt(fix.range[1])
+    /**
+     * @type {import('monaco-editor').IRange}
+     */
+    const editRange = {
+        startLineNumber: start.lineNumber,
+        startColumn: start.column,
+        endLineNumber: end.lineNumber,
+        endColumn: end.column,
+    }
+    return {
+        title,
+        diagnostics: [marker],
+        kind: "quickfix",
+        edit: {
+            edits: [
+                {
+                    resource: model.uri,
+                    edit: {
+                        range: editRange,
+                        text: fix.text,
+                    },
+                },
+            ],
+        },
+    }
+}
+
 (function init() {
     setResourceApiUrl();
     require.config({
         paths: {
             'vs': '/webjars/monaco-editor/0.33.0/min/vs',
             'parser': 'js/parser'
+            'linters': 'js/linters'
         }
     });
 
     loadModuleSuggestions(modulesSuggestions);
 
     //@ts-ignore
-    require(['vs/editor/editor.main', 'parser/acorn-loose'], function (monaco, acornLoose) {
+    try {
+    require(['vs/editor/editor.main', 'parser/acorn-loose', 'linters/eslint_bundle'], function (monaco, acornLoose, eslint) {
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
         let _fileObject;
         let _fileType;
+        linters.eslint = eslint;
 
-        fileIO.getFileType(fileName)
-            .then((fileType) => {
+        fileIO.loadText(fileName)
+            .then((fileObject) => {
+                _fileObject = fileObject;
+                return createEditorInstance(readOnly);
+            })
+            .catch((status) => {
+                if (fileName) messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
+                console.error(status);
+            })
+            .then((editor) => {
+                _editor = editor;
+                return _fileObject.modified;
+            })
+            .then((fileText) => {
+                if (fileName) {
+                    let fileType = fileIO.resolveFileType(fileName);
 
-                _fileType = fileType;
+                    let moduleImports = getModuleImports(fileText);
+                    codeCompletionAssignments = parseAssignments(acornLoose, fileText);
 
-                fileIO.loadText(fileName)
-                    .then((fileObject) => {
-                        _fileObject = fileObject;
-                        return createEditorInstance(readOnly);
-                    })
-                    .catch((status) => {
-                        if (fileName) messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
-                        console.error(status);
-                    })
-                    .then((editor) => {
-                        _editor = editor;
-                        return _fileObject.modified;
-                    })
-                    .then((fileText) => {
-                        if (fileName) {
-                            let fileType = _fileType;
+                    moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
 
-                            let moduleImports = getModuleImports(fileText);
-                            codeCompletionAssignments = parseAssignments(acornLoose, fileText);
+                    messageHub.subscribe(function () {
+                        if (dirty) {
+                            fileIO.saveText(_editor.getModel().getValue());
+                        }
+                    }, "workbench.editor.save");
 
-                            moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
-
-                            messageHub.subscribe(function () {
-                                if (dirty) {
-                                    fileIO.saveText(_editor.getModel().getValue());
+                    _editor.onDidChangeModel(function () {
+                        if (_fileObject.isGit) {
+                            lineDecorations = highlight_changed(
+                                getNewLines(_fileObject.git, fileText),
+                                _editor
+                            );
+                        }
+                    });
+                    let model = monaco.editor.createModel(fileText, fileType || 'text');
+                    _editor.setModel(model);
+                    if (!readOnly) {
+                        _editor.addAction(createSaveAction());
+                    }
+                    _editor.addAction(createSearchAction());
+                    _editor.addAction(createCloseAction());
+                    _editor.addAction(createCloseOthersAction());
+                    _editor.addAction(createCloseAllAction());
+                    _editor.onDidChangeCursorPosition(function (e) {
+                        let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
+                        messageHub.post({ data: caretInfo }, 'status.caret');
+                    });
+                    _editor.onDidChangeModelContent(function (e) {
+                        if (e.changes && e.changes[0].text === ".") {
+                            codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
+                        }
+                        if (_fileObject.isGit && e.changes) {
+                            let content = _editor.getValue();
+                            lineDecorations = highlight_changed(
+                                getNewLines(_fileObject.git, content),
+                                _editor
+                            );
+                        }
+                        let newModuleImports = getModuleImports(_editor.getValue());
+                        if (e && !dirty) {
+                            dirty = true;
+                            messageHub.post({ data: fileName }, 'editor.file.dirty');
+                        }
+                        newModuleImports.forEach(function (module) {
+                            if (module.module.split("/").length > 0) {
+                                let newModule = moduleImports.filter(e => e.keyWord === module.keyWord && e.module === module.module)[0];
+                                let moduleChanged = moduleImports.filter(e => e.keyWord === module.keyWord && e.module !== module.module)[0];
+                                let keyWordChanged = moduleImports.filter(e => e.keyWord !== module.keyWord && e.module === module.module)[0];
+                                if (!newModule) {
+                                    loadSuggestions(module.module, codeCompletionSuggestions);
+                                    moduleImports.push(module);
+                                } else if (moduleChanged) {
+                                    moduleChanged.module = module.module;
+                                    loadSuggestions(module.module, codeCompletionSuggestions);
+                                } else if (keyWordChanged) {
+                                    keyWordChanged.keyWord = module.keyWord;
                                 }
-                            }, "workbench.editor.save");
+                            }
+                        });
 
-                            _editor.onDidChangeModel(function () {
-                                if (_fileObject.isGit) {
-                                    lineDecorations = highlight_changed(
-                                        getNewLines(_fileObject.git, fileText),
-                                        _editor
-                                    );
+                        runEslint(fileName);
+                    });
+
+                    monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
+                    monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
+                    loadDTS();
+
+                    monaco.languages.registerCompletionItemProvider('javascript', {
+                        triggerCharacters: ["\"", "'"],
+                        provideCompletionItems: function (model, position) {
+                            let token = model.getValueInRange({
+                                startLineNumber: position.lineNumber,
+                                startColumn: 1,
+                                endLineNumber: position.lineNumber,
+                                endColumn: position.column
+                            })
+                            if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0
+                                && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
+                                return { suggestions: [] };
+                            }
+                            let wordPosition = model.getWordUntilPosition(position);
+                            let word = wordPosition.word;
+                            let range = {
+                                startLineNumber: position.lineNumber,
+                                endLineNumber: position.lineNumber,
+                                startColumn: wordPosition.startColumn,
+                                endColumn: wordPosition.endColumn
+                            };
+                            return {
+                                suggestions: modulesSuggestions
+                                    .filter(function (e) {
+                                        if (word.length > 0) {
+                                            return e.name.toLowerCase().indexOf(word.toLowerCase()) >= 0;
+                                        }
+                                        return true;
+                                    }).map(function (e) {
+                                        return {
+                                            label: e.name,
+                                            kind: monaco.languages.CompletionItemKind.Module,
+                                            documentation: e.documentation,
+                                            detail: e.description,
+                                            insertText: e.name,
+                                            range: range
+                                        }
+                                    })
+                            };
+                        }
+                    });
+                    monaco.languages.registerCompletionItemProvider('javascript', {
+                        triggerCharacters: ["."],
+                        provideCompletionItems: function (model, position) {
+                            let token = model.getValueInRange({
+                                startLineNumber: position.lineNumber,
+                                startColumn: 1,
+                                endLineNumber: position.lineNumber,
+                                endColumn: position.column
+                            })
+
+                            let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
+                            // let afterDotToken = token.substring(token.indexOf(".") + 1);
+                            let tokenParts = token.split(".");
+                            let moduleName = moduleImport ? moduleImport.module : null;
+                            if (tokenParts != null && tokenParts.length > 2) {
+                                moduleName = null;
+                            }
+                            let nestedObjectKeyword = null;
+                            if (!moduleName) {
+                                let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
+                                if (nestedKeyword) {
+                                    nestedObjectKeyword = nestedKeyword.split(".")[0];
+>>>>>>> 44fc6a6dfb (feat: add quickfix support)
                                 }
                             });
                             let model = monaco.editor.createModel(fileText, fileType || 'text');
@@ -919,5 +1077,26 @@ function traverseAssignment(assignment, assignmentInfo) {
             space_around_combinator: true
         });
         monaco.editor.setTheme(monacoTheme);
+
+       // Register quickfix provider
+        monaco.languages.registerCodeActionProvider("javascript", {
+            provideCodeActions(model, range, context, token) {
+                /** @type {monaco.languages.CodeAction[]} */
+                const codeActions = [];
+                for (const marker of context.markers) {
+                    /** @type {monaco.languages.TextEdit} */
+                    if(!marker.relatedInformation) continue;
+                    if(marker.relatedInformation.length === 0) continue;
+                    const fix = JSON.parse(marker.relatedInformation);
+                    const codeAction = createQuickfixCodeAction(`Fix: ${marker.message}`, marker, model, fix)
+                    codeActions.push(codeAction);
+                }
+                return { actions: codeActions, dispose() {} };
+            }
+        });
     });
+    }catch(err) {
+        console.log(err.message);
+    }
+
 })();
