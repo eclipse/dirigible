@@ -1,10 +1,10 @@
 package org.eclipse.dirigible.engine.js.graalvm.execution.js;
 
 import org.eclipse.dirigible.engine.js.graalvm.execution.CodeRunner;
-import org.eclipse.dirigible.engine.js.graalvm.execution.js.eventloop.EventLoop;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSContextCreator;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSEngineCreator;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.platform.GraalJSSourceCreator;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.JSGlobalObject;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.JSPolyfill;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -30,6 +30,8 @@ public class GraalJSCodeRunner implements CodeRunner {
 
         graalEngine = builder.waitForDebugger ? GraalJSEngineCreator.getOrCreateDebuggableEngine() : GraalJSEngineCreator.getOrCreateEngine();
         graalContext = GraalJSContextCreator.createContext(graalEngine, currentWorkingDirectoryPath, onBeforeContextCreatedHook, onAfterContextCreatedHook);
+
+        registerGlobalObjects(graalContext, builder.globalObjects);
         registerPolyfills(graalContext, builder.jsPolyfills);
     }
 
@@ -39,6 +41,11 @@ public class GraalJSCodeRunner implements CodeRunner {
 
     private static Consumer<Context> provideOnAfterContextCreatedHook(List<Consumer<Context>> onAfterContextCreatedListeners) {
         return context -> onAfterContextCreatedListeners.forEach(x -> x.accept(context));
+    }
+
+    private static void registerGlobalObjects(Context context, List<JSGlobalObject> globalObjects) {
+        Value contextBindings = context.getBindings("js");
+        globalObjects.forEach(global -> contextBindings.putMember(global.getName(), global.getValue()));
     }
 
     private static void registerPolyfills(Context context, List<JSPolyfill> jsPolyfills) {
@@ -57,16 +64,6 @@ public class GraalJSCodeRunner implements CodeRunner {
         return result;
     }
 
-    @Override
-    public void runLooped(Path codeFilePath) {
-        Path relativeCodeFilePath = currentWorkingDirectoryPath.resolve(codeFilePath);
-        Source codeSource = GraalJSSourceCreator.createSource(relativeCodeFilePath);
-
-        Value initialScriptExecutable = graalContext.parse(codeSource);
-        EventLoop eventLoop = new EventLoop(initialScriptExecutable);
-        eventLoop.loop();
-    }
-
     private static void rethrowIfError(Value maybeError) {
         if (maybeError.isException()) {
             throw maybeError.throwException();
@@ -77,6 +74,7 @@ public class GraalJSCodeRunner implements CodeRunner {
         private final Path currentWorkingDirectoryPath;
         private boolean waitForDebugger = false;
         private final List<JSPolyfill> jsPolyfills = new ArrayList<>();
+        private final List<JSGlobalObject> globalObjects = new ArrayList<>();
         private final List<Consumer<Context.Builder>> onBeforeContextCreatedListeners = new ArrayList<>();
         private final List<Consumer<Context>> onAfterContextCreatedListener = new ArrayList<>();
 
@@ -91,6 +89,11 @@ public class GraalJSCodeRunner implements CodeRunner {
 
         public Builder addJSPolyfill(JSPolyfill jsPolyfill) {
             jsPolyfills.add(jsPolyfill);
+            return this;
+        }
+
+        public Builder addGlobalObject(JSGlobalObject jsGlobalObject) {
+            globalObjects.add(jsGlobalObject);
             return this;
         }
 

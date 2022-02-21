@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.js.graalvm.service;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.api.context.ContextException;
@@ -21,8 +22,9 @@ import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.extensions.api.ExtensionsException;
 import org.eclipse.dirigible.engine.js.graalvm.execution.js.GraalJSCodeRunner;
-import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.cjs.RequirePolyfill;
-import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.timers.TimersPolyfill;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.eventloop.GraalJSEventLoop;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.TimersJSGlobalObject;
+import org.eclipse.dirigible.engine.js.graalvm.execution.js.polyfills.*;
 import org.eclipse.dirigible.engine.js.graalvm.processor.GraalVMJavascriptEngineExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
@@ -36,165 +38,190 @@ import org.slf4j.LoggerFactory;
  */
 public class GraalVMCustomTest extends AbstractApiSuiteTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(GraalVMCustomTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(GraalVMCustomTest.class);
 
-	/** The repository. */
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    /**
+     * The repository.
+     */
+    private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
-	/** The GraalVM javascript engine executor. */
-	private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
+    /**
+     * The GraalVM javascript engine executor.
+     */
+    private GraalVMJavascriptEngineExecutor graalVMJavascriptEngineExecutor;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
-	 */
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-		this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-		this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest#setUp()
+     */
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+        this.graalVMJavascriptEngineExecutor = new GraalVMJavascriptEngineExecutor();
+    }
 
-	@Override
-	public void registerModules() {
-		registerModulesV4();
-	}
+    @Override
+    public void registerModules() {
+        registerModulesV4();
+    }
 
-	@Test
-	public void testDownloadFirebaseDependency() {
-		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/dependencies");
-		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+    @Test
+    public void testDownloadFirebaseDependency() throws InterruptedException {
+        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/dependencies");
+        GraalJSEventLoop loopedCodeRunner = new GraalJSEventLoop(
+                20, TimeUnit.MINUTES,
+                (looper) -> createLoopedCodeRunner(workingDir, looper)
+        );
 
-		Path codePath = Path.of("firebase-test.mjs");
-		codeRunner.runLooped(codePath);
-	}
+        Path codePath = Path.of("firebase-test.mjs");
+        loopedCodeRunner.loop(codePath);
 
-	@Test
-	public void testNewEngineWithEventLooper() {
-		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/timers");
-		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+        int a = 5;
+    }
 
-		Path codePath = Path.of("timers-test.mjs");
-		codeRunner.runLooped(codePath);
-	}
+    @Test
+    public void testNewEngineWithEventLooper() throws InterruptedException {
+        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/timers");
+        GraalJSEventLoop loopedCodeRunner = new GraalJSEventLoop(
+                20, TimeUnit.MINUTES,
+                (looper) -> createLoopedCodeRunner(workingDir, looper)
+        );
 
-	@Test
-	public void testNewEngineWithDirigibleImports() {
-		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
-		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+        Path codePath = Path.of("timers-test.mjs");
+        loopedCodeRunner.loop(codePath);
+        int a = 5;
+    }
 
-		Path codePath = Path.of("importDirigibleApi.mjs");
-		codeRunner.run(codePath);
-	}
+    @Test
+    public void testNewEngineWithDirigibleImports() {
+        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
+        GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
 
-	@Test
-	public void testNewEngineWithRelativeImports() {
-		Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
-		GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
+        Path codePath = Path.of("importDirigibleApi.mjs");
+        codeRunner.run(codePath);
+    }
 
-		Path codePath = Path.of("relativeImports/l12/l12.mjs");
-		codeRunner.run(codePath);
-	}
+    @Test
+    public void testNewEngineWithRelativeImports() {
+        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
+        GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
 
-	private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
-		return new GraalJSCodeRunner.Builder(workingDir)
+        Path codePath = Path.of("relativeImports/l12/l12.mjs");
+        codeRunner.run(codePath);
+    }
+
+    private GraalJSCodeRunner createLoopedCodeRunner(Path workingDir, GraalJSEventLoop looper) {
+        return new GraalJSCodeRunner.Builder(workingDir)
+                .addGlobalObject(looper)
+                .addGlobalObject(new TimersJSGlobalObject())
+                .addJSPolyfill(new GlobalPolyfill())
                 .addJSPolyfill(new RequirePolyfill())
-				.addJSPolyfill(new TimersPolyfill())
-				.waitForDebugger(false)
+                .addJSPolyfill(new TimersPolyfill())
+                .addJSPolyfill(new XhrPolyfill())
+                .addJSPolyfill(new FetchPolyfill())
+                .waitForDebugger(false)
                 .build();
-	}
+    }
 
-	/**
-	 * Custom custom package
-	 *
-	 * @throws RepositoryWriteException the repository write exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
-	 * @throws ContextException the context exception
-	 * @throws ExtensionsException the extensions exception
-	 */
+    private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
+        return new GraalJSCodeRunner.Builder(workingDir)
+                .addJSPolyfill(new RequirePolyfill())
+                .waitForDebugger(true)
+                .build();
+    }
+
+    /**
+     * Custom custom package
+     *
+     * @throws RepositoryWriteException the repository write exception
+     * @throws IOException              Signals that an I/O exception has occurred.
+     * @throws ScriptingException       the scripting exception
+     * @throws ContextException         the context exception
+     * @throws ExtensionsException      the extensions exception
+     */
 //	@Test
-	public void customPackage() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
+    public void customPackage() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 
-		String testModule = "graalvm/customPackage.js";
+        String testModule = "graalvm/customPackage.js";
 
-		try {
-			ThreadContextFacade.setUp();
+        try {
+            ThreadContextFacade.setUp();
 
-			logger.info("API test starting... " + testModule);
+            logger.info("API test starting... " + testModule);
 
-			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
-			logger.info("API test passed successfully: " + testModule);
+            runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+            logger.info("API test passed successfully: " + testModule);
 
-		} finally {
-			ThreadContextFacade.tearDown();
-		}
-	}
+        } finally {
+            ThreadContextFacade.tearDown();
+        }
+    }
 
-	/**
-	 * Custom custom package
-	 *
-	 * @throws RepositoryWriteException the repository write exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ScriptingException the scripting exception
-	 * @throws ContextException the context exception
-	 * @throws ExtensionsException the extensions exception
-	 */
+    /**
+     * Custom custom package
+     *
+     * @throws RepositoryWriteException the repository write exception
+     * @throws IOException              Signals that an I/O exception has occurred.
+     * @throws ScriptingException       the scripting exception
+     * @throws ContextException         the context exception
+     * @throws ExtensionsException      the extensions exception
+     */
 //	@Test
-	public void customPackageImport() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
+    public void customPackageImport() throws RepositoryWriteException, IOException, ScriptingException, ContextException, ExtensionsException {
 
-		String testModule = "graalvm/customPackageImport.js";
+        String testModule = "graalvm/customPackageImport.js";
 
-		try {
-			ThreadContextFacade.setUp();
+        try {
+            ThreadContextFacade.setUp();
 
-			logger.info("API test starting... " + testModule);
+            logger.info("API test starting... " + testModule);
 
-			Object result = null;
-			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+            Object result = null;
+            runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 
-			logger.info("API test passed successfully: " + testModule);
+            logger.info("API test passed successfully: " + testModule);
 
-		} finally {
-			ThreadContextFacade.tearDown();
-		}
-	}
+        } finally {
+            ThreadContextFacade.tearDown();
+        }
+    }
 
-//	@Test
-	public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
-		String testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
+    //	@Test
+    public void dirigibleApiEcmaImport() throws ContextException, IOException, ScriptingException {
+        String testModule = "graalvm/ecmascript/importDirigibleApi.mjs";
 
-		try {
-			ThreadContextFacade.setUp();
+        try {
+            ThreadContextFacade.setUp();
 
-			logger.info("API test starting... " + testModule);
+            logger.info("API test starting... " + testModule);
 
-			Object result = null;
-			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+            Object result = null;
+            runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 
-			logger.info("API test passed successfully: " + testModule);
+            logger.info("API test passed successfully: " + testModule);
 
-		} finally {
-			ThreadContextFacade.tearDown();
-		}
-	}
+        } finally {
+            ThreadContextFacade.tearDown();
+        }
+    }
 
-//	@Test
-	public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
-		String testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
+    //	@Test
+    public void relativePathEcmaImport() throws ContextException, IOException, ScriptingException {
+        String testModule = "graalvm/ecmascript/relativeImports/l12/l12.mjs";
 
-		try {
-			ThreadContextFacade.setUp();
+        try {
+            ThreadContextFacade.setUp();
 
-			logger.info("API test starting... " + testModule);
+            logger.info("API test starting... " + testModule);
 
-			Object result = null;
-			runTest(graalVMJavascriptEngineExecutor, repository, testModule);
+            Object result = null;
+            runTest(graalVMJavascriptEngineExecutor, repository, testModule);
 
-			logger.info("API test passed successfully: " + testModule);
+            logger.info("API test passed successfully: " + testModule);
 
-		} finally {
-			ThreadContextFacade.tearDown();
-		}
-	}
+        } finally {
+            ThreadContextFacade.tearDown();
+        }
+    }
 }

@@ -4,8 +4,6 @@ import { uuid, hex, escape } from '@dirigible/utils';
 import * as utils from '@dirigible/utils'
 import utils2 from '@dirigible/utils'
 
-console.log("!!!! VM: hellooooo");
-
 // var assertEquals = require('utils/assert').assertEquals;
 const assertEquals = Java.type("org.junit.Assert").assertEquals;
 assertEquals("YWRtaW46YWRtaW4=", base64.encode("admin:admin"));
