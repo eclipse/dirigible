@@ -10,12 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getView = function () {
-	return {
-		"id": "about",
-		"name": "About",
-		"factory": "frame",
-		"region": "center-middle",
-		"label": "About",
-		"link": "../ide/about/about.html"
-	};
+    return {
+        "id": "about",
+        "name": "About",
+        "factory": "frame",
+        "region": "center-middle",
+        "label": "About",
+        "link": "../ide-about/about.html"
+    };
 }
