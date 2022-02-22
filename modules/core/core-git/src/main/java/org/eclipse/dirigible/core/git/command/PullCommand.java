@@ -27,7 +27,6 @@ import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

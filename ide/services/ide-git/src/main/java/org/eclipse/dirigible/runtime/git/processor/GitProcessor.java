@@ -159,26 +159,6 @@ public class GitProcessor {
 	}
 
 	/**
-	 * Remote.
-	 *
-	 * @param workspace the workspace
-	 * @param repositoryName the repositoryName
-	 * @throws GitConnectorException in case of exception
-	 */
-//	public void remote(String workspace, String repositoryName) throws GitConnectorException {
-//		try {
-//			File gitRepository = getGitRepository(workspace, repositoryName);
-////			GitCommand remoteConfig = new GitCommand();
-////			remoteConfig.call();
-//
-//
-//		} catch (IOException e) {
-//			throw new GitConnectorException("Unable to delete Git repository [" + repositoryName + "]", e);
-//		}
-//	}
-
-
-	/**
 	 * Share.
 	 *
 	 * @param workspace the workspace
@@ -448,21 +428,44 @@ public class GitProcessor {
 		}
 	}
 
+	/**
+	 * Remote origin URLs.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @throws GitConnectorException in case of an error
+	 */
 	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		return gitConnector.getOriginUrls();
 	}
 
+	/**
+	 * Update remote origin fetch URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
 	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitConnector.setFetchUrl(url);
-		gitConnector.getOriginUrls();
 	}
 
+	/**
+	 * Update remote origin push URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
 	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
 		gitConnector.setPushUrl(url);
-		gitConnector.getOriginUrls();
 	}
 
 	/**

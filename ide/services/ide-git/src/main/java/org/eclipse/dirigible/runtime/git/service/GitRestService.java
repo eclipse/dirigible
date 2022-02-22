@@ -30,7 +30,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.oracle.truffle.tools.utils.json.JSONObject;
+import com.google.gson.JsonElement;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -63,6 +63,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+import com.google.gson.JsonObject;
 /**
  * Front facing REST service serving the Git commands.
  */
@@ -78,6 +79,9 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	
 	@Context
 	private HttpServletResponse response;
+	private String workspace;
+	private String project;
+	private String url;
 
 	/**
 	 * Clone repository.
@@ -107,7 +111,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 *
 	 * @param workspace the workspace
 	 * @param model the model
-	 * @return the responseF
+	 * @return the response
 	 * @throws GitConnectorException 
 	 */
 	@POST
@@ -626,6 +630,14 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok().build();
 	}
 
+	/**
+	 * Get remote origin URLs.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
 	@GET
 	@Path("/{project}/origin-urls")
 	@Produces("application/json")
@@ -641,37 +653,57 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		return Response.ok(originUrls).build();
 	}
 
-	@GET
-	@Path("/{project}/set-fetch-url")
+	/**
+	 * Update remote origin fetch URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL   
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
+	@POST
+	@Path("/{project}/fetch-url")
 	@Produces("application/json")
 	@ApiOperation("Set origin fetch URL")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
-	public Response setFetchUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+	public Response setFetchUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @ApiParam(value = "New fetch URL", required = true) JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
-		processor.setFetchUrl(workspace, project, url);
-		JSONObject res = new JSONObject();
-		res.put("status", "success");
-		res.put("url", url);
+		String newurl = url.get("url").getAsString();
+		processor.setFetchUrl(workspace, project, newurl);
+		JsonObject res = new JsonObject();
+		res.addProperty("status", "success");
+		res.addProperty("url", newurl);
 		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
-	@GET
-	@Path("/{project}/set-push-url")
+	/**
+	 * Update remote origin push URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
+	@POST
+	@Path("/{project}/push-url")
 	@Produces("application/json")
 	@ApiOperation("Set origin push URL")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
-	public Response setPushUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @QueryParam("url") String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+	public Response setPushUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @ApiParam(value = "New push URL", required = true) JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
-		processor.setPushUrl(workspace, project, url);
-		JSONObject res = new JSONObject();
-		res.put("status", "success");
-		res.put("url", url);
+		String newurl = url.get("url").getAsString();
+		processor.setPushUrl(workspace, project, newurl);
+		JsonObject res = new JsonObject();
+		res.addProperty("status", "success");
+		res.addProperty("url", newurl);
 		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 

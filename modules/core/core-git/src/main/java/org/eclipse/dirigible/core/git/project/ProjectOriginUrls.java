@@ -27,12 +27,10 @@ public class ProjectOriginUrls {
         return pushUrl;
     }
 
-    public String setFetchUrl(String fetchURL) {
+    public void setFetchUrl(String fetchURL) {
         this.fetchUrl = fetchURL;
-        return this.fetchUrl;
     }
-    public String setPushUrl(String pushURL) {
+    public void setPushUrl(String pushURL) {
         this.pushUrl = pushURL;
-        return this.pushUrl;
     }
 }
