@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.2.3</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -17,97 +17,97 @@
 		<dependency>
 			 <groupId>org.eclipse.dirigible</groupId>
 			 <artifactId>dirigible-ext-acorn</artifactId>
-			 <version>7.0.0-SNAPSHOT</version>
+			 <version>6.2.3</version>
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-ext-jasmine</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
+		 	<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-qunit</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 	   </dependency>
 	   <dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-kafka</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 	   </dependency>
 	   <dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-mongodb</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 	   </dependency>
 	   <dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-cassandra</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-elasticsearch</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-etcd</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-rabbitmq</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-redis</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ext-spark</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-kafka</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-mongodb</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-cassandra</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-elasticsearch</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-etcd</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-rabbitmq</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-redis</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-spark</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.3</version>
 		</dependency>
 	</dependencies>
 
