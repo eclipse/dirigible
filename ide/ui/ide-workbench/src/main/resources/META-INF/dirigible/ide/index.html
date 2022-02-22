@@ -36,7 +36,7 @@
         <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
         <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 
         <!-- Twitter Bootstrap with Theme Support -->
         <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js">
@@ -109,8 +109,22 @@
                                 alert(msg.data);
                             },
                             'editor.file.dirty': function (msg) {
-                                dirtyFiles.push(msg.data);
-                                Layouts.manager.setEditorDirty(msg.data, true);
+                                var file, isDirty;
+                                if (typeof msg.data === 'string') {
+                                    file = msg.data;
+                                    isDirty = true;
+                                } else {
+                                    file = msg.data.file;
+                                    isDirty = msg.data.isDirty;
+                                }
+
+                                if (isDirty) {
+                                    dirtyFiles.push(file);
+                                } else {
+                                    dirtyFiles = dirtyFiles.filter(e => e !== file);
+                                }
+
+                                Layouts.manager.setEditorDirty(file, isDirty);
                             },
                             'editor.file.saved': function (msg) {
                                 dirtyFiles = dirtyFiles.filter(e => e !== msg.data);

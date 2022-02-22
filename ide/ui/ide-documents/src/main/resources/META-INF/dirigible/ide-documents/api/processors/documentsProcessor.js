@@ -15,6 +15,7 @@ let documentUtils = require("ide-documents/utils/cmis/document");
 let contentTypeHandler = require("ide-documents/utils/content-type-handler");
 let registry = require("platform/v4/registry");
 let { replaceAll, unescapePath, getNameFromPath } = require("ide-documents/utils/string");
+let user = require("security/v4/user");
 
 exports.get = function (path) {
 	let document = documentUtils.getDocument(path);

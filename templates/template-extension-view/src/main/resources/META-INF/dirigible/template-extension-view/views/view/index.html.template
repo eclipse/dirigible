@@ -26,7 +26,7 @@
 	<link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
 	
 	<!-- jQuery -->
-	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 
 	<!-- AngularJS -->
 	<script src="/webjars/angularjs/1.8.2/angular.min.js"></script>
