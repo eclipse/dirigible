@@ -15,10 +15,10 @@ import org.eclipse.jgit.api.RemoteSetUrlCommand;
 import org.eclipse.jgit.lib.Repository;
 
 public class RemoteUrl extends RemoteSetUrlCommand {
-    protected RemoteUrl(Repository repo) {
+    public RemoteUrl(Repository repo) {
         super(repo);
     }
-    public static RemoteUrl getRemoteUrl(Repository repo) {
-        return new RemoteUrl(repo);
-    }
+//    public static RemoteUrl getRemoteUrl(Repository repo) {
+//        return new RemoteUrl(repo);
+//    }
 }

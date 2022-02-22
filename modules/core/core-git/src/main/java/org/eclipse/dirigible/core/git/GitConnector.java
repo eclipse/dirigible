@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.git.utils.RemoteUrl;
 import org.eclipse.jgit.api.*;
@@ -53,13 +51,12 @@ import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.api.RemoteSetUrlCommand;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-
-import javax.ws.rs.core.Response;
 
 /**
  * The GitConnector utility is used for simplified communication with Git SCM server.
@@ -100,7 +97,7 @@ public class GitConnector implements IGitConnector {
 
 	@Override
 	public String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
-		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
+		RemoteUrl remoteGit = new RemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.FETCH);
 		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(fetchUrl);
@@ -115,7 +112,7 @@ public class GitConnector implements IGitConnector {
 
 	@Override
 	public String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
-		RemoteUrl remoteGit = RemoteUrl.getRemoteUrl(repository);
+		RemoteUrl remoteGit = new RemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.PUSH);
 		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(pushUrl);
