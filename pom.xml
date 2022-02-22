@@ -700,7 +700,7 @@
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.16.4</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<jetty.version>9.4.12.v20180830</jetty.version>
+		<jetty.version>11.0.8</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
