@@ -167,8 +167,7 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     public SQLJoinClause join(final EdmEntitySet start, final EdmEntitySet target, final List<NavigationSegment> expands)
             throws ODataException {
-        SQLJoinClause clause = this.join(start.getEntityType(), target.getEntityType());
-        return clause;
+        return this.join(start.getEntityType(), target.getEntityType());
     }
 
     // Do NOT use this method; For Unit testing purposes ONLY
@@ -215,10 +214,15 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
             builder.append(" WHERE ");
             builder.append(getWhereClause().evaluate(context)).append(SPACE);
         }
+
         SQLOrderByClause ob = getOrderByClause();
         if(null != ob) {
-            builder.append("ORDER BY ").append(ob.evaluate(context)).append(SPACE);
+            String orderByExpression = ob.evaluate(context);
+            if(!orderByExpression.isEmpty()) {
+                builder.append("ORDER BY ").append(orderByExpression).append(SPACE);
+            }
         }
+
         addSelectOption(context, builder, SELECT_LIMIT);
         addSelectOption(context, builder, SELECT_OFFSET);
 

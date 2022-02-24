@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
 import org.apache.olingo.odata2.api.edm.*;
+import org.apache.olingo.odata2.core.edm.EdmNull;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 
 public class SQLStatementParam {
@@ -51,6 +52,62 @@ public class SQLStatementParam {
         } else {
             return null;
         }
+    }
+
+    public EdmSimpleTypeKind getEdmSimpleKind(){
+        if(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.String;
+        }
+        if(EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Int16;
+        }
+        if(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Int32;
+        }
+        if(EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Int64;
+        }
+        if(EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Double;
+        }
+        if(EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Decimal;
+        }
+        if(EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Boolean;
+        }
+        if(EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.DateTime;
+        }
+        if(EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.DateTimeOffset;
+        }
+        if(EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Time;
+        }
+        if(EdmSimpleTypeKind.Guid.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Guid;
+        }
+        if(EdmSimpleTypeKind.Binary.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Binary;
+        }
+        if(EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.SByte;
+        }
+        if(EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Single;
+        }
+        if(edmType instanceof EdmNull){
+            return EdmSimpleTypeKind.Null;
+        }
+        if(EdmSimpleTypeKind.Byte.getEdmSimpleTypeInstance().equals(edmType)){
+            return EdmSimpleTypeKind.Byte;
+        }
+        if(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance().isCompatible((EdmSimpleType) edmType)){
+            return EdmSimpleTypeKind.Int32;
+        }
+
+        throw new IllegalStateException("Unexpected EdmType - " + edmType);
     }
 
     public EdmType getEdmType() {
