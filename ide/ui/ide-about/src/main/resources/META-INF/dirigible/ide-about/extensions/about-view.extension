@@ -1,0 +1,5 @@
+{
+    "module": "ide-about/services/about-view.js",
+    "extensionPoint": "ide-view",
+    "description": "About View"
+}

@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
 	<modules>
+		<module>ide-about</module>
 		<module>ide-branding</module>
 		<module>ide-console</module>
 		<module>ide-core</module>
