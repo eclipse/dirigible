@@ -14,6 +14,7 @@ exports.getPerspective = function () {
 		name: "Documents",
 		link: "../ide-documents/index.html",
 		order: "150",
-		image: "clipboard"
+		image: "clipboard", // deprecated
+		icon: "../ide-documents/images/documents.svg",
 	};
 };
