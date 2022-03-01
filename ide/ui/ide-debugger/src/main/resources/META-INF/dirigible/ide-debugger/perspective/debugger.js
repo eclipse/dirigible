@@ -11,9 +11,10 @@
  */
 exports.getPerspective = function () {
 	return {
-		"name": "Debugger",
-		"link": "../ide-debugger/index.html",
-		"order": "106",
-		"image": "bug"
+		name: "Debugger",
+		link: "../ide-debugger/index.html",
+		order: "106",
+		image: "bug", // deprecated
+		icon: "../ide-debugger/images/debugger.svg",
 	};
 }
