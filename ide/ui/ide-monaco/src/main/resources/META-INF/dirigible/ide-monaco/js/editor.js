@@ -21,9 +21,6 @@ let parameters = {
     file: ""
 };
 
-import prettier from "https://unpkg.com/prettier@2.5.1/esm/standalone.mjs";
-import parserBabel from "https://unpkg.com/prettier@2.5.1/esm/parser-babel.mjs";
-
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
     let target = this;
@@ -40,9 +37,9 @@ function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
     }
     let lineDiff;
     if (isWhitespaceIgnored) {
-        lineDiff = diffTrimmedLines(oldText, newText);
+        lineDiff = Diff.diffTrimmedLines(oldText, newText);
     } else {
-        lineDiff = diffLines(oldText, newText);
+        lineDiff = Diff.diffLines(oldText, newText);
     }
     let addedCount = 0;
     let addedLines = [];
@@ -611,54 +608,6 @@ function getModuleImports(text) {
     return moduleImports;
 }
 
-function setupPrettier(fileName) {
-    let editorApi = "/services/v4/ide/editor/prettier/config";
-    let prettierConfigRequest = `${editorApi}${fileName}`
-
-    fetch(prettierConfigRequest, {
-        method: "GET"
-    })
-    .then(function(response) { return response.json(); })
-    .then(function(configJson) {
-        registerPrettierFormatter(configJson, "javascript");
-    })
-    .catch((error) => {
-        let defaultConfigJson = {
-              trailingComma: "es5",
-              tabWidth: 4,
-              semi: false,
-              singleQuote: true,
-        };
-        registerPrettierFormatter(defaultConfigJson, "javascript");
-    });
-}
-
-function registerPrettierFormatter(configJson, language) {
-    configJson.plugins = [parserBabel];
-    configJson.parser = "babel";
-
-    monaco.languages.registerDocumentFormattingEditProvider(language, {
-        provideDocumentFormattingEdits: function (model, options, token) {
-            var textEditRange = model.getFullModelRange();
-            var sourceCode = model.getValue();
-
-            try {
-                sourceCode = prettier.format(sourceCode, configJson);
-            }
-            catch(formatError) {
-                console.error(formatError.stack);
-            }
-
-            return [
-                {
-                    range: textEditRange,
-                    text:  sourceCode
-                }
-            ];
-        }
-    });
-}
-
 function traverseAssignment(assignment, assignmentInfo) {
     if (assignment.parentModule) {
         traverseAssignment(assignment.parentModule, assignmentInfo);
@@ -955,7 +904,5 @@ function traverseAssignment(assignment, assignmentInfo) {
             indent_with_tabs: false,
         });
         monaco.editor.setTheme(monacoTheme);
-
-        setupPrettier(fileName);
     });
 })();
