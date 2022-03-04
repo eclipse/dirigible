@@ -96,33 +96,23 @@ public class GitConnector implements IGitConnector {
 	}
 
 	@Override
-	public String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
+	public void setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = new RemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.FETCH);
 		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(fetchUrl);
 		remoteGit.setRemoteUri(newUrl);
 		remoteGit.call();
-
-		StoredConfig gitConfig = repository.getConfig();
-		gitConfig.setString("remote", "origin", "url", fetchUrl);
-		String updatedURL = gitConfig.getString("remote", "origin", "url");
-		return updatedURL;
 	}
 
 	@Override
-	public String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
+	public void setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
 		RemoteUrl remoteGit = new RemoteUrl(repository);
 		remoteGit.setUriType(RemoteSetUrlCommand.UriType.PUSH);
 		remoteGit.setRemoteName("origin");
 		URIish newUrl = new URIish(pushUrl);
 		remoteGit.setRemoteUri(newUrl);
 		remoteGit.call();
-
-		StoredConfig gitConfig = repository.getConfig();
-		gitConfig.setString("remote", "origin", "pushurl", pushUrl);
-		String updatedURL = gitConfig.getString("remote", "origin", "pushurl");
-		return updatedURL;
 	}
 
 	/**
@@ -204,7 +194,6 @@ public class GitConnector implements IGitConnector {
 		commitCommand.setMessage(message);
 		commitCommand.setCommitter(name, email);
 		commitCommand.setAuthor(name, email);
-//		commitCommand.setCommitter(name, email);
 		commitCommand.setAll(all);
 		commitCommand.setAllowEmpty(true);
 		commitCommand.call();

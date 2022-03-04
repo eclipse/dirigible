@@ -434,6 +434,8 @@ public class GitProcessor {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @throws GitConnectorException in case of an error
+	 * @return Origin URLs info
+	 *
 	 */
 	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
@@ -446,8 +448,9 @@ public class GitProcessor {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param url the new fetch URL
-	 * @return the response
-	 * @throws GitConnectorException in case of exception
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
 	 */
 	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);
@@ -460,8 +463,9 @@ public class GitProcessor {
 	 * @param workspace the workspace
 	 * @param project the project
 	 * @param url the new fetch URL
-	 * @return the response
-	 * @throws GitConnectorException in case of exception
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
 	 */
 	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
 		IGitConnector gitConnector = getGitConnector(workspace, project);

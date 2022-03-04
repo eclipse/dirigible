@@ -18,7 +18,4 @@ public class RemoteUrl extends RemoteSetUrlCommand {
     public RemoteUrl(Repository repo) {
         super(repo);
     }
-//    public static RemoteUrl getRemoteUrl(Repository repo) {
-//        return new RemoteUrl(repo);
-//    }
 }

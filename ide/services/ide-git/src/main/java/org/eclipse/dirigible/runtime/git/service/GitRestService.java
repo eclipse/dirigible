@@ -660,7 +660,9 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param url the new fetch URL   
 	 * @return the response
-	 * @throws GitConnectorException in case of exception
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
 	 */
 	@POST
 	@Path("/{project}/fetch-url")
@@ -687,7 +689,9 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param project the project
 	 * @param url the new fetch URL
 	 * @return the response
-	 * @throws GitConnectorException in case of exception
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
 	 */
 	@POST
 	@Path("/{project}/push-url")

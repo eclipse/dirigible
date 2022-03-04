@@ -35,7 +35,6 @@ import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.transport.URIish;
 
 /**
  * The IGitConnector provides the simplified methods for communicating with a Git SCM server.
@@ -59,9 +58,9 @@ public interface IGitConnector {
 
 	ProjectOriginUrls getOriginUrls();
 
-	String setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException;
+	void setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException;
 
-	String setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException;
+	void setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException;
 
 	/**
 	 * Adds file(s) to the staging index.
