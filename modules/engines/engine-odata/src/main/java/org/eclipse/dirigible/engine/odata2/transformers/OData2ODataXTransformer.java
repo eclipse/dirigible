@@ -33,10 +33,16 @@ public class OData2ODataXTransformer {
 
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
-    private ITableMetadataProvider tableMetadataProvider;
+    private final ODataPropertyNameEscaper propertyNameEscaper;
+    private final ITableMetadataProvider tableMetadataProvider;
 
     public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider) {
+        this(tableMetadataProvider, new DefaultPropertyNameEscaper());
+    }
+
+    public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider, ODataPropertyNameEscaper propertyNameEscaper){
         this.tableMetadataProvider = tableMetadataProvider;
+        this.propertyNameEscaper = propertyNameEscaper;
     }
 
     public String[] transform(ODataDefinition model) throws SQLException {
@@ -84,16 +90,16 @@ public class OData2ODataXTransformer {
                 if (entityOrigKeys.size() > 0) {
                     entityOrigKeys.forEach(key -> {
                         String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(key.getName(), entityProperties, isPretty);
-                        buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\" />\n");
+                        buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(columnValue)).append("\" />\n");
                     });
                 } else {
                     //local key was generated
-                    entity.getKeys().forEach(key -> buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(key)).append("\" />\n"));
+                    entity.getKeys().forEach(key -> buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(key)).append("\" />\n"));
                 }
             } else {
                 idColumns.forEach(column -> {
                     String nameValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\t\t<PropertyRef Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(nameValue)).append("\" />\n");
+                    buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(nameValue)).append("\" />\n");
                 });
             }
             buff.append("\t\t</Key>\n");
@@ -109,7 +115,7 @@ public class OData2ODataXTransformer {
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\t<Property Name=\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\"")
+                    buff.append("\t\t<Property Name=\"").append(propertyNameEscaper.escape(columnValue)).append("\"")
                             .append(" Nullable=\"").append(DBMetadataUtil.isNullable(column, entityProperties)).append("\"").append(" Type=\"").append(DBMetadataUtil.getType(column, entityProperties)).append("\"");
                     buff.append("/>\n");
                 });

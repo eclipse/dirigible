@@ -126,17 +126,4 @@ public class ODataMetadataUtil {
         }
     }
 
-    /**
-     * Replace unsupported olingo symbols with underscore symbol
-     * The olingo do not allow dot symbol to be part of the property name.
-     *
-     * @param propName
-     *          entity property name
-     * @return replaced string
-     * @see  org.apache.olingo.odata2.core.edm.provider.EdmNamedImplProv
-     */
-    public static String replaceUnSupportedPropOlingoSymbols(String propName) {
-        return propName.replace('.', '_');
-    }
-
 }
