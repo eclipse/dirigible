@@ -396,6 +396,7 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
         }
     }.bind(this))
         .on('select_node.jstree', function (e, data) {
+            this.workspaceController.selectedNodes = data.selected;
             if (data.node.type === 'file') {
                 this.clickNode(this.jstree.get_node(data.node));
             }
@@ -413,9 +414,6 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
                 data.instance.set_icon(data.node, 'fa fa-folder-o');
             }
         })
-        // .on('delete_node.jstree', function (e, data) {
-        //     // this.deleteNode(data.node);
-        // }.bind(this))
         .on('create_node.jstree', function (e, data) {
             data.node.name = data.node.text;
             data.node.icon = getIcon(data.node);
@@ -460,17 +458,23 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             this.paste(data);
         }.bind(this))
         .on('jstree.workspace.delete', function (e, data) {
-            this.workspaceController.selectedNodeData = data;
-            this.workspaceController.showDeleteDialog(data.type);
+            this.workspaceController.selectedNodeData = this.getSelectedNodes(this.workspaceController.selectedNodes,
+                this.workspaceController.wsTree.jstree._model.data);
+            this.workspaceController.showDeleteDialog(this.workspaceController.selectedNodeData.length == 1
+                ? this.workspaceController.selectedNodeData[0].type :
+                this.workspaceController.selectedNodeData.length + ' file nodes');
         }.bind(this))
-        //	.on('jstree.workspace.file.properties', function (e, data) {
-        //	 	var url = data.path + '/' + data.name;
-        // 		this.openNodeProperties(url);
-        // 	}.bind(this))
         ;
 
     this.jstree = $.jstree.reference(jstree);
     return this;
+};
+WorkspaceTreeAdapter.prototype.getSelectedNodes = function (selectedNodeIDs, nodesList) {
+    let selected = [];
+    for (let i = 0; i < selectedNodeIDs.length; i++)
+        if (nodesList[selectedNodeIDs[i]])
+            selected.push(nodesList[selectedNodeIDs[i]].original._file);
+    return selected;
 };
 WorkspaceTreeAdapter.prototype.createNode = function (parentNode, type, defaultName) {
     if (type === undefined)
@@ -1300,16 +1304,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             }
         };
         this.okDelete = function () {
-            if (this.unpublishOnDelete) {
-                publishService.unpublish(this.selectedNodeData.path)
-                    .then(function () {
-                        return messageHub.announceUnpublish(this.selectedNodeData);
-                    }.bind(this));
-            }
-            if (this.selectedNodeData.type === "project") {
-                workspaceService.deleteProject(this.selectedWorkspace, this.selectedNodeData, this.wsTree);
-            } else {
-                workspaceTreeAdapter.deleteNode(this.selectedNodeData);
+            for (let i = 0; i < this.selectedNodeData.length; i++) {
+                let selected_node = this.selectedNodeData[i];
+                if (this.unpublishOnDelete) {
+                    publishService.unpublish(selected_node.path)
+                        .then(function () {
+                            return messageHub.announceUnpublish(selected_node);
+                        }.bind(this));
+                }
+                if (selected_node.type === "project") {
+                    workspaceService.deleteProject(this.selectedWorkspace, selected_node, this.wsTree);
+                } else {
+                    workspaceTreeAdapter.deleteNode(selected_node);
+                }
             }
         };
 
