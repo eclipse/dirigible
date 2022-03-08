@@ -43,7 +43,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
     private DBMetadataUtil dbMetadataUtil;
 
     @InjectMocks
-    OData2ODataMTransformer odata2ODataMTransformer;
+    OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer(new DefaultPropertyNameEscaper());
 
     @Test
     public void testTransformOrders() throws IOException, SQLException {
