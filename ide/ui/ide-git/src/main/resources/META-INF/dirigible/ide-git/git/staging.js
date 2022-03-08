@@ -132,6 +132,44 @@ GitService.prototype.getStagedFiles = function (workspace, project) {
 		}
 	);
 };
+
+GitService.prototype.getOriginUrls = function (workspace, project) {
+	let messageHub = this.$messageHub;
+	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('origin-urls').build();
+
+	return this.$http.get(url, {}).then(
+		function (response) {
+			return response.data;
+		},
+		function (response) {
+			let errorMessage = JSON.parse(response.data.error).message;
+			console.log('Git Origin Error', errorMessage);
+		}
+	);
+};
+
+GitService.prototype.setFetchUrl = function (workspace, project, url) {
+	let requesturl = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('fetch-url').build();
+	let params = { url: url };
+
+	return this.$http.post(requesturl, params).then(
+		function (response) {
+			return response;
+		}
+	);
+};
+
+GitService.prototype.setPushUrl = function (workspace, project, url) {
+	let requesturl = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('push-url').build();
+	let params = { url: url };
+
+	return this.$http.post(requesturl, params).then(
+		function (response) {
+			return response;
+		}
+	);
+};
+
 GitService.prototype.addFiles = function (workspace, project, files) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('add').build();
@@ -286,7 +324,11 @@ let stagingApp = angular
 			$scope.password;
 			$scope.email;
 			$scope.branch;
+			$scope.fetchURL = '';
+			$scope.pushURL = '';
 			$scope.loaderOn = false;
+			$scope.editFetchURL = false;
+			$scope.editPushURL = false;
 
 			let loadingOverview = document.getElementsByClassName('loading-overview')[0];
 			let loadingMessage = document.getElementsByClassName('loading-message')[0];
@@ -303,6 +345,56 @@ let stagingApp = angular
 
 			function typeIcon(i) {
 				return types[i];
+			}
+
+			$scope.editFetchURLclicked = function () {
+				$scope.fetchURLeditable = $scope.fetchURL;
+				$scope.editFetchURL = true;
+			}
+			$scope.okSaveFetchURLclicked = function () {
+				let messageHub = $messageHub;
+				if (!$scope.fetchURLeditable) {
+					let errorMessage = 'URL must be specified!';
+					messageHub.announceAlertError('Git Fetch URL Error', errorMessage);
+					return;
+				}
+				gitService.setFetchUrl($scope.selectedWorkspace, $scope.selectedProject, $scope.fetchURLeditable).then(
+					function (res) {
+						if (res.data && res.data.status && res.data.status == "success") {
+							$scope.fetchURL = res.data.url;
+						} else {
+							messageHub.announceAlertError('Git Set Fetch URL Error',
+								typeof res.data.error.message !== undefined ? res.data.error.message : 'Error occured!');
+						}
+
+					});
+				$scope.editFetchURL = false;
+			}
+
+			$scope.editPushURLclicked = function () {
+				$scope.pushURLeditable = $scope.pushURL;
+				$scope.editPushURL = true;
+			}
+
+			$scope.okSavePushURLclicked = function () {
+				let messageHub = $messageHub;
+				if (!$scope.pushURLeditable) {
+					let errorMessage = 'URL must be specified!';
+					messageHub.announceAlertError('Git Fetch URL Error', errorMessage);
+					return;
+				}
+				gitService.setPushUrl($scope.selectedWorkspace, $scope.selectedProject, $scope.pushURLeditable).then(
+					function (res) {
+						console.log(res);
+						if (res.data && res.data.status && res.data.status == "success") {
+							$scope.pushURL = res.data.url;
+						} else {
+							messageHub.announceAlertError('Git Set Push URL Error',
+								typeof res.data.error.message !== undefined ? res.data.error.message : 'Error occured!');
+						}
+
+					});
+				$scope.editPushURL = false;
 			}
 
 			$scope.okCommitAndPushClicked = function () {
@@ -388,6 +480,8 @@ let stagingApp = angular
 					$scope.stagedFiles = [];
 					return;
 				}
+				$scope.editFetchURL = false;
+				$scope.editPushURL = false;
 				gitService.getUnstagedFiles($scope.selectedWorkspace, $scope.selectedProject).then(
 					function (files) {
 						$scope.unstagedFiles = files;
@@ -402,6 +496,12 @@ let stagingApp = angular
 						$scope.stagedFiles.map((e) => {
 							e.label = typeIcon(e.type) + ' ' + e.path;
 						});
+					}.bind(this)
+				);
+				gitService.getOriginUrls($scope.selectedWorkspace, $scope.selectedProject).then(
+					function (res) {
+						$scope.fetchURL = res.fetchUrl;
+						$scope.pushURL = res.pushUrl;
 					}.bind(this)
 				);
 			};
