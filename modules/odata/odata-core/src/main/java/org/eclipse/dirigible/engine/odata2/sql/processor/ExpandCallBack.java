@@ -113,9 +113,14 @@ public class ExpandCallBack implements OnWriteFeedContent, OnWriteEntryContent, 
         Map<String, Object> entry = context.getEntryData();
         EdmNavigationProperty currentNavigationProperty = context.getNavigationProperty();
         try {
-            Map<String, Object> inlinedEntry = (Map<String, Object>) entry.get(OData2Utils.fqn(currentNavigationProperty.getType()));
-            navigationEntryData.setEntryData(inlinedEntry);
-            navigationEntryData.setInlineProperties(getInlineEntityProviderProperties(context));
+            List<Map<String, Object>> expandEntries = (List<Map<String, Object>>) entry.get(OData2Utils.fqn(currentNavigationProperty.getType()));
+            if (null != expandEntries && !expandEntries.isEmpty()) {
+                if (expandEntries.size() > 1){
+                    throw new IllegalStateException("More than 1 entries are not expected for association with multiplicity different than MANY");
+                }
+                navigationEntryData.setEntryData(expandEntries.get(0));
+                navigationEntryData.setInlineProperties(getInlineEntityProviderProperties(context));
+            }
         } catch (EdmException e) {
             throw new ODataApplicationException(e.getMessage(), Locale.getDefault(), e);
         }
