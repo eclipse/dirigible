@@ -11,7 +11,7 @@
  */
 package org.eclipse.dirigible.engine.js.graalium.execution.modules;
 
-        import java.util.Objects;
+import java.util.Objects;
 
 public class DirigibleApiModule {
     private final String name;

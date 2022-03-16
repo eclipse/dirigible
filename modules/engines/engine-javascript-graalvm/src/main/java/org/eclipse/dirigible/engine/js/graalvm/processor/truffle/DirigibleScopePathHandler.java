@@ -36,10 +36,9 @@ class DirigibleScopePathHandler {
 
     String resolve(String pathString) {
         if (pathString.startsWith("/@dirigible-native/")) {
-//            String packageName = parseImportedJavaPackage(pathString);
-//            List<ClassName> classes = getClassesInPackage(packageName);
-//            String generated = generateJavaExports(classes);
-//            return generated;
+            String packageName = parseImportedJavaPackage(pathString);
+            List<ClassName> classes = getClassesInPackage(packageName);
+            return generateJavaExports(classes);
         } else if (pathString.startsWith(Constants.DIRIGIBLE_SCOPE_VERSIONED)) {
             return resolveVersionedScopePath(pathString);
         } else if (pathString.startsWith(Constants.DIRIGIBLE_SCOPE_DEFAULT)) {

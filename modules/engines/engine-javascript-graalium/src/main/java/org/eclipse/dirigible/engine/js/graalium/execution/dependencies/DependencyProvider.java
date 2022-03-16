@@ -26,10 +26,12 @@ import java.nio.file.Path;
 import java.util.Base64;
 
 public class DependencyProvider {
-    private static final Path DEPENDENCIES_CACHE_PATH = Path.of("/Users", "c5326377", "work", "dirigible", "dependencies");
 
-    static {
-        DEPENDENCIES_CACHE_PATH.toFile().mkdirs();
+    private final Path dependenciesCachePath;
+
+    public DependencyProvider(Path dependenciesCachePath) {
+        dependenciesCachePath.toFile().mkdirs();
+        this.dependenciesCachePath = dependenciesCachePath;
     }
 
     public Path provideDependency(URI uri) {
@@ -40,7 +42,7 @@ public class DependencyProvider {
     @Nullable
     private Path tryGetCachePath(URI uri) {
         String base64DependencyName = getBase64FromURI(uri);
-        Path expectedDependencyPath = DEPENDENCIES_CACHE_PATH.resolve(base64DependencyName);
+        Path expectedDependencyPath = dependenciesCachePath.resolve(base64DependencyName);
         File expectedDependencyFile = expectedDependencyPath.toFile();
 
         if (expectedDependencyFile.exists()) {
@@ -67,11 +69,9 @@ public class DependencyProvider {
         }
     }
 
-    private static File getDependencyFileForOutput(URI dependencyUri) {
+    private File getDependencyFileForOutput(URI dependencyUri) {
         String base64DependencyName = getBase64FromURI(dependencyUri);
-        File dependencyFile = DEPENDENCIES_CACHE_PATH.resolve(base64DependencyName).toFile();
-
-        return dependencyFile;
+        return dependenciesCachePath.resolve(base64DependencyName).toFile();
     }
 
     private static String getBase64FromURI(URI uri) {

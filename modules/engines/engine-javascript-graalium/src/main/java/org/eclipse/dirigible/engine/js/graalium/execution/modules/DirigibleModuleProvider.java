@@ -69,11 +69,11 @@ public class DirigibleModuleProvider {
             String prefix = Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
             String location = prefix + module + (extension != null ? extension : "");
             try (InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible" + location)) {
-                if (bundled == null) {
-                    return null;
+                byte[] content = null;
+                if (bundled != null) {
+                    content = IOUtils.toByteArray(bundled);
+                    REPOSITORY.createResource(repositoryPath, content);
                 }
-                byte[] content = IOUtils.toByteArray(bundled);
-                REPOSITORY.createResource(repositoryPath, content);
                 return content;
             }
         } catch (IOException e) {

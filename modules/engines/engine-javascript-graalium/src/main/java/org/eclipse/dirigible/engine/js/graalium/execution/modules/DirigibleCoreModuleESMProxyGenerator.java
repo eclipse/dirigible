@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class DirigibleCoreModuleESMProxyGenerator {
 
-    private static final String apiModuleJsonPath = "/extensions/modules.json";
+    private static final String API_MODULES_JSON_PATH = "/extensions/modules.json";
 
     private static final String NAME_PLACEHOLDER = "<name_placeholder>";
     private static final String PATH_PLACEHOLDER = "<path_placeholder>";
@@ -31,15 +31,8 @@ public class DirigibleCoreModuleESMProxyGenerator {
     private static final String EXPORT_PATTERN =
             "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
 
-    private final DirigibleModuleProvider dirigibleModuleProvider;
-
-    public DirigibleCoreModuleESMProxyGenerator() {
-        dirigibleModuleProvider = new DirigibleModuleProvider();
-    }
-
     public String generate(String path, String apiVersion) {
-        path += apiModuleJsonPath;
-        DirigibleApiModule[] modules = readApiModuleJson(path);
+        DirigibleApiModule[] modules = readApiModuleJson(path + API_MODULES_JSON_PATH);
         StringBuilder source = new StringBuilder();
         StringBuilder moduleNames = new StringBuilder();
 
@@ -70,7 +63,7 @@ public class DirigibleCoreModuleESMProxyGenerator {
 
     private DirigibleApiModule[] readApiModuleJson(String path) {
         Gson gson = new Gson();
-        byte[] apiModuleJsonBytes = dirigibleModuleProvider.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
+        byte[] apiModuleJsonBytes = DirigibleModuleProvider.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
                 path.replace(".json", ""), ".json");
 
         String apiModuleJson = new String(apiModuleJsonBytes, StandardCharsets.UTF_8);
@@ -86,19 +79,19 @@ public class DirigibleCoreModuleESMProxyGenerator {
                 .filter(p -> p.contains(apiVersion))
                 .collect(Collectors.toList());
 
-        if (foundPaths.size() == 1) {
-            return foundPaths.get(0);
-        } else {
+        if (foundPaths.size() != 1) {
             StringBuilder message = new StringBuilder();
             message.append("Searching for single api path containing '");
             message.append(apiVersion);
             message.append("' but found: ");
-            for (String item : foundPaths) {
+            for (String foundPath : foundPaths) {
                 message.append("'");
-                message.append(item);
+                message.append(foundPath);
                 message.append("' ");
             }
             throw new RuntimeException(message.toString());
         }
+
+        return foundPaths.get(0);
     }
 }

@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.js.graalium.execution;
 
 import org.eclipse.dirigible.engine.js.graalium.execution.platform.GraalJSContextCreator;
+import org.eclipse.dirigible.engine.js.graalium.execution.platform.GraalJSContextFolders;
 import org.eclipse.dirigible.engine.js.graalium.execution.platform.GraalJSEngineCreator;
 import org.eclipse.dirigible.engine.js.graalium.execution.platform.GraalJSSourceCreator;
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.JSGlobalObject;
@@ -32,13 +33,20 @@ public class GraalJSCodeRunner implements CodeRunner {
     private final Context graalContext;
 
     private GraalJSCodeRunner(Builder builder) {
-        this.currentWorkingDirectoryPath = builder.currentWorkingDirectoryPath;
+        this.currentWorkingDirectoryPath = builder.workingDirectoryPath;
 
         Consumer<Context.Builder> onBeforeContextCreatedHook = provideOnBeforeContextCreatedHook(builder.onBeforeContextCreatedListeners);
         Consumer<Context> onAfterContextCreatedHook = provideOnAfterContextCreatedHook(builder.onAfterContextCreatedListener);
 
         Engine graalEngine = builder.waitForDebugger ? GraalJSEngineCreator.getOrCreateDebuggableEngine() : GraalJSEngineCreator.getOrCreateEngine();
-        graalContext = GraalJSContextCreator.createContext(graalEngine, currentWorkingDirectoryPath, onBeforeContextCreatedHook, onAfterContextCreatedHook);
+        GraalJSContextFolders contextFolders = new GraalJSContextFolders(currentWorkingDirectoryPath, builder.coreModulesProxiesCachePath, builder.dependenciesCachePath);
+
+        graalContext = GraalJSContextCreator.createContext(
+                graalEngine,
+                contextFolders,
+                onBeforeContextCreatedHook,
+                onAfterContextCreatedHook
+        );
 
         registerGlobalObjects(graalContext, builder.globalObjects);
         registerPolyfills(graalContext, builder.jsPolyfills);
@@ -84,8 +92,8 @@ public class GraalJSCodeRunner implements CodeRunner {
         }
     }
 
-    public static Builder newBuilder(Path currentWorkingDirectoryPath) {
-        return new Builder(currentWorkingDirectoryPath);
+    public static Builder newBuilder(Path currentWorkingDirectoryPath, Path dependenciesCachePath, Path coreModulesProxiesCachePath) {
+        return new Builder(currentWorkingDirectoryPath, dependenciesCachePath, coreModulesProxiesCachePath);
     }
 
     @Override
@@ -96,15 +104,19 @@ public class GraalJSCodeRunner implements CodeRunner {
     }
 
     public static class Builder {
-        private final Path currentWorkingDirectoryPath;
+        private final Path workingDirectoryPath;
+        private final Path dependenciesCachePath;
+        private final Path coreModulesProxiesCachePath;
         private boolean waitForDebugger = false;
         private final List<JSPolyfill> jsPolyfills = new ArrayList<>();
         private final List<JSGlobalObject> globalObjects = new ArrayList<>();
         private final List<Consumer<Context.Builder>> onBeforeContextCreatedListeners = new ArrayList<>();
         private final List<Consumer<Context>> onAfterContextCreatedListener = new ArrayList<>();
 
-        public Builder(Path currentWorkingDirectoryPath) {
-            this.currentWorkingDirectoryPath = currentWorkingDirectoryPath;
+        public Builder(Path workingDirectoryPath, Path dependenciesCachePath, Path coreModulesProxiesCachePath) {
+            this.workingDirectoryPath = workingDirectoryPath;
+            this.dependenciesCachePath = dependenciesCachePath;
+            this.coreModulesProxiesCachePath = coreModulesProxiesCachePath;
         }
 
         public Builder waitForDebugger(boolean shouldWaitForDebugger) {
@@ -133,6 +145,13 @@ public class GraalJSCodeRunner implements CodeRunner {
         }
 
         public GraalJSCodeRunner build() throws IllegalStateException {
+            if (workingDirectoryPath == null
+                    || coreModulesProxiesCachePath == null
+                    || dependenciesCachePath == null
+            ) {
+                throw new RuntimeException("Please, provide all folder paths!");
+            }
+
             return new GraalJSCodeRunner(this);
         }
 

@@ -98,10 +98,15 @@
             <version>4.1.5</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-test</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <properties>
-        <graalvm.version>22.0.0.2</graalvm.version>
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 

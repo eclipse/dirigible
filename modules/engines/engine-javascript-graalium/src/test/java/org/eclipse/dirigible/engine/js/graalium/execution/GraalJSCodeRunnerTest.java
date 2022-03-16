@@ -1,19 +1,23 @@
 package org.eclipse.dirigible.engine.js.graalium.execution;
 
+import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.js.graalium.execution.eventloop.GraalJSEventLoop;
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.*;
+import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.junit.Test;
 
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+public class GraalJSCodeRunnerTest extends AbstractDirigibleTest {
 
-public class GraalJSCodeRunnerTest {
+    private static final IRepository REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
     @Test
     public void testDownloadFirebaseDependency() throws InterruptedException {
-        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/dependencies");
+        Path workingDir = Path.of("");
         GraalJSEventLoop loopedCodeRunner = new GraalJSEventLoop(
                 20, TimeUnit.MINUTES,
                 (looper) -> createLoopedCodeRunner(workingDir, looper)
@@ -21,13 +25,11 @@ public class GraalJSCodeRunnerTest {
 
         Path codePath = Path.of("firebase-test.mjs");
         loopedCodeRunner.loop(codePath);
-
-        int a = 5;
     }
 
     @Test
     public void testNewEngineWithEventLooper() throws InterruptedException {
-        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/timers");
+        Path workingDir = Path.of("");
         GraalJSEventLoop loopedCodeRunner = new GraalJSEventLoop(
                 20, TimeUnit.MINUTES,
                 (looper) -> createLoopedCodeRunner(workingDir, looper)
@@ -35,12 +37,11 @@ public class GraalJSCodeRunnerTest {
 
         Path codePath = Path.of("timers-test.mjs");
         loopedCodeRunner.loop(codePath);
-        int a = 5;
     }
 
     @Test
     public void testNewEngineWithDirigibleImports() {
-        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
+        Path workingDir = Path.of("");
         GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
 
         Path codePath = Path.of("importDirigibleApi.mjs");
@@ -49,7 +50,7 @@ public class GraalJSCodeRunnerTest {
 
     @Test
     public void testNewEngineWithRelativeImports() {
-        Path workingDir = Path.of("/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/test/resources/META-INF/dirigible/graalvm/ecmascript");
+        Path workingDir = Path.of("");
         GraalJSCodeRunner codeRunner = createCodeRunner(workingDir);
 
         Path codePath = Path.of("relativeImports/l12/l12.mjs");
@@ -57,7 +58,7 @@ public class GraalJSCodeRunnerTest {
     }
 
     private GraalJSCodeRunner createLoopedCodeRunner(Path workingDir, GraalJSEventLoop looper) {
-        return new GraalJSCodeRunner.Builder(workingDir)
+        return GraalJSCodeRunner.newBuilder(workingDir, getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
                 .addGlobalObject(looper)
                 .addGlobalObject(new TimersJSGlobalObject())
                 .addJSPolyfill(new GlobalPolyfill())
@@ -69,8 +70,19 @@ public class GraalJSCodeRunnerTest {
                 .build();
     }
 
+    private static Path getOrCreateInternalFolder(String folderName) {
+        ICollection folder = REPOSITORY.getCollection(folderName);
+        if (!folder.exists()) {
+            folder.create();
+        }
+
+        String dependenciesCollectionPathString = folder.getPath();
+        String dependenciesCollectionInternalPathString = REPOSITORY.getInternalResourcePath(dependenciesCollectionPathString);
+        return Path.of(dependenciesCollectionInternalPathString);
+    }
+
     private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
-        return new GraalJSCodeRunner.Builder(workingDir)
+        return GraalJSCodeRunner.newBuilder(workingDir, getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
                 .addJSPolyfill(new RequirePolyfill())
                 .waitForDebugger(false)
                 .build();

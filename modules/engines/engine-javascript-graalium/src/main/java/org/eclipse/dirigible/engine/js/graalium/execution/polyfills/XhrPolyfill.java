@@ -22,6 +22,6 @@ public class XhrPolyfill implements JSPolyfill {
 
     @Override
     public String getFileName() {
-        return "/Users/c5326377/work/dirigible/dirigible/modules/engines/engine-javascript-graalvm/src/main/resources/polyfills/xhr.js";
+        return "polyfills/xhr.js";
     }
 }

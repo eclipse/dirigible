@@ -31,10 +31,10 @@ public class GraalJSFileSystem implements FileSystem {
     private final DirigibleCoreModuleResolver dirigibleCoreModuleResolver;
     private final DependencyProvider dependencyProvider;
 
-    public GraalJSFileSystem(Path currentWorkingDirectoryPath, DirigibleCoreModuleResolver dirigibleCoreModuleResolver) {
+    public GraalJSFileSystem(Path currentWorkingDirectoryPath, DirigibleCoreModuleResolver dirigibleCoreModuleResolver, DependencyProvider dependencyProvider) {
         this.currentWorkingDirectoryPath = currentWorkingDirectoryPath;
         this.dirigibleCoreModuleResolver = dirigibleCoreModuleResolver;
-        this.dependencyProvider = new DependencyProvider();
+        this.dependencyProvider = dependencyProvider;
     }
 
     @Override
@@ -79,9 +79,8 @@ public class GraalJSFileSystem implements FileSystem {
             DELEGATE.checkAccess(path, modes.toArray(new AccessMode[0]));
         } else if (modes.isEmpty()) {
             DELEGATE.readAttributes(path, "isRegularFile", LinkOption.NOFOLLOW_LINKS);
-        } else {
-            throw new UnsupportedOperationException("CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
         }
+        throw new UnsupportedOperationException("CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
     }
 
     @Override

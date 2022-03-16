@@ -725,6 +725,7 @@
 		<logcaptor.version>2.7.8</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.2.2</jackson.databind.version>
+		<graalvm.version>22.0.0.2</graalvm.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

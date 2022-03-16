@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.engine.js.graalium.execution.adapter;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
 import org.eclipse.dirigible.engine.js.graalium.execution.CodeRunner;
 import org.eclipse.dirigible.engine.js.graalium.execution.GraalJSCodeRunner;
@@ -9,6 +10,8 @@ import org.eclipse.dirigible.engine.js.graalium.execution.platform.GraalJSSource
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.internal.DirigibleContextGlobalObject;
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.internal.DirigibleEngineTypeGlobalObject;
+import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.graalvm.polyglot.Source;
 
 import java.io.IOException;
@@ -16,6 +19,8 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor {
+
+    private static final IRepository REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
     @Override
     public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
@@ -67,12 +72,23 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     }
 
     private static CodeRunner createJSCodeRunner(Map<Object, Object> executionContext) {
-        return GraalJSCodeRunner.newBuilder(Path.of(""))
+        return GraalJSCodeRunner.newBuilder(Path.of(""), getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
                 .addJSPolyfill(new RequirePolyfill())
                 .addGlobalObject(new DirigibleContextGlobalObject(executionContext))
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
                 .waitForDebugger(false)
                 .build();
+    }
+
+    private static Path getOrCreateInternalFolder(String folderName) {
+        ICollection folder = REPOSITORY.getCollection(folderName);
+        if (!folder.exists()) {
+            folder.create();
+        }
+
+        String dependenciesCollectionPathString = folder.getPath();
+        String dependenciesCollectionInternalPathString = REPOSITORY.getInternalResourcePath(dependenciesCollectionPathString);
+        return Path.of(dependenciesCollectionInternalPathString);
     }
 
     @Override
