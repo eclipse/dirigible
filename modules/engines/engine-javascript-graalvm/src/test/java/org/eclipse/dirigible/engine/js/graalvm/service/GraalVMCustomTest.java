@@ -127,7 +127,7 @@ public class GraalVMCustomTest extends AbstractApiSuiteTest {
     private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
         return new GraalJSCodeRunner.Builder(workingDir)
                 .addJSPolyfill(new RequirePolyfill())
-                .waitForDebugger(true)
+                .waitForDebugger(false)
                 .build();
     }
 
