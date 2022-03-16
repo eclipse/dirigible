@@ -14,6 +14,8 @@ package org.eclipse.dirigible.runtime.ide.workspaces.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +35,7 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceProcessor;
+import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceSelectionTargetPair;
 import org.eclipse.dirigible.runtime.ide.workspaces.processor.WorkspaceSourceTargetPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +154,129 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
                     targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
         }
 
+        return Response.created(processor.getURI(targetWorkspace, null, content.getTarget())).build();
+    }
+
+    /**
+     * @param currentWorkspace
+     * @param content
+     * @param request
+     * @return
+     * @throws URISyntaxException
+     * @throws UnsupportedEncodingException
+     * @throws DecoderException
+     */
+    @POST
+    @Path("{workspace}/copySelection")
+    public Response copySelection(@PathParam("workspace") String currentWorkspace, WorkspaceSelectionTargetPair content, @Context HttpServletRequest request)
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+        String user = UserFacade.getName();
+        ArrayList<WorkspaceSelectionTargetPair.SelectedNode> sourceSelection = content.getSource();
+        if (user == null) {
+            return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+        }
+
+        if ((content.getSource() == null) || (content.getTarget() == null) || (content.getSourceWorkspace() == null) || (content.getTargetWorkspace() == null)) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_AND_TARGET_PATHS_HAVE_TO_BE_PRESENT_IN_THE_BODY_OF_THE_REQUEST);
+        }
+
+        if (sourceSelection.size() == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_PATH_IS_EMPTY);
+        }
+
+        RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
+        System.out.println("INIT TARGET PATH " + targetPath.toString());
+        if (targetPath.getSegments().length == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
+        }
+
+        String sourceWorkspace = content.getSourceWorkspace();
+        if (sourceWorkspace.length() == 0) {
+            return createErrorResponseBadRequest(ERROR_SOURCE_WORKSPACE_IS_EMPTY);
+        }
+        String targetWorkspace = content.getTargetWorkspace();
+        if (targetWorkspace.length() == 0) {
+            return createErrorResponseBadRequest(ERROR_TARGET_WORKSPACE_IS_EMPTY);
+        }
+
+        String targetProject = targetPath.getSegments()[1];
+        WorkspaceSelectionTargetPair.SelectedNode nodeToCopy;
+
+        for (int i = 0; i < sourceSelection.size(); i++) {
+
+            nodeToCopy = sourceSelection.get(i);
+            RepositoryPath sourcePath = new RepositoryPath(UrlFacade.decode(sourceSelection.get(i).getPath()));
+            String sourceProject = sourcePath.getSegments()[1];
+
+            if (sourcePath.getSegments().length == 1) {
+                // a project is selected as a source
+                processor.copyProject(sourceWorkspace, targetWorkspace, sourceProject, targetProject);
+                return Response.created(processor.getURI(targetWorkspace, targetProject, null)).build();
+            }
+
+            String targetFilePath = targetPath.constructPathFrom(2);
+            String relativePath = sourceSelection.get(i).getRelativePath();
+            if (targetFilePath.equals(targetPath.build())) {
+                targetFilePath = IRepository.SEPARATOR;
+            }
+            targetFilePath = targetFilePath.concat(IRepository.SEPARATOR).concat(nodeToCopy.getInternalPath()).replaceAll("^/+", "");
+            System.out.println("SOURCE file " + sourcePath.toString());
+            System.out.println("DESTINATION file " + targetFilePath);
+            System.out.println("RELATIVE PATH" + relativePath);
+
+            String fileOrFolder = sourceSelection.get(i).getNodeType();
+            String conflictResolution = sourceSelection.get(i).getResolution();
+
+            if ((fileOrFolder == "folder" && processor.existsFile(targetWorkspace, targetProject, targetFilePath)) || (fileOrFolder == "file" && processor.existsFolder(targetWorkspace, targetProject, targetFilePath))) {
+                // file - folder with same names conflict
+            }
+
+            switch (fileOrFolder) {
+                case "folder":
+                    if (!processor.existsFolder(targetWorkspace, targetProject, targetFilePath)) {
+                        processor.createFolder(targetWorkspace, targetProject, targetFilePath);
+                    }
+                    break;
+                case "file":
+                    if (processor.existsFile(sourceWorkspace, sourceProject, relativePath)) {
+                        String relativePathToTargetFile = Paths.get(targetFilePath).getParent().toString();
+                        if (!processor.existsFile(targetWorkspace, targetProject, targetFilePath)) {
+                            System.out.println("NO-CONFLICT COPY OPERATION " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(targetFilePath));
+                            processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
+                        } else
+                        switch (conflictResolution) {
+                            case "replace":
+                                System.out.println("COPY with REPLACE " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
+                                processor.deleteFile(targetWorkspace, targetProject, targetFilePath);
+                                processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
+                                break;
+                            case "skip":
+                                System.out.println("SKIP COPY " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
+                                break;
+                            default:
+                                System.out.println("DEFAULT COPY (rename)" + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
+                                processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
+
+                        }
+                    }
+                    else
+                        System.out.println("File " + relativePath + " in " + sourceWorkspace + "/" + sourceProject + " doesn't exist.");
+                    break;
+                default:
+                    System.out.println("UNKNOWN NODE TYPE");
+            }
+//            if (!processor.existsFolder(targetWorkspace, targetProject, targetFilePath)) {
+//                return createErrorResponseBadRequest(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
+//            }
+//
+//            String sourceFilePath = sourcePath.constructPathFrom(1);
+//            if (processor.existsFile(sourceWorkspace, sourceProject, sourceFilePath)) {
+//                processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
+//            } else {
+//                processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject,
+//                        targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
+//            }
+        }
         return Response.created(processor.getURI(targetWorkspace, null, content.getTarget())).build();
     }
 

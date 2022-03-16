@@ -9,13 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.core.git.utils;
+package org.eclipse.dirigible.runtime.ide.workspaces.service;
 
-import org.eclipse.jgit.api.RemoteSetUrlCommand;
-import org.eclipse.jgit.lib.Repository;
-
-public class RemoteUrl extends RemoteSetUrlCommand {
-    public RemoteUrl(Repository repo) {
-        super(repo);
-    }
+public class SelectedNode {
 }
