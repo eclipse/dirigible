@@ -27,6 +27,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.cxf.jaxrs.common.openapi.DelegatingServletConfig;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
@@ -226,35 +227,46 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
 
             String fileOrFolder = sourceSelection.get(i).getNodeType();
             String conflictResolution = sourceSelection.get(i).getResolution();
-
-            if ((fileOrFolder == "folder" && processor.existsFile(targetWorkspace, targetProject, targetFilePath)) || (fileOrFolder == "file" && processor.existsFolder(targetWorkspace, targetProject, targetFilePath))) {
-                // file - folder with same names conflict
-            }
+            String relativePathToTargetFile = Paths.get(targetFilePath).getParent().toString();
+            String fileOrFolderName = Paths.get(targetFilePath).getFileName().toString();
 
             switch (fileOrFolder) {
                 case "folder":
+                    if (processor.existsFile(targetWorkspace, targetProject, targetFilePath)) {
+                        switch (conflictResolution) {
+                            case "replace":
+                                processor.deleteFile(targetWorkspace, targetProject, targetFilePath);
+                                processor.createFolder(targetWorkspace, targetProject, targetFilePath);
+                                break;
+                            case "skip":
+                                String skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
+                                content.skipByPath(skipPath);
+                                break;
+                            default:
+                                processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourcePath.toString(), targetProject, relativePathToTargetFile, fileOrFolderName);
+
+                        }
+                    } else
                     if (!processor.existsFolder(targetWorkspace, targetProject, targetFilePath)) {
                         processor.createFolder(targetWorkspace, targetProject, targetFilePath);
                     }
                     break;
                 case "file":
                     if (processor.existsFile(sourceWorkspace, sourceProject, relativePath)) {
-                        String relativePathToTargetFile = Paths.get(targetFilePath).getParent().toString();
-                        if (!processor.existsFile(targetWorkspace, targetProject, targetFilePath)) {
-                            System.out.println("NO-CONFLICT COPY OPERATION " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(targetFilePath));
-                            processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
-                        } else
                         switch (conflictResolution) {
                             case "replace":
                                 System.out.println("COPY with REPLACE " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
-                                processor.deleteFile(targetWorkspace, targetProject, targetFilePath);
+                                if (processor.existsFile(targetWorkspace, targetProject, targetFilePath))
+                                    processor.deleteFile(targetWorkspace, targetProject, targetFilePath);
+                                else if (processor.existsFolder(targetWorkspace, targetProject, targetFilePath))
+                                    processor.deleteFolder(targetWorkspace, targetProject, targetFilePath);
                                 processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
                                 break;
                             case "skip":
                                 System.out.println("SKIP COPY " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
                                 break;
                             default:
-                                System.out.println("DEFAULT COPY (rename)" + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
+                                System.out.println("DEFAULT or NON-CONFLICT COPY (rename)" + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
                                 processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
 
                         }

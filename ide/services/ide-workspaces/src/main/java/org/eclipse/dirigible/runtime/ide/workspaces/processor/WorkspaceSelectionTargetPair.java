@@ -100,6 +100,17 @@ public class WorkspaceSelectionTargetPair {
             this.target = target;
         }
 
+    /**
+     * @param skipPath the path to skip all inside
+     */
+        public void skipByPath(String skipPath) {
+            for (int i = 0; i < sourceSelection.size(); i++) {
+                if (sourceSelection.get(i).getPath().substring(0, skipPath.length()) == skipPath) {
+                    sourceSelection.get(i).setResolution("skip");
+                }
+            }
+        }
+
         public class SelectedNode {
             private String id;
             private String path;
@@ -115,14 +126,20 @@ public class WorkspaceSelectionTargetPair {
             public String getPath() {
                 return path;
             }
+            public void setPath(String newPath) {
+                path = newPath;
+            }
             public String getRelativePath() {
                 Path fullpath = Paths.get(path);
                 return fullpath.subpath(2, fullpath.getNameCount()).toString().replaceAll("^/+", "");
             }
             public String getResolution() {
-                String defaultResolution = "replace";
+                String defaultResolution = "rename";
                 if (resolution != null) return resolution;
                 return defaultResolution;
+            }
+            public void setResolution(String value) {
+                resolution = value;
             }
         }
 }
