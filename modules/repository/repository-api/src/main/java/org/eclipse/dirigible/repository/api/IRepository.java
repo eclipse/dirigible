@@ -50,4 +50,8 @@ public interface IRepository
 	/** Gets the most recent time when the repository gets changed */
 	public long getLastModified();
 
+	default String getInternalResourcePath(String resourcePath) {
+		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
+	}
+
 }
