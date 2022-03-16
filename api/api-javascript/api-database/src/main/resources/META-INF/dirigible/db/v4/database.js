@@ -772,7 +772,7 @@ function ResultSet(internalResultset) {
 
 	this.getDate = function (identifier) {
 		const dateInstance = this.native.getDate(identifier);
-		return new Date(dateInstance.getTime());
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.getDouble = function (identifier) {
@@ -801,13 +801,12 @@ function ResultSet(internalResultset) {
 
 	this.getTime = function (identifier) {
 		const dateInstance = this.native.getTime(identifier);
-		return new Date(dateInstance.getTime());
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.getTimestamp = function (identifier) {
 		const dateInstance = this.native.getTimestamp(identifier);
-		const date = new Date(dateInstance.getTime());
-		return date;
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.isAfterLast = function () {
