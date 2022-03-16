@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
 let cmis = require("cms/v4/cmis");
 let user = require("security/v4/user");
@@ -27,13 +26,14 @@ function ChildSerializer(cmisObject) {
 		this.restrictedAccess = true;
 	}
 	let readOnly;
-	let writeOnly;
+	let readable;
 	let pathReadAccessDefinitionFound = false;
 	let pathWriteAccessDefinitionFound = false;
 	if (readAccessDefinitions.length > 0) {
 		for (let i = 0; i < readAccessDefinitions.length; i++) {
 			if (readAccessDefinitions[i].path === this.id) {
-				readOnly = hasAccess([readAccessDefinitions[i]]);
+				readable = hasAccess([readAccessDefinitions[i]]);
+				readOnly = true;
 				pathReadAccessDefinitionFound = true;
 				break;
 			}
@@ -42,7 +42,7 @@ function ChildSerializer(cmisObject) {
 	if (writeAccessDefinitions.length > 0) {
 		for (let i = 0; i < writeAccessDefinitions.length; i++) {
 			if (writeAccessDefinitions[i].path === this.id) {
-				writeOnly = hasAccess([writeAccessDefinitions[i]]);
+				readOnly = !hasAccess([writeAccessDefinitions[i]]);
 				pathWriteAccessDefinitionFound = true;
 				break;
 			}
@@ -53,17 +53,15 @@ function ChildSerializer(cmisObject) {
 		let readOnlyAccessDefinitions = readAccessDefinitions.filter(e => e.method === cmis.METHOD_READ);
 		let writeOnlyAccessDefinitions = writeAccessDefinitions.filter(e => e.method === cmis.METHOD_WRITE);
 		if (readOnlyAccessDefinitions.length > 0) {
-			readOnly = hasAccess(readOnlyAccessDefinitions);
+			readable = hasAccess(readOnlyAccessDefinitions);
 		}
 		if (writeOnlyAccessDefinitions.length > 0) {
-			writeOnly = hasAccess(writeOnlyAccessDefinitions);
+			readOnly = !hasAccess(writeOnlyAccessDefinitions);
 		}
 	}
 
-	if (readOnly && !writeOnly || !readOnly && writeOnly) {
-		this.readOnly = readOnly;
-		this.writeOnly = writeOnly;
-	}
+	this.readOnly = readOnly;
+	this.readable = readable;
 }
 
 function FolderSerializer(cmisFolder) {

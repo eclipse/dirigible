@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
 let cmis = require("cms/v4/cmis");
 let streams = require("io/v4/streams");
@@ -22,13 +21,12 @@ function DocumentSerializer(cmisDocument) {
 }
 
 exports.uploadDocument = function (folder, document) {
-	//check for .name first as it's passed from uploadDocumentOverwrite. Refactor
-	let fileName = document.name ?? document.getName();
+	let fileName = getDocumentFileName(document);
 	let mimetype = document.getContentType();
 	let size = document.getSize();
 	let inputStream = document.getInputStream();
 
-	let newDocument = craeteDocument(folder, fileName, size, mimetype, inputStream);
+	let newDocument = createDocument(folder, fileName, size, mimetype, inputStream);
 
 	return new DocumentSerializer(newDocument);
 };
@@ -56,7 +54,12 @@ exports.uploadDocumentOverwrite = function (folder, document) {
 	objectUtils.renameObject(newDoc, oldName);
 };
 
-function craeteDocument(folder, fileName, size, mimetype, inputStream) {
+function getDocumentFileName(document) {
+	//check for .name first as it's passed from uploadDocumentOverwrite
+	return document.name ?? document.getName();
+}
+
+function createDocument(folder, fileName, size, mimetype, inputStream) {
 	let contentStream = cmisSession.getObjectFactory().createContentStream(fileName, size, mimetype, inputStream);
 	let properties = {};
 	properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_DOCUMENT;
@@ -85,5 +88,5 @@ exports.createFromBytes = function (folder, fileName, bytes) {
 	let inputStream = streams.createByteArrayInputStream(bytes);
 	let mimeType = "application/octet-stream";
 
-	craeteDocument(folder, fileName, bytes.length, mimeType, inputStream);
+	createDocument(folder, fileName, bytes.length, mimeType, inputStream);
 };
