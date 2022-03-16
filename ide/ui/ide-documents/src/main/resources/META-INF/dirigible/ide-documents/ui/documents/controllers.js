@@ -103,7 +103,7 @@ angular
 		};
 
 		$scope.writeAccessAllowed = function (document) {
-			return !document.restrictedAccess || !(document.readOnly === true);
+			return !(document.readOnly === true);
 		};
 
 		$scope.crumbsChanged = function (entry) {

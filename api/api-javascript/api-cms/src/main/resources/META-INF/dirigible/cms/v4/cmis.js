@@ -238,6 +238,20 @@ function CmisObject() {
 		return this.native.getName();
 	};
 
+	this.getPath = function() {
+		//this is caused by having different underlying native objects in different environments.
+	    if (this.native.getPath) {
+	        return this.native.getPath();
+	    }
+
+		//Apache Chemistry CmisObject has no getPath() but getPaths() - https://chemistry.apache.org/docs/cmis-samples/samples/retrieve-objects/index.html
+	    if (this.native.getPaths) {
+	        return this.native.getPaths()[0];
+	    }
+
+	    throw new Error(`Path not found for CmisObject with id ${this.getId()}`);
+	}
+
 	this.getType = function() {
 		var type = new TypeDefinition();
 		var native = this.native.getType();

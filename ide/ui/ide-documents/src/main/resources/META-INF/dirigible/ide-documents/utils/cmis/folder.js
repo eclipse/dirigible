@@ -18,20 +18,18 @@ function ChildSerializer(cmisObject) {
 	this.name = cmisObject.getName();
 	this.type = cmisObject.getType().getId();
 	this.id = cmisObject.getId();
+	this.path = cmisObject.getPath();
 
 	let readAccessDefinitions = getReadAccessDefinitions(this.id);
 	let writeAccessDefinitions = getWriteAccessDefinitions(this.id);
 
-	if (readAccessDefinitions.length > 0 || writeAccessDefinitions.length > 0) {
-		this.restrictedAccess = true;
-	}
 	let readOnly;
 	let readable;
 	let pathReadAccessDefinitionFound = false;
 	let pathWriteAccessDefinitionFound = false;
 	if (readAccessDefinitions.length > 0) {
 		for (let i = 0; i < readAccessDefinitions.length; i++) {
-			if (readAccessDefinitions[i].path === this.id) {
+			if (readAccessDefinitions[i].path === this.path) {
 				readable = hasAccess([readAccessDefinitions[i]]);
 				readOnly = true;
 				pathReadAccessDefinitionFound = true;
@@ -41,7 +39,7 @@ function ChildSerializer(cmisObject) {
 	}
 	if (writeAccessDefinitions.length > 0) {
 		for (let i = 0; i < writeAccessDefinitions.length; i++) {
-			if (writeAccessDefinitions[i].path === this.id) {
+			if (writeAccessDefinitions[i].path === this.path) {
 				readOnly = !hasAccess([writeAccessDefinitions[i]]);
 				pathWriteAccessDefinitionFound = true;
 				break;
