@@ -4,7 +4,7 @@ import { uuid, hex, escape } from '@dirigible/utils';
 import * as utils from '@dirigible/utils'
 import utils2 from '@dirigible/utils'
 
-const  assertEquals = require('utils/assert').assertEquals;
+const assertEquals = require('utils/assert').assertEquals;
 
 assertEquals(base64.encode("admin:admin"), "YWRtaW46YWRtaW4=", "base64 import failed");
 assertEquals(base642.encode("admin:admin"), "YWRtaW46YWRtaW4=", "base642 import failed");

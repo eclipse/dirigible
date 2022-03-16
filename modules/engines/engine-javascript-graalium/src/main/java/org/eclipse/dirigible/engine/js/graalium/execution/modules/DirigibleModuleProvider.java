@@ -41,8 +41,6 @@ public class DirigibleModuleProvider {
             return maybeContentFromRepository;
         }
 
-        REPOSITORY.getInternalResourcePath(resourcePath);
-
         final String logMsg = String.format("There is no resource at the specified path: %s", resourcePath);
         throw new RepositoryNotFoundException(logMsg);
     }

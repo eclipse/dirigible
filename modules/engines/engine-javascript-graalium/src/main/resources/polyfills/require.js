@@ -20,7 +20,7 @@ var Require = (function (modulePath) {
         if (moduleInfo) {
             return moduleInfo;
         }
-        code = Java.type('org.eclipse.dirigible.engine.js.graalvm.execution.js.modules.DirigibleModuleProvider').loadSource(path);
+        code = Java.type('org.eclipse.dirigible.engine.js.graalium.execution.modules.DirigibleModuleProvider').loadSource(path);
         moduleInfo = {
             loaded: false,
             id: path,
@@ -29,18 +29,12 @@ var Require = (function (modulePath) {
         };
         code = head + code + tail;
         _loadedModules[path] = moduleInfo;
-        var compiledWrapper = null;
-        try {
-            compiledWrapper = eval(code);
-        } catch (e) {
-            throw new Error('Error evaluating module ' + path + ' line #' + e.lineNumber + ' : ' + e.message, path, e.lineNumber);
-        }
+        var compiledWrapper = load({
+            name: path,
+            script: code
+        });
         var parameters = [moduleInfo.exports, /* exports */ moduleInfo, /* module */ moduleInfo.require /* require */];
-        try {
-            compiledWrapper.apply(moduleInfo.exports, /* this */ parameters);
-        } catch (e) {
-            throw new Error('Error executing module ' + path + ' line #' + e.lineNumber + ' : ' + e.message, path, e.lineNumber);
-        }
+        compiledWrapper.apply(moduleInfo.exports, /* this */ parameters);
         moduleInfo.loaded = true;
         return moduleInfo;
     };

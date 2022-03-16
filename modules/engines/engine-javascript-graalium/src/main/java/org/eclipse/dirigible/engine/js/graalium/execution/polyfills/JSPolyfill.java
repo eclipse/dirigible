@@ -12,6 +12,8 @@
 package org.eclipse.dirigible.engine.js.graalium.execution.polyfills;
 
 import org.apache.commons.io.IOUtils;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
 
 import java.io.IOException;
 import java.io.InputStream;

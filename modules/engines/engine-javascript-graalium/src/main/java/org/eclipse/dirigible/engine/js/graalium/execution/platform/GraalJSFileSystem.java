@@ -79,8 +79,9 @@ public class GraalJSFileSystem implements FileSystem {
             DELEGATE.checkAccess(path, modes.toArray(new AccessMode[0]));
         } else if (modes.isEmpty()) {
             DELEGATE.readAttributes(path, "isRegularFile", LinkOption.NOFOLLOW_LINKS);
+        } else {
+            throw new UnsupportedOperationException("CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
         }
-        throw new UnsupportedOperationException("CheckAccess for NIO Provider is unsupported with non empty AccessMode and NOFOLLOW_LINKS.");
     }
 
     @Override

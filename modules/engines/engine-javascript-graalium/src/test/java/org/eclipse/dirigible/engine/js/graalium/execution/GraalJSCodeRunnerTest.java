@@ -1,19 +1,28 @@
 package org.eclipse.dirigible.engine.js.graalium.execution;
 
+import org.eclipse.dirigible.api.v3.test.AbstractApiSuiteTest;
 import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.engine.js.graalium.execution.eventloop.GraalJSEventLoop;
 import org.eclipse.dirigible.engine.js.graalium.execution.polyfills.*;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
-public class GraalJSCodeRunnerTest extends AbstractDirigibleTest {
+public class GraalJSCodeRunnerTest extends AbstractApiSuiteTest {
 
-    private static final IRepository REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    private IRepository repository;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        this.repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    }
 
     @Test
     public void testDownloadFirebaseDependency() throws InterruptedException {
@@ -70,22 +79,29 @@ public class GraalJSCodeRunnerTest extends AbstractDirigibleTest {
                 .build();
     }
 
-    private static Path getOrCreateInternalFolder(String folderName) {
-        ICollection folder = REPOSITORY.getCollection(folderName);
+    private Path getOrCreateInternalFolder(String folderName) {
+        ICollection folder = repository.getCollection(folderName);
         if (!folder.exists()) {
             folder.create();
         }
 
-        String dependenciesCollectionPathString = folder.getPath();
-        String dependenciesCollectionInternalPathString = REPOSITORY.getInternalResourcePath(dependenciesCollectionPathString);
-        return Path.of(dependenciesCollectionInternalPathString);
+        String folderPathString = folder.getPath();
+        String folderInternalPathString = repository.getInternalResourcePath(folderPathString);
+        return Path.of(folderInternalPathString);
     }
 
-    private static GraalJSCodeRunner createCodeRunner(Path workingDir) {
+    private GraalJSCodeRunner createCodeRunner(Path workingDir) {
         return GraalJSCodeRunner.newBuilder(workingDir, getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
                 .addJSPolyfill(new RequirePolyfill())
                 .waitForDebugger(false)
                 .build();
+    }
+
+    @After
+    public void cleanUp() {
+        repository.removeCollection("dependencies");
+        repository.removeCollection("core-modules");
+        repository.removeCollection("registry");
     }
 
 }
