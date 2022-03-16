@@ -25,11 +25,11 @@ public interface JSPolyfill {
 
     default String getPolyfillFromResources(String polyfillPathInResources) {
         try {
-            InputStream xhrPolyfill = JSPolyfill.class.getResourceAsStream(polyfillPathInResources);
-            if (xhrPolyfill == null) {
-                throw new IOException("XHR polyfill not found in resources!");
+            InputStream polyfill = JSPolyfill.class.getResourceAsStream(polyfillPathInResources);
+            if (polyfill == null) {
+                throw new IOException("Polyfill '" + polyfillPathInResources + "' not found in resources!");
             }
-            return IOUtils.toString(xhrPolyfill, Charset.defaultCharset());
+            return IOUtils.toString(polyfill, Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
