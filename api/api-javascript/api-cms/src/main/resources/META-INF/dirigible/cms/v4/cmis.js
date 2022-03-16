@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- *
+ * Copyright (c) 2010-2020 SAP and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * Contributors:
+ *   SAP - initial API and implementation
  */
+
 /**
  * API v4 CMIS
  * 
@@ -85,10 +85,12 @@ function Session() {
 		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
 			var document = new Document();
 			document.native = objectInstance;
+			document.path = path;
 			return document;
 		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
 			var folder = new Folder();
 			folder.native = objectInstance;
+			folder.path = path;
 			return folder;
 		}
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
@@ -176,7 +178,7 @@ function Folder() {
 	};
 
 	this.getPath = function() {
-		return this.native.getPath();
+		return this.path;
 	};
 
 	this.isRootFolder = function() {
@@ -306,7 +308,15 @@ function Document() {
 		return type;
 	};
 
+	this.getPath = function() {
+    	return this.path;
+    };
+
 	this.delete = function() {
+	    var allowed = org.eclipse.dirigible.api.v3.cms.CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
+       	    if (!allowed) {
+            	throw new Error("Write access not allowed on: " + this.getPath());
+            }
 		return this.native.delete(true);
 	};
 
@@ -325,6 +335,10 @@ function Document() {
 	};
 
 	this.rename = function(newName) {
+	    var allowed = org.eclipse.dirigible.api.v3.cms.CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
+    	    if (!allowed) {
+    		throw new Error("Write access not allowed on: " + this.getPath());
+    	    }
 		return this.native.rename(newName);
 	};
 }
