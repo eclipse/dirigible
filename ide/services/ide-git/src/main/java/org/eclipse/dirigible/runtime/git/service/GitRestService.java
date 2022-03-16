@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.git.service;
 
 import static java.text.MessageFormat.format;
 
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.google.gson.JsonElement;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -36,6 +38,7 @@ import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
@@ -49,6 +52,7 @@ import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.runtime.git.processor.GitProcessor;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +63,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
+import com.google.gson.JsonObject;
 /**
  * Front facing REST service serving the Git commands.
  */
@@ -66,13 +71,17 @@ import io.swagger.annotations.Authorization;
 @Api(value = "IDE - Git", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class GitRestService extends AbstractRestService implements IRestService {
-	
+
+
 	private static final Logger logger = LoggerFactory.getLogger(GitRestService.class);
 
 	private GitProcessor processor = new GitProcessor();
 	
 	@Context
 	private HttpServletResponse response;
+	private String workspace;
+	private String project;
+	private String url;
 
 	/**
 	 * Clone repository.
@@ -539,7 +548,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		GitProjectChangedFiles gitProjectFiles = processor.getStagedFiles(workspace, project);
 		return Response.ok().entity(GsonHelper.GSON.toJson(gitProjectFiles)).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
-	
+
 	/**
 	 * Add file to index.
 	 *
@@ -619,6 +628,87 @@ public class GitRestService extends AbstractRestService implements IRestService 
 		}
 		processor.removeFileFromIndex(workspace, project, paths);
 		return Response.ok().build();
+	}
+
+	/**
+	 * Get remote origin URLs.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @return the response
+	 * @throws GitConnectorException in case of exception
+	 */
+	@GET
+	@Path("/{project}/origin-urls")
+	@Produces("application/json")
+	@ApiOperation("Get Project Repo URLs")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Repo URLs") })
+	public Response getOriginUrl(@PathParam("workspace") String workspace, @PathParam("project") String project) throws GitConnectorException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		ProjectOriginUrls originUrls = processor.getOriginUrls(workspace, project);
+		return Response.ok(originUrls).build();
+	}
+
+	/**
+	 * Update remote origin fetch URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL   
+	 * @return the response
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
+	 */
+	@POST
+	@Path("/{project}/fetch-url")
+	@Produces("application/json")
+	@ApiOperation("Set origin fetch URL")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response setFetchUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @ApiParam(value = "New fetch URL", required = true) JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		String newurl = url.get("url").getAsString();
+		processor.setFetchUrl(workspace, project, newurl);
+		JsonObject res = new JsonObject();
+		res.addProperty("status", "success");
+		res.addProperty("url", newurl);
+		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
+	}
+
+	/**
+	 * Update remote origin push URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @return the response
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
+	 */
+	@POST
+	@Path("/{project}/push-url")
+	@Produces("application/json")
+	@ApiOperation("Set origin push URL")
+	@ApiResponses({ @ApiResponse(code = 200, message = "Git File Diff") })
+	public Response setPushUrl(@PathParam("workspace") String workspace, @PathParam("project") String project, @ApiParam(value = "New push URL", required = true) JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		String newurl = url.get("url").getAsString();
+		processor.setPushUrl(workspace, project, newurl);
+		JsonObject res = new JsonObject();
+		res.addProperty("status", "success");
+		res.addProperty("url", newurl);
+		return Response.ok().entity(res).type(ContentTypeHelper.APPLICATION_JSON).build();
 	}
 
 	/**

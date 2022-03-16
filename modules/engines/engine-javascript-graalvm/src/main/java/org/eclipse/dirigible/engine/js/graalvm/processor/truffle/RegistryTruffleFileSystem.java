@@ -44,6 +44,9 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path parsePath(String path) {
+        if ("".equals(path)) {
+            return Path.of("");
+        }
         return standardHandler.handlePossibleRepositoryPath(path);
     }
 

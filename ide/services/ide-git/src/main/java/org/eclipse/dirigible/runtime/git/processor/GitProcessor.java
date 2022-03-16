@@ -13,6 +13,7 @@ package org.eclipse.dirigible.runtime.git.processor;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,10 +22,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.core.git.GitCommitInfo;
-import org.eclipse.dirigible.core.git.GitConnectorException;
-import org.eclipse.dirigible.core.git.GitConnectorFactory;
-import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.*;
 import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.CommitCommand;
@@ -33,6 +31,7 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -58,7 +57,9 @@ import org.eclipse.dirigible.runtime.git.model.GitPushModel;
 import org.eclipse.dirigible.runtime.git.model.GitResetModel;
 import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.transport.URIish;
 
 /**
  * Processing the Git Service incoming requests.
@@ -132,7 +133,7 @@ public class GitProcessor {
 	}
 
 	/**
-	 * Reset.
+	 * Delete.
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repositoryName
@@ -425,6 +426,50 @@ public class GitProcessor {
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
+	}
+
+	/**
+	 * Remote origin URLs.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @throws GitConnectorException in case of an error
+	 * @return Origin URLs info
+	 *
+	 */
+	public ProjectOriginUrls getOriginUrls(String workspace, String project) throws GitConnectorException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		return gitConnector.getOriginUrls();
+	}
+
+	/**
+	 * Update remote origin fetch URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
+	 */
+	public void setFetchUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitConnector.setFetchUrl(url);
+	}
+
+	/**
+	 * Update remote origin push URL.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param url the new fetch URL
+	 * @throws GitConnectorException Git Connector Exception
+	 * @throws GitAPIException Git API Exception
+	 * @throws URISyntaxException URL with wrong format provided
+	 */
+	public void setPushUrl(String workspace, String project, String url) throws GitConnectorException, GitAPIException, URISyntaxException {
+		IGitConnector gitConnector = getGitConnector(workspace, project);
+		gitConnector.setPushUrl(url);
 	}
 
 	/**

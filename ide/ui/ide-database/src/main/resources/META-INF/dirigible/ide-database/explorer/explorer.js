@@ -114,7 +114,8 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 											"action": function (data) {
 												let tree = $.jstree.reference(data.reference);
 												let node = tree.get_node(data.reference);
-												let sqlCommand = "SELECT * FROM \"" + node.original.text + "\"";
+												let parentNodeName = tree.get_node(node.parent).text;
+												let sqlCommand = "SELECT * FROM \"" + parentNodeName + "\"" + "."+"\"" +node.original.text + "\"";
 												messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 											}.bind(this)
 										};
@@ -126,8 +127,10 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												"action": function (data) {
 													let tree = $.jstree.reference(data.reference);
 													let node = tree.get_node(data.reference);
-													if (confirmRemove("TABLE", node.original.text)) {
-														let sqlCommand = "DROP TABLE \"" + node.original.text + "\"";
+													let parentNodeName = tree.get_node(node.parent).text;
+													if (confirmRemove("TABLE", parentNodeName+"."+node.original.text)) {
+														let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "."+"\"" +node.original.text + "\"";
+														alert(sqlCommand);
 														messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 														$('.database').jstree(true).refresh();
 													}
@@ -142,8 +145,9 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												"action": function (data) {
 													let tree = $.jstree.reference(data.reference);
 													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
 													if (confirmRemove("VIEW", node.original.text)) {
-														let sqlCommand = "DROP VIEW \"" + node.original.text + "\"";
+														let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "."+"\"" +node.original.text + "\"";
 														messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 														$('.database').jstree(true).refresh();
 													}

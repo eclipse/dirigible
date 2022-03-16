@@ -164,20 +164,6 @@ public class RepositoryFacade {
 	 * @throws ScriptingException in case of an error
 	 */
 	public static String find(String path, String pattern) throws IOException, ScriptingException {
-		ICollection collection = getCollection(path);
-		if (collection.exists() && collection instanceof LocalCollection) {
-			List<String> list = FileSystemUtils.find(((LocalCollection) collection).getFolder().getPath(), pattern);
-			int repositoryRootLength = ((LocalCollection) collection.getRepository().getRoot()).getFolder().getPath().length();
-			List<String> prepared = new ArrayList<String>();
-			list.forEach(item -> {
-					String truncated = item.substring(repositoryRootLength);
-					if (!IRepository.SEPARATOR.equals(File.separator)) {
-						truncated = truncated.replace(File.separator, IRepository.SEPARATOR);
-					}
-					prepared.add(truncated);
-				});
-			return GsonHelper.GSON.toJson(prepared);
-		}
-		return "[]";
+		return repositoryProcessor.find(path, pattern);
 	}
 }

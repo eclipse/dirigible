@@ -96,8 +96,8 @@ public class JwtUtils {
 		String authorizationHeader = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
 		if (authorizationHeader != null) {	
 			// Expected format Authorization header value: Bearer eyJhbGciOiJS...
-			if (authorizationHeader.startsWith(AUTHORIZATION_HEADER_VALUE_BEARER)) {
-				String tokenValue = authorizationHeader.replace(AUTHORIZATION_HEADER_VALUE_BEARER, "");
+			if (authorizationHeader.toLowerCase().startsWith(AUTHORIZATION_HEADER_VALUE_BEARER.toLowerCase())) {
+				String tokenValue = authorizationHeader.substring(AUTHORIZATION_HEADER_VALUE_BEARER.length());
 				if (isValidJwt(httpServletRequest, tokenValue)) {
 					jwt = tokenValue;
 				}

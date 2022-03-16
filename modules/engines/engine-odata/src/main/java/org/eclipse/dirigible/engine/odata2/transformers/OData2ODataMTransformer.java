@@ -30,8 +30,17 @@ import java.util.stream.Collectors;
 public class OData2ODataMTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataMTransformer.class);
+    private final ODataPropertyNameEscaper propertyNameEscaper;
 
     private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
+
+    public OData2ODataMTransformer(ODataPropertyNameEscaper propertyNameEscaper){
+        this.propertyNameEscaper = propertyNameEscaper;
+    }
+
+    public OData2ODataMTransformer(){
+        this(new DefaultPropertyNameEscaper());
+    }
 
     public String[] transform(ODataDefinition model) throws SQLException {
 
@@ -64,13 +73,13 @@ public class OData2ODataMTransformer {
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
-                    buff.append("\t\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(columnValue)).append("\": \"").append(column.getName()).append("\",\n");
+                    buff.append("\t\"").append(propertyNameEscaper.escape(columnValue)).append("\": \"").append(column.getName()).append("\",\n");
                 });
             } else {
                 //in case entity props are defined expose only them
                 entityProperties.forEach(prop -> {
                     List<PersistenceTableColumnModel> dbColumnName = tableMetadata.getColumns().stream().filter(x -> x.getName().equals(prop.getColumn())).collect(Collectors.toList());
-                    buff.append("\t\"").append(ODataMetadataUtil.replaceUnSupportedPropOlingoSymbols(prop.getName())).append("\": \"").append(dbColumnName.get(0).getName()).append("\",\n");
+                    buff.append("\t\"").append(propertyNameEscaper.escape(prop.getName())).append("\": \"").append(dbColumnName.get(0).getName()).append("\",\n");
                 });
             }
 

@@ -44,7 +44,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	public static final String DEFAULT_DESTINATION_PREFIX = "destination_";
 
 	private static final String ERROR_MESSAGE_NO_OAUTH_CONFIGURATION = "No OAuth configuration provided";
-	private static final String ERROR_MESSAGE_NO_DESTINATION_CONFIGURATION = "No Destination configuration provided";
+	private static final String WARN_MESSAGE_NO_DESTINATION_CONFIGURATION = "No Destination configuration provided";
 
 	@Override
 	public int getPriority() {
@@ -97,15 +97,15 @@ public class KymaModule extends AbstractDirigibleModule {
 		String url = getEnvWithPrefix(destinationPrefix, ENV_URL);
 		String uri = getEnvWithPrefix(destinationPrefix, ENV_URI);
 
-		if (url == null || clientId == null || clientSecret == null || url == null || uri == null) {
-			logger.error(ERROR_MESSAGE_NO_DESTINATION_CONFIGURATION);
-			throw new InvalidStateException(ERROR_MESSAGE_NO_DESTINATION_CONFIGURATION);
+		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
+		} else {
+			logger.warn(WARN_MESSAGE_NO_DESTINATION_CONFIGURATION);
 		}
 
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 	}
 
 	private String getEnvWithPrefix(String prefix, String variableName) {

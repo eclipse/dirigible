@@ -11,9 +11,10 @@
  */
 exports.getPerspective = function () {
 	return {
-		"name": "Git",
-		"link": "../ide-git/index.html",
-		"order": "105",
-		"image": "code-fork"
+		name: "Git",
+		link: "../ide-git/index.html",
+		order: "105",
+		image: "code-fork", // deprecated
+		icon: "../ide-git/images/git.svg",
 	};
 }

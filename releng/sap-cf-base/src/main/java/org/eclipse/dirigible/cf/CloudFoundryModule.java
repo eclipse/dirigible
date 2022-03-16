@@ -40,7 +40,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 	private static final String MODULE_NAME = "Cloud Foundry Module";
 
 	private static final String ERROR_MESSAGE_NO_XSUAA = "No XSUAA service instance is bound";
-	private static final String ERROR_MESSAGE_NO_DESTINATION = "No Destination service instance is bound";
+	private static final String WARN_MESSAGE_NO_DESTINATION = "No Destination service instance is bound";
 
 	public static final String DIRIGIBLE_DESTINATION_CLIENT_ID = "DIRIGIBLE_DESTINATION_CLIENT_ID";
 	public static final String DIRIGIBLE_DESTINATION_CLIENT_SECRET = "DIRIGIBLE_DESTINATION_CLIENT_SECRET";
@@ -114,22 +114,21 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 
 	private void configureDestination() {
 		DestinationEnv destinationEnv = CloudFoundryUtils.getDestinationEnv();
-		if (destinationEnv == null || destinationEnv.getCredentials() == null) {
-			logger.error(ERROR_MESSAGE_NO_DESTINATION);
-			throw new InvalidStateException(ERROR_MESSAGE_NO_DESTINATION);
+		if (destinationEnv != null && destinationEnv.getCredentials() != null) {
+			DestinationCredentialsEnv destinationCredentials = destinationEnv.getCredentials();
+
+			String clientId = destinationCredentials.getClientId();
+			String clientSecret = destinationCredentials.getClientSecret();
+			String url = destinationCredentials.getUrl();
+			String uri = destinationCredentials.getUri();
+
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
+			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
+		} else {
+			logger.warn(WARN_MESSAGE_NO_DESTINATION);
 		}
-
-		DestinationCredentialsEnv destinationCredentials = destinationEnv.getCredentials();
-
-		String clientId = destinationCredentials.getClientId();
-		String clientSecret = destinationCredentials.getClientSecret();
-		String url = destinationCredentials.getUrl();
-		String uri = destinationCredentials.getUri();
-
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
-		Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 	}
 
 	private boolean bindPostgreDb(PostgreDbEnv env) {

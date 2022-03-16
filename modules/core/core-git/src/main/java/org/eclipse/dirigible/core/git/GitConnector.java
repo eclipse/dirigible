@@ -13,6 +13,7 @@ package org.eclipse.dirigible.core.git;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,21 +24,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jgit.api.AddCommand;
-import org.eclipse.jgit.api.CheckoutCommand;
-import org.eclipse.jgit.api.CommitCommand;
-import org.eclipse.jgit.api.CreateBranchCommand;
+import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
+import org.eclipse.dirigible.core.git.utils.RemoteUrl;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.PullCommand;
-import org.eclipse.jgit.api.PushCommand;
-import org.eclipse.jgit.api.RebaseCommand;
 import org.eclipse.jgit.api.RebaseCommand.Operation;
-import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
-import org.eclipse.jgit.api.RmCommand;
-import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
@@ -55,15 +47,13 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.api.RemoteSetUrlCommand;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
@@ -88,6 +78,41 @@ public class GitConnector implements IGitConnector {
 	GitConnector(Repository repository) throws IOException {
 		this.repository = repository;
 		this.git = new Git(repository);
+	}
+
+	@Override
+	public ProjectOriginUrls getOriginUrls() {
+		StoredConfig gitConfig = repository.getConfig();
+
+		String fetchUrl = gitConfig.getString("remote", "origin", "url");
+
+		String pushUrl;
+		pushUrl = gitConfig.getString("remote", "origin", "pushurl");
+		if (pushUrl == null) {
+			pushUrl = fetchUrl; // fallback to fetch url if no explicit pushurl is configured
+		}
+
+		return new ProjectOriginUrls(fetchUrl, pushUrl);
+	}
+
+	@Override
+	public void setFetchUrl(String fetchUrl) throws URISyntaxException, GitAPIException {
+		RemoteUrl remoteGit = new RemoteUrl(repository);
+		remoteGit.setUriType(RemoteSetUrlCommand.UriType.FETCH);
+		remoteGit.setRemoteName("origin");
+		URIish newUrl = new URIish(fetchUrl);
+		remoteGit.setRemoteUri(newUrl);
+		remoteGit.call();
+	}
+
+	@Override
+	public void setPushUrl(String pushUrl) throws URISyntaxException, GitAPIException {
+		RemoteUrl remoteGit = new RemoteUrl(repository);
+		remoteGit.setUriType(RemoteSetUrlCommand.UriType.PUSH);
+		remoteGit.setRemoteName("origin");
+		URIish newUrl = new URIish(pushUrl);
+		remoteGit.setRemoteUri(newUrl);
+		remoteGit.call();
 	}
 
 	/**
@@ -118,7 +143,7 @@ public class GitConnector implements IGitConnector {
 		addCommand.addFilepattern(filePattern);
 		addCommand.call();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#addDeleted(java.lang.String)
@@ -129,8 +154,8 @@ public class GitConnector implements IGitConnector {
 		rmCommand.addFilepattern(filePattern);
 		rmCommand.call();
 	}
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#remove(java.lang.String)
@@ -142,7 +167,7 @@ public class GitConnector implements IGitConnector {
 		reset.addPath(path);
 		reset.call();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#revert(java.lang.String)
@@ -153,9 +178,9 @@ public class GitConnector implements IGitConnector {
 		checkoutCommand.addPath(path);
 		checkoutCommand.call();
 	}
-	
-	
-	
+
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -169,7 +194,6 @@ public class GitConnector implements IGitConnector {
 		commitCommand.setMessage(message);
 		commitCommand.setCommitter(name, email);
 		commitCommand.setAuthor(name, email);
-//		commitCommand.setCommitter(name, email);
 		commitCommand.setAll(all);
 		commitCommand.setAllowEmpty(true);
 		commitCommand.call();
@@ -279,7 +303,7 @@ public class GitConnector implements IGitConnector {
 	public Status status() throws NoWorkTreeException, GitAPIException {
 		return git.status().call();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getBranch()
@@ -298,9 +322,9 @@ public class GitConnector implements IGitConnector {
 //			throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 //		return checkout(branch).getLeaf().getObjectId().getName();
 //	}
-	
+
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.git.IGitConnector#getLocalBranches()
@@ -316,7 +340,7 @@ public class GitConnector implements IGitConnector {
 				    return getShortBranchName(ref1).compareTo(getShortBranchName(ref2));
 				  }
 				});
-			
+
 			String currentBranch = getBranch();
 			RevWalk walk = new RevWalk(git.getRepository());
 			try {
@@ -324,10 +348,10 @@ public class GitConnector implements IGitConnector {
 					RevCommit commit = walk.parseCommit(branch.getObjectId());
 					String shortLocalBranchName = getShortBranchName(branch);
 					GitBranch gitBranch = new GitBranch(shortLocalBranchName, false, currentBranch.equals(shortLocalBranchName),
-							commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+							commit.getId().getName(), commit.getId().abbreviate(7).name(),
 							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
 					result.add(gitBranch);
-				} 
+				}
 			} finally {
 				walk.close();
 			}
@@ -349,17 +373,17 @@ public class GitConnector implements IGitConnector {
 			        .setHeads(true)
 			        .setRemote(git.getRepository().getConfig().getString("remote", "origin", "url"))
 			        .call();
-				
+
 			List<Ref> branches = new ArrayList<Ref>(remotes);
-			
+
 			RevWalk walk = new RevWalk(git.getRepository());
 			try {
 				for (Ref branch : branches) {
 					RevCommit commit = walk.parseCommit(branch.getObjectId());
-					GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false, commit.getId().getName(), commit.getId().abbreviate(7).name(), 
+					GitBranch gitBranch = new GitBranch(getShortBranchName(branch), true, false, commit.getId().getName(), commit.getId().abbreviate(7).name(),
 							format.format(commit.getAuthorIdent().getWhen()), commit.getShortMessage(), commit.getAuthorIdent().getName());
 					result.add(gitBranch);
-				} 
+				}
 			} finally {
 				walk.close();
 			}
@@ -368,10 +392,10 @@ public class GitConnector implements IGitConnector {
 			throw new GitConnectorException(e);
 		}
 	}
-	
+
 	/**
 	 * Returns the short branch name
-	 * 
+	 *
 	 * @param branch the branch
 	 * @return the short name
 	 */
@@ -480,7 +504,7 @@ public class GitConnector implements IGitConnector {
 		try {
 			final List<GitCommitInfo> history = new ArrayList<GitCommitInfo>();
 			final SimpleDateFormat dtfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-			
+
 			LogCommand logCommand = git.log();
 			if (path != null) {
 				logCommand.addPath(path);
@@ -496,7 +520,7 @@ public class GitConnector implements IGitConnector {
 				info.setEmailAddress(personIdentity.getEmailAddress());
 				info.setDateTime(dtfmt.format(personIdentity.getWhen()));
 				info.setMessage(log.getFullMessage());
-				
+
 				history.add(info);
 			});
 			return history;

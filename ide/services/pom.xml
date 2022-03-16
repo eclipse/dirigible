@@ -19,6 +19,7 @@
 		<module>ide-core</module>
 		<module>ide-databases</module>
 		<module>ide-git</module>
+		<module>ide-editor</module>
 		<module>ide-publisher</module>
 		<module>ide-terminal</module>
 		<module>ide-workspaces</module>

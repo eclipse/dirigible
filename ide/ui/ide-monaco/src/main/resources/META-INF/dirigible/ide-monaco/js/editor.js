@@ -37,9 +37,9 @@ function getNewLines(oldText, newText, isWhitespaceIgnored = true) {
     }
     let lineDiff;
     if (isWhitespaceIgnored) {
-        lineDiff = diffTrimmedLines(oldText, newText);
+        lineDiff = Diff.diffTrimmedLines(oldText, newText);
     } else {
-        lineDiff = diffLines(oldText, newText);
+        lineDiff = Diff.diffLines(oldText, newText);
     }
     let addedCount = 0;
     let addedLines = [];

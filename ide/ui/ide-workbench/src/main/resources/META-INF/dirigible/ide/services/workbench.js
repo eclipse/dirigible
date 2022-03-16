@@ -11,9 +11,10 @@
  */
 exports.getPerspective = function () {
 	return {
-		"name": "Workbench",
-		"link": "../ide/index.html",
-		"order": "100",
-		"image": "files-o"
+		name: "Workbench",
+		link: "../ide/index.html",
+		order: "100",
+		image: "files-o", // deprecated
+		icon: "../ide/images/workbench.svg",
 	};
 }
