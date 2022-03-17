@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -159,6 +160,9 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
     }
 
     /**
+     *
+     * Copy selection of nodes
+     *
      * @param currentWorkspace
      * @param content
      * @param request
@@ -170,7 +174,7 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
     @POST
     @Path("{workspace}/copySelection")
     public Response copySelection(@PathParam("workspace") String currentWorkspace, WorkspaceSelectionTargetPair content, @Context HttpServletRequest request)
-            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+            throws Exception {
         String user = UserFacade.getName();
         ArrayList<WorkspaceSelectionTargetPair.SelectedNode> sourceSelection = content.getSource();
         if (user == null) {
@@ -186,7 +190,6 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
         }
 
         RepositoryPath targetPath = new RepositoryPath(UrlFacade.decode(content.getTarget()));
-        System.out.println("INIT TARGET PATH " + targetPath.toString());
         if (targetPath.getSegments().length == 0) {
             return createErrorResponseBadRequest(ERROR_TARGET_PATH_IS_EMPTY);
         }
@@ -221,14 +224,13 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
                 targetFilePath = IRepository.SEPARATOR;
             }
             targetFilePath = targetFilePath.concat(IRepository.SEPARATOR).concat(nodeToCopy.getInternalPath()).replaceAll("^/+", "");
-            System.out.println("SOURCE file " + sourcePath.toString());
-            System.out.println("DESTINATION file " + targetFilePath);
-            System.out.println("RELATIVE PATH" + relativePath);
 
             String fileOrFolder = sourceSelection.get(i).getNodeType();
             String conflictResolution = sourceSelection.get(i).getResolution();
+            String relativePathToSourceFile = Paths.get(relativePath).getParent().toString();
             String relativePathToTargetFile = Paths.get(targetFilePath).getParent().toString();
             String fileOrFolderName = Paths.get(targetFilePath).getFileName().toString();
+            String skipPath;
 
             switch (fileOrFolder) {
                 case "folder":
@@ -239,11 +241,13 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
                                 processor.createFolder(targetWorkspace, targetProject, targetFilePath);
                                 break;
                             case "skip":
-                                String skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
+                                skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
                                 content.skipByPath(skipPath);
                                 break;
                             default:
-                                processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourcePath.toString(), targetProject, relativePathToTargetFile, fileOrFolderName);
+                                processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile.concat(IRepository.SEPARATOR), fileOrFolderName);
+                                skipPath = sourceSelection.get(i).getPath().concat(IRepository.SEPARATOR);
+                                content.skipByPath(skipPath);
 
                         }
                     } else
@@ -255,7 +259,6 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
                     if (processor.existsFile(sourceWorkspace, sourceProject, relativePath)) {
                         switch (conflictResolution) {
                             case "replace":
-                                System.out.println("COPY with REPLACE " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
                                 if (processor.existsFile(targetWorkspace, targetProject, targetFilePath))
                                     processor.deleteFile(targetWorkspace, targetProject, targetFilePath);
                                 else if (processor.existsFolder(targetWorkspace, targetProject, targetFilePath))
@@ -263,31 +266,16 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
                                 processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
                                 break;
                             case "skip":
-                                System.out.println("SKIP COPY " + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
                                 break;
                             default:
-                                System.out.println("DEFAULT or NON-CONFLICT COPY (rename)" + sourceWorkspace + "/" + sourceProject + "/" + relativePath + " -> " + targetWorkspace.concat(IRepository.SEPARATOR).concat(targetProject).concat(IRepository.SEPARATOR).concat(targetFilePath));
                                 processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, relativePath, targetProject, relativePathToTargetFile);
 
                         }
                     }
-                    else
-                        System.out.println("File " + relativePath + " in " + sourceWorkspace + "/" + sourceProject + " doesn't exist.");
                     break;
                 default:
-                    System.out.println("UNKNOWN NODE TYPE");
+                    throw new InputMismatchException();
             }
-//            if (!processor.existsFolder(targetWorkspace, targetProject, targetFilePath)) {
-//                return createErrorResponseBadRequest(ERROR_TARGET_PATH_POINTS_TO_A_NON_EXISTING_FOLDER);
-//            }
-//
-//            String sourceFilePath = sourcePath.constructPathFrom(1);
-//            if (processor.existsFile(sourceWorkspace, sourceProject, sourceFilePath)) {
-//                processor.copyFile(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject, targetFilePath);
-//            } else {
-//                processor.copyFolder(sourceWorkspace, targetWorkspace, sourceProject, sourceFilePath, targetProject,
-//                        targetFilePath + IRepositoryStructure.SEPARATOR, sourcePath.getLastSegment());
-//            }
         }
         return Response.created(processor.getURI(targetWorkspace, null, content.getTarget())).build();
     }

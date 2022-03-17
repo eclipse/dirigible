@@ -535,7 +535,7 @@ public class WorkspaceProcessor {
      * @param targetFilePath  the target file path
      */
     public void copyFile(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
-        if (sourceWorkspace.equals(targetWorkspace)) {
+        if (sourceWorkspace.equals(targetWorkspace) && !existsFile(targetWorkspace, targetProject, targetFilePath) && !existsFolder(targetWorkspace, targetProject, targetFilePath)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
         } else { // This is a temporary workaround
