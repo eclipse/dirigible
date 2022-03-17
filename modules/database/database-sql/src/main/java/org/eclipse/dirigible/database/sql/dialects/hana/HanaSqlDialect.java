@@ -459,5 +459,10 @@ public class HanaSqlDialect extends
         return FUNCTIONS;
     }
 
+    @Override
+    public String getFuzzySearchIndex() {
+        return "FUZZY SEARCH INDEX ON";
+    }
+
 }
 

@@ -187,7 +187,7 @@ public class CreateTableTest {
     public void createTableWithIdentity() {
         String sql = SqlFactory.getDefault().create()
                 .table("CUSTOMERS")
-                .column("ID", DataType.BIGINT, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, Modifiers.IDENTITY)
+                .column("ID", DataType.BIGINT, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, Modifiers.IDENTITY, false)
                 .column("FIRST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(20)")
                 .column("LAST_NAME", DataType.VARCHAR, Modifiers.REGULAR, Modifiers.NULLABLE, Modifiers.NON_UNIQUE, "(30)")
                 .build();

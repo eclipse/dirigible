@@ -483,4 +483,9 @@ public class DefaultSqlDialect<SELECT extends SelectBuilder, INSERT extends Inse
 		return FUNCTIONS;
 	}
 
+	@Override
+	public String getFuzzySearchIndex() {
+		return " ";
+	}
+
 }
