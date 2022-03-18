@@ -20,11 +20,11 @@ function ChildSerializer(cmisObject) {
 	this.id = cmisObject.getId();
 	this.path = cmisObject.getPath();
 
-	let readAccessDefinitions = getReadAccessDefinitions(this.id);
-	let writeAccessDefinitions = getWriteAccessDefinitions(this.id);
+	let readAccessDefinitions = getReadAccessDefinitions(this.path);
+	let writeAccessDefinitions = getWriteAccessDefinitions(this.path);
 
-	let readOnly;
-	let readable;
+	let readOnly = false;
+	let readable = true;
 	let pathReadAccessDefinitionFound = false;
 	let pathWriteAccessDefinitionFound = false;
 	if (readAccessDefinitions.length > 0) {
