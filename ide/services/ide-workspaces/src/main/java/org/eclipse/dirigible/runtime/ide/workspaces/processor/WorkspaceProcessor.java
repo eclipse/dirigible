@@ -477,7 +477,7 @@ public class WorkspaceProcessor {
      */
     public void copyFolder(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFolderPath, String targetProject, String targetBasePath, String targetFolderName) {
         String targetFolderPath = targetBasePath + targetFolderName;
-        if (existsFolder(targetWorkspace, targetProject, targetFolderPath)) {
+        if (existsFolder(targetWorkspace, targetProject, targetFolderPath) || existsFile(targetWorkspace, targetProject, targetFolderPath)) {
             int inc = 1;
             String folderName = targetFolderName + " (copy " + inc + ")";
             while (
@@ -535,7 +535,7 @@ public class WorkspaceProcessor {
      * @param targetFilePath  the target file path
      */
     public void copyFile(String sourceWorkspace, String targetWorkspace, String sourceProject, String sourceFilePath, String targetProject, String targetFilePath) {
-        if (sourceWorkspace.equals(targetWorkspace)) {
+        if (sourceWorkspace.equals(targetWorkspace) && !existsFile(targetWorkspace, targetProject, targetFilePath) && !existsFolder(targetWorkspace, targetProject, targetFilePath)) {
             IWorkspace workspaceObject = workspacesCoreService.getWorkspace(targetWorkspace);
             workspaceObject.copyFile(sourceProject, sourceFilePath, targetProject, targetFilePath);
         } else { // This is a temporary workaround
@@ -550,7 +550,7 @@ public class WorkspaceProcessor {
                 baseTargetPath = IRepository.SEPARATOR + targetFilePath;
                 targetFilePath += IRepository.SEPARATOR + sourceFile.getName();
             }
-            if (existsFile(targetWorkspace, targetProject, targetFilePath)) {
+            if (existsFile(targetWorkspace, targetProject, targetFilePath) || existsFolder(targetWorkspace, targetProject, targetFilePath)) {
                 String fileName = sourceFile.getName();
                 String fileTitle = "";
                 String fileExt = "";

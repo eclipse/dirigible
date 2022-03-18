@@ -75,8 +75,10 @@
                         data-target="#dialogGenerateFromTemplate"></button>
                     <button type="button" id="generateFromModel" ng-show=false data-toggle="modal"
                         data-target="#dialogGenerateFromModel"></button>
-                    <button type="button" id="uploadFile" ng-show=false data-toggle="modal"
+                    <button type="button" id="uploadFile" ng-show="false" data-toggle="modal"
                         data-target="#dialogUploadFile"></button>
+                    <button type="button" id="resolveConflicts" ng-show="false" data-toggle="modal"
+                        data-target="#dialogResolveConflicts"></button>
 
                     <div class="btn btn-top dropdown" style="padding: 0px">
                         <div class="btn btn-default btn-top dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -104,8 +106,8 @@
                         ng-click="workspace.publish()"><i class="fa fa-play-circle"></i></button>
                     <!-- <button type="button" class="btn btn-default btn-top" title="Export All" ng-click="workspace.exportWorkspace()"><i class="fa fa-arrow-circle-down"></i></button> -->
 
-                    <button type="button" class="btn btn-default btn-top" title="Refresh"
-                        ng-click="workspace.refresh()"><i class="fa fa-refresh"></i></button>
+                    <button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="workspace.refresh()"
+                        id="refreshButton"><i class="fa fa-refresh"></i></button>
 
                     <select ng-model="workspace.selectedWorkspace" ng-options="o as o for o in workspace.workspaces"
                         ng-change="workspace.workspaceSelected()"
@@ -333,6 +335,41 @@
                 <button class="btn btn-primary" ng-click="workspace.okDelete()" data-toggle="modal"
                     data-target="#dialogDelete">Delete</button>
                 <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Resolve Conflicts -->
+        <div class="dirigible-modal modal fade" id="dialogResolveConflicts" tabindex="-1" role="dialog"
+            aria-labelledby="resolveConflictsLabel" aria-hidden="true">
+            <div class="modal-header">
+                <h4>{{copyConflicts.length}} overwrite conflict(s) found</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-xs-12 col-form-label">
+                        Source file exists in target destination: <br>
+                        <strong>{{copyConflicts[resolvedConflicts.length].norootpath}}</strong><br>
+                        from {{copyConflicts[resolvedConflicts.length].source.split('/').slice(0, -1).join('/')}}
+                    </label>
+                    <label class="col-xs-12 col-form-label">
+                        Please, select an action</label>
+                    <div class="small col-xs-12 checkbox"
+                        ng-show="copyConflicts.length > 1 && resolvedConflicts.length < copyConflicts.length - 1">
+                        <label><input type="checkbox" value="" ng-model="workspace.conflictApplyAll">Apply to all
+                            {{copyConflicts.length - resolvedConflicts.length - 1}} remaining conflict(s)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="workspace.resolveConflict('replace')">Replace</button>
+                <button class="btn btn-primary" ng-click="workspace.resolveConflict('rename')">Rename (keep
+                    both)</button>
+                <button class="btn btn-default" ng-click="workspace.resolveConflict('skip')">Skip</button>
+            </div>
+            <div class="modal-footer" ng-show="copyConflicts.length">
+                <button class="btn btn-default" ng-click="workspace.cancelCopy()" data-toggle="modal"
+                    data-target="#dialogResolveConflicts">Cancel all</button>
             </div>
         </div>
 

@@ -251,8 +251,34 @@ WorkspaceService.prototype.copy = function (sourcePath, targetPath, sourceWorksp
         sourceWorkspace: sourceWorkspace,
         source: sourcePath,
         targetWorkspace: targetWorkspace,
-        target: targetPath + '/',
+        target: targetPath + '/'
     });
+};
+WorkspaceService.prototype.copySelection = function (sourceSelection, targetPath, conflictsResolution, wsTree) {
+    let targetWorkspace = targetPath.split('/')[1];
+    let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(targetWorkspace).path('copySelection').build();
+    let sourceWorkspace = sourceSelection[0].path.split('/')[1];
+    for (let i = 0; i < conflictsResolution.length; i++) {
+        sourceSelection.find((o, j) => {
+            if (o.path === conflictsResolution[i].source) {
+                sourceSelection[j].resolution = conflictsResolution[i].resolution;
+                return true;
+            }
+        })
+    }
+
+    let postRequest = {
+        sourceWorkspace: sourceWorkspace,
+        sourceSelection: sourceSelection,
+        targetWorkspace: targetWorkspace,
+        target: targetPath + '/'
+    };
+
+    return this.$http.post(url, postRequest)
+        .then(function (response) {
+            $('#refreshButton').click();
+            return response.data;
+        });
 };
 WorkspaceService.prototype.load = function (wsResourcePath) {
     let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
@@ -364,6 +390,8 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
     this.workspaceName = workspaceController.selectedWorkspace;
     this.scope = scope;
     this.copy_node = null;
+    this.nodes_selected = [];
+    this.paths_selected = [];
 
     let self = this;
     let jstree = this.containerEl.jstree(this.treeConfig);
@@ -400,6 +428,8 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             if (data.node.type === 'file') {
                 this.clickNode(this.jstree.get_node(data.node));
             }
+            this.workspaceController.selectedNodeData = this.getSelectedNodes(this.workspaceController.selectedNodes,
+                this.workspaceController.wsTree.jstree._model.data);
         }.bind(this))
         .on('dblclick.jstree', function (evt) {
             this.dblClickNode(this.jstree.get_node(evt.target));
@@ -458,13 +488,10 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             this.paste(data);
         }.bind(this))
         .on('jstree.workspace.delete', function (e, data) {
-            this.workspaceController.selectedNodeData = this.getSelectedNodes(this.workspaceController.selectedNodes,
-                this.workspaceController.wsTree.jstree._model.data);
             this.workspaceController.showDeleteDialog(this.workspaceController.selectedNodeData.length == 1
                 ? this.workspaceController.selectedNodeData[0].type :
                 this.workspaceController.selectedNodeData.length + ' file nodes');
-        }.bind(this))
-        ;
+        }.bind(this));
 
     this.jstree = $.jstree.reference(jstree);
     return this;
@@ -473,7 +500,7 @@ WorkspaceTreeAdapter.prototype.getSelectedNodes = function (selectedNodeIDs, nod
     let selected = [];
     for (let i = 0; i < selectedNodeIDs.length; i++)
         if (nodesList[selectedNodeIDs[i]])
-            selected.push(nodesList[selectedNodeIDs[i]].original._file);
+            selected.push({ id: selectedNodeIDs[i], ...nodesList[selectedNodeIDs[i]].original._file });
     return selected;
 };
 WorkspaceTreeAdapter.prototype.createNode = function (parentNode, type, defaultName) {
@@ -560,6 +587,64 @@ WorkspaceTreeAdapter.prototype.moveNode = function (sourceParentNode, node) {
             this.refresh();
         }.bind(this));
 };
+WorkspaceTreeAdapter.prototype.allPathsInSelection = function (selection) {
+    let paths = [];
+    for (let i = 0; i < selection.length; i++) {
+        if (selection[i].path)
+            paths.push({ id: selection[i].id, path: selection[i].path, type: selection[i].type });
+        if (selection[i].files) {
+            let internal_paths = this.allPathsInSelection(selection[i].files);
+            paths = paths.concat(internal_paths);
+        }
+        if (selection[i].folders) {
+            let internal_paths = this.allPathsInSelection(selection[i].folders);
+            paths = paths.concat(internal_paths);
+        }
+    }
+    return paths;
+};
+WorkspaceTreeAdapter.prototype.removeKnownRoot = function (paths, root) {
+    return paths.filter(node => node.path != root).map(
+        (elem) => {
+            if (elem.path.slice(0, root.length + 1) === `${root}/` && (!elem.norootpath || elem.norootpath == elem.path)) {
+                return { ...elem, norootpath: elem.path.slice(root.length + 1) }
+            }
+            else
+                return { ...elem, norootpath: elem.norootpath ? elem.norootpath : elem.path };
+        })
+};
+WorkspaceTreeAdapter.prototype.removeRootsFromCopied = function (all_paths_selected, nodes_selected) {
+    let paths = all_paths_selected;
+    for (let i = 0; i < nodes_selected.length; i++) {
+        paths = this.removeKnownRoot(paths,
+            nodes_selected[i].path.slice(0, nodes_selected[i].path.length - nodes_selected[i].name.length - 1));
+    }
+    return paths;
+};
+WorkspaceTreeAdapter.prototype.fileCopyConflicts = function (node) {
+    let pathsInCopy = this.allPathsInSelection(this.nodes_selected);
+    let pathsInPaste = this.allPathsInSelection([node.original._file]);
+
+    let unrootedPathInCopy = this.removeRootsFromCopied(pathsInCopy, this.nodes_selected);
+    let unrootedPathInPaste = this.removeKnownRoot(pathsInPaste, pathsInPaste[0].path)
+
+    let conflicts = [];
+    for (let i = 0; i < unrootedPathInCopy.length; i++) {
+        for (let j = 0; j < unrootedPathInPaste.length; j++) {
+            if (unrootedPathInCopy[i].norootpath === unrootedPathInPaste[j].norootpath &&
+                (unrootedPathInCopy[i].type === 'file' || unrootedPathInPaste[j].type === 'file')) {
+                conflicts.push({
+                    norootpath: unrootedPathInCopy[i].norootpath,
+                    source: unrootedPathInCopy[i].path,
+                    destinaton: unrootedPathInPaste[j].path
+                });
+                break;
+            }
+        }
+    }
+    this.paths_selected = unrootedPathInCopy;
+    return conflicts;
+};
 WorkspaceTreeAdapter.prototype.copyNode = function (sourceParentNode, node) {
     //strip the "/{workspace}" segment from paths and the file segment from source path (for consistency)
     let sourceWorkspace = sourceParentNode.original._file.path.split('/')[1];
@@ -603,13 +688,23 @@ WorkspaceTreeAdapter.prototype.raw = function () {
     return this.jstree;
 };
 WorkspaceTreeAdapter.prototype.copy = function (node) {
+    this.nodes_selected = this.workspaceController.selectedNodeData;
     this.copy_node = node;
     pasteObject.canPaste = true;
     pasteObject.type = node.type;
 };
 WorkspaceTreeAdapter.prototype.paste = function (node) {
     if (this.copy_node && this.copy_node !== null) {
-        this.copyNode(this.copy_node, node);
+        let potential_conflicts = this.fileCopyConflicts(node);
+        if (potential_conflicts.length) {
+            this.workspaceController.showConflictsDialog(potential_conflicts, this.paths_selected, this.copy_node, node);
+            return;
+        } else {
+            if (this.paths_selected.length == 1)
+                this.copyNode(this.copy_node, node)
+            else
+                this.workspaceService.copySelection(this.paths_selected, node.original._file.path, [], this.wsTree);
+        }
     }
     this.copy_node = null;
     pasteObject.canPaste = false;
@@ -1215,7 +1310,14 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         this.workspaces;
         this.selectedWorkspace;
         this.selectedTemplate;
+        this.workspaceService = workspaceService;
         this.unpublishOnDelete = true;
+        this.workspaceTreeAdapter = workspaceTreeAdapter;
+        this.conflictApplyAll = false;
+        $scope.copyConflicts = [];
+        $scope.resolvedConflicts = [];
+        $scope.copyWhich = [];
+        $scope.copyTo = {};
 
         this.showDeleteDialog = function (type) {
             this.unpublishOnDelete = true;
@@ -1223,6 +1325,30 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             $scope.$apply(); // Because of JQuery and the bootstrap modal
             $('#deleteProject').click();
         };
+
+        this.showConflictsDialog = function (conflicts, copyWhich, copyNode, copyTo) {
+            $scope.copyConflicts = conflicts;
+            $scope.resolvedConflicts = [];
+            $scope.copyWhich = copyWhich;
+            $scope.copyTo = copyTo;
+            $scope.copyNode = copyNode;
+            $scope.$apply(); // Because of JQuery and the bootstrap modal
+            $('#resolveConflicts').click();
+        };
+
+        this.resolveConflict = function (resolution) {
+            let startRange = $scope.resolvedConflicts.length;
+            let endRange = this.conflictApplyAll ? $scope.copyConflicts.length : $scope.resolvedConflicts.length + 1;
+            for (let i = startRange; i < endRange; i++)
+                $scope.resolvedConflicts.push({ ...$scope.copyConflicts[i], resolution: resolution });
+            if ($scope.resolvedConflicts.length == $scope.copyConflicts.length) {
+                this.workspaceService.copySelection($scope.copyWhich, $scope.copyTo.original._file.path, $scope.resolvedConflicts);
+                $('#resolveConflicts').click();
+            }
+        }
+        this.cancelCopy = function () {
+            $scope.resolvedConflicts = [];
+        }
 
         this.refreshTemplates = function () {
             templatesService.listTemplates()
