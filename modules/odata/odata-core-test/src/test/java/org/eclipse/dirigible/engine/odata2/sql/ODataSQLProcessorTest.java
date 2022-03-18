@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.odata2.sql;
 
 import com.google.gson.Gson;
+import java.util.stream.Collectors;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.olingo.odata2.api.client.batch.*;
 import org.apache.olingo.odata2.api.commons.ODataHttpMethod;
@@ -750,6 +751,24 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(500, response.getStatus()); //TODO refine the error codes, here it should be a bad request
     }
 
+    @Test
+    public void testOrderByTopSkipExpandedEntityProperty() throws Exception {
+        Response response = OData2RequestBuilder.createRequest(sf) //
+            .segments("Cars") //
+            .param("$top", "3") //
+            .param("$skip", "2") //
+            .param("$orderby", "Drivers/FirstName desc") //
+            .param("$expand", "Drivers") //
+            .accept("application/atom+xml").executeRequest(GET);
+        assertEquals(200, response.getStatus());
+
+        ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
+        List<ODataEntry> entries = resultFeed.getEntries();
+        assertEquals("The limit must work with expand, however we expect 3 entities because on of the cars has two drivers", 3, entries.size());
+        Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+        assertEquals("The actual main entity set should be limited by the $top param and the count of all entities", 2, uniqueEntities.size());
+    }
+
 
     @Test
     public void testOrderByExpandedEntityProperty() throws Exception {
@@ -763,7 +782,10 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
         ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
         List<ODataEntry> entries = resultFeed.getEntries();
-        assertEquals("The limit must work with expand", 3, entries.size());
+        assertEquals("The limit must work with expand, however we expect 4 entities because on of the cars has two drivers", 4, entries.size());
+        Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+        assertEquals("The actual main entity set should be limited by the $top param", 3, uniqueEntities.size());
+
         Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
         assertEquals(2021, firstEntryProperties.get("Year"));
         assertEquals("BMW", firstEntryProperties.get("Make"));
@@ -805,7 +827,10 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(200, response.getStatus());
         ODataFeed resultFeed = retrieveODataFeed(response, "Cars");
         List<ODataEntry> entries = resultFeed.getEntries();
-        assertEquals("The limit must work with expand", 3, entries.size());
+        assertEquals("The limit must work with expand, however we expect 4 entities because on of the cars has two drivers", 4, entries.size());
+        Set<Object> uniqueEntities = entries.stream().map(oDataEntry -> oDataEntry.getProperties().get("Id")).collect(Collectors.toSet());
+        assertEquals("The actual main entity set should be limited by the $top param", 3, uniqueEntities.size());
+
         Map<String, Object> firstEntryProperties = entries.get(0).getProperties();
         assertEquals(2021, firstEntryProperties.get("Year"));
         assertEquals("BMW", firstEntryProperties.get("Make"));

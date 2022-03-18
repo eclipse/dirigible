@@ -357,4 +357,11 @@ public interface ISqlDialect<SELECT extends SelectBuilder, INSERT extends Insert
 	 * @return the list of functions names
 	 */
 	public Set<String> getFunctionsNames();
+
+	/**
+	 * Returns the creation of fuzzy search index
+	 *
+	 * @return the string for creating the Fuzzy Search Index
+	 */
+	public String getFuzzySearchIndex();
 }

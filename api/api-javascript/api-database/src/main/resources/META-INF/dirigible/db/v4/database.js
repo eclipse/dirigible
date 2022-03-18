@@ -15,6 +15,29 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 const bytes = require('io/v4/bytes');
+const SQLTypes = Object.freeze({
+	"BOOLEAN": 16,
+	"DATE": 91,
+	"TIME": 92,
+	"TIMESTAMP": 93,
+	"DOUBLE": 8,
+	"FLOAT": 6,
+	"REAL": 7,
+	"TINYINT": -6,
+	"SMALLINT": 5,
+	"INTEGER": 4,
+	"BIGINT": -5,
+	"VARCHAR": 12,
+	"CHAR": 1,
+	"CLOB": 2005,
+	"BLOB": 2004,
+	"VARBINARY": -3,
+	"DECIMAL": 3,
+	"ARRAY": 2003,
+	"NVARCHAR": -9,
+	"NCLOB": 2011,
+	"BIT": -7
+});
 
 exports.getDatabaseTypes = function () {
 	const types = org.eclipse.dirigible.api.v3.db.DatabaseFacade.getDatabaseTypes();
@@ -196,25 +219,6 @@ function PreparedStatement(internalStatement) {
 	// setBigDecimal
 	// setBlob
 
-	this.SQLTypes = Object.freeze({
-		"BOOLEAN": 16,
-		"DATE": 91,
-		"TIME": 92,
-		"TIMESTAMP": 93,
-		"DOUBLE": 8,
-		"FLOAT": 6,
-		"REAL": 7,
-		"TINYINT": -6,
-		"SMALLINT": 5,
-		"INTEGER": 4,
-		"BIGINT": -5,
-		"VARCHAR": 12,
-		"CHAR": 1,
-		"CLOB": 2005,
-		"BLOB": 2004,
-		"VARBINARY": -3
-	});
-
 	this.setNull = function (index, sqlType) {
 		this.native.setNull(index, sqlType);
 	};
@@ -223,7 +227,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setBoolean(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.BOOLEAN);
+			this.setNull(index, SQLTypes.BOOLEAN);
 		}
 	};
 
@@ -231,7 +235,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setByte(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.TINYINT);
+			this.setNull(index, SQLTypes.TINYINT);
 		}
 	};
 
@@ -239,7 +243,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setClob(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.CLOB);
+			this.setNull(index, SQLTypes.CLOB);
 		}
 	};
 
@@ -247,7 +251,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setBlob(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.BLOB);
+			this.setNull(index, SQLTypes.BLOB);
 		}
 	};
 
@@ -255,7 +259,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setBytes(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.VARBINARY);
+			this.setNull(index, SQLTypes.VARBINARY);
 		}
 	};
 
@@ -264,7 +268,7 @@ function PreparedStatement(internalStatement) {
 			var data = bytes.toJavaBytes(value);
 			this.native.setBytes(index, data);
 		} else {
-			this.setNull(index, this.SQLTypes.VARBINARY);
+			this.setNull(index, SQLTypes.VARBINARY);
 		}
 	};
 
@@ -273,7 +277,7 @@ function PreparedStatement(internalStatement) {
 			var dateInstance = new java.sql.Date(value.getTime());
 			this.native.setDate(index, dateInstance);
 		} else {
-			this.setNull(index, this.SQLTypes.DATE);
+			this.setNull(index, SQLTypes.DATE);
 		}
 	};
 
@@ -281,7 +285,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setDouble(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.DOUBLE);
+			this.setNull(index, SQLTypes.DOUBLE);
 		}
 	};
 
@@ -289,7 +293,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setFloat(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.FLOAT);
+			this.setNull(index, SQLTypes.FLOAT);
 		}
 	};
 
@@ -297,7 +301,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setInt(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.INTEGER);
+			this.setNull(index, SQLTypes.INTEGER);
 		}
 	};
 
@@ -306,7 +310,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setLong(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.BIGINT);
+			this.setNull(index, SQLTypes.BIGINT);
 		}
 	};
 
@@ -314,7 +318,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setShort(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.SMALLINT);
+			this.setNull(index, SQLTypes.SMALLINT);
 		}
 	};
 
@@ -322,7 +326,7 @@ function PreparedStatement(internalStatement) {
 		if (value !== null && value !== undefined) {
 			this.native.setString(index, value);
 		} else {
-			this.setNull(index, this.SQLTypes.VARCHAR);
+			this.setNull(index, SQLTypes.VARCHAR);
 		}
 	};
 
@@ -331,7 +335,7 @@ function PreparedStatement(internalStatement) {
 			var timeInstance = new java.sql.Time(value.getTime());
 			this.native.setTime(index, timeInstance);
 		} else {
-			this.setNull(index, this.SQLTypes.TIME);
+			this.setNull(index, SQLTypes.TIME);
 		}
 	};
 
@@ -340,7 +344,7 @@ function PreparedStatement(internalStatement) {
 			var timestampInstance = new java.sql.Timestamp(value.getTime());
 			this.native.setTimestamp(index, timestampInstance);
 		} else {
-			this.setNull(index, this.SQLTypes.TIMESTAMP);
+			this.setNull(index, SQLTypes.TIMESTAMP);
 		}
 	};
 
@@ -517,7 +521,7 @@ function CallableStatement() {
 	};
 
 	this.setNull = function (parameter, sqlTypeStr, typeName) {
-		const sqlType = PreparedStatement.SQLTypes[sqlTypeStr];
+		const sqlType = Number.isInteger(sqlTypeStr) ? sqlTypeStr : SQLTypes[sqlTypeStr];
 		if (typeName !== undefined && typeName !== null) {
 			this.native.setNull(parameter, sqlType, typeName);
 		} else {
@@ -526,55 +530,107 @@ function CallableStatement() {
 	};
 
 	this.setBoolean = function (parameter, value) {
-		this.native.setBoolean(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setBoolean(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.BOOLEAN);
+		}
 	};
 
 	this.setByte = function (parameter, value) {
-		this.native.setByte(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setByte(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.BIT);
+		}
 	};
 
 	this.setShort = function (parameter, value) {
-		this.native.setShort(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setShort(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.SMALLINT);
+		}
 	};
 
 	this.setInt = function (parameter, value) {
-		this.native.setInt(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setInt(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.INTEGER);
+		}
 	};
 
 	this.setLong = function (parameter, value) {
-		this.native.setLong(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setLong(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.BIGINT);
+		}
 	};
 
 	this.setFloat = function (parameter, value) {
-		this.native.setFloat(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setFloat(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.FLOAT);
+		}
 	};
 
 	this.setDouble = function (parameter, value) {
-		this.native.setDouble(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setDouble(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.DOUBLE);
+		}
 	};
 
 	this.setBigDecimal = function (parameter, value) {
-		this.native.setBigDecimal(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setBigDecimal(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.DECIMAL);
+		}
 	};
 
 	this.setString = function (parameter, value) {
-		this.native.setString(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setString(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.VARCHAR);
+		}
 	};
 
 	this.setBytes = function (parameter, value) {
-		this.native.setBytes(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setBytes(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.ARRAY);
+		}
 	};
 
 	this.setDate = function (parameter, value) {
-		this.native.setDate(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setDate(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.DATE);
+		}
 	};
 
 	this.setTime = function (parameter, value) {
-		this.native.setTime(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setTime(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.TIME);
+		}
 	};
 
 	this.setTimestamp = function (parameter, value) {
-		this.native.setTimestamp(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setTimestamp(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.TIMESTAMP);
+		}
 	};
 
 	this.setAsciiStream = function (parameter, inputStream, length) {
@@ -608,19 +664,43 @@ function CallableStatement() {
 	};
 
 	this.setNString = function (parameter, value) {
-		this.native.setNString(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setNString(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.NVARCHAR);
+		}
 	};
 
 	this.setSQLXML = function (parameter, value) {
-		this.native.setSQLXML(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setSQLXML(parameter, value);
+		} else {
+			throw Error("Nullable SQLXML type not supported.");
+		}
 	};
 
 	this.setBlob = function (parameter, value) {
-		this.native.setBlob(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setBlob(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.BLOB);
+		}
 	};
 
 	this.setClob = function (parameter, value) {
-		this.native.setClob(parameter, value);
+		if (value !== null && value !== undefined) {
+			this.native.setClob(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.CLOB);
+		}
+	};
+
+	this.setNClob = function (parameter, value) {
+		if (value !== null && value !== undefined) {
+			this.native.setNClob(parameter, value);
+		} else {
+			this.setNull(parameter, SQLTypes.NCLOB);
+		}
 	};
 
 	this.execute = function () {
@@ -639,9 +719,6 @@ function CallableStatement() {
 		return this.native.isClosed();
 	};
 
-	this.setNClob = function (parameter, value) {
-		this.native.setNClob(parameter, value);
-	};
 
 	this.close = function () {
 		this.native.close();
@@ -695,7 +772,7 @@ function ResultSet(internalResultset) {
 
 	this.getDate = function (identifier) {
 		const dateInstance = this.native.getDate(identifier);
-		return new Date(dateInstance.getTime());
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.getDouble = function (identifier) {
@@ -724,13 +801,12 @@ function ResultSet(internalResultset) {
 
 	this.getTime = function (identifier) {
 		const dateInstance = this.native.getTime(identifier);
-		return new Date(dateInstance.getTime());
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.getTimestamp = function (identifier) {
 		const dateInstance = this.native.getTimestamp(identifier);
-		const date = new Date(dateInstance.getTime());
-		return date;
+		return dateInstance !== null && dateInstance !== undefined ? new Date(dateInstance.getTime()) : null;
 	};
 
 	this.isAfterLast = function () {

@@ -193,6 +193,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				readIdsForExpand = readIdsForExpand(uriInfo);
 				LOG.info("Using IDs for $expand: {}", readIdsForExpand);
 			}
+
 			SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntitySetQuery((UriInfo) uriInfo, readIdsForExpand, getContext());
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {

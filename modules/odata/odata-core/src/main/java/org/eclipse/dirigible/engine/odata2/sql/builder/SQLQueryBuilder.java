@@ -94,7 +94,7 @@ public class SQLQueryBuilder {
             //and then we do filter on these IDS with the expand, with no top and skip 
             // SELECT TOP XXX FROM TTTT AS M WHERE FILTER
             // SELECT XXX WHERE XXX.ID IN (...)
-            q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target);
+            q.select(uri.getSelect(), uri.getExpand()).from(target);
             q.filter(uri.getTargetEntitySet(), getKeyProperty(target), readIdsForExpand);
         }
         q.join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
@@ -118,10 +118,6 @@ public class SQLQueryBuilder {
         }
 
         final Integer effectiveSkip = calculateEffectiveSkip(uri);
-
-        if (effectiveSkip != null && effectiveTop != null) {
-            effectiveTop += effectiveSkip;
-        }
 
         q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
         q.filter(uri.getTargetEntitySet(), uri.getFilter())

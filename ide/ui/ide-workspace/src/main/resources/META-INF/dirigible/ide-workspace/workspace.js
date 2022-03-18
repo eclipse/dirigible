@@ -491,8 +491,7 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             this.workspaceController.showDeleteDialog(this.workspaceController.selectedNodeData.length == 1
                 ? this.workspaceController.selectedNodeData[0].type :
                 this.workspaceController.selectedNodeData.length + ' file nodes');
-        }.bind(this))
-        ;
+        }.bind(this));
 
     this.jstree = $.jstree.reference(jstree);
     return this;
