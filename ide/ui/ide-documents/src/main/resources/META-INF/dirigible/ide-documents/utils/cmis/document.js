@@ -22,13 +22,12 @@ function DocumentSerializer(cmisDocument) {
 }
 
 exports.uploadDocument = function (folder, document) {
-	//check for .name first as it's passed from uploadDocumentOverwrite. Refactor
-	let fileName = document.name ?? document.getName();
+	let fileName = getDocumentFileName(document);
 	let mimetype = document.getContentType();
 	let size = document.getSize();
 	let inputStream = document.getInputStream();
 
-	let newDocument = craeteDocument(folder, fileName, size, mimetype, inputStream);
+	let newDocument = createDocument(folder, fileName, size, mimetype, inputStream);
 
 	return new DocumentSerializer(newDocument);
 };
@@ -56,7 +55,12 @@ exports.uploadDocumentOverwrite = function (folder, document) {
 	objectUtils.renameObject(newDoc, oldName);
 };
 
-function craeteDocument(folder, fileName, size, mimetype, inputStream) {
+function getDocumentFileName(document) {
+	//check for .name first as it's passed from uploadDocumentOverwrite
+	return document.name ?? document.getName();
+}
+
+function createDocument(folder, fileName, size, mimetype, inputStream) {
 	let contentStream = cmisSession.getObjectFactory().createContentStream(fileName, size, mimetype, inputStream);
 	let properties = {};
 	properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_DOCUMENT;
@@ -85,5 +89,5 @@ exports.createFromBytes = function (folder, fileName, bytes) {
 	let inputStream = streams.createByteArrayInputStream(bytes);
 	let mimeType = "application/octet-stream";
 
-	craeteDocument(folder, fileName, bytes.length, mimeType, inputStream);
+	createDocument(folder, fileName, bytes.length, mimeType, inputStream);
 };

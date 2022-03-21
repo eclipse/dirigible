@@ -85,10 +85,12 @@ function Session() {
 		if (objectInstanceTypeId === exports.OBJECT_TYPE_DOCUMENT) {
 			var document = new Document();
 			document.native = objectInstance;
+			document.path = path;
 			return document;
 		} else if (objectInstanceTypeId === exports.OBJECT_TYPE_FOLDER) {
 			var folder = new Folder();
 			folder.native = objectInstance;
+			folder.path = path;
 			return folder;
 		}
 		throw new Error("Unsupported CMIS object type: " + objectInstanceTypeId);
@@ -176,7 +178,7 @@ function Folder() {
 	};
 
 	this.getPath = function() {
-		return this.native.getPath();
+		return this.path;
 	};
 
 	this.isRootFolder = function() {
@@ -235,6 +237,20 @@ function CmisObject() {
 	this.getName = function() {
 		return this.native.getName();
 	};
+
+	this.getPath = function() {
+		//this is caused by having different underlying native objects in different environments.
+	    if (this.native.getPath) {
+	        return this.native.getPath();
+	    }
+
+		//Apache Chemistry CmisObject has no getPath() but getPaths() - https://chemistry.apache.org/docs/cmis-samples/samples/retrieve-objects/index.html
+	    if (this.native.getPaths) {
+	        return this.native.getPaths()[0];
+	    }
+
+	    throw new Error(`Path not found for CmisObject with id ${this.getId()}`);
+	}
 
 	this.getType = function() {
 		var type = new TypeDefinition();
@@ -306,7 +322,15 @@ function Document() {
 		return type;
 	};
 
+	this.getPath = function() {
+    	return this.path;
+    };
+
 	this.delete = function() {
+	    var allowed = org.eclipse.dirigible.api.v3.cms.CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
+       	    if (!allowed) {
+            	throw new Error("Write access not allowed on: " + this.getPath());
+            }
 		return this.native.delete(true);
 	};
 
@@ -325,6 +349,10 @@ function Document() {
 	};
 
 	this.rename = function(newName) {
+	    var allowed = org.eclipse.dirigible.api.v3.cms.CmisFacade.isAllowed(this.getPath(), CMIS_METHOD_WRITE);
+    	    if (!allowed) {
+    		throw new Error("Write access not allowed on: " + this.getPath());
+    	    }
 		return this.native.rename(newName);
 	};
 }

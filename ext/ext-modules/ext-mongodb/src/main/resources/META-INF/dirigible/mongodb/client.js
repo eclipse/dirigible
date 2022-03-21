@@ -9,6 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+/** Client API for MongoDB */
+
+
 exports.getClient = function() {
 	var client = new Client();
 	var native = org.eclipse.dirigible.api.mongodb.MongoDBFacade.getClient();

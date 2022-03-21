@@ -38,6 +38,8 @@ public class CmisFacade {
 	public static final String VERSIONING_STATE_MAJOR = "major";
 	public static final String VERSIONING_STATE_MINOR = "minor";
 	public static final String VERSIONING_STATE_CHECKEDOUT = "checkedout";
+	public static final String CMIS_METHOD_READ = "READ";
+	public static final String CMIS_METHOD_WRITE = "WRITE";
 	
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
 	private static ICmsProvider cmsProvider = (ICmsProvider) StaticObjects.get(StaticObjects.CMS_PROVIDER);
@@ -89,29 +91,50 @@ public class CmisFacade {
 		if (Configuration.isAnonymousModeEnabled()) {
 			return true;
 		}
+
 		if (!Boolean.parseBoolean(Configuration.get(DIRIGIBLE_CMS_ROLES_ENABLED, Boolean.TRUE.toString()))) {
 			return true;
 		}
 		try {
-			Set<AccessDefinition> accessDefinitions = getAccessDefinitions(path, method);
-			if (!accessDefinitions.isEmpty()) {
-				String user = HttpRequestFacade.getRemoteUser();
+			String user = HttpRequestFacade.getRemoteUser();
+			Set<AccessDefinition> readDefinitions = getAccessDefinitions(path, CMIS_METHOD_READ);
+			boolean isReadOnly = false;
+			boolean isReadable = true;
+			if (!readDefinitions.isEmpty()) {
+				isReadable = false;
 				if (user == null) {
 					logger.error("No logged in user accessing path: " + path);
 					return false;
 				}
-				boolean isInRole = true;
-				for (AccessDefinition accessDefinition : accessDefinitions) {
-					if (!HttpRequestFacade.isUserInRole(accessDefinition.getRole())) {
-						isInRole = false;
+			}
+
+			for (AccessDefinition readDefinition : readDefinitions) {
+				if (HttpRequestFacade.isUserInRole(readDefinition.getRole())) {
+					isReadOnly = true;
+					isReadable = true;
+					break;
+				}
+			}
+
+			if (method.equals(CMIS_METHOD_WRITE)) {
+				Set<AccessDefinition> writeDefinitions = getAccessDefinitions(path, CMIS_METHOD_WRITE);
+				if (!writeDefinitions.isEmpty()) {
+					if (user == null) {
+						logger.error("No logged in user accessing path: " + path);
+						return false;
+					}
+				}
+				for (AccessDefinition writeDefinition : writeDefinitions) {
+					if (HttpRequestFacade.isUserInRole(writeDefinition.getRole())) {
+						isReadOnly = false;
 						break;
 					}
 				}
-				if (!isInRole) {
-					logger.error("The logged in user does not have any of the required roles for the requested path: " + path);
-					return false;
-				}
+				return isReadable && !isReadOnly;
+			} else {
+				return isReadable;
 			}
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
