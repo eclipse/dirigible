@@ -112,6 +112,10 @@
                     createEditorInstance()
                         .then((editor) => {
                             _editor = editor;
+                            messageHub.subscribe(function () {
+                            let executionObject = createExecuteAction()
+                                        executionObject.run(_editor);
+                                    }, 'database.sql.run');
                             let sqlCommand = loadSQLCommand();
                             return sqlPlaceholder + sqlCommand;
                         })
