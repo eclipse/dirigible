@@ -455,11 +455,11 @@ declare module "@dirigible/db" {
         isClosed(): boolean;
 
         /**
-         * Sets a parameter of type Decimal
+         * Sets a parameter of type BigDecimal
          * @param index
          * @param value
          */
-        setDecimal(index:number, value);
+        setBigDecimal(index:number, value);
 
         /**
          * Sets a parameter of type NClob
@@ -856,7 +856,7 @@ declare module "@dirigible/db" {
          */
         isClosed(): boolean;
 
-        setDecimal(index, value);
+        setBigDecimal(index, value);
 
     }
 
