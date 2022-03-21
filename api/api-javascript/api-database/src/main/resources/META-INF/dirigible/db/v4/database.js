@@ -215,10 +215,6 @@ function PreparedStatement(internalStatement) {
 		return this.native.executeUpdate();
 	};
 
-	// getMetaData
-	// setBigDecimal
-	// setBlob
-
 	this.setNull = function (index, sqlType) {
 		this.native.setNull(index, sqlType);
 	};
@@ -239,19 +235,30 @@ function PreparedStatement(internalStatement) {
 		}
 	};
 
+	this.setBlob = function (index, value) {
+		if (value !== null && value !== undefined) {
+			let blob = createBlobValue(this.native, value);
+			this.native.setBlob(index, blob);
+		} else {
+			this.setNull(index, SQLTypes.BLOB);
+		}
+	};
+
 	this.setClob = function (index, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setClob(index, value);
+			let clob = createClobValue(this.native, value);
+			this.native.setClob(index, clob);
 		} else {
 			this.setNull(index, SQLTypes.CLOB);
 		}
 	};
 
-	this.setBlob = function (index, value) {
+	this.setNClob = function (index, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setBlob(index, value);
+			let nclob = createNClobValue(this.native, value);
+			this.native.setNClob(index, nclob);
 		} else {
-			this.setNull(index, SQLTypes.BLOB);
+			this.setNull(parameter, SQLTypes.NCLOB);
 		}
 	};
 
@@ -348,6 +355,22 @@ function PreparedStatement(internalStatement) {
 		}
 	};
 
+	this.setBigDecimal = function (index, value) {
+		if (value !== null && value !== undefined) {
+			this.native.setBigDecimal(index, value);
+		} else {
+			this.setNull(parameter, SQLTypes.DECIMAL);
+		}
+	};
+
+	this.setNString = function (index, value) {
+		if (value !== null && value !== undefined) {
+			this.native.setNString(index, value);
+		} else {
+			this.setNull(parameter, SQLTypes.NVARCHAR);
+		}
+	};
+
 	this.execute = function () {
 		return this.native.execute();
 	};
@@ -378,15 +401,6 @@ function PreparedStatement(internalStatement) {
 
 	this.isClosed = function () {
 		return this.native.isClosed();
-	};
-	this.setDecimal = function (index, value) {
-		this.native.setBigDecimal(index, value);
-	};
-	this.setNClob = function (index, value) {
-		this.native.setNClob(index, value);
-	};
-	this.setNString = function (index, value) {
-		this.native.setNString(index, value);
 	};
 }
 
@@ -456,10 +470,6 @@ function CallableStatement() {
 		return this.native.getDouble(parameter);
 	};
 
-	this.getBytes = function (parameter) {
-		return this.native.getBytes(parameter);
-	};
-
 	this.getDate = function (parameter) {
 		return this.native.getDate(parameter);
 	};
@@ -484,16 +494,30 @@ function CallableStatement() {
 		return this.native.getRef(parameter);
 	};
 
+	this.getBytes = function (parameter) {
+		let data = this.native.getBytes(parameter);
+		return bytes.toJavaScriptBytes(data);
+	};
+
+	this.getBytesNative = function (parameter) {
+		return this.native.getBytes(parameter);
+	};
+
 	this.getBlob = function (parameter) {
-		return this.native.getBlob(parameter);
+		let data = readBlobValue(this.native.getBlob(parameter));
+		return bytes.toJavaScriptBytes(data);
+	};
+
+	this.getBlobNative = function (parameter) {
+		return readBlobValue(this.native.getBlob(parameter));
 	};
 
 	this.getClob = function (parameter) {
-		return this.native.getClob(parameter);
+		return readClobValue(this.native.getClob(parameter));
 	};
 
 	this.getNClob = function (parameter) {
-		return this.native.getNClob(parameter);
+		return readNClobValue(this.native.getNClob(parameter));
 	};
 
 	this.getNString = function (parameter) {
@@ -681,7 +705,8 @@ function CallableStatement() {
 
 	this.setBlob = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setBlob(parameter, value);
+			let blob = createBlobValue(this.native, value);
+			this.native.setBlob(parameter, blob);
 		} else {
 			this.setNull(parameter, SQLTypes.BLOB);
 		}
@@ -689,7 +714,8 @@ function CallableStatement() {
 
 	this.setClob = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setClob(parameter, value);
+			let clob = createClobValue(this.native, value);
+			this.native.setClob(parameter, clob);
 		} else {
 			this.setNull(parameter, SQLTypes.CLOB);
 		}
@@ -697,7 +723,8 @@ function CallableStatement() {
 
 	this.setNClob = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setNClob(parameter, value);
+			let nclob = createNClobValue(this.native, value);
+			this.native.setNClob(parameter, nclob);
 		} else {
 			this.setNull(parameter, SQLTypes.NCLOB);
 		}
@@ -741,10 +768,6 @@ function ResultSet(internalResultset) {
 		this.native.close();
 	};
 
-	this.getBlob = function (identifier) {
-		return this.native.getBlob(identifier);
-	};
-
 	this.getBigDecimal = function (identifier) {
 		return this.native.getBigDecimal(identifier);
 	};
@@ -757,18 +780,31 @@ function ResultSet(internalResultset) {
 		return this.native.getByte(identifier);
 	};
 
+	this.getBytes = function (identifier) {
+		let data = this.native.getBytes(identifier);
+		return bytes.toJavaScriptBytes(data);
+	};
+
 	this.getBytesNative = function (identifier) {
 		return this.native.getBytes(identifier);
 	};
 
-	this.getBytes = function (identifier) {
-		var data = this.native.getBytes(identifier);
+	this.getBlob = function (identifier) {
+		let data = readBlobValue(this.native.getBlob(identifier));
 		return bytes.toJavaScriptBytes(data);
 	};
 
-	this.getClob = function (identifier) {
-		return this.native.getClob(identifier);
+	this.getBlobNative = function (identifier) {
+		return readBlobValue(this.native.getBlob(identifier));
 	};
+
+	this.getClob = function (identifier) {
+		return readClobValue(this.native.getClob(identifier));
+	};
+
+	this.getNClob = function (columnIndex) {
+		return readNClobValue(this.native.getNClob(columnIndex));
+	}
 
 	this.getDate = function (identifier) {
 		const dateInstance = this.native.getDate(identifier);
@@ -837,11 +873,121 @@ function ResultSet(internalResultset) {
 		return this.native.getMetaData();
 	}
 
-	this.getNClob = function (columnIndex) {
-		return this.native.getNClob(columnIndex);
-	}
-
 	this.getNString = function (columnIndex) {
 		return this.native.getNString(columnIndex);
+	}
+}
+
+function isHanaDatabase(connection) {
+	let isHanaDatabase = false;
+	let metadata = connection.getMetaData();
+	if (metadata !== null && metadata !== undefined) {
+		isHanaDatabase = metadata.getDatabaseProductName() === "HDB";
+	}
+	return isHanaDatabase;
+}
+
+function readBlobValue(value) {
+	return value.getBytes(1, value.length());
+}
+
+function createBlobValue(native, value) {
+	try {
+		let connection = native.getConnection();
+		if (connection === null || connection === undefined) {
+			throw new Error("Can't create new 'Blob' value as the connection is null");
+		}
+		let blob = null;
+		if (isHanaDatabase(connection)) {
+			let ps = null;
+			try {
+				ps = connection.prepareStatement("SELECT TO_BLOB (?) FROM DUMMY;");
+				ps.setBytes(1, value);
+				let rs = ps.executeQuery();
+				if (rs.next()) {
+					blob = rs.getBlob(1);
+				}
+			} finally {
+				if (ps !== null && ps !== undefined) {
+					ps.close();
+				}
+			}
+		} else {
+			blob = connection.createBlob();
+			blob.setBytes(1, value);
+		}
+		return blob;
+	} catch (e) {
+		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
+	}
+}
+
+function readClobValue(value) {
+	return value.getSubString(1, value.length());
+}
+
+function createClobValue(native, value) {
+	try {
+		let connection = native.getConnection();
+		if (connection === null || connection === undefined) {
+			throw new Error("Can't create new 'Clob' value as the connection is null");
+		}
+		let clob = null;
+		if (isHanaDatabase(connection)) {
+			let ps = null;
+			try {
+				ps = connection.prepareStatement("SELECT TO_CLOB (?) FROM DUMMY;");
+				ps.setString(1, value);
+				let rs = ps.executeQuery();
+				if (rs.next()) {
+					clob = rs.getClob(1);
+				}
+			} finally {
+				if (ps !== null && ps !== undefined) {
+					ps.close();
+				}
+			}
+		} else {
+			clob = connection.createClob();
+			clob.setString(1, value);
+		}
+		return clob;
+	} catch (e) {
+		throw new Error(`Error occured during creation of 'Clob' value: ${e.message}`);
+	}
+}
+
+function readNClobValue(value) {
+	return value.getSubString(1, value.length());
+}
+
+function createNClobValue(native, value) {
+	try {
+		let connection = native.getConnection();
+		if (connection === null || connection === undefined) {
+			throw new Error("Can't create new 'NClob' value as the connection is null");
+		}
+		let nclob = null;
+		if (isHanaDatabase(connection)) {
+			let ps = null;
+			try {
+				ps = connection.prepareStatement("SELECT TO_NCLOB (?) FROM DUMMY;");
+				ps.setString(1, value);
+				let rs = ps.executeQuery();
+				if (rs.next()) {
+					nclob = rs.getNClob(1);
+				}
+			} finally {
+				if (ps !== null && ps !== undefined) {
+					ps.close();
+				}
+			}
+		} else {
+			nclob = connection.createNClob();
+			nclob.setString(1, value);
+		}
+		return nclob;
+	} catch (e) {
+		throw new Error(`Error occured during creation of 'NClob' value: ${e.message}`);
 	}
 }
