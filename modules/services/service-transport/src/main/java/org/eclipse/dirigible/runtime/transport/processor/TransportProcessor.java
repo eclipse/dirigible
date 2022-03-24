@@ -58,7 +58,6 @@ public class TransportProcessor {
 	public void importZipToPath(String workspaceName, String projectName, String pathInProject, byte[] content, Boolean override) {
 		if (override == null) override = true;
 		IWorkspace workspace = getWorkspace(workspaceName);
-		String workspacePath = workspace.getPath();
 		String projectPath = workspace.getProject(projectName).getPath();
 		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
 		repository.importZip(content, importPath, override, false, null);
