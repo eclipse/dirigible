@@ -281,7 +281,8 @@ function PreparedStatement(internalStatement) {
 
 	this.setDate = function (index, value) {
 		if (value !== null && value !== undefined) {
-			var dateInstance = new java.sql.Date(value.getTime());
+			let date = getDateValue(value);
+			let dateInstance = new java.sql.Date(date.getTime());
 			this.native.setDate(index, dateInstance);
 		} else {
 			this.setNull(index, SQLTypes.DATE);
@@ -339,7 +340,8 @@ function PreparedStatement(internalStatement) {
 
 	this.setTime = function (index, value) {
 		if (value !== null && value !== undefined) {
-			var timeInstance = new java.sql.Time(value.getTime());
+			let date = getDateValue(value);
+			let timeInstance = new java.sql.Time(date.getTime());
 			this.native.setTime(index, timeInstance);
 		} else {
 			this.setNull(index, SQLTypes.TIME);
@@ -348,7 +350,8 @@ function PreparedStatement(internalStatement) {
 
 	this.setTimestamp = function (index, value) {
 		if (value !== null && value !== undefined) {
-			var timestampInstance = new java.sql.Timestamp(value.getTime());
+			let date = getDateValue(value);
+			let timestampInstance = new java.sql.Timestamp(date.getTime());
 			this.native.setTimestamp(index, timestampInstance);
 		} else {
 			this.setNull(index, SQLTypes.TIMESTAMP);
@@ -635,7 +638,9 @@ function CallableStatement() {
 
 	this.setDate = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setDate(parameter, value);
+			let date = getDateValue(value);
+			let dateInstance = new java.sql.Date(date.getTime());
+			this.native.setDate(parameter, dateInstance);
 		} else {
 			this.setNull(parameter, SQLTypes.DATE);
 		}
@@ -643,7 +648,9 @@ function CallableStatement() {
 
 	this.setTime = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setTime(parameter, value);
+			let date = getDateValue(value);
+			let timeInstance = new java.sql.Time(date.getTime());
+			this.native.setTime(parameter, timeInstance);
 		} else {
 			this.setNull(parameter, SQLTypes.TIME);
 		}
@@ -651,7 +658,9 @@ function CallableStatement() {
 
 	this.setTimestamp = function (parameter, value) {
 		if (value !== null && value !== undefined) {
-			this.native.setTimestamp(parameter, value);
+			let date = getDateValue(value);
+			let timestampInstance = new java.sql.Timestamp(date.getTime());
+			this.native.setTimestamp(parameter, timestampInstance);
 		} else {
 			this.setNull(parameter, SQLTypes.TIMESTAMP);
 		}
@@ -990,4 +999,15 @@ function createNClobValue(native, value) {
 	} catch (e) {
 		throw new Error(`Error occured during creation of 'NClob' value: ${e.message}`);
 	}
+}
+
+function getDateValue(value) {
+	if (typeof value === "string" && isValidDateString(value)) {
+		return new Date(value);
+	}
+	return value;
+}
+
+function isValidDateString(value) {
+	return (new Date(value) !== "Invalid Date") && !isNaN(new Date(value));
 }
