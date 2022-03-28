@@ -19,6 +19,9 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 
+import java.io.InputStream;
+import java.util.zip.ZipInputStream;
+
 /**
  * Processing the Transport Service incoming requests.
  */
@@ -34,20 +37,21 @@ public class TransportProcessor {
 	 * @param workspaceName the workspace name
 	 * @param content the content
 	 */
-	public void importProjectInWorkspace(String workspaceName, byte[] content) {
+	public void importProjectInWorkspace(String workspaceName, InputStream content) {
 		IWorkspace workspace = getWorkspace(workspaceName);
 		String workspacePath = workspace.getPath();
 		importProject(workspacePath, content);
 	}
 
-	public void importProjectInPath(String path, byte[] content) {
+	public void importProjectInPath(String path, InputStream content) {
 		ICollection importedZipFolder = getOrCreateCollection(path);
 		String importedZipFolderPath = importedZipFolder.getPath();
 		importProject(importedZipFolderPath, content);
 	}
 
-	private void importProject(String path, byte[] content) {
-		repository.importZip(content, path, true, false, null);
+	private void importProject(String path, InputStream content) {
+		ZipInputStream str = new ZipInputStream(content);
+		repository.importZip(str, path, true);
 	}
 
 	private ICollection getOrCreateCollection(String path) {
