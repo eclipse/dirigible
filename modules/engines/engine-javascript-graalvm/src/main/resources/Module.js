@@ -221,7 +221,10 @@
 
 
        try {
-           var compiledWrapper = eval(wrapper);
+           var compiledWrapper = load({
+            name: filename,
+            script: wrapper
+           });
            compiledWrapper.apply(self.exports, [self.exports, require, self, filename, path.dirname(filename)]);
            return self.exports;
        } catch (e) {
@@ -250,7 +253,10 @@
 
 
        try {
-           var compiledWrapper = eval(wrapper);
+           var compiledWrapper = load({
+             name: filename,
+             script: wrapper
+           });
            compiledWrapper.apply(self.exports, [self.exports, require, self, filename, path.dirname(filename)]);
            return self.exports;
        } catch (e) {

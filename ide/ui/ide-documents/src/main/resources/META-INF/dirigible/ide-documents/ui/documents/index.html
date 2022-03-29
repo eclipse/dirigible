@@ -114,7 +114,7 @@
                             ng-click="handleExplorerClick(single)" ng-mouseover="hoverIn()" ng-mouseleave="hoverOut()">
                             <input ng-show="inDeleteSession" ng-model="single['selected']" type="checkbox">
                             <span
-                                class="badge-right fa fa-{{ (single.type === 'cmis:folder') ? (single.restrictedAccess ? 'folder' : 'folder-open-o' ) : (single.restrictedAccess ? 'file' : 'file-o' ) }}"></span>
+                                class="badge-right fa fa-{{ (single.type === 'cmis:folder') ? (single.readOnly ? 'folder' : 'folder-open-o' ) : (single.readOnly ? 'file' : 'file-o' ) }}"></span>
                             <a href="{{ previewPath }}?path={{ getFullPath(single.name) }}" target="_blank"
                                 rel="noopener noreferrer"
                                 ng-show="single.type === 'cmis:document'">{{ single.name }}</a>

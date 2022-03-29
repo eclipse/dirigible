@@ -45,6 +45,9 @@ angular.module('page')
 			return this.replace(new RegExp(find, 'g'), replace);
 		};
 
+		$scope.pathValid = true;
+		$scope.rolesValid = true;
+
 		$scope.methods = [{
 			'key': 'READ',
 			'label': 'READ'
@@ -86,6 +89,13 @@ angular.module('page')
 
 		$scope.create = function () {
 			let exists = false;
+
+			$scope.rolesValid = $scope.entity.rolesLine && $scope.entity.rolesLine.length > 0
+			$scope.pathValid = $scope.entity.path && $scope.entity.path.length > 0;
+
+			if (!($scope.rolesValid && $scope.pathValid)) {
+				return;
+			}
 			$scope.access.constraints.forEach(e => {
 				if (e.path === $scope.entity.path && e.method === $scope.entity.method) {
 					alert(`Constraint with path "${e.path}" and method "${e.method}" already exists!`);
@@ -158,7 +168,10 @@ angular.module('page')
 			contents = loadContents();
 			$scope.access = JSON.parse(contents);
 			$scope.access.constraints.forEach(function (constraint) {
-				constraint.rolesLine = constraint.roles.join();
+				if (constraint.roles && constraint.roles.length > 0) {
+					constraint.rolesLine = constraint.roles.join();
+				}
+
 			});
 			sortAccessConstraints();
 		}

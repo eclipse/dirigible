@@ -22,3 +22,14 @@ exports.getNameFromPath = function (path) {
 	let name = splittedFullName[splittedFullName.length - 1];
 	return (!name || name.lenght === 0) ? "root" : name;
 };
+
+exports.formatPath = function (path) {
+	path = exports.replaceAll(path, "//", "/");
+	if (!path.startsWith("/")) {
+		path = "/" + path;
+	}
+	if (path.endsWith("/")) {
+		path = path.substr(0, path.length - 1);
+	}
+	return path;
+}

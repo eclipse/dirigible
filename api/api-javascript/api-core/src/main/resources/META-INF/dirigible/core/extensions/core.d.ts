@@ -121,16 +121,16 @@ declare module "@dirigible/core" {
     module globals {
         /**
          * Returns the value per key from the global parameters
-         * @param key
+         * @param name
          */
         function get(key: string): string;
 
         /**
          * Sets the value per key to the global parameters
-         * @param name
+         * @param ame
          * @param value
          */
-        function set(name, value);
+        function set(ame, value);
 
         /**
          * Returns list of globals

@@ -53,7 +53,7 @@ public class Require {
                 + " _loadedModules[path] = moduleInfo;" //
                 + " var compiledWrapper = null;" //
                 + " try {" //
-                + "   compiledWrapper = eval(code);" //
+                + "   compiledWrapper = load({ name: path, script: code});" //
                 + " } catch (e) {" //
                 + "   throw new Error('Error evaluating module ' + path + ' line #' + e.lineNumber + ' : ' + e.message, path, e.lineNumber);" //
                 + " }" //

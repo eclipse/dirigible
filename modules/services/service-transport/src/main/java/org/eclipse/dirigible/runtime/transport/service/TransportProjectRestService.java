@@ -12,6 +12,8 @@
 package org.eclipse.dirigible.runtime.transport.service;
 
 import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
@@ -54,6 +57,8 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	
 	private static final Logger logger = LoggerFactory.getLogger(TransportProjectRestService.class);
 
+	private static final String FILE_UPLOAD_FAILED = "Upload failed.";
+
 	private TransportProcessor processor = new TransportProcessor();
 	
 	@Context
@@ -74,9 +79,15 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	@ApiOperation("Import Project from Zip into given path")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Imported") })
 	public Response importProjectInPath(@ApiParam(value = "Path to import into", required = true) @QueryParam("path") String path, //     /path/zipContent
-								  @ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
+								  @ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<Attachment> files) throws RepositoryImportException {
 		path = URLDecoder.decode(path, StandardCharsets.UTF_8);
-		return importProject(path, false, files);
+		try {
+			return importProject(path, false, files);
+		} catch(IOException e) {
+			logger.error(e.getMessage(), e);
+			return createErrorResponseInternalServerError(FILE_UPLOAD_FAILED);
+		}
+
 	}
 
 	/**
@@ -94,17 +105,24 @@ public class TransportProjectRestService extends AbstractRestService implements 
 	@ApiOperation("Import Project from Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Imported") })
 	public Response importProjectInWorkspace(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace, //     /workspaceName/zipName
-			@ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryImportException {
-		return importProject(workspace, true, files);
+			@ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<Attachment> files) throws RepositoryImportException {
+
+		try {
+			return importProject(workspace, true, files);
+		} catch(IOException e) {
+			logger.error(e.getMessage(), e);
+			return createErrorResponseInternalServerError(FILE_UPLOAD_FAILED);
+		}
 	}
 
-	private Response importProject(String path, boolean isPathWorkspace, List<byte[]> files) {
+	private Response importProject(String path, boolean isPathWorkspace, List<Attachment> attachments) throws IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		for (byte[] file : files) {
+		for (Attachment attachment : attachments) {
+			InputStream file = attachment.getDataHandler().getInputStream();
 			if (isPathWorkspace) {
 				processor.importProjectInWorkspace(path, file);
 			} else {

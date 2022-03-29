@@ -49,7 +49,7 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 	 */
 	@Override
 	protected Status getResponseStatus(ScriptingDependencyException exception) {
-		return Status.ACCEPTED;
+		return Status.INTERNAL_SERVER_ERROR;
 	}
 
 	/*
