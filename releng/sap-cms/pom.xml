@@ -84,6 +84,21 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-api</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-core-git</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-api-facade-git</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-api-javascript-git</artifactId>
+				</exclusion>
+			</exclusions>
+
 		</dependency>
 
 		<!-- Repository -->
@@ -91,6 +106,13 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-repository</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-repository-cache</artifactId>
+				</exclusion>
+			</exclusions>
+
 		</dependency>
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -125,6 +147,13 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-core</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-core-git</artifactId>
+				</exclusion>
+			</exclusions>
+
 		</dependency>
 
 		<!-- Services -->
@@ -132,6 +161,12 @@
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-services</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-core-git</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -143,7 +178,11 @@
 		 			<groupId>org.eclipse.dirigible</groupId>
 		 			<artifactId>dirigible-engine-odata</artifactId>
 		 		</exclusion>
-		 	</exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-repository-cache</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- CMS -->

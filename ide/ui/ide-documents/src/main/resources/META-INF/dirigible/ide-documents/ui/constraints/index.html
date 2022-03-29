@@ -89,6 +89,9 @@
                             <div class="form-group">
                                 <label>Path</label>
                                 <input type="text" class="form-control" placeholder="Enter path" ng-model="entity.path">
+                                <span ng-show="!pathValid">
+                                    Please select path.
+                                </span>
                             </div>
                             <div class="form-group">
                                 <label for="type">Method: </label>
@@ -103,6 +106,9 @@
                                 <label>Roles</label>
                                 <input type="text" class="form-control" placeholder="Enter roles"
                                     ng-model="entity.rolesLine">
+                                <span ng-show="!rolesValid">
+                                    Please add roles.
+                                </span>
                             </div>
                         </form>
                         <div ng-show="actionType === 'delete'">

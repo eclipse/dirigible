@@ -100,12 +100,8 @@ angular
 			}
 		};
 
-		$scope.readAccessAllowed = function (document) {
-			return !document.restrictedAccess || (document.restrictedAccess && (document.readOnly || document.readOnly));
-		};
-
 		$scope.writeAccessAllowed = function (document) {
-			return !document.restrictedAccess || (document.restrictedAccess && document.readOnly === undefined);
+			return !(document.readOnly === true);
 		};
 
 		$scope.crumbsChanged = function (entry) {
@@ -124,7 +120,7 @@ angular
 				},
 					function (data) {
 						$('#newFolderModal').modal('toggle');
-						openErrorModal("Failed to create folder", data.err.message);
+						openErrorModal("Failed to create folder", data.data.err.message);
 					});
 			$scope.newFolderName = undefined;
 

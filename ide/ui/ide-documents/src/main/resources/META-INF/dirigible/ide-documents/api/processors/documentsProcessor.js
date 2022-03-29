@@ -14,7 +14,7 @@ let folderUtils = require("ide-documents/utils/cmis/folder");
 let documentUtils = require("ide-documents/utils/cmis/document");
 let contentTypeHandler = require("ide-documents/utils/content-type-handler");
 let registry = require("platform/v4/registry");
-let { replaceAll, unescapePath, getNameFromPath } = require("ide-documents/utils/string");
+let { formatPath } = require("ide-documents/utils/string");
 let user = require("security/v4/user");
 
 exports.get = function (path) {
@@ -77,15 +77,9 @@ exports.delete = function (objects, forceDelete) {
 function filterByAccessDefinitions(folder) {
 	let accessDefinitions = JSON.parse(registry.getText("ide-documents/security/roles.access"));
 	folder.children = folder.children.filter(e => {
-		let path = replaceAll((folder.path + "/" + e.name), "//", "/");
+		let path = formatPath(folder.path + "/" + e.name);
 		if (path.startsWith("/__internal")) {
 			return false;
-		}
-		if (!path.startsWith("/")) {
-			path = "/" + path;
-		}
-		if (path.endsWith("/")) {
-			path = path.substr(0, path.length - 1);
 		}
 		return hasAccessPermissions(accessDefinitions.constraints, path);
 	});
@@ -95,21 +89,18 @@ function hasAccessPermissions(constraints, path) {
 	for (let i = 0; i < constraints.length; i++) {
 		let method = constraints[i].method;
 		let constraintPath = constraints[i].path;
-		constraintPath = replaceAll(constraintPath, "//", "/");
-		if (!constraintPath.startsWith("/")) {
-			constraintPath = "/" + constraintPath;
-		}
-		if (constraintPath.endsWith("/")) {
-			constraintPath = constraintPath.substr(0, constraintPath.length - 1);
-		}
+		constraintPath = formatPath(constraintPath);
 		if (constraintPath.length === 0 || (path.length >= constraintPath.length && constraintPath.startsWith(path))) {
 			if (method !== null && method !== undefined && (method.toUpperCase() === "READ" || method === "*")) {
 				let roles = constraints[i].roles;
-				for (let j = 0; j < roles.length; j++) {
-					if (!user.isInRole(roles[j])) {
-						return false;
+				if (roles && roles.length) {
+					for (let j = 0; j < roles.length; j++) {
+						if (!user.isInRole(roles[j])) {
+							return false;
+						}
 					}
 				}
+
 			}
 		}
 	}

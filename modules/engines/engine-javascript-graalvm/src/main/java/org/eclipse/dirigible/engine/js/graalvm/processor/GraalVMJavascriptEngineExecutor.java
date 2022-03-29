@@ -176,62 +176,58 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             String code;
             ExecutableFileType executableFileType = executableFileTypeResolver.resolveFileType(moduleOrCode, commonJSModule);
             if (executableFileType == ExecutableFileType.JAVASCRIPT_ESM) {
-                context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
-                context.eval(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE); // alias of Require.CODE
-                context.eval(ENGINE_JAVA_SCRIPT, isDebugEnabled ? CODE_DEBUGGER : "");
-                context.eval(ENGINE_JAVA_SCRIPT, "globalThis.console = require('core/v4/console');");
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.CODE, "internal-require.js").internal(true).build());
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.DIRIGIBLE_REQUIRE_CODE, "internal-dirigible-require.js").internal(true).build()); // alias of Require.CODE
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, "globalThis.console = require('core/v4/console');", "internal-console.js").internal(true).build());
 
                 String fileName = isModule ? moduleOrCode : "unknown";
                 code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
-                Source src = Source.newBuilder("js", code, fileName).mimeType("application/javascript+module").build();
+                Source src = Source.newBuilder(ENGINE_JAVA_SCRIPT, code, fileName).mimeType("application/javascript+module").build();
 
                 beforeEval(context);
                 Value evaluated = context.eval(src);
                 onAfterExecute.accept(context, evaluated);
                 result = null; // always return null as the evaluation of `evaluated.as(Object.class)` returns a PolyglotMap dying with the context
             } else if (executableFileType == ExecutableFileType.JAVASCRIPT_NODE_CJS) {
-                context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE);
-                context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE());
-                Object mainModule = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE).as(Object.class);
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.LOAD_CONSOLE_CODE, "internal-console.js").internal(true).build());
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.MODULE_CODE(), "Module.js").build());
+                Object mainModule = context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.MODULE_CREATE_CODE, "internal-module-create-code.js").build()).as(Object.class);
                 executionContext.put("main_module", mainModule);
                 beforeEval(context);
 
+                Source source;
                 if (isModule) {
                     bindings.putMember("MODULE_FILENAME", moduleOrCode);
-                    Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE);
-                    onAfterExecute.accept(context, evaluated);
+                    source = Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.MODULE_LOAD_CODE, "internal-module-load-code.js").build();
                 } else {
                     bindings.putMember("SCRIPT_STRING", moduleOrCode);
-                    Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE);
-                    onAfterExecute.accept(context, evaluated);
+                    source = Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.LOAD_STRING_CODE, "internal-module-load-string-code.js").build();
                 }
+
+                Value evaluated = context.eval(source);
+                onAfterExecute.accept(context, evaluated);
             } else {
-                context.eval(ENGINE_JAVA_SCRIPT, Require.CODE);
-                context.eval(ENGINE_JAVA_SCRIPT, "const console = require('core/v4/console');");
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, Require.CODE, "internal-require.js").internal(true).build());
+                context.eval(Source.newBuilder(ENGINE_JAVA_SCRIPT, "globalThis.console = require('core/v4/console');", "internal-console.js").internal(true).build());
                 code = (isModule ? loadSource(moduleOrCode) : moduleOrCode);
                 if (isDebugEnabled) {
                     code = CODE_DEBUGGER + code;
                 }
 
                 beforeEval(context);
+                Source source = Source.newBuilder(ENGINE_JAVA_SCRIPT, code, (isModule ? moduleOrCode : "unknown")).build();
+                Value evaluated = context.eval(source);
 
-                Value evaluated = context.eval(ENGINE_JAVA_SCRIPT, code);
                 onAfterExecute.accept(context, evaluated);
                 result = evaluated.as(Object.class);
             }
 
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        } catch (ClassCastException | URISyntaxException | IllegalStateException e) {
-            e.printStackTrace();
-        } catch (PolyglotException e) {
-            e.printStackTrace();
-            if (e.isHostException()) {
-                Throwable hostException = e.asHostException();
+        } catch (Exception e) {
+            if (e instanceof PolyglotException && ((PolyglotException) e).isHostException()) {
+                Throwable hostException = ((PolyglotException) e).asHostException();
                 throw new ScriptingException(hostException);
             }
-            logger.trace("exiting: executeServiceModule() with js exception");
-            return e.getMessage(); // TODO: Create JSExecutionResult class and return it instead of Object instance
+            throw new ScriptingException(e);
         } finally {
             context.close();
         }
