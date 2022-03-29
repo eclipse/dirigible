@@ -11,6 +11,9 @@
  */
 package org.eclipse.dirigible.runtime.transport.processor;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.net.URLCodec;
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -18,7 +21,8 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.io.InputStream;
 import java.util.zip.ZipInputStream;
 
@@ -43,6 +47,22 @@ public class TransportProcessor {
 		importProject(workspacePath, content);
 	}
 
+	/**
+	 * Import files from zip to folder
+	 *
+	 * @param workspaceName
+	 * @param projectName
+	 * @param pathInProject
+	 * @param content
+	 */
+	public void importZipToPath(String workspaceName, String projectName, String pathInProject, byte[] content, Boolean override) {
+		if (override == null) override = true;
+		IWorkspace workspace = getWorkspace(workspaceName);
+		String projectPath = workspace.getProject(projectName).getPath();
+		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
+		repository.importZip(content, importPath, override, false, null);
+	}
+  
 	public void importProjectInPath(String path, InputStream content) {
 		ICollection importedZipFolder = getOrCreateCollection(path);
 		String importedZipFolderPath = importedZipFolder.getPath();
@@ -87,6 +107,22 @@ public class TransportProcessor {
 	public byte[] exportWorkspace(String workspace) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		return repository.exportZip(workspaceApi.getPath(), false);
+	}
+
+	/**
+	 * Export folder.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param folder the project
+	 * @return the byte[]
+	 */
+	public byte[] exportFolder(String workspace, String project, String folder) throws  UnsupportedEncodingException, DecoderException {
+		IWorkspace workspaceApi = getWorkspace(workspace);
+		IProject projectApi = getProject(workspaceApi, project);
+		UrlFacade decodedFolder = new UrlFacade();
+		String decodedPath = decodedFolder.decode(folder, null);
+		return repository.exportZip(projectApi.getPath() + IRepositoryStructure.SEPARATOR + decodedPath, true);
 	}
 
 	/**
