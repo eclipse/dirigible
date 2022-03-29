@@ -5,6 +5,54 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
+    <changeSet id="users" author="dirigible">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CVUSERS"/>
+            </not>
+        </preConditions>
+        <createTable tableName="CVUSERS">
+            <column name="ID" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="FIRST_NAME" type="VARCHAR(200)" defaultValueComputed="${now}">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="userstogroup" author="dirigible">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="USERSTOGROUP"/>
+            </not>
+        </preConditions>
+        <createTable tableName="USERSTOGROUP">
+            <column name="UserId" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="GroupId" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="groups" author="dirigible">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CVGROUP"/>
+            </not>
+        </preConditions>
+        <createTable tableName="CVGROUP">
+            <column name="ID" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(200)" defaultValueComputed="${now}">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="cars" author="dirigible">
         <preConditions onFail="MARK_RAN">
             <not>
