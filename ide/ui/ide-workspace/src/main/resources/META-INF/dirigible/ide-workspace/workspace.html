@@ -29,6 +29,8 @@
         <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
         <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
 
+        <script type="text/javascript" src="js/angular-file-upload.min.js"></script>
+
         <!-- jsTree -->
         <link href="/services/v4/js/theme/resources.js/jstree.css" rel="stylesheet">
         <script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
@@ -77,6 +79,8 @@
                         data-target="#dialogGenerateFromModel"></button>
                     <button type="button" id="uploadFile" ng-show="false" data-toggle="modal"
                         data-target="#dialogUploadFile"></button>
+                    <button type="button" id="uploadZipToFolder" ng-show="false" data-toggle="modal"
+                        data-target="#dialogUploadZipToFolder"></button>
                     <button type="button" id="resolveConflicts" ng-show="false" data-toggle="modal"
                         data-target="#dialogResolveConflicts"></button>
 
@@ -310,6 +314,84 @@
                 <button class="btn btn-primary" ng-click="workspace.okUploadFile()" data-toggle="modal"
                     data-target="#dialogUploadFile">Upload</button>
                 <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Import in folder from ZIP -->
+        <div class="dirigible-modal modal fade" id="dialogUploadZipToFolder" tabindex="-1" role="dialog"
+            aria-labelledby="dialogUploadZipToFolderLabel" aria-hidden="true">
+            <div class="modal-header">
+                <h4>Import files from ZIP</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <P>Import to project: <strong>{{projectName}}</strong><br>
+                        Extract to path: <strong>{{pathToImportIn}}</strong></p>
+                </div>
+                <div class="row" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div ng-show="uploader.isHTML5">
+                                <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                    Drop *.zip file(s) here
+                                </div>
+                            </div>
+                            <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                            or browse your file system
+                            <input type="file" nv-file-select="" uploader="uploader" /><br />
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 40px">
+                        <h3>Upload queue</h3>
+                        <p>Queue length: {{ uploader.queue.length }}</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="50%">Name &amp; size</th>
+                                    <th ng-show="uploader.isHTML5">Progress</th>
+                                    <th ng-show="uploader.isHTML5">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td><strong>{{ item.file.name }}</strong><br>{{ item.file.size/1024/1024|number:2 }}
+                                        MB
+                                    </td>
+                                    <td ng-show="uploader.isHTML5">
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar"
+                                                ng-style="{ 'width': item.progress + '%' }"></div>
+                                        </div>
+                                    </td>
+                                    <td nowrap>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                            <span class="fa fa-trash"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <div>
+                                Queue progress:
+                                <div class="progress" style="">
+                                    <div class="progress-bar" role="progressbar"
+                                        ng-style="{ 'width': uploader.progress + '%' }"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--
+                        data-toggle="modal" data-target="#dialogUploadZipToFolder" -->
+                    <button class="btn btn-primary"
+                        ng-click="workspace.okUploadZipFiles(uploader, projectName, pathToImportIn)"
+                        ng-disabled="!uploader.getNotUploadedItems().length">Upload and extract</button>
+                    <button class="btn btn-default" data-dismiss="modal"
+                        ng-click="workspace.cancelImportFromZip(uploader)">Cancel</button>
+                </div>
             </div>
         </div>
 
