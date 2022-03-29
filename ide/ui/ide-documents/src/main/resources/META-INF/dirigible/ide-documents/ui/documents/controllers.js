@@ -120,7 +120,7 @@ angular
 				},
 					function (data) {
 						$('#newFolderModal').modal('toggle');
-						openErrorModal("Failed to create folder", data.err.message);
+						openErrorModal("Failed to create folder", data.data.err.message);
 					});
 			$scope.newFolderName = undefined;
 

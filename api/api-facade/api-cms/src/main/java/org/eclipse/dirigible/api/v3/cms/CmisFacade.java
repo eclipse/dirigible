@@ -119,6 +119,7 @@ public class CmisFacade {
 			if (method.equals(CMIS_METHOD_WRITE)) {
 				Set<AccessDefinition> writeDefinitions = getAccessDefinitions(path, CMIS_METHOD_WRITE);
 				if (!writeDefinitions.isEmpty()) {
+					isReadOnly = true;
 					if (user == null) {
 						logger.error("No logged in user accessing path: " + path);
 						return false;
