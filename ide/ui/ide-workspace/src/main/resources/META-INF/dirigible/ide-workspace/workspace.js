@@ -1370,13 +1370,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         // UPLOADER CALLBACKS
 
         uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
-            // console.info('onWhenAddingFileFailed', item, filter, options);
-        };
-        uploader.onAfterAddingFile = function (fileItem) {
-
-        };
-        uploader.onAfterAddingAll = function (addedFileItems) {
-            // console.info('onAfterAddingAll', addedFileItems);
+            console.info('onWhenAddingFileFailed', item, filter, options);
         };
         uploader.onBeforeUploadItem = function (item) {
             let internalPath = $scope.pathToImportIn;
@@ -1386,34 +1380,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             item.url = $scope.TRANSPORT_ZIPTOFOLDER_URL + buildPath.build();
             $scope.uploader.url = item.url;
         };
-        uploader.onProgressItem = function (fileItem, progress) {
-            // console.info('onProgressItem', fileItem, progress);
-        };
-        uploader.onProgressAll = function (progress) {
-            // console.info('onProgressAll', progress);
-        };
-        uploader.onSuccessItem = function (fileItem, response, status, headers) {
-            // console.info('onSuccessItem', fileItem, response, status, headers);
-        };
-        uploader.onErrorItem = function (fileItem, response, status, headers) {
-            // console.info('onErrorItem', fileItem, response, status, headers);
-        };
-        uploader.onCancelItem = function (fileItem, response, status, headers) {
-            // console.info('onCancelItem', fileItem, response, status, headers);
-        };
-        uploader.onCompleteItem = function (fileItem, response, status, headers) {
-            // console.info('onCompleteItem', fileItem, response, status, headers);
-        };
         uploader.onCompleteAll = function () {
-            // console.log('COMPLETE UPLOAD');
             this.clearQueue();
             $('#uploadZipToFolder').click();
             $('#refreshButton').click();
         };
 
         this.cancelImportFromZip = function (uploader) {
-            if (uploader.isUploading)
+            if (uploader.isUploading) {
                 uploader.cancelAll();
+            }
             uploader.clearQueue();
         }
 
