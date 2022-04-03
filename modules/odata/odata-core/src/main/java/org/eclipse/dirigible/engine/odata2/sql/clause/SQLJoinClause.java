@@ -80,6 +80,9 @@ public final class SQLJoinClause implements SQLClause {
             buildJoinClause(firstJoinColumns, firstJoinLeftTableAlias, firstJoinRightTable, firstJoinRightTableAlias,
                     firstJoinTargetKeys, join);
 
+            // Only needed when adding a second join statement
+            join.append(" ");
+
             List<String> secondJoinColumns = query.getSQLMappingTableJoinColumn(start, target);
             String secondJoinLeftTableAlias = query.getSQLTableAliasForManyToManyMappingTable(firstJoinRightTable);
             String secondJoinRightTable = query.getSQLTableName(start);
@@ -129,7 +132,6 @@ public final class SQLJoinClause implements SQLClause {
             join.append(getValue(caseSensitive, leftTableAlias));
             join.append(".");
             join.append(getValue(caseSensitive, joinColumns.get(i)));
-            join.append(" ");
             if (i < targetKeys.size() - 1) join.append(" AND ");
         }
     }
