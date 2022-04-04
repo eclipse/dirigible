@@ -275,7 +275,7 @@
 	</build>
 
 	<properties>
-		<spring.boot.version>2.6.3</spring.boot.version>
+		<spring.boot.version>2.6.6</spring.boot.version>
 		<webjars-locator>0.30</webjars-locator>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
