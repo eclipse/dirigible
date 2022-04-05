@@ -481,6 +481,9 @@ public class ContentTypeHelper {
 	/** The Constant APPLICATION_JSON_XSACCESS. */
 	public static final String APPLICATION_JSON_XSACCESS = "application/json+xsaccess";
 
+	/** The Constant APPLICATION_JSON_HDI. */
+	public static final String APPLICATION_JSON_HDI = "application/json+hdi";
+
 	/** The Constant CONTENT_TYPES. */
 	private static final Map<String, String> CONTENT_TYPES = new HashMap<String, String>();
 
@@ -740,6 +743,8 @@ public class ContentTypeHelper {
 		TEXT_CONTENT_TYPES.put("bpmn", APPLICATION_BPMN); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("dsm", APPLICATION_SCHEMA); //$NON-NLS-1$
 		TEXT_CONTENT_TYPES.put("edm", APPLICATION_ENTITY_DATA_MODEL); //$NON-NLS-1$
+		TEXT_CONTENT_TYPES.put("hdi", APPLICATION_JSON_HDI); //$NON-NLS-1$
+
 
 		CONTENT_TYPES.putAll(BINARY_CONTENT_TYPES);
 		CONTENT_TYPES.putAll(TEXT_CONTENT_TYPES);
