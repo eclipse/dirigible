@@ -143,12 +143,10 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         }
     }
 
-    //TODO use me
     private String fixDatabaseNamesCase(String column) {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
         return caseSensitive ? "\"" + column + "\"" : column;
     }
-
 
     public List<String> getSQLJoinColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmNavigationProperty p) throws EdmException {
         List<String> joinColums = tableBinding.getEdmTableBinding(targetEnitityType).getJoinColumnTo((EdmStructuralType) p.getType());
@@ -182,10 +180,6 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return !tableBinding.getEdmTableBinding(targetEnitityType).isPropertyMapped(property);
     }
 
-
-    // This Method is for internal use ONLY !!! Do NEVER use it !!!
-    // It will be hidden in future without further mitigation
-    // TODO Refactor this method to private area
     public String getSQLTableAlias(final EdmType type) {
         if (type instanceof EdmStructuralType)
             return getTableAliasForType((EdmStructuralType) type);
@@ -193,9 +187,6 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
             throw new IllegalArgumentException("Mapping of types other than EdmEntityType and EdmComplexType is not supported!");
     }
 
-    // This Method is for internal use ONLY !!! Do NEVER use it !!!
-    // It will be hidden in future without further mitigation
-    // TODO Refactor this method to private area
     public String getSQLTableAliasForManyToManyMappingTable(final String manyToManyMappingTable) {
         return getTableAliasForManyToManyMappingTable(manyToManyMappingTable);
     }
@@ -216,21 +207,13 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
 
     private String getTableAliasForManyToManyMappingTable(final String manyToManyMappingTable) {
         Collection<String> keys = tableAliasesForManyToManyMappingTablesInQuery.keySet();
-        try {
-            for (String key : keys) {
-                String target = tableAliasesForManyToManyMappingTablesInQuery.get(key);
-                if (target.equals(manyToManyMappingTable))
-                    return key;
-            }
-            return grantTableAliasForManyToManyMappingTableInQuery(manyToManyMappingTable);
-        } catch (Exception e) {
-            throw new OData2Exception("No mapping has been defined for type " + manyToManyMappingTable, INTERNAL_SERVER_ERROR);
+        for (String key : keys) {
+            String target = tableAliasesForManyToManyMappingTablesInQuery.get(key);
+            if (target.equals(manyToManyMappingTable))
+                return key;
         }
+        return grantTableAliasForManyToManyMappingTableInQuery(manyToManyMappingTable);
     }
-
-    // This Method is for internal use ONLY !!! Do NEVER use it !!!
-    // It will be hidden in future without further mitigation
-    // TODO Refactor this method to private area
 
     /**
      * Get table aliases
@@ -241,16 +224,10 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return tableAliasesForEntitiesInQuery.keySet().iterator();
     }
 
-    // This Method is for internal use ONLY !!! Do NEVER use it !!!
-    // It will be hidden in future without further mitigation
-    // TODO Refactor this method to private area
     public EdmStructuralType getEntityInQueryForAlias(final String tableAlias) {
         return tableAliasesForEntitiesInQuery.get(tableAlias);
     }
 
-    // This Method is for internal use ONLY !!! Do NEVER use it !!!
-    // It will be hidden in future without further mitigation
-    // TODO Refactor this method to private area
     public String grantTableAliasForStructuralTypeInQuery(final EdmStructuralType entity) {
         try {
             Collection<EdmStructuralType> targets = tableAliasesForEntitiesInQuery.values();
@@ -270,21 +247,17 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     }
 
     private String grantTableAliasForManyToManyMappingTableInQuery(final String manyToManyMappingTable) {
-        try {
-            Collection<String> targets = tableAliasesForManyToManyMappingTablesInQuery.values();
-            for (String target : targets) {
-                if (target.equals(manyToManyMappingTable))
-                    // Alias is already contained in the map
-                    return getTableAliasForManyToManyMappingTable(target);
-            }
-            String alias = "MT" + tableAliasesForManyToManyMappingTablesInQuery.size();
-            LOG.debug("Grant Alias '" + alias + "' for " + manyToManyMappingTable);
-            // Add alias to map
-            tableAliasesForManyToManyMappingTablesInQuery.put("MT" +
-                    tableAliasesForManyToManyMappingTablesInQuery.size(), manyToManyMappingTable);
-            return alias;
-        } catch (Exception e) {
-            throw new OData2Exception(INTERNAL_SERVER_ERROR, e);
+        Collection<String> targets = tableAliasesForManyToManyMappingTablesInQuery.values();
+        for (String target : targets) {
+            if (target.equals(manyToManyMappingTable))
+                // Alias is already contained in the map
+                return getTableAliasForManyToManyMappingTable(target);
         }
+        String alias = "MT" + tableAliasesForManyToManyMappingTablesInQuery.size();
+        LOG.debug("Grant Alias '" + alias + "' for " + manyToManyMappingTable);
+        // Add alias to map
+        tableAliasesForManyToManyMappingTablesInQuery.put("MT" +
+                tableAliasesForManyToManyMappingTablesInQuery.size(), manyToManyMappingTable);
+        return alias;
     }
 }
