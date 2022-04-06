@@ -18,7 +18,10 @@ import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
-import org.eclipse.dirigible.engine.odata2.sql.entities.*;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Car;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Driver;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Owner;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Address;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,7 +43,7 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
 
     @Override
     protected Class<?>[] getODataEntities() {
-        return new Class<?>[]{User.class, Group.class, Car.class, Driver.class, Owner.class, Address.class};
+        return new Class<?>[]{Car.class, Driver.class, Owner.class, Address.class};
     }
 
     @Test
@@ -877,15 +880,5 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
         assertEquals(2, lastOwnerAddresses.size());
         assertEquals("Monaco", lastOwnerAddresses.get(0).getProperties().get("City"));
         assertEquals("Haskovo", lastOwnerAddresses.get(1).getProperties().get("City"));
-    }
-
-    @Test
-    public void testSQLProcessorWithMappingTable() throws Exception {
-        String UUID = "ec20bbaf-ee7a-4405-91d0-7ad8be889270";
-        Response response = OData2RequestBuilder.createRequest(sf) //
-                .segments("Users('" + UUID + "')", "Groups") //
-                .accept("application/atom+xml").executeRequest(GET);
-        String content = IOUtils.toString((InputStream) response.getEntity());
-        assertTrue(content.contains("Mid"));
     }
 }
