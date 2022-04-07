@@ -593,7 +593,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.13.1</version>
+			<version>${jackson.databind.version}</version>
 		</dependency>
 
 		<!-- Java 11 Dependencies -->
@@ -724,6 +724,7 @@
 		<testcontainers.elasticsearch.version>1.16.3</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.8</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
+		<jackson.databind.version>2.13.2.2</jackson.databind.version>
 
 		<profile.content.phase>none</profile.content.phase>
 
