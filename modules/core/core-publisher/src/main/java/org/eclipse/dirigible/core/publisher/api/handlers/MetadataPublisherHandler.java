@@ -65,7 +65,7 @@ public class MetadataPublisherHandler implements IPublisherHandler {
 	}
 
 	@Override
-	public void afterPublish(String location) throws SchedulerException {
+	public void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException {
 		
 	}
 

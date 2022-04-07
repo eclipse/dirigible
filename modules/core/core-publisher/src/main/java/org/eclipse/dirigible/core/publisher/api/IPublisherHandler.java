@@ -17,7 +17,7 @@ public interface IPublisherHandler {
 
     void beforePublish(String location) throws SchedulerException;
 
-    void afterPublish(String location) throws SchedulerException;
+    void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException;
 
     void beforeUnpublish(String location) throws SchedulerException;
 
