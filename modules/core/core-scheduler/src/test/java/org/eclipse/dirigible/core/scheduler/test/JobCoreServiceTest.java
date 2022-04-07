@@ -51,15 +51,14 @@ public class JobCoreServiceTest extends AbstractDirigibleTest {
 	 */
 	@Test
 	public void createJob() throws SchedulerException {
-		jobCoreService.removeJob("test_job1");
-		jobCoreService.createJob("test_job1", "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
-		List<JobDefinition> list = jobCoreService.getJobs();
-		assertEquals(1, list.size());
-		JobDefinition jobDefinition = list.get(0);
-		System.out.println(jobDefinition.toString());
-		assertEquals("test_job1", jobDefinition.getName());
+		String jobName = "test_job1";
+		jobCoreService.removeJob(jobName);
+		jobCoreService.createJob(jobName, "test_group", "org....", "handler.js", "engine type", "Test", "expr...", false);
+		JobDefinition jobDefinition = jobCoreService.getJob(jobName);
+
+		assertEquals(jobName, jobDefinition.getName());
 		assertEquals("Test", jobDefinition.getDescription());
-		jobCoreService.removeJob("test_job1");
+		jobCoreService.removeJob(jobName);
 	}
 
 	/**
