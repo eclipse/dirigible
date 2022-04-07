@@ -28,6 +28,41 @@
     </loadData>
   </changeSet>
 
+
+  <changeSet author="dirigible" id="users-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM CVUSERS
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/Users.csv"
+              separator=";" tableName="CVUSERS">
+    </loadData>
+  </changeSet>
+
+  <changeSet author="dirigible" id="userstogroup-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM USERSTOGROUP
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/UsersToGroup.csv"
+              separator=";" tableName="USERSTOGROUP">
+    </loadData>
+  </changeSet>
+
+  <changeSet author="dirigible" id="groups-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM CVGROUP
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/Groups.csv"
+              separator=";" tableName="CVGROUP">
+    </loadData>
+  </changeSet>
+
+
   <changeSet author="dirigible" id="owners-data">
     <preConditions onFail="MARK_RAN">
       <sqlCheck expectedResult="0">
