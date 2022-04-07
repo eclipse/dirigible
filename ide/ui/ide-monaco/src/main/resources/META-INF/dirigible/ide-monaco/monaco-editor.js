@@ -34,6 +34,7 @@ exports.getEditor = function () {
 			"application/json+view",
 			"application/json+job",
 			"application/json+xsjob",
+			"application/json+xsaccess",
 			"application/json+listener",
 			"application/json+websocket",
 			"application/json+access",
@@ -45,7 +46,8 @@ exports.getEditor = function () {
 			"application/database-schema-model+xml",
 			"application/entity-data-model+xml",
 			"application/json+form",
-			"application/xml+calculationview"
+			"application/xml+calculationview",
+			"application/json+hdi"
 		]
 	};
 }

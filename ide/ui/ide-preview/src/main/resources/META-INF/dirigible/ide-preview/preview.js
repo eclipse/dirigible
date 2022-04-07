@@ -113,6 +113,7 @@ angular.module('preview', [])
                     case 'xsjob':
                     case 'calculationview':
                     case 'websocket':
+                    case 'hdi':
                     case 'hdbtable':
                     case 'hdbstructurе':
                     case 'hdbview':
