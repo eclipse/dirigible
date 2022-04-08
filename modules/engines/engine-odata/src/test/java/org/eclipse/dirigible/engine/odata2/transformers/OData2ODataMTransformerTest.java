@@ -232,6 +232,59 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
+    @Test
+    public void testManyToManyMappingTableTransformation() throws IOException, SQLException {
+        String users = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/users/Users.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/users/Users.odata", users);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("FIRSTNAME", "Edm.String", true, false);
+        PersistenceTableModel model = new PersistenceTableModel("CVUSER", Arrays.asList(column1, column2), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("CVUSER", null)).thenReturn(model);
+
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("FIRSTNAME", "Edm.String", true, false);
+        model = new PersistenceTableModel("CVGROUP", Arrays.asList(column3, column4), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("CVGROUP", null)).thenReturn(model);
+
+        String entityUser = "{\n" +
+                "\t\"edmType\": \"UsersType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.UsersType\",\n" +
+                "\t\"sqlTable\": \"CVUSER\",\n" +
+                "\t\"Id\": \"ID\",\n" +
+                "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_ref_GroupsType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"ID\"\n" +
+                "\t\t],\n" +
+                "\t\t\"manyToManyMappingTable\" : {\n" +
+                "\t\t\t\"mappingTableName\" : \"USERSTOGROUP\",\n" +
+                "\t\t\t\"mappingTableJoinColumn\" : \"UserId\"\n" +
+                "\t\t}\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"ID\"\n" +
+                "}";
+        String entityGroup = "{\n" +
+                "\t\"edmType\": \"GroupsType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.GroupsType\",\n" +
+                "\t\"sqlTable\": \"CVGROUP\",\n" +
+                "\t\"Id\": \"ID\",\n" +
+                "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_ref_UsersType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"ID\"\n" +
+                "\t\t],\n" +
+                "\t\t\"manyToManyMappingTable\" : {\n" +
+                "\t\t\t\"mappingTableName\" : \"USERSTOGROUP\",\n" +
+                "\t\t\t\"mappingTableJoinColumn\" : \"GroupId\"\n" +
+                "\t\t}\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"ID\"\n" +
+                "}";
+        String[] transformed = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
+    }
+
 //    @Test
 //    public void testTransformWithCompositePrimaryKey() throws IOException, SQLException {
 //        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeCompositePrimaryKey.odata"), Charset.defaultCharset());

@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.engine.odata2.sql;
+
+import org.apache.cxf.helpers.IOUtils;
+import org.eclipse.dirigible.engine.odata2.sql.entities.User;
+import org.eclipse.dirigible.engine.odata2.sql.entities.Group;
+import org.junit.Test;
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
+
+import static org.apache.olingo.odata2.api.commons.ODataHttpMethod.GET;
+import static org.junit.Assert.assertTrue;
+
+public class ODataSQLProcessorManyToManyTest extends AbstractSQLProcessorTest {
+
+    @Override
+    protected Class<?>[] getODataEntities() {
+        return new Class<?>[]{User.class, Group.class};
+    }
+
+    @Test
+    public void testSQLProcessorWithMappingTable() throws Exception {
+        String UUID = "ec20bbaf-ee7a-4405-91d0-7ad8be889270";
+        Response response = OData2RequestBuilder.createRequest(sf) //
+                .segments("Users('" + UUID + "')", "Groups") //
+                .accept("application/atom+xml").executeRequest(GET);
+        String content = IOUtils.toString((InputStream) response.getEntity());
+        assertTrue(content.contains("Mid"));
+    }
+}

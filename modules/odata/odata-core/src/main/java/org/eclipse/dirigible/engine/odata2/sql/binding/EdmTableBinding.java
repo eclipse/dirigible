@@ -45,23 +45,42 @@ public class EdmTableBinding extends Mapping {
         return readMandatoryConfig("sqlTable", String.class);
     }
 
-    @SuppressWarnings("unchecked")
+    public List<String> getMappingTableName(EdmStructuralType target) throws EdmException {
+        return getRefProperties(target, "manyToManyMappingTable", "mappingTableName");
+    }
+
+    public List<String> getMappingTableJoinColumn(EdmStructuralType target) throws EdmException {
+        return getRefProperties(target, "manyToManyMappingTable", "mappingTableJoinColumn");
+    }
+
     public List<String> getJoinColumnTo(EdmStructuralType target) throws EdmException {
+        return getRefProperties(target, "joinColumn", "");
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getRefProperties(EdmStructuralType target, String property, String secondaryProperty) throws EdmException {
         String ref = "_ref_" + target.getName();
-        String jk = "joinColumn";
         Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
-        if (refKeys.containsKey(jk)) {  
-            Object joinColumn = refKeys.get(jk);
+        if (refKeys.containsKey(property)) {
+            Object joinColumn = refKeys.get(property);
             if (joinColumn instanceof List) {
                 return (List<String>)joinColumn;
-            } else if (refKeys.get(jk) instanceof String) {
-                return Arrays.asList(String.valueOf(refKeys.get(jk)));
+            } else if (refKeys.get(property) instanceof String) {
+                return Arrays.asList(String.valueOf(refKeys.get(property)));
+            } else if (refKeys.get(property) instanceof Map) {
+                return Arrays.asList(((Map<String, String>) refKeys.get(property)).get(secondaryProperty));
             } else {
                 throw new IllegalArgumentException(format(format(JOIN_COLUMN_UNSUPPORTED_CONFIGURATION, ref, joinColumn)));
             }
         } else {
-            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, ref + "->" + jk, targetFqn));
+            throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, ref + "->" + property, targetFqn));
         }
+    }
+
+    public boolean hasMappingTable(EdmStructuralType target) throws EdmException {
+        String ref = "_ref_" + target.getName();
+        Map<String, Object> refKeys = readMandatoryConfig(ref, Map.class);
+        return refKeys.containsKey("manyToManyMappingTable");
     }
 
     public boolean isPropertyMapped(EdmProperty p) {

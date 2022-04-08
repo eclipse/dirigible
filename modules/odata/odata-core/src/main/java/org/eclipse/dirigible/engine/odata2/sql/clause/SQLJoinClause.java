@@ -63,29 +63,100 @@ public final class SQLJoinClause implements SQLClause {
         if (isEmpty()){
             return "";
         }
-        boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
 
         StringBuilder join = new StringBuilder();
-        join.append(joinType.toString());
-        join.append(" JOIN ");
-        join.append(getValue(caseSensitive, query.getSQLTableName(start)));
-        join.append(" AS ");
-        join.append(getValue(caseSensitive, query.getSQLTableAlias(start)));
-        join.append(" ON ");
 
-        List<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
-        for (int i = 0; i < targetKeys.size(); i++) {
-            join.append(getValue(caseSensitive, query.getSQLTableAlias(start)));
-            join.append(".");
-            join.append(getValue(caseSensitive, targetKeys.get(i)));
-            join.append(" = ");
-            join.append(getValue(caseSensitive, query.getSQLTableAlias(target)));
-            join.append(".");
-            join.append(getValue(caseSensitive, query.getSQLJoinTableName(target, start).get(i)));
-            if (i < targetKeys.size() - 1) join.append(" AND ");
+        boolean hasFirstJsonMappingTable = query.hasSQLMappingTablePresent(start, target);
+        boolean hasSecondJsonMappingTable = query.hasSQLMappingTablePresent(target, start);
+
+        if(hasFirstJsonMappingTable && hasSecondJsonMappingTable) {
+
+            buildMappingTableJoin(join);
+
+        } else if(!hasFirstJsonMappingTable && !hasSecondJsonMappingTable) {
+
+            buildJoinWithoutMappingTable(join);
+
+        } else {
+
+            throw new IllegalArgumentException("Missing manyToManyMappingTable definition in the following json file: " +
+                    "" + (hasFirstJsonMappingTable? target.getName() : start.getName()) +
+                    ". Both json files need to point to the mapping table");
         }
 
         return join.toString();
+    }
+
+    private void buildMappingTableJoin(StringBuilder join) throws EdmException {
+
+        validateMappingTable();
+
+        List<String> firstJoinColumns = getTargetJoinKeyForEntityType(target, start);
+        String firstJoinLeftTableAlias = query.getSQLTableAlias(target);
+        String firstJoinRightTable = query.getSQLMappingTableName(start, target).get(0);
+        String firstJoinRightTableAlias = query.getSQLTableAliasForManyToManyMappingTable(firstJoinRightTable);
+        List<String> firstJoinTargetKeys = query.getSQLMappingTableJoinColumn(target, start);
+
+        buildJoinClause(firstJoinColumns, firstJoinLeftTableAlias, firstJoinRightTable, firstJoinRightTableAlias,
+                firstJoinTargetKeys, join);
+
+        // Only needed when adding a second join statement
+        join.append(" ");
+
+        List<String> secondJoinColumns = query.getSQLMappingTableJoinColumn(start, target);
+        String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+        String secondJoinLeftTableAlias = query.getSQLTableAliasForManyToManyMappingTable(secondJsonMappingTable);
+        String secondJoinRightTable = query.getSQLTableName(start);
+        String secondJoinRightTableAlias = query.getSQLTableAlias(start);
+        List<String> secondJoinTargetKeys = getTargetJoinKeyForEntityType(start, target);
+
+        buildJoinClause(secondJoinColumns, secondJoinLeftTableAlias, secondJoinRightTable, secondJoinRightTableAlias,
+                secondJoinTargetKeys, join);
+    }
+
+    private void buildJoinWithoutMappingTable(StringBuilder join) throws EdmException {
+        List<String> joinColumns = query.getSQLJoinTableName(target, start);
+        String leftTableAlias = query.getSQLTableAlias(target);
+        String rightTable = query.getSQLTableName(start);
+        String rightTableAlias = query.getSQLTableAlias(start);
+        List<String> targetKeys = getTargetJoinKeyForEntityType(start, target);
+
+        buildJoinClause(joinColumns, leftTableAlias, rightTable, rightTableAlias, targetKeys, join);
+    }
+
+    private void buildJoinClause(List<String> joinColumns, String leftTableAlias, String rightTable,
+                                   String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
+        boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
+
+        join.append(joinType.toString());
+
+        join.append(" JOIN ");
+        join.append(getValue(caseSensitive, rightTable));
+        join.append(" AS ");
+        join.append(getValue(caseSensitive, rightTableAlias));
+        join.append(" ON ");
+
+        for (int i = 0; i < targetKeys.size(); i++) {
+            join.append(getValue(caseSensitive, rightTableAlias));
+            join.append(".");
+            join.append(getValue(caseSensitive, targetKeys.get(i)));
+            join.append(" = ");
+            join.append(getValue(caseSensitive, leftTableAlias));
+            join.append(".");
+            join.append(getValue(caseSensitive, joinColumns.get(i)));
+            if (i < targetKeys.size() - 1) join.append(" AND ");
+        }
+    }
+
+    private void validateMappingTable() throws EdmException {
+        String firstJsonMappingTable = query.getSQLMappingTableName(start, target).get(0);
+        String secondJsonMappingTable = query.getSQLMappingTableName(target, start).get(0);
+
+        if (!firstJsonMappingTable.equals(secondJsonMappingTable)) {
+            throw new IllegalArgumentException("OData manyToManyMappingTable name is different in both json files: " +
+                    "" + (target.getName()) + " and " + (start.getName()) +
+                    ". Both json files need to point to the same mapping table");
+        }
     }
 
     private String getValue(boolean caseSensitive, String value){
