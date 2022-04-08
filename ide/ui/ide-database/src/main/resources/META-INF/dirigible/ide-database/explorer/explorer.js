@@ -130,7 +130,6 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 													let parentNodeName = tree.get_node(node.parent).text;
 													if (confirmRemove("TABLE", parentNodeName + "." + node.original.text)) {
 														let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-														alert(sqlCommand);
 														messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 														$('.database').jstree(true).refresh();
 													}
