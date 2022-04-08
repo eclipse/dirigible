@@ -22,7 +22,6 @@ import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.io.InputStream;
 import java.util.zip.ZipInputStream;
 
