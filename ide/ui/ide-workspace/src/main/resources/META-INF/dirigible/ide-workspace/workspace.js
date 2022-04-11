@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
@@ -1018,11 +1018,15 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         let post_no_edit_URL = '/services/v4/ide/workspaces/';
 
         for (let i = 0; i < priorityFileTemplates.length; i++) {
-            if (priorityFileTemplates[i].isModel) models.push(priorityFileTemplates[i].extension);
+            if (priorityFileTemplates[i].isModel) {
+                models.push(priorityFileTemplates[i].extension);
+            }
         }
 
         for (let i = 0; i < specificFileTemplates.length; i++) {
-            if (specificFileTemplates[i].isModel) models.push(specificFileTemplates[i].extension);
+            if (specificFileTemplates[i].isModel) {
+                models.push(specificFileTemplates[i].extension);
+            }
         }
 
         return {
@@ -1118,12 +1122,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                             let isDisabled = false;
                             if (fileTemplate.oncePerFolder) {
                                 for (let nc = 0; nc < nodeChildren.length; nc++) {
-                                    if (fileTemplate.nameless) {
-                                        if (nodeChildren[nc] === `.${fileTemplate.extension}`) {
-                                            isDisabled = true;
-                                            break;
-                                        }
-                                    } else if (nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
+                                    if (fileTemplate.nameless && nodeChildren[nc] === `.${fileTemplate.extension}` || nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
                                         isDisabled = true;
                                         break;
                                     }
@@ -1140,8 +1139,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                                         type: 'file',
                                         data: fileTemplate.data,
                                     };
-                                    if (fileTemplate.nameless) fileNode.text = `.${fileTemplate.extension}`;
-                                    else fileNode.text = `file.${fileTemplate.extension}`;
+                                    if (fileTemplate.nameless) {
+                                        fileNode.text = `.${fileTemplate.extension}`;
+                                    } else {
+                                        fileNode.text = `file.${fileTemplate.extension}`;
+                                    }
                                     if (fileTemplate.staticName) {
                                         let url = new UriBuilder().path(post_no_edit_URL.split('/')).path(parentNode.original._file.path.split('/')).path(fileNode.text).build();
                                         $http.post(url, fileNode.data, {
@@ -1165,12 +1167,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                             let isDisabled = false;
                             if (fileTemplate.oncePerFolder) {
                                 for (let nc = 0; nc < nodeChildren.length; nc++) {
-                                    if (fileTemplate.nameless) {
-                                        if (nodeChildren[nc] === `.${fileTemplate.extension}`) {
-                                            isDisabled = true;
-                                            break;
-                                        }
-                                    } else if (nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
+                                    if (fileTemplate.nameless && nodeChildren[nc] === `.${fileTemplate.extension}` || nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
                                         isDisabled = true;
                                         break;
                                     }
@@ -1186,8 +1183,11 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                                         type: 'file',
                                         data: fileTemplate.data
                                     };
-                                    if (fileTemplate.nameless) fileNode.text = `.${fileTemplate.extension}`;
-                                    else fileNode.text = `file.${fileTemplate.extension}`;
+                                    if (fileTemplate.nameless) {
+                                        fileNode.text = `.${fileTemplate.extension}`;
+                                    } else {
+                                        fileNode.text = `file.${fileTemplate.extension}`;
+                                    }
                                     if (fileTemplate.staticName) {
                                         let url = new UriBuilder().path(post_no_edit_URL.split('/')).path(parentNode.original._file.path.split('/')).path(fileNode.text).build();
                                         $http.post(url, fileNode.data, {
@@ -1432,7 +1432,9 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             name: 'customFilter',
             fn: function (item /*{File|FileLikeObject}*/, options) {
                 let type = item.type.slice(item.type.lastIndexOf('/') + 1);
-                if (type != 'zip' && type != 'x-zip') return false;
+                if (type != 'zip' && type != 'x-zip') {
+                    return false;
+                }
                 return this.queue.length < 100;
             }
         });
