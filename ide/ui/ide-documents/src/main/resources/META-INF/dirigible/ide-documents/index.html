@@ -87,9 +87,7 @@
                 });
 
                 function getConstraints() {
-                    let requestUrl = '/services/v4/js/ide-documents/api/constraints';
-
-                    return $http.get(requestUrl);
+                    return $http.get('/services/v4/js/ide-documents/api/constraints');
                 };
 
             }]);
