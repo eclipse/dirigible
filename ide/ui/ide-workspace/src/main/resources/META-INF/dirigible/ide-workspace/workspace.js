@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
 /**
@@ -157,7 +157,7 @@ WorkspaceService.prototype.createFolder = function (type) {
         text: this.newFileName('folder', 'folder')
     };
     inst.create_node(obj, node_tmpl, "last", function (new_node) {
-        setTimeout(function () { inst.edit(new_node); }, 0);
+        inst.edit(new_node);
     });
 };
 
@@ -995,7 +995,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 
         return openMenuItemFactory;
     }])
-    .factory('$treeConfig', ['$treeConfig.openmenuitem', function (openmenuitem) {
+    .factory('$treeConfig', ['$treeConfig.openmenuitem', '$http', function (openmenuitem, $http) {
 
         // get the new by template extensions
         let templates = $.ajax({
@@ -1015,6 +1015,19 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 
         let priorityFileTemplates = JSON.parse(templates).filter(e => e.order !== undefined).sort((a, b) => a.order - b.order);
         let specificFileTemplates = JSON.parse(templates).filter(e => e.order === undefined);
+        let post_no_edit_URL = '/services/v4/ide/workspaces/';
+
+        for (let i = 0; i < priorityFileTemplates.length; i++) {
+            if (priorityFileTemplates[i].isModel) {
+                models.push(priorityFileTemplates[i].extension);
+            }
+        }
+
+        for (let i = 0; i < specificFileTemplates.length; i++) {
+            if (specificFileTemplates[i].isModel) {
+                models.push(specificFileTemplates[i].extension);
+            }
+        }
 
         return {
             'core': {
@@ -1067,7 +1080,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         ctxmenu.create = _ctxmenu.create;
                         delete ctxmenu.create.action;
                         ctxmenu.create.label = "New";
-                        ctxmenu.create.submenu = {
+
+                        let new_submenu = {
                             /*Folder*/
                             "create_folder": {
                                 "label": "Folder",
@@ -1097,46 +1111,100 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                                 }.bind(self, this)
                             }
                         };
+                        ctxmenu.create.submenu = new_submenu;
                     }
 
                     if (ctxmenu.create) {
+                        let nodeChildren = node.original._file.files.map(x => x.name);
+
                         for (let i = 0; i < priorityFileTemplates.length; i++) {
                             let fileTemplate = priorityFileTemplates[i];
+                            let isDisabled = false;
+                            if (fileTemplate.oncePerFolder) {
+                                for (let nc = 0; nc < nodeChildren.length; nc++) {
+                                    if (fileTemplate.nameless && nodeChildren[nc] === `.${fileTemplate.extension}` || nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
+                                        isDisabled = true;
+                                        break;
+                                    }
+                                }
+                            }
                             ctxmenu.create.submenu[fileTemplate.name] = {
+                                "_disabled": isDisabled,
                                 "separator_after": (i + 1 === priorityFileTemplates.length),
                                 "label": fileTemplate.label,
                                 "action": function (wnd, data) {
                                     let tree = $.jstree.reference(data.reference);
                                     let parentNode = tree.get_node(data.reference);
                                     let fileNode = {
-                                        type: 'file'
+                                        type: 'file',
+                                        data: fileTemplate.data,
                                     };
-                                    fileNode.text = 'file.' + fileTemplate.extension;
-                                    fileNode.data = fileTemplate.data;
-                                    tree.create_node(parentNode, fileNode, "last", function (new_node) {
-                                        tree.edit(new_node);
-                                    });
+                                    if (fileTemplate.nameless) {
+                                        fileNode.text = `.${fileTemplate.extension}`;
+                                    } else {
+                                        fileNode.text = `file.${fileTemplate.extension}`;
+                                    }
+                                    if (fileTemplate.staticName) {
+                                        let url = new UriBuilder().path(post_no_edit_URL.split('/')).path(parentNode.original._file.path.split('/')).path(fileNode.text).build();
+                                        $http.post(url, fileNode.data, {
+                                            headers: {
+                                                "Content-Type": "text/plain;charset=UTF-8"
+                                            }
+                                        }).then(function (response) {
+                                            $('#refreshButton').click();
+                                        });
+                                    } else {
+                                        tree.create_node(parentNode, fileNode, "last", function (new_node) {
+                                            tree.edit(new_node);
+                                        });
+                                    }
                                 }.bind(self, this)
                             };
                         }
 
-                        specificFileTemplates.forEach(function (fileTemplate) {
+                        for (let i = 0; i < specificFileTemplates.length; i++) {
+                            let fileTemplate = specificFileTemplates[i];
+                            let isDisabled = false;
+                            if (fileTemplate.oncePerFolder) {
+                                for (let nc = 0; nc < nodeChildren.length; nc++) {
+                                    if (fileTemplate.nameless && nodeChildren[nc] === `.${fileTemplate.extension}` || nodeChildren[nc].endsWith(`.${fileTemplate.extension}`)) {
+                                        isDisabled = true;
+                                        break;
+                                    }
+                                }
+                            }
                             ctxmenu.create.submenu[fileTemplate.name] = {
+                                "_disabled": isDisabled,
                                 "label": fileTemplate.label,
                                 "action": function (wnd, data) {
                                     let tree = $.jstree.reference(data.reference);
                                     let parentNode = tree.get_node(data.reference);
                                     let fileNode = {
-                                        type: 'file'
+                                        type: 'file',
+                                        data: fileTemplate.data
                                     };
-                                    fileNode.text = 'file.' + fileTemplate.extension;
-                                    fileNode.data = fileTemplate.data;
-                                    tree.create_node(parentNode, fileNode, "last", function (new_node) {
-                                        tree.edit(new_node);
-                                    });
+                                    if (fileTemplate.nameless) {
+                                        fileNode.text = `.${fileTemplate.extension}`;
+                                    } else {
+                                        fileNode.text = `file.${fileTemplate.extension}`;
+                                    }
+                                    if (fileTemplate.staticName) {
+                                        let url = new UriBuilder().path(post_no_edit_URL.split('/')).path(parentNode.original._file.path.split('/')).path(fileNode.text).build();
+                                        $http.post(url, fileNode.data, {
+                                            headers: {
+                                                "Content-Type": "text/plain;charset=UTF-8"
+                                            }
+                                        }).then(function (response) {
+                                            $('#refreshButton').click();
+                                        });
+                                    } else {
+                                        tree.create_node(parentNode, fileNode, "last", function (new_node) {
+                                            tree.edit(new_node, fileNode.text);
+                                        });
+                                    }
                                 }.bind(self, this)
                             };
-                        });
+                        }
                     }
 
                     /*Copy*/
@@ -1363,15 +1431,15 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         uploader.filters.push({
             name: 'customFilter',
             fn: function (item /*{File|FileLikeObject}*/, options) {
+                let type = item.type.slice(item.type.lastIndexOf('/') + 1);
+                if (type != 'zip' && type != 'x-zip') {
+                    return false;
+                }
                 return this.queue.length < 100;
             }
         });
 
         // UPLOADER CALLBACKS
-
-        uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
-            console.info('onWhenAddingFileFailed', item, filter, options);
-        };
         uploader.onBeforeUploadItem = function (item) {
             let internalPath = $scope.pathToImportIn;
             let pathSegments = [$scope.selectedWorkspace, $scope.projectName, encodeURIComponent(internalPath)];
@@ -1380,6 +1448,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             item.url = $scope.TRANSPORT_ZIPTOFOLDER_URL + buildPath.build();
             $scope.uploader.url = item.url;
         };
+
         uploader.onCompleteAll = function () {
             this.clearQueue();
             $('#uploadZipToFolder').click();
@@ -1387,9 +1456,8 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         };
 
         this.cancelImportFromZip = function (uploader) {
-            if (uploader.isUploading) {
+            if (uploader.isUploading)
                 uploader.cancelAll();
-            }
             uploader.clearQueue();
         }
 
@@ -1671,7 +1739,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     }]);
 
 const images = ['png', 'jpg', 'jpeg', 'gif'];
-const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'xsjob', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
+const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
 function getIcon(f) {
     let icon;

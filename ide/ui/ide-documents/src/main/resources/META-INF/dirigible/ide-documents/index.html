@@ -58,7 +58,7 @@
 
         <div class="shell">
             <div class="sidebar list-group" sidebar active="Documents"></div>
-            <div id="documents" class="plane" views-layout views-layout-model="db.layoutModel"></div>
+            <div id="documents" class="plane" views-layout views-layout-model="layoutModel"></div>
         </div>
         <div class="statusbar" status-bar>{{message}}</div>
         <div alert></div>
@@ -68,14 +68,26 @@
             .config(["messageHubProvider", function (messageHubProvider) {
                 messageHubProvider.evtNamePrefix = 'documents';
             }])
-            .controller('DocumentsController', ['Layouts', function (Layouts) {
+            .controller('DocumentsController', ['$scope', '$http', 'Layouts', function ($scope, $http, Layouts) {
 
-                this.layoutModel = {
-                    views: ['documents', 'documents-constraints'],
+                $scope.layoutModel = {
+                    views: ['documents'],
                     viewSettings: {
-                        'documents': { isClosable: false },
-                        'documents-constraints': { isClosable: false }
+                        'documents': { isClosable: false }
                     }
+                };
+
+                getConstraints()
+                .then(function (data) {
+                    $scope.layoutModel.views.push('documents-constraints');
+                    $scope.layoutModel.viewSettings['documents-constraints'] = { isClosable: false };
+                })
+                .catch(function(err) {
+                    //User is not Operator, so Constraints view cannot be presented."
+                });
+
+                function getConstraints() {
+                    return $http.get('/services/v4/js/ide-documents/api/constraints');
                 };
 
             }]);
