@@ -11,9 +11,17 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import com.sap.db.jdbc.HanaClob;
+import com.sap.db.jdbc.HanaBlob;
+import org.apache.commons.io.IOUtils;
+import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.apache.olingo.odata2.core.edm.EdmDouble;
+import org.apache.olingo.odata2.core.edm.EdmInt16;
+import org.apache.olingo.odata2.core.edm.EdmInt32;
+import org.apache.olingo.odata2.core.edm.EdmInt64;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLInterceptor;
@@ -23,6 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +79,24 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
     }
 
     @Override
-    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) {
+    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException, SQLException, IOException {
+        if (value instanceof BigDecimal) {
+            BigDecimal dec = (BigDecimal) value;
+            if (property.getType().equals(EdmInt32.getInstance())) {
+                return dec.toBigInteger().intValue();
+            } else if (property.getType().equals(EdmInt64.getInstance())) {
+                return dec.toBigInteger().longValue();
+            } else if (property.getType().equals(EdmInt16.getInstance())) {
+                return dec.toBigInteger().shortValue();
+            } else if (property.getType().equals(EdmDouble.getInstance())) {
+                return dec.doubleValue();
+            }
+        } else if (value instanceof HanaClob) {
+            return IOUtils.toString(((HanaClob) value).getCharacterStream());
+        } else if (value instanceof HanaBlob) {
+            return IOUtils.toString(((HanaBlob) value).getBinaryStream(), StandardCharsets.UTF_8);
+        }
+
         return value;
     }
 
