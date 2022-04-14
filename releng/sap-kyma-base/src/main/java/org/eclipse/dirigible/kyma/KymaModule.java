@@ -43,8 +43,17 @@ public class KymaModule extends AbstractDirigibleModule {
 
 	public static final String DEFAULT_DESTINATION_PREFIX = "destination_";
 
+	public static final String DIRIGIBLE_CONNECTIVITY_PREFIX = "DIRIGIBLE_CONNECTIVITY_PREFIX";
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_ID = "DIRIGIBLE_CONNECTIVITY_CLIENT_ID";
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET = "DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET";
+	public static final String DIRIGIBLE_CONNECTIVITY_URL = "DIRIGIBLE_CONNECTIVITY_URL";
+	public static final String DIRIGIBLE_CONNECTIVITY_URI = "DIRIGIBLE_CONNECTIVITY_URI";
+
+	public static final String DEFAULT_CONNECTIVITY_PREFIX = "connectivity_";
+
 	private static final String ERROR_MESSAGE_NO_OAUTH_CONFIGURATION = "No OAuth configuration provided";
 	private static final String WARN_MESSAGE_NO_DESTINATION_CONFIGURATION = "No Destination configuration provided";
+	private static final String WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION = "No Connectivity configuration provided";
 
 	@Override
 	public int getPriority() {
@@ -61,6 +70,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		Configuration.loadModuleConfig("/dirigible-kyma.properties");
 		configureOAuth();
 		configureDestination();
+		configureConnectivity();
 	}
 
 	private void configureOAuth() {
@@ -104,6 +114,25 @@ public class KymaModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 		} else {
 			logger.warn(WARN_MESSAGE_NO_DESTINATION_CONFIGURATION);
+		}
+
+	}
+
+	private void configureConnectivity() {
+		String connectivityPrefix = Configuration.get(DIRIGIBLE_CONNECTIVITY_PREFIX, DEFAULT_CONNECTIVITY_PREFIX);
+
+		String clientId = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_ID);
+		String clientSecret = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_SECRET);
+		String url = getEnvWithPrefix(connectivityPrefix, ENV_URL);
+		String uri = getEnvWithPrefix(connectivityPrefix, ENV_URI);
+
+		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_ID, clientId);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET, clientSecret);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, url);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URI, uri);
+		} else {
+			logger.warn(WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION);
 		}
 
 	}
