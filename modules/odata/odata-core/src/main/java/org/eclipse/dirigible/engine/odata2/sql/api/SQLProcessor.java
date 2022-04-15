@@ -18,6 +18,8 @@ import org.apache.olingo.odata2.api.processor.ODataProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 public interface SQLProcessor extends ODataProcessor {
@@ -57,7 +59,7 @@ public interface SQLProcessor extends ODataProcessor {
      * @throws EdmException in case of an error
      */
     Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value)
-            throws EdmException;
+            throws EdmException, SQLException, IOException;
     
 
     /**
