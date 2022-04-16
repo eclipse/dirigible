@@ -167,9 +167,7 @@ angular.module('ideUiCore', ['ngResource'])
 						}
 					} else {
 						container.setTitle("Welcome");
-						let brandingInfo = {};
-						getBrandingInfo(brandingInfo);
-						src = brandingInfo.branding.welcomePage;
+						src = '/services/v4/web/ide-welcome/welcome.html'; // Hardcoded for now
 					}
 					$('<iframe>').attr('src', src).appendTo(container.getElement().empty());
 				})(componentState, this);

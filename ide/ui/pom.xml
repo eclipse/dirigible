@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -12,7 +11,7 @@
 	<name>IDE - UI - Parent</name>
 	<artifactId>dirigible-ide-ui-parent</artifactId>
 	<description>WebIDE UI Plugins</description>
-    <packaging>pom</packaging>
+	<packaging>pom</packaging>
 
 	<modules>
 		<module>ide-about</module>
@@ -20,6 +19,7 @@
 		<module>ide-console</module>
 		<module>ide-core</module>
 		<module>ide-workbench</module>
+		<module>ide-welcome</module>
 		<module>ide-database</module>
 		<module>ide-database-menu</module>
 		<module>ide-deploy-manager</module>

@@ -65,32 +65,32 @@
 
         <script type="text/javascript">
             angular.module('documents', ['ngResource', 'ideUiCore'])
-            .config(["messageHubProvider", function (messageHubProvider) {
-                messageHubProvider.evtNamePrefix = 'documents';
-            }])
-            .controller('DocumentsController', ['$scope', '$http', 'Layouts', function ($scope, $http, Layouts) {
+                .config(["messageHubProvider", function (messageHubProvider) {
+                    messageHubProvider.evtNamePrefix = 'documents';
+                }])
+                .controller('DocumentsController', ['$scope', '$http', 'Layouts', function ($scope, $http, Layouts) {
 
-                $scope.layoutModel = {
-                    views: ['documents'],
-                    viewSettings: {
-                        'documents': { isClosable: false }
-                    }
-                };
+                    $scope.layoutModel = {
+                        views: ['documents'],
+                        viewSettings: {
+                            'documents': { isClosable: false }
+                        }
+                    };
 
-                getConstraints()
-                .then(function (data) {
-                    $scope.layoutModel.views.push('documents-constraints');
-                    $scope.layoutModel.viewSettings['documents-constraints'] = { isClosable: false };
-                })
-                .catch(function(err) {
-                    //User is not Operator, so Constraints view cannot be presented."
-                });
+                    getConstraints()
+                        .then(function (data) {
+                            $scope.layoutModel.views.push('documents-constraints');
+                            $scope.layoutModel.viewSettings['documents-constraints'] = { isClosable: false };
+                        })
+                        .catch(function (err) {
+                            //User is not Operator, so Constraints view cannot be presented."
+                        });
 
-                function getConstraints() {
-                    return $http.get('/services/v4/js/ide-documents/api/constraints');
-                };
+                    function getConstraints() {
+                        return $http.get('/services/v4/js/ide-documents/api/constraints');
+                    };
 
-            }]);
+                }]);
         </script>
 
     </body>
