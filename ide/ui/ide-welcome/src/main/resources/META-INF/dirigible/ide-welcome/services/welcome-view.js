@@ -10,13 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getView = function () {
-	let view = {
-		"id": "sql",
-		"name": "SQL",
-		"factory": "editor",
+	return {
+		"id": "welcome",
+		"name": "Welcome",
+		"factory": "frame",
 		"region": "center-middle",
-		"label": "SQL",
-		"link": "../ide-database/sql/sql.html"
+		"label": "Welcome",
+		"link": "../ide-welcome/welcome.html"
 	};
-	return view;
 }

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
+    <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+      body {
+        overflow: hidden;
+        height: 100%;
+      }
+
+      #embeddedEditor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+
+    <!-- Twitter Bootstrap with Theme Support -->
+    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+  </head>
+
+  <body id="monaco-browser" spellcheck="false">
+    <script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
+
+    <div id="embeddedEditor"></div>
+
+    <script type="text/javascript" src="/services/v4/web/ide-monaco/monaco-editor/min/vs/loader.js"></script>
+    <script>
+      let messageHub = new FramesMessageHub();
+      let sqlPlaceholder = "-- Ctrl+X to execute all or selected text only (Cmd+X for Mac)\n";
+      let csrfToken;
+
+      function createEditorInstance() {
+        return new Promise((resolve, reject) => {
+          setTimeout(function () {
+            try {
+              let containerEl = document.getElementById("embeddedEditor");
+              if (containerEl.childElementCount > 0) {
+                for (let i = 0; i < containerEl.childElementCount; i++)
+                  containerEl.removeChild(containerEl.children.item(i));
+              }
+              let editor = monaco.editor.create(containerEl, {
+                value: sqlPlaceholder,
+                automaticLayout: true,
+                language: "sql",
+              });
+              resolve(editor);
+              window.onresize = function () {
+                editor.layout();
+              };
+            } catch (err) {
+              reject(err);
+            }
+          });
+        });
+      }
+
+      function createExecuteAction() {
+        return {
+          // An unique identifier of the contributed action.
+          id: "dirigible-sql-execute",
+
+          // A label of the action that will be presented to the user.
+          label: "Execute",
+
+          // An optional array of keybindings for the action.
+          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX],
+
+          // Method that will be executed when the action is triggered.
+          // @param editor The editor instance is passed in as a convinience
+          run: function (editor) {
+            let text = editor.getModel().getValueInRange(editor.getSelection());
+            if (text.length === 0) {
+              text = editor.getModel().getValue();
+            }
+            let sqlCommand = getSQLCommand(text);
+            messageHub.post({ data: sqlCommand }, "database.sql.execute");
+          },
+        };
+      }
+
+      (function init() {
+        require.config({ paths: { vs: "/services/v4/web/ide-monaco/monaco-editor/min/vs" } });
+
+        require(["vs/editor/editor.main"], function () {
+          let _editor;
+          createEditorInstance()
+            .then((editor) => {
+              _editor = editor;
+              messageHub.subscribe(function () {
+                let executionObject = createExecuteAction();
+                executionObject.run(_editor);
+              }, "database.sql.run");
+              let sqlCommand = loadSQLCommand();
+              return sqlPlaceholder + sqlCommand;
+            })
+            .then((fileText) => {
+              let model = monaco.editor.createModel(fileText, "sql");
+              _editor.setModel(model);
+              _editor.addAction(createExecuteAction());
+              _editor.onDidChangeCursorPosition(function (e) {
+                let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
+                messageHub.post({ data: caretInfo }, "status.caret");
+              });
+              _editor.onDidChangeModelContent(function (e) {
+                saveSQLCommand(_editor.getValue());
+              });
+            });
+          monaco.editor.setTheme(monacoTheme);
+        });
+      })();
+
+      function getSQLCommand(text) {
+        let sqlCommand = text;
+        let sqlPlaceHolderIndex = text.indexOf(sqlPlaceholder);
+        if (sqlPlaceHolderIndex >= 0) {
+          sqlCommand = text.substring(sqlPlaceholder.length);
+        }
+        return sqlCommand;
+      }
+
+      function saveSQLCommand(text) {
+        let sqlCommand = getSQLCommand(text);
+        localStorage.setItem("DIRIGIBLE.IDE.DATABASE.sqlCommand", sqlCommand);
+      }
+
+      function loadSQLCommand() {
+        let sqlCommand = localStorage.getItem("DIRIGIBLE.IDE.DATABASE.sqlCommand");
+        return sqlCommand ? sqlCommand : "";
+      }
+    </script>
+  </body>
+</html>
