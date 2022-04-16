@@ -1,0 +1,5 @@
+{
+    "module": "ide-sql/services/sql-editor.js",
+    "extensionPoint": "ide-view",
+    "description": "SQL Editor"
+}

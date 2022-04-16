@@ -69,6 +69,21 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-properties</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-sql</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-result</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-ide-ui-database</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>

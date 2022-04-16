@@ -26,6 +26,9 @@
 		<module>ide-git</module>
 		<module>ide-preview</module>
 		<module>ide-problems</module>
+		<module>ide-properties</module>
+		<module>ide-sql</module>
+		<module>ide-result</module>
 		<module>ide-repository</module>
 		<module>ide-swagger</module>
 		<module>ide-terminal</module>
