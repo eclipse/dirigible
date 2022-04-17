@@ -303,7 +303,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"sqlTable\": \"UserRole\",\n" +
                 "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
                 "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
-                "\t\"KeyGenerated\": \"ID\",\n" +
+                "\t\"keyGenerated\": \"ID\",\n" +
                 "\t\"_pk_\" : \"\"\n" +
                 "}";
 
