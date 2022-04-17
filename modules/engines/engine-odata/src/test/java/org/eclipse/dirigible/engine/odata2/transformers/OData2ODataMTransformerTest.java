@@ -16,6 +16,7 @@ import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactoryTest;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
@@ -283,6 +284,31 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "}";
         String[] transformed = odata2ODataMTransformer.transform(definition);
         assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
+    }
+
+    @Test
+    public void testViewTransformation() throws IOException, SQLException {
+        String view = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/view/View.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/view/View.odata", view);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ZUSR_ROLE", "Edm.String", true, false);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("ZROLE_NAME", "Edm.String", true, false);
+        PersistenceTableModel model = new PersistenceTableModel("UserRole", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.KEYWORD_VIEW);
+        when(dbMetadataUtil.getTableMetadata("UserRole", null)).thenReturn(model);
+
+        String entityView = "{\n" +
+                "\t\"edmType\": \"UserRoleType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUserRole.UserRoleType\",\n" +
+                "\t\"sqlTable\": \"UserRole\",\n" +
+                "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
+                "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
+                "\t\"KeyGenerated\": \"ID\",\n" +
+                "\t\"_pk_\" : \"\"\n" +
+                "}";
+
+        String[] transformed = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityView}, transformed);
     }
 
 //    @Test

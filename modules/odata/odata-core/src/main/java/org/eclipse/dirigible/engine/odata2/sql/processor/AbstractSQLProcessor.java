@@ -199,7 +199,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				try (ResultSet resultSet = statement.executeQuery()) {
 					ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
 					while (resultSet.next()) {
-						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						ResultSetReader.ResultSetEntity currentTargetEntity;
+						if(query.hasKeyGeneratedPresent(targetEntitySet.getEntityType())) {
+							currentTargetEntity = resultSetReader.getResultSetEntityForView(query, targetEntityType, properties, resultSet);
+						} else {
+							currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						}
 						LOG.info("Current entity set object is {}", currentTargetEntity);
 						if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
 							currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);

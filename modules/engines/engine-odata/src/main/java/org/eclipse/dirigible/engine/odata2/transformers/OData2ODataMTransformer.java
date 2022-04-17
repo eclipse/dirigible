@@ -148,6 +148,10 @@ public class OData2ODataMTransformer {
                 buff.append(String.join(",\n", assembleRefNav)).append(",\n");
             }
 
+            if(entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
+                buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
+            }
+
             String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});
             buff.append("\t\"_pk_\" : \"").append(String.join(",", pks)).append("\"");
             buff.append("\n}");

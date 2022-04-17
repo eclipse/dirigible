@@ -24,6 +24,8 @@ public class ODataEntityDefinition {
 
     private String table;
 
+	private String keyGenerated;
+
     private List<ODataProperty> properties = new ArrayList<>();
 
     private List<ODataNavigation> navigations = new ArrayList<>();
@@ -71,6 +73,14 @@ public class ODataEntityDefinition {
 
 	public void setTable(String table) {
 		this.table = table;
+	}
+
+	public String getKeyGenerated() {
+		return keyGenerated;
+	}
+
+	public void setKeyGenerated(String keyGenerated) {
+		this.keyGenerated = keyGenerated;
 	}
 
 	public List<ODataProperty> getProperties() {

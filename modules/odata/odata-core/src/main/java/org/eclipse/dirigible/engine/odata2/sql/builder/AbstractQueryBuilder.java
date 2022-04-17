@@ -113,6 +113,11 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return mapping.hasMappingTable(to);
     }
 
+    public boolean hasKeyGeneratedPresent(final EdmStructuralType target) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+        return mapping.isPropertyMapped("keyGenerated");
+    }
+
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getPrimaryKey();
     }
