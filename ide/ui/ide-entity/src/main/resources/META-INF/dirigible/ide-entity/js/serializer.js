@@ -81,7 +81,7 @@ function createModel(graph) {
 				for (let j = 0; j < propertyCount; j++) {
 					let property = graph.model.getChildAt(child, j).value;
 
-					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
+					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
 						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
