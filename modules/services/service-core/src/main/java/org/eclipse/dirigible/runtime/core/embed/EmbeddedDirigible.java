@@ -13,9 +13,11 @@ package org.eclipse.dirigible.runtime.core.embed;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.EnumSet;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +69,8 @@ public class EmbeddedDirigible {
 	 */
 	public void load(File root) throws IOException {
 		Path source = Paths.get(root.getAbsolutePath());
-		Files.walkFileTree(source, new FolderToRegistryImporter(source, this.repository));
+		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(source, opts, Integer.MAX_VALUE, new FolderToRegistryImporter(source, this.repository));
 	}
 	
 	/**
