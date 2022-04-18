@@ -41,27 +41,14 @@ public class ResultSetReader {
         return result;
     }
 
-
-    protected ResultSetEntity getResultSetEntityForView(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                        Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
-
-        return getResultSetEntityForObject(selectEntityQuery, entityType, properties, resultSet, true);
-    }
-
     protected ResultSetEntity getResultSetEntity(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                 Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
-
-        return getResultSetEntityForObject(selectEntityQuery, entityType, properties, resultSet, false);
-    }
-
-    protected ResultSetEntity getResultSetEntityForObject(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                          Collection<EdmProperty> properties, final ResultSet resultSet, boolean isView) throws SQLException, ODataException, IOException {
+                                                          Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId) throws SQLException, ODataException, IOException {
         Map<String, Object> data = new HashMap<>();
         for (EdmProperty property : properties) {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
         }
 
-        if(isView) {
+        if(hasGeneratedId) {
             return new ResultSetEntity(entityType, data, String.valueOf(resultSet.getInt("row_num")));
         }
         return new ResultSetEntity(entityType, data);
