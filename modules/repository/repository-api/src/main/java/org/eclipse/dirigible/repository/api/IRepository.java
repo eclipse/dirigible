@@ -54,4 +54,7 @@ public interface IRepository
 		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
 	}
 
+	default String getRepositoryPath() {
+		throw new RepositoryException("Operation not supported for repository type: " + this.getClass().getName());
+	}
 }

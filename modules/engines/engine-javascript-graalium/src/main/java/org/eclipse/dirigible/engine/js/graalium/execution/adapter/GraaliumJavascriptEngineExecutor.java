@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.engine.js.graalium.execution.adapter;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.js.api.AbstractJavascriptExecutor;
@@ -25,7 +26,8 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     @Override
     public Object executeServiceModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
         Source moduleSource = loadModuleSource(module);
-        try (CodeRunner codeRunner = createJSCodeRunner(executionContext)) {
+        ExecutableFile executableFile = createExecutableFile(module);
+        try (CodeRunner codeRunner = createJSCodeRunner(executableFile.getWorkingDirectoryPath(), executionContext)) {
             return codeRunner.run(moduleSource).as(Object.class);
         }
     }
@@ -33,7 +35,8 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     @Override
     public Object evalModule(String module, Map<Object, Object> executionContext) throws ScriptingException {
         Source moduleSource = loadModuleSource(module);
-        try (CodeRunner codeRunner = createJSCodeRunner(executionContext)) {
+        ExecutableFile executableFile = createExecutableFile(module);
+        try (CodeRunner codeRunner = createJSCodeRunner(executableFile.getWorkingDirectoryPath(), executionContext)) {
             return codeRunner.run(moduleSource).as(Object.class);
         }
     }
@@ -41,8 +44,40 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     @Override
     public Object executeMethodFromModule(String module, String memberClass, String memberClassMethod, Map<Object, Object> executionContext) {
         Source moduleSource = loadModuleSource(module);
-        try (CodeRunner codeRunner = createJSCodeRunner(executionContext)) {
+        ExecutableFile executableFile = createExecutableFile(module);
+        try (CodeRunner codeRunner = createJSCodeRunner(executableFile.getWorkingDirectoryPath(), executionContext)) {
             return codeRunner.run(moduleSource).as(Object.class);
+        }
+    }
+
+    private static ExecutableFile createExecutableFile(String module) {
+        Path modulePath = Path.of(module);
+        Path repositoryRootPath = Path.of(REPOSITORY.getRepositoryPath());
+        Path projectDirectoryPath = repositoryRootPath.resolve(modulePath);
+
+        Path executableFilePath = Path.of("/");
+        for (int partIndex = 1; partIndex < modulePath.getNameCount(); partIndex += 1) {
+            executableFilePath = executableFilePath.resolve(modulePath.getName(partIndex));
+        }
+
+        return new ExecutableFile(projectDirectoryPath, executableFilePath);
+    }
+
+    private static class ExecutableFile {
+        private final Path workingDirectoryPath;
+        private final Path executableFilePath;
+
+        private ExecutableFile(Path workingDirectoryPath, Path executableFilePath) {
+            this.workingDirectoryPath = workingDirectoryPath;
+            this.executableFilePath = executableFilePath;
+        }
+
+        public Path getWorkingDirectoryPath() {
+            return workingDirectoryPath;
+        }
+
+        public Path getExecutableFilePath() {
+            return executableFilePath;
         }
     }
 
@@ -58,7 +93,7 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     @Override
     public Object executeServiceCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
         Source source = GraalJSSourceCreator.createSource(code, "Unknown");
-        try (CodeRunner codeRunner = createJSCodeRunner(executionContext)) {
+        try (CodeRunner codeRunner = createJSCodeRunner(Path.of(REPOSITORY.getRepositoryPath()), executionContext)) {
             return codeRunner.run(source).as(Object.class);
         }
     }
@@ -66,13 +101,13 @@ public class GraaliumJavascriptEngineExecutor extends AbstractJavascriptExecutor
     @Override
     public Object evalCode(String code, Map<Object, Object> executionContext) throws ScriptingException {
         Source source = GraalJSSourceCreator.createSource(code, "Unknown");
-        try (CodeRunner codeRunner = createJSCodeRunner(executionContext)) {
+        try (CodeRunner codeRunner = createJSCodeRunner(Path.of(REPOSITORY.getRepositoryPath()), executionContext)) {
             return codeRunner.run(source).as(Object.class);
         }
     }
 
-    private static CodeRunner createJSCodeRunner(Map<Object, Object> executionContext) {
-        return GraalJSCodeRunner.newBuilder(Path.of(""), getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
+    private static CodeRunner createJSCodeRunner(Path workingDirectoryPath, Map<Object, Object> executionContext) {
+        return GraalJSCodeRunner.newBuilder(workingDirectoryPath, getOrCreateInternalFolder("dependencies"), getOrCreateInternalFolder("core-modules"))
                 .addJSPolyfill(new RequirePolyfill())
                 .addGlobalObject(new DirigibleContextGlobalObject(executionContext))
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())

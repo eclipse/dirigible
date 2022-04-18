@@ -16,33 +16,50 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.engine.api.script.AbstractScriptExecutor;
 import org.eclipse.dirigible.engine.js.graalium.execution.CalledFromJS;
 import org.eclipse.dirigible.repository.api.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DirigibleModuleProvider {
     private static final IRepository REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 
-    public static byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
-        validateProvidedModulePath(module);
-        String resourcePath = createResourcePath(root, module, extension);
+    @CalledFromJS
+    public static String loadSource(String module) throws IOException {
+        if (module == null) {
+            throw new IOException("Module location cannot be null");
+        }
+
+        String maybeJSSourceCode = getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, module + ".js");
+        if (maybeJSSourceCode != null) {
+            return maybeJSSourceCode;
+        }
+
+        String maybeXSJSSourceCode = getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, module + ".xsjs");
+        if (maybeXSJSSourceCode != null) {
+            return maybeXSJSSourceCode;
+        }
+
+        throw new IOException("Could not find module '" + module + "'");
+    }
+
+    @Nullable
+    public static String getResourceContent(String root, String filePath) throws RepositoryException {
+        validateProvidedModulePath(filePath);
+        String resourcePath = createResourcePath(root, filePath);
 
         byte[] maybeContentFromRepository = tryGetFromRepository(resourcePath);
         if (maybeContentFromRepository != null) {
-            return maybeContentFromRepository;
+            return new String(maybeContentFromRepository, StandardCharsets.UTF_8);
         }
 
-        maybeContentFromRepository = tryGetFromClassLoader(resourcePath, module, extension);
-        if (maybeContentFromRepository != null) {
-            return maybeContentFromRepository;
+        byte[] maybeContentFromClassLoader = tryGetFromClassLoader(resourcePath, filePath);
+        if (maybeContentFromClassLoader != null) {
+            return new String(maybeContentFromClassLoader, StandardCharsets.UTF_8);
         }
 
-        final String logMsg = String.format("There is no resource at the specified path: %s", resourcePath);
-        throw new RepositoryNotFoundException(logMsg);
+        return null;
     }
 
     private static void validateProvidedModulePath(String modulePath) {
@@ -54,6 +71,7 @@ public class DirigibleModuleProvider {
         }
     }
 
+    @Nullable
     private static byte[] tryGetFromRepository(String repositoryPath) {
         IResource resource = REPOSITORY.getResource(repositoryPath);
         if (!resource.exists()) {
@@ -62,10 +80,11 @@ public class DirigibleModuleProvider {
         return resource.getContent();
     }
 
-    private static byte[] tryGetFromClassLoader(String repositoryPath, String module, String extension) {
+    @Nullable
+    private static byte[] tryGetFromClassLoader(String repositoryPath, String filePath) {
         try {
-            String prefix = Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
-            String location = prefix + module + (extension != null ? extension : "");
+            String prefix = Character.toString(filePath.charAt(0)).equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
+            String location = prefix + filePath;
             try (InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible" + location)) {
                 byte[] content = null;
                 if (bundled != null) {
@@ -75,30 +94,16 @@ public class DirigibleModuleProvider {
                 return content;
             }
         } catch (IOException e) {
-            throw new RepositoryException(e);
+            return null;
         }
     }
 
-    private static String createResourcePath(String root, String module, String extension) {
+    private static String createResourcePath(String root, String module) {
         StringBuilder buff = new StringBuilder().append(root);
         if (!Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR)) {
             buff.append(IRepository.SEPARATOR);
         }
         buff.append(module);
-        if (extension != null) {
-            buff.append(extension);
-        }
         return buff.toString();
-    }
-
-    @CalledFromJS
-    public static String loadSource(String module) throws IOException {
-
-        if (module == null) {
-            throw new IOException("Module location cannot be null");
-        }
-
-        byte[] sourceCode = getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, module, ".js");
-        return new String(sourceCode, StandardCharsets.UTF_8);
     }
 }

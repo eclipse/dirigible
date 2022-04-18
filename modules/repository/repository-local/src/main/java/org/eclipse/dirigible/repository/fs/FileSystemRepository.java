@@ -160,6 +160,7 @@ public abstract class FileSystemRepository implements IRepository {
 	 *
 	 * @return the repository path
 	 */
+	@Override
 	public String getRepositoryPath() {
 		return repositoryPath;
 	}

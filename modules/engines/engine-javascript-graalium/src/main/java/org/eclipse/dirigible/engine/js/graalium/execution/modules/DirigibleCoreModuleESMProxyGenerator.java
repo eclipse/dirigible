@@ -17,6 +17,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DirigibleCoreModuleESMProxyGenerator {
@@ -30,6 +31,7 @@ public class DirigibleCoreModuleESMProxyGenerator {
     private static final String DEFAULT_EXPORT_PATTERN = "export default { " + NAMES_LIST_PLACEHOLDER + " }";
     private static final String EXPORT_PATTERN =
             "export const " + NAME_PLACEHOLDER + " = dirigibleRequire('" + PATH_PLACEHOLDER + "');";
+    private final Gson gson = new Gson();
 
     public String generate(String path, String apiVersion) {
         DirigibleApiModule[] modules = readApiModuleJson(path + API_MODULES_JSON_PATH);
@@ -62,11 +64,7 @@ public class DirigibleCoreModuleESMProxyGenerator {
     }
 
     private DirigibleApiModule[] readApiModuleJson(String path) {
-        Gson gson = new Gson();
-        byte[] apiModuleJsonBytes = DirigibleModuleProvider.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC,
-                path.replace(".json", ""), ".json");
-
-        String apiModuleJson = new String(apiModuleJsonBytes, StandardCharsets.UTF_8);
+        String apiModuleJson = DirigibleModuleProvider.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
         return gson.fromJson(apiModuleJson, DirigibleApiModule[].class);
     }
 

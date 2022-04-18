@@ -36,7 +36,7 @@ public class JavascriptModule extends AbstractDirigibleModule {
 		Configuration.loadModuleConfig("/dirigible-js.properties");
 
 		String javascriptEngineType = Configuration.get(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_DEFAULT,
-				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALIUM);
+				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_GRAALVM);
 		for (IJavascriptEngineExecutor next : javascriptEngineExecutors) {
 			if (next.getType().equals(javascriptEngineType)) {
 				StaticObjects.set(StaticObjects.JAVASCRIPT_ENGINE, next);
