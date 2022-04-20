@@ -117,7 +117,7 @@ angular.module('page')
 	$scope.dataPage = 1;
 	$scope.dataCount = 0;
 	$scope.dataOffset = 0;
-	$scope.dataLimit = 10;
+	$scope.dataLimit = 50;
 
 	$scope.getPages = function() {
 		return new Array($scope.dataPages);
