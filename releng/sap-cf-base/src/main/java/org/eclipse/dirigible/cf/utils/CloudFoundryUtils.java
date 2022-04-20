@@ -88,7 +88,7 @@ public class CloudFoundryUtils {
 	public static ConnectivityEnv getConnectivityEnv() {
 		String envJson = EnvFacade.get(VCAP_SERVICES);
 		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
-		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getConnectivityEnv().get(0) : null;
+		return vcapServicesEnv.getConnectivityEnv() != null ? vcapServicesEnv.getConnectivityEnv().get(0) : null;
 	}
 
 	public static class VcapApplicationEnv {
