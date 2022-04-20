@@ -85,6 +85,12 @@ public class CloudFoundryUtils {
 		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getDestinationEnv().get(0) : null;
 	}
 
+	public static ConnectivityEnv getConnectivityEnv() {
+		String envJson = EnvFacade.get(VCAP_SERVICES);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		return vcapServicesEnv.getConnectivityEnv() != null ? vcapServicesEnv.getConnectivityEnv().get(0) : null;
+	}
+
 	public static class VcapApplicationEnv {
 
 		private String name;
@@ -174,6 +180,9 @@ public class CloudFoundryUtils {
 		@SerializedName("destination")
 		private List<DestinationEnv> destinationEnv;
 
+		@SerializedName("connectivity")
+		private List<ConnectivityEnv> connectivityEnv;
+
 		public List<XsuaaEnv> getXsuaa() {
 			return xsuaa;
 		}
@@ -224,6 +233,14 @@ public class CloudFoundryUtils {
 
 		public void setDestinationEnv(List<DestinationEnv> destinationEnv) {
 			this.destinationEnv = destinationEnv;
+		}
+
+		public List<ConnectivityEnv> getConnectivityEnv() {
+			return connectivityEnv;
+		}
+
+		public void setConnectivityEnv(List<ConnectivityEnv> connectivityEnv) {
+			this.connectivityEnv = connectivityEnv;
 		}
 	}
 
@@ -627,6 +644,59 @@ public class CloudFoundryUtils {
 		}
 
 		public static class DestinationCredentialsEnv {
+
+			private String clientId;
+			private String clientSecret;
+			private String url;
+			private String uri;
+
+			public String getClientId() {
+				return clientId;
+			}
+
+			public void setClientId(String clientId) {
+				this.clientId = clientId;
+			}
+
+			public String getClientSecret() {
+				return clientSecret;
+			}
+
+			public void setClientSecret(String clientSecret) {
+				this.clientSecret = clientSecret;
+			}
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getUri() {
+				return uri;
+			}
+
+			public void setUri(String uri) {
+				this.uri = uri;
+			}
+		}
+	}
+
+	public static class ConnectivityEnv {
+
+		private ConnectivityCredentialsEnv credentials;
+
+		public ConnectivityCredentialsEnv getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(ConnectivityCredentialsEnv credentials) {
+			this.credentials = credentials;
+		}
+
+		public static class ConnectivityCredentialsEnv {
 
 			private String clientId;
 			private String clientSecret;
