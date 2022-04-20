@@ -148,7 +148,10 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			try (PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
 					while (resultSet.next()) {
-						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
+						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query,
+								targetEntityType, properties, resultSet, hasGeneratedId);
+
 						if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
 							currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
 						}
@@ -199,7 +202,10 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 				try (ResultSet resultSet = statement.executeQuery()) {
 					ResultSetReader.ExpandAccumulator currentAccumulator = new ResultSetReader.ExpandAccumulator(targetEntityType);
 					while (resultSet.next()) {
-						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
+						ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query,
+								targetEntityType, properties, resultSet, hasGeneratedId);
+
 						LOG.info("Current entity set object is {}", currentTargetEntity);
 						if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
 							currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);
@@ -271,7 +277,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			try (PreparedStatement statement = createSelectStatement(query, connection)){
 				try (ResultSet resultSet = statement.executeQuery()){
 					while (resultSet.next()) {
-						currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
+						currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet, hasGeneratedId);
 					}
 				}
 			}
@@ -363,7 +370,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 					try (PreparedStatement statement = createSelectStatement(query, connection)){
 						try (ResultSet resultSet = statement.executeQuery()){
 							while (resultSet.next()) {
-								currentTargetEntity = resultSetReader.getResultSetEntity(query, entityType, properties, resultSet);
+								boolean hasGeneratedId = query.hasKeyGeneratedPresent(entitySet.getEntityType());
+								currentTargetEntity = resultSetReader.getResultSetEntity(query, entityType, properties, resultSet, hasGeneratedId);
 							}
 						}
 					}
@@ -463,7 +471,8 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 			try (PreparedStatement statement = createSelectStatement(query, connection)) {
 				try (ResultSet resultSet = statement.executeQuery()) {
 					while (resultSet.next()) {
-						currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet);
+						boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
+						currentTargetEntity = resultSetReader.getResultSetEntity(query, targetEntityType, properties, resultSet, hasGeneratedId);
 					}
 					if (currentTargetEntity.data.isEmpty()) {
 						throw new ODataNotFoundException(ODataNotFoundException.ENTITY);

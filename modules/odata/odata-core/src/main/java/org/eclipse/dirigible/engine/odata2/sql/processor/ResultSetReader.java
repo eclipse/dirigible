@@ -41,12 +41,15 @@ public class ResultSetReader {
         return result;
     }
 
-
     protected ResultSetEntity getResultSetEntity(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                 Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
+                                                          Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId) throws SQLException, ODataException, IOException {
         Map<String, Object> data = new HashMap<>();
         for (EdmProperty property : properties) {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
+        }
+
+        if(hasGeneratedId) {
+            return new ResultSetEntity(entityType, data, String.valueOf(resultSet.getInt("row_num")));
         }
         return new ResultSetEntity(entityType, data);
     }
@@ -197,6 +200,13 @@ public class ResultSetReader {
                 String name = p.getName();
                 keys.put(name, data.get(name));
             }
+        }
+
+        public ResultSetEntity(EdmEntityType type, Map<String, Object> data, String key) throws EdmException {
+            this.entityType = type;
+            this.data = data;
+            this.keys = new HashMap<>();
+            keys.put("Id", key);
         }
 
         public boolean isEmpty() throws ODataException {
