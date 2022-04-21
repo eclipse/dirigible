@@ -15,7 +15,8 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 
 public class CreateTemporaryTableBuilder<TABLE_BUILDER extends CreateTemporaryTableBuilder> extends AbstractTableBuilder<TABLE_BUILDER> {
 
-    private String likeTable;
+    protected String likeTable;
+    protected String asSelectQuery;
 
     private static final String TEMPORARY_TABLES_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE = "Temporary tables not supported for this Database type!";
 
@@ -24,18 +25,23 @@ public class CreateTemporaryTableBuilder<TABLE_BUILDER extends CreateTemporaryTa
      *
      * @param dialect the dialect
      */
-    public CreateTemporaryTableBuilder(ISqlDialect dialect, String table, String likeTable) {
+    public CreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
-
-        this.likeTable = likeTable;
     }
+
 
     @Override
     public String generate() {
         throw new IllegalStateException(TEMPORARY_TABLES_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE);
     }
 
-    public String getLikeTable() {
-        return this.likeTable;
+    public CreateTemporaryTableBuilder<TABLE_BUILDER> setLikeTable(String likeTable) {
+        this.likeTable = likeTable;
+        return this;
+    }
+
+    public CreateTemporaryTableBuilder<TABLE_BUILDER> setAsSelectQuery(String asSelectQuery) {
+        this.asSelectQuery = asSelectQuery;
+        return this;
     }
 }

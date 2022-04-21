@@ -49,16 +49,14 @@ public class CreateBranchingBuilder extends AbstractSqlBuilder {
         return new CreateTableBuilder(getDialect(), table);
     }
 
-    // TODO: check method signatures
     /**
      * Temporary table branch.
      *
      * @param table the table
-     * @param likeTable the like table
      * @return the creates the table builder
      */
-    public CreateTemporaryTableBuilder temporaryTable(String table, String likeTable) {
-        return new CreateTemporaryTableBuilder(getDialect(), table, likeTable);
+    public CreateTemporaryTableBuilder temporaryTable(String table) {
+        return new CreateTemporaryTableBuilder(getDialect(), table);
     }
 
     /**

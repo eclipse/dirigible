@@ -20,15 +20,16 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
 
     private static final Logger logger = LoggerFactory.getLogger(CreateTemporaryTableBuilder.class);
 
+    private static final String NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED = "No `like` table or `as` select query specified.";
+
     /**
      * Instantiates a new abstract sql builder.
      *
      * @param dialect   the dialect
      * @param table
-     * @param likeTable
      */
-    protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table, String likeTable) {
-        super(dialect, table, likeTable);
+    protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
+        super(dialect, table);
     }
 
     @Override
@@ -44,9 +45,18 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
         // TABLE
         generateTable(sql);
 
-        sql.append(SPACE).append(KEYWORD_LIKE).append(SPACE).append(this.getLikeTable())
-                .append(SPACE).append(KEYWORD_WITH).append(SPACE)
-                .append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
+        sql.append(SPACE);
+        if (this.likeTable != null) {
+            // LIKE table
+            sql.append(KEYWORD_LIKE).append(SPACE).append(this.likeTable)
+                    .append(SPACE).append(KEYWORD_WITH).append(SPACE)
+                    .append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
+        } else if (this.asSelectQuery != null) {
+            // AS select query
+            sql.append(KEYWORD_AS).append(SPACE).append(OPEN).append(this.asSelectQuery).append(CLOSE);
+        } else {
+            throw new IllegalStateException(NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED);
+        }
 
         String generated = sql.toString();
 

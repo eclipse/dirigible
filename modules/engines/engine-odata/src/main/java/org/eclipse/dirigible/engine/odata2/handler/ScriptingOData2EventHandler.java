@@ -51,14 +51,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public void beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType, ODataEntry entry) {
+			String contentType, ODataEntry entry, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.before.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -71,14 +70,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public void afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType, ODataEntry entry) {
+			String contentType, ODataEntry entry, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.after.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -107,14 +105,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public ODataResponse onCreateEntity(PostUriInfo uriInfo, InputStream content, String requestContentType,
-			String contentType) {
+			String contentType, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.create.name();
 			String type = ODataHandlerTypes.on.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("contentType", contentType);
@@ -146,14 +143,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public void beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType, ODataEntry entry) {
+			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.before.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -167,14 +163,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public void afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType, ODataEntry entry) {
+			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.after.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -204,14 +199,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
 	@Override
 	public ODataResponse onUpdateEntity(PutMergePatchUriInfo uriInfo, InputStream content, String requestContentType,
-			boolean merge, String contentType) {
+			boolean merge, String contentType, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.update.name();
 			String type = ODataHandlerTypes.on.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("requestContentType", requestContentType);
 			context.put("merge", merge);
@@ -243,14 +237,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
+	public void beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.before.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			executeHandlers(handlers, context);
@@ -260,14 +253,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
+	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.after.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			executeHandlers(handlers, context);
@@ -292,14 +284,13 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public ODataResponse onDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
+	public ODataResponse onDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
 			String method = ODataHandlerMethods.delete.name();
 			String type = ODataHandlerTypes.on.name();
 			List<ODataHandlerDefinition> handlers = odataCoreService.getHandlers(namespace, name, method, type);
-			Map<Object, Object> context = new HashMap<Object, Object>();
 			context.put("uriInfo", uriInfo);
 			context.put("contentType", contentType);
 			String responseMessage = executeHandler(handlers, context);
@@ -325,7 +316,12 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		}
 		return false;
 	}
-	
+
+	@Override
+	public String getName() {
+		return DEFAULT_ODATA_EVENT_HANDLER_NAME;
+	}
+
 	private void executeHandlers(List<ODataHandlerDefinition> handlers, Map<Object, Object> context) {
 		handlers.forEach(handler -> {
 			setHandlerParametersInContext(context, handler);
@@ -363,7 +359,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 				IJavascriptEngineExecutor.JAVASCRIPT_TYPE_DEFAULT, DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT, context);
 		return response;
 	}
-	
+
 	private void setHandlerParametersInContext(Map<Object, Object> context, ODataHandlerDefinition handler) {
 		context.put("location", handler.getLocation());
 		context.put("namespace", handler.getNamespace());

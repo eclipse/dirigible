@@ -56,9 +56,10 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.String)
 	 */
-	public HanaCreateTemporaryTableBuilder temporaryTable(String table, String likeTable) {
-		return new HanaCreateTemporaryTableBuilder(this.getDialect(), table, likeTable);
+	public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
+		return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
 	}
+
 
 	/**
 	 * Column table.
