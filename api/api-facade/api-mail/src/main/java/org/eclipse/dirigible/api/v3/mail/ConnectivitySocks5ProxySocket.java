@@ -74,29 +74,26 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 	}
 
 	private byte[] createInitialSOCKS5Request() throws IOException {
-		ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_VERSION);
 			byteArraysStream.write(SOCKS5_AUTHENTICATION_METHODS_COUNT);
 			byteArraysStream.write(SOCKS5_PASSWORD_AUTHENTICATION_METHOD);
 			return byteArraysStream.toByteArray();
-		} finally {
-			byteArraysStream.close();
 		}
 	}
 
 	private void assertServerInitialResponse() throws IOException {
-		InputStream inputStream = getInputStream();
+		try (InputStream inputStream = getInputStream()) {
+			int versionByte = inputStream.read();
+			if (SOCKS5_VERSION != versionByte) {
+				throw new SocketException("Unsupported SOCKS version - expected " + SOCKS5_VERSION + ", but received " + versionByte);
+			}
 
-		int versionByte = inputStream.read();
-		if (SOCKS5_VERSION != versionByte) {
-			throw new SocketException(String.format("Unsupported SOCKS version - expected %s, but received %s", SOCKS5_VERSION, versionByte));
-		}
-
-		int authenticationMethodValue = inputStream.read();
-		if (SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE != authenticationMethodValue) {
-			throw new SocketException(String.format("Unsupported authentication method value - expected %s, but received %s",
-					SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE, authenticationMethodValue));
+			int authenticationMethodValue = inputStream.read();
+			if (SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE != authenticationMethodValue) {
+				throw new SocketException("Unsupported authentication method value - expected "
+						+ SOCKS5_PASSWORD_AUTHENTICATION_METHOD_UNSIGNED_VALUE + ", but received " + authenticationMethodValue);
+			}
 		}
 	}
 
@@ -108,31 +105,28 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 	}
 
 	private byte[] createPasswordAuthenticationRequest() throws IOException {
-		ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION);
-			byteArraysStream.write(ByteBuffer.allocate(1).put((byte)this.username.getBytes().length).array());
+			byteArraysStream.write(ByteBuffer.allocate(1).put((byte) this.username.getBytes().length).array());
 			byteArraysStream.write(this.username.getBytes());
-			byteArraysStream.write(ByteBuffer.allocate(1).put((byte)this.password.getBytes().length).array());
+			byteArraysStream.write(ByteBuffer.allocate(1).put((byte) this.password.getBytes().length).array());
 			byteArraysStream.write(this.password.getBytes());
 			return byteArraysStream.toByteArray();
-		} finally {
-			byteArraysStream.close();
 		}
 	}
 
 	private void assertAuthenticationResponse() throws IOException {
-		InputStream inputStream = getInputStream();
+		try (InputStream inputStream = getInputStream()) {
+			int authenticationMethodVersion = inputStream.read();
+			if (SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION != authenticationMethodVersion) {
+				throw new SocketException("Unsupported authentication method version - expected "
+						+ SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION + ", but received " + authenticationMethodVersion);
+			}
 
-		int authenticationMethodVersion = inputStream.read();
-		if (SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION != authenticationMethodVersion) {
-			throw new SocketException(String.format("Unsupported authentication method version - expected %s, but received %s",
-					SOCKS5_PASSWORD_AUTHENTICATION_METHOD_VERSION, authenticationMethodVersion));
-		}
-
-		int authenticationStatus = inputStream.read();
-		if (SOCKS5_AUTHENTICATION_SUCCESS_BYTE != authenticationStatus) {
-			throw new SocketException("Authentication failed!");
+			int authenticationStatus = inputStream.read();
+			if (SOCKS5_AUTHENTICATION_SUCCESS_BYTE != authenticationStatus) {
+				throw new SocketException("Authentication failed!");
+			}
 		}
 	}
 
@@ -146,8 +140,7 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 	private byte[] createConnectCommandRequest(InetSocketAddress endpoint) throws IOException {
 		String host = endpoint.getHostName();
 		int port = endpoint.getPort();
-		ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream byteArraysStream = new ByteArrayOutputStream()) {
 			byteArraysStream.write(SOCKS5_VERSION);
 			byteArraysStream.write(SOCKS5_COMMAND_CONNECT_BYTE);
 			byteArraysStream.write(SOCKS5_COMMAND_REQUEST_RESERVED_BYTE);
@@ -162,23 +155,21 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 			}
 			byteArraysStream.write(ByteBuffer.allocate(2).putShort((short) port).array());
 			return byteArraysStream.toByteArray();
-		} finally {
-			byteArraysStream.close();
 		}
 	}
 
 	private void assertConnectCommandResponse() throws IOException {
-		InputStream inputStream = getInputStream();
+		try (InputStream inputStream = getInputStream()) {
+			int versionByte = inputStream.read();
+			if (SOCKS5_VERSION != versionByte) {
+				throw new SocketException("Unsupported SOCKS version - expected " + SOCKS5_VERSION + ", but received " + versionByte);
+			}
 
-		int versionByte = inputStream.read();
-		if (SOCKS5_VERSION != versionByte) {
-			throw new SocketException(String.format("Unsupported SOCKS version - expected %s, but received %s", SOCKS5_VERSION, versionByte));
+			int connectStatusByte = inputStream.read();
+			assertConnectStatus(connectStatusByte);
+
+			readRemainingCommandResponseBytes(inputStream);
 		}
-
-		int connectStatusByte = inputStream.read();
-		assertConnectStatus(connectStatusByte);
-
-		readRemainingCommandResponseBytes(inputStream);
 	}
 
 	private void assertConnectStatus(int commandConnectStatus) throws IOException {
@@ -229,7 +220,7 @@ public class ConnectivitySocks5ProxySocket extends Socket {
 				for (int i = 0; i < octetsCount; i++) {
 					int currentOctet = Integer.parseInt(virtualHostOctets[i]);
 					if ((currentOctet < 0) || (currentOctet > 255)) {
-						throw new IllegalArgumentException(String.format("Provided octet %s is not in the range of [0-255]", currentOctet));
+						throw new IllegalArgumentException("Provided octet %s is not in the range of [0-255]: " + currentOctet);
 					}
 					ipOctets[i] = (byte) currentOctet;
 				}

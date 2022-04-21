@@ -34,7 +34,7 @@ public class MailClient {
 	private static final String SMTP_TRANSPORT = "smtp";
 	private static final String SMTPS_TRANSPORT = "smtps";
 
-	private Properties properties;
+	private final Properties properties;
 
 	/**
 	 * @param properties mail client configuration options
