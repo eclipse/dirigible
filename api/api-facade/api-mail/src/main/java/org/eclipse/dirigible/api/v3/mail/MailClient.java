@@ -13,153 +13,194 @@ package org.eclipse.dirigible.api.v3.mail;
 
 import com.google.gson.Gson;
 import com.sun.mail.smtp.SMTPSSLTransport;
+import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 public class MailClient {
-    // Mail properties
-    private static final String MAIL_USER = "mail.user";
-    private static final String MAIL_PASSWORD = "mail.password";
+	// Mail properties
+	private static final String MAIL_USER = "mail.user";
+	private static final String MAIL_PASSWORD = "mail.password";
+	private static final String SMTP_TRANSPORT = "smtp";
+	private static final String SMTPS_TRANSPORT = "smtps";
 
-    private Properties properties;
+	private Properties properties;
 
-    /**
-     * @param properties mail client configuration options
-     */
-    public MailClient(Properties properties) {
-        this.properties = properties;
-    }
+	/**
+	 * @param properties mail client configuration options
+	 */
+	public MailClient(Properties properties) {
+		this.properties = properties;
+	}
 
-    /**
-     * Send an email
-     *
-     * @param from    the sender
-     * @param to      the to receiver
-     * @param cc      the cc receiver
-     * @param bcc     the bcc receiver
-     * @param subject the subject
-     * @param parts   the mail parts
-     * @throws MessagingException
-     */
-    public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException {
-        Session session = getSession(this.properties);
-        SMTPSSLTransport transport = (SMTPSSLTransport) session.getTransport();
-        transport.connect();
+	/**
+	 * Send an email
+	 *
+	 * @param from    the sender
+	 * @param to      the to receiver
+	 * @param cc      the cc receiver
+	 * @param bcc     the bcc receiver
+	 * @param subject the subject
+	 * @param parts   the mail parts
+	 * @throws MessagingException
+	 */
+	public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException, IOException {
+		Session session = getSession(this.properties);
+		SMTPTransport transport;
+		String transportProperty = properties.getProperty("mail.transport.protocol").toLowerCase();
 
-        MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
-        mimeMessage.saveChanges();
-        String messageId = mimeMessage.getMessageID();
-        transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
-        String finalReply = transport.getLastServerResponse();
-        transport.close();
+		switch (transportProperty) {
+			case SMTP_TRANSPORT:
+				transport = (SMTPTransport) session.getTransport();
+				break;
+			case SMTPS_TRANSPORT:
+				transport = (SMTPSSLTransport) session.getTransport();
+				break;
+			default:
+				throw new IllegalStateException("Unexpected transport property: " + transportProperty);
+		}
 
-        Map mailResult = new HashMap();
-        mailResult.put("messageId", messageId);
-        mailResult.put("finalReply", finalReply);
+		if (this.properties.getProperty("ProxyType").equals("OnPremise")) {
+			Socket socket =
+					new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
+							getTransportProperty(transportProperty, "socks.port"),
+							getTransportProperty(transportProperty, "proxy.user"),
+							getTransportProperty(transportProperty, "proxy.password", " "));
 
-        return mailResult;
-    }
+			socket.connect(new InetSocketAddress(getTransportProperty(transportProperty, "host"),
+					Integer.parseInt(getTransportProperty(transportProperty, "port"))));
 
-    private Session getSession(Properties properties) {
-        String user = properties.getProperty(MAIL_USER);
-        String password = properties.getProperty(MAIL_PASSWORD);
-        Authenticator authenticator = new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(user, password);
-            }
-        };
-        return Session.getInstance(properties, authenticator);
-    }
+			transport.connect(socket);
+		} else {
+			transport.connect();
+		}
 
-    private static MimeMessage createMimeMessage(Session smtpSession, String from, String to[], String cc[], String bcc[], String subjectText, List<Map> parts)
-            throws MessagingException {
 
-        MimeMessage mimeMessage = new MimeMessage(smtpSession);
-        mimeMessage.setFrom(InternetAddress.parse(from)[0]);
-        for (String next : to) {
-            mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(next));
-        }
-        for (String next : cc) {
-            mimeMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(next));
-        }
-        for (String next : bcc) {
-            mimeMessage.addRecipients(Message.RecipientType.BCC, InternetAddress.parse(next));
-        }
-        mimeMessage.setSubject(subjectText, "UTF-8"); //$NON-NLS-1$
+		MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
+		mimeMessage.saveChanges();
+		String messageId = mimeMessage.getMessageID();
+		transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+		String finalReply = transport.getLastServerResponse();
+		transport.close();
 
-        MimeMultipart multiPart = new MimeMultipart("mixed");
+		Map mailResult = new HashMap();
+		mailResult.put("messageId", messageId);
+		mailResult.put("finalReply", finalReply);
 
-        for (Map mailPart : parts) {
-            String type = (String) mailPart.get("type");
-            ContentType contentType;
-            String contentId;
-            String fileName;
-            String data;
-            Gson gson = new Gson();
-            byte[] dataBytes;
-            ByteArrayDataSource source;
+		return mailResult;
+	}
 
-            switch (type) {
-                case "text":
-                    contentType = new ContentType((String) mailPart.get("contentType"));
-                    String mailText = (String) mailPart.get("text");
+	private Session getSession(Properties properties) {
+		String user = properties.getProperty(MAIL_USER);
+		String password = properties.getProperty(MAIL_PASSWORD);
+		Authenticator authenticator = new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		};
+		return Session.getInstance(properties, authenticator);
+	}
 
-                    switch (contentType.getSubType()) {
-                        case "plain":
-                            MimeBodyPart plainTextPart = new MimeBodyPart();
-                            plainTextPart.setText(mailText, "utf-8", contentType.getSubType());
-                            multiPart.addBodyPart(plainTextPart);
-                            break;
-                        case "html":
-                            MimeBodyPart htmlTextPart = new MimeBodyPart();
-                            htmlTextPart.setContent(mailText, String.valueOf(contentType));
-                            multiPart.addBodyPart(htmlTextPart);
-                            break;
-                    }
-                    break;
-                case "inline":
-                    contentType = new ContentType((String) mailPart.get("contentType"));
-                    contentId = (String) mailPart.get("contentId");
-                    fileName = (String) mailPart.get("fileName");
-                    data = (String) mailPart.get("data");
+	private static MimeMessage createMimeMessage(Session smtpSession, String from, String to[], String cc[], String bcc[], String subjectText, List<Map> parts)
+			throws MessagingException {
 
-                    dataBytes = gson.fromJson(data, byte[].class);
+		MimeMessage mimeMessage = new MimeMessage(smtpSession);
+		mimeMessage.setFrom(InternetAddress.parse(from)[0]);
+		for (String next : to) {
+			mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(next));
+		}
+		for (String next : cc) {
+			mimeMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(next));
+		}
+		for (String next : bcc) {
+			mimeMessage.addRecipients(Message.RecipientType.BCC, InternetAddress.parse(next));
+		}
+		mimeMessage.setSubject(subjectText, "UTF-8"); //$NON-NLS-1$
 
-                    MimeBodyPart inlinePart = new MimeBodyPart();
-                    source = new ByteArrayDataSource(dataBytes, String.valueOf(contentType));
-                    inlinePart.setDataHandler(new DataHandler(source));
-                    inlinePart.setContentID("<" + contentId + ">");
-                    inlinePart.setDisposition(MimeBodyPart.INLINE);
-                    inlinePart.setFileName(fileName);
+		MimeMultipart multiPart = new MimeMultipart("mixed");
 
-                    multiPart.addBodyPart(inlinePart);
-                    break;
-                case "attachment":
-                    contentType = new ContentType((String) mailPart.get("contentType"));
-                    fileName = (String) mailPart.get("fileName");
-                    data = (String) mailPart.get("data");
+		for (Map mailPart : parts) {
+			String type = (String) mailPart.get("type");
+			ContentType contentType;
+			String contentId;
+			String fileName;
+			String data;
+			Gson gson = new Gson();
+			byte[] dataBytes;
+			ByteArrayDataSource source;
 
-                    dataBytes = gson.fromJson(data, byte[].class);
+			switch (type) {
+				case "text":
+					contentType = new ContentType((String) mailPart.get("contentType"));
+					String mailText = (String) mailPart.get("text");
 
-                    MimeBodyPart attachmentPart = new MimeBodyPart();
-                    source = new ByteArrayDataSource(dataBytes, String.valueOf(contentType));
-                    attachmentPart.setDataHandler(new DataHandler(source));
-                    attachmentPart.setFileName(fileName);
+					switch (contentType.getSubType()) {
+						case "plain":
+							MimeBodyPart plainTextPart = new MimeBodyPart();
+							plainTextPart.setText(mailText, "utf-8", contentType.getSubType());
+							multiPart.addBodyPart(plainTextPart);
+							break;
+						case "html":
+							MimeBodyPart htmlTextPart = new MimeBodyPart();
+							htmlTextPart.setContent(mailText, String.valueOf(contentType));
+							multiPart.addBodyPart(htmlTextPart);
+							break;
+					}
+					break;
+				case "inline":
+					contentType = new ContentType((String) mailPart.get("contentType"));
+					contentId = (String) mailPart.get("contentId");
+					fileName = (String) mailPart.get("fileName");
+					data = (String) mailPart.get("data");
 
-                    multiPart.addBodyPart(attachmentPart);
-                    break;
-            }
-        }
+					dataBytes = gson.fromJson(data, byte[].class);
 
-        mimeMessage.setContent(multiPart);
+					MimeBodyPart inlinePart = new MimeBodyPart();
+					source = new ByteArrayDataSource(dataBytes, String.valueOf(contentType));
+					inlinePart.setDataHandler(new DataHandler(source));
+					inlinePart.setContentID("<" + contentId + ">");
+					inlinePart.setDisposition(MimeBodyPart.INLINE);
+					inlinePart.setFileName(fileName);
 
-        return mimeMessage;
-    }
+					multiPart.addBodyPart(inlinePart);
+					break;
+				case "attachment":
+					contentType = new ContentType((String) mailPart.get("contentType"));
+					fileName = (String) mailPart.get("fileName");
+					data = (String) mailPart.get("data");
+
+					dataBytes = gson.fromJson(data, byte[].class);
+
+					MimeBodyPart attachmentPart = new MimeBodyPart();
+					source = new ByteArrayDataSource(dataBytes, String.valueOf(contentType));
+					attachmentPart.setDataHandler(new DataHandler(source));
+					attachmentPart.setFileName(fileName);
+
+					multiPart.addBodyPart(attachmentPart);
+					break;
+			}
+		}
+
+		mimeMessage.setContent(multiPart);
+
+		return mimeMessage;
+	}
+
+	private String getTransportProperty(String transport, String prop) {
+		return this.properties.getProperty("mail." + transport + "." + prop);
+	}
+
+	private String getTransportProperty(String transport, String prop, String defaultValue) {
+		return this.properties.getProperty("mail." + transport + "." + prop, defaultValue);
+	}
 }
