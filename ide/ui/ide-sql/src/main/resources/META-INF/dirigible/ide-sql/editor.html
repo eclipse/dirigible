@@ -10,10 +10,13 @@
   -->
 
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
+    <link type="text/css" data-name="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main" rel="stylesheet"
+      href="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main.css">
     <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
     <style>
       body {
@@ -29,6 +32,7 @@
         left: 0;
         right: 0;
       }
+
     </style>
 
     <!-- Twitter Bootstrap with Theme Support -->
@@ -42,7 +46,7 @@
 
     <div id="embeddedEditor"></div>
 
-    <script type="text/javascript" src="/services/v4/web/ide-monaco/monaco-editor/min/vs/loader.js"></script>
+    <script type="text/javascript" src="/webjars/monaco-editor/0.33.0/min/vs/loader.js"></script>
     <script>
       let messageHub = new FramesMessageHub();
       let sqlPlaceholder = "-- Ctrl+X to execute all or selected text only (Cmd+X for Mac)\n";
@@ -98,7 +102,7 @@
       }
 
       (function init() {
-        require.config({ paths: { vs: "/services/v4/web/ide-monaco/monaco-editor/min/vs" } });
+        require.config({ paths: { vs: "/webjars/monaco-editor/0.33.0/min/vs" } });
 
         require(["vs/editor/editor.main"], function () {
           let _editor;
@@ -148,4 +152,5 @@
       }
     </script>
   </body>
+
 </html>
