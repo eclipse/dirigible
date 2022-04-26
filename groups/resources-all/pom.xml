@@ -126,15 +126,25 @@
 			<artifactId>diff</artifactId>
 			<version>5.0.0</version>
 		</dependency>
-		<!-- <dependency>
-		    <groupId>org.webjars.npm</groupId>
-		    <artifactId>fundamental-styles</artifactId>
-		    <version>0.21.1</version>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>split.js</artifactId>
+			<version>1.6.5</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.webjars.npm</groupId>
-		    <artifactId>sap-theming__theming-base-content</artifactId>
-		    <version>11.1.34</version>
-		</dependency> -->
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>angular-aria</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>fundamental-styles</artifactId>
+			<version>0.23.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>sap-theming__theming-base-content</artifactId>
+			<version>11.1.38</version>
+		</dependency>
 	</dependencies>
 </project>
