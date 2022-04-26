@@ -14,5 +14,5 @@ let dtsParser = require("ide-monaco-extensions/api/utils/dtsParser");
 
 let dtsPaths = dtsParser.getDtsPaths();
 let dtsContent = dtsParser.getDtsFileContents(dtsPaths);
-
+response.setContentType('text/javascript');
 response.println(dtsContent);

@@ -8,6 +8,12 @@
             "branch": "master"
         },
         {
+            "guid": "template-application-rest",
+            "url": "https://github.com/dirigiblelabs/template-application-rest.git",
+            "type": "git",
+            "branch": "master"
+        },
+        {
             "guid": "template-application-feed",
             "url": "https://github.com/dirigiblelabs/template-application-feed.git",
             "type": "git",

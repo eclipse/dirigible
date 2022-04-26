@@ -15,15 +15,15 @@ exports.getTemplate = function (parameters) {
         description: "Application with DAO",
         extension: "model",
         sources: [{
-            location: "/template-application-dao/data/dao/entity.js.template",
+            location: "/template-application-dao/dao/entity.js.template",
             action: "generate",
-            rename: "data/dao/{{perspectiveName}}/{{fileName}}.js",
+            rename: "gen/dao/{{perspectiveName}}/{{fileName}}.js",
             engine: "velocity",
             collection: "models"
         }, {
-            location: "/template-application-dao/data/utils/EntityUtils.js.template",
+            location: "/template-application-dao/dao/utils/EntityUtils.js.template",
             action: "copy",
-            rename: "data/utils/EntityUtils.js"
+            rename: "gen/dao/utils/EntityUtils.js"
         }],
         parameters: []
     };

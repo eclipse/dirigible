@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getTemplate = function (parameters) {
-    
+
     return {
         name: "Application - OData",
         description: "Application with a OData",
@@ -18,7 +18,7 @@ exports.getTemplate = function (parameters) {
         sources: [{
             location: "/template-application-odata/odata/application.odata.template",
             action: "generate",
-            rename: "odata/{{fileNameBase}}.odata",
+            rename: "gen/odata/{{fileNameBase}}.odata",
             engine: "velocity"
         }],
         parameters: [{

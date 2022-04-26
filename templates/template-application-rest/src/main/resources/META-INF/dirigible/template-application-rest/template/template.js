@@ -15,13 +15,13 @@ exports.getTemplate = function (parameters) {
     let daoTemplate = daoTemplateManager.getTemplate(parameters);
 
     let templateSources = [{
-        location: "/template-application-rest/api/http.js.template",
+        location: "/template-application-rest/api/utils/http.js.template",
         action: "copy",
-        rename: "api/http.js",
+        rename: "gen/api/utils/http.js",
     }, {
         location: "/template-application-rest/api/entity.js.template",
         action: "generate",
-        rename: "api/{{perspectiveName}}/{{fileName}}.js",
+        rename: "gen/api/{{perspectiveName}}/{{fileName}}.js",
         engine: "velocity",
         collection: "models"
     }];
