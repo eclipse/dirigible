@@ -21,6 +21,36 @@ let parameters = {
     file: ""
 };
 
+const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
+    if (oldText[oldText.length - 1] !== "\n" || newText[newText.length - 1] !== "\n") {
+        oldText += "\n";
+        newText += "\n"
+    }
+    let lineDiff;
+    if (isWhitespaceIgnored) {
+        lineDiff = Diff.diffTrimmedLines(oldText, newText)
+    } else {
+        lineDiff = Diff.diffLines(oldText, newText)
+    }
+    let addedCount = 0;
+    let addedLines = [];
+    lineDiff.forEach(part => {
+        let { added, removed, value } = part;
+        let count = value.split("\n").length - 1;
+        if (!added && !removed) {
+            addedCount += count
+        }
+        else
+            if (added) {
+                for (let i = 0; i < count; i++) {
+                    addedLines.push(addedCount + i + 1)
+                }
+                addedCount += count
+            }
+    });
+    return addedLines
+};
+
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
     let target = this;
@@ -289,7 +319,7 @@ function FileIO() {
                 xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
                 xhr.send();
             } else {
-                reject(`HTTP ${400} - 'fileName' parameter cannot be '${fileName}'`);
+                reject(`HTTP ${400} - 'file' parameter cannot be '${file}'`);
             }
         });
     };
@@ -624,13 +654,14 @@ function traverseAssignment(assignment, assignmentInfo) {
     setResourceApiUrl();
     require.config({
         paths: {
-            'vs': 'monaco-editor/min/vs',
+            'vs': '/webjars/monaco-editor/0.33.0/min/vs',
             'parser': 'js/parser'
         }
     });
 
     loadModuleSuggestions(modulesSuggestions);
 
+    //@ts-ignore
     require(['vs/editor/editor.main', 'parser/acorn-loose'], function (monaco, acornLoose) {
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
@@ -902,6 +933,7 @@ function traverseAssignment(assignment, assignmentInfo) {
             newline_between_rules: false,
             end_with_newline: true,
             indent_with_tabs: false,
+            space_around_combinator: true
         });
         monaco.editor.setTheme(monacoTheme);
     });

@@ -116,6 +116,16 @@
 		    <version>2.3.6</version>
 		    <scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>monaco-editor</artifactId>
+			<version>0.33.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>diff</artifactId>
+			<version>5.0.0</version>
+		</dependency>
 		<!-- <dependency>
 		    <groupId>org.webjars.npm</groupId>
 		    <artifactId>fundamental-styles</artifactId>
