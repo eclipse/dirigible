@@ -161,6 +161,7 @@ public class ODataCoreService implements IODataCoreService {
     public void removeMappings(String location) throws ODataException {
         try {
             try (Connection connection = dataSource.getConnection()) {
+            	odataMappingPersistenceManager.tableCheck(connection, ODataMappingDefinition.class);
                 String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_ODATA_MAPPING").where("ODATAM_LOCATION LIKE ?").toString();
                 odataMappingPersistenceManager.execute(connection, sql, location + "#%");
             }
