@@ -64,6 +64,7 @@ public class DBMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("REAL", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("FLOAT", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
+        SQL_TO_ODATA_EDM_TYPES.put("DOUBLE PRECISION", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("NVARCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("CHARACTER VARYING", "Edm.String");
