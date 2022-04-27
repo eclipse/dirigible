@@ -16,6 +16,6 @@ exports.getView = function(relativePath) {
 		order: {{menuIndex}},
 		factory: "frame",
 		// region: "center-bottom",
-		link: relativePath + "services/v4/web/{{projectName}}/ui/{{perspectiveName}}/views/{{name}}/index.html"
+		link: relativePath + "services/v4/web/{{projectName}}/gen/ui/{{perspectiveName}}/views/{{name}}/index.html"
 	};
 };

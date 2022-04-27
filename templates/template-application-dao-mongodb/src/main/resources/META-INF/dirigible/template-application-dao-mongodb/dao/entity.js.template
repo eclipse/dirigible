@@ -8,7 +8,7 @@ var daoApi = require("mongodb/dao");
 #end
 #end
 #if($isEntityUtilsEnabled == "true")
-var EntityUtils = require("${projectName}/data/utils/EntityUtils");
+var EntityUtils = require("${projectName}/gen/dao/utils/EntityUtils");
 #end
 #if($roleRead && $roleRead != "" || $roleWrite && $roleWrite != "") 
 #set($isEntitySecurityEnabled = "true")

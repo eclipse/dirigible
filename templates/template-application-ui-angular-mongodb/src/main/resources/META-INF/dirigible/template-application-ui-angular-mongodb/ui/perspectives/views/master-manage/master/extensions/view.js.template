@@ -17,6 +17,6 @@ exports.getView = function(relativePath) {
 		factory: "frame",
 		region: "center-top",
 		type: "master",
-		link: relativePath + "services/v4/web/{{projectName}}/ui/{{perspectiveName}}/views/master/{{name}}/master/index.html"
+		link: relativePath + "services/v4/web/{{projectName}}/gen/ui/{{perspectiveName}}/views/master/{{name}}/master/index.html"
 	};
 };
