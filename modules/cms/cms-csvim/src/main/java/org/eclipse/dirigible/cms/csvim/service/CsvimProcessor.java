@@ -143,15 +143,21 @@ public class CsvimProcessor {
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName,
 				DatabaseMetadataUtil.getTableSchema(dataSource, tableName));
 
+		CsvRecordDefinition csvRecordDefinition = null;
+		
 		for (CSVRecord csvRecord : recordsToProcess) {
 			try {
-				CsvRecordDefinition csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames,
+				csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames,
 						csvFileDefinition.getDistinguishEmptyFromNull());
 				
-				csvProcessor.insert(csvRecordDefinition);
+				csvProcessor.insert(csvRecordDefinition, csvFileDefinition);
 				
 			} catch (SQLException throwable) {
-				logger.error(throwable.getMessage(), throwable);
+				String errorMessage = String
+						.format("Error occurred while trying to insert a record [%s] for table with name: %s", 
+								csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "empty", tableName);
+				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSVIM);
+				logger.error(errorMessage, throwable);
 			}
 		}
 	}
@@ -162,15 +168,20 @@ public class CsvimProcessor {
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName,
 				DatabaseMetadataUtil.getTableSchema(dataSource, tableName));
 
+		CsvRecordDefinition csvRecordDefinition = null;
 		for (CSVRecord csvRecord : recordsToProcess) {
 			try {
-				CsvRecordDefinition csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames,
+				csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames,
 						csvFileDefinition.getDistinguishEmptyFromNull());
 				
 				csvProcessor.update(csvRecordDefinition);
 				
 			} catch (SQLException throwable) {
-				logger.error(throwable.getMessage(), throwable);
+				String errorMessage = String
+						.format("Error occurred while trying to insert a record [%s] for table with name: %s", 
+								csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "empty", tableName);
+				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSVIM);
+				logger.error(errorMessage, throwable);
 			}
 		}
 

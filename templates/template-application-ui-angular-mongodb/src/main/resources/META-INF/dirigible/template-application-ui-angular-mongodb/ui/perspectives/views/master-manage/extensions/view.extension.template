@@ -1,5 +1,5 @@
 {
 	"description": "{{perspectiveName}} view",
 	"extensionPoint": "launchpad-{{extensionName}}-{{perspectiveName}}-view",
-	"module": "{{projectName}}/ui/{{perspectiveName}}/views/master/{{name}}/extensions/view.js"
+	"module": "{{projectName}}/gen/ui/{{perspectiveName}}/views/master/{{name}}/extensions/view.js"
 }

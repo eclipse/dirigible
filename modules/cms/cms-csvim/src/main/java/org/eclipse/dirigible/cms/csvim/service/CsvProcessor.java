@@ -24,9 +24,14 @@ import javax.sql.DataSource;
 
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.api.v3.problems.IProblemsConstants;
+import org.eclipse.dirigible.api.v3.problems.ProblemsFacade;
+import org.eclipse.dirigible.cms.csvim.artefacts.CsvSynchronizationArtefactType;
+import org.eclipse.dirigible.cms.csvim.definition.CsvFileDefinition;
 import org.eclipse.dirigible.cms.csvim.definition.CsvRecordDefinition;
 import org.eclipse.dirigible.commons.api.helpers.DateTimeUtils;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.problems.exceptions.ProblemsException;
 import org.eclipse.dirigible.database.ds.model.transfer.TableColumn;
 import org.eclipse.dirigible.database.ds.model.transfer.TableMetadataHelper;
 import org.eclipse.dirigible.database.persistence.PersistenceException;
@@ -39,6 +44,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CsvProcessor {
+	
+	private static final String MODULE = "dirigible-cms-csv";
+
+	private static final String ARTEFACT_TYPE_CSV = new CsvSynchronizationArtefactType().getId();
+
+	private static final String ERROR_TYPE_PROCESSOR = "PROCESSOR";
 
 	private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
@@ -46,7 +57,7 @@ public class CsvProcessor {
 
 	private DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 
-	public void insert(CsvRecordDefinition csvRecordDefinition) throws SQLException {
+	public void insert(CsvRecordDefinition csvRecordDefinition, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = csvRecordDefinition.getTableMetadataModel().getTableName();
 		try (Connection connection = dataSource.getConnection()) {
 			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName,
@@ -67,6 +78,12 @@ public class CsvProcessor {
 				executeInsertPreparedStatement(csvRecordDefinition, availableTableColumns, statement);
 				logger.info(
 						String.format("Table row with id: %s was CREATED successfully in %s.", csvRecord.get(0), tableName));
+			} catch(Throwable throwable) {
+				String errorMessage = String
+						.format("Error occurred while trying to insert a record [%s] for table with name: %s", 
+								csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "empty", tableName);
+				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+				logger.error(errorMessage, throwable);
 			}
 		}
 	}
@@ -307,6 +324,19 @@ public class CsvProcessor {
 			value = "0";
 		}
 		return value;
+	}
+	
+	/**
+	 * Use to log errors from artifact processing
+	 */
+	private static void logProcessorErrors(String errorMessage, String errorType, String location, String artifactType) {
+		try {
+			ProblemsFacade.save(location, errorType, "", "", errorMessage, "", artifactType, MODULE,
+					"CsvProcessor", IProblemsConstants.PROGRAM_DEFAULT);
+		} catch (ProblemsException e) {
+			logger.error("There is an issue with logging of the Errors.");
+			logger.error(e.getMessage());
+		}
 	}
 
 }

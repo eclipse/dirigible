@@ -380,7 +380,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		let projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
 
 		projection.setVertex(true);
-		addSidebarIcon(graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external', $scope);
+		addSidebarIcon(graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope);
 
 		// // Adds primary key field into projection entity
 		// var keyProperty = property.clone();

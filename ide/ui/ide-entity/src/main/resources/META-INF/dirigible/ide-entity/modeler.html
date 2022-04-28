@@ -92,6 +92,8 @@
             data-target="#dialogPropertyProperties"></button>
         <button type="button" id="connectorPropertiesOpen" ng-show=false data-toggle="modal"
             data-target="#dialogConnectorProperties"></button>
+        <button type="button" id="sidebarNavigationPropertiesOpen" ng-show=false data-toggle="modal"
+            data-target="#dialogSidebarNavigationProperties"></button>
         <button type="button" id="alertOpen" ng-show=false data-toggle="modal" data-target="#dialogAlert"></button>
         <button type="button" id="referEntityOpen" ng-show=false data-toggle="modal"
             data-target="#dialogReferEntity"></button>
@@ -663,6 +665,138 @@
             </div>
         </div>
 
+
+        <!-- Sidebar Navigation Properties -->
+        <div class="modal fade" id="dialogSidebarNavigationProperties" tabindex="-1" role="dialog"
+            aria-labelledby="dialogSidebarNavigationPropertiesLabel" aria-hidden="true">
+            <div class="modal-header">
+                <h3>Sidebar Navigation</h3>
+            </div>
+            <div class="modal-body">
+
+                <ul class="nav nav-pills">
+                    <li class="active"><a data-toggle="pill" href="#generalSidebarNavigation">Structure</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="generalSidebarNavigation" class="tab-pane fade in active">
+                        <br><br>
+                        <div class="form-group row">
+                            <div class="row">
+                                <label class="col-xs-1 col-form-label">Navigation: </label>
+                                <div class="col-xs-11">
+
+                                    <div class="container">
+                                        <button type="button" ng-click="openSidebarNewDialog()"
+                                            class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus"
+                                                aria-hidden="true"></i></button>
+                                        <table class="table product-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Path</th>
+                                                    <th>Label</th>
+                                                    <th>Icon</th>
+                                                    <th>URL</th>
+                                                    <th class="col-xs-1"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="next in ctrl.$scope.$parent.graph.model.sidebar">
+                                                    <td class="view">{{next.path}}</td>
+                                                    <td class="view">{{next.label}}</td>
+                                                    <td class="view">{{next.icon}}</td>
+                                                    <td class="view">{{next.url}}</td>
+                                                    <td class="view">
+                                                        <i class="close fa fa-2x fa-remove"
+                                                            ng-click="openSidebarDeleteDialog(next)"></i>
+                                                        <i class="close fa fa-2x fa-bars"
+                                                            ng-click="openSidebarEditDialog(next)"
+                                                            style="margin-right: 0.5em"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ctrl.okSidebarNavigationProperties()" data-toggle="modal"
+                    data-target="#dialogSidebarNavigationProperties">OK</button>
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="sidebarEntityModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 ng-show="actionType === 'sidebarNew'" class="modal-title" id="exampleModalLabel">Create
+                            Navigation</h3>
+                        <h3 ng-show="actionType === 'sidebarUpdate'" class="modal-title" id="exampleModalLabel">Update
+                            Navigation</h3>
+                        <h3 ng-show="actionType === 'sidebarDelete'" class="modal-title" id="exampleModalLabel">Delete
+                            Navigation</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" ng-show="error">
+                            {{error}}
+                        </div>
+                        <form ng-hide="actionType === 'delete'">
+                            <div class="form-group">
+                                <label>Path</label>
+                                <input type="text" class="form-control" placeholder="Enter name"
+                                    ng-model="sidebarEntity.path">
+                            </div>
+                            <div class="form-group">
+                                <label>Label</label>
+                                <input type="text" class="form-control" placeholder="Enter name"
+                                    ng-model="sidebarEntity.label">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon</label>
+                                <!-- <div class="col-xs-5"> -->
+                                <select class="form-control" name="entityIcon" id="entityIcon"
+                                    ng-model="sidebarEntity.icon" style="font-family: 'FontAwesome', 'Helvetica'">
+                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
+                                        value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                </select>
+                                <!-- </div> -->
+                            </div>
+                            <div class="form-group">
+                                <label>URL</label>
+                                <input type="text" class="form-control" placeholder="Enter name"
+                                    ng-model="sidebarEntity.url">
+                            </div>
+
+                        </form>
+                        <div ng-show="actionType === 'delete'">
+                            You are going to delete <b>Navigation</b> with <b>name = {{sidebarEntity.name}}</b>?
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarNew'"
+                            ng-click="sidebarCreate()">Save</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarUpdate'"
+                            ng-click="sidebarUpdate()">Update</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarDelete'"
+                            ng-click="sidebarDelete()">Delete</button>
+                        <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Alert Dialog -->
         <div class="dirigible-modal modal fade" id="dialogAlert" tabindex="-1" role="dialog"

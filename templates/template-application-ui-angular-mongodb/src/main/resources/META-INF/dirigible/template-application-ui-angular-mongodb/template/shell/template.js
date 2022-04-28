@@ -13,21 +13,21 @@ exports.getSources = function (parameters) {
     var sources = [];
     if (parameters && parameters.includeLaunchpad) {
         sources = [{
-            location: "/template-application-ui-angular/api/launchpad/menu.js.template",
+            location: "/template-application-ui-angular/shell/launchpad/menu.js.template",
             action: "generate",
-            rename: "api/launchpad/menu.js"
+            rename: "gen/shell/launchpad/menu.js"
         }, {
-            location: "/template-application-ui-angular/api/launchpad/perspectives.js.template",
+            location: "/template-application-ui-angular/shell/launchpad/perspectives.js.template",
             action: "generate",
-            rename: "api/launchpad/perspectives.js"
+            rename: "gen/shell/launchpad/perspectives.js"
         }, {
-            location: "/template-application-ui-angular/api/launchpad/tiles.js.template",
+            location: "/template-application-ui-angular/shell/launchpad/tiles.js.template",
             action: "generate",
-            rename: "api/launchpad/tiles.js"
+            rename: "gen/shell/launchpad/tiles.js"
         }, {
-            location: "/template-application-ui-angular/api/launchpad/views.js.template",
+            location: "/template-application-ui-angular/shell/launchpad/views.js.template",
             action: "generate",
-            rename: "api/launchpad/views.js"
+            rename: "gen/shell/launchpad/views.js"
         }];
     }
     return sources;
