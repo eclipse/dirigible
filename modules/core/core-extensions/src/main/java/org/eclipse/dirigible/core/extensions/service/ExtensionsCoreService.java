@@ -39,11 +39,18 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class ExtensionsCoreService implements IExtensionsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<ExtensionPointDefinition> extensionPointPersistenceManager = new PersistenceManager<ExtensionPointDefinition>();
 
 	private PersistenceManager<ExtensionDefinition> extensionPersistenceManager = new PersistenceManager<ExtensionDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Extension Points
 
@@ -64,7 +71,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				extensionPointPersistenceManager.insert(connection, extensionPointDefinition);
 				return extensionPointDefinition;
 			} finally {
@@ -86,7 +93,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return extensionPointPersistenceManager.find(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -107,7 +114,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSION_POINTS").where("EXTENSIONPOINT_NAME = ?")
 						.toString();
 				List<ExtensionPointDefinition> extensionPointDefinitions = extensionPointPersistenceManager.query(connection,
@@ -140,7 +147,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				extensionPointPersistenceManager.delete(connection, ExtensionPointDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -162,7 +169,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				ExtensionPointDefinition extensionPointDefinition = getExtensionPoint(location);
 				extensionPointDefinition.setName(name);
 				extensionPointDefinition.setDescription(description);
@@ -186,7 +193,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return extensionPointPersistenceManager.findAll(connection, ExtensionPointDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -218,7 +225,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				extensionPersistenceManager.insert(connection, extensionDefinition);
 				return extensionDefinition;
 			} finally {
@@ -240,7 +247,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return extensionPersistenceManager.find(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -261,7 +268,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				extensionPersistenceManager.delete(connection, ExtensionDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -283,7 +290,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				ExtensionDefinition extensionDefinition = getExtension(location);
 				extensionDefinition.setModule(module);
 				extensionDefinition.setExtensionPoint(extensionPoint);
@@ -308,7 +315,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return extensionPersistenceManager.findAll(connection, ExtensionDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -330,7 +337,7 @@ public class ExtensionsCoreService implements IExtensionsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_EXTENSIONS")
 						.where("EXTENSION_EXTENSIONPOINT_NAME = ?").toString();
 				return extensionPersistenceManager.query(connection, ExtensionDefinition.class, sql,

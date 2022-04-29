@@ -523,7 +523,23 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			{ "name": "tablet", "icon": "&#xf10a; tablet" },
 			{ "name": "tachometer", "icon": "&#xf0e4; tachometer" },
 			{ "name": "tag", "icon": "&#xf02b; tag" },
-			{ "name": "tags", "icon": "&#xf02c; tags" }
+			{ "name": "tags", "icon": "&#xf02c; tags" },
+			{ "name": "tasks", "icon": "&#xf0ae; tasks" },
+			{ "name": "television", "icon": "&#xf26c; television" },
+			{ "name": "terminal", "icon": "&#xf120; terminal" },
+			{ "name": "th", "icon": "&#xf00a; th" },
+			{ "name": "th-large", "icon": "&#xf009; th-large" },
+			{ "name": "th-list", "icon": "&#xf00b; th-list" },
+			{ "name": "thermometer", "icon": "&#xf2c7; thermometer" },
+			{ "name": "toggle-on", "icon": "&#xf205; toggle-on" },
+			{ "name": "train", "icon": "&#xf238; train" },
+			{ "name": "trophy", "icon": "&#xf091; trophy" },
+			{ "name": "truck", "icon": "&#xf0d1; truck" },
+			{ "name": "umbrella", "icon": "&#xf0e9; umbrella" },
+			{ "name": "user", "icon": "&#xf007; user" },
+			{ "name": "users", "icon": "&#xf0c0; users" },
+			{ "name": "video-camera", "icon": "&#xf03d; video-camera" },
+			{ "name": "wrench", "icon": "&#xf0ad; wrench" }
 		];
 
 		ctrl.loadModels = function () {

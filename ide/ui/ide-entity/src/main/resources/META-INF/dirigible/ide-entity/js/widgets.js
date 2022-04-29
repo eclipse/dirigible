@@ -113,8 +113,9 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 						v1.style = 'extensionproperty';
 					}
 
-
+					var initial = parent.geometry.width;
 					graph.addCell(v1, parent);
+					parent.geometry.width = initial;
 
 					if (isEntity) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);

@@ -41,11 +41,18 @@ import com.google.gson.reflect.TypeToken;
  */
 public class CsvimCoreService implements ICsvimCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<CsvimDefinition> csvimPersistenceManager = new PersistenceManager<CsvimDefinition>();
 
 	private PersistenceManager<CsvDefinition> csvPersistenceManager = new PersistenceManager<CsvDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// CSVIM
 
@@ -67,7 +74,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				csvimPersistenceManager.insert(connection, csvimDefinition);
 				return csvimDefinition;
 			} finally {
@@ -92,7 +99,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return csvimPersistenceManager.find(connection, CsvimDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -116,7 +123,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				csvimPersistenceManager.delete(connection, CsvimDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -140,7 +147,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				CsvimDefinition csvimDefinition = getCsvim(location);
 				csvimDefinition.setHash(hash);
 				csvimPersistenceManager.update(connection, csvimDefinition);
@@ -164,7 +171,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return csvimPersistenceManager.findAll(connection, CsvimDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -253,7 +260,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				csvPersistenceManager.insert(connection, csvDefinition);
 				return csvDefinition;
 			} finally {
@@ -277,7 +284,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return csvPersistenceManager.find(connection, CsvDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -301,7 +308,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				csvPersistenceManager.delete(connection, CsvDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -325,7 +332,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				CsvDefinition csvDefinition = getCsv(location);
 				if (hash != null) {
 					csvDefinition.setHash(hash);
@@ -351,7 +358,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return csvPersistenceManager.findAll(connection, CsvDefinition.class);
 			} finally {
 				if (connection != null) {

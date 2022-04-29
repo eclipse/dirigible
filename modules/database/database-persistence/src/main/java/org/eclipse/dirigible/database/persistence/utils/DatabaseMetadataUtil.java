@@ -16,8 +16,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -37,7 +35,7 @@ public class DatabaseMetadataUtil {
 
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private DataSource dataSource = null;
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
@@ -49,13 +47,20 @@ public class DatabaseMetadataUtil {
     public static final String JDBC_FK_COLUMN_NAME_PROPERTY = "FKCOLUMN_NAME";
     public static final String JDBC_PK_COLUMN_NAME_PROPERTY = "PKCOLUMN_NAME";
     
+    protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
+    
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
 
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             addFields(databaseMetadata, connection, tableMetadata, schemaName);
             addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);

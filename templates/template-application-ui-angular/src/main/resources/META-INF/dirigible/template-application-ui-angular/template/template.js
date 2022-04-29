@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 var restTemplateManager = require("template-application-rest/template/template");
-var apiTemplate = require("template-application-ui-angular/template/api/template");
+var shellTemplate = require("template-application-ui-angular/template/shell/template");
 var uiTemplate = require("template-application-ui-angular/template/ui/template");
 
 
@@ -19,7 +19,7 @@ exports.getTemplate = function (parameters) {
 
     let templateSources = [];
     templateSources = templateSources.concat(restTemplate.sources);
-    templateSources = templateSources.concat(apiTemplate.getSources(parameters));
+    templateSources = templateSources.concat(shellTemplate.getSources(parameters));
     templateSources = templateSources.concat(uiTemplate.getSources(parameters));
 
     let templateParameters = getTemplateParameters();

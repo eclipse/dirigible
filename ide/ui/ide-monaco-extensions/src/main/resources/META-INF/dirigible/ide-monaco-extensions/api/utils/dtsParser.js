@@ -27,11 +27,10 @@ exports.getDtsPaths = function () {
         for (let [property, value] of Object.entries(content)) {
             let isPackageDescription = value["isPackageDescription"];
             let shouldBeUnexposedToESM = value["shouldBeUnexposedToESM"];
-            if(shouldBeUnexposedToESM){
+            if (shouldBeUnexposedToESM) {
                 continue;
             }
-            if(typeof isPackageDescription === 'boolean' && isPackageDescription === true)
-            {
+            if (typeof isPackageDescription === 'boolean' && isPackageDescription === true) {
                 dtsPaths.push(value["dtsPath"])
             }
         }
@@ -41,9 +40,9 @@ exports.getDtsPaths = function () {
 }
 
 // Returns the concatenated file content.
-exports.getDtsFileContents = function (paths){
+exports.getDtsFileContents = function (paths) {
     let result = ""
-    for(const path of paths) {
+    for (const path of paths) {
         result = result.concat(registry.getText(path) + "\n");
     }
 

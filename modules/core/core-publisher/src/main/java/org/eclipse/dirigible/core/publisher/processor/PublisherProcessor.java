@@ -34,7 +34,14 @@ public class PublisherProcessor {
 
 	private PublisherCoreService publishCoreService = new PublisherCoreService();
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Request publishing.
@@ -138,7 +145,7 @@ public class PublisherProcessor {
 	 */
 	public boolean existsWorkspace(String user, String workspace) {
 		StringBuilder workspacePath = generateWorkspacePath(user, workspace, null, null);
-		ICollection collection = repository.getCollection(workspacePath.toString());
+		ICollection collection = getRepository().getCollection(workspacePath.toString());
 		return collection.exists();
 	}
 

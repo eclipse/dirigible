@@ -37,7 +37,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class SynchronizerCoreService implements ISynchronizerCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<SynchronizerStateDefinition> synchronizerStatePersistenceManager = new PersistenceManager<SynchronizerStateDefinition>();
 	
@@ -57,6 +57,12 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		}
 	}
 	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// State
 
@@ -90,7 +96,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				SynchronizerStateDefinition existing = getSynchronizerState(synchronizerStateDefinition.getName());
 				if (existing != null && !synchronizerStateDefinition.equals(existing)) {
 					synchronizerStatePersistenceManager.update(connection, synchronizerStateDefinition);
@@ -120,7 +126,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return synchronizerStatePersistenceManager.find(connection, SynchronizerStateDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -141,7 +147,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				synchronizerStatePersistenceManager.delete(connection, SynchronizerStateDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -181,7 +187,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				synchronizerStatePersistenceManager.update(connection, synchronizerStateDefinition);
 				
 				SynchronizerStateLogDefinition synchronizerStateLogDefinition = new SynchronizerStateLogDefinition(
@@ -206,7 +212,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return synchronizerStatePersistenceManager.findAll(connection, SynchronizerStateDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -227,7 +233,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_LOG")
 						.where("SYNCHRONIZER_LOG_NAME = ?")
 						.build();
@@ -251,7 +257,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE_LOG")
 						.where("SYNCHRONIZER_LOG_TIMESTAMP < ?")
 						.build();
@@ -284,7 +290,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE").build();
 				synchronizerStatePersistenceManager.tableCheck(connection, SynchronizerStateDefinition.class);
 				synchronizerStatePersistenceManager.execute(connection, sql);
@@ -356,7 +362,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(synchronizerStateArtefactDefinition.getName(), synchronizerStateArtefactDefinition.getLocation());
 				if (existing != null && !synchronizerStateArtefactDefinition.equals(existing)) {
 					synchronizerStateArtefactPersistenceManager.update(connection, synchronizerStateArtefactDefinition);
@@ -384,7 +390,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
 						.where("SYNCHRONIZER_ARTEFACT_NAME = ? AND SYNCHRONIZER_ARTEFACT_LOCATION = ?")
 						.build();
@@ -415,7 +421,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 			try {
 				SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
 				if (existing != null) {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					synchronizerStateArtefactPersistenceManager.delete(
 							connection, SynchronizerStateArtefactDefinition.class, existing.getId());
 				}
@@ -458,7 +464,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				synchronizerStateArtefactPersistenceManager.update(connection, synchronizerStateArtefactDefinition);
 			} finally {
 				if (connection != null) {
@@ -480,7 +486,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				List<SynchronizerStateArtefactDefinition> list = synchronizerStateArtefactPersistenceManager.findAll(
 						connection, SynchronizerStateArtefactDefinition.class);
 				
@@ -504,7 +510,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
 						.where("SYNCHRONIZER_ARTEFACT_LOCATION = ?")
 						.build();

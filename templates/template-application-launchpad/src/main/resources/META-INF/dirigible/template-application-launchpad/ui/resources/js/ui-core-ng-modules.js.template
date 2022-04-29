@@ -75,13 +75,13 @@ angular.module('ideUiCore', ['ngResource'])
 	}
 }])
 .service('Perspectives', ['$resource', function($resource){
-	return $resource(relativePath + 'services/v4/js/{{projectName}}/api/launchpad/perspectives.js');
+	return $resource(relativePath + 'services/v4/js/{{projectName}}/gen/shell/launchpad/perspectives.js');
 }])
 .service('Tiles', ['$resource', function($resource){
-	return $resource(relativePath + 'services/v4/js/{{projectName}}/api/launchpad/tiles.js');
+	return $resource(relativePath + 'services/v4/js/{{projectName}}/gen/shell/launchpad/tiles.js');
 }])
 .service('Menu', ['$resource', function($resource){
-	return $resource(relativePath + 'services/v4/js/{{projectName}}/api/launchpad/menu.js');
+	return $resource(relativePath + 'services/v4/js/{{projectName}}/gen/shell/launchpad/menu.js');
 }])
 .service('User', ['$http', function($http){
 	return {
@@ -187,7 +187,7 @@ angular.module('ideUiCore', ['ngResource'])
 			};
 			scope.user = User.get();
 		},
-		templateUrl: relativePath + 'services/v4/web/{{projectName}}/ui/resources/templates/menu.html'
+		templateUrl: relativePath + 'services/v4/web/{{projectName}}/gen/ui/resources/templates/menu.html'
 	}
 }])
 .directive('sidebar', ['Perspectives', function(Perspectives){
@@ -207,7 +207,7 @@ angular.module('ideUiCore', ['ngResource'])
 				scope.activePerspective = activePerspective;
 			};
 		},
-		templateUrl: relativePath + 'services/v4/web/{{projectName}}/ui/resources/templates/sidebar.html'
+		templateUrl: relativePath + 'services/v4/web/{{projectName}}/gen/ui/resources/templates/sidebar.html'
 	}
 }])
 .directive('tiles', ['Tiles', function(Tiles){
@@ -221,7 +221,7 @@ angular.module('ideUiCore', ['ngResource'])
 		link: function(scope, el, attrs){
 			scope.tiles= Tiles.query({'pathSegments': pathSegments});
 		},
-		templateUrl: relativePath + 'services/v4/web/{{projectName}}/ui/resources/templates/tiles.html'
+		templateUrl: relativePath + 'services/v4/web/{{projectName}}/gen/ui/resources/templates/tiles.html'
 	}
 }])
 .directive('statusBar', ['messageHub', function(messageHub){

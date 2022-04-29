@@ -35,7 +35,7 @@ public class DBMetadataUtil {
 
     private static final boolean IS_CASE_SENSETIVE = Boolean.parseBoolean(Configuration.get(IDataStructureModel.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE));
 
-    private final DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+    private DataSource dataSource = null;
 
     public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
     public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
@@ -64,6 +64,7 @@ public class DBMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("REAL", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("FLOAT", "Edm.Single");
         SQL_TO_ODATA_EDM_TYPES.put("DOUBLE", "Edm.Double");
+        SQL_TO_ODATA_EDM_TYPES.put("DOUBLE PRECISION", "Edm.Double");
         SQL_TO_ODATA_EDM_TYPES.put("VARCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("NVARCHAR", "Edm.String");
         SQL_TO_ODATA_EDM_TYPES.put("CHARACTER VARYING", "Edm.String");
@@ -82,6 +83,13 @@ public class DBMetadataUtil {
         SQL_TO_ODATA_EDM_TYPES.put("BINTEXT", "Edm.Binary");
         SQL_TO_ODATA_EDM_TYPES.put("ALPHANUM", "Edm.String");
     }
+    
+    protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
 
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
@@ -89,7 +97,7 @@ public class DBMetadataUtil {
 
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             String artifactType = getArtifactType(databaseMetadata, connection, tableName, schemaName);
             if (null == artifactType) {
@@ -251,7 +259,7 @@ public class DBMetadataUtil {
     }
 
     public String getArtifactSchema(String artifactName, String[] types) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             ResultSet rs = databaseMetadata.getTables(connection.getCatalog(), null, artifactName, types);
             if (rs.next()) {

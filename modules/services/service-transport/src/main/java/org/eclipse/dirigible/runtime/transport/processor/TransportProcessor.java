@@ -11,8 +11,11 @@
  */
 package org.eclipse.dirigible.runtime.transport.processor;
 
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.zip.ZipInputStream;
+
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.net.URLCodec;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.workspace.api.IProject;
@@ -21,9 +24,6 @@ import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import java.io.UnsupportedEncodingException;
-import java.io.InputStream;
-import java.util.zip.ZipInputStream;
 
 /**
  * Processing the Transport Service incoming requests.
@@ -32,7 +32,14 @@ public class TransportProcessor {
 
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 	
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Import project.
@@ -59,7 +66,7 @@ public class TransportProcessor {
 		IWorkspace workspace = getWorkspace(workspaceName);
 		String projectPath = workspace.getProject(projectName).getPath();
 		String importPath = projectPath + IRepositoryStructure.SEPARATOR  + pathInProject;
-		repository.importZip(content, importPath, override, false, null);
+		getRepository().importZip(content, importPath, override, false, null);
 	}
   
 	public void importProjectInPath(String path, InputStream content) {
@@ -70,11 +77,11 @@ public class TransportProcessor {
 
 	private void importProject(String path, InputStream content) {
 		ZipInputStream str = new ZipInputStream(content);
-		repository.importZip(str, path, true);
+		getRepository().importZip(str, path, true);
 	}
 
 	private ICollection getOrCreateCollection(String path) {
-		ICollection repositoryRootCollection = repository.getRoot();
+		ICollection repositoryRootCollection = getRepository().getRoot();
 		ICollection importedZipFolder = repositoryRootCollection.getCollection(path);
 
 		if (!importedZipFolder.exists()) {
@@ -94,7 +101,7 @@ public class TransportProcessor {
 	public byte[] exportProject(String workspace, String project) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject projectApi = getProject(workspaceApi, project);
-		return repository.exportZip(projectApi.getPath(), true);
+		return getRepository().exportZip(projectApi.getPath(), true);
 	}
 	
 	/**
@@ -105,7 +112,7 @@ public class TransportProcessor {
 	 */
 	public byte[] exportWorkspace(String workspace) {
 		IWorkspace workspaceApi = getWorkspace(workspace);
-		return repository.exportZip(workspaceApi.getPath(), false);
+		return getRepository().exportZip(workspaceApi.getPath(), false);
 	}
 
 	/**
@@ -121,7 +128,7 @@ public class TransportProcessor {
 		IProject projectApi = getProject(workspaceApi, project);
 		UrlFacade decodedFolder = new UrlFacade();
 		String decodedPath = decodedFolder.decode(folder, null);
-		return repository.exportZip(projectApi.getPath() + IRepositoryStructure.SEPARATOR + decodedPath, true);
+		return getRepository().exportZip(projectApi.getPath() + IRepositoryStructure.SEPARATOR + decodedPath, true);
 	}
 
 	/**
@@ -151,7 +158,7 @@ public class TransportProcessor {
 	 * @param content the content
 	 */
 	public void importSnapshot(byte[] content) {
-		repository.importZip(content, IRepositoryStructure.SEPARATOR, true, false, null);
+		getRepository().importZip(content, IRepositoryStructure.SEPARATOR, true, false, null);
 	}
 
 	/**
@@ -160,7 +167,7 @@ public class TransportProcessor {
 	 * @return the byte[]
 	 */
 	public byte[] exportSnapshot() {
-		return repository.exportZip(IRepositoryStructure.SEPARATOR, true);
+		return getRepository().exportZip(IRepositoryStructure.SEPARATOR, true);
 	}
 
 	

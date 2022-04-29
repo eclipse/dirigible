@@ -37,7 +37,7 @@ public class WebsocketsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebsocketsService.class);
 	
-	private WebsocketHandler handler = (WebsocketHandler) StaticObjects.get(StaticObjects.WEBSOCKET_HANDLER);
+	private WebsocketHandler handler = null;
 	
 	/**
 	 * On open callback.
@@ -53,7 +53,7 @@ public class WebsocketsService {
 		Map<Object, Object> context = new HashMap<>();
     	context.put("method", "onopen");
     	try {
-			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN, context);
+    		getHandler().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_OPEN, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -77,7 +77,7 @@ public class WebsocketsService {
 		context.put("message", message);
     	context.put("method", "onmessage");
     	try {
-			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
+    		getHandler().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -101,7 +101,7 @@ public class WebsocketsService {
 		context.put("error", throwable.getMessage());
     	context.put("method", "onerror");
     	try {
-			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
+    		getHandler().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -123,10 +123,17 @@ public class WebsocketsService {
 		Map<Object, Object> context = new HashMap<>();
     	context.put("method", "onclose");
     	try {
-			handler.processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE, context);
+    		getHandler().processEvent(endpoint, WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE, context);
 		} catch (WebsocketsException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+	
+	protected synchronized WebsocketHandler getHandler() {
+		if (this.handler == null) {
+			handler = (WebsocketHandler) StaticObjects.get(StaticObjects.WEBSOCKET_HANDLER);
+		}
+		return this.handler;
 	}
 
 }

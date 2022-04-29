@@ -44,7 +44,7 @@ angular.module('page')
 }])
 .controller('PageController', function ($scope, $http, $messageHub) {
 
-	var api = '../../../../../../../../services/v4/js/${projectName}/api/${perspectiveName}/${name}.js';
+	var api = '/services/v4/js/${projectName}/gen/api/${perspectiveName}/${name}.js';
 
 	$scope.load = function() {
 		$http.get(api)

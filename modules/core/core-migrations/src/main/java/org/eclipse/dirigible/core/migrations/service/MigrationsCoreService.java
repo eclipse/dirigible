@@ -36,11 +36,18 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class MigrationsCoreService implements IMigrationsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<MigrationDefinition> migrationsPersistenceManager = new PersistenceManager<MigrationDefinition>();
 	
 	private PersistenceManager<MigrationStatusDefinition> migrationsStatusPersistenceManager = new PersistenceManager<MigrationStatusDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Migrations
 
@@ -66,7 +73,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				migrationsPersistenceManager.insert(connection, migrationDefinition);
 				return migrationDefinition;
 			} finally {
@@ -88,7 +95,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return migrationsPersistenceManager.find(connection, MigrationDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -118,7 +125,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				migrationsPersistenceManager.delete(connection, MigrationDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -140,7 +147,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				MigrationDefinition migrationDefinition = getMigration(location);
 				migrationDefinition.setProject(project);
 				migrationDefinition.setMajor(major);
@@ -169,7 +176,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return migrationsPersistenceManager.findAll(connection, MigrationDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -189,7 +196,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_MIGRATIONS").where("MIGRATION_PROJECT = ?")
 						.order("MIGRATION_MAJOR").order("MIGRATION_MINOR").order("MIGRATION_MICRO").toString();
 				return migrationsPersistenceManager.query(connection, MigrationDefinition.class, sql, project);
@@ -254,7 +261,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				migrationsStatusPersistenceManager.insert(connection, migrationStatusDefinition);
 				return migrationStatusDefinition;
 			} finally {
@@ -275,7 +282,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return migrationsStatusPersistenceManager.find(connection, MigrationStatusDefinition.class, project);
 			} finally {
 				if (connection != null) {
@@ -303,7 +310,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				migrationsStatusPersistenceManager.delete(connection, MigrationStatusDefinition.class, project);
 			} finally {
 				if (connection != null) {
@@ -324,7 +331,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				MigrationStatusDefinition migrationStatusDefinition = getMigrationStatus(project);
 				migrationStatusDefinition.setMajor(major);
 				migrationStatusDefinition.setMinor(minor);
@@ -349,7 +356,7 @@ public class MigrationsCoreService implements IMigrationsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return migrationsStatusPersistenceManager.findAll(connection, MigrationStatusDefinition.class);
 			} finally {
 				if (connection != null) {
