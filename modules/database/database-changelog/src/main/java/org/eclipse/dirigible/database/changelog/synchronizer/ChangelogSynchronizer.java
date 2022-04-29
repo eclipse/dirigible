@@ -71,11 +71,18 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 
 	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = null;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 
 	private static final ChangelogSynchronizationArtefactType CHANGELOG_ARTEFACT = new ChangelogSynchronizationArtefactType();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -268,7 +275,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				
 				List<DataStructureChangelogModel> schemaModels = dataStructuresCoreService.getChangelogs();
 				for (DataStructureChangelogModel schemaModel : schemaModels) {
@@ -303,7 +310,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				
 				List<String> changelogs = new ArrayList<String>((DATA_STRUCTURE_CHANGELOG_MODELS.keySet()));
 				

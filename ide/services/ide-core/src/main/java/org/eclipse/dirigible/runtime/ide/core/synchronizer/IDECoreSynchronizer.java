@@ -30,7 +30,14 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(IDECoreSynchronizer.class);
 
-	private IJavascriptEngineExecutor engine  = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
+	private IJavascriptEngineExecutor engine  = null;
+	
+	protected synchronized IJavascriptEngineExecutor getEngine() {
+		if (engine == null) {
+			engine = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
+		}
+		return engine;
+	}
 
 	@Override
 	public void synchronize() {
@@ -43,7 +50,7 @@ public class IDECoreSynchronizer extends AbstractSynchronizer {
 							.append("var moduleInfoCache = require(\"ide-monaco-extensions/api/utils/moduleInfoCache\");\n")
 							.append("moduleInfoCache.refresh();").toString();
 					try {
-						engine.executeServiceCode(code, new HashMap<Object, Object>());
+						getEngine().executeServiceCode(code, new HashMap<Object, Object>());
 					} catch (ScriptingException e) {
 						logger.error(e.getMessage(), e);
 					}

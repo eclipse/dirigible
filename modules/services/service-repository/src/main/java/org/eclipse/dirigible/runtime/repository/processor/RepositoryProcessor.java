@@ -38,7 +38,14 @@ public class RepositoryProcessor {
 
 	private static final String REPOSITORY_SERVICE_PREFIX = "core/repository";
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Gets the resource.
@@ -48,7 +55,7 @@ public class RepositoryProcessor {
 	 * @return the resource
 	 */
 	public IResource getResource(String path) {
-		return repository.getResource(path);
+		return getRepository().getResource(path);
 	}
 
 	/**
@@ -63,7 +70,7 @@ public class RepositoryProcessor {
 	 * @return the i resource
 	 */
 	public IResource createResource(String path, byte[] content, String contentType) {
-		return repository.createResource(path, content, false, contentType);
+		return getRepository().createResource(path, content, false, contentType);
 	}
 
 	/**
@@ -76,7 +83,7 @@ public class RepositoryProcessor {
 	 * @return the i resource
 	 */
 	public IResource updateResource(String path, byte[] content) {
-		IResource resource = repository.getResource(path);
+		IResource resource = getRepository().getResource(path);
 		resource.setContent(content);
 		return resource;
 	}
@@ -88,7 +95,7 @@ public class RepositoryProcessor {
 	 *            the path
 	 */
 	public void deleteResource(String path) {
-		repository.removeResource(path);
+		getRepository().removeResource(path);
 	}
 
 	/**
@@ -99,7 +106,7 @@ public class RepositoryProcessor {
 	 * @return the collection
 	 */
 	public ICollection getCollection(String path) {
-		return repository.getCollection(path);
+		return getRepository().getCollection(path);
 	}
 
 	/**
@@ -121,7 +128,7 @@ public class RepositoryProcessor {
 	 * @return the collection
 	 */
 	public ICollection createCollection(String path) {
-		return repository.createCollection(path);
+		return getRepository().createCollection(path);
 	}
 
 	/**
@@ -131,7 +138,7 @@ public class RepositoryProcessor {
 	 *            the path
 	 */
 	public void deleteCollection(String path) {
-		repository.removeCollection(path);
+		getRepository().removeCollection(path);
 	}
 
 	/**

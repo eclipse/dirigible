@@ -34,9 +34,16 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
  */
 public class SchedulerCoreService implements ISchedulerCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<JobDefinition> jobPersistenceManager = new PersistenceManager<JobDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Jobs
 
@@ -80,7 +87,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				JobDefinition existing = getJob(jobDefinition.getName());
 				if (existing != null) {
 					jobPersistenceManager.update(connection, jobDefinition);
@@ -107,7 +114,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return jobPersistenceManager.find(connection, JobDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -128,7 +135,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				jobPersistenceManager.delete(connection, JobDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -151,7 +158,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				JobDefinition jobDefinition = getJob(name);
 				jobDefinition.setGroup(group);
 				jobDefinition.setClazz(clazz);
@@ -180,7 +187,7 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return jobPersistenceManager.findAll(connection, JobDefinition.class);
 			} finally {
 				if (connection != null) {

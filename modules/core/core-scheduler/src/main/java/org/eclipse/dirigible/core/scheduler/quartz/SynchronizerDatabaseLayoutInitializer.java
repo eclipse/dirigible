@@ -32,7 +32,14 @@ public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayou
 
 	private static final Logger logger = LoggerFactory.getLogger(SynchronizerDatabaseLayoutInitializer.class);
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	/**
 	 * Initialize the database schema for Quartz.
@@ -49,9 +56,9 @@ public class SynchronizerDatabaseLayoutInitializer extends AbstractDatabaseLayou
 			String dataSourceType = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_TYPE);
 			String dataSourceName = Configuration.get(SchedulerManager.DIRIGIBLE_SCHEDULER_DATABASE_DATASOURCE_NAME);
 			if (dataSourceType != null && dataSourceName != null) {
-				datasource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
+				dataSource = DatabaseModule.getDataSource(dataSourceType, dataSourceName);
 			}
-			connection = datasource.getConnection();
+			connection = getDataSource().getConnection();
 			logger.debug("Starting to create the database layout for Synchronizer...");
 			@SuppressWarnings("rawtypes")
 			SqlFactory sqlFactory = SqlFactory.getNative(connection);

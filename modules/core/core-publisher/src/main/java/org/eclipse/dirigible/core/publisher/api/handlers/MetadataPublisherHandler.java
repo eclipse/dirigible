@@ -28,10 +28,17 @@ public class MetadataPublisherHandler implements IPublisherHandler {
 
     private static final String PERCENT = "%";
 
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+    private DataSource dataSource = null;
+    
+    protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
     protected void removeMetadata(PersistenceManager persistenceManager, String table, String column, String location, boolean includeLeadingSeparator) throws SchedulerException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             SqlFactory sqlFactory = SqlFactory.getNative(connection);
 
             if (sqlFactory.exists(connection, table)) {

@@ -25,7 +25,14 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 public class ProjectPropertiesVerifier {
 
 	/** The repository. */
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Verify.
@@ -38,7 +45,7 @@ public class ProjectPropertiesVerifier {
 	 */
 	public boolean verify(String workspace, String repositoryName) {
 		try {
-			if (repository instanceof FileSystemRepository) {
+			if (getRepository() instanceof FileSystemRepository) {
 				File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
 				String gitDirectory = gitRepository.getCanonicalPath();
 				return Paths.get(Paths.get(gitDirectory).toString(), ".git").toFile().exists();

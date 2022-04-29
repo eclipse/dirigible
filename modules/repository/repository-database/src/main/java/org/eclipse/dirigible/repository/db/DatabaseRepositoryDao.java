@@ -58,10 +58,17 @@ public class DatabaseRepositoryDao {
 
 	static final int OBJECT_TYPE_BINARY = 2;
 
-	private DatabaseRepository repository = (DatabaseRepository) StaticObjects.get(StaticObjects.DATABASE_REPOSITORY);
+	private DatabaseRepository repository = null;
 
-	private DataSource datasource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
-
+	private DataSource dataSource = null;
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
+	
 	/**
 	 * Instantiates a new database repository dao.
 	 */
@@ -79,7 +86,7 @@ public class DatabaseRepositoryDao {
 	 */
 	public DatabaseRepositoryDao(DatabaseRepository repository, DataSource datasource) {
 		this.repository = repository;
-		this.datasource = datasource;
+		this.dataSource = datasource;
 	}
 
 	/**
@@ -87,8 +94,11 @@ public class DatabaseRepositoryDao {
 	 *
 	 * @return the repository
 	 */
-	public DatabaseRepository getRepository() {
-		return this.repository;
+	protected DatabaseRepository getRepository() {
+		if (repository == null) {
+			repository = (DatabaseRepository) StaticObjects.get(StaticObjects.DATABASE_REPOSITORY);
+		}
+		return repository;
 	}
 
 	/**
@@ -161,7 +171,7 @@ public class DatabaseRepositoryDao {
 	}
 
 	private Connection openConnection() throws SQLException {
-		return datasource.getConnection();
+		return getDataSource().getConnection();
 	}
 
 	/**

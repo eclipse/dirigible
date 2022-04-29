@@ -36,13 +36,15 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractSynchronizer.class);
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
 	
 	private SynchronizerCoreService synchronizerCoreService = new SynchronizerCoreService();
 	
 	private final AtomicLong lastSynchronized = new AtomicLong(0);
 	
 	private final AtomicBoolean forcedSynchronization = new AtomicBoolean(false);
+	
+	
 	
 	@Override
 	public boolean beforeSynchronizing() {
@@ -75,7 +77,10 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	 *
 	 * @return the repository
 	 */
-	protected IRepository getRepository() {
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
 		return repository;
 	}
 

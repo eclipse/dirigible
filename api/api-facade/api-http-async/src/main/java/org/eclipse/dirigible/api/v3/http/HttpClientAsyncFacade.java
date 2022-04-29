@@ -41,11 +41,21 @@ import org.slf4j.LoggerFactory;
 public final class HttpClientAsyncFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientAsyncFacade.class);
-	private static IJavascriptEngineExecutor defaultEngineExecutor = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
+	
+	private IJavascriptEngineExecutor defaultEngineExecutor = null;
 
 	private int requestsCounter = 0;
+	
 	private List<AsyncHttpRequest> asyncHttpRequests = new ArrayList<AsyncHttpRequest>();
+	
 	private CountDownLatch countDownLatch;
+	
+	protected synchronized IJavascriptEngineExecutor getDefaultEngineExecutor() {
+		if (defaultEngineExecutor == null) {
+			defaultEngineExecutor = (IJavascriptEngineExecutor) StaticObjects.get(StaticObjects.JAVASCRIPT_ENGINE);
+		}
+		return defaultEngineExecutor;
+	}
 
 	/**
 	 * Create HttpResponseCallback
@@ -304,7 +314,7 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 
 				private void executeCallback(String completeCallback, Map<Object, Object> executionContext) {
 					try {
-						defaultEngineExecutor.executeServiceCode(completeCallback, executionContext);
+						getDefaultEngineExecutor().executeServiceCode(completeCallback, executionContext);
 					} catch (ScriptingException e) {
 						logger.error(e.getMessage(), e);
 					}

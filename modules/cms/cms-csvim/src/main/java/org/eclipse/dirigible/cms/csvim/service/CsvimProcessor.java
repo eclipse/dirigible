@@ -26,7 +26,6 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -65,16 +64,30 @@ public class CsvimProcessor {
 
 	private final DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = null;
 
-	private final IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
 	
 	private final CsvProcessor csvProcessor = new CsvProcessor();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 
 	public void process(CsvFileDefinition csvFileDefinition, Connection connection)
 			throws CsvimException, SQLException {
-		IResource resource = repository.getResource(convertToActualFileName(csvFileDefinition.getFile()));
+		IResource resource = getRepository().getResource(convertToActualFileName(csvFileDefinition.getFile()));
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		CSVParser csvParser = getCsvParser(csvFileDefinition, resource);
 		PersistenceTableModel tableMetadata = getTableMetadata(csvFileDefinition);
@@ -141,7 +154,7 @@ public class CsvimProcessor {
 			CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName,
-				DatabaseMetadataUtil.getTableSchema(dataSource, tableName));
+				DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
 		
@@ -166,7 +179,7 @@ public class CsvimProcessor {
 			CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName,
-				DatabaseMetadataUtil.getTableSchema(dataSource, tableName));
+				DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
 		for (CSVRecord csvRecord : recordsToProcess) {
@@ -329,7 +342,7 @@ public class CsvimProcessor {
 	private PersistenceTableModel getTableMetadata(String tableName) {
 		try {
 			return databaseMetadataUtil.getTableMetadata(tableName,
-					DatabaseMetadataUtil.getTableSchema(dataSource, tableName));
+					DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 		} catch (SQLException sqlException) {
 			logger.error(String.format("Error occurred while trying to read table metadata for table with name: %s",
 					tableName), sqlException);

@@ -53,13 +53,20 @@ public class CsvProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(CsvProcessor.class);
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = null;
 
 	private DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	public void insert(CsvRecordDefinition csvRecordDefinition, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = csvRecordDefinition.getTableMetadataModel().getTableName();
-		try (Connection connection = dataSource.getConnection()) {
+		try (Connection connection = getDataSource().getConnection()) {
 			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName,
 					csvRecordDefinition.getTableMetadataModel().getSchemaName());
 			for (TableColumn availableTableColumn : availableTableColumns) {
@@ -90,7 +97,7 @@ public class CsvProcessor {
 
 	public void update(CsvRecordDefinition csvRecordDefinition) throws SQLException {
 		String tableName = csvRecordDefinition.getTableMetadataModel().getTableName();
-		try (Connection connection = dataSource.getConnection()) {
+		try (Connection connection = getDataSource().getConnection()) {
 			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName,
 					csvRecordDefinition.getTableMetadataModel().getSchemaName());
 			UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
@@ -128,9 +135,9 @@ public class CsvProcessor {
 			return;
 		}
 
-		try (Connection connection = dataSource.getConnection()) {
+		try (Connection connection = getDataSource().getConnection()) {
 			String pkColumnName = databaseMetadataUtil
-					.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(dataSource, tableName)).getColumns()
+					.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName)).getColumns()
 					.get(0).getName();
 			DeleteBuilder deleteBuilder = new DeleteBuilder(SqlFactory.deriveDialect(connection));
 			deleteBuilder.from(tableName).where(String.format("%s IN (%s)", pkColumnName, String.join(",", ids)));
@@ -147,9 +154,9 @@ public class CsvProcessor {
 			return;
 		}
 
-		try (Connection connection = dataSource.getConnection()) {
+		try (Connection connection = getDataSource().getConnection()) {
 			String pkColumnName = databaseMetadataUtil
-					.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(dataSource, tableName)).getColumns()
+					.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName)).getColumns()
 					.get(0).getName();
 			DeleteBuilder deleteBuilder = new DeleteBuilder(SqlFactory.deriveDialect(connection));
 			deleteBuilder.from(tableName).where(String.format("%s='%s'", pkColumnName, id));

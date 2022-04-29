@@ -129,7 +129,7 @@ public class WebsocketsService {
 		}
 	}
 	
-	private synchronized WebsocketHandler getHandler() {
+	protected synchronized WebsocketHandler getHandler() {
 		if (this.handler == null) {
 			handler = (WebsocketHandler) StaticObjects.get(StaticObjects.WEBSOCKET_HANDLER);
 		}

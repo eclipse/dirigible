@@ -30,7 +30,6 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.core.version.Version;
 import org.eclipse.dirigible.runtime.core.version.VersionProcessor;
 import org.eclipse.dirigible.runtime.openapi.definition.OpenAPIDefinition;
@@ -42,7 +41,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 import io.swagger.models.Contact;
-import io.swagger.models.ExternalDocs;
 import io.swagger.models.Info;
 import io.swagger.models.License;
 import io.swagger.models.Model;
@@ -70,7 +68,14 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 	
 	private OpenAPICoreService openAPICoreService = new OpenAPICoreService();
 	
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 	
 	@Context
 	private HttpServletResponse response;
@@ -134,7 +139,7 @@ public class OpenAPIRestService extends AbstractRestService implements IRestServ
 		swagger.setTags(new ArrayList<Tag>());
 		
 		for (OpenAPIDefinition openAPIDefinition : openAPICoreService.getOpenAPIs()) {
-			IResource resource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPIDefinition.getLocation());
+			IResource resource = getRepository().getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + openAPIDefinition.getLocation());
 			if (resource.exists()) {
 				String service = new String(resource.getContent());
 				Swagger contribution = new SwaggerParser().parse(service);
