@@ -703,6 +703,24 @@ public class CloudFoundryUtils {
 			private String url;
 			private String uri;
 
+			@SerializedName("onpremise_proxy_host")
+			private String onpremiseProxyHost;
+
+			@SerializedName("onpremise_proxy_http_port")
+			private String onpremiseProxyHttpPort;
+
+			@SerializedName("onpremise_proxy_ldap_port")
+			private String onpremiseProxyLdapPort;
+
+			@SerializedName("onpremise_proxy_port")
+			private String onpremiseProxyPort;
+
+			@SerializedName("onpremise_proxy_rfc_port")
+			private String onpremiseProxyRfcPort;
+
+			@SerializedName("onpremise_socks5_proxy_port")
+			private String onpremiseSocks5ProxyPort;
+
 			public String getClientId() {
 				return clientId;
 			}
@@ -734,6 +752,55 @@ public class CloudFoundryUtils {
 			public void setUri(String uri) {
 				this.uri = uri;
 			}
+
+			public String getOnpremiseProxyHost() {
+				return onpremiseProxyHost;
+			}
+
+			public void setOnpremiseProxyHost(String onpremiseProxyHost) {
+				this.onpremiseProxyHost = onpremiseProxyHost;
+			}
+
+			public String getOnpremiseProxyHttpPort() {
+				return onpremiseProxyHttpPort;
+			}
+
+			public void setOnpremiseProxyHttpPort(String onpremiseProxyHttpPort) {
+				this.onpremiseProxyHttpPort = onpremiseProxyHttpPort;
+			}
+
+			public String getOnpremiseProxyLdapPort() {
+				return onpremiseProxyLdapPort;
+			}
+
+			public void setOnpremiseProxyLdapPort(String onpremiseProxyLdapPort) {
+				this.onpremiseProxyLdapPort = onpremiseProxyLdapPort;
+			}
+
+			public String getOnpremiseProxyPort() {
+				return onpremiseProxyPort;
+			}
+
+			public void setOnpremiseProxyPort(String onpremiseProxyPort) {
+				this.onpremiseProxyPort = onpremiseProxyPort;
+			}
+
+			public String getOnpremiseProxyRfcPort() {
+				return onpremiseProxyRfcPort;
+			}
+
+			public void setOnpremiseProxyRfcPort(String onpremiseProxyRfcPort) {
+				this.onpremiseProxyRfcPort = onpremiseProxyRfcPort;
+			}
+
+			public String getOnpremiseSocks5ProxyPort() {
+				return onpremiseSocks5ProxyPort;
+			}
+
+			public void setOnpremiseSocks5ProxyPort(String onpremiseSocks5ProxyPort) {
+				this.onpremiseSocks5ProxyPort = onpremiseSocks5ProxyPort;
+			}
+
 		}
 	}
 }
