@@ -27,6 +27,7 @@
 		<module>odata</module>
 		<module>templating</module>
 		<module>mail</module>
+		<module>spring</module>
 	</modules>
 
 	<properties>

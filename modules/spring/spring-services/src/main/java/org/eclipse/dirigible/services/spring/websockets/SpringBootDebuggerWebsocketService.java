@@ -9,15 +9,15 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.services.spring.boot.websockets;
+package org.eclipse.dirigible.services.spring.websockets;
 
 import javax.websocket.server.ServerEndpoint;
 
-import org.eclipse.dirigible.runtime.websockets.service.WebsocketsService;
+import org.eclipse.dirigible.engine.js.graalvm.debugger.DebuggerWebsocketService;
 import org.springframework.stereotype.Component;
 
 @Component
-@ServerEndpoint("/websockets/v4/service/{endpoint}")
-public class SpringBootWebsocketsService extends WebsocketsService {
+@ServerEndpoint(value = "/websockets/v4/ide/debugger/{path}")
+public class SpringBootDebuggerWebsocketService extends DebuggerWebsocketService {
 
 }
