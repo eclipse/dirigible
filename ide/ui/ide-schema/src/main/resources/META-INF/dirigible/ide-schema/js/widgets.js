@@ -81,7 +81,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					tableCount++;
 				}
 			}
-			let prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
+			var prefix = prototype.value.name === "TABLENAME" ? "TABLE" : "VIEW";
 			//showPrompt('Enter name for new table', prefix+(tableCount+1), createNode);
 			createNode(prefix + (tableCount + 1));
 		}
@@ -96,7 +96,16 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					v1.geometry.x = pt.x;
 					v1.geometry.y = pt.y;
 
+					var memento = undefined;
+					if (parent.geometry && parent.geometry.width) {
+						memento = parent.geometry.width;
+					}
+
 					graph.addCell(v1, parent);
+
+					if (memento) {
+						parent.geometry.width = memento;
+					}
 
 					if (isTable) {
 						v1.geometry.alternateBounds = new mxRectangle(0, 0, v1.geometry.width, v1.geometry.height);
