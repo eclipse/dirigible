@@ -14,9 +14,12 @@ package org.eclipse.dirigible.engine.odata2.sql.clause;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
+import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
@@ -39,6 +42,7 @@ public final class SQLSelectClause {
     public static final int NOT_SET = -1;
     //later we would like to bind the columns in the entity set to the correct entities/fields
     private final Map<Integer, EdmTarget> columnMapping;
+    private final Map<EdmTarget, String> targetParameters;
     private final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query;
     private int atColumn = 0;
     private boolean isCount;
@@ -48,6 +52,8 @@ public final class SQLSelectClause {
     private int skip;
     private EdmStructuralType target;
 
+    private final List<SQLStatementParam> statementParams;
+
     @SuppressWarnings("unchecked")
     public SQLSelectClause(final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder parent) {
         this(parent, EMPTY_LIST, EMPTY_LIST);
@@ -56,6 +62,8 @@ public final class SQLSelectClause {
     public SQLSelectClause(final org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder query, final List<SelectItem> selects,
                            final List<ArrayList<NavigationPropertySegment>> expands) {
         columnMapping = new TreeMap<>();
+        targetParameters = new HashMap<>();
+        this.statementParams = new ArrayList<>();
         this.query = query;
         selectsFromTargetEntity = selects;
         this.expands = expands;
@@ -66,21 +74,21 @@ public final class SQLSelectClause {
 
     public String evaluate(final SQLContext context, final EvaluationType type) throws EdmException {
         switch (type) {
-        case SELECT_COLUMN_LIST:
-            return buildColumnList(context);
-        case FROM:
-            return buildFrom(context);
-        case SELECT_LIMIT:
-            return buildLimit(context);
-        case SELECT_OFFSET:
-            return buildOffset(context);
-        default:
-            throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type, HttpStatusCodes.INTERNAL_SERVER_ERROR);
+            case SELECT_COLUMN_LIST:
+                return buildColumnList(context);
+            case FROM:
+                return buildFrom(context);
+            case SELECT_LIMIT:
+                return buildLimit(context);
+            case SELECT_OFFSET:
+                return buildOffset(context);
+            default:
+                throw new OData2Exception("Unable to evaluate the SQLSelect to type " + type, HttpStatusCodes.INTERNAL_SERVER_ERROR);
         }
     }
 
     private String buildOffset(SQLContext context) {
-        if(skip <= 0){
+        if (skip <= 0) {
             return EMPTY_STRING;
         }
 
@@ -129,16 +137,32 @@ public final class SQLSelectClause {
     }
 
     @SuppressWarnings("unchecked")
-    public org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder from(final EdmStructuralType target) throws ODataException {
+    public org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder from(final EdmStructuralType target, List<KeyPredicate> keyPredicates) throws ODataException {
         query.grantTableAliasForStructuralTypeInQuery(target);
         this.target = target;
 
         if (isCount) {
             columnMapping.put(atColumn++, new EdmTarget(target, null));
         } else {
+            Collection<EdmProperty> properties = EdmUtils.getSelectedProperties(selectsFromTargetEntity, target);
+
+            setTargetParameters(target, keyPredicates, properties);
+
             for (EdmProperty property : EdmUtils.getSelectedProperties(selectsFromTargetEntity, target)) {
                 //TODO the selectsFromTargetEntity cannot be mapped only to properties. what happens in this case?
-                columnMapping.put(atColumn++, new EdmTarget(target, property));
+
+                boolean isPropertyParameter = false;
+
+                for ( Map.Entry<EdmTarget, String> targetParameter : this.targetParameters.entrySet()) {
+                    if (targetParameter.getKey().getEdmProperty().getName().equals(property.getName())) {
+                        isPropertyParameter = true;
+                    }
+                }
+
+                if (!isPropertyParameter) {
+                    columnMapping.put(atColumn++, new EdmTarget(target, property));
+                }
+
             }
             if (hasExpand(expands)) {
                 //handle expands here
@@ -159,6 +183,35 @@ public final class SQLSelectClause {
         return query;
     }
 
+    private void setTargetParameters(EdmStructuralType target, List<KeyPredicate> keyPredicates, Collection<EdmProperty> properties) throws EdmException {
+        String targetSqlTableType = this.query.getSQLTableType(target);
+
+        if (targetSqlTableType.equalsIgnoreCase("CALC VIEW")) {
+            List<String> targetParameters = this.query.getSQLTableParameters(this.target);
+
+            for ( EdmProperty property : properties) {
+                String propertyName = property.getName();
+
+                for ( KeyPredicate keyPredicate : keyPredicates) {
+                    if (keyPredicate.getProperty().getName().equals(propertyName) && targetParameters.contains(propertyName)) {
+                        String keyPredicateValue = keyPredicate.getLiteral();
+                        this.targetParameters.put(new EdmTarget(target, property), keyPredicateValue);
+                    }
+                }
+            }
+        }
+    }
+
+    public List<String> getTargetParameterNames() throws EdmException {
+        List<String> targetParameterNames = new ArrayList<>();
+
+        for (Map.Entry<EdmTarget, String> targetParameter : this.targetParameters.entrySet()) {
+            targetParameterNames.add(targetParameter.getKey().getEdmProperty().getName());
+        }
+
+        return targetParameterNames;
+    }
+
     private String getPropertyName(final int columnIndex) throws EdmException {
         return getProperty(columnIndex).getName();
     }
@@ -169,6 +222,10 @@ public final class SQLSelectClause {
 
     private EdmStructuralType getTargetType(final int columnIndex) {
         return columnMapping.get(columnIndex).getEdmTargetType();
+    }
+
+    public List<SQLStatementParam> getStatementParams() {
+        return Collections.unmodifiableList(statementParams);
     }
 
     private String buildLimit(final SQLContext context) {
@@ -188,17 +245,45 @@ public final class SQLSelectClause {
         return selectPredicate;
     }
 
-    private String buildFrom(final SQLContext context) {
+    private String buildFrom(final SQLContext context) throws EdmException {
         List<String> tables = new ArrayList<>();
         Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
         while (it.hasNext()) {
             String tableAlias = it.next();
             EdmStructuralType target = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(target)) {
-                tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
+                if (this.targetParameters.isEmpty()) {
+                    tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
+                }
+                else {
+                    tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + tableAlias);
+                }
             }
         }
         return SQLUtils.csv(tables);
+    }
+
+    private String buildTargetParameters() throws EdmException {
+        StringBuilder parameters = new StringBuilder();
+
+        Integer targetParameterCount = this.targetParameters.size();
+        for (Map.Entry<EdmTarget,String> targetParameter : this.targetParameters.entrySet()) {
+            EdmStructuralType type = targetParameter.getKey().getEdmTargetType();
+            EdmProperty prop = targetParameter.getKey().getEdmProperty();
+            String targetParameterValue = targetParameter.getValue();
+            EdmTableBinding.ColumnInfo info = this.query.getSQLTableColumnInfo(type, prop);
+            this.statementParams.add(new SQLStatementParam(targetParameterValue, prop, info));
+
+            parameters.append("placeholder.\"$$" + prop.getName() + "$$\"" + " => " + " ? ");
+
+            targetParameterCount--;
+
+            if (targetParameterCount > 0) {
+                parameters.append(",");
+            }
+        }
+
+        return "(" + parameters + ")";
     }
 
     private boolean isSelectTarget(final EdmStructuralType target) {
@@ -212,14 +297,41 @@ public final class SQLSelectClause {
         else {
 
             StringBuilder select = new StringBuilder();
-            Iterator<Integer> i = columnMapping.keySet().iterator();
-            while (i.hasNext()) {
-                Integer column = i.next();
+
+            if (!this.targetParameters.isEmpty()) {
+
+                Integer targetParametersCount = this.targetParameters.size();
+
+                for (Map.Entry<EdmTarget, String> targetParameter : this.targetParameters.entrySet()) {
+                    EdmProperty prop = targetParameter.getKey().getEdmProperty();
+                    EdmStructuralType type = targetParameter.getKey().getEdmTargetType();
+                    String targetParameterValue = targetParameter.getValue();
+                    EdmTableBinding.ColumnInfo info = this.query.getSQLTableColumnInfo(type, prop);
+                    this.statementParams.add(new SQLStatementParam(targetParameterValue, prop, info));
+
+                    select.append(tableColumnForSelectWhenParameter(type, prop));
+
+                    targetParametersCount--;
+
+                    if (targetParametersCount > 0) {
+                        select.append(", ");
+                    }
+                }
+            }
+
+            if (!this.targetParameters.isEmpty() && !this.columnMapping.isEmpty()) {
+                select.append(", ");
+            }
+
+            Iterator<Integer> ci = columnMapping.keySet().iterator();
+
+            while (ci.hasNext()) {
+                Integer column = ci.next();
                 EdmStructuralType type = getTargetType(column);
                 String propertyName = getPropertyName(column);
                 EdmTyped p = type.getProperty(propertyName);
                 if (!(p instanceof EdmProperty))
-                    throw new OData2Exception("You must map the column " + column + " to a EDM property! The current type of propery "
+                    throw new OData2Exception("You must map the column " + column + " to a EDM property! The current type of property "
                             + propertyName + " is " + p, HttpStatusCodes.INTERNAL_SERVER_ERROR);
                 if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
                     EdmProperty prop = (EdmProperty) p;
@@ -242,16 +354,21 @@ public final class SQLSelectClause {
                     } else
                         throw new IllegalStateException("Unable to handle property " + p);
                 }
-                if (i.hasNext()) {
+                if (ci.hasNext()) {
                     select.append(", ");
                 }
             }
+
             return select.toString();
         }
     }
 
     private Object tableColumnForSelect(final EdmStructuralType type, final EdmProperty prop) {
-        return query.getSQLTableColumn(type, prop) + " AS \"" + query.getSQLTableColumnAlias(type, prop)+"\"";
+        return query.getSQLTableColumn(type, prop) + " AS \"" + query.getSQLTableColumnAlias(type, prop) + "\"";
+    }
+
+    private Object tableColumnForSelectWhenParameter(final EdmStructuralType type, final EdmProperty prop) {
+        return "?" + " AS " + query.getSQLTableColumnAlias(type, prop);
     }
 
     public static class SQLSelectBuilder {

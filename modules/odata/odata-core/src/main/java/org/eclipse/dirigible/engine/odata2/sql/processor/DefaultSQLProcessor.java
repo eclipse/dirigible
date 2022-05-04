@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.processor.ODataContext;
@@ -67,7 +68,16 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
     }
 
     @Override
-    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) {
+    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException {
+        if (value instanceof String && !property.getType().toString().equals("Edm.String")) {
+            switch (property.getType().toString()) {
+                case "Edm.Int32":
+                    value = Integer.parseInt(value.toString());
+                break;
+            }
+
+        }
+
         return value;
     }
 

@@ -5,6 +5,7 @@
 			"name": "Entity1",
 			"alias": "Entity1",
 			"table": "ENTITY1",
+			"dataStructureType": "TABLE",
 			"properties": [
 				{
 					"name": "entity1Id",
@@ -37,6 +38,7 @@
 			"name": "Entity2",
 			"alias": "Entity2",
 			"table": "ENTITY2",
+			"dataStructureType": "TABLE",
 			"properties": [
 				{
 					"name": "entity2Id",
@@ -69,6 +71,7 @@
 			"name": "Entity3",
 			"alias": "Entity3",
 			"table": "ENTITY3",
+			"dataStructureType": "TABLE",
 			"properties": [],
 			"navigations": []
 		}

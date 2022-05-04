@@ -5,6 +5,7 @@
 			"name": "employee",
 			"alias": "Employees",
 			"table": "EMPLOYEES",
+			"dataStructureType": "TABLE",
 			"properties": [
 				{
 					"name": "companyId",
@@ -27,7 +28,8 @@
 		{
 			"name": "phone",
 			"alias": "Phones",
-			"table": "PHONES"
+			"table": "PHONES",
+			"dataStructureType": "TABLE"
 		}
 	]
 }

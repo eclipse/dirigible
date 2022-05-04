@@ -4,6 +4,7 @@
       "name": "Order",
       "alias": "Orders",
       "table": "ORDERS",
+      "dataStructureType": "TABLE",
       "navigations": [{
           "name": "Items",
           "association": "OrderItems"
@@ -11,7 +12,8 @@
     }, {
       "name": "Item",
       "alias": "Items",
-      "table": "ITEMS"
+      "table": "ITEMS",
+      "dataStructureType": "TABLE"
     }
   ],
   "associations": [{

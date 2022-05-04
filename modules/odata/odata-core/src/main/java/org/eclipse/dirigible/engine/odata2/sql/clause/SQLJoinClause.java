@@ -185,9 +185,20 @@ public final class SQLJoinClause implements SQLClause {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     public SQLSelectBuilder with(List<KeyPredicate> keyPredicates) throws EdmException {
         if (this.keyPredicates != NO_PREDICATES_USED) {
-            throw new OData2Exception("A where clause for the key predicates of this join epxression is already added!",
+            throw new OData2Exception("A where clause for the key predicates of this join expression is already added!",
                     INTERNAL_SERVER_ERROR);
         }
+
+        List<String> entityParameters = this.query.getSQLTableParameters(this.target);
+        keyPredicates.removeIf( keyPredicate -> {
+            try {
+                return entityParameters.contains(keyPredicate.getProperty().getName());
+            } catch (EdmException e) {
+                e.printStackTrace();
+            }
+            return false;
+        });
+
         this.keyPredicates = keyPredicates;
         SQLWhereClause where = SQLUtils.whereClauseFromKeyPredicates(query, start, keyPredicates);
         query.and(where);

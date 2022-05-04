@@ -4,6 +4,7 @@
       "name": "Users",
       "alias": "Users",
       "table": "CVUSER",
+      "dataStructureType": "TABLE",
       "navigations": [{
           "name": "Groups",
           "association": "UserToGroups"
@@ -13,6 +14,7 @@
         "name": "Groups",
         "alias": "Groups",
         "table": "CVGROUP",
+        "dataStructureType": "TABLE",
         "navigations": [{
             "name": "Users",
             "association": "GroupToUser"

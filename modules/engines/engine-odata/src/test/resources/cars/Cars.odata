@@ -5,11 +5,13 @@
     {
       "name": "Car",
       "alias": "Cars",
-      "table": "CAR"
+      "table": "CAR",
+      "dataStructureType": "TABLE"
     }, {
       "name": "Manufacturer",
       "alias": "Manufacturers",
-      "table": "MANUFACTURER"
+      "table": "MANUFACTURER",
+      "dataStructureType": "TABLE"
     }
   ]
 }

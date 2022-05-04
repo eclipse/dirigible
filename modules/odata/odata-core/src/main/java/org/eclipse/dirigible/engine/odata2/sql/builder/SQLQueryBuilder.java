@@ -50,7 +50,7 @@ public class SQLQueryBuilder {
     public SQLSelectBuilder buildSelectCountQuery(final UriInfo uri, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
-        q.select().count().from(target).join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments())
+        q.select().count().from(target, uri.getKeyPredicates()).join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments())
                 .with(uri.getKeyPredicates()).filter(uri.getTargetEntitySet(), uri.getFilter());
         return chain.onRead(q, uri, context);
     }
@@ -58,7 +58,7 @@ public class SQLQueryBuilder {
     public SQLSelectBuilder buildSelectEntityQuery(final UriInfo uri, ODataContext context) throws ODataException {
         EdmEntityType target = uri.getTargetEntitySet().getEntityType();
         SQLSelectBuilder q = new SQLSelectBuilder(tableBinding);
-        q.select(uri.getSelect(), uri.getExpand()).from(target).filter(uri.getTargetEntitySet(), uri.getFilter())
+        q.select(uri.getSelect(), uri.getExpand()).from(target, uri.getKeyPredicates()).filter(uri.getTargetEntitySet(), uri.getFilter())
                 .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
         if (uri.getKeyPredicates() != uri.getTargetKeyPredicates()) {
             q.and(whereClauseFromKeyPredicates(q, uri.getTargetEntitySet().getEntityType(), uri.getTargetKeyPredicates()));
@@ -87,14 +87,14 @@ public class SQLQueryBuilder {
 
         if (readIdsForExpand == null || readIdsForExpand.isEmpty()) {
             //no expand, we filter as usual
-            q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target);
+            q.select(uri.getSelect(), uri.getExpand()).top(effectiveTop).skip(effectiveSkip).from(target, uri.getKeyPredicates());
             q.filter(uri.getTargetEntitySet(), uri.getFilter());
         } else {
             //we have the problem that top does not work for exapnd. Therefore we do 2 queries to select the ids of the target entities (with applied filter),
             //and then we do filter on these IDS with the expand, with no top and skip 
             // SELECT TOP XXX FROM TTTT AS M WHERE FILTER
             // SELECT XXX WHERE XXX.ID IN (...)
-            q.select(uri.getSelect(), uri.getExpand()).from(target);
+            q.select(uri.getSelect(), uri.getExpand()).from(target, uri.getKeyPredicates());
             q.filter(uri.getTargetEntitySet(), getKeyProperty(target), readIdsForExpand);
         }
         q.join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
@@ -119,7 +119,7 @@ public class SQLQueryBuilder {
 
         final Integer effectiveSkip = calculateEffectiveSkip(uri);
 
-        q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target);
+        q.select(buildSelectItemsForPrimaryKey(target), null).top(effectiveTop).skip(effectiveSkip).from(target, uri.getKeyPredicates());
         q.filter(uri.getTargetEntitySet(), uri.getFilter())
                 .join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
 

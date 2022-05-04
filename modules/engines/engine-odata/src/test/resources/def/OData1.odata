@@ -5,6 +5,7 @@
             "name": "Entity1",
             "alias": "Entity1",
             "table": "ENTITY1",
+            "dataStructureType": "TABLE",
             "properties": [
                 {
                     "name": "entity1Id",

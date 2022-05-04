@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.eclipse.dirigible.engine.odata2.sql.clause.SQLSelectClause.EvaluationType.*;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
@@ -177,7 +179,10 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     @Override
     public List<SQLStatementParam> getStatementParams() {
-        return getWhereClause().getStatementParams();
+        List<SQLStatementParam> selectClauseStatementParams = getSelectExpression().getStatementParams();
+        List<SQLStatementParam> whereClauseStatementParams = getWhereClause().getStatementParams();
+
+        return Stream.concat(selectClauseStatementParams.stream(), whereClauseStatementParams.stream()).collect(Collectors.toList());
     }
 
     private String evaluateJoins(final SQLContext context) throws ODataException {

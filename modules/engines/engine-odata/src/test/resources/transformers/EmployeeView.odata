@@ -4,7 +4,8 @@
 		{
 			"name": "employee",
 			"alias": "Employees",
-			"table": "EMPLOYEES"
+			"table": "EMPLOYEES",
+			"dataStructureType": "VIEW"
 		}
 	]
 }

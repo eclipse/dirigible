@@ -5,6 +5,7 @@
 			"name": "employee",
 			"alias": "Employees",
 			"table": "EMPLOYEES",
+			"dataStructureType": "TABLE",
 			"handlers": [
 				{
 					"method": "create",

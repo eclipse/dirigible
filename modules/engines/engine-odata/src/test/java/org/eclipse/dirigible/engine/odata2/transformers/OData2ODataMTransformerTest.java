@@ -65,6 +65,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"OrderType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.OrderType\",\n" +
                 "\t\"sqlTable\": \"ORDERS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Customer\": \"Customer\",\n" +
                 "\t\"_ref_ItemType\": {\n" +
@@ -78,6 +79,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"ItemType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.ItemType\",\n" +
                 "\t\"sqlTable\": \"ITEMS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Orderid\": \"OrderId\",\n" +
                 "\t\"_ref_OrderType\": {\n" +
@@ -111,6 +113,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"OrderType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.OrderType\",\n" +
                 "\t\"sqlTable\": \"ORDERS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Customer\": \"CUSTOMER\",\n" +
                 "\t\"_ref_ItemType\": {\n" +
@@ -124,6 +127,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"ItemType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.ItemType\",\n" +
                 "\t\"sqlTable\": \"ITEMS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ItemId\": \"ITEM_ID\",\n" +
                 "\t\"OrderId\": \"ORDER_ID\",\n" +
                 "\t\"_ref_OrderType\": {\n" +
@@ -145,6 +149,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity1Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity1Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY1\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"entity1Id\": \"ENTITY1ID\",\n" +
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
@@ -160,6 +165,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity2Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity2Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY2\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"entity2Id\": \"ENTITY2ID\",\n" +
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
@@ -176,6 +182,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity3Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity3Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY3\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Entity3_id\": \"ENTITY3.ID\",\n" +
                 "\t\"Name_id\": \"NAME.ID\",\n" +
                 "\t\"_pk_\" : \"ENTITY3.ID\"\n" +
@@ -205,6 +212,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"employeeType\",\n" +
                 "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
                 "\t\"sqlTable\": \"EMPLOYEES\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"companyId\": \"COMPANY_ID\",\n" +
                 "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
                 "\t\"_ref_phoneType\": {\n" +
@@ -218,6 +226,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"phoneType\",\n" +
                 "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
                 "\t\"sqlTable\": \"PHONES\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"number\": \"NUMBER\",\n" +
                 "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
                 "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
@@ -251,6 +260,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"UsersType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.UsersType\",\n" +
                 "\t\"sqlTable\": \"CVUSER\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
                 "\t\"_ref_GroupsType\": {\n" +
@@ -268,6 +278,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"GroupsType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.GroupsType\",\n" +
                 "\t\"sqlTable\": \"CVGROUP\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
                 "\t\"_ref_UsersType\": {\n" +

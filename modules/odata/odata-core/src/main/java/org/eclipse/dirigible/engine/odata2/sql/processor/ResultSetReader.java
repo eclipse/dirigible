@@ -82,6 +82,9 @@ public class ResultSetReader {
                 } else {
                     propertyDbValue = resultSet.getObject(columnName);
                 }
+
+
+
                 propertyDbValue = callback.onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
                 return convertProperty(property, propertyDbValue);
             } else {

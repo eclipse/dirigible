@@ -4,7 +4,8 @@
 		{
 			"name": "employee",
 			"alias": "Employees",
-			"table": "EmployeesView"
+			"table": "EmployeesView",
+			"dataStructureType": "SYNONYM"
 		}
 	]
 }

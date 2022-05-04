@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 
@@ -112,9 +113,13 @@ public class SQLOrderByClause implements SQLClause {
             throw new OData2Exception(INTERNAL_SERVER_ERROR);
         }
 
-        if (context == null || context.getDatabaseProduct() != null) {
+        if ((context == null || context.getDatabaseProduct() != null) && !this.query.getSelectExpression().getTargetParameterNames().contains(prop.getName())) {
             orderByClause.append(query.getSQLTableColumn(entityType, prop));
-        } else {
+        }
+        else if (context == null || context.getDatabaseProduct() != null && this.query.getSelectExpression().getTargetParameterNames().contains(prop.getName())) {
+            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop));
+        }
+        else {
             orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "order by" column name for Open SQL
         }
         orderByClause.append(" ").append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");

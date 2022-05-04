@@ -192,6 +192,14 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    public List<String> getParameters() throws EdmException {
+        return readMandatoryConfig("_parameters_", List.class);
+    }
+
+    public String getType() throws EdmException {
+        return readMandatoryConfig("dataStructureType", String.class);
+    }
+
     public String getPrimaryKey() throws EdmException {
         return readMandatoryConfig("_pk_", String.class);
     }
