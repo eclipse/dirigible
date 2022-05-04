@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.core.scheduler.service.definition;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -150,7 +152,7 @@ public class SynchronizerStateArtefactDefinition {
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
-		this.message = message;
+		this.message = StringUtils.truncate(message, 512);
 	}
 
 	/**
