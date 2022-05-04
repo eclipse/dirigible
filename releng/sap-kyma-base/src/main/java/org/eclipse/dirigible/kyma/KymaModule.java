@@ -12,11 +12,14 @@
 package org.eclipse.dirigible.kyma;
 
 import org.eclipse.dirigible.commons.api.context.InvalidStateException;
+import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.module.AbstractDirigibleModule;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.annotations.SerializedName;
 
 public class KymaModule extends AbstractDirigibleModule {
 
@@ -31,6 +34,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	private static final String ENV_VERIFICATION_KEY = "verificationkey";
 	private static final String ENV_XS_APP_NAME = "xsappname";
 	private static final String ENV_DIRIGIBLE_HOST = "DIRIGIBLE_HOST";
+	private static final String ENV_CONNECTIVITY_SERVICE = "connectivity_service";
 
 	private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 	private static final String OAUTH_TOKEN = "/oauth/token";
@@ -114,7 +118,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		String url = getEnvWithPrefix(destinationPrefix, ENV_URL);
 		String uri = getEnvWithPrefix(destinationPrefix, ENV_URI);
 
-		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+		if (clientId != null && clientSecret != null && url != null && uri != null) {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
@@ -130,14 +134,12 @@ public class KymaModule extends AbstractDirigibleModule {
 
 		String clientId = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_ID);
 		String clientSecret = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_SECRET);
-		String url = getEnvWithPrefix(connectivityPrefix, ENV_URL);
-		String uri = getEnvWithPrefix(connectivityPrefix, ENV_URI);
+		ConnectivityServiceEnv connectivityService = GsonHelper.GSON.fromJson(getEnvWithPrefix(connectivityPrefix, ENV_CONNECTIVITY_SERVICE), ConnectivityServiceEnv.class);
 
-		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+		if (clientId != null && clientSecret != null && connectivityService != null && connectivityService.getUrl() != null) {
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_ID, clientId);
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET, clientSecret);
-			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, url);
-			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URI, uri);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, connectivityService.getUrl());
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST, "connectivity-proxy.kyma-system.svc.cluster.local");
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT, "20003");
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT, "20001");
@@ -159,4 +161,62 @@ public class KymaModule extends AbstractDirigibleModule {
 		return MODULE_NAME;
 	}
 
+	public static class ConnectivityServiceEnv {
+
+		@SerializedName("CAs_path")
+		private String casPath;
+
+		@SerializedName("CAs_signing_path")
+		private String casSigningPath;
+
+		@SerializedName("api_path")
+		private String apiPath;
+
+		@SerializedName("tunnel_path")
+		private String tunnelPath;
+
+		public String getCasPath() {
+			return casPath;
+		}
+
+		public void setCasPath(String casPath) {
+			this.casPath = casPath;
+		}
+
+		public String getCasSigningPath() {
+			return casSigningPath;
+		}
+
+		public void setCasSigningPath(String casSigningPath) {
+			this.casSigningPath = casSigningPath;
+		}
+
+		public String getApiPath() {
+			return apiPath;
+		}
+
+		public void setApiPath(String apiPath) {
+			this.apiPath = apiPath;
+		}
+
+		public String getTunnelPath() {
+			return tunnelPath;
+		}
+
+		public void setTunnelPath(String tunnelPath) {
+			this.tunnelPath = tunnelPath;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		@SerializedName("url")
+		private String url;
+
+	}
 }
