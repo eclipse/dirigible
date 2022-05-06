@@ -155,6 +155,7 @@
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
+		<!-- Engines -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-engine</artifactId>
