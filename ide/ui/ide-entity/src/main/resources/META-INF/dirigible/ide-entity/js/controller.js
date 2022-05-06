@@ -14,18 +14,18 @@
 // from the onLoad event handler of the document (see below).
 function main(container, outline, toolbar, sidebar, status) {
 
-	let ICON_ENTITY = 'list-alt';//'list-alt';
-	let ICON_PROPERTY = 'bars';//'align-justify';
-	let ICON_PROJECTION = 'sign-in';//'external-link';
-	let ICON_EXTENSION = 'puzzle-piece';//'puzzle-piece';
+	var ICON_ENTITY = 'list-alt';//'list-alt';
+	var ICON_PROPERTY = 'bars';//'align-justify';
+	var ICON_PROJECTION = 'sign-in';//'external-link';
+	var ICON_EXTENSION = 'puzzle-piece';//'puzzle-piece';
 
-	let $scope = $('#ModelerCtrl').scope();
-	let csrfToken;
-	let file;
+	var $scope = $('#ModelerCtrl').scope();
+	var csrfToken;
+	var file;
 
 	// Load model file
 	function getResource(resourcePath) {
-		let xhr = new XMLHttpRequest();
+		var xhr = new XMLHttpRequest();
 		xhr.open('GET', resourcePath, false);
 		xhr.setRequestHeader('X-CSRF-Token', 'Fetch');
 		xhr.send();
@@ -44,18 +44,18 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	function getViewParameters() {
 		if (window.frameElement.hasAttribute("data-parameters")) {
-			let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+			var params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
 			file = params["file"];
 		} else {
-			let searchParams = new URLSearchParams(window.location.search);
+			var searchParams = new URLSearchParams(window.location.search);
 			file = searchParams.get('file');
 		}
 	}
 
 	getViewParameters();
-	let contents = loadContents(file);
+	var contents = loadContents(file);
 
-	let messageHub = new FramesMessageHub();
+	var messageHub = new FramesMessageHub();
 
 	if (file)
 		initializeModelJson(file.substring(0, file.lastIndexOf('.')) + '.model');
@@ -63,7 +63,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	function saveContents(text, file) {
 		console.log('Save called...');
 		if (file) {
-			let xhr = new XMLHttpRequest();
+			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '/services/v4/ide/workspaces' + file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
@@ -83,7 +83,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	function initializeModelJson(file) {
 		console.log('Save called...');
 		if (file) {
-			let xhr = new XMLHttpRequest();
+			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '/services/v4/ide/workspaces' + file);
 			xhr.setRequestHeader('X-Requested-With', 'Fetch');
 			xhr.setRequestHeader('X-CSRF-Token', csrfToken);
@@ -100,7 +100,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	}
 
 	function saveModel(graph) {
-		let model = createModel(graph);
+		var model = createModel(graph);
 		saveContents(model, file);
 		// var modelJson = createModelJson(graph);
 		// saveContents(modelJson, file.substring(0, file.lastIndexOf('.')) + '.model');
@@ -110,7 +110,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		saveModel(graph);
 	}, 'workbench.editor.save');
 
-	let graph;
+	var graph;
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported()) {
 		// Displays an error message if the browser is not supported.
@@ -150,9 +150,9 @@ function main(container, outline, toolbar, sidebar, status) {
 		// editor is used to create certain functionality for the
 		// graph, such as the rubberband selection, but most parts
 		// of the UI are custom in this example.
-		let editor = new mxEditor();
+		var editor = new mxEditor();
 		graph = editor.graph;
-		let model = graph.model;
+		var model = graph.model;
 
 		initClipboard(graph);
 
@@ -184,7 +184,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Sets the graph container and configures the editor
 		editor.setGraphContainer(container);
-		let config = mxUtils.load(
+		var config = mxUtils.load(
 			'editors/config/keyhandler-minimal.xml').
 			getDocumentElement();
 		editor.configure(config);
@@ -192,7 +192,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Configures the automatic layout for the entity properties
 		editor.layoutSwimlanes = true;
 		editor.createSwimlaneLayout = function () {
-			let layout = new mxStackLayout(this.graph, false);
+			var layout = new mxStackLayout(this.graph, false);
 			layout.fill = true;
 			layout.resizeParent = true;
 
@@ -209,7 +209,7 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (value.name != null) {
 				return mxGraphModel.prototype.valueForCellChanged.apply(this, arguments);
 			}
-			let old = cell.value.name;
+			var old = cell.value.name;
 			cell.value.name = value;
 			return old;
 		};
@@ -239,8 +239,8 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (this.isHtmlLabel(state.cell)) {
 				return 'Type: ' + state.cell.value.dataType;
 			} else if (this.model.isEdge(state.cell)) {
-				let source = this.model.getTerminal(state.cell, true);
-				let parent = this.model.getParent(source);
+				var source = this.model.getTerminal(state.cell, true);
+				var parent = this.model.getParent(source);
 
 				return parent.value.name + '.' + source.value.name;
 			}
@@ -251,7 +251,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Creates a dynamic HTML label for property fields
 		graph.getLabel = function (cell) {
 			if (this.isHtmlLabel(cell)) {
-				let label = '';
+				var label = '';
 
 				if (cell.value.dataPrimaryKey === 'true') {
 					label += '<i title="Primary Key" class="fa fa-key" width="16" height="16" align="top"></i>&nbsp;';
@@ -267,7 +267,7 @@ function main(container, outline, toolbar, sidebar, status) {
 					label += '<img src="images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 
-				let suffix = mxUtils.htmlEntities(cell.value.dataType, false) + (cell.value.dataLength ? '(' + cell.value.dataLength + ')' : '');
+				var suffix = mxUtils.htmlEntities(cell.value.dataType, false) + (cell.value.dataLength ? '(' + cell.value.dataLength + ')' : '');
 				return label + mxUtils.htmlEntities(cell.value.name, false) + ":" + suffix;
 			}
 
@@ -276,14 +276,14 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Removes the source vertex if edges are removed
 		graph.addListener(mxEvent.REMOVE_CELLS, function (sender, evt) {
-			let cells = evt.getProperty('cells');
+			var cells = evt.getProperty('cells');
 
-			for (let i = 0; i < cells.length; i++) {
-				let cell = cells[i];
+			for (var i = 0; i < cells.length; i++) {
+				var cell = cells[i];
 
 				if (this.model.isEdge(cell)) {
-					let terminal = this.model.getTerminal(cell, true);
-					let parent = this.model.getParent(terminal);
+					var terminal = this.model.getTerminal(cell, true);
+					var parent = this.model.getParent(terminal);
 					this.model.remove(terminal);
 				}
 			}
@@ -303,15 +303,15 @@ function main(container, outline, toolbar, sidebar, status) {
 		configureStylesheet(graph);
 
 		// Adds sidebar icon for the entity object
-		let entityObject = new Entity('EntityName');
-		let entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
+		var entityObject = new Entity('EntityName');
+		var entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
 
 		entity.setVertex(true);
 		addSidebarIcon(graph, sidebar, entity, ICON_ENTITY, 'Drag this to the diagram to create a new Entity', $scope);
 
 		// Adds sidebar icon for the property object
-		let propertyObject = new Property('propertyName');
-		let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+		var propertyObject = new Property('propertyName');
+		var property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
 
 		property.setVertex(true);
 		property.setConnectable(false);
@@ -319,7 +319,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		addSidebarIcon(graph, sidebar, property, ICON_PROPERTY, 'Drag this to an Entity to create a new Property', $scope);
 
 		// Adds primary key field into entity
-		let firstProperty = property.clone();
+		var firstProperty = property.clone();
 
 		firstProperty.value.name = 'entityNameId';
 		firstProperty.value.dataType = 'INTEGER';
@@ -337,11 +337,11 @@ function main(container, outline, toolbar, sidebar, status) {
 			}
 
 			// Finds the primary key child of the target table
-			let primaryKey = null;
-			let childCount = this.model.getChildCount(target);
+			var primaryKey = null;
+			var childCount = this.model.getChildCount(target);
 
-			for (let i = 0; i < childCount; i++) {
-				let child = this.model.getChildAt(target, i);
+			for (var i = 0; i < childCount; i++) {
+				var child = this.model.getChildAt(target, i);
 
 				if (child.value.dataPrimaryKey === 'true') {
 					primaryKey = child;
@@ -356,7 +356,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 			this.model.beginUpdate();
 			try {
-				let prop1 = this.model.cloneCell(property);
+				var prop1 = this.model.cloneCell(property);
 				if (target.style && target.style.startsWith('projection')) {
 					prop1.value.name = primaryKey.parent.value.projectionReferencedEntity + primaryKey.value.name;
 				} else {
@@ -376,8 +376,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		};
 
 		// Adds sidebar icon for the projection entity object
-		let projectionObject = new Entity('EntityName');
-		let projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
+		var projectionObject = new Entity('EntityName');
+		var projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
 
 		projection.setVertex(true);
 		addSidebarIcon(graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope);
@@ -395,8 +395,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		// projection.insert(keyProperty);
 
 		// Adds sidebar icon for the extension entity object
-		let extensionObject = new Entity('EntityName');
-		let extension = new mxCell(extensionObject, new mxGeometry(0, 0, 200, 28), 'extension');
+		var extensionObject = new Entity('EntityName');
+		var extension = new mxCell(extensionObject, new mxGeometry(0, 0, 200, 28), 'extension');
 
 		extension.setVertex(true);
 		addSidebarIcon(graph, sidebar, extension, ICON_EXTENSION, 'Drag this to the diagram to create a new Extension Entity', $scope);
@@ -416,7 +416,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Creates a new DIV that is used as a toolbar and adds
 		// toolbar buttons.
-		let spacer = document.createElement('div');
+		var spacer = document.createElement('div');
 		spacer.style.display = 'inline';
 		spacer.style.padding = '8px';
 
@@ -495,6 +495,65 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		});
 
+		// Defines a new move up action
+		editor.addAction('moveup', function (editor, cell) {
+
+			if (cell.parent.children.length > 1) {
+				graph.getModel().beginUpdate();
+				try {
+
+					for (index = 0; index < cell.parent.children.length; index++) {
+						var current = cell.parent.children[index];
+						if (cell.id === current.id) {
+							if (index > 0) {
+								var previous = cell.parent.children[index - 1];
+								var y = previous.geometry.y;
+								previous.geometry.y = current.geometry.y;
+								current.geometry.y = y;
+								cell.parent.children[index - 1] = current;
+								cell.parent.children[index] = previous;
+								break;
+							}
+
+						}
+					}
+				} finally {
+					graph.getModel().endUpdate();
+					graph.refresh();
+				}
+			}
+
+		});
+
+		// Defines a new move down action
+		editor.addAction('movedown', function (editor, cell) {
+
+			if (cell.parent.children.length > 2) {
+				graph.getModel().beginUpdate();
+				try {
+
+					for (index = 0; index < cell.parent.children.length; index++) {
+						var current = cell.parent.children[index];
+						if (cell.id === current.id) {
+							if (index < cell.parent.children.length - 1) {
+								var next = cell.parent.children[index + 1];
+								var y = next.geometry.y;
+								next.geometry.y = current.geometry.y;
+								current.geometry.y = y;
+								cell.parent.children[index + 1] = current;
+								cell.parent.children[index] = next;
+								break;
+							}
+						}
+					}
+				} finally {
+					graph.getModel().endUpdate();
+					graph.refresh();
+				}
+			}
+
+		});
+
 		toolbar.appendChild(spacer.cloneNode(true));
 
 		addToolbarButton(editor, toolbar, 'copy', 'Copy', 'copy', true);
@@ -540,10 +599,10 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Creates the outline (navigator, overview) for moving
 		// around the graph in the top, right corner of the window.
-		let outln = new mxOutline(graph, outline);
+		var outln = new mxOutline(graph, outline);
 
 		// Fades-out the splash screen after the UI has been loaded.
-		let splash = document.getElementById('splash');
+		var splash = document.getElementById('splash');
 		if (splash != null) {
 			try {
 				mxEvent.release(splash);
@@ -556,8 +615,8 @@ function main(container, outline, toolbar, sidebar, status) {
 		}
 	}
 
-	let doc = mxUtils.parseXml(contents);
-	let codec = new mxCodec(doc.mxGraphModel);
+	var doc = mxUtils.parseXml(contents);
+	var codec = new mxCodec(doc.mxGraphModel);
 	codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
 
 	deserializeFilter(graph);
@@ -565,12 +624,12 @@ function main(container, outline, toolbar, sidebar, status) {
 }
 
 function deserializeFilter(graph) {
-	let parent = graph.getDefaultParent();
-	let childCount = graph.model.getChildCount(parent);
+	var parent = graph.getDefaultParent();
+	var childCount = graph.model.getChildCount(parent);
 
 	// Base64 deserialization of the encoded properties
-	for (let i = 0; i < childCount; i++) {
-		let child = graph.model.getChildAt(parent, i);
+	for (var i = 0; i < childCount; i++) {
+		var child = graph.model.getChildAt(parent, i);
 		if (!graph.model.isEdge(child)) {
 			if (child.value.feedUrl && child.value.feedUrl !== "") {
 				child.value.feedUrl = atob(child.value.feedUrl);
@@ -593,17 +652,17 @@ function loadSidebar(doc, graph) {
 	if (!graph.getModel().sidebar) {
 		graph.getModel().sidebar = [];
 	}
-	for (let i = 0; i < doc.children.length; i++) {
-		let element = doc.children[i];
+	for (var i = 0; i < doc.children.length; i++) {
+		var element = doc.children[i];
 		if (element.localName === "model") {
-			for (let j = 0; j < element.children.length; j++) {
-				let sidebar = element.children[j];
+			for (var j = 0; j < element.children.length; j++) {
+				var sidebar = element.children[j];
 				if (sidebar.localName === "sidebar") {
-					for (let k = 0; k < sidebar.children.length; k++) {
-						let item = sidebar.children[k];
-						let copy = {};
-						for (let m = 0; m < item.children.length; m++) {
-							let attribute = item.children[m];
+					for (var k = 0; k < sidebar.children.length; k++) {
+						var item = sidebar.children[k];
+						var copy = {};
+						for (var m = 0; m < item.children.length; m++) {
+							var attribute = item.children[m];
 							if (attribute.localName === "path") {
 								copy.path = attribute.textContent;
 							} else if (attribute.localName === "label") {

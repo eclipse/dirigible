@@ -324,6 +324,14 @@ function createPopupMenu(editor, graph, menu, cell, evt) {
 			editor.execute('properties', cell);
 		});
 
+		menu.addItem('Move up', 'arrow-up', function () {
+			editor.execute('moveup', cell);
+		});
+
+		menu.addItem('Move down', 'arrow-down', function () {
+			editor.execute('movedown', cell);
+		});
+
 		menu.addItem('Copy', 'copy', function () {
 			editor.execute('copy', cell);
 		});
