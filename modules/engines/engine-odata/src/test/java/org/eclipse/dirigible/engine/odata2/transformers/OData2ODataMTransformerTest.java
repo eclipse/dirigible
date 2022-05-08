@@ -311,6 +311,36 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
         assertArrayEquals(new String[]{entityView}, transformed);
     }
 
+    @Test
+    public void testAggregationsTransformation() throws IOException, SQLException {
+        String customer = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/customer/Customer.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/customer/Customer.odata", customer);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ID", "Edm.Int32", false, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("NUMBER", "Edm.Int32", true, false);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("PAYMENT", "Edm.Int32", true, false);
+        PersistenceTableModel model = new PersistenceTableModel("CUSTOMER", Arrays.asList(column1, column2, column3), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("CUSTOMER", null)).thenReturn(model);
+
+        String aggregationEntity = "{\n" +
+                "\t\"edmType\": \"CustomerType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataCustomer.CustomerType\",\n" +
+                "\t\"sqlTable\": \"CUSTOMER\",\n" +
+                "\t\"ID\": \"ID\",\n" +
+                "\t\"NUMBER\": \"NUMBER\",\n" +
+                "\t\"PAYMENT\": \"PAYMENT\",\n" +
+                "\t\"aggregationType\" : \"derived\",\n" +
+                "\t\"aggregationProps\" : {\n" +
+                "\t\t\"NUMBER\": \"SUM\",\n" +
+                "\t\t\"PAYMENT\": \"AVERAGE\"\n" +
+                "\t}\n" +
+                "\t\"_pk_\" : \"ID\"\n" +
+                "}";
+
+        String[] transformed = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{aggregationEntity}, transformed);
+    }
+
 //    @Test
 //    public void testTransformWithCompositePrimaryKey() throws IOException, SQLException {
 //        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeCompositePrimaryKey.odata"), Charset.defaultCharset());

@@ -99,6 +99,21 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
+    public boolean isAggregationTypeExplicit() {
+        String aggregationType = readMandatoryConfig("aggregationType", String.class);
+        return "explicit".equals(aggregationType);
+    }
+
+    public boolean isColumnContainedInAggregationProp(String columnName) {
+        Map<String, String> aggregationProps = readMandatoryConfig("aggregationProps", Map.class);
+        return aggregationProps.containsKey(columnName);
+    }
+
+    public String getColumnAggregationType(String columnName) {
+        Map<String, String> aggregationProps = readMandatoryConfig("aggregationProps", Map.class);
+        return aggregationProps.get(columnName);
+    }
+
     private <T> boolean isOfType(String key, Class<T> clazz) {
         if (bindingData.containsKey(key)) {
             Object property = bindingData.get(key);

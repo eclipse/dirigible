@@ -21,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OData2ODataMTransformer {
@@ -150,6 +147,27 @@ public class OData2ODataMTransformer {
 
             if(entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
                 buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
+            }
+
+            if("aggregate".equals(entity.getAnnotationsEntityType().get("sap:semantics"))) {
+                buff.append("\t\"aggregationType\" : ");
+                if(!entity.getAggregationsTypeAndColumn().isEmpty()) {
+                    buff.append("\"derived\",\n");
+                    buff.append("\t\"aggregationProps\" : {\n");
+                    Iterator<String> aggregationTypes = entity.getAggregationsTypeAndColumn().keySet().iterator();
+                    while(aggregationTypes.hasNext()) {
+                        String aggregationType = aggregationTypes.next();
+                        buff.append("\t\t\"").append(aggregationType).append("\": \"")
+                                .append(entity.getAggregationsTypeAndColumn().get(aggregationType)).append("\"");
+                        if(aggregationTypes.hasNext()) {
+                            buff.append(",");
+                        }
+                        buff.append("\n");
+                    }
+                    buff.append("\t}\n");
+                } else {
+                    buff.append("\"explicit\",\n");
+                }
             }
 
             String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});

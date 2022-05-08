@@ -128,6 +128,10 @@ public final class SQLSelectClause {
         return skip;
     }
 
+    public Map<Integer, EdmTarget> getColumnMapping() {
+        return columnMapping;
+    }
+
     @SuppressWarnings("unchecked")
     public org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder from(final EdmStructuralType target) throws ODataException {
         query.grantTableAliasForStructuralTypeInQuery(target);
@@ -227,7 +231,19 @@ public final class SQLSelectClause {
                             + propertyName + " is " + p, HttpStatusCodes.INTERNAL_SERVER_ERROR);
                 if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
                     EdmProperty prop = (EdmProperty) p;
-                    select.append(tableColumnForSelect(type, prop));
+                    String columnNameWithoutAlias = query.getPureSQLColumnName(target, prop);
+
+                    if(!query.isAggregationTypeExplicit(target) &&
+                            query.isColumnContainedInAggregationProp(target, columnNameWithoutAlias)) {
+                        select.append(query.getColumnAggregationType(target, columnNameWithoutAlias))
+                                .append("(")
+                                .append(tableColumnForSelectWithoutAlias(type, prop))
+                                .append(") AS \"")
+                                .append(query.getSQLTableColumnAlias(type, prop))
+                                .append("\"");
+                    } else {
+                        select.append(tableColumnForSelect(type, prop));
+                    }
 
                 } else {
                     if (p.getType().getKind() == EdmTypeKind.COMPLEX) {
@@ -256,6 +272,10 @@ public final class SQLSelectClause {
 
     private Object tableColumnForSelect(final EdmStructuralType type, final EdmProperty prop) {
         return query.getSQLTableColumn(type, prop) + " AS \"" + query.getSQLTableColumnAlias(type, prop)+"\"";
+    }
+
+    private Object tableColumnForSelectWithoutAlias(final EdmStructuralType type, final EdmProperty prop) {
+        return query.getSQLTableColumn(type, prop);
     }
 
     public static class SQLSelectBuilder {
