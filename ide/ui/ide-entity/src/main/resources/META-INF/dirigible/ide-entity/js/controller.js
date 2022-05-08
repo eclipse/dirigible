@@ -482,13 +482,13 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		toolbar.appendChild(spacer.cloneNode(true));
 
-		addToolbarButton(editor, toolbar, 'sidebarnav', 'Sidebar Navigation', 'map-signs', true);
+		addToolbarButton(editor, toolbar, 'navigation', 'Navigation', 'map-signs', true);
 
 		// Defines a new sidebarnav action
-		editor.addAction('sidebarnav', function (editor, cell) {
+		editor.addAction('navigation', function (editor, cell) {
 
 			//graph.getModel()
-			$('#sidebarNavigationPropertiesOpen').click();
+			$('#navigationPropertiesOpen').click();
 
 			// $scope.$parent.cell = cell;
 			// $scope.$apply();
@@ -620,6 +620,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
 
 	deserializeFilter(graph);
+	loadPerspectives(doc, graph);
 	loadSidebar(doc, graph);
 }
 
@@ -647,8 +648,42 @@ function deserializeFilter(graph) {
 	}
 }
 
+function loadPerspectives(doc, graph) {
+	if (!graph.getModel().perspectives) {
+		graph.getModel().perspectives = [];
+	}
+	for (var i = 0; i < doc.children.length; i++) {
+		var element = doc.children[i];
+		if (element.localName === "model") {
+			for (var j = 0; j < element.children.length; j++) {
+				var perspectives = element.children[j];
+				if (perspectives.localName === "perspectives") {
+					for (var k = 0; k < perspectives.children.length; k++) {
+						var item = perspectives.children[k];
+						var copy = {};
+						for (var m = 0; m < item.children.length; m++) {
+							var attribute = item.children[m];
+							if (attribute.localName === "name") {
+								copy.id = attribute.textContent;
+							} else if (attribute.localName === "label") {
+								copy.label = attribute.textContent;
+							} else if (attribute.localName === "icon") {
+								copy.icon = attribute.textContent;
+							} else if (attribute.localName === "order") {
+								copy.order = attribute.textContent;
+							}
+						}
+						graph.getModel().perspectives.push(copy);
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
 function loadSidebar(doc, graph) {
-	//  console.log(JSON.stringify(doc));
 	if (!graph.getModel().sidebar) {
 		graph.getModel().sidebar = [];
 	}

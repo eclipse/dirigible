@@ -92,8 +92,8 @@
             data-target="#dialogPropertyProperties"></button>
         <button type="button" id="connectorPropertiesOpen" ng-show=false data-toggle="modal"
             data-target="#dialogConnectorProperties"></button>
-        <button type="button" id="sidebarNavigationPropertiesOpen" ng-show=false data-toggle="modal"
-            data-target="#dialogSidebarNavigationProperties"></button>
+        <button type="button" id="navigationPropertiesOpen" ng-show=false data-toggle="modal"
+            data-target="#dialogNavigationProperties"></button>
         <button type="button" id="alertOpen" ng-show=false data-toggle="modal" data-target="#dialogAlert"></button>
         <button type="button" id="referEntityOpen" ng-show=false data-toggle="modal"
             data-target="#dialogReferEntity"></button>
@@ -189,7 +189,7 @@
                             <div class="row">
                                 <label class="col-xs-3 col-form-label">Icon: </label>
                                 <div class="col-xs-5">
-                                    <select class="form-control" name="perspectiveIcon" id="perspectiveIcon"
+                                    <select class="form-control" name="icon" id="icon"
                                         ng-model="ctrl.$scope.$parent.cell.value.icon"
                                         style="font-family: 'FontAwesome', 'Helvetica'">
                                         <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
@@ -232,7 +232,7 @@
                                 </div>
                             </div>
 
-
+                            <!--
                             <div class="row">
                                 <label class="col-xs-3 col-form-label">Perspective Name: </label>
                                 <div class="col-xs-5">
@@ -243,17 +243,19 @@
                                         perspective name format is not valid!</span>
                                 </div>
                             </div>
+                            -->
                             <div class="row">
-                                <label class="col-xs-3 col-form-label">Perspective Icon: </label>
+                                <label class="col-xs-3 col-form-label">Perspective: </label>
                                 <div class="col-xs-2">
-                                    <select class="form-control" name="perspectiveIcon" id="perspectiveIcon"
-                                        ng-model="ctrl.$scope.$parent.cell.value.perspectiveIcon"
+                                    <select class="form-control" name="perspective" id="perspective"
+                                        ng-model="ctrl.$scope.$parent.cell.value.perspectiveName"
                                         style="font-family: 'FontAwesome', 'Helvetica'">
-                                        <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
-                                            value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                        <option ng-repeat="option in ctrl.availablePerspectives()" id="{{option.id}}"
+                                            value="{{option.id}}" ng-bind-html="option.id"></option>
                                     </select>
                                 </div>
                             </div>
+                            <!--
                             <div class="row">
                                 <label class="col-xs-3 col-form-label">Perspective Order: </label>
                                 <div class="col-xs-3">
@@ -261,6 +263,7 @@
                                         ng-model="ctrl.$scope.$parent.cell.value.perspectiveOrder" required="required">
                                 </div>
                             </div>
+                            -->
 
                         </div>
                     </div>
@@ -353,6 +356,7 @@
                 </ul>
 
                 <div class="tab-content">
+
                     <div id="generalProperty" class="tab-pane fade in active">
                         <br><br>
                         <div class="form-group row">
@@ -382,6 +386,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div id="dataProperty" class="tab-pane fade">
                         <br><br>
                         <div class="form-group row">
@@ -465,6 +470,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div id="uiProperty" class="tab-pane fade">
                         <br><br>
                         <div class="form-group row">
@@ -557,6 +563,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div id="feedProperty" class="tab-pane fade">
                         <br><br>
                         <div class="form-group row">
@@ -666,26 +673,69 @@
         </div>
 
 
-        <!-- Sidebar Navigation Properties -->
-        <div class="modal fade" id="dialogSidebarNavigationProperties" tabindex="-1" role="dialog"
-            aria-labelledby="dialogSidebarNavigationPropertiesLabel" aria-hidden="true">
+        <!-- Navigation Properties -->
+        <div class="dirigible-modal modal fade" id="dialogNavigationProperties" tabindex="-1" role="dialog"
+            aria-labelledby="dialogNavigationPropertiesLabel" aria-hidden="true">
             <div class="modal-header">
-                <h3>Sidebar Navigation</h3>
+                <h3>Navigation</h3>
             </div>
             <div class="modal-body">
 
                 <ul class="nav nav-pills">
-                    <li class="active"><a data-toggle="pill" href="#generalSidebarNavigation">Structure</a></li>
+                    <li class="active"><a data-toggle="pill" href="#perspectivesNavigation">Perspectives</a></li>
+                    <li><a data-toggle="pill" href="#sidebarNavigation">Sidebar</a></li>
                 </ul>
 
                 <div class="tab-content">
-                    <div id="generalSidebarNavigation" class="tab-pane fade in active">
+
+                    <div id="perspectivesNavigation" class="tab-pane fade in active">
                         <br><br>
                         <div class="form-group row">
                             <div class="row">
-                                <label class="col-xs-1 col-form-label">Navigation: </label>
+                                <label class="col-xs-1 col-form-label">Perspectives: </label>
                                 <div class="col-xs-11">
+                                    <div class="container">
+                                        <button type="button" ng-click="openPerspectiveNewDialog()"
+                                            class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus"
+                                                aria-hidden="true"></i></button>
+                                        <table class="table product-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Label</th>
+                                                    <th>Icon</th>
+                                                    <th>Order</th>
+                                                    <th class="col-xs-1"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="next in ctrl.$scope.$parent.graph.model.perspectives">
+                                                    <td class="view">{{next.id}}</td>
+                                                    <td class="view">{{next.label}}</td>
+                                                    <td class="view">{{next.icon}}</td>
+                                                    <td class="view">{{next.order}}</td>
+                                                    <td class="view">
+                                                        <i class="close fa fa-2x fa-remove"
+                                                            ng-click="openPerspectiveDeleteDialog(next)"></i>
+                                                        <i class="close fa fa-2x fa-bars"
+                                                            ng-click="openPerspectiveEditDialog(next)"
+                                                            style="margin-right: 0.5em"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div id="sidebarNavigation" class="tab-pane fade">
+                        <br><br>
+                        <div class="form-group row">
+                            <div class="row">
+                                <label class="col-xs-1 col-form-label">Sidebar: </label>
+                                <div class="col-xs-11">
                                     <div class="container">
                                         <button type="button" ng-click="openSidebarNewDialog()"
                                             class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus"
@@ -717,34 +767,93 @@
                                             </tbody>
                                         </table>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-
             </div>
+
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ctrl.okSidebarNavigationProperties()" data-toggle="modal"
-                    data-target="#dialogSidebarNavigationProperties">OK</button>
-                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" ng-click="ctrl.okNavigationProperties()" data-toggle="modal"
+                    data-target="#dialogNavigationProperties">Close</button>
             </div>
         </div>
 
+        <!-- Perspective Dialogs -->
+        <div class="modal fade" id="perspectiveEntityModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 ng-show="actionType === 'perspectiveNew'" class="modal-title"
+                            id="perspectiveModalCreateLabel">Create Perspective</h3>
+                        <h3 ng-show="actionType === 'perspectiveUpdate'" class="modal-title"
+                            id="perspectiveModalUpdateLabel">Update Perspective</h3>
+                        <h3 ng-show="actionType === 'perspectiveDelete'" class="modal-title"
+                            id="perspectiveModalDeleteLabel">Delete Perspective</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" ng-show="error">
+                            {{error}}
+                        </div>
+                        <form ng-hide="actionType === 'delete'">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" placeholder="Enter name"
+                                    ng-model="perspectiveEntity.id">
+                            </div>
+                            <div class="form-group">
+                                <label>Label</label>
+                                <input type="text" class="form-control" placeholder="Enter label"
+                                    ng-model="perspectiveEntity.label">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon</label>
+                                <select class="form-control" name="entityIcon" id="entityIcon"
+                                    ng-model="perspectiveEntity.icon" style="font-family: 'FontAwesome', 'Helvetica'">
+                                    <option ng-repeat="option in ctrl.icons" id="{{option.name}}"
+                                        value="{{option.name}}" ng-bind-html="option.icon"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Order</label>
+                                <input type="number" class="form-control" placeholder="Enter order"
+                                    ng-model="perspectiveEntity.order">
+                            </div>
+
+                        </form>
+                        <div ng-show="actionType === 'delete'">
+                            You are going to delete <b>Perspective</b> with <b>name = {{perspectiveEntity.id}}</b>?
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'perspectiveNew'"
+                            ng-click="perspectiveCreate()">Create</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'perspectiveUpdate'"
+                            ng-click="perspectiveUpdate()">Update</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'perspectiveDelete'"
+                            ng-click="perspectiveDelete()">Delete</button>
+                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Dialog -->
         <div class="modal fade" id="sidebarEntityModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 ng-show="actionType === 'sidebarNew'" class="modal-title" id="exampleModalLabel">Create
-                            Navigation</h3>
-                        <h3 ng-show="actionType === 'sidebarUpdate'" class="modal-title" id="exampleModalLabel">Update
-                            Navigation</h3>
-                        <h3 ng-show="actionType === 'sidebarDelete'" class="modal-title" id="exampleModalLabel">Delete
-                            Navigation</h3>
+                        <h3 ng-show="actionType === 'sidebarNew'" class="modal-title" id="sidebarModalCreateLabel">
+                            Create Navigation</h3>
+                        <h3 ng-show="actionType === 'sidebarUpdate'" class="modal-title" id="sidebarModalUpdateLabel">
+                            Update Navigation</h3>
+                        <h3 ng-show="actionType === 'sidebarDelete'" class="modal-title" id="sidebarModalDeleteLabel">
+                            Delete Navigation</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -787,12 +896,12 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarNew'"
-                            ng-click="sidebarCreate()">Save</button>
+                            ng-click="sidebarCreate()">Create</button>
                         <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarUpdate'"
                             ng-click="sidebarUpdate()">Update</button>
                         <button type="button" class="btn btn-primary" ng-show="actionType === 'sidebarDelete'"
                             ng-click="sidebarDelete()">Delete</button>
-                        <button type="button" class="btn" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -829,7 +938,7 @@
         <div class="dirigible-modal modal fade" id="dialogReferEntity" tabindex="-1" role="dialog"
             aria-labelledby="dialogReferEntityLabel" aria-hidden="true">
             <div class="modal-header">
-                <h3>{{$parent.dialogTitle}}</h3>
+                <h3>Entity from External Model</h3>
             </div>
             <div class="modal-body">
 
