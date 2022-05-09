@@ -231,11 +231,12 @@ public final class SQLSelectClause {
                             + propertyName + " is " + p, HttpStatusCodes.INTERNAL_SERVER_ERROR);
                 if (p.getType().getKind() == EdmTypeKind.SIMPLE) {
                     EdmProperty prop = (EdmProperty) p;
-                    String columnNameWithoutAlias = query.getPureSQLColumnName(target, prop);
 
-                    if(!query.isAggregationTypeExplicit(target) &&
-                            query.isColumnContainedInAggregationProp(target, columnNameWithoutAlias)) {
-                        select.append(query.getColumnAggregationType(target, columnNameWithoutAlias))
+                    if (query.hasAggregationTypePresent(target) &&
+                            !query.isAggregationTypeExplicit(target) &&
+                            query.isColumnContainedInAggregationProp(target, query.getPureSQLColumnName(target, prop))) {
+
+                        select.append(query.getColumnAggregationType(target, query.getPureSQLColumnName(target, prop)))
                                 .append("(")
                                 .append(tableColumnForSelectWithoutAlias(type, prop))
                                 .append(") AS \"")
