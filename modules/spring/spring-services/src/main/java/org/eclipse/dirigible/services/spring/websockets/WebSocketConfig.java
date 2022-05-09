@@ -9,18 +9,17 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.services.spring.boot.websockets;
+package org.eclipse.dirigible.services.spring.websockets;
 
-import javax.websocket.server.ServerEndpoint;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import org.eclipse.dirigible.runtime.ide.terminal.service.XTerminalWebsocketService;
-import org.springframework.stereotype.Component;
-
-@Component
-@ServerEndpoint(
-		value = "/websockets/v4/ide/xterminal",
-		subprotocols = {"tty"}
-		)
-public class SpringBootXTerminalWebsocketService extends XTerminalWebsocketService {
-
+@Configuration
+public class WebSocketConfig {
+	
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
 }

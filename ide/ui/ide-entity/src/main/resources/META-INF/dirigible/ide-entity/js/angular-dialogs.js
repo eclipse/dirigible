@@ -624,8 +624,8 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			$scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 		};
 
-		// Save SidebarNavigation's properties
-		ctrl.okSidebarNavigationProperties = function () {
+		// Save Navigation's properties
+		ctrl.okNavigationProperties = function () {
 			// var clone = $scope.$parent.sidebar;
 			// $scope.$parent.graph.model.sidebar = clone;
 
@@ -634,6 +634,72 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			// $scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 		};
 
+		ctrl.availablePerspectives = function () {
+			return $scope.$parent.graph.model.perspectives;
+		};
+
+		// Perspectives Management
+		$scope.openPerspectiveNewDialog = function () {
+			$scope.actionType = 'perspectiveNew';
+			$scope.perspectiveEntity = {};
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.openPerspectiveEditDialog = function (entity) {
+			$scope.actionType = 'perspectiveUpdate';
+			$scope.perspectiveEntity = entity;
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.openPerspectiveDeleteDialog = function (entity) {
+			$scope.actionType = 'perspectiveDelete';
+			$scope.perspectiveEntity = entity;
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.closePerspective = function () {
+			//load();
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.perspectiveCreate = function () {
+			if (!$scope.$parent.graph.model.perspectives) {
+				$scope.$parent.graph.model.perspectives = [];
+			}
+			let exists = $scope.$parent.graph.model.perspectives.filter(function (e) {
+				return e.id === $scope.perspectiveEntity.id;
+			});
+			if (exists.length === 0) {
+				$scope.$parent.graph.model.perspectives.push($scope.perspectiveEntity);
+				togglePerspectiveEntityModal();
+			} else {
+				$scope.error = "Perspective with the id [" + $scope.perspectiveEntity.id + "] already exists!";
+			}
+
+		};
+
+		$scope.perspectiveUpdate = function () {
+			// auto-wired
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.perspectiveDelete = function () {
+			if (!$scope.$parent.graph.model.perspectives) {
+				$scope.$parent.graph.model.perspectives = [];
+			}
+			$scope.$parent.graph.model.perspectives = $scope.$parent.graph.model.perspectives.filter(function (e) {
+				return e !== $scope.perspectiveEntity;
+			});
+			togglePerspectiveEntityModal();
+		};
+
+		function togglePerspectiveEntityModal() {
+			$('#perspectiveEntityModal').modal('toggle');
+			$scope.error = null;
+		}
+		// ----
+
+		// Sidebar Management
 		$scope.openSidebarNewDialog = function () {
 			$scope.actionType = 'sidebarNew';
 			$scope.sidebarEntity = {};
@@ -692,6 +758,7 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			$('#sidebarEntityModal').modal('toggle');
 			$scope.error = null;
 		}
+		// ----
 
 		main(document.getElementById('graphContainer'),
 			document.getElementById('outlineContainer'),

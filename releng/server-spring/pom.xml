@@ -10,8 +10,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>Releng - Server - Spring - Boot</name>
-	<artifactId>dirigible-server-spring-boot</artifactId>
+	<name>Releng - Server - Spring</name>
+	<artifactId>dirigible-server-spring</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -116,6 +116,11 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-service-anonymous</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-spring-services</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
@@ -261,7 +266,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring.boot.version}</version>
 				<configuration>
-					<mainClass>org.eclipse.dirigible.services.spring.boot.DirigibleRestServiceApplication</mainClass>
+					<mainClass>org.eclipse.dirigible.services.spring.DirigibleRestServiceApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>
@@ -275,8 +280,6 @@
 	</build>
 
 	<properties>
-		<spring.boot.version>2.6.6</spring.boot.version>
-		<webjars-locator>0.30</webjars-locator>
 		<license.header.location>../../licensing-header.txt</license.header.location>
 	</properties>
 

@@ -131,7 +131,7 @@ angular.module('page')
 		$scope.dataPage = pageNumber;
 		${dollar}http.get(api + '/count')
 		.then(function(data) {
-			$scope.dataCount = data;
+			$scope.dataCount = data.data;
 			$scope.dataPages = Math.ceil($scope.dataCount / $scope.dataLimit);
 			${dollar}http.get(api + '?${dollar}offset=' + ((pageNumber - 1) * ${dollar}scope.dataLimit) + '&${dollar}limit=' + ${dollar}scope.dataLimit)
 			.then(function(data) {
@@ -150,6 +150,7 @@ angular.module('page')
 	$scope.openEditDialog = function(entity) {
 		$scope.actionType = 'update';
 		$scope.entity = entity;
+		$scope.entityForm.$valid = true;
 		toggleEntityModal();
 	};
 

@@ -31,6 +31,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	private static final String ENV_VERIFICATION_KEY = "verificationkey";
 	private static final String ENV_XS_APP_NAME = "xsappname";
 	private static final String ENV_DIRIGIBLE_HOST = "DIRIGIBLE_HOST";
+	private static final String ENV_TOKEN_SERVICE_URL = "token_service_url";
 
 	private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 	private static final String OAUTH_TOKEN = "/oauth/token";
@@ -114,7 +115,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		String url = getEnvWithPrefix(destinationPrefix, ENV_URL);
 		String uri = getEnvWithPrefix(destinationPrefix, ENV_URI);
 
-		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+		if (clientId != null && clientSecret != null && url != null && uri != null) {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
@@ -130,14 +131,12 @@ public class KymaModule extends AbstractDirigibleModule {
 
 		String clientId = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_ID);
 		String clientSecret = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_SECRET);
-		String url = getEnvWithPrefix(connectivityPrefix, ENV_URL);
-		String uri = getEnvWithPrefix(connectivityPrefix, ENV_URI);
+		String url = getEnvWithPrefix(connectivityPrefix, ENV_TOKEN_SERVICE_URL);
 
-		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+		if (clientId != null && clientSecret != null && url != null) {
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_ID, clientId);
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET, clientSecret);
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, url);
-			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URI, uri);
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST, "connectivity-proxy.kyma-system.svc.cluster.local");
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT, "20003");
 			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT, "20001");

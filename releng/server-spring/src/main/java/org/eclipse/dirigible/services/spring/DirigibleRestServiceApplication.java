@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.services.spring.boot;
+package org.eclipse.dirigible.services.spring;
 
 import java.io.IOException;
 import java.util.ArrayList;

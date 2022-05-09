@@ -1,5 +1,5 @@
 {
 	'description': 'Home perspective',
 	'extensionPoint': 'launchpad-{{extensionName}}-perspective',
-	'module': '{{projectName}}/extensions/perspective.js'
+	'module': '{{projectName}}/gen/shell/extensions/perspective.js'
 }

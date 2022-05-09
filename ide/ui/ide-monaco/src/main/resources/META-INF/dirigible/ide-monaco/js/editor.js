@@ -267,6 +267,15 @@ function FileIO() {
         }, {
             extension: ".calculationview",
             type: "xml"
+        }, {
+            extension: ".ftl",
+            type: "freemarker2"
+        }, {
+            extension: ".yml",
+            type: "yaml"
+        }, {
+            extension: ".yaml",
+            type: "yaml"
         }];
 
         if (fileName) {
@@ -276,8 +285,11 @@ function FileIO() {
                 }
             }
         }
+        if (fileName.indexOf(".") === -1 && fileName.toLowerCase().indexOf("dockerfile") > 0) {
+            return "dockerfile";
+        }
 
-        return 'text';
+        return "text";
     };
 
     this.loadText = function (file) {
