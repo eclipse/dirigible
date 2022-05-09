@@ -62,7 +62,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				initializeQuery();
 				StringBuilder builder = new StringBuilder();
 				builder.append("UPDATE ");
-				builder.append(tableName != null ? tableName : buildInto());
+				builder.append(getTargetTableName());
 				builder.append(" SET ");
 				builder.append(buildColumnList()).append(" WHERE ");
 
@@ -93,8 +93,8 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		return this;
 	}
 
-	public String getTargetTableName() {
-		return buildInto();
+	private String getTargetTableName() {
+		return tableName != null ? tableName : buildInto();
 	}
 
 	public void initializeQuery() throws ODataException {
