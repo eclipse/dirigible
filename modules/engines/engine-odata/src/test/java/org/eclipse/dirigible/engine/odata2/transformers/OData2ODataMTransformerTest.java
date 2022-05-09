@@ -333,7 +333,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"aggregationProps\" : {\n" +
                 "\t\t\"NUMBER\": \"SUM\",\n" +
                 "\t\t\"PAYMENT\": \"AVERAGE\"\n" +
-                "\t}\n" +
+                "\t},\n" +
                 "\t\"_pk_\" : \"ID\"\n" +
                 "}";
 
