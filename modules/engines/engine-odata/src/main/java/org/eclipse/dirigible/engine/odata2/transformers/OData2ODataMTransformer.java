@@ -164,7 +164,7 @@ public class OData2ODataMTransformer {
                         }
                         buff.append("\n");
                     }
-                    buff.append("\t}\n");
+                    buff.append("\t},\n");
                 } else {
                     buff.append("\"explicit\",\n");
                 }
