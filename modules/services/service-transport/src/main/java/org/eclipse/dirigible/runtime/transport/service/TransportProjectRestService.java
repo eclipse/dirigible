@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.runtime.transport.service;
 
+import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -25,9 +27,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.RepositoryExportException;
@@ -127,33 +131,84 @@ public class TransportProjectRestService extends AbstractRestService implements 
 		}
 		return Response.ok().build();
 	}
-	
+
+	/**
+	 * Import zip to folder.
+	 *
+	 * @param workspace the workspace
+	 * @param project the project
+	 * @param folder Internal folder (url encoded)
+	 * @return the response
+	 * @throws RepositoryExportException the repository export exception
+	 * @throws UnsupportedEncodingException the repository export exception
+	 * @throws DecoderException the repository export exception
+	 */
+	@POST
+	@Path("/zipimport/{workspace}/{project}/{folder}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Import Zip to Folder")
+	@ApiResponses({ @ApiResponse(code = 200, message = "ZIP imported") })
+	public Response importZipToFolder(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
+								  @ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+								  @ApiParam(value = "Relative path to folder (url encoded)", required = false) @PathParam("folder") String folder,
+									  @ApiParam(value = "The Zip file(s) containing the Project artifacts", required = true) @Multipart("file") List<byte[]> files) throws RepositoryExportException, UnsupportedEncodingException, DecoderException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		String relativePath;
+		if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+			relativePath = "";
+		else {
+			UrlFacade decodedFolder = new UrlFacade();
+			relativePath = decodedFolder.decode(folder, null);
+		}
+
+		TransportProcessor processor = new TransportProcessor();
+
+		for (byte[] file : files) {
+			processor.importZipToPath(workspace, project, relativePath, file, true);
+		}
+		return Response.ok().build();
+	}
+
 	/**
 	 * Export project.
 	 *
 	 * @param workspace the workspace
 	 * @param project the project
+	 * @param folder Internal folder (url encoded)
 	 * @return the response
 	 * @throws RepositoryExportException the repository export exception
+	 * @throws UnsupportedEncodingException the repository export exception
+	 * @throws DecoderException the repository export exception
 	 */
 	@GET
-	@Path("/project/{workspace}/{project}")
+	@Path("/project/{workspace}/{project}{folder:(/folder/[^/]+?)?}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@ApiOperation("Export Project as Zip")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Project Exported") })
 	public Response exportProject(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project) throws RepositoryExportException {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("project") String project,
+								  @ApiParam(value = "Internal folder", required = false) @PathParam("folder") String folder) throws RepositoryExportException, UnsupportedEncodingException, DecoderException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 		
 		SimpleDateFormat pattern = getDateFormat();
+		byte[] zip;
+
 		if ("*".equals(project)) {
-			byte[] zip = processor.exportWorkspace(workspace);
+			zip = processor.exportWorkspace(workspace);
 			return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + workspace + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
-		}
-		byte[] zip = processor.exportProject(workspace, project);
+		} else
+		if (folder == null || folder.isEmpty() || folder.trim().isEmpty() || folder.equals("/"))
+			zip = processor.exportProject(workspace, project);
+		else
+			zip = processor.exportFolder(workspace, project, folder);
 		return Response.ok().header("Content-Disposition",  "attachment; filename=\"" + project + "-" + pattern.format(new Date()) + ".zip\"").entity(zip).build();
 	}
 	

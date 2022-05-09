@@ -60,7 +60,14 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 
 	private static final String COOKIE_THEME = "dirigible-theme"; //$NON-NLS-1$
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	@Context
 	private HttpServletResponse response;
@@ -164,7 +171,7 @@ public class ThemeRestService extends AbstractRestService implements IRestServic
 		}
 
 		String repositoryPath = IRepositoryStructure.PATH_REGISTRY_PUBLIC + THEMES_PATH + cookieValue + IRepository.SEPARATOR + path;
-		final IResource resource = repository.getResource(repositoryPath);
+		final IResource resource = getRepository().getResource(repositoryPath);
 		if (resource.exists()) {
 			return Response.ok().entity(resource.getContent()).type(ContentTypeHelper.TEXT_CSS).build();
 		}

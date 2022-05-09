@@ -28,8 +28,6 @@ import org.eclipse.dirigible.bpm.flowable.dto.TaskData;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.h2.H2Database;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
@@ -72,7 +70,7 @@ public class BpmProviderFlowable implements IBpmProvider {
 
 	private static ProcessEngine processEngine;
 	
-	private static IRepository repository;
+	private IRepository repository = null;
 
 	public BpmProviderFlowable() {
 		Configuration.loadModuleConfig("/dirigible-bpm.properties");
@@ -87,16 +85,19 @@ public class BpmProviderFlowable implements IBpmProvider {
 	public String getType() {
 		return TYPE;
 	}
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	@Override
 	public ProcessEngine getProcessEngine() {
 		synchronized (BpmProviderFlowable.class) {
 			if (processEngine == null) {
 				logger.info("Initializng the Flowable Process Engine...");
-
-				if (repository == null) {
-					repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
-				}
 
 				ProcessEngineConfiguration cfg = null;
 				String dataSourceName = Configuration.get(DIRIGIBLE_FLOWABLE_DATABASE_DATASOURCE_NAME);
@@ -148,8 +149,8 @@ public class BpmProviderFlowable implements IBpmProvider {
 		if (!location.startsWith(IRepositoryStructure.SEPARATOR))
 			location = IRepositoryStructure.SEPARATOR + location;
 		String repositoryPath = IRepositoryStructure.PATH_REGISTRY_PUBLIC + location;
-		if (repository.hasResource(repositoryPath)) {
-			IResource resource = repository.getResource(repositoryPath);
+		if (getRepository().hasResource(repositoryPath)) {
+			IResource resource = getRepository().getResource(repositoryPath);
 			deployment = repositoryService.createDeployment()
 					.addBytes(location + EXTENSION_BPMN20_XML, resource.getContent())
 					.deploy();

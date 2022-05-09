@@ -84,9 +84,9 @@
                 <!-- GoldenLayout with Theme Support -->
                 <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
  
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/ui/resources/js/message-hub.js"></script>	
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/ui/resources/js/ui-layout.js"></script>
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/ui/resources/js/ui-core-ng-modules.js"></script>
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/message-hub.js"></script>	
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/ui-layout.js"></script>
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
                
                 <script type="text/javascript">
                                 angular.module('operations', ['ngResource', 'ideUiCore'])

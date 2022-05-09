@@ -213,6 +213,10 @@ public final class SQLSelectClause {
 
             StringBuilder select = new StringBuilder();
             Iterator<Integer> i = columnMapping.keySet().iterator();
+            if(query.hasKeyGeneratedPresent(target) && i.hasNext()) {
+                select.append("row_number() over() \"row_num\"");
+                select.append(", ");
+            }
             while (i.hasNext()) {
                 Integer column = i.next();
                 EdmStructuralType type = getTargetType(column);

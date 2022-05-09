@@ -81,7 +81,7 @@ function createModel(graph) {
 				for (let j = 0; j < propertyCount; j++) {
 					let property = graph.model.getChildAt(child, j).value;
 
-					property.dataName = property.dataName ? property.dataName : JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
+					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
 						'" isCalculatedProperty="' + _.escape(property.isCalculatedProperty) +
@@ -195,6 +195,14 @@ function createModel(graph) {
 		}
 	}
 	model.push(' </entities>\n');
+
+	if (graph.getModel().perspectives) {
+		model.push(' <perspectives>\n');
+		for (let i = 0; i < graph.getModel().perspectives.length; i++) {
+			model.push('  <perspective><name>' + _.escape(graph.getModel().perspectives[i].id) + '</name><label>' + _.escape(graph.getModel().perspectives[i].label) + '</label><icon>' + _.escape(graph.getModel().perspectives[i].icon) + '</icon><order>' + _.escape(graph.getModel().perspectives[i].order) + '</order></perspective>\n');
+		}
+		model.push(' </perspectives>\n');
+	}
 
 	if (graph.getModel().sidebar) {
 		model.push(' <sidebar>\n');

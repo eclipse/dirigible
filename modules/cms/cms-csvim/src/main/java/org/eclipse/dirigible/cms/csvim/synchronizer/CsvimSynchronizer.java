@@ -76,11 +76,18 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 
 	private static final CsvSynchronizationArtefactType CSV_ARTEFACT = new CsvSynchronizationArtefactType();
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = null;
 
 	private static final Map<String, CsvimDefinition> CSVIM_MODELS = new LinkedHashMap<>();
 
 	private CsvimProcessor csvimProcessor = new CsvimProcessor();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -325,7 +332,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 	}
 
 	private void processCsvimArtefacts() {
-		try (Connection connection = dataSource.getConnection()) {
+		try (Connection connection = getDataSource().getConnection()) {
 			for (String csvimArtifactKey : CSVIM_MODELS.keySet()) {
 				executeCsvim(CSVIM_MODELS.get(csvimArtifactKey), connection);
 			}

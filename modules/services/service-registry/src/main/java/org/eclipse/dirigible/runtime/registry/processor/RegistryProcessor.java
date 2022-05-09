@@ -26,7 +26,14 @@ public class RegistryProcessor {
 
 	private static final String REGISTRY = "/registry";
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Gets the resource.
@@ -37,7 +44,7 @@ public class RegistryProcessor {
 	 */
 	public IResource getResource(String path) {
 		StringBuilder registryPath = generateRegistryPath(path);
-		return repository.getResource(registryPath.toString());
+		return getRepository().getResource(registryPath.toString());
 	}
 
 	/**
@@ -49,7 +56,7 @@ public class RegistryProcessor {
 	 */
 	public ICollection getCollection(String path) {
 		StringBuilder registryPath = generateRegistryPath(path);
-		return repository.getCollection(registryPath.toString());
+		return getRepository().getCollection(registryPath.toString());
 	}
 
 	/**

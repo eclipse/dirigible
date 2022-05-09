@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- AngularJS -->
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <!-- Custom IDE Styles -->
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+
+        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+
+    </head>
+
+    <body ng-app="database-table" ng-controller="DatabaseTableController">
+        <h4 ng-hide="hasMultipleProcedureResults" ng-show="result">{{result}}</h4>
+        <div class="tableFixHead">
+            <table class="table table-striped" ng-hide="hasMultipleProcedureResults" ng-show="columns">
+                <thead>
+                    <tr>
+                        <th ng-repeat="column in columns">{{column}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in rows">
+                        <td ng-repeat="cell in row">
+                            <div class="tdSingleLine">
+                                {{cell}}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div ng-show="hasMultipleProcedureResults">
+                <ul class="nav nav-tabs">
+                    <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults"><a data-toggle="pill"
+                            href="#{{$index + 1}}">Result {{$index + 1}}</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
+                        ng-class="{active: $index === 0}">
+                        <table class="table table-striped"">
+						<thead>
+							<tr>
+								<th ng-repeat=" column in procedureResults[$index].columns">{{column}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in procedureResults[$index].rows">
+                                    <td ng-repeat="cell in row">
+                                        <div class="tdSingleLine">
+                                            {{cell}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            angular.module('database-table', [])
+            .controller('DatabaseTableController', function ($scope, $http) {
+
+                let messageHub = new FramesMessageHub();
+
+                let csrfToken = null;
+
+                $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
+                    csrfToken = response.headers()["x-csrf-token"];
+                }, function (response) {
+                    console.error("Error getting token.");
+                });
+
+                $scope.database = "local";
+                $scope.datasource = "DefaultDB";
+
+                messageHub.subscribe(function (evt) {
+                    $scope.database = evt.data;
+                }, "database.database.selection.changed");
+
+                messageHub.subscribe(function (evt) {
+                    $scope.datasource = evt.data;
+                }, "database.datasource.selection.changed");
+
+                messageHub.subscribe(function (command) {
+                    let url = "/services/v4/ide/databases/" + $scope.database + "/" + $scope.datasource;
+                    let sql = command.data.trim().toLowerCase();
+                    if (sql.startsWith('select')) {
+                        $http({
+                            method: 'POST',
+                            url: url + "/query",
+                            data: command.data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                'X-Requested-With': 'Fetch',
+                                'X-CSRF-Token': csrfToken
+                            }
+                        }).then(function (result) {
+                            cleanScope();
+                            if (result.data != null && result.data.length > 0) {
+                                $scope.rows = result.data;
+                                $scope.columns = [];
+                                for (let i = 0; i < result.data.length; i++) {
+                                    for (let column in result.data[i]) {
+                                        $scope.columns.push(column);
+                                    }
+                                    break;
+                                }
+                            } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                                $scope.result = result.data.errorMessage;
+                            } else {
+                                $scope.result = 'Empty result';
+                            }
+                        });
+                    } else if (sql.startsWith('call')) {
+                        $http({
+                            method: 'POST',
+                            url: url + "/procedure",
+                            data: command.data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                'X-Requested-With': 'Fetch',
+                                'X-CSRF-Token': csrfToken
+                            }
+                        }).then(function (result) {
+                            cleanScope();
+                            if (result.data != null && result.data.length > 0) {
+                                $scope.hasMultipleProcedureResults = result.data.length > 1;
+                                if ($scope.hasMultipleProcedureResults) {
+                                    $scope.procedureResults = [];
+                                    for (let resultIndex = 0; resultIndex < result.data.length; resultIndex++) {
+                                        let procedureResult = JSON.parse(result.data[resultIndex]);
+                                        let data = {
+                                            rows: procedureResult,
+                                            columns: []
+                                        };
+                                        for (let i = 0; i < procedureResult.length; i++) {
+                                            for (let column in procedureResult[i]) {
+                                                data.columns.push(column);
+                                            }
+                                            break;
+                                        }
+                                        $scope.procedureResults.push(data);
+                                    }
+                                } else {
+                                    result = JSON.parse(result.data[0]);
+                                    $scope.rows = result;
+                                    $scope.columns = [];
+                                    for (let i = 0; i < result.length; i++) {
+                                        for (let column in result[i]) {
+                                            $scope.columns.push(column);
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
+                                $scope.result = result.data.errorMessage;
+                            } else {
+                                $scope.result = 'Empty result';
+                            }
+                        });
+                    } else {
+                        $http({
+                            method: 'POST',
+                            url: url + "/update",
+                            data: command.data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/plain',
+                                'X-Requested-With': 'Fetch',
+                                'X-CSRF-Token': csrfToken
+                            }
+                        }).then(function (result) {
+                            cleanScope();
+                            if (!isNaN(result.data)) {
+                                result = 'Rows updated: ' + result.data;
+                            }
+                            $scope.result = result.data;
+                        });
+                    }
+                }, "database.sql.execute");
+
+                function cleanScope() {
+                    $scope.result = null;
+                    $scope.columns = null;
+                    $scope.rows = null;
+                    $scope.hasMultipleProcedureResults = false;
+                    $scope.procedureResults = null;
+                }
+            });
+        </script>
+    </body>

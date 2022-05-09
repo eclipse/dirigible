@@ -8,14 +8,14 @@
  * SAP - initial API and implementation
  */
 
-var dao = require("${projectName}/data/dao/${perspectiveName}/${name}.js")
+var dao = require("${projectName}/gen/dao/${perspectiveName}/${name}.js")
 
 exports.getTile = function(relativePath) {
 	let count = "n/a";
 	try {
 		count = dao.customDataCount();	
 	} catch (e) {
-		console.error("Error occured while involking '${projectName}/data/dao/${perspectiveName}/${name}.customDataCount()': " + e);
+		console.error("Error occured while involking '${projectName}/gen/dao/${perspectiveName}/${name}.customDataCount()': " + e);
 	}
 	return {
 #if($title)
@@ -37,7 +37,7 @@ exports.getTile = function(relativePath) {
 #else
 		icon: "life-ring",
  #end
-		location: relativePath + "services/v4/web/${projectName}/ui/${perspectiveName}/index.html",
+		location: relativePath + "services/v4/web/${projectName}/gen/ui/${perspectiveName}/index.html",
 		count: count,
 #if($perspectiveOrder)
 		order: "${perspectiveOrder}"

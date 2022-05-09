@@ -64,13 +64,13 @@ angular.module('page')
 }])
 .controller('PageController', function ($scope, $http, $messageHub) {
 
-	var api = '../../../../../../../../services/v4/js/${projectName}/api/${perspectiveName}/${name}.js';
+	var api = '/services/v4/js/${projectName}/gen/api/${perspectiveName}/${name}.js';
 #foreach ($property in $properties)
 #if($property.widgetType == "DROPDOWN")
 #if($property.widgetService && "$property.widgetService" != "")
 	var ${property.name.toLowerCase()}OptionsApi = '${property.widgetService}';
 #else
-	var ${property.name.toLowerCase()}OptionsApi = '../../../../../../../../services/v4/js/${projectName}/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js';
+	var ${property.name.toLowerCase()}OptionsApi = '/services/v4/js/${projectName}/gen/api/${property.relationshipEntityPerspectiveName}/${property.relationshipEntityName}.js';
 #end
 #end
 #end
@@ -106,7 +106,7 @@ angular.module('page')
 	$scope.dataPage = 1;
 	$scope.dataCount = 0;
 	$scope.dataOffset = 0;
-	$scope.dataLimit = 10;
+	$scope.dataLimit = 50;
 
 	$scope.getPages = function() {
 		return new Array($scope.dataPages);

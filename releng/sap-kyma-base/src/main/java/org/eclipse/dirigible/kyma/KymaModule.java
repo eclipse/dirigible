@@ -31,6 +31,7 @@ public class KymaModule extends AbstractDirigibleModule {
 	private static final String ENV_VERIFICATION_KEY = "verificationkey";
 	private static final String ENV_XS_APP_NAME = "xsappname";
 	private static final String ENV_DIRIGIBLE_HOST = "DIRIGIBLE_HOST";
+	private static final String ENV_TOKEN_SERVICE_URL = "token_service_url";
 
 	private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 	private static final String OAUTH_TOKEN = "/oauth/token";
@@ -43,8 +44,24 @@ public class KymaModule extends AbstractDirigibleModule {
 
 	public static final String DEFAULT_DESTINATION_PREFIX = "destination_";
 
+	public static final String DIRIGIBLE_CONNECTIVITY_PREFIX = "DIRIGIBLE_CONNECTIVITY_PREFIX";
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_ID = "DIRIGIBLE_CONNECTIVITY_CLIENT_ID";
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET = "DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET";
+	public static final String DIRIGIBLE_CONNECTIVITY_URL = "DIRIGIBLE_CONNECTIVITY_URL";
+	public static final String DIRIGIBLE_CONNECTIVITY_URI = "DIRIGIBLE_CONNECTIVITY_URI";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT";
+
+	public static final String DEFAULT_CONNECTIVITY_PREFIX = "connectivity_";
+
 	private static final String ERROR_MESSAGE_NO_OAUTH_CONFIGURATION = "No OAuth configuration provided";
 	private static final String WARN_MESSAGE_NO_DESTINATION_CONFIGURATION = "No Destination configuration provided";
+	private static final String WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION = "No Connectivity configuration provided";
+
 
 	@Override
 	public int getPriority() {
@@ -61,6 +78,7 @@ public class KymaModule extends AbstractDirigibleModule {
 		Configuration.loadModuleConfig("/dirigible-kyma.properties");
 		configureOAuth();
 		configureDestination();
+		configureConnectivity();
 	}
 
 	private void configureOAuth() {
@@ -97,13 +115,36 @@ public class KymaModule extends AbstractDirigibleModule {
 		String url = getEnvWithPrefix(destinationPrefix, ENV_URL);
 		String uri = getEnvWithPrefix(destinationPrefix, ENV_URI);
 
-		if (url != null && clientId != null && clientSecret != null && url != null && uri != null) {
+		if (clientId != null && clientSecret != null && url != null && uri != null) {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_ID, clientId);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_CLIENT_SECRET, clientSecret);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URL, url);
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 		} else {
 			logger.warn(WARN_MESSAGE_NO_DESTINATION_CONFIGURATION);
+		}
+
+	}
+
+	private void configureConnectivity() {
+		String connectivityPrefix = Configuration.get(DIRIGIBLE_CONNECTIVITY_PREFIX, DEFAULT_CONNECTIVITY_PREFIX);
+
+		String clientId = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_ID);
+		String clientSecret = getEnvWithPrefix(connectivityPrefix, ENV_CLIENT_SECRET);
+		String url = getEnvWithPrefix(connectivityPrefix, ENV_TOKEN_SERVICE_URL);
+
+		if (clientId != null && clientSecret != null && url != null) {
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_ID, clientId);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET, clientSecret);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, url);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST, "connectivity-proxy.kyma-system.svc.cluster.local");
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT, "20003");
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT, "20001");
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT, "20003");
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT, "20001");
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT, "20004");
+		} else {
+			logger.warn(WARN_MESSAGE_NO_CONNECTIVITY_CONFIGURATION);
 		}
 
 	}

@@ -15,15 +15,15 @@ exports.getTemplate = function (parameters) {
         description: "Application with DAO for MongoDB",
         extension: "model",
         sources: [{
-            location: "/template-application-dao-mongodb/data/dao/entity.js.template",
+            location: "/template-application-dao-mongodb/dao/entity.js.template",
             action: "generate",
-            rename: "data/dao/{{perspectiveName}}/{{fileName}}.js",
+            rename: "gen/dao/{{perspectiveName}}/{{fileName}}.js",
             engine: "velocity",
             collection: "models"
         }, {
-            location: "/template-application-dao-mongodb/data/utils/EntityUtils.js.template",
+            location: "/template-application-dao-mongodb/dao/utils/EntityUtils.js.template",
             action: "copy",
-            rename: "data/utils/EntityUtils.js"
+            rename: "gen/dao/utils/EntityUtils.js"
         }],
         parameters: []
     };

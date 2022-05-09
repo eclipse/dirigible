@@ -122,13 +122,16 @@ public class RepositoryZipImporter {
 				String parentFolder = null;
 				while ((entry = zipInputStream.getNextEntry()) != null) {
 
-					String name = entry.getName();
-					name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
-					if (excludeRootFolderName && (parentFolder == null)) {
-						parentFolder = name;
-						logger.debug("importZip parentFolder: " + parentFolder);
-						continue;
-					}
+                    String name = entry.getName();
+                    if (ifEntryIsAddedByMac(name)) {
+                        continue;
+                    }
+                    name = Paths.get(FilenameUtils.normalize(name)).normalize().toString();
+                    if (excludeRootFolderName && (parentFolder == null)) {
+                        parentFolder = name;
+                        logger.debug("importZip parentFolder: " + parentFolder);
+                        continue;
+                    }
 
 					String entryName = getEntryName(entry, parentFolder, excludeRootFolderName);
 					entryName = Paths.get(FilenameUtils.normalize(entryName)).normalize().toString();
@@ -199,4 +202,13 @@ public class RepositoryZipImporter {
 		return excludeParentFolder ? entry.getName().substring(parentFolder.length()) : entry.getName();
 	}
 
+    /**
+     * Checks is zip contains files added by MAC OS when creating zip
+     *
+     * @param path
+     * @return boolean
+     */
+    private static boolean ifEntryIsAddedByMac(String path) {
+        return path.contains("__MACOSX/") || path.contains("DS_Store");
+    }
 }

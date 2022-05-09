@@ -101,7 +101,7 @@ public class OData2ODataMTransformer {
                 String fkElement = rel.getValue().stream().map(x -> "\"" + x.getFkColumnName() + "\"").collect(Collectors.joining(","));
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntityByTableName(model, rel.getKey());
                 String dependentEntity = toSetEntity.getName();
-                return assembleOdataMRefSection(dependentEntity, fkElement);
+                return assembleOdataMRefSection(dependentEntity, fkElement, null, null);
             }).collect(Collectors.toList());
             if (!assembleRefFromFK.isEmpty()) {
                 buff.append(String.join(",\n", assembleRefFromFK)).append(",\n");
@@ -121,7 +121,10 @@ public class OData2ODataMTransformer {
                 ODataEntityDefinition toSetEntity = ODataMetadataUtil.getEntity(model, toRoleEntity, association.getName());
                 String dependentEntity = toSetEntity.getName();
                 String fkElement = association.getFrom().getProperties().stream().map(x -> "\"" + ODataMetadataUtil.getEntityPropertyColumnByPropertyName(model, fromRoleEntity, x) + "\"").collect(Collectors.joining(","));
-                return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, toSetEntity, dependentEntity, fkElement);
+                String mappingTableName = association.getFrom().getMappingTableDefinition().getMappingTableName();
+                String mappingTableJoinColumn = association.getFrom().getMappingTableDefinition().getMappingTableJoinColumn();
+                return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK,
+                        toSetEntity, dependentEntity, fkElement, mappingTableName, mappingTableJoinColumn);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             if (!assembleRefNav.isEmpty()) {
                 buff.append(String.join(",\n", assembleRefNav)).append(",\n");
@@ -136,10 +139,17 @@ public class OData2ODataMTransformer {
                 ODataEntityDefinition fromSetEntity = ODataMetadataUtil.getEntity(model, fromRoleEntity, association.getName());
                 String principleEntity = fromSetEntity.getName();
                 String fkElement = association.getTo().getProperties().stream().map(x -> "\"" + ODataMetadataUtil.getEntityPropertyColumnByPropertyName(model, toRoleEntity, x) + "\"").collect(Collectors.joining(","));
-                return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK, fromSetEntity, principleEntity, fkElement);
+                String mappingTableName = association.getTo().getMappingTableDefinition().getMappingTableName();
+                String mappingTableJoinColumn = association.getTo().getMappingTableDefinition().getMappingTableJoinColumn();
+                return checkRefSectionConsistency(buff, entity, groupRelationsByToTableName, assembleRefFromFK,
+                        fromSetEntity, principleEntity, fkElement, mappingTableName, mappingTableJoinColumn);
             }).filter(Objects::nonNull).collect(Collectors.toList());
             if (!assembleRefNav.isEmpty()) {
                 buff.append(String.join(",\n", assembleRefNav)).append(",\n");
+            }
+
+            if(entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
+                buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
             }
 
             String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});
@@ -151,8 +161,11 @@ public class OData2ODataMTransformer {
         return result.toArray(new String[]{});
     }
 
-    private String checkRefSectionConsistency(StringBuilder buff, ODataEntityDefinition entity, Map<String, List<PersistenceTableRelationModel>> groupRelationsByToTableName, List<String> assembleRefFromFK, ODataEntityDefinition toSetEntity, String principleEntity, String fkElement) {
-        String refSection = assembleOdataMRefSection(principleEntity, fkElement);
+    private String checkRefSectionConsistency(StringBuilder buff, ODataEntityDefinition entity, Map<String,
+            List<PersistenceTableRelationModel>> groupRelationsByToTableName, List<String> assembleRefFromFK,
+                                              ODataEntityDefinition toSetEntity, String principleEntity, String fkElement,
+                                              String mappingTableName, String mappingTableJoinColumn) {
+        String refSection = assembleOdataMRefSection(principleEntity, fkElement, mappingTableName, mappingTableJoinColumn);
         if (groupRelationsByToTableName.get(toSetEntity.getTable()) != null) {
             List<String> match = assembleRefFromFK.stream().filter(el -> el.equals(refSection)).collect(Collectors.toList());
             if (match.isEmpty()) {
@@ -189,9 +202,21 @@ public class OData2ODataMTransformer {
         }
     }
 
-    private String assembleOdataMRefSection(String dependentEntity, String fkElements) {
-        return "\t\"_ref_" + dependentEntity + "Type" + "\": {\n\t\t\"joinColumn\" : " + "[\n\t\t\t" +
-                fkElements + "\n\t\t]" + "\n\t}";
+    private String assembleOdataMRefSection(String dependentEntity, String fkElements, String mappingTableName,
+                                            String mappingTableJoinColumn) {
+        String refSection = "\t\"_ref_" + dependentEntity + "Type" + "\": {\n\t\t\"joinColumn\" : " + "[\n\t\t\t" +
+                fkElements + "\n\t\t]";
+
+        if(mappingTableName != null && !mappingTableName.isEmpty()
+                && mappingTableJoinColumn != null && !mappingTableJoinColumn.isEmpty()) {
+            refSection = refSection + "," + "\n\t\t\"manyToManyMappingTable\" : {" + "\n\t\t\t\"mappingTableName\" : "
+                    + "\"" + mappingTableName + "\"," + "\n\t\t\t\"mappingTableJoinColumn\" : "
+                    + "\"" + mappingTableJoinColumn + "\"" + "\n\t\t}";
+        }
+
+        refSection = refSection + "\n\t}";
+
+        return refSection;
     }
 
 

@@ -42,7 +42,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class SecurityCoreService implements ISecurityCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<RoleDefinition> rolesPersistenceManager = new PersistenceManager<RoleDefinition>();
 
@@ -50,6 +50,13 @@ public class SecurityCoreService implements ISecurityCoreService {
 
 	// used by the access security filter to minimize the performance implications on getting the whole list
 	private static final List<AccessDefinition> CACHE = Collections.synchronizedList(new ArrayList<AccessDefinition>());
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Roles
 
@@ -70,7 +77,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				rolesPersistenceManager.insert(connection, roleDefinition);
 				return roleDefinition;
 			} finally {
@@ -92,7 +99,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return rolesPersistenceManager.find(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -122,7 +129,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				rolesPersistenceManager.delete(connection, RoleDefinition.class, name);
 			} finally {
 				if (connection != null) {
@@ -144,7 +151,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				RoleDefinition roleDefinition = getRole(name);
 				roleDefinition.setLocation(location);
 				roleDefinition.setDescription(description);
@@ -167,7 +174,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				rolesPersistenceManager.tableCheck(connection, RoleDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ROLES").where("ROLE_LOCATION = ?").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
@@ -196,7 +203,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				rolesPersistenceManager.tableCheck(connection, RoleDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ROLES").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
@@ -225,7 +232,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return rolesPersistenceManager.findAll(connection, RoleDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -290,7 +297,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				accessPersistenceManager.insert(connection, accessDefinition);
 				clearCache();
 				return accessDefinition;
@@ -313,7 +320,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return accessPersistenceManager.find(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -336,7 +343,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 			Connection connection = null;
 			try {
 				scope = scope != null ? scope : ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT;
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where("ACCESS_ROLE = ?").where("ACCESS_METHOD = ?").toString();
 				List<AccessDefinition> access = accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path, role, method);
@@ -378,7 +385,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				accessPersistenceManager.delete(connection, AccessDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -400,7 +407,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				AccessDefinition accessDefinition = getAccessDefinition(id);
 				accessDefinition.setLocation(location);
 				accessDefinition.setScope(scope != null ? scope : ISecurityCoreService.CONSTRAINT_SCOPE_DEFAULT);
@@ -429,7 +436,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				accessPersistenceManager.tableCheck(connection, AccessDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ?").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
@@ -458,7 +465,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				accessPersistenceManager.tableCheck(connection, AccessDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
@@ -490,7 +497,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				List<AccessDefinition> accessDefinitions = accessPersistenceManager.findAll(connection, AccessDefinition.class);
 				CACHE.addAll(accessDefinitions);
 				return Collections.unmodifiableList(accessDefinitions);
@@ -513,7 +520,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path);
@@ -538,7 +545,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
 				return accessPersistenceManager.query(connection, AccessDefinition.class, sql, scope, path, method, AccessDefinition.METHOD_ANY);
@@ -562,7 +569,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_SCOPE = ?").where("ACCESS_PATH = ?")
 						.where("ACCESS_ROLE = ?")
 						.where(SqlFactory.getNative(connection).expression().and("ACCESS_METHOD = ?").or("ACCESS_METHOD = ?").toString()).toString();
@@ -624,7 +631,7 @@ public class SecurityCoreService implements ISecurityCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SECURITY_ACCESS").where("ACCESS_LOCATION = ? AND ACCESS_HASH <> ?").toString();
 				PreparedStatement statement = connection.prepareStatement(sql);
 				try {

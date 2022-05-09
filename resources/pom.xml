@@ -24,6 +24,7 @@
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
 		<module>resources-flowable-libs</module>
+		<module>resources-mxgraph</module>
 	</modules>
 
 	<properties>

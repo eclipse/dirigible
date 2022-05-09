@@ -25,7 +25,7 @@ import com.google.gson.JsonObject;
  */
 public class ResultSetJsonWriter implements ResultSetWriter<String> {
 
-	private static final int LIMIT = 100;
+	private static final int LIMIT = 1000;
 
 	private boolean limited = true;
 

@@ -4,6 +4,6 @@
 #else
 	"expression": "0 0 0 1 * ? *",
 #end
-	"handler": "${projectName}/feed/${perspectiveName}/${fileName}FeedSynchronizer.js",
+	"handler": "${projectName}/gen/feed/${perspectiveName}/${fileName}FeedSynchronizer.js",
 	"description": "${name}FeedSynchronizer Job"
 }

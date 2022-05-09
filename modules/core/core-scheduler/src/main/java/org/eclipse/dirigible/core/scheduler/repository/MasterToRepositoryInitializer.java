@@ -32,9 +32,23 @@ public class MasterToRepositoryInitializer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MasterToRepositoryInitializer.class);
 	
-	private IMasterRepository masterRepository = (IMasterRepository) StaticObjects.get(StaticObjects.MASTER_REPOSITORY);
+	private IMasterRepository masterRepository = null;
 	
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IMasterRepository getMasterRepository() {
+		if (masterRepository == null) {
+			masterRepository = (IMasterRepository) StaticObjects.get(StaticObjects.MASTER_REPOSITORY);
+		}
+		return masterRepository;
+	}
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 	
 	/**
 	 * Initialize the Repository from the Master Repository, if configured
@@ -45,9 +59,9 @@ public class MasterToRepositoryInitializer {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize() throws SQLException, IOException {
-		if (this.masterRepository != null && this.masterRepository.hasCollection("/")) {
-			if (this.repository != null) {
-				copyRepository(masterRepository, repository);
+		if (getMasterRepository() != null && getMasterRepository().hasCollection("/")) {
+			if (getRepository() != null) {
+				copyRepository(getMasterRepository(), getRepository());
 			} else {
 				logger.error("No Repository has been initialized.");
 			}

@@ -136,7 +136,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 
 	private DataStructuresCoreService dataStructuresCoreService = new DataStructuresCoreService();
 	
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+	private DataSource dataSource = null;
 	
 	private final String SYNCHRONIZER_NAME = this.getClass().getCanonicalName();
 	
@@ -147,6 +147,13 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private static final AppendSynchronizationArtefactType APPEND_ARTEFACT = new AppendSynchronizationArtefactType();
 	private static final DeleteSynchronizationArtefactType DELETE_ARTEFACT = new DeleteSynchronizationArtefactType();
 	private static final UpdateSynchronizationArtefactType UPDATE_ARTEFACT = new UpdateSynchronizationArtefactType();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
+		}
+		return dataSource;
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -726,7 +733,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				List<DataStructureTableModel> tableModels = dataStructuresCoreService.getTables();
 				for (DataStructureTableModel tableModel : tableModels) {
 					if (!TABLES_SYNCHRONIZED.contains(tableModel.getLocation())) {
@@ -810,7 +817,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				
 				TopologicalSorter<TopologyDataStructureModelWrapper> sorter = new TopologicalSorter<>();
 				TopologicalDepleter<TopologyDataStructureModelWrapper> depleter = new TopologicalDepleter<>();
@@ -1001,7 +1008,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 			String tableName = model.getName();
 			deleteAllDataFromTable(tableName);
 
-			TableImporter tableDataInserter = new TableImporter(dataSource, content, tableName);
+			TableImporter tableDataInserter = new TableImporter(getDataSource(), content, tableName);
 			tableDataInserter.insert();
 			moveSequence(tableName); // move the sequence just in case
 		} else {
@@ -1024,7 +1031,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		if (tableRowsCount == 0) {
 			byte[] content = model.getContent().getBytes();
 			if (content.length != 0) {
-				TableImporter tableDataInserter = new TableImporter(dataSource, content, tableName);
+				TableImporter tableDataInserter = new TableImporter(getDataSource(), content, tableName);
 				tableDataInserter.insert();
 				moveSequence(tableName); // move the sequence, to be able to add more records after the initial import
 			} else {
@@ -1076,7 +1083,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private void deleteAllDataFromTable(String tableName) throws Exception {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			String sql = SqlFactory.getNative(connection).delete().from(DataStructuresUtils.getCaseSensitiveTableName(tableName)).build();
 			PreparedStatement deleteStatement = connection.prepareStatement(sql);
 			deleteStatement.execute();
@@ -1090,7 +1097,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private int getTableRowsCount(String tableName) throws Exception {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			String sql = SqlFactory.getNative(connection).select().column("COUNT(*)").from(tableName).build();
 			PreparedStatement countStatement = connection.prepareStatement(sql);
 			ResultSet rs = countStatement.executeQuery();
@@ -1110,7 +1117,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 		String result = null;
 		Connection connection = null;
 		try {
-			connection = this.dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			ResultSet primaryKeys = TableMetadataHelper.getPrimaryKeys(connection, tableName);
 			List<String> primaryKeysList = new ArrayList<String>();
 			while (primaryKeys.next()) {
@@ -1136,7 +1143,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private void deleteRowsDataFromTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			List<String[]> records = TableDataReader.readRecords(new ByteArrayInputStream(fileContent));
 			for (String[] record : records) {
 				if (record.length > 0) {
@@ -1159,7 +1166,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 	private void updateRowsDataInTable(String tableName, String primaryKey, byte[] fileContent) throws Exception {
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			List<String[]> records = TableDataReader.readRecords(new ByteArrayInputStream(fileContent));
 			for (String[] record : records) {
 				if (record.length > 0) {
@@ -1174,7 +1181,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 						}
 						buff.deleteCharAt(buff.length() - 1);
 						buff.append("\n");
-						TableImporter tableDataInserter = new TableImporter(dataSource, buff.toString().getBytes(), tableName);
+						TableImporter tableDataInserter = new TableImporter(getDataSource(), buff.toString().getBytes(), tableName);
 						tableDataInserter.insert();
 					}
 				} else {
@@ -1196,7 +1203,7 @@ public class DataStructuresSynchronizer extends AbstractSynchronizer implements 
 
 		Connection connection = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = getDataSource().getConnection();
 			connection.setAutoCommit(false);
 
 			PersistenceManager<Identity> persistenceManager = new PersistenceManager<Identity>();

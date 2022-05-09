@@ -49,13 +49,20 @@ public class EditorRestService extends AbstractRestService implements IRestServi
 
     private static final Logger logger = LoggerFactory.getLogger(EditorRestService.class);
 
-    private final IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    private IRepository repository = null;
 
     private static final String PRETTIER_CONFIG_FILE_NAME = ".prettierrc.json";
     private static final String PRETTIER_CONFIG_CONTENT_TYPE = "application/json";
 
     @Context
     private HttpServletResponse response;
+    
+    protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
     /**
      * Finds all prettier config file paths inside a project
@@ -83,7 +90,7 @@ public class EditorRestService extends AbstractRestService implements IRestServi
         RepositoryPath sourceFilePath = new RepositoryPath(projectPath + IRepository.SEPARATOR + filePath);
         RepositoryPath sourceFolder = sourceFilePath.getParentPath();
         String sourceFileName = sourceFilePath.getLastSegment();
-        ICollection lookupDirectory = repository.getCollection(sourceFolder.getPath());
+        ICollection lookupDirectory = getRepository().getCollection(sourceFolder.getPath());
 
         if (!isPathNormalized(queryPath) || !isResourceInDirectory(lookupDirectory, sourceFileName)) {
             return createPrettierConfigNotFoundErrorResponse("There is no resource at specified path", queryPath);

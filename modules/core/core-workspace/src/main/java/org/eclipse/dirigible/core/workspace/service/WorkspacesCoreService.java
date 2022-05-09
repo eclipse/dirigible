@@ -34,7 +34,14 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	/** The Constant DEFAULT_WORKSPACE_NAME. */
 	private static final String DEFAULT_WORKSPACE_NAME = "workspace";
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -55,7 +62,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	@Override
 	public IWorkspace getWorkspace(String name) {
 		StringBuilder workspacePath = generateWorkspacePath(name, null, null);
-		ICollection collection = repository.getCollection(workspacePath.toString());
+		ICollection collection = getRepository().getCollection(workspacePath.toString());
 		return new Workspace(collection);
 	}
 
@@ -66,7 +73,7 @@ public class WorkspacesCoreService implements IWorkspacesCoreService {
 	@Override
 	public List<IWorkspace> getWorkspaces() {
 		StringBuilder workspacePath = generateWorkspacePath(null, null, null);
-		ICollection root = repository.getCollection(workspacePath.toString());
+		ICollection root = getRepository().getCollection(workspacePath.toString());
 		List<IWorkspace> workspaces = new ArrayList<IWorkspace>();
 		if (!root.exists()) {
 			root.create();

@@ -85,6 +85,12 @@ public class CloudFoundryUtils {
 		return vcapServicesEnv.getDestinationEnv() != null ? vcapServicesEnv.getDestinationEnv().get(0) : null;
 	}
 
+	public static ConnectivityEnv getConnectivityEnv() {
+		String envJson = EnvFacade.get(VCAP_SERVICES);
+		VcapServicesEnv vcapServicesEnv = GsonHelper.GSON.fromJson(envJson, VcapServicesEnv.class);
+		return vcapServicesEnv.getConnectivityEnv() != null ? vcapServicesEnv.getConnectivityEnv().get(0) : null;
+	}
+
 	public static class VcapApplicationEnv {
 
 		private String name;
@@ -174,6 +180,9 @@ public class CloudFoundryUtils {
 		@SerializedName("destination")
 		private List<DestinationEnv> destinationEnv;
 
+		@SerializedName("connectivity")
+		private List<ConnectivityEnv> connectivityEnv;
+
 		public List<XsuaaEnv> getXsuaa() {
 			return xsuaa;
 		}
@@ -224,6 +233,14 @@ public class CloudFoundryUtils {
 
 		public void setDestinationEnv(List<DestinationEnv> destinationEnv) {
 			this.destinationEnv = destinationEnv;
+		}
+
+		public List<ConnectivityEnv> getConnectivityEnv() {
+			return connectivityEnv;
+		}
+
+		public void setConnectivityEnv(List<ConnectivityEnv> connectivityEnv) {
+			this.connectivityEnv = connectivityEnv;
 		}
 	}
 
@@ -664,6 +681,126 @@ public class CloudFoundryUtils {
 			public void setUri(String uri) {
 				this.uri = uri;
 			}
+		}
+	}
+
+	public static class ConnectivityEnv {
+
+		private ConnectivityCredentialsEnv credentials;
+
+		public ConnectivityCredentialsEnv getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(ConnectivityCredentialsEnv credentials) {
+			this.credentials = credentials;
+		}
+
+		public static class ConnectivityCredentialsEnv {
+
+			private String clientId;
+			private String clientSecret;
+			private String url;
+			private String uri;
+
+			@SerializedName("onpremise_proxy_host")
+			private String onpremiseProxyHost;
+
+			@SerializedName("onpremise_proxy_http_port")
+			private String onpremiseProxyHttpPort;
+
+			@SerializedName("onpremise_proxy_ldap_port")
+			private String onpremiseProxyLdapPort;
+
+			@SerializedName("onpremise_proxy_port")
+			private String onpremiseProxyPort;
+
+			@SerializedName("onpremise_proxy_rfc_port")
+			private String onpremiseProxyRfcPort;
+
+			@SerializedName("onpremise_socks5_proxy_port")
+			private String onpremiseSocks5ProxyPort;
+
+			public String getClientId() {
+				return clientId;
+			}
+
+			public void setClientId(String clientId) {
+				this.clientId = clientId;
+			}
+
+			public String getClientSecret() {
+				return clientSecret;
+			}
+
+			public void setClientSecret(String clientSecret) {
+				this.clientSecret = clientSecret;
+			}
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getUri() {
+				return uri;
+			}
+
+			public void setUri(String uri) {
+				this.uri = uri;
+			}
+
+			public String getOnpremiseProxyHost() {
+				return onpremiseProxyHost;
+			}
+
+			public void setOnpremiseProxyHost(String onpremiseProxyHost) {
+				this.onpremiseProxyHost = onpremiseProxyHost;
+			}
+
+			public String getOnpremiseProxyHttpPort() {
+				return onpremiseProxyHttpPort;
+			}
+
+			public void setOnpremiseProxyHttpPort(String onpremiseProxyHttpPort) {
+				this.onpremiseProxyHttpPort = onpremiseProxyHttpPort;
+			}
+
+			public String getOnpremiseProxyLdapPort() {
+				return onpremiseProxyLdapPort;
+			}
+
+			public void setOnpremiseProxyLdapPort(String onpremiseProxyLdapPort) {
+				this.onpremiseProxyLdapPort = onpremiseProxyLdapPort;
+			}
+
+			public String getOnpremiseProxyPort() {
+				return onpremiseProxyPort;
+			}
+
+			public void setOnpremiseProxyPort(String onpremiseProxyPort) {
+				this.onpremiseProxyPort = onpremiseProxyPort;
+			}
+
+			public String getOnpremiseProxyRfcPort() {
+				return onpremiseProxyRfcPort;
+			}
+
+			public void setOnpremiseProxyRfcPort(String onpremiseProxyRfcPort) {
+				this.onpremiseProxyRfcPort = onpremiseProxyRfcPort;
+			}
+
+			public String getOnpremiseSocks5ProxyPort() {
+				return onpremiseSocks5ProxyPort;
+			}
+
+			public void setOnpremiseSocks5ProxyPort(String onpremiseSocks5ProxyPort) {
+				this.onpremiseSocks5ProxyPort = onpremiseSocks5ProxyPort;
+			}
+
 		}
 	}
 }

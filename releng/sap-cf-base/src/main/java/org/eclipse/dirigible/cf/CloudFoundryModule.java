@@ -16,6 +16,8 @@ import java.text.MessageFormat;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.DestinationEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.DestinationEnv.DestinationCredentialsEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.ConnectivityEnv;
+import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.ConnectivityEnv.ConnectivityCredentialsEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaCloudDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaDbEnv;
 import org.eclipse.dirigible.cf.utils.CloudFoundryUtils.HanaSchemaEnv;
@@ -41,11 +43,23 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 
 	private static final String ERROR_MESSAGE_NO_XSUAA = "No XSUAA service instance is bound";
 	private static final String WARN_MESSAGE_NO_DESTINATION = "No Destination service instance is bound";
+	private static final String WARN_MESSAGE_NO_CONNECTIVITY = "No Connectivity service instance is bound";
 
 	public static final String DIRIGIBLE_DESTINATION_CLIENT_ID = "DIRIGIBLE_DESTINATION_CLIENT_ID";
 	public static final String DIRIGIBLE_DESTINATION_CLIENT_SECRET = "DIRIGIBLE_DESTINATION_CLIENT_SECRET";
 	public static final String DIRIGIBLE_DESTINATION_URL = "DIRIGIBLE_DESTINATION_URL";
 	public static final String DIRIGIBLE_DESTINATION_URI = "DIRIGIBLE_DESTINATION_URI";
+
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_ID = "DIRIGIBLE_CONNECTIVITY_CLIENT_ID";
+	public static final String DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET = "DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET";
+	public static final String DIRIGIBLE_CONNECTIVITY_URL = "DIRIGIBLE_CONNECTIVITY_URL";
+	public static final String DIRIGIBLE_CONNECTIVITY_URI = "DIRIGIBLE_CONNECTIVITY_URI";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT";
+	public static final String DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT = "DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT";
 
 	private static final String DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE = "DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE";
 
@@ -74,6 +88,7 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 		configureOAuth();
 		configureDatasource();
 		configureDestination();
+		configureConnectivity();
 	}
 
 	private void configureOAuth() {
@@ -128,6 +143,38 @@ public class CloudFoundryModule extends AbstractDirigibleModule {
 			Configuration.setIfNull(DIRIGIBLE_DESTINATION_URI, uri);
 		} else {
 			logger.warn(WARN_MESSAGE_NO_DESTINATION);
+		}
+	}
+
+	private void configureConnectivity() {
+		ConnectivityEnv connectivityEnv = CloudFoundryUtils.getConnectivityEnv();
+		if (connectivityEnv != null && connectivityEnv.getCredentials() != null) {
+			ConnectivityCredentialsEnv connectivityCredentials = connectivityEnv.getCredentials();
+
+			String clientId = connectivityCredentials.getClientId();
+			String clientSecret = connectivityCredentials.getClientSecret();
+			String url = connectivityCredentials.getUrl();
+			String uri = connectivityCredentials.getUri();
+			String onpremiseProxyHost = connectivityCredentials.getOnpremiseProxyHost();
+			String onpremiseProxyHttpPort = connectivityCredentials.getOnpremiseProxyHttpPort();
+			String onpremiseProxyLdapPort = connectivityCredentials.getOnpremiseProxyLdapPort();
+			String onpremiseProxyPort = connectivityCredentials.getOnpremiseProxyPort();
+			String onpremiseProxyRfcPort = connectivityCredentials.getOnpremiseProxyRfcPort();
+			String onpremiseSocks5ProxyPort = connectivityCredentials.getOnpremiseSocks5ProxyPort();
+
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_ID, clientId);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_CLIENT_SECRET, clientSecret);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URL, url);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_URI, uri);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HOST, onpremiseProxyHost);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_HTTP_PORT, onpremiseProxyHttpPort);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_LDAP_PORT, onpremiseProxyLdapPort);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_PORT, onpremiseProxyPort);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_PROXY_RFC_PORT, onpremiseProxyRfcPort);
+			Configuration.setIfNull(DIRIGIBLE_CONNECTIVITY_ONPREMISE_SOCKS5_PROXY_PORT, onpremiseSocks5ProxyPort);
+
+		} else {
+			logger.warn(WARN_MESSAGE_NO_CONNECTIVITY);
 		}
 	}
 

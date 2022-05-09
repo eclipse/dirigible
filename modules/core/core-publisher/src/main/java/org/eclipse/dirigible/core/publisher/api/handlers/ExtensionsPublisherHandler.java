@@ -42,8 +42,8 @@ public class ExtensionsPublisherHandler implements IPublisherHandler {
 	}
 
 	@Override
-	public void afterPublish(String location) throws SchedulerException {
-		triggerExtensions(location, EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH, "After Publish");
+	public void afterPublish(String workspaceLocation, String registryLocation) throws SchedulerException {
+		triggerExtensions(workspaceLocation, EXTENSION_POINT_IDE_WORKSPACE_AFTER_PUBLISH, "After Publish");
 	}
 
 	@Override

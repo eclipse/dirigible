@@ -36,11 +36,16 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class WebsocketsCoreService implements IWebsocketsCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<WebsocketDefinition> websocketsPersistenceManager = new PersistenceManager<WebsocketDefinition>();
 
-	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Websocket
 
@@ -62,7 +67,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				websocketsPersistenceManager.insert(connection, websocketDefinition);
 				return websocketDefinition;
 			} finally {
@@ -84,7 +89,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return websocketsPersistenceManager.find(connection, WebsocketDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -105,7 +110,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				websocketsPersistenceManager.delete(connection, WebsocketDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -127,7 +132,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				WebsocketDefinition websocketDefinition = getWebsocket(location);
 				websocketDefinition.setHandler(module);
 				websocketDefinition.setEndpoint(endpoint);
@@ -152,7 +157,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return websocketsPersistenceManager.findAll(connection, WebsocketDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -174,7 +179,7 @@ public class WebsocketsCoreService implements IWebsocketsCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_WEBSOCKETS")
 						.where("WEBSOCKET_ENDPOINT_NAME = ?").toString();
 				return websocketsPersistenceManager.query(connection, WebsocketDefinition.class, sql,

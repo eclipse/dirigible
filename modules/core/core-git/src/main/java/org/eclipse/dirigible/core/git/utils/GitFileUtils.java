@@ -61,7 +61,14 @@ public class GitFileUtils {
 	private static String GIT_ROOT_FOLDER;
 
 	/** The repository. */
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	static {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
@@ -154,7 +161,7 @@ public class GitFileUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
-		repository.linkPath(path, gitRepositoryFile.getCanonicalPath());
+		getRepository().linkPath(path, gitRepositoryFile.getCanonicalPath());
 	}
 
 	/**
@@ -175,8 +182,8 @@ public class GitFileUtils {
 	 * @return the local absolute path
 	 */
 	public String getAbsolutePath(String path) {
-		if (this.repository instanceof FileSystemRepository) {
-			String absolutePath = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, path);
+		if (this.getRepository() instanceof FileSystemRepository) {
+			String absolutePath = LocalWorkspaceMapper.getMappedName((FileSystemRepository) getRepository(), path);
 			return absolutePath;
 		}
 		throw new IllegalArgumentException("Repository must be file based to use git utilities: " + path);

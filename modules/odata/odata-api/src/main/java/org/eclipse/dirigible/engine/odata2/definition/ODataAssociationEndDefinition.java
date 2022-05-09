@@ -26,6 +26,8 @@ public class ODataAssociationEndDefinition {
 
     private String multiplicity;
 
+	private ODataManyToManyMappingTableDefinition mappingTableDefinition = new ODataManyToManyMappingTableDefinition();
+
 	public String getEntity() {
 		return entity;
 	}
@@ -65,6 +67,12 @@ public class ODataAssociationEndDefinition {
 	public void setMultiplicity(String multiplicity) {
 		this.multiplicity = multiplicity;
 	}
-    
-    
+
+	public ODataManyToManyMappingTableDefinition getMappingTableDefinition() {
+		return mappingTableDefinition;
+	}
+
+	public void setMappingTableDefinition(ODataManyToManyMappingTableDefinition mappingTableDefinition) {
+		this.mappingTableDefinition = mappingTableDefinition;
+	}
 }

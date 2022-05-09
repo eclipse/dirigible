@@ -1,7 +1,7 @@
 #set($dollar = '$' )
 var rs = require("http/v4/rs");
-var dao = require("${projectName}/data/dao/${perspectiveName}/${name}");
-var http = require("${projectName}/api/http");
+var dao = require("${projectName}/gen/dao/${perspectiveName}/${name}");
+var http = require("${projectName}/gen/api/utils/http");
 
 #if($type != "REPORT")
 #foreach ($property in $properties)
@@ -71,7 +71,7 @@ rs.service()
 			validateEntity(entity);
 #end
 			entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end = dao.create(entity);
-			response.setHeader("Content-Location", "/services/v4/js/${projectName}/api/${name}.js/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
+			response.setHeader("Content-Location", "/services/v4/js/${projectName}/gen/api/${name}.js/" + entity.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end);
 			http.sendResponseCreated(entity);
 		})
 		.produces(["application/json"])

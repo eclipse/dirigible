@@ -13,11 +13,9 @@ package test.org.eclipse.dirigible.core.generation.javascript;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dirigible.commons.api.context.ContextException;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
@@ -29,7 +27,7 @@ import org.junit.Test;
 
 public class JavascriptGeneratorTest extends AbstractDirigibleTest {
 	
-	private IRepository repository;
+	private IRepository repository = null;
 
 	@Before
 	public void setUp() throws Exception {

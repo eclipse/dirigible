@@ -50,7 +50,14 @@ public class DatabaseProcessor {
 
 	private boolean LIMITED = true;
 
-	private IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
+	private IDatabase database = null;
+	
+	protected synchronized IDatabase getDatabase() {
+		if (database == null) {
+			database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
+		}
+		return database;
+	}
 
 	/**
 	 * Exists database.
@@ -99,9 +106,9 @@ public class DatabaseProcessor {
 		DataSource dataSource = null;
 		if (type == null) {
 			if (name == null) {
-				dataSource = database.getDataSource();
+				dataSource = getDatabase().getDataSource();
 			} else {
-				dataSource = database.getDataSource(name);
+				dataSource = getDatabase().getDataSource(name);
 			}
 		} else {
 			dataSource = DatabaseModule.getDataSource(type, name);

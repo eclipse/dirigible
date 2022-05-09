@@ -59,14 +59,14 @@
 	<script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
 
 #if($includeLaunchpad)
-	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="/services/v4/web/${projectName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/gen/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${projectName}/gen/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
 
 #else
-	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>	
-	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-layout.js"></script>
-	<script type="text/javascript" src="/services/v4/web/${launchpadName}/ui/resources/js/ui-core-ng-modules.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/gen/ui/resources/js/message-hub.js"></script>	
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/gen/ui/resources/js/ui-layout.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
 #end
 
 	<script type="text/javascript">
@@ -101,9 +101,9 @@
 			};
 
 #if($includeLaunchpad)
-			${dollar}http.get('/services/v4/js/${projectName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${projectName}/gen/shell/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
 #else
-			${dollar}http.get('/services/v4/js/${launchpadName}/api/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
+			${dollar}http.get('/services/v4/js/${launchpadName}/gen/shell/launchpad/views.js?extensionPoint=launchpad-${extensionName}-${perspectiveName}-view&pathSegments=6')
 #end
 			.then(function(views) {
 				for (var i = 0 ; i < views.data.length; i ++) {

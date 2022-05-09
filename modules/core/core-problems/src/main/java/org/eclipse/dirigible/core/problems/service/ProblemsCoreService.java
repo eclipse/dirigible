@@ -41,10 +41,19 @@ import java.util.List;
 public class ProblemsCoreService implements IProblemsCoreService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProblemsCoreService.class);
-    private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+    
+    private DataSource dataSource = null;
+    
     private PersistenceManager<ProblemsModel> persistenceManager = new PersistenceManager<ProblemsModel>();
 
     private static final String PERCENT = "%";
+    
+    protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
     @Override
     public ProblemsModel createProblem(ProblemsModel problemsModel) throws ProblemsException {
@@ -52,7 +61,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
         problemsModel.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
         problemsModel.setStatus(ProblemsConstants.ACTIVE);
 
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             persistenceManager.insert(connection, problemsModel);
             return problemsModel;
         } catch (SQLException e) {
@@ -89,7 +98,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public void updateProblem(ProblemsModel problemsModel) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             persistenceManager.update(connection, problemsModel);
         } catch (SQLException e) {
             throw new ProblemsException(e);
@@ -101,7 +110,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
         ProblemsModel problemToUpdate = getProblemById(id);
         if (problemToUpdate != null) {
             problemToUpdate.setStatus(status);
-            try (Connection connection = dataSource.getConnection()) {
+            try (Connection connection = getDataSource().getConnection()) {
                 persistenceManager.update(connection, problemToUpdate);
             } catch (SQLException e) {
                 throw new ProblemsException(e);
@@ -111,7 +120,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public int updateStatusMultipleProblems(List<Long> ids, String status) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             StringBuilder sql = new StringBuilder("UPDATE DIRIGIBLE_PROBLEMS SET PROBLEM_STATUS = ? WHERE PROBLEM_ID IN (");
             ids = new ArrayList<>(ids);
             ids.forEach(id -> sql.append("?,"));
@@ -126,7 +135,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public ProblemsModel getProblem(String location, String type, String line, String column) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS")
                     .where("PROBLEM_LOCATION = ? AND PROBLEM_TYPE = ? AND PROBLEM_LINE = ? AND PROBLEM_COLUMN = ?").toString();
             List<ProblemsModel> result = persistenceManager.query(connection, ProblemsModel.class,
@@ -139,7 +148,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public ProblemsModel getProblemById(Long id) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             return persistenceManager.find(connection, ProblemsModel.class, id);
         } catch (SQLException e) {
             throw new ProblemsException(e);
@@ -148,7 +157,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public List<ProblemsModel> getAllProblems() throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             return persistenceManager.findAll(connection, ProblemsModel.class);
         } catch (SQLException e) {
             throw new ProblemsException(e);
@@ -163,7 +172,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public List<ProblemsModel> searchProblemsLimited(String condition, int limit) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             SelectBuilder sqlBuilder = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PROBLEMS").limit(limit);
             List<Object> values = null;
 
@@ -194,7 +203,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public int countProblems() throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             PersistenceTableModel tableModel = PersistenceFactory.createModel(ProblemsModel.class);
             return SqlFactory.getNative(connection).count(connection, tableModel.getTableName());
         } catch (SQLException e) {
@@ -204,7 +213,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public void deleteProblemById(Long id) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             persistenceManager.delete(connection, ProblemsModel.class, id);
         } catch (SQLException e) {
             throw new ProblemsException(e);
@@ -213,7 +222,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public int deleteMultipleProblemsById(List<Long> ids) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             StringBuilder sql = new StringBuilder("DELETE FROM DIRIGIBLE_PROBLEMS WHERE PROBLEM_ID IN (");
             ids = new ArrayList<>(ids);
             ids.forEach(id -> sql.append("?,"));
@@ -228,7 +237,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public int deleteProblemsByStatus(String status) throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PROBLEMS")
                     .where("PROBLEM_STATUS = ?").toString();
             return persistenceManager.execute(connection, sql, Collections.singletonList(status));
@@ -239,7 +248,7 @@ public class ProblemsCoreService implements IProblemsCoreService {
 
     @Override
     public void deleteAll() throws ProblemsException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             persistenceManager.deleteAll(connection, ProblemsModel.class);
         } catch (SQLException e) {
             throw new ProblemsException(e);

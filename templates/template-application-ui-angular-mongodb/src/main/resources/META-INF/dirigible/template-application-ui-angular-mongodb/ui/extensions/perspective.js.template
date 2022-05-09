@@ -12,7 +12,7 @@ exports.getPerspective = function(relativePath) {
 	return {
 		name: "Home",
 		image: "home",
-		link: relativePath + "services/v4/web/{{projectName}}/index.html",
+		link: relativePath + "services/v4/web/{{projectName}}/gen/index.html",
 		order: 0
 	};
 };

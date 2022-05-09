@@ -16,6 +16,7 @@ import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactoryTest;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
@@ -230,6 +231,84 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "}";
         String[] actualResult = odata2ODataMTransformer.transform(definition);
         assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
+    }
+
+    @Test
+    public void testManyToManyMappingTableTransformation() throws IOException, SQLException {
+        String users = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/users/Users.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/users/Users.odata", users);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("FIRSTNAME", "Edm.String", true, false);
+        PersistenceTableModel model = new PersistenceTableModel("CVUSER", Arrays.asList(column1, column2), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("CVUSER", null)).thenReturn(model);
+
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column4 = new PersistenceTableColumnModel("FIRSTNAME", "Edm.String", true, false);
+        model = new PersistenceTableModel("CVGROUP", Arrays.asList(column3, column4), new ArrayList<>());
+        when(dbMetadataUtil.getTableMetadata("CVGROUP", null)).thenReturn(model);
+
+        String entityUser = "{\n" +
+                "\t\"edmType\": \"UsersType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.UsersType\",\n" +
+                "\t\"sqlTable\": \"CVUSER\",\n" +
+                "\t\"Id\": \"ID\",\n" +
+                "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_ref_GroupsType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"ID\"\n" +
+                "\t\t],\n" +
+                "\t\t\"manyToManyMappingTable\" : {\n" +
+                "\t\t\t\"mappingTableName\" : \"USERSTOGROUP\",\n" +
+                "\t\t\t\"mappingTableJoinColumn\" : \"UserId\"\n" +
+                "\t\t}\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"ID\"\n" +
+                "}";
+        String entityGroup = "{\n" +
+                "\t\"edmType\": \"GroupsType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.GroupsType\",\n" +
+                "\t\"sqlTable\": \"CVGROUP\",\n" +
+                "\t\"Id\": \"ID\",\n" +
+                "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_ref_UsersType\": {\n" +
+                "\t\t\"joinColumn\" : [\n" +
+                "\t\t\t\"ID\"\n" +
+                "\t\t],\n" +
+                "\t\t\"manyToManyMappingTable\" : {\n" +
+                "\t\t\t\"mappingTableName\" : \"USERSTOGROUP\",\n" +
+                "\t\t\t\"mappingTableJoinColumn\" : \"GroupId\"\n" +
+                "\t\t}\n" +
+                "\t},\n" +
+                "\t\"_pk_\" : \"ID\"\n" +
+                "}";
+        String[] transformed = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
+    }
+
+    @Test
+    public void testViewTransformation() throws IOException, SQLException {
+        String view = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/view/View.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/view/View.odata", view);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("ZUSR_ROLE", "Edm.String", true, false);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("ZROLE_NAME", "Edm.String", true, false);
+        PersistenceTableModel model = new PersistenceTableModel("UserRole", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType(ISqlKeywords.KEYWORD_VIEW);
+        when(dbMetadataUtil.getTableMetadata("UserRole", null)).thenReturn(model);
+
+        String entityView = "{\n" +
+                "\t\"edmType\": \"UserRoleType\",\n" +
+                "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUserRole.UserRoleType\",\n" +
+                "\t\"sqlTable\": \"UserRole\",\n" +
+                "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
+                "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
+                "\t\"keyGenerated\": \"ID\",\n" +
+                "\t\"_pk_\" : \"\"\n" +
+                "}";
+
+        String[] transformed = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityView}, transformed);
     }
 
 //    @Test

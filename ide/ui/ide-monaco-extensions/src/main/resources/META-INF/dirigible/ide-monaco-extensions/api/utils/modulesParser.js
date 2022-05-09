@@ -27,7 +27,7 @@ exports.getModules = function () {
 
     let apiModulesExtensions = extensions.getExtensions("api-modules");
     let extModulesExtensions = extensions.getExtensions("ext-modules");
-    let apis= apiModulesExtensions.concat(extModulesExtensions);
+    let apis = apiModulesExtensions.concat(extModulesExtensions);
 
     apis.forEach(function (apiModule) {
         let module = require(apiModule);

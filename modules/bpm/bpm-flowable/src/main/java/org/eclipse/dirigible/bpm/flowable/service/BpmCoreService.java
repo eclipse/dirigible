@@ -30,9 +30,16 @@ import org.eclipse.dirigible.database.persistence.PersistenceManager;
  */
 public class BpmCoreService implements IBpmCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<BpmDefinition> bpmPersistenceManager = new PersistenceManager<BpmDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// BPM
 
@@ -51,7 +58,7 @@ public class BpmCoreService implements IBpmCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				bpmPersistenceManager.insert(connection, bpmDefinition);
 				return bpmDefinition;
 			} finally {
@@ -73,7 +80,7 @@ public class BpmCoreService implements IBpmCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return bpmPersistenceManager.find(connection, BpmDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -94,7 +101,7 @@ public class BpmCoreService implements IBpmCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				bpmPersistenceManager.delete(connection, BpmDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -115,7 +122,7 @@ public class BpmCoreService implements IBpmCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				BpmDefinition bpmDefinition = getBpm(location);
 				bpmDefinition.setHash(hash);
 				bpmPersistenceManager.update(connection, bpmDefinition);
@@ -138,7 +145,7 @@ public class BpmCoreService implements IBpmCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return bpmPersistenceManager.findAll(connection, BpmDefinition.class);
 			} finally {
 				if (connection != null) {

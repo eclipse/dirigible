@@ -14,16 +14,12 @@ package org.eclipse.dirigible.engine.odata2.sql.processor;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
-import org.apache.olingo.odata2.core.edm.EdmDouble;
-import org.apache.olingo.odata2.core.edm.EdmInt16;
-import org.apache.olingo.odata2.core.edm.EdmInt32;
-import org.apache.olingo.odata2.core.edm.EdmInt64;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLProcessor;
 import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -37,7 +33,7 @@ public class ResultSetReader {
     }
 
     protected Map<String, Object> getEntityDataFromResultSet(SQLSelectBuilder selectEntityQuery, final EdmStructuralType entityType,
-                                                             Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException {
+                                                             Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException, IOException {
         Map<String, Object> result = new HashMap<>();
         for (EdmProperty property : properties) {
             result.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
@@ -45,34 +41,21 @@ public class ResultSetReader {
         return result;
     }
 
-
     protected ResultSetEntity getResultSetEntity(SQLSelectBuilder selectEntityQuery, final EdmEntityType entityType,
-                                                 Collection<EdmProperty> properties, final ResultSet resultSet) throws SQLException, ODataException {
+                                                          Collection<EdmProperty> properties, final ResultSet resultSet, boolean hasGeneratedId) throws SQLException, ODataException, IOException {
         Map<String, Object> data = new HashMap<>();
         for (EdmProperty property : properties) {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
         }
+
+        if(hasGeneratedId) {
+            return new ResultSetEntity(entityType, data, String.valueOf(resultSet.getInt("row_num")));
+        }
         return new ResultSetEntity(entityType, data);
     }
 
-    protected Object convertProperty(EdmProperty property, Object dbValue) throws EdmException {
-        if (dbValue instanceof BigDecimal) {
-            BigDecimal dec = (BigDecimal) dbValue;
-            if (property.getType().equals(EdmInt32.getInstance())) {
-                return dec.toBigInteger().intValue();
-            } else if (property.getType().equals(EdmInt64.getInstance())) {
-                return dec.toBigInteger().longValue();
-            } else if (property.getType().equals(EdmInt16.getInstance())) {
-                return dec.toBigInteger().shortValue();
-            } else if (property.getType().equals(EdmDouble.getInstance())) {
-                return dec.doubleValue();
-            }
-        }
-        return dbValue;
-    }
-
     protected Object readProperty(EdmStructuralType entityType, EdmProperty property, SQLSelectBuilder selectEntityQuery,
-                                  ResultSet resultSet) throws SQLException, ODataException {
+                                  ResultSet resultSet) throws SQLException, ODataException, IOException {
         Object propertyDbValue;
         if (property.isSimple()) {
             if (!selectEntityQuery.isTransientType(entityType, property)) {
@@ -82,8 +65,7 @@ public class ResultSetReader {
                 } else {
                     propertyDbValue = resultSet.getObject(columnName);
                 }
-                propertyDbValue = callback.onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
-                return convertProperty(property, propertyDbValue);
+                return callback.onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
             } else {
                 return null;
             }
@@ -94,15 +76,14 @@ public class ResultSetReader {
                 EdmProperty prop = (EdmProperty) complexProperty.getProperty(pn);
                 final String columnName = selectEntityQuery.getSQLTableColumnAlias(complexProperty, prop);
                 propertyDbValue = resultSet.getObject(columnName);
-                propertyDbValue = callback.onCustomizePropertyValue(entityType, property, entityType, propertyDbValue);
-                complexPropertyData.put(pn, convertProperty(prop, propertyDbValue));
+                complexPropertyData.put(pn, callback.onCustomizePropertyValue(entityType, property, entityType, propertyDbValue));
             }
             return complexPropertyData;
         }
     }
 
     public void accumulateExpandedEntities(SQLSelectBuilder query, ResultSet resultSet, ExpandAccumulator accumulator,
-                                           List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException {
+                                           List<ArrayList<NavigationPropertySegment>> expandEntities) throws SQLException, ODataException, IOException {
 
         for (List<NavigationPropertySegment> expandContents : expandEntities) {
             List<ResultSetEntity> parents = new ArrayList<>();
@@ -219,6 +200,13 @@ public class ResultSetReader {
                 String name = p.getName();
                 keys.put(name, data.get(name));
             }
+        }
+
+        public ResultSetEntity(EdmEntityType type, Map<String, Object> data, String key) throws EdmException {
+            this.entityType = type;
+            this.data = data;
+            this.keys = new HashMap<>();
+            keys.put("Id", key);
         }
 
         public boolean isEmpty() throws ODataException {

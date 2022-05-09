@@ -38,9 +38,16 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class MessagingCoreService implements IMessagingCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<ListenerDefinition> listenerPersistenceManager = new PersistenceManager<ListenerDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Listener
 
@@ -63,7 +70,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				listenerPersistenceManager.insert(connection, listenerDefinition);
 				return listenerDefinition;
 			} finally {
@@ -85,7 +92,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return listenerPersistenceManager.find(connection, ListenerDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -106,7 +113,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_LISTENERS").where("LISTENER_NAME = ?").toString();
 				List<ListenerDefinition> listenerDefinitions = listenerPersistenceManager.query(connection, ListenerDefinition.class, sql,
 						Arrays.asList(name));
@@ -137,7 +144,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				listenerPersistenceManager.delete(connection, ListenerDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -159,7 +166,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				ListenerDefinition listenerDefinition = getListener(location);
 				listenerDefinition.setName(name);
 				listenerDefinition.setType(type);
@@ -185,7 +192,7 @@ public class MessagingCoreService implements IMessagingCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return listenerPersistenceManager.findAll(connection, ListenerDefinition.class);
 			} finally {
 				if (connection != null) {
