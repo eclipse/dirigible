@@ -141,7 +141,7 @@ public class GitFileUtils {
 		}
 		for (File file : listFiles) {
 			String project = file.getName();
-			if (file.isDirectory() && !project.equalsIgnoreCase(DOT_GIT)) {
+			if (file.isDirectory() && !project.startsWith(".")) {
 				importProjectFromGitRepositoryToWorkspace(file, basePath + project);
 //				saveGitPropertiesFile(properties, user, workspace, project);
 				importedProjects.add(project);
@@ -255,7 +255,7 @@ public class GitFileUtils {
 		List<String> valid = new ArrayList<String>();
 		String[] all = gitDirectory.list();
 		for (String name : all) {
-			if (name.equals(DOT_GIT)) {
+			if (name.startsWith(".")) {
 				continue;
 			}
 			File file = new File(gitDirectory.getCanonicalPath() + File.separator + name);
