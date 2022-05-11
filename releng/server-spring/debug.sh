@@ -1,0 +1,1 @@
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar ./target/dirigible-server-spring-7.0.0-SNAPSHOT.jar
