@@ -22,12 +22,18 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.openapi.OpenApiFeature;
 import org.apache.cxf.jaxrs.swagger.ui.SwaggerUiConfig;
 import org.apache.olingo.odata2.core.servlet.ODataServlet;
+import org.eclipse.dirigible.engine.js.graalvm.service.GraalVMJavascriptExceptionHandler;
+import org.eclipse.dirigible.engine.js.service.ScriptingDependencyExceptionHandler;
+import org.eclipse.dirigible.repository.api.RepositoryExceptionHandler;
 import org.eclipse.dirigible.runtime.core.embed.EmbeddedDirigible;
 import org.eclipse.dirigible.runtime.core.filter.HealthCheckFilter;
 import org.eclipse.dirigible.runtime.core.filter.HttpContextFilter;
 import org.eclipse.dirigible.runtime.core.initializer.DirigibleInitializer;
+import org.eclipse.dirigible.runtime.core.services.GeneralExceptionHandler;
+import org.eclipse.dirigible.runtime.core.services.GsonMessageBodyHandler;
 import org.eclipse.dirigible.runtime.core.services.HomeRedirectServlet;
 import org.eclipse.dirigible.runtime.core.services.LogoutServlet;
+import org.eclipse.dirigible.runtime.core.services.RepositoryNotFoundExceptionHandler;
 import org.eclipse.dirigible.runtime.core.version.Version;
 import org.eclipse.dirigible.runtime.core.version.VersionProcessor;
 //import org.eclipse.dirigible.runtime.security.filter.SecurityFilter;
@@ -56,17 +62,17 @@ public class DirigibleRestServiceApplication {
 
     @Bean
     public Server rsServer() {
-    	EmbeddedDirigible dirigible = new EmbeddedDirigible();
+        EmbeddedDirigible dirigible = new EmbeddedDirigible();
         DirigibleInitializer initializer = dirigible.initialize();
+        ArrayList<Object> servicesAndProviders = new ArrayList<Object>(initializer.getServices());
         
         JAXRSServerFactoryBean endpoint = new JAXRSServerFactoryBean();
         endpoint.setBus(bus);
-        endpoint.setServiceBeans(new ArrayList<Object>(initializer.getServices()));
+        endpoint.setServiceBeans(servicesAndProviders);
+        endpoint.setProviders(servicesAndProviders);
         endpoint.setAddress("/");
         endpoint.setFeatures(Arrays.asList(createOpenApiFeature()));
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        endpoint.setProvider(provider);
-        
+
         return endpoint.create();
     }
     
