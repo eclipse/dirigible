@@ -67,17 +67,17 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 		jobDefinition.setCreatedBy(UserFacade.getName());
 		jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 
-		return createJob(jobDefinition);
+		return createOrUpdateJob(jobDefinition);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createJob(org.eclipse.dirigible.core.scheduler.
+	 * org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#createOrUpdateJob(org.eclipse.dirigible.core.scheduler.
 	 * service.definition.JobDefinition)
 	 */
 	@Override
-	public JobDefinition createJob(JobDefinition jobDefinition) throws SchedulerException {
+	public JobDefinition createOrUpdateJob(JobDefinition jobDefinition) throws SchedulerException {
 		if (jobDefinition.getCreatedAt() == null) {
 			jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
 		}

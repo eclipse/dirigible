@@ -86,7 +86,7 @@ public class SchedulerInitializer {
 			try {
 				JobDefinition found = schedulerCoreService.getJob(jobDefinition.getDescription());
 				if (found == null) {
-					schedulerCoreService.createJob(jobDefinition);
+					schedulerCoreService.createOrUpdateJob(jobDefinition);
 					scheduleJob(jobDefinition);
 				}
 			} catch (Throwable e) {
