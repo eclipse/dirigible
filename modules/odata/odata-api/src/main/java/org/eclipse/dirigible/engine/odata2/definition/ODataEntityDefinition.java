@@ -51,6 +51,13 @@ public class ODataEntityDefinition {
      */
     private Map<String, String> annotationsEntityType = new HashMap<>();
 
+	/**
+	 * <p>Define list of aggregation types for the columns.</p>
+	 * For example:
+	 * <code> &lt;SUM="NUMBER"&gt; </code>
+	 */
+	private Map<String, String> aggregationsTypeAndColumn = new HashMap<>();
+
 	public String getName() {
 		return name;
 	}
@@ -130,5 +137,12 @@ public class ODataEntityDefinition {
 	public void setAnnotationsEntityType(Map<String, String> annotationsEntityType) {
 		this.annotationsEntityType = annotationsEntityType;
 	}
-    
+
+	public Map<String, String> getAggregationsTypeAndColumn() {
+		return aggregationsTypeAndColumn;
+	}
+
+	public void setAggregationsTypeAndColumn(Map<String, String> aggregationsTypeAndColumn) {
+		this.aggregationsTypeAndColumn = aggregationsTypeAndColumn;
+	}
 }

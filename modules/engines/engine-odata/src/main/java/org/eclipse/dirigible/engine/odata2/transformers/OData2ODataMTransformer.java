@@ -21,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OData2ODataMTransformer {
@@ -150,6 +147,20 @@ public class OData2ODataMTransformer {
 
             if(entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
                 buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
+            }
+
+            if("aggregate".equals(entity.getAnnotationsEntityType().get("sap:semantics"))) {
+                buff.append("\t\"aggregationType\" : ");
+                if(!entity.getAggregationsTypeAndColumn().isEmpty()) {
+                    buff.append("\"derived\",\n");
+                    Map<String, String> aggregationsTypeAndColumn = entity.getAggregationsTypeAndColumn();
+                    String aggregationProps = aggregationsTypeAndColumn.keySet().stream()
+                            .map(key -> "\t\t\"" + key + "\": \"" + aggregationsTypeAndColumn.get(key) + "\"")
+                            .collect(Collectors.joining(",\n", "\t\"aggregationProps\" : {\n", "\n\t},\n"));
+                    buff.append(aggregationProps);
+                } else {
+                    buff.append("\"explicit\",\n");
+                }
             }
 
             String[] pks = idColumns.stream().map(PersistenceTableColumnModel::getName).collect(Collectors.toList()).toArray(new String[]{});

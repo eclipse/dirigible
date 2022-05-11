@@ -1,0 +1,14 @@
+{
+  "edmType": "Customer",
+  "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Customer",
+  "sqlTable": "CUSTOMER",
+  "Number": "NUMBER",
+  "Payment": "PAYMENT",
+  "_pk_" : "ID",
+  "aggregationType" : "derived",
+  "aggregationProps" : {
+    "NUMBER": "SUM",
+    "PAYMENT": "SUM"
+  },
+  "Id" : "ID"
+}

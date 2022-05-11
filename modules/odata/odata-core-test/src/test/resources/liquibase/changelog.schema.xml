@@ -53,6 +53,25 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="customers" author="dirigible">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CUSTOMER"/>
+            </not>
+        </preConditions>
+        <createTable tableName="CUSTOMER">
+            <column name="ID" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="NUMBER" type="INT">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="PAYMENT" type="INT">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="cars" author="dirigible">
         <preConditions onFail="MARK_RAN">
             <not>
