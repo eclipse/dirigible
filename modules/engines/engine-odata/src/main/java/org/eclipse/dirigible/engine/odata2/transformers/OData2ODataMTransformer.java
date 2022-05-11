@@ -153,18 +153,11 @@ public class OData2ODataMTransformer {
                 buff.append("\t\"aggregationType\" : ");
                 if(!entity.getAggregationsTypeAndColumn().isEmpty()) {
                     buff.append("\"derived\",\n");
-                    buff.append("\t\"aggregationProps\" : {\n");
-                    Iterator<String> aggregationTypes = entity.getAggregationsTypeAndColumn().keySet().iterator();
-                    while(aggregationTypes.hasNext()) {
-                        String aggregationType = aggregationTypes.next();
-                        buff.append("\t\t\"").append(aggregationType).append("\": \"")
-                                .append(entity.getAggregationsTypeAndColumn().get(aggregationType)).append("\"");
-                        if(aggregationTypes.hasNext()) {
-                            buff.append(",");
-                        }
-                        buff.append("\n");
-                    }
-                    buff.append("\t},\n");
+                    Map<String, String> aggregationsTypeAndColumn = entity.getAggregationsTypeAndColumn();
+                    String aggregationProps = aggregationsTypeAndColumn.keySet().stream()
+                            .map(key -> "\t\t\"" + key + "\": \"" + aggregationsTypeAndColumn.get(key) + "\"")
+                            .collect(Collectors.joining(",\n", "\t\"aggregationProps\" : {\n", "\n\t},\n"));
+                    buff.append(aggregationProps);
                 } else {
                     buff.append("\"explicit\",\n");
                 }

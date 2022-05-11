@@ -30,10 +30,10 @@ public class SQLGroupByClause implements SQLClause {
 
     @Override
     public String evaluate(final SQLContext context) throws EdmException {
-        return buildExpression(context);
+        return groupByClauseBuilder(context);
     }
 
-    public String buildExpression(SQLContext context) throws EdmException {
+    public String groupByClauseBuilder(SQLContext context) throws EdmException {
         StringBuilder groupByClause = new StringBuilder();
         for(String propertyName: entityType.getPropertyNames()) {
             EdmProperty prop = (EdmProperty) entityType.getProperty(propertyName);
