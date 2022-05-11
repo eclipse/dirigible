@@ -46,12 +46,14 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
     private SQLSelectClause selectExpression;
     private SQLOrderByClause orderByClause;
+    private SQLGroupByClause groupByClause;
     private boolean serversidePaging;
 
     public SQLSelectBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
         selectExpression = null;
         orderByClause = null;
+        groupByClause = null;
         structuralTypesInJoin = new HashSet<>();
     }
 
@@ -95,6 +97,17 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
 
     public SQLOrderByClause getOrderByClause() {
         return orderByClause;
+    }
+
+    public SQLSelectBuilder groupBy(final EdmEntityType entityType) {
+        if (hasAggregationTypePresent(entityType)) {
+            this.groupByClause = new SQLGroupByClause(this, entityType);
+        }
+        return this;
+    }
+
+    public SQLGroupByClause getGroupByClause() {
+        return groupByClause;
     }
 
     public void validateOrderBy(final UriInfo uriInfo)
@@ -213,6 +226,14 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         if (!getWhereClause().isEmpty()) {
             builder.append(" WHERE ");
             builder.append(getWhereClause().evaluate(context)).append(SPACE);
+        }
+
+        SQLGroupByClause gb = getGroupByClause();
+        if(gb != null) {
+            String groupByExpression = gb.evaluate(context);
+            if(!groupByExpression.isEmpty()) {
+                builder.append("GROUP BY ").append(groupByExpression).append(SPACE);
+            }
         }
 
         SQLOrderByClause ob = getOrderByClause();

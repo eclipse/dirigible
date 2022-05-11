@@ -118,6 +118,26 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return mapping.isPropertyMapped("keyGenerated");
     }
 
+    public boolean hasAggregationTypePresent(final EdmStructuralType target) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+        return mapping.isPropertyMapped("aggregationType");
+    }
+
+    public boolean isAggregationTypeExplicit(final EdmStructuralType target) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+        return mapping.isAggregationTypeExplicit();
+    }
+
+    public boolean isColumnContainedInAggregationProp(final EdmStructuralType target, String columnName) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+        return mapping.isColumnContainedInAggregationProp(columnName);
+    }
+
+    public String getColumnAggregationType(final EdmStructuralType target, String columnName) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+        return mapping.getColumnAggregationType(columnName);
+    }
+
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getPrimaryKey();
     }
@@ -156,6 +176,10 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
     public List<String> getSQLJoinColumnNoAlias(final EdmStructuralType targetEnitityType, final EdmNavigationProperty p) throws EdmException {
         List<String> joinColums = tableBinding.getEdmTableBinding(targetEnitityType).getJoinColumnTo((EdmStructuralType) p.getType());
         return joinColums.stream().map(this::fixDatabaseNamesCase).collect(Collectors.toList());
+    }
+
+    public String getPureSQLColumnName(final EdmStructuralType type, final EdmProperty p) throws EdmException {
+        return tableBinding.getEdmTableBinding(type).getColumnName(p);
     }
 
     public ColumnInfo getSQLTableColumnInfo(final EdmStructuralType targetEnitityType, final EdmProperty p) throws EdmException {

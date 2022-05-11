@@ -208,7 +208,7 @@ public class WorkspaceJsonHelper {
 	 * @return the file descriptor
 	 */
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {
-		return describeFile(resource, removePathPrefix, addPathPrefix);
+		return describeFile(resource, removePathPrefix, addPathPrefix, null);
 	}
 	
 	/**

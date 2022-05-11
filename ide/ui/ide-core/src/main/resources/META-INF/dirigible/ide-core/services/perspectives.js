@@ -21,7 +21,7 @@ for (let i = 0; i < perspectiveExtensions.length; i++) {
 		let perspectiveExtension = require(module);
 		let perspective = perspectiveExtension.getPerspective();
 		perspectives.push(perspective);
-		
+
 		let duplication = false;
 		for (let i = 0; i < perspectives.length; i++) {
 			for (let j = 0; j < perspectives.length; j++) {

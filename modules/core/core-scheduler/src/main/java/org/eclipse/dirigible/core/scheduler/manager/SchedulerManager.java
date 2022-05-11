@@ -29,7 +29,6 @@ import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.handler.JobHandler;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
-import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -190,6 +189,9 @@ public class SchedulerManager {
 	 *             the scheduler exception
 	 */
 	public static void scheduleJob(JobDefinition jobDefinition) throws SchedulerException {
+		if (!jobDefinition.isEnabled()) {
+			return;
+		}
 		try {
 			JobKey jobKey = new JobKey(jobDefinition.getName(), jobDefinition.getGroup());
 			TriggerKey triggerKey = new TriggerKey(jobDefinition.getName(), jobDefinition.getGroup());
