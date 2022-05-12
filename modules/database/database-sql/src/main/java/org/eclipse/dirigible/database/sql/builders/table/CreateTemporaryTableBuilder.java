@@ -17,6 +17,7 @@ public class CreateTemporaryTableBuilder<TABLE_BUILDER extends CreateTemporaryTa
 
     protected String likeTable;
     protected String asSelectQuery;
+    protected boolean selectWithNoData;
 
     private static final String TEMPORARY_TABLES_NOT_SUPPORTED_FOR_THIS_DATABASE_TYPE = "Temporary tables not supported for this Database type!";
 
@@ -27,8 +28,8 @@ public class CreateTemporaryTableBuilder<TABLE_BUILDER extends CreateTemporaryTa
      */
     public CreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
         super(dialect, table);
+        this.selectWithNoData = false;
     }
-
 
     @Override
     public String generate() {
@@ -42,6 +43,11 @@ public class CreateTemporaryTableBuilder<TABLE_BUILDER extends CreateTemporaryTa
 
     public CreateTemporaryTableBuilder<TABLE_BUILDER> setAsSelectQuery(String asSelectQuery) {
         this.asSelectQuery = asSelectQuery;
+        return this;
+    }
+
+    public CreateTemporaryTableBuilder<TABLE_BUILDER> setSelectWithNoData(boolean selectWithNoData) {
+        this.selectWithNoData = selectWithNoData;
         return this;
     }
 }

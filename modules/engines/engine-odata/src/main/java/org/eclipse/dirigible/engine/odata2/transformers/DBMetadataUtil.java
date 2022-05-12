@@ -236,7 +236,7 @@ public class DBMetadataUtil {
         return table;
     }
 
-    private String getArtifactType(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern) throws SQLException {
+    public String getArtifactType(DatabaseMetaData databaseMetadata, Connection connection, String artifactName, String schemaPattern) throws SQLException {
         ResultSet tables = databaseMetadata.getTables(connection.getCatalog(), schemaPattern, normalizeTableName(artifactName), null);
         if (!tables.isBeforeFirst() && !IS_CASE_SENSETIVE) {
             // Fallback for PostgreSQL

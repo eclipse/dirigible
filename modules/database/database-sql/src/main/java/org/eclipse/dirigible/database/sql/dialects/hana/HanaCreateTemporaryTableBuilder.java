@@ -25,7 +25,7 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
     /**
      * Instantiates a new abstract sql builder.
      *
-     * @param dialect   the dialect
+     * @param dialect the dialect
      * @param table
      */
     protected HanaCreateTemporaryTableBuilder(ISqlDialect dialect, String table) {
@@ -48,12 +48,14 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
         sql.append(SPACE);
         if (this.likeTable != null) {
             // LIKE table
-            sql.append(KEYWORD_LIKE).append(SPACE).append(this.likeTable)
-                    .append(SPACE).append(KEYWORD_WITH).append(SPACE)
-                    .append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
+            sql.append(KEYWORD_LIKE).append(SPACE).append(this.likeTable);
+            appendWithNoDataKeywords(sql);
         } else if (this.asSelectQuery != null) {
             // AS select query
             sql.append(KEYWORD_AS).append(SPACE).append(OPEN).append(this.asSelectQuery).append(CLOSE);
+            if (this.selectWithNoData) {
+                appendWithNoDataKeywords(sql);
+            }
         } else {
             throw new IllegalStateException(NO_LIKE_TABLE_OR_AS_SELECT_QUERY_SPECIFIED);
         }
@@ -63,5 +65,9 @@ public class HanaCreateTemporaryTableBuilder extends CreateTemporaryTableBuilder
         logger.trace("generated: " + generated);
 
         return generated;
+    }
+
+    private void appendWithNoDataKeywords(StringBuilder sql) {
+        sql.append(SPACE).append(KEYWORD_WITH).append(SPACE).append(KEYWORD_NO).append(SPACE).append(KEYWORD_DATA);
     }
 }
