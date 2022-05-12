@@ -222,8 +222,8 @@ public class OData2Utils {
         return EntityProvider.writeErrorDocument(errorContext);
     }
 
-    public static Object getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
-        Object keyPredicateValue = "";
+    public static String getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
+        String keyPredicateValue = "";
         for (KeyPredicate keyPredicate : keyPredicates) {
             if (keyPredicate.getProperty().getName().equals(propertyName)) {
                 keyPredicateValue = keyPredicate.getLiteral();

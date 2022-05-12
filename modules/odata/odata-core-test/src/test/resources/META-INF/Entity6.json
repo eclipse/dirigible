@@ -2,7 +2,7 @@
   "edmType": "Entity6",
   "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.Entity6",
   "sqlTable": "ENTITY6_TABLE",
-  "dataStructureType": "VIEW",
+  "dataStructureType": "CALC VIEW",
   "CurrentEmployeeId": "CurrentEmployeeId",
   "CurrentEmployeeName": "CurrentEmployeeName",
   "ID": "ID",

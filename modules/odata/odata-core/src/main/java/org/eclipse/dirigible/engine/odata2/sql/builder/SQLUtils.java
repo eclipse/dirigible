@@ -152,17 +152,26 @@ public final class SQLUtils {
                         EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
                         literal = evaluateDateTimeExpressions(literal, edmSimpleType);
                         ColumnInfo info = query.getSQLTableColumnInfo(type, property);
-                        whereClause.append(info.getColumnName()).append(" = ?");
+//                        whereClause.append(info.getColumnName()).append(" = ?");
                         params.add(SQLWhereClause.param(literal, edmSimpleType, info));
                     } else {
                         //TODO what to do with complex properties?
                         throw new IllegalStateException();
                     }
-                    if (it.hasNext()) {
-                        whereClause.append(" AND ");
-                    }
                 }
             }
+
+            Iterator<SQLStatementParam> pi = params.iterator();
+
+            while (pi.hasNext()) {
+                SQLStatementParam param = pi.next();
+                whereClause.append(param.getSqlColumnName()).append(" = ?");
+
+                if (pi.hasNext()) {
+                    whereClause.append(" AND ");
+                }
+            }
+
             return new SQLWhereClause(whereClause.toString(), params.toArray(new SQLStatementParam[params.size()]));
         } else {
             return new SQLWhereClause();

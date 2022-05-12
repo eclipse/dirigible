@@ -118,6 +118,10 @@ public class SQLStatementParam {
         return columnInfo == null ? null: columnInfo.getJdbcType();
     }
 
+    public String getSqlColumnName() {
+        return columnInfo == null ? null: columnInfo.getColumnName();
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
         return (T) value;

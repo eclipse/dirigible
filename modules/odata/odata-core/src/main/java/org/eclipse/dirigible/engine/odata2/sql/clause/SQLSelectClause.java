@@ -17,6 +17,7 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
@@ -79,7 +80,7 @@ public final class SQLSelectClause {
             case SELECT_COLUMN_LIST:
                 return buildColumnList();
             case FROM:
-                return buildFrom();
+                return buildFrom(context);
             case SELECT_LIMIT:
                 return buildLimit(context);
             case SELECT_OFFSET:
@@ -227,7 +228,7 @@ public final class SQLSelectClause {
         return selectPredicate;
     }
 
-    private String buildFrom() throws EdmException {
+    private String buildFrom(final SQLContext context) throws EdmException {
         List<String> tables = new ArrayList<>();
         Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
         while (it.hasNext()) {
@@ -237,16 +238,16 @@ public final class SQLSelectClause {
                 if (this.parameterMapping.isEmpty()) {
                     tables.add(query.getSQLTableName(target) + " AS " + tableAlias);
                 } else {
-                    tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + tableAlias);
+                    tables.add(query.getSQLTableName(target) + buildTargetParameters(context) + " AS " + tableAlias);
                 }
             }
         }
         return SQLUtils.csv(tables);
     }
 
-    private String buildTargetParameters() throws EdmException {
+    private String buildTargetParameters(final SQLContext context) throws EdmException {
+        String targetDataStructureType = this.query.getSQLTableDataStructureType(this.target);
         StringBuilder parameters = new StringBuilder();
-
         Iterator<Integer> pi = parameterMapping.keySet().iterator();
 
         while (pi.hasNext()) {
@@ -260,7 +261,9 @@ public final class SQLSelectClause {
             EdmTableBinding.ColumnInfo info = this.query.getSQLTableColumnInfo(type, prop);
             this.statementParams.add(new SQLStatementParam(parameterValue, prop, info));
 
-            parameters.append("placeholder.\"$$" + propertyName + "$$\"" + " => " + " ? ");
+            if (context.getDatabaseProduct().equals(DatabaseProduct.HANA) && targetDataStructureType.equals(ISqlKeywords.METADATA_CALC_VIEW)) {
+                parameters.append("placeholder.\"$$" + propertyName + "$$\"" + " => " + " ? ");
+            }
 
             if (pi.hasNext()) {
                 parameters.append(",");

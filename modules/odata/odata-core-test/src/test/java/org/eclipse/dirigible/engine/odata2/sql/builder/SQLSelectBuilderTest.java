@@ -415,14 +415,14 @@ public class SQLSelectBuilderTest {
     }
 
     @Test
-    public void testSelectWithParametersForEntity() throws Exception {
+    public void testSelectWithParametersForEntityWhenCalcViewAndHanaDb() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
         Map<String, String> params = new HashMap<>();
         PathSegment ps = new ODataPathSegmentImpl("Entities6(CurrentEmployeeId=1,CurrentEmployeeName='Ben',ID=3)", Collections.emptyMap());
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps), params);
 
         SQLSelectBuilder q = builder.buildSelectEntityQuery(uriInfo, null);
-        SQLContext context = new SQLContext();
+        SQLContext context = new SQLContext(DatabaseProduct.HANA);
         String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
                 "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
                 "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
@@ -431,20 +431,20 @@ public class SQLSelectBuilderTest {
     }
 
     @Test
-    public void testSelectWithParametersForEntitySet() throws Exception {
+    public void testSelectWithParametersForEntitySetWhenCalcViewAndHanaDb() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
         Map<String, String> params = new HashMap<>();
         PathSegment ps = new ODataPathSegmentImpl("Entities6(CurrentEmployeeId=1,CurrentEmployeeName='Ben',ID=3)", Collections.emptyMap());
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps), params);
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
-        SQLContext context = new SQLContext();
+        SQLContext context = new SQLContext(DatabaseProduct.HANA);
         String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
                 "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
                 "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
                 "WHERE \"T0\".\"ID\" = ? " +
                 "ORDER BY CurrentEmployeeId_T0 ASC, CurrentEmployeeName_T0 ASC, \"T0\".\"ID\" ASC " +
-                "FETCH FIRST 1000 ROWS ONLY";
+                "LIMIT 1000";
         assertEquals(expected, q.buildSelect(context));
     }
 
