@@ -40,8 +40,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
 @SpringBootApplication
 public class DirigibleRestServiceApplication {
 	
@@ -56,17 +54,17 @@ public class DirigibleRestServiceApplication {
 
     @Bean
     public Server rsServer() {
-    	EmbeddedDirigible dirigible = new EmbeddedDirigible();
+        EmbeddedDirigible dirigible = new EmbeddedDirigible();
         DirigibleInitializer initializer = dirigible.initialize();
+        ArrayList<Object> servicesAndProviders = new ArrayList<Object>(initializer.getServices());
         
         JAXRSServerFactoryBean endpoint = new JAXRSServerFactoryBean();
         endpoint.setBus(bus);
-        endpoint.setServiceBeans(new ArrayList<Object>(initializer.getServices()));
+        endpoint.setServiceBeans(servicesAndProviders);
+        endpoint.setProviders(servicesAndProviders);
         endpoint.setAddress("/");
         endpoint.setFeatures(Arrays.asList(createOpenApiFeature()));
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        endpoint.setProvider(provider);
-        
+
         return endpoint.create();
     }
     

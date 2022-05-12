@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.runtime.core.services;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class GeneralExceptionHandler.
  */
+@Provider
 public class RepositoryNotFoundExceptionHandler extends AbstractExceptionHandler<RepositoryNotFoundException> {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryNotFoundExceptionHandler.class);

@@ -14,8 +14,9 @@ package org.eclipse.dirigible.engine.js.service;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
-import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
+import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +24,17 @@ import org.slf4j.LoggerFactory;
  * The Class ScriptingDependencyExceptionHandler.
  */
 @Provider
-public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandler<ScriptingDependencyException> {
+public class ScriptingExceptionHandler extends AbstractExceptionHandler<ScriptingException> {
 
-	private static final Logger logger = LoggerFactory.getLogger(ScriptingDependencyExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(ScriptingExceptionHandler.class);
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getType()
 	 */
 	@Override
-	public Class<? extends AbstractExceptionHandler<ScriptingDependencyException>> getType() {
-		return ScriptingDependencyExceptionHandler.class;
+	public Class<? extends AbstractExceptionHandler<ScriptingException>> getType() {
+		return ScriptingExceptionHandler.class;
 	}
 
 	/*
@@ -47,10 +48,25 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#logErrorMessage(org.slf4j.Logger, org.eclipse.dirigible.commons.api.scripting.ScriptingException)
+	 */
+	@Override
+	protected void logErrorMessage(Logger logger, ScriptingException exception) {
+		if (!exception.getCause().getClass().equals(RepositoryNotFoundException.class)) {
+			super.logErrorMessage(logger, exception);
+		}
+		// Do nothing
+	}
+	
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseStatus(java.lang.Throwable)
 	 */
 	@Override
-	protected Status getResponseStatus(ScriptingDependencyException exception) {
+	protected Status getResponseStatus(ScriptingException exception) {
+		if (exception.getCause().getClass().equals(RepositoryNotFoundException.class)) {
+			return Status.NOT_FOUND;
+		}
 		return Status.INTERNAL_SERVER_ERROR;
 	}
 
@@ -59,7 +75,10 @@ public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandle
 	 * @see org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler#getResponseMessage(java.lang.Throwable)
 	 */
 	@Override
-	protected String getResponseMessage(ScriptingDependencyException exception) {
+	protected String getResponseMessage(ScriptingException exception) {
+		if (exception.getCause().getClass().equals(RepositoryNotFoundException.class)) {
+			return exception.getCause().getMessage();
+		}
 		return exception.getMessage();
 	}
 
