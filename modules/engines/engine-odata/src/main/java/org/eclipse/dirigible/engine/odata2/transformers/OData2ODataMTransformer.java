@@ -47,16 +47,17 @@ public class OData2ODataMTransformer {
         List<String> result = new ArrayList<>();
 
         for (ODataEntityDefinition entity : model.getEntities()) {
+            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
+
             StringBuilder buff = new StringBuilder();
             buff.append("{\n")
                     .append("\t\"edmType\": \"").append(entity.getName()).append("Type").append("\",\n")
                     .append("\t\"edmTypeFqn\": \"").append(model.getNamespace()).append(".").append(entity.getName()).append("Type").append("\",\n")
                     .append("\t\"sqlTable\": \"").append(entity.getTable()).append("\",\n")
-                    .append("\t\"dataStructureType\": \"").append(entity.getDataStructureType()).append("\",\n");
+                    .append("\t\"dataStructureType\": \"").append(tableMetadata.getTableType()).append("\",\n");
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
             if (tableMetadata.getTableType() == null) {
                 logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
                 continue;
@@ -85,17 +86,14 @@ public class OData2ODataMTransformer {
             }
 
             List<ODataParameter> entityParameters = entity.getParameters();
-
+            List<String> parameterNames = new ArrayList<>();
             if(!entityParameters.isEmpty()) {
-                List<String> parameterNames = new ArrayList<>();
-
                 entityParameters.forEach(parameter -> {
                     parameterNames.add("\"" + parameter.getName() + "\"");
                     buff.append("\t\"").append(propertyNameEscaper.escape(parameter.getName())).append("\": \"").append(parameter.getName()).append("\",\n");
                 });
-
-                buff.append("\t\"_parameters_\" : [").append(String.join(",", parameterNames)).append("],\n");
             }
+            buff.append("\t\"_parameters_\" : [").append(String.join(",", parameterNames)).append("],\n");
 
             //Process FK relations from DB if they exist
             Map<String, List<PersistenceTableRelationModel>> groupRelationsByToTableName = tableMetadata.getRelations().stream()

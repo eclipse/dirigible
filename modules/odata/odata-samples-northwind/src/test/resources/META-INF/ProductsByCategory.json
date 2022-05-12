@@ -2,12 +2,12 @@
 	"edmType": "Products_by_Category",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.ProductsByCategory",
 	"sqlTable": " PUBLIC.PRODUCTS_BY_CATEGORY",
-
+	"dataStructureType": "TABLE",
 	"CategoryName": "CATEGORY_NAME",
 	"ProductName": "PRODUCT_NAME",
 	"QuantityPerUnit": "QUANTITY_PERUNIT",
 	"UnitsInStock": "UNITS_IN_STOCK",
 	"Discontinued": "DISCONTINUED",
-
+	"_parameters_": [],
 	"_pk_": ["CATEGORY_NAME", "PRODUCT_NAME", "DISCONTINUED"]
 }

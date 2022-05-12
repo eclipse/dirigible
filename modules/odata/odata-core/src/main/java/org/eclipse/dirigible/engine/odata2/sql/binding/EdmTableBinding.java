@@ -196,7 +196,7 @@ public class EdmTableBinding extends Mapping {
         return readMandatoryConfig("_parameters_", List.class);
     }
 
-    public String getType() throws EdmException {
+    public String getDataStructureType() throws EdmException {
         return readMandatoryConfig("dataStructureType", String.class);
     }
 

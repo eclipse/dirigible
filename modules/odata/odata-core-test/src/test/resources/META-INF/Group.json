@@ -2,7 +2,9 @@
   "edmType" : "Group",
   "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Group",
   "sqlTable" : "CVGROUP",
+  "dataStructureType": "TABLE",
   "Name" : "NAME",
+  "_parameters_": [],
   "_pk_" : "ID",
   "_ref_User" : {
     "joinColumn" : ["ID"],

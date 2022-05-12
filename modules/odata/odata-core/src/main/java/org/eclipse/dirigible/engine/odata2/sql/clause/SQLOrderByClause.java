@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isPropertyParameter;
 
 public class SQLOrderByClause implements SQLClause {
 
@@ -43,7 +43,7 @@ public class SQLOrderByClause implements SQLClause {
     public SQLOrderByClause(final SQLSelectBuilder query, final EdmEntityType orderByEntityType, final OrderByExpression orderByExpression) {
         this.orderByExpression = orderByExpression;
         this.query = query;
-        this.entityType  = orderByEntityType;
+        this.entityType = orderByEntityType;
     }
 
 
@@ -58,9 +58,9 @@ public class SQLOrderByClause implements SQLClause {
     }
 
     private String getDefaultExpression(SQLContext context)
-        throws EdmException {
+            throws EdmException {
         List<String> keyPropertyNames = entityType.getKeyPropertyNames();
-        if (null == keyPropertyNames || keyPropertyNames.isEmpty()){
+        if (null == keyPropertyNames || keyPropertyNames.isEmpty()) {
             return EMPTY_STRING;
         }
 
@@ -69,7 +69,7 @@ public class SQLOrderByClause implements SQLClause {
         OrderByExpression orderExpression;
         try {
             orderExpression = orderByParser.parseOrderByString(
-                defaultOrderByExpression);
+                    defaultOrderByExpression);
         } catch (ExpressionParserException | ExpressionParserInternalError e) {
             throw new IllegalStateException("Failed to parse default OrderBy expression.", e);
         }
@@ -98,7 +98,7 @@ public class SQLOrderByClause implements SQLClause {
             entityType = (EdmStructuralType) pathExpression.getEdmType();
             PropertyExpression propertyExpression = (PropertyExpression) memberExpression.getProperty();
             prop = (EdmProperty) propertyExpression.getEdmProperty();
-            
+
         } else if (expression instanceof PropertyExpression) {
             PropertyExpression propertyExpression = (PropertyExpression) expression;
             prop = (EdmProperty) propertyExpression.getEdmProperty();
@@ -107,20 +107,20 @@ public class SQLOrderByClause implements SQLClause {
             throw new OData2Exception("Not Implemented", INTERNAL_SERVER_ERROR);
         }
         if (query.isTransientType(entityType, prop)) {
-            //unable to sort with a transient property in the list. This changes the semantic of order by and the result of the select
+            // Unable to sort with a transient property in the list. This changes the semantic of order by and the result of the select
             LOG.error("Unmapped property {}! Unable to use an order by expression for properties that are not mapped to the DB.",
                     prop.getName());
             throw new OData2Exception(INTERNAL_SERVER_ERROR);
         }
 
-        if ((context == null || context.getDatabaseProduct() != null) && !this.query.getSelectExpression().getTargetParameterNames().contains(prop.getName())) {
-            orderByClause.append(query.getSQLTableColumn(entityType, prop));
-        }
-        else if (context == null || context.getDatabaseProduct() != null && this.query.getSelectExpression().getTargetParameterNames().contains(prop.getName())) {
-            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop));
-        }
-        else {
-            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // this gives the correct "order by" column name for Open SQL
+        if ((context == null || context.getDatabaseProduct() != null)) {
+            if (isPropertyParameter(prop, query, entityType)) {
+                orderByClause.append(query.getSQLTableColumnAlias(entityType, prop));
+            } else {
+                orderByClause.append(query.getSQLTableColumn(entityType, prop));
+            }
+        } else {
+            orderByClause.append(query.getSQLTableColumnAlias(entityType, prop)); // This gives the correct "order by" column name for Open SQL
         }
         orderByClause.append(" ").append(orderBy.getSortOrder() == SortOrder.asc ? "ASC" : "DESC");
         return orderByClause.toString();

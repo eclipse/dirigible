@@ -2,10 +2,10 @@
 	"edmType": "Territory",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Territory",
 	"sqlTable": " PUBLIC.TERRITORY",
-
+	"dataStructureType": "TABLE",
 	"TerritoryID": "TERRITORY_ID",
 	"TerritoryDescription": "TERRITORY_DESCRIPTION",
 	"RegionID": "REGION_ID",
-
+	"_parameters_": [],
 	"_pk_": "TERRITORY_ID"
 }

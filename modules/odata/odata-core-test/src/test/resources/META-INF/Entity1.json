@@ -1,8 +1,8 @@
 {
 	"edmType" : "Entity1",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.Entity1",
-	
 	"sqlTable" : "MPLHEADER",
+    "dataStructureType": "TABLE",
 	"MessageGuid" : "MESSAGEGUID",
 	"AlternateWebLink" : "MESSAGEGUID",
     "LogStart" : "LOGSTART",
@@ -10,6 +10,7 @@
     "Sender" : "SENDER",
     "Receiver" : "RECEIVER",
     "Status" : "STATUS",
+    "_parameters_": [],
     "_pk_" : "ID",
     "_ref_Entity2" : {
     	"joinColumn" : ["ID"]

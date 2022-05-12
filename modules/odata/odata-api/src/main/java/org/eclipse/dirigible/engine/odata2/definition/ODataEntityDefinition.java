@@ -24,8 +24,6 @@ public class ODataEntityDefinition {
 
     private String table;
 
-    private String dataStructureType;
-
     private List<ODataProperty> properties = new ArrayList<>();
 
 	private List<ODataParameter> parameters = new ArrayList<>();
@@ -75,14 +73,6 @@ public class ODataEntityDefinition {
 
 	public void setTable(String table) {
 		this.table = table;
-	}
-
-	public String getDataStructureType() {
-		return dataStructureType;
-	}
-
-	public void setDataStructureType(String dataStructureType) {
-		this.dataStructureType = dataStructureType;
 	}
 
 	public List<ODataProperty> getProperties() {

@@ -2,7 +2,7 @@
 	"edmType": "Orders_Qry",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrdersQry",
 	"sqlTable": " PUBLIC.ORDER_QRY",
-
+	"dataStructureType": "TABLE",
 	"OrderID": "ORDER_ID",
 	"CustomerId": "CUSTOMER_ID",
 	"EmployeeId": "EMPLOYEE_ID",
@@ -23,5 +23,6 @@
 	"Region": "REGION",
 	"PostalCode": "POSTAL_CODE",
 	"Country": "COUNTRY",
+	"_parameters_": [],
 	"_pk_": ["ORDER_ID", "COMPANY_NAME"]
 }

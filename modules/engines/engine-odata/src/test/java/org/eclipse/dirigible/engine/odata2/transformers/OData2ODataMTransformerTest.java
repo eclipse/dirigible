@@ -68,6 +68,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Customer\": \"Customer\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_ItemType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"Id\"\n" +
@@ -82,6 +83,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Orderid\": \"OrderId\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_OrderType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"OrderId\"\n" +
@@ -116,6 +118,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Customer\": \"CUSTOMER\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_ItemType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +
@@ -130,6 +133,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ItemId\": \"ITEM_ID\",\n" +
                 "\t\"OrderId\": \"ORDER_ID\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_OrderType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ORDER_ID\"\n" +
@@ -154,6 +158,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
                 "\t\"Country_Id\": \"Country.Id\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_Entity2Type\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ENTITY1ID\"\n" +
@@ -171,6 +176,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"property3\": \"PROPERTY3\",\n" +
                 "\t\"property4_5\": \"PROPERTY4_5\",\n" +
                 "\t\"Entity1entity1Id\": \"ENTITY1ENTITY1ID\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_Entity1Type\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ENTITY1ENTITY1ID\"\n" +
@@ -185,11 +191,39 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Entity3_id\": \"ENTITY3.ID\",\n" +
                 "\t\"Name_id\": \"NAME.ID\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_pk_\" : \"ENTITY3.ID\"\n" +
                 "}";
 
         String[] transformed = odata2ODataMTransformer.transform(definition);
         assertArrayEquals(new String[]{entity1, entity2, entity3}, transformed);
+    }
+
+    @Test
+    public void testTransformEntityWithParameters() throws IOException, SQLException {
+        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithParameters.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithParameters.odata", employee);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType("VIEW");
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
+
+        String entityEmployee = "{\n" +
+                "\t\"edmType\": \"employeeType\",\n" +
+                "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
+                "\t\"sqlTable\": \"EMPLOYEES\",\n" +
+                "\t\"dataStructureType\": \"VIEW\",\n" +
+                "\t\"companyId\": \"COMPANY_ID\",\n" +
+                "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
+                "\t\"EmployeeId\": \"EmployeeId\",\n" +
+                "\t\"_parameters_\" : [\"EmployeeId\"],\n" +
+                "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
+                "}";
+
+        String[] actualResult = odata2ODataMTransformer.transform(definition);
+        assertArrayEquals(new String[]{entityEmployee}, actualResult);
     }
 
     @Test
@@ -215,6 +249,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"companyId\": \"COMPANY_ID\",\n" +
                 "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_phoneType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"COMPANY_ID\",\"EMPLOYEE_NUMBER\"\n" +
@@ -230,6 +265,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"number\": \"NUMBER\",\n" +
                 "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
                 "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_employeeType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"FK_COMPANY_ID\",\"FK_EMPLOYEE_NUMBER\"\n" +
@@ -263,6 +299,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_GroupsType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +
@@ -281,6 +318,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_UsersType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +

@@ -2,7 +2,7 @@
 	"edmType": "Customer",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Customer",
 	"sqlTable": " PUBLIC.CUSTOMER",
-
+	"dataStructureType": "TABLE",
 	"CompanyName": "COMPANY_NAME",
 	"ContactName": "CONTACT_NAME",
 	"ContactTitle": "CONTACT_TITLE",
@@ -13,6 +13,6 @@
 	"Country": "COUNTRY",
 	"Phone": "PHONE",
 	"Fax": "FAX",
-
+	"_parameters_": [],
 	"_pk_": "CUSTOMER_ID"
 }

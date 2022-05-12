@@ -2,10 +2,10 @@
 	"edmType": "Summary_of_Sales_by_Year",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.SummaryOfSalesByQuarters",
 	"sqlTable": " PUBLIC.Summary_of_Sales_by_Year",
-
+	"dataStructureType": "TABLE",
 	"ShippedDate": "SHIPPED_DATE",
 	"OrderID": "ORDER_ID",
 	"Subtotal": "SUBTOTAL",
-
+	"_parameters_": [],
 	"_pk_": "ORDER_ID"
 }

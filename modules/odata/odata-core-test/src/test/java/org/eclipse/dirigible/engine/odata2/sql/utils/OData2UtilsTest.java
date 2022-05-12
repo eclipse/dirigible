@@ -16,22 +16,31 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.EdmEntityType;
+import org.apache.olingo.odata2.api.edm.EdmException;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
+import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
+import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.easymock.EasyMock;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.processor.ExpandCallBack;
 import org.eclipse.dirigible.engine.odata2.sql.processor.ResultSetReader;
 import org.junit.Test;
+
+import javax.persistence.metamodel.EntityType;
 
 public class OData2UtilsTest {
 
@@ -114,5 +123,47 @@ public class OData2UtilsTest {
         EasyMock.replay(testContext);
         assertEquals(resultTenantName, OData2Utils.getTenantNameFromContext(testContext));
         EasyMock.verify(testContext);
+    }
+
+    @Test
+    public void testGetKeyPredicateValueByPropertyName() throws EdmException {
+        EdmProperty edmProperty = EasyMock.createMock(EdmProperty.class);
+        KeyPredicate keyPredicate = EasyMock.createMock(KeyPredicate.class);
+        List<KeyPredicate> keyPredicates = new ArrayList<>();
+        keyPredicates.add(keyPredicate);
+
+        EasyMock.expect(edmProperty.getName()).andReturn("TestProperty");
+        EasyMock.replay(edmProperty);
+
+        EasyMock.expect(keyPredicate.getProperty()).andReturn(edmProperty);
+        EasyMock.expect(keyPredicate.getLiteral()).andReturn("TestValue");
+        EasyMock.replay(keyPredicate);
+
+        assertEquals( "TestValue", OData2Utils.getKeyPredicateValueByPropertyName("TestProperty", keyPredicates));
+        EasyMock.verify(edmProperty);
+        EasyMock.verify(keyPredicate);
+    }
+
+    @Test
+    public void testIsPropertyParameter() throws EdmException {
+        EdmProperty edmProperty = EasyMock.createMock(EdmProperty.class);
+        SQLSelectBuilder query = EasyMock.createMock(SQLSelectBuilder.class);
+        EdmStructuralType entityType = EasyMock.createMock(EdmStructuralType.class);
+
+        EasyMock.expect(edmProperty.getName()).andReturn("TestProperty");
+        EasyMock.replay(edmProperty);
+
+        List<String> targetParameters = new ArrayList<>();
+        targetParameters.add("TestProperty");
+
+        EasyMock.expect(query.getSQLTableParameters(entityType)).andReturn(targetParameters);
+        EasyMock.replay(query);
+
+        EasyMock.replay(entityType);
+
+        assertEquals( true, OData2Utils.isPropertyParameter(edmProperty, query, entityType));
+        EasyMock.verify(edmProperty);
+        EasyMock.verify(query);
+        EasyMock.verify(entityType);
     }
 }

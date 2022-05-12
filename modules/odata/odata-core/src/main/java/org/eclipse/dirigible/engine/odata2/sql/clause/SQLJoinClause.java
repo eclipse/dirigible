@@ -12,20 +12,24 @@
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
 import org.apache.olingo.odata2.api.edm.EdmException;
+import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLClause;
+import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isPropertyParameter;
 
 public final class SQLJoinClause implements SQLClause {
 
@@ -189,16 +193,6 @@ public final class SQLJoinClause implements SQLClause {
                     INTERNAL_SERVER_ERROR);
         }
 
-        List<String> entityParameters = this.query.getSQLTableParameters(this.target);
-        keyPredicates.removeIf( keyPredicate -> {
-            try {
-                return entityParameters.contains(keyPredicate.getProperty().getName());
-            } catch (EdmException e) {
-                e.printStackTrace();
-            }
-            return false;
-        });
-
         this.keyPredicates = keyPredicates;
         SQLWhereClause where = SQLUtils.whereClauseFromKeyPredicates(query, start, keyPredicates);
         query.and(where);
@@ -209,7 +203,7 @@ public final class SQLJoinClause implements SQLClause {
         return query.getSQLJoinTableName(start, end);
     }
 
-    private static boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
+    private boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
         try {
             if (start.getName().equals(target.getName())) {
                 return false;
@@ -217,12 +211,22 @@ public final class SQLJoinClause implements SQLClause {
                 if (startPredicates == NO_PREDICATES_USED) {
                     return true;
                 } else {
-                    return (startPredicates != null && !startPredicates.isEmpty()) ? true : false;
+                    return ((startPredicates != null && !startPredicates.isEmpty()) && hasKeyPredicatesNonParameterProperty(start, startPredicates) ) ? true : false;
                 }
             }
         } catch (EdmException e) {
             throw new RuntimeException(e);//should never happen
         }
+    }
+
+    private boolean hasKeyPredicatesNonParameterProperty(EdmStructuralType start, List<KeyPredicate> keyPredicates) throws EdmException {
+        for (KeyPredicate keyPredicate : keyPredicates) {
+            if (!isPropertyParameter(keyPredicate.getProperty(), this.query, start)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

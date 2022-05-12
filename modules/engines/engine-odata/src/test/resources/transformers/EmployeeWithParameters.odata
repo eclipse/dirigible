@@ -17,17 +17,14 @@
 					"column": "EMPLOYEE_NUMBER",
 					"nullable": false,
 					"type": "Edm.Int32"
-				},
-				{
-					"name": "orderId",
-					"column": "ORDER_ID"
 				}
+			],
+			"parameters": [
+			    {
+			        "name": "EmployeeId",
+			        "type": "Edm.Int32"
+			    }
 			]
-		},
-		{
-			"name": "phone",
-			"alias": "Phones",
-			"table": "PHONES"
 		}
 	]
 }

@@ -5,7 +5,6 @@
       "name": "employee",
       "alias": "Employees",
       "table": "employee",
-      "dataStructureType": "TABLE",
       "navigations": [
         {
           "name": "HisPhones",
@@ -23,7 +22,6 @@
       "name": "phone",
       "alias": "Phones",
       "table": "phone",
-      "dataStructureType": "TABLE",
       "navigations": [
         {
           "name": "HisAddress",

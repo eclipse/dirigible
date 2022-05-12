@@ -2,9 +2,11 @@
 	"edmType" : "Owner",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Owner",
 	"sqlTable" : " PUBLIC.OWNERS",
+	"dataStructureType": "TABLE",
 	"FirstName" : "FIRSTNAME",
 	"LastName" : "LASTNAME",
 	"PurchaseDate" : "PURCHASE_DATE",
+	"_parameters_": [],
 	"_pk_" : "ID",
     "_ref_Car" : {
     	"joinColumn" :["CAR_ID"]

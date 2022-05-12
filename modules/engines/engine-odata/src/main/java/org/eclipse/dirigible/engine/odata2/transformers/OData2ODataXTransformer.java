@@ -106,19 +106,19 @@ public class OData2ODataXTransformer {
             }
             buff.append("\t\t</Key>\n");
 
-            // Add keys as property
+            // Add keys and parameters as property
             if (VIEW_TYPES.contains(tableMetadata.getTableType())) {
                 if (entityOrigKeys.size() == 0) {
                     // Local key was generated
                     entity.getKeys().forEach(key -> buff.append("\t\t<Property Name=\"").append(key).append("\"").append(" Type=\"").append("Edm.String").append("\"").append(" Nullable=\"").append("false").append("\" MaxLength=\"2147483647\"").append(" sap:filterable=\"false\"").append("/>\n"));
                 }
-            }
 
-            entityParameters.forEach(parameter -> {
-                buff.append("\t\t<Property Name=\"").append(parameter.getName()).append("\"")
-                        .append(" Nullable=\"").append(parameter.isNullable()).append("\"").append(" Type=\"").append(parameter.getType() != null ? parameter.getType() : "null").append("\"");
-                buff.append("/>\n");
-            });
+                entityParameters.forEach(parameter -> {
+                    buff.append("\t\t<Property Name=\"").append(parameter.getName()).append("\"")
+                            .append(" Nullable=\"").append(parameter.isNullable()).append("\"").append(" Type=\"").append(parameter.getType() != null ? parameter.getType() : "null").append("\"");
+                    buff.append("/>\n");
+                });
+            }
 
             // Expose all Db columns in case no entity props are defined
             if (entityProperties.isEmpty() && entityParameters.isEmpty()) {

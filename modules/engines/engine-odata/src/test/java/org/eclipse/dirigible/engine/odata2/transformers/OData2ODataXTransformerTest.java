@@ -18,6 +18,7 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
 import org.eclipse.dirigible.engine.odata2.definition.ODataDefinitionFactoryTest;
+import org.eclipse.dirigible.engine.odata2.definition.ODataParameter;
 import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
 import org.eclipse.dirigible.engine.odata2.definition.factory.ODataDefinitionFactory;
 import org.junit.Test;
@@ -372,6 +373,49 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
+    }
+
+    @Test
+    public void testTransformOnViewWithPropsAndParameters() throws IOException, SQLException {
+        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
+
+        definition.getEntities().get(0).getKeys().add("COMPANY_ID");
+        definition.getEntities().get(0).getKeys().add("EMPLOYEE_NUMBER");
+
+        definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myORDER_ID").setType("Edm.Int32").setNullable(false).setColumn("ORDER_ID"));
+        definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myCOMPANY_ID").setType("Edm.Int32").setNullable(false).setColumn("COMPANY_ID"));
+        definition.getEntities().get(0).getProperties().add(new ODataProperty().setName("myEMPLOYEE_NUMBER").setType("Edm.Int32").setNullable(false).setColumn("EMPLOYEE_NUMBER"));
+
+        definition.getEntities().get(0).getParameters().add(new ODataParameter().setName("isEmployeeFrom").setType("Edm.DateTime").setNullable(true));
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column3 = new PersistenceTableColumnModel("ORDER_ID", "Edm.Int32", true, false);
+
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>());
+
+        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
+
+        String entitySchema = "<Schema Namespace=\"np\"\n" +
+                "\txmlns=\"http://schemas.microsoft.com/ado/2008/09/edm\">\n" +
+                "\t<EntityType Name=\"employeeType\">\n" +
+                "\t\t<Key>\n" +
+                "\t\t\t<PropertyRef Name=\"isEmployeeFrom\" />\n" +
+                "\t\t\t<PropertyRef Name=\"myCOMPANY_ID\" />\n" +
+                "\t\t\t<PropertyRef Name=\"myEMPLOYEE_NUMBER\" />\n" +
+                "\t\t</Key>\n" +
+                "\t\t<Property Name=\"isEmployeeFrom\" Nullable=\"true\" Type=\"Edm.DateTime\"/>\n" +
+                "\t\t<Property Name=\"myORDER_ID\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"myCOMPANY_ID\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t\t<Property Name=\"myEMPLOYEE_NUMBER\" Nullable=\"false\" Type=\"Edm.Int32\"/>\n" +
+                "\t</EntityType>\n" +
+                "</Schema>\n";
+        String entitySet = "\t\t<EntitySet Name=\"Employees\" EntityType=\"np.employeeType\"/>\n";
+
+        String[] actualResult = new OData2ODataXTransformer(defaultTableMetadataProvider).transform(definition);
+        assertArrayEquals(new String[]{entitySchema, entitySet}, actualResult);
     }
 
     @Test

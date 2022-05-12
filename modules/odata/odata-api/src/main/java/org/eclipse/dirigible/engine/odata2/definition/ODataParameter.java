@@ -18,8 +18,6 @@ public class ODataParameter {
 
     private String name;
 
-    private String column;
-
     private boolean nullable;
 
     private String type;
@@ -30,15 +28,6 @@ public class ODataParameter {
 
 	public ODataParameter setName(String name) {
 		this.name = name;
-		return this;
-	}
-
-	public String getColumn() {
-		return column;
-	}
-
-	public ODataParameter setColumn(String column) {
-		this.column = column;
 		return this;
 	}
 

@@ -5,6 +5,6 @@
 
 	"CategoryName": "CATEGORY_NAME",
 	"CategorySales": "CATEGORY_SALES",
-
+	"_parameters_": [],
 	"_pk_": ["CATEGORY_NAME"]
 }

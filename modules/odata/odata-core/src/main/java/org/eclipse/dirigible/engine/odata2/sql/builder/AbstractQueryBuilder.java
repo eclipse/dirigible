@@ -117,8 +117,8 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         return tableBinding.getEdmTableBinding(type).getParameters();
     }
 
-    public String getSQLTableType(final EdmStructuralType type) throws EdmException {
-        return tableBinding.getEdmTableBinding(type).getType();
+    public String getSQLTableDataStructureType(final EdmStructuralType type) throws EdmException {
+        return tableBinding.getEdmTableBinding(type).getDataStructureType();
     }
 
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {

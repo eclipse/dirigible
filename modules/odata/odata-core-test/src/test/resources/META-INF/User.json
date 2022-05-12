@@ -2,7 +2,9 @@
   "edmType" : "User",
   "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.User",
   "sqlTable" : "CVUSERS",
+  "dataStructureType": "TABLE",
   "Firstname" : "FIRST_NAME",
+  "_parameters_": [],
   "_pk_" : "ID",
   "_ref_Group" : {
     "joinColumn" : ["ID"],

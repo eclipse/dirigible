@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmLiteralKind;
@@ -64,7 +65,8 @@ public class SQLSelectBuilderTest {
                 Entity2.class, //
                 Entity3.class, //
                 Entity4.class,//
-                Entity5.class
+                Entity5.class,
+                Entity6.class
         };
         provider = new AnnotationEdmProvider(Arrays.asList(classes));
         EdmImplProv edm = new EdmImplProv(provider);
@@ -163,9 +165,9 @@ public class SQLSelectBuilderTest {
         params.put("$orderby", "Status, LogStart desc");
 
         String expectedSelectStatment = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
-            "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
-            "FROM MPLHEADER AS T0 " +
-            "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
+                "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                "FROM MPLHEADER AS T0 " +
+                "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
@@ -174,9 +176,9 @@ public class SQLSelectBuilderTest {
         Map<String, String> params = new HashMap<>();
 
         String expectedSelectStatment = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
-            "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
-            "FROM MPLHEADER AS T0 " +
-            "ORDER BY T0.MESSAGEGUID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
+                "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                "FROM MPLHEADER AS T0 " +
+                "ORDER BY T0.MESSAGEGUID ASC" + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
@@ -187,10 +189,10 @@ public class SQLSelectBuilderTest {
         params.put("$top", "10");
 
         String expectedSelectStatment = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\", T0.LOGSTART AS \"LOGSTART_T0\", T0.LOGEND AS \"LOGEND_T0\", " +
-            "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
-            "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
-            "FROM MPLHEADER AS T0 ORDER BY T0.MESSAGEGUID ASC " +
-            "FETCH FIRST 10 ROWS ONLY";
+                "T0.SENDER AS \"SENDER_T0\", T0.RECEIVER AS \"RECEIVER_T0\", T0.STATUS AS \"STATUS_T0\", " +
+                "T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" " +
+                "FROM MPLHEADER AS T0 ORDER BY T0.MESSAGEGUID ASC " +
+                "FETCH FIRST 10 ROWS ONLY";
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
@@ -201,8 +203,8 @@ public class SQLSelectBuilderTest {
         params.put("$orderby", "Status, LogStart desc");
 
         String expectedSelectStatment = "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 "
-            + "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
-            + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
+                + "ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
+                + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
@@ -213,7 +215,7 @@ public class SQLSelectBuilderTest {
         params.put("$orderby", "Status, LogStart desc");
 
         String expectedSelectStatment = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
-            + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
+                + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
@@ -225,14 +227,14 @@ public class SQLSelectBuilderTest {
 
         //The primary key is always selected in addition
         String expectedSelectStatment = "SELECT T0.STATUS AS \"STATUS_T0\", T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.STATUS ASC, T0.LOGSTART DESC"
-            + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
+                + SERVER_SIDE_PAGING_DEFAULT_SUFFIX;
         testBuildSelectStatement(params, context.getDatabaseProduct(), expectedSelectStatment);
     }
 
     @Test
     public void testBuildSelectStatementWithSelectTop() throws ODataException {
         String expectedSelectStmnt = "SELECT T0.MESSAGEGUID AS \"MESSAGEGUID_T0\" FROM MPLHEADER AS T0 ORDER BY T0.LOGSTART " +
-            "DESC FETCH FIRST 12 ROWS ONLY";
+                "DESC FETCH FIRST 12 ROWS ONLY";
         testBuildSelectStatementWithSelectTop(context.getDatabaseProduct(), 12, expectedSelectStmnt);
     }
 
@@ -292,7 +294,7 @@ public class SQLSelectBuilderTest {
     }
 
     private void testBuildSelectStatement(Map<String, String> uriParams, DatabaseProduct dbType, String expectedSelectStatment)
-        throws ODataException {
+            throws ODataException {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         PathSegment ps1 = createPathSegment();
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), uriParams);
@@ -413,6 +415,40 @@ public class SQLSelectBuilderTest {
     }
 
     @Test
+    public void testSelectWithParametersForEntity() throws Exception {
+        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+        Map<String, String> params = new HashMap<>();
+        PathSegment ps = new ODataPathSegmentImpl("Entities6(CurrentEmployeeId=1,CurrentEmployeeName='Ben',ID=3)", Collections.emptyMap());
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps), params);
+
+        SQLSelectBuilder q = builder.buildSelectEntityQuery(uriInfo, null);
+        SQLContext context = new SQLContext();
+        String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
+                "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
+                "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
+                "WHERE \"T0\".\"ID\" = ?";
+        assertEquals(expected, q.buildSelect(context));
+    }
+
+    @Test
+    public void testSelectWithParametersForEntitySet() throws Exception {
+        Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "true");
+        Map<String, String> params = new HashMap<>();
+        PathSegment ps = new ODataPathSegmentImpl("Entities6(CurrentEmployeeId=1,CurrentEmployeeName='Ben',ID=3)", Collections.emptyMap());
+        UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps), params);
+
+        SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
+        SQLContext context = new SQLContext();
+        String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
+                "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
+                "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
+                "WHERE \"T0\".\"ID\" = ? " +
+                "ORDER BY CurrentEmployeeId_T0 ASC, CurrentEmployeeName_T0 ASC, \"T0\".\"ID\" ASC " +
+                "FETCH FIRST 1000 ROWS ONLY";
+        assertEquals(expected, q.buildSelect(context));
+    }
+
+    @Test
     public void testDeleteWithComposedKey() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false");
         Map<String, String> params = new HashMap<>();
@@ -432,10 +468,10 @@ public class SQLSelectBuilderTest {
         PathSegment ps1 = new ODataPathSegmentImpl("Entities4(Id4_1=11,Id4_2=22)", Collections.emptyMap());
         UriInfo uriInfo = uriParser.parse(Collections.singletonList(ps1), params);
 
-        Map<String, Object> entity4=new HashMap<>();
+        Map<String, Object> entity4 = new HashMap<>();
         entity4.put("Id4_1", "1");
         entity4.put("Id4_2", "2");
-        ODataEntry entity =new ODataEntryImpl(entity4, null, null, null);
+        ODataEntry entity = new ODataEntryImpl(entity4, null, null, null);
 
         SQLInsertBuilder insertBuilder = builder.buildInsertEntityQuery(uriInfo, entity, null);
         SQLContext context = new SQLContext();

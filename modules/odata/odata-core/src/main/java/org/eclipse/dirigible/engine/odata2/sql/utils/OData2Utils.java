@@ -22,12 +22,15 @@ import org.apache.olingo.odata2.api.exception.ODataRuntimeApplicationException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
+import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 
 import java.util.*;
 
@@ -217,5 +220,26 @@ public class OData2Utils {
         errorContext.setLocale(Locale.ENGLISH);
         errorContext.setMessage("No content");
         return EntityProvider.writeErrorDocument(errorContext);
+    }
+
+    public static Object getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
+        Object keyPredicateValue = "";
+        for (KeyPredicate keyPredicate : keyPredicates) {
+            if (keyPredicate.getProperty().getName().equals(propertyName)) {
+                keyPredicateValue = keyPredicate.getLiteral();
+            }
+        }
+        return keyPredicateValue;
+    }
+
+    public static boolean isPropertyParameter(EdmProperty property, SQLSelectBuilder query, EdmStructuralType entityType) throws EdmException {
+        boolean isParameter = false;
+        List<String> sqlTableParameters = query.getSQLTableParameters(entityType);
+
+        if (sqlTableParameters.contains(property.getName())) {
+            isParameter = true;
+        }
+
+        return isParameter;
     }
 }

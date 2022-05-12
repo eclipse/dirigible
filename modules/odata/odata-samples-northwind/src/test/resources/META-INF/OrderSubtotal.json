@@ -2,9 +2,9 @@
 	"edmType": "Order_Subtotal",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrderSubtotal",
 	"sqlTable": " PUBLIC.ORDER_SUBTOTAL",
-
+	"dataStructureType": "TABLE",
 	"OrderID": "ORDER_ID",
 	"Subtotal": "SUBTOTAL",
-
+	"_parameters_": [],
 	"_pk_": ["ORDER_ID"]
 }
