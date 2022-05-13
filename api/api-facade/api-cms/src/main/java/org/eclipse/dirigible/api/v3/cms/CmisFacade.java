@@ -11,9 +11,7 @@
  */
 package org.eclipse.dirigible.api.v3.cms;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -42,15 +40,22 @@ public class CmisFacade {
 	public static final String CMIS_METHOD_WRITE = "WRITE";
 	
 	public static final String DIRIGIBLE_CMS_ROLES_ENABLED = "DIRIGIBLE_CMS_ROLES_ENABLED";
-	private static ICmsProvider cmsProvider = (ICmsProvider) StaticObjects.get(StaticObjects.CMS_PROVIDER);
+	private static ICmsProvider cmsProvider = null;
 	
+	protected static synchronized ICmsProvider getCmsProvider() {
+		if (cmsProvider == null) {
+			cmsProvider = (ICmsProvider) StaticObjects.get(StaticObjects.CMS_PROVIDER);
+		}
+		return cmsProvider;
+	}
+
 	/**
 	 * CMIS Session
 	 *
 	 * @return the CMIS session object
 	 */
 	public static final Object getSession() {
-		Object session = cmsProvider.getSession();
+		Object session = getCmsProvider().getSession();
 		return session;
 	}
 	

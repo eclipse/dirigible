@@ -1,1 +1,0 @@
-java -jar ./target/dirigible-spring-boot-6.0.0-SNAPSHOT.jar

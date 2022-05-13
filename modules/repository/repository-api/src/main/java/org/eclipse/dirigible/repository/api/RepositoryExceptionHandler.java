@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.repository.api;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class RepositoryExceptionHandler.
  */
+@Provider
 public class RepositoryExceptionHandler extends AbstractExceptionHandler<RepositoryException> {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepositoryExceptionHandler.class);

@@ -4,6 +4,7 @@ dist/
 target/
 dirigible_local/
 bin/
+log/
 .idea
 
 # files
@@ -18,3 +19,4 @@ derby.log
 *.fpr
 *.iml
 *.factorypath
+*.log

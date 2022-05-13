@@ -20,7 +20,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -33,14 +32,12 @@ import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.eclipse.dirigible.database.dynamic.DynamicDatabase;
 import org.eclipse.dirigible.database.persistence.processors.identity.PersistenceNextValueIdentityProcessor;
 import org.eclipse.dirigible.database.sql.DataTypeUtils;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseResultSetHelper;
-import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +52,14 @@ public class DatabaseFacade implements IScriptingFacade {
 
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseFacade.class);
 
-	private static IDatabase database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
+	private static IDatabase database = null;
+	
+	protected static synchronized IDatabase getDatabase() {
+		if (database == null) {
+			database = (IDatabase) StaticObjects.get(StaticObjects.DATABASE);
+		}
+		return database;
+	}
 
 	/**
 	 * Gets the database types.
@@ -82,7 +86,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the data sources
 	 */
 	public static final String getDataSources() {
-		return GsonHelper.GSON.toJson(database.getDataSources().keySet());
+		return GsonHelper.GSON.toJson(getDatabase().getDataSources().keySet());
 	}
 
 	/**
@@ -91,7 +95,7 @@ public class DatabaseFacade implements IScriptingFacade {
 	 * @return the default data source
 	 */
 	public static final DataSource getDefaultDataSource() {
-		return database.getDataSource();
+		return getDatabase().getDataSource();
 	}
 
 	/**
@@ -222,9 +226,9 @@ public class DatabaseFacade implements IScriptingFacade {
 		DataSource dataSource = null;
 		if (databaseType == null) {
 			if (datasourceName == null) {
-				dataSource = database.getDataSource();
+				dataSource = getDatabase().getDataSource();
 			} else {
-				dataSource = database.getDataSource(datasourceName);
+				dataSource = getDatabase().getDataSource(datasourceName);
 			}
 		} else {
 			dataSource = DatabaseModule.getDataSource(databaseType, datasourceName);

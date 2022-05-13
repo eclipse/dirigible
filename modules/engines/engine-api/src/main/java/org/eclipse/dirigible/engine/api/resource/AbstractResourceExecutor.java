@@ -36,9 +36,11 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
 
 	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
+	
+	
 
 	/**
 	 * Gets the repository.
@@ -46,6 +48,9 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	 * @return the repository
 	 */
 	protected IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
 		return repository;
 	}
 
@@ -73,7 +78,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 			throw new RepositoryException("Module name cannot point to a collection.");
 		}
 		String repositoryPath = createResourcePath(root, module, extension);
-		final IResource resource = repository.getResource(repositoryPath);
+		final IResource resource = getRepository().getResource(repositoryPath);
 		if (resource.exists()) {
 			return resource.getContent();
 		}
@@ -115,7 +120,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	@Override
 	public ICollection getCollection(String root, String module) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module);
-		final ICollection collection = repository.getCollection(repositoryPath);
+		final ICollection collection = getRepository().getCollection(repositoryPath);
 		if (collection.exists()) {
 			return collection;
 		}
@@ -142,7 +147,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	@Override
 	public IResource getResource(String root, String module, String extension) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module, extension);
-		final IResource resource = repository.getResource(repositoryPath);
+		final IResource resource = getRepository().getResource(repositoryPath);
 		if (resource.exists()) {
 			return resource;
 		}
@@ -171,7 +176,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	@Override
 	public boolean existResource(String root, String module, String extension) throws RepositoryException {
 		String repositoryPath = createResourcePath(root, module, extension);
-		final IResource resource = repository.getResource(repositoryPath);
+		final IResource resource = getRepository().getResource(repositoryPath);
 		return resource.exists();
 	}
 

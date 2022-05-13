@@ -20,6 +20,10 @@ import java.util.List;
 public class EntityDataModelRoot {
 	
 	private List<EntityDataModelEntity> entities;
+	
+	private List<EntityDataModelPerspective> perspectives;
+	
+	private List<EntityDataModelSidebarItem> sidebar;
 
 	/**
 	 * Gets the entities
@@ -37,6 +41,34 @@ public class EntityDataModelRoot {
 	 */
 	public void setEntities(List<EntityDataModelEntity> entities) {
 		this.entities = entities;
+	}
+
+	/**
+	 * @return the perspectives
+	 */
+	public List<EntityDataModelPerspective> getPerspectives() {
+		return perspectives;
+	}
+
+	/**
+	 * @param perspectives the perspectives to set
+	 */
+	public void setPerspectives(List<EntityDataModelPerspective> perspectives) {
+		this.perspectives = perspectives;
+	}
+
+	/**
+	 * @return the sidebar
+	 */
+	public List<EntityDataModelSidebarItem> getSidebar() {
+		return sidebar;
+	}
+
+	/**
+	 * @param sidebar the sidebar to set
+	 */
+	public void setSidebar(List<EntityDataModelSidebarItem> sidebar) {
+		this.sidebar = sidebar;
 	}
 
 }

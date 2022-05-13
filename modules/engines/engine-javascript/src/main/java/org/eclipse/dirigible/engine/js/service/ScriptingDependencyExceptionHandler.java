@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.js.service;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import org.eclipse.dirigible.commons.api.scripting.ScriptingDependencyException;
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class ScriptingDependencyExceptionHandler.
  */
+@Provider
 public class ScriptingDependencyExceptionHandler extends AbstractExceptionHandler<ScriptingDependencyException> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScriptingDependencyExceptionHandler.class);

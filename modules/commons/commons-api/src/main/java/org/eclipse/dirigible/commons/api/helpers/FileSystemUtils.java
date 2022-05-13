@@ -16,8 +16,9 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -29,6 +30,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -198,7 +200,8 @@ public class FileSystemUtils {
 		Path path = FileSystems.getDefault().getPath(workspacePath);
 		// logger.debug("Deleting file: " + file);
 
-		Files.walkFileTree(path, new FileVisitor<Path>() {
+		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(path, opts, Integer.MAX_VALUE, new FileVisitor<Path>() {
 
 			@Override
 			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
@@ -624,7 +627,8 @@ public class FileSystemUtils {
 	public static final List<String> find(String root, String pattern) throws IOException {
 		 Path startingDir = Paths.get(root);
 		 Finder finder = new Finder(pattern);
-	     Files.walkFileTree(startingDir, finder);
+		 EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+	     Files.walkFileTree(startingDir, opts, Integer.MAX_VALUE, finder);
 	     finder.done();
 	     return finder.getFiles();
 	}

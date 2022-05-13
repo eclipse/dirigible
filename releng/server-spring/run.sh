@@ -1,0 +1,1 @@
+java -jar ./target/dirigible-server-spring-7.0.0-SNAPSHOT.jar

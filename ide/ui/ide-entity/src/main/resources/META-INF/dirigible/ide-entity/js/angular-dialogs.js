@@ -523,7 +523,23 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			{ "name": "tablet", "icon": "&#xf10a; tablet" },
 			{ "name": "tachometer", "icon": "&#xf0e4; tachometer" },
 			{ "name": "tag", "icon": "&#xf02b; tag" },
-			{ "name": "tags", "icon": "&#xf02c; tags" }
+			{ "name": "tags", "icon": "&#xf02c; tags" },
+			{ "name": "tasks", "icon": "&#xf0ae; tasks" },
+			{ "name": "television", "icon": "&#xf26c; television" },
+			{ "name": "terminal", "icon": "&#xf120; terminal" },
+			{ "name": "th", "icon": "&#xf00a; th" },
+			{ "name": "th-large", "icon": "&#xf009; th-large" },
+			{ "name": "th-list", "icon": "&#xf00b; th-list" },
+			{ "name": "thermometer", "icon": "&#xf2c7; thermometer" },
+			{ "name": "toggle-on", "icon": "&#xf205; toggle-on" },
+			{ "name": "train", "icon": "&#xf238; train" },
+			{ "name": "trophy", "icon": "&#xf091; trophy" },
+			{ "name": "truck", "icon": "&#xf0d1; truck" },
+			{ "name": "umbrella", "icon": "&#xf0e9; umbrella" },
+			{ "name": "user", "icon": "&#xf007; user" },
+			{ "name": "users", "icon": "&#xf0c0; users" },
+			{ "name": "video-camera", "icon": "&#xf03d; video-camera" },
+			{ "name": "wrench", "icon": "&#xf0ad; wrench" }
 		];
 
 		ctrl.loadModels = function () {
@@ -608,8 +624,8 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			$scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 		};
 
-		// Save SidebarNavigation's properties
-		ctrl.okSidebarNavigationProperties = function () {
+		// Save Navigation's properties
+		ctrl.okNavigationProperties = function () {
 			// var clone = $scope.$parent.sidebar;
 			// $scope.$parent.graph.model.sidebar = clone;
 
@@ -618,6 +634,72 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			// $scope.$parent.graph.model.setValue($scope.$parent.cell, connector);
 		};
 
+		ctrl.availablePerspectives = function () {
+			return $scope.$parent.graph.model.perspectives;
+		};
+
+		// Perspectives Management
+		$scope.openPerspectiveNewDialog = function () {
+			$scope.actionType = 'perspectiveNew';
+			$scope.perspectiveEntity = {};
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.openPerspectiveEditDialog = function (entity) {
+			$scope.actionType = 'perspectiveUpdate';
+			$scope.perspectiveEntity = entity;
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.openPerspectiveDeleteDialog = function (entity) {
+			$scope.actionType = 'perspectiveDelete';
+			$scope.perspectiveEntity = entity;
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.closePerspective = function () {
+			//load();
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.perspectiveCreate = function () {
+			if (!$scope.$parent.graph.model.perspectives) {
+				$scope.$parent.graph.model.perspectives = [];
+			}
+			let exists = $scope.$parent.graph.model.perspectives.filter(function (e) {
+				return e.id === $scope.perspectiveEntity.id;
+			});
+			if (exists.length === 0) {
+				$scope.$parent.graph.model.perspectives.push($scope.perspectiveEntity);
+				togglePerspectiveEntityModal();
+			} else {
+				$scope.error = "Perspective with the id [" + $scope.perspectiveEntity.id + "] already exists!";
+			}
+
+		};
+
+		$scope.perspectiveUpdate = function () {
+			// auto-wired
+			togglePerspectiveEntityModal();
+		};
+
+		$scope.perspectiveDelete = function () {
+			if (!$scope.$parent.graph.model.perspectives) {
+				$scope.$parent.graph.model.perspectives = [];
+			}
+			$scope.$parent.graph.model.perspectives = $scope.$parent.graph.model.perspectives.filter(function (e) {
+				return e !== $scope.perspectiveEntity;
+			});
+			togglePerspectiveEntityModal();
+		};
+
+		function togglePerspectiveEntityModal() {
+			$('#perspectiveEntityModal').modal('toggle');
+			$scope.error = null;
+		}
+		// ----
+
+		// Sidebar Management
 		$scope.openSidebarNewDialog = function () {
 			$scope.actionType = 'sidebarNew';
 			$scope.sidebarEntity = {};
@@ -676,6 +758,7 @@ angular.module('ui.entity-data.modeler', ['ngAnimate', 'ngSanitize', 'ui.bootstr
 			$('#sidebarEntityModal').modal('toggle');
 			$scope.error = null;
 		}
+		// ----
 
 		main(document.getElementById('graphContainer'),
 			document.getElementById('outlineContainer'),

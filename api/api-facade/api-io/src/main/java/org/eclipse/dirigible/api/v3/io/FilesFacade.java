@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -321,7 +323,8 @@ public class FilesFacade {
 	public static final void copy(String source, String target) throws IOException {
 		Path sourcePath = Paths.get(source);
 		Path targetPath = Paths.get(target);
-		Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(sourcePath, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
 				Files.createDirectories(targetPath.resolve(sourcePath.relativize(dir)));
@@ -372,7 +375,8 @@ public class FilesFacade {
 	 */
 	public static final void deleteDirectory(String path, boolean forced) throws IOException {
 		if (forced) {
-			Files.walkFileTree(Paths.get(path), new FileVisitor<Path>() {
+			EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+			Files.walkFileTree(Paths.get(path), opts, Integer.MAX_VALUE, new FileVisitor<Path>() {
 	
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
@@ -471,7 +475,8 @@ public class FilesFacade {
 		Path sourcePath = Paths.get(source);
 		List<FolderObject> root = new ArrayList<>();
 		Map<Path, FolderObject> map = new HashMap<>();
-		Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+		EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(sourcePath, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 			
 			FolderObject currentFolder = null;
 			

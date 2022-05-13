@@ -50,13 +50,19 @@
                         <th width="50px">Singleton</th>
                         <th width="180px">Created</th>
                         <th width="150px">Creator</th>
-
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="next in jobsList">
-                        <td width="50px"><i class="fa fa-check" ng-show="{{next.enabled}}"></i><i class="fa fa-close"
-                                ng-hide="{{next.enabled}}"></i>
+                        <td width="50px">
+                            <div ng-show="next.enabled" class="tdSingleLine">
+                                <button class="btn" ng-click="disable(next)"><i class="fa fa-toggle-on"
+                                        aria-hidden="true"></i></button>
+                            </div>
+                            <div ng-hide="!!next.enabled" class="tdSingleLine">
+                                <button class="btn" ng-click="enable(next)"><i class="fa fa-toggle-off"
+                                        aria-hidden="true"></i></button>
+                            </div>
                         </td>
                         <td>
                             <div class="tdSingleLine">{{next.name}}</div>

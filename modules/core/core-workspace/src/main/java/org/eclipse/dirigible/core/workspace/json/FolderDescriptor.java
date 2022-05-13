@@ -24,6 +24,8 @@ public class FolderDescriptor {
 	private String path;
 
 	private String type = "folder";
+	
+	private String status;
 
 	private List<FolderDescriptor> folders = new ArrayList<FolderDescriptor>();
 
@@ -65,6 +67,25 @@ public class FolderDescriptor {
 	 */
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the status.
+	 *
+	 * @param status
+	 *            the new status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**

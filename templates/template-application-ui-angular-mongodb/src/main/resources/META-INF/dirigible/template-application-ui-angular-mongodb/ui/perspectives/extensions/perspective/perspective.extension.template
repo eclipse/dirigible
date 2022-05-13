@@ -5,5 +5,5 @@
 #else
 	"extensionPoint": "launchpad-${launchpadName}-perspective",
 #end
-	"module": "${projectName}/ui/${perspectiveName}/extensions/perspective/perspective.js"
+	"module": "${projectName}/gen/ui/${perspectiveName}/extensions/perspective/perspective.js"
 }

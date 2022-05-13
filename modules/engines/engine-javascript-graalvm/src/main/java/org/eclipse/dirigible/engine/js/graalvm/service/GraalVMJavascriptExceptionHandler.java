@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.engine.js.graalvm.service;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.graalvm.polyglot.PolyglotException;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class GraalVMJavascriptExceptionHandler.
  */
+@Provider
 public class GraalVMJavascriptExceptionHandler extends AbstractExceptionHandler<PolyglotException> {
 
 	private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptExceptionHandler.class);

@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
@@ -44,7 +43,9 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModel;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelComposition;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelEntity;
+import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelPerspective;
 import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelProperty;
+import org.eclipse.dirigible.runtime.ide.generation.model.entity.EntityDataModelSidebarItem;
 import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateMetadata;
 import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateMetadataSource;
 import org.eclipse.dirigible.runtime.ide.generation.model.template.GenerationTemplateModelParameters;
@@ -301,7 +302,13 @@ public class GenerationProcessor extends WorkspaceProcessor {
 				List<Map<String, Object>> models = mapModels(entityDataModel, parameters, workspace, project, path);
 				parameters.getParameters().put("models", models);
 				
-				distributeByLayoutType(models, parameters);
+				Map<String, Map<String, Object>> perspectives = mapPerspectives(entityDataModel, parameters, workspace, project, path);
+				parameters.getParameters().put("perspectives", models);
+				
+				Map<String, Map<String, Object>> sidebar = mapSidebar(entityDataModel, parameters, workspace, project, path);
+				parameters.getParameters().put("sidebar", models);
+				
+				distributeByLayoutType(models, perspectives, sidebar, parameters);
 				
 				for (GenerationTemplateMetadataSource source : metadataObject.getSources()) {
 					String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC).append(source.getLocation()).build();
@@ -338,7 +345,8 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		}
 	}
 
-	private void distributeByLayoutType(List<Map<String, Object>> models, GenerationTemplateModelParameters parameters) {
+	private void distributeByLayoutType(List<Map<String, Object>> models, Map<String, Map<String, Object>> perspectives, 
+			Map<String, Map<String, Object>> sidebar, GenerationTemplateModelParameters parameters) {
 		
 		List<Map<String, Object>> uiPrimaryModels = new ArrayList<>();
 		List<Map<String, Object>> uiReportModels = new ArrayList<>();
@@ -391,9 +399,20 @@ public class GenerationProcessor extends WorkspaceProcessor {
 			String perspectiveName = model.get("perspectiveName").toString();
 			if (perspectiveName != null && !perspectiveCheck.contains(perspectiveName)) {
 				Map<String, Object> uiPerspective = new HashMap<String, Object>();
-				uiPerspective.put("perspectiveName", perspectiveName);
-				uiPerspective.put("perspectiveIcon", model.get("perspectiveIcon"));
-				uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder"));
+				
+				Map<String, Object> perspectiveParameters = perspectives.get(perspectiveName);
+				if (perspectiveParameters != null) {
+					uiPerspective.put("perspectiveName", perspectiveParameters.get("name"));
+					uiPerspective.put("perspectiveLabel", perspectiveParameters.get("label"));
+					uiPerspective.put("perspectiveIcon", perspectiveParameters.get("icon"));
+					uiPerspective.put("perspectiveOrder", perspectiveParameters.get("order"));
+				} else {
+					uiPerspective.put("perspectiveName", perspectiveName);
+					uiPerspective.put("perspectiveLabel", perspectiveName);
+					uiPerspective.put("perspectiveIcon", model.get("perspectiveIcon"));
+					uiPerspective.put("perspectiveOrder", model.get("perspectiveOrder"));
+				}
+				
 				uiPerspective.put("launchpadName", model.get("launchpadName"));
 				uiPerspective.put("extensionName", model.get("extensionName"));
 				uiPerspective.put("brand", model.get("brand"));
@@ -520,5 +539,36 @@ public class GenerationProcessor extends WorkspaceProcessor {
 		return models;
 	}
 
+	private Map<String, Map<String, Object>> mapPerspectives(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
+		Map<String, Map<String, Object>> perspectives = new HashMap<>();
+		for (EntityDataModelPerspective perspective : entityDataModel.getModel().getPerspectives()) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(perspective.getName());
+			model.putAll(parameters.getParameters());
+			addStandardParameters(workspace, project, localPath.build(), model);
+			model.put("name", perspective.getName());
+			model.put("label", perspective.getLabel());
+			model.put("icon", perspective.getIcon());
+			model.put("order", perspective.getOrder());
+			perspectives.put(perspective.getName(), model);
+		}
+		return perspectives;
+	}
+	
+	private Map<String, Map<String, Object>> mapSidebar(EntityDataModel entityDataModel, GenerationTemplateModelParameters parameters, String workspace, String project, String path) {
+		Map<String, Map<String, Object>> sidebar = new HashMap<>();
+		for (EntityDataModelSidebarItem item : entityDataModel.getModel().getSidebar()) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			RepositoryPath localPath = new RepositoryPath().append(path).getParentPath().append(item.getPath());
+			model.putAll(parameters.getParameters());
+			addStandardParameters(workspace, project, localPath.build(), model);
+			model.put("path", item.getPath());
+			model.put("label", item.getLabel());
+			model.put("icon", item.getIcon());
+			model.put("url", item.getUrl());
+			sidebar.put(item.getPath(), model);
+		}
+		return sidebar;
+	}
 
 }

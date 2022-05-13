@@ -188,7 +188,7 @@ public class PublisherSynchronizer extends AbstractSynchronizer {
 					}
 
 					for (IPublisherHandler next : publisherHandlers) {
-						next.afterPublish(entry.getKey());
+						next.afterPublish(entry.getKey(), entry.getValue());
 					}
 				}
 			} catch (SchedulerException e) {

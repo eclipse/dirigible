@@ -23,6 +23,8 @@ public class FileDescriptor {
 	private String type = "file";
 
 	private String contentType;
+	
+	private String status;
 
 	/**
 	 * Gets the name.
@@ -88,6 +90,25 @@ public class FileDescriptor {
 	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
+	}
+	
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the status.
+	 *
+	 * @param status
+	 *            the new status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

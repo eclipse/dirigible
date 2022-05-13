@@ -28,6 +28,8 @@ exports.transform = function (workspaceName, projectName, filePath) {
     let root = {};
     root.model = {};
     root.model.entities = [];
+    root.model.perspectives = [];
+    root.model.sidebar = [];
     if (raw.model) {
         if (raw.model.entities) {
             if (raw.model.entities.entity) {
@@ -47,6 +49,31 @@ exports.transform = function (workspaceName, projectName, filePath) {
         } else {
             console.error("Invalid source model: 'entities' element is null");
         }
+
+        if (raw.model.perspectives) {
+            if (raw.model.perspectives.perspective) {
+                if (Array.isArray(raw.model.perspectives.perspective)) {
+                    raw.model.perspectives.perspective.forEach(perspective => { root.model.perspectives.push(transformPerspective(perspective)) });
+                } else {
+                    root.model.perspectives.push(transformPerspective(raw.model.perspectives.perspective));
+                }
+            } else {
+                console.error("Invalid source model: 'perspective' element is null");
+            }
+        } else {
+            console.error("Invalid source model: 'perspectives' element is null");
+        }
+
+        if (raw.model.sidebar) {
+            if (raw.model.sidebar.item) {
+                if (Array.isArray(raw.model.sidebar.item)) {
+                    raw.model.sidebar.item.forEach(item => { root.model.sidebar.push(transformSidebar(item)) });
+                } else {
+                    root.model.sidebar.push(transformSidebar(raw.model.sidebar.item));
+                }
+            }
+        }
+
     } else {
         console.error("Invalid source model: 'model' element is null");
     }
@@ -89,5 +116,21 @@ exports.transform = function (workspaceName, projectName, filePath) {
                 });
             }
         });
+    }
+
+    function transformPerspective(raw) {
+        let perspective = {};
+        for (let propertyName in raw) {
+            perspective[propertyName] = raw[propertyName];
+        }
+        return perspective;
+    }
+
+    function transformSidebar(raw) {
+        let item = {};
+        for (let propertyName in raw) {
+            item[propertyName] = raw[propertyName];
+        }
+        return item;
     }
 }

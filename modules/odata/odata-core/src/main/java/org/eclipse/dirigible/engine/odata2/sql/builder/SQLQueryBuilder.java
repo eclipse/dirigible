@@ -99,6 +99,7 @@ public class SQLQueryBuilder {
         }
         q.join(uri.getStartEntitySet(), uri.getTargetEntitySet(), uri.getNavigationSegments()).with(uri.getKeyPredicates());
         q.validateOrderBy(uri);
+        q.groupBy(uri.getTargetEntitySet().getEntityType());
         q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
         
         return chain.onRead(q, uri, context);
@@ -133,6 +134,7 @@ public class SQLQueryBuilder {
                 joinTarget = nav.getTargetEntitySet();
             }
         }
+        q.groupBy(uri.getTargetEntitySet().getEntityType());
         q.orderBy(uri.getOrderBy(), uri.getTargetEntitySet().getEntityType());
         return chain.onRead(q, uri, context);
     }

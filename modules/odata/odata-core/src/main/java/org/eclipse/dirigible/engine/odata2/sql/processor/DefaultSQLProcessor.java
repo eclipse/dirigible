@@ -11,8 +11,15 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import com.sap.db.jdbc.HanaClob;
+import com.sap.db.jdbc.HanaBlob;
+import org.apache.commons.io.IOUtils;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.processor.ODataContext;
+import org.apache.olingo.odata2.core.edm.EdmDouble;
+import org.apache.olingo.odata2.core.edm.EdmInt16;
+import org.apache.olingo.odata2.core.edm.EdmInt32;
+import org.apache.olingo.odata2.core.edm.EdmInt64;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2EventHandler;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLInterceptor;
@@ -22,11 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -71,46 +80,50 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
     }
 
     @Override
-    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException {
+    public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException, SQLException, IOException {
         EdmType propertyType = property.getType();
 
         if (value instanceof String && !propertyType.equals(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance())) {
             if (propertyType.equals(EdmSimpleTypeKind.Byte.getEdmSimpleTypeInstance())) {
                 value = Short.parseShort(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance())) {
                 value = Byte.parseByte(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance())) {
                 value = Short.parseShort(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance())) {
                 value = Integer.parseInt(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance())) {
                 value = Long.parseLong(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance())) {
                 value = Float.parseFloat(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance())) {
                 value = Double.parseDouble(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance())) {
                 value = new BigDecimal(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance())) {
                 value = Boolean.parseBoolean(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance())) {
                 value = Time.valueOf(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance())) {
                 value = Timestamp.valueOf(value.toString());
-            }
-            else if (propertyType.equals(EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance())) {
+            } else if (propertyType.equals(EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance())) {
                 value = Date.valueOf(value.toString());
             }
+        } else if (value instanceof BigDecimal) {
+            BigDecimal dec = (BigDecimal) value;
+            if (property.getType().equals(EdmInt32.getInstance())) {
+                return dec.toBigInteger().intValue();
+            } else if (property.getType().equals(EdmInt64.getInstance())) {
+                return dec.toBigInteger().longValue();
+            } else if (property.getType().equals(EdmInt16.getInstance())) {
+                return dec.toBigInteger().shortValue();
+            } else if (property.getType().equals(EdmDouble.getInstance())) {
+                return dec.doubleValue();
+            }
+        } else if (value instanceof HanaClob) {
+            return IOUtils.toString(((HanaClob) value).getCharacterStream());
+        } else if (value instanceof HanaBlob) {
+            return IOUtils.toString(((HanaBlob) value).getBinaryStream(), StandardCharsets.UTF_8);
         }
 
         return value;

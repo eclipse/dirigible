@@ -13,12 +13,12 @@
 // DOM node with the specified ID. This function is invoked
 // from the onLoad event handler of the document (see below).
 function main(container, outline, toolbar, sidebar, status) {
-	let $scope = $('#ModelerCtrl').scope();
-	let file = "";
+	var $scope = $('#ModelerCtrl').scope();
+	var file = "";
 
 	// Load schema file
 	function getResource(resourcePath) {
-		let xhr = new XMLHttpRequest();
+		var xhr = new XMLHttpRequest();
 		xhr.open('GET', resourcePath, false);
 		xhr.send();
 		if (xhr.status === 200) {
@@ -35,25 +35,25 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	function getViewParameters() {
 		if (window.frameElement.hasAttribute("data-parameters")) {
-			let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+			var params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
 			file = params["file"];
 		} else {
-			let searchParams = new URLSearchParams(window.location.search);
+			var searchParams = new URLSearchParams(window.location.search);
 			file = searchParams.get('file');
 		}
 	}
 
 	getViewParameters();
-	let contents = loadContents(file);
+	var contents = loadContents(file);
 
-	let messageHub = new FramesMessageHub();
+	var messageHub = new FramesMessageHub();
 
 	initializeSchemaJson(file.substring(0, file.lastIndexOf('.')) + '.schema');
 
 	function saveContents(text, file) {
 		console.log('Save called...');
 		if (file) {
-			let xhr = new XMLHttpRequest();
+			var xhr = new XMLHttpRequest();
 			xhr.open('PUT', '/services/v4/ide/workspaces' + file);
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
@@ -71,7 +71,7 @@ function main(container, outline, toolbar, sidebar, status) {
 	function initializeSchemaJson(file) {
 		console.log('Save called...');
 		if (file) {
-			let xhr = new XMLHttpRequest();
+			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '/services/v4/ide/workspaces' + file);
 			xhr.onreadystatechange = function () {
 				if (xhr.readyState === 4) {
@@ -86,9 +86,9 @@ function main(container, outline, toolbar, sidebar, status) {
 	}
 
 	function saveSchema(graph) {
-		let schema = createSchema(graph);
+		var schema = createSchema(graph);
 		saveContents(schema, file);
-		let schemaJson = createSchemaJson(graph);
+		var schemaJson = createSchemaJson(graph);
 		saveContents(schemaJson, file.substring(0, file.lastIndexOf('.')) + '.schema');
 	}
 
@@ -136,9 +136,9 @@ function main(container, outline, toolbar, sidebar, status) {
 		// editor is used to create certain functionality for the
 		// graph, such as the rubberband selection, but most parts
 		// of the UI are custom in this example.
-		let editor = new mxEditor();
-		let graph = editor.graph;
-		let model = graph.model;
+		var editor = new mxEditor();
+		var graph = editor.graph;
+		var model = graph.model;
 
 		initClipboard(graph);
 
@@ -170,7 +170,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Sets the graph container and configures the editor
 		editor.setGraphContainer(container);
-		let config = mxUtils.load(
+		var config = mxUtils.load(
 			'editors/config/keyhandler-minimal.xml').
 			getDocumentElement();
 		editor.configure(config);
@@ -178,7 +178,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Configures the automatic layout for the table columns
 		editor.layoutSwimlanes = true;
 		editor.createSwimlaneLayout = function () {
-			let layout = new mxStackLayout(this.graph, false);
+			var layout = new mxStackLayout(this.graph, false);
 			layout.fill = true;
 			layout.resizeParent = true;
 
@@ -195,7 +195,7 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (value.name != null) {
 				return mxGraphModel.prototype.valueForCellChanged.apply(this, arguments);
 			}
-			let old = cell.value.name;
+			var old = cell.value.name;
 			cell.value.name = value;
 			return old;
 		};
@@ -225,8 +225,8 @@ function main(container, outline, toolbar, sidebar, status) {
 			if (this.isHtmlLabel(state.cell)) {
 				return 'Type: ' + state.cell.value.type;
 			} else if (this.model.isEdge(state.cell)) {
-				let source = this.model.getTerminal(state.cell, true);
-				let parent = this.model.getParent(source);
+				var source = this.model.getTerminal(state.cell, true);
+				var parent = this.model.getParent(source);
 
 				return parent.value.name + '.' + source.value.name;
 			}
@@ -237,7 +237,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Creates a dynamic HTML label for column fields
 		graph.getLabel = function (cell) {
 			if (this.isHtmlLabel(cell)) {
-				let label = '';
+				var label = '';
 
 				if (cell.value.primaryKey === 'true') {
 					label += '<i title="Primary Key" class="fa fa-key" width="16" height="16" align="top"></i>&nbsp;';
@@ -253,7 +253,7 @@ function main(container, outline, toolbar, sidebar, status) {
 					label += '<img src="images/spacer.gif" width="9" height="1">&nbsp;';
 				}
 
-				let suffix = ': ' + mxUtils.htmlEntities(cell.value.type, false) + (cell.value.columnLength ?
+				var suffix = ': ' + mxUtils.htmlEntities(cell.value.type, false) + (cell.value.columnLength ?
 					'(' + cell.value.columnLength + ')' : '');
 				suffix = cell.value.isSQL ? '' : suffix;
 				return label + mxUtils.htmlEntities(cell.value.name, false) + suffix;
@@ -264,14 +264,14 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Removes the source vertex if edges are removed
 		graph.addListener(mxEvent.REMOVE_CELLS, function (sender, evt) {
-			let cells = evt.getProperty('cells');
+			var cells = evt.getProperty('cells');
 
-			for (let i = 0; i < cells.length; i++) {
-				let cell = cells[i];
+			for (var i = 0; i < cells.length; i++) {
+				var cell = cells[i];
 
 				if (this.model.isEdge(cell)) {
-					let terminal = this.model.getTerminal(cell, true);
-					let parent = this.model.getParent(terminal);
+					var terminal = this.model.getTerminal(cell, true);
+					var parent = this.model.getParent(terminal);
 					this.model.remove(terminal);
 				}
 			}
@@ -291,15 +291,15 @@ function main(container, outline, toolbar, sidebar, status) {
 		configureStylesheet(graph);
 
 		// Adds sidebar icon for the table object
-		let tableObject = new Table('TABLENAME');
-		let table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
+		var tableObject = new Table('TABLENAME');
+		var table = new mxCell(tableObject, new mxGeometry(0, 0, 200, 28), 'table');
 
 		table.setVertex(true);
 		addSidebarIcon(graph, sidebar, table, 'table', 'Drag this to the diagram to create a new Table', $scope);
 
 		// Adds sidebar icon for the column object
-		let columnObject = new Column('COLUMNNAME');
-		let column = new mxCell(columnObject, new mxGeometry(0, 0, 0, 26));
+		var columnObject = new Column('COLUMNNAME');
+		var column = new mxCell(columnObject, new mxGeometry(0, 0, 0, 26));
 
 		column.setVertex(true);
 		column.setConnectable(false);
@@ -307,14 +307,14 @@ function main(container, outline, toolbar, sidebar, status) {
 		addSidebarIcon(graph, sidebar, column, 'columns', 'Drag this to a Table to create a new Column', $scope);
 
 		// Adds sidebar icon for the view object
-		let viewObject = new View('VIEWENAME');
-		let view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'table');
+		var viewObject = new View('VIEWENAME');
+		var view = new mxCell(viewObject, new mxGeometry(0, 0, 200, 28), 'table');
 
 		view.setVertex(true);
 		addSidebarIcon(graph, sidebar, view, 'th-large', 'Drag this to the diagram to create a new View', $scope);
 
 		// Adds primary key field into table
-		let firstColumn = column.clone();
+		var firstColumn = column.clone();
 
 		firstColumn.value.name = 'TABLENAME_ID';
 		firstColumn.value.type = 'INTEGER';
@@ -325,7 +325,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		table.insert(firstColumn);
 
 		// Adds sql field into view
-		let sqlColumn = column.clone();
+		var sqlColumn = column.clone();
 
 		sqlColumn.value.name = 'SELECT ...';
 		sqlColumn.value.isSQL = true;
@@ -341,11 +341,11 @@ function main(container, outline, toolbar, sidebar, status) {
 			}
 
 			// Finds the primary key child of the target table
-			let primaryKey = null;
-			let childCount = this.model.getChildCount(target);
+			var primaryKey = null;
+			var childCount = this.model.getChildCount(target);
 
-			for (let i = 0; i < childCount; i++) {
-				let child = this.model.getChildAt(target, i);
+			for (var i = 0; i < childCount; i++) {
+				var child = this.model.getChildAt(target, i);
 
 				if (child.value.primaryKey) {
 					primaryKey = child;
@@ -360,7 +360,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 			this.model.beginUpdate();
 			try {
-				let col1 = this.model.cloneCell(column);
+				var col1 = this.model.cloneCell(column);
 				col1.value.name = primaryKey.value.name;
 				col1.value.type = primaryKey.value.type;
 				col1.value.columnLength = primaryKey.value.columnLength;
@@ -377,7 +377,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Creates a new DIV that is used as a toolbar and adds
 		// toolbar buttons.
-		let spacer = document.createElement('div');
+		var spacer = document.createElement('div');
 		spacer.style.display = 'inline';
 		spacer.style.padding = '8px';
 
@@ -431,6 +431,67 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		toolbar.appendChild(spacer.cloneNode(true));
 
+		// Defines a new move up action
+		editor.addAction('moveup', function (editor, cell) {
+
+			if (cell.parent.children.length > 1) {
+				graph.getModel().beginUpdate();
+				try {
+
+					for (index = 0; index < cell.parent.children.length; index++) {
+						var current = cell.parent.children[index];
+						if (cell.id === current.id) {
+							if (index > 0) {
+								var previous = cell.parent.children[index - 1];
+								var y = previous.geometry.y;
+								previous.geometry.y = current.geometry.y;
+								current.geometry.y = y;
+								cell.parent.children[index - 1] = current;
+								cell.parent.children[index] = previous;
+								break;
+							}
+
+						}
+					}
+				} finally {
+					graph.getModel().endUpdate();
+					graph.refresh();
+				}
+			}
+
+		});
+
+		// Defines a new move down action
+		editor.addAction('movedown', function (editor, cell) {
+
+			if (cell.parent.children.length > 2) {
+				graph.getModel().beginUpdate();
+				try {
+
+					for (index = 0; index < cell.parent.children.length; index++) {
+						var current = cell.parent.children[index];
+						if (cell.id === current.id) {
+							if (index < cell.parent.children.length - 1) {
+								var next = cell.parent.children[index + 1];
+								var y = next.geometry.y;
+								next.geometry.y = current.geometry.y;
+								current.geometry.y = y;
+								cell.parent.children[index + 1] = current;
+								cell.parent.children[index] = next;
+								break;
+							}
+						}
+					}
+				} finally {
+					graph.getModel().endUpdate();
+					graph.refresh();
+				}
+			}
+
+		});
+
+		toolbar.appendChild(spacer.cloneNode(true));
+
 		addToolbarButton(editor, toolbar, 'copy', 'Copy', 'copy', true);
 		// Defines a new save action
 		editor.addAction('copy', function (editor, cell) {
@@ -463,7 +524,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Defines a create SQL action
 		editor.addAction('showSql', function (editor, cell) {
-			let sql = createSql(graph);
+			var sql = createSql(graph);
 
 			if (sql.length > 0) {
 				//				var textarea = document.createElement('textarea');
@@ -509,10 +570,10 @@ function main(container, outline, toolbar, sidebar, status) {
 
 		// Creates the outline (navigator, overview) for moving
 		// around the graph in the top, right corner of the window.
-		let outln = new mxOutline(graph, outline);
+		var outln = new mxOutline(graph, outline);
 
 		// Fades-out the splash screen after the UI has been loaded.
-		let splash = document.getElementById('splash');
+		var splash = document.getElementById('splash');
 		if (splash != null) {
 			try {
 				mxEvent.release(splash);
@@ -525,7 +586,7 @@ function main(container, outline, toolbar, sidebar, status) {
 		}
 	}
 
-	let doc = mxUtils.parseXml(contents);
-	let codec = new mxCodec(doc.mxGraphModel);
+	var doc = mxUtils.parseXml(contents);
+	var codec = new mxCodec(doc.mxGraphModel);
 	codec.decode(doc.documentElement.getElementsByTagName('mxGraphModel')[0], graph.getModel());
 };

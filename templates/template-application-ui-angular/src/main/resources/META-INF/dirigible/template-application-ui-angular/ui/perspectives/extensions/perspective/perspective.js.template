@@ -22,7 +22,7 @@ exports.getPerspective = function(relativePath) {
 #else
 		image: "life-ring",
 #end
-		link: relativePath + "services/v4/web/${projectName}/ui/${perspectiveName}/index.html",
+		link: relativePath + "services/v4/web/${projectName}/gen/ui/${perspectiveName}/index.html",
 #if($perspectiveOrder)
 		order: ${perspectiveOrder},
 #else

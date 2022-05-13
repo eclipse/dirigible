@@ -98,6 +98,10 @@ public class RegistryTruffleFileSystem implements FileSystem {
 
     @Override
     public Path toAbsolutePath(Path path) {
+        if ("".equals(path.toString())) {
+            return Path.of("");
+        }
+
     	Path maybeDirigiblePath = standardHandler.handlePossibleRepositoryPath(path);
         return maybeDirigiblePath.toAbsolutePath();
     }
@@ -107,6 +111,10 @@ public class RegistryTruffleFileSystem implements FileSystem {
             Path path,
             LinkOption... linkOptions
     ) throws IOException {
+        if ("".equals(path.toString())) {
+            return Path.of("");
+        }
+
         return standardHandler.handlePossibleRepositoryPath(path);
     }
 

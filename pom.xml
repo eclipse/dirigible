@@ -698,7 +698,7 @@
 		<postgresql.version>42.3.3</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
-		<activemq.version>5.16.4</activemq.version>
+		<activemq.version>5.17.0</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
@@ -725,6 +725,8 @@
 		<logcaptor.version>2.7.8</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.2.2</jackson.databind.version>
+		<spring.boot.version>2.6.6</spring.boot.version>
+		<webjars-locator>0.30</webjars-locator>
 
 		<profile.content.phase>none</profile.content.phase>
 

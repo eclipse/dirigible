@@ -9,38 +9,38 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getSources = function(parameters) {
+exports.getSources = function (parameters) {
 	return [{
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/index.html.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/index.html.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/index.html",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/index.html",
 		engine: "velocity",
 		collection: "uiReportTableModels"
 	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/controller.js.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/controller.js.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/controller.js",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/controller.js",
 		engine: "velocity",
 		collection: "uiReportTableModels"
 	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/view.js.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/view.js.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.js",
 		collection: "uiReportTableModels"
 	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/view.extension.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/view.extension.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/view.extension",
 		collection: "uiReportTableModels"
 	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/menu/item.extension.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/menu/item.extension.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.extension",
 		collection: "uiReportTableModels"
 	}, {
-		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/menu/item.js.template", 
+		location: "/template-application-ui-angular/ui/perspectives/views/report/table/extensions/menu/item.js.template",
 		action: "generate",
-		rename: "ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js",
+		rename: "gen/ui/{{perspectiveName}}/views/{{fileName}}/extensions/menu/item.js",
 		collection: "uiReportTableModels"
 	}];
 };

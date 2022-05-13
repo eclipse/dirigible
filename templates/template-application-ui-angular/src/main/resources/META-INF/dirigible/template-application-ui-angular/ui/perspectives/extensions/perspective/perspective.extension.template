@@ -3,7 +3,7 @@
 #if($includeLaunchpad)
 	"extensionPoint": "launchpad-${extensionName}-perspective",
 #else
-	"extensionPoint": "launchpad-${launchpadName}-perspective",
+	"extensionPoint": "launchpad-${extensionName}-perspective",
 #end
-	"module": "${projectName}/ui/${perspectiveName}/extensions/perspective/perspective.js"
+	"module": "${projectName}/gen/ui/${perspectiveName}/extensions/perspective/perspective.js"
 }

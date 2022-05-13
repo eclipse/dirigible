@@ -37,13 +37,20 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 public class PublisherCoreService implements IPublisherCoreService {
 
 	/** The data source. */
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	/** The publish request persistence manager. */
 	private PersistenceManager<PublishRequestDefinition> publishRequestPersistenceManager = new PersistenceManager<PublishRequestDefinition>();
 
 	/** The publish log persistence manager. */
 	private PersistenceManager<PublishLogDefinition> publishLogPersistenceManager = new PersistenceManager<PublishLogDefinition>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Publish Request
 
@@ -65,7 +72,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishRequestPersistenceManager.insert(connection, publishRequestDefinition);
 				return publishRequestDefinition;
 			} finally {
@@ -97,7 +104,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishRequestPersistenceManager.insert(connection, publishRequestDefinition);
 				return publishRequestDefinition;
 			} finally {
@@ -129,7 +136,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return publishRequestPersistenceManager.find(connection, PublishRequestDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -150,7 +157,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishRequestPersistenceManager.delete(connection, PublishRequestDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -171,7 +178,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS").toString();
 				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
 				publishRequestPersistenceManager.execute(connection, sql);
@@ -194,7 +201,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return publishRequestPersistenceManager.findAll(connection, PublishRequestDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -224,7 +231,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishLogPersistenceManager.insert(connection, publishLogDefinition);
 				return publishLogDefinition;
 			} finally {
@@ -246,7 +253,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return publishLogPersistenceManager.find(connection, PublishLogDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -267,7 +274,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishLogPersistenceManager.delete(connection, PublishLogDefinition.class, id);
 			} finally {
 				if (connection != null) {
@@ -288,7 +295,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return publishLogPersistenceManager.findAll(connection, PublishLogDefinition.class);
 			} finally {
 				if (connection != null) {
@@ -309,7 +316,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_PUBLISH_REQUESTS").where("PUBREQ_CREATED_AT > ?")
 						.toString();
 				Timestamp latest = (timestamp == null) ? new Timestamp(0) : timestamp;
@@ -333,7 +340,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				publishRequestPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
 				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();

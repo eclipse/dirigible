@@ -85,9 +85,9 @@
                 </div>
                 <div class="statusbar" status-bar></div>
  
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/resources/js/message-hub.js"></script>	
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/resources/js/ui-layout.js"></script>
-                <script type="text/javascript" src="/services/v4/web/{{projectName}}/resources/js/ui-core-ng-modules.js"></script>
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/message-hub.js"></script>	
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/ui-layout.js"></script>
+                <script type="text/javascript" src="/services/v4/web/{{projectName}}/gen/ui/resources/js/ui-core-ng-modules.js"></script>
                
                 <script type="text/javascript">
                                 angular.module('operations', ['ngResource', 'ideUiCore'])

@@ -11,22 +11,16 @@
  */
 package org.eclipse.dirigible.runtime.openapi.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
-import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.runtime.openapi.api.IOpenAPICoreService;
 import org.eclipse.dirigible.runtime.openapi.api.OpenAPIException;
 import org.eclipse.dirigible.runtime.openapi.definition.OpenAPIDefinition;
@@ -36,11 +30,16 @@ import org.eclipse.dirigible.runtime.openapi.definition.OpenAPIDefinition;
  */
 public class OpenAPICoreService implements IOpenAPICoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<OpenAPIDefinition> openAPIPersistenceManager = new PersistenceManager<OpenAPIDefinition>();
 
-	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// OpenAPI
 
@@ -60,7 +59,7 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				openAPIPersistenceManager.insert(connection, openAPIDefinition);
 				return openAPIDefinition;
 			} finally {
@@ -82,7 +81,7 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return openAPIPersistenceManager.find(connection, OpenAPIDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -103,7 +102,7 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				openAPIPersistenceManager.delete(connection, OpenAPIDefinition.class, location);
 			} finally {
 				if (connection != null) {
@@ -125,7 +124,7 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				OpenAPIDefinition openAPIDefinition = getOpenAPI(location);
 				openAPIDefinition.setHash(hash);
 				openAPIPersistenceManager.update(connection, openAPIDefinition);
@@ -148,7 +147,7 @@ public class OpenAPICoreService implements IOpenAPICoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return openAPIPersistenceManager.findAll(connection, OpenAPIDefinition.class);
 			} finally {
 				if (connection != null) {

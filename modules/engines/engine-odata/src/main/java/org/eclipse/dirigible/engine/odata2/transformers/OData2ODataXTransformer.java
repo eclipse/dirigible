@@ -28,6 +28,7 @@ public class OData2ODataXTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataXTransformer.class);
 
+    public static final List<String> TABLE_TYPES = List.of(ISqlKeywords.METADATA_TABLE, ISqlKeywords.METADATA_BASE_TABLE);
     public static final List<String> VIEW_TYPES = List.of(ISqlKeywords.METADATA_VIEW, ISqlKeywords.METADATA_CALC_VIEW);
 
     private final ODataPropertyNameEscaper propertyNameEscaper;
@@ -64,8 +65,8 @@ public class OData2ODataXTransformer {
                 logger.error("Table {} not available for entity {}, so it will be skipped.", entity.getTable(), entity.getName());
                 continue;
             }
-            if (!VIEW_TYPES.contains(tableMetadata.getTableType()) && !ISqlKeywords.METADATA_TABLE.equals(tableMetadata.getTableType())) {
-                logger.error("Unsupported object type for {}", entity.getTable());
+            if (!VIEW_TYPES.contains(tableMetadata.getTableType()) && !TABLE_TYPES.contains(tableMetadata.getTableType())) {
+                logger.error("Unsupported database type {} for entity object {}", tableMetadata.getTableType(), entity.getTable());
                 continue;
             }
 

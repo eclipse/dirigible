@@ -12,10 +12,14 @@
 package org.eclipse.dirigible.core.workspace.json;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.ServiceLoader;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.dirigible.core.workspace.api.IProjectStatusProvider;
+import org.eclipse.dirigible.core.workspace.api.ProjectStatus;
+import org.eclipse.dirigible.core.workspace.api.Status;
 import org.eclipse.dirigible.repository.api.ICollection;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
@@ -23,8 +27,8 @@ import org.eclipse.dirigible.repository.api.RepositoryPath;
  * The Workspace Json Helper.
  */
 public class WorkspaceJsonHelper {
-
 	
+	private static ServiceLoader<IProjectStatusProvider> statusProviders = ServiceLoader.load(IProjectStatusProvider.class);
 
 	/**
 	 * Describe workspace.
@@ -93,19 +97,22 @@ public class WorkspaceJsonHelper {
 
 		projectPojo.setGit(gitInfo.getLeft());
 		projectPojo.setGitName(gitInfo.getRight());
+		ProjectStatus status = null;
+		if (gitInfo.getLeft()) {
+			for (IProjectStatusProvider statusProvider : statusProviders) {
+				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
+				break;
+			}
+		}
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));
+			projectPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
-			FileDescriptor resourcePojo = new FileDescriptor();
-			resourcePojo.setName(childResource.getName());
-			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
-			resourcePojo.setContentType(childResource.getContentType());
-			projectPojo.getFiles().add(resourcePojo);
+			projectPojo.getFiles().add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
 		}
 
 		return projectPojo;
@@ -135,7 +142,6 @@ public class WorkspaceJsonHelper {
 		
 		return projectPojo;
 	}
-
 	/**
 	 * Describe folder.
 	 *
@@ -148,21 +154,43 @@ public class WorkspaceJsonHelper {
 	 * @return the folder descriptor
 	 */
 	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix) {
+		return describeFolder(collection, removePathPrefix, addPathPrefix, null);
+	}
+
+	/**
+	 * Describe folder.
+	 *
+	 * @param collection
+	 *            the collection
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
+	 * @param status
+	 *            the project status
+	 * @return the folder descriptor
+	 */
+	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix, ProjectStatus status) {
 		FolderDescriptor folderPojo = new FolderDescriptor();
 		folderPojo.setName(collection.getName());
 		folderPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
+		if (status != null) {
+			
+			String path = folderPojo.getPath().substring(1);
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1);
+			
+			if (status.getUntrackedFolders().contains(path)) {
+				folderPojo.setStatus(Status.U.name());
+			}
+		}
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
-			folderPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix));
+			folderPojo.getFolders().add(describeFolder(childCollection, removePathPrefix, addPathPrefix, status));
 		}
 
 		List<IResource> resources = collection.getResources();
 		for (IResource childResource : resources) {
-			FileDescriptor resourcePojo = new FileDescriptor();
-			resourcePojo.setName(childResource.getName());
-			resourcePojo.setPath(addPathPrefix + childResource.getPath().substring(removePathPrefix.length()));
-			resourcePojo.setContentType(childResource.getContentType());
-			folderPojo.getFiles().add(resourcePojo);
+			folderPojo.getFiles().add(describeFile(childResource, removePathPrefix, addPathPrefix, status));
 		}
 
 		return folderPojo;
@@ -180,10 +208,46 @@ public class WorkspaceJsonHelper {
 	 * @return the file descriptor
 	 */
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {
+		return describeFile(resource, removePathPrefix, addPathPrefix, null);
+	}
+	
+	/**
+	 * Describe file.
+	 *
+	 * @param resource
+	 *            the resource
+	 * @param removePathPrefix
+	 *            the remove path prefix
+	 * @param addPathPrefix
+	 *            the add path prefix
+	 * @param status
+	 *            the project status
+	 * @return the file descriptor
+	 */
+	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix, ProjectStatus status) {
 		FileDescriptor resourcePojo = new FileDescriptor();
 		resourcePojo.setName(resource.getName());
 		resourcePojo.setPath(addPathPrefix + resource.getPath().substring(removePathPrefix.length()));
 		resourcePojo.setContentType(resource.getContentType());
+		if (status != null) {
+			
+			String path = resourcePojo.getPath().substring(1);
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1);
+			
+			if (status.getAdded().contains(path)) {
+				resourcePojo.setStatus(Status.A.name());
+			} else if (status.getChanged().contains(path) 
+					|| status.getModified().contains(path)
+					|| status.getMissing().contains(path)) {
+				resourcePojo.setStatus(Status.M.name());
+			} else if (status.getConflicting().contains(path)) {
+				resourcePojo.setStatus(Status.C.name());
+			} else if (status.getRemoved().contains(path)) {
+				resourcePojo.setStatus(Status.D.name());
+			} else if (status.getUntracked().contains(path)) {
+				resourcePojo.setStatus(Status.U.name());
+			}
+		}
 		return resourcePojo;
 	}
 

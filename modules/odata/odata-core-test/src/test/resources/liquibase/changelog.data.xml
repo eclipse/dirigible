@@ -62,6 +62,16 @@
     </loadData>
   </changeSet>
 
+  <changeSet author="dirigible" id="customers-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM CUSTOMER
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/Customer.csv"
+              separator=";" tableName="CUSTOMER">
+    </loadData>
+  </changeSet>
 
   <changeSet author="dirigible" id="owners-data">
     <preConditions onFail="MARK_RAN">

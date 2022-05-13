@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 
-	private static final int LIMIT = 100;
+	private static final int LIMIT = 1000;
 
 	private static final String EMPTY_RESULT_SET = "Empty result set";
 

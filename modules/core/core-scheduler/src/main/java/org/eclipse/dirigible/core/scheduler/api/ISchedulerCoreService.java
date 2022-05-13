@@ -71,7 +71,7 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @throws SchedulerException
 	 *             the scheduler exception
 	 */
-	public JobDefinition createJob(JobDefinition jobDefinition) throws SchedulerException;
+	public JobDefinition createOrUpdateJob(JobDefinition jobDefinition) throws SchedulerException;
 
 	/**
 	 * Gets the job.

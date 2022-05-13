@@ -53,13 +53,27 @@ public class SchedulerManager {
 	/** The Constant LOCATION_TEMP_STORE. */
 	private static final String LOCATION_TEMP_STORE = "./target/temp/kahadb";
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 	
-	private IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private IRepository repository = null;
 
 	private static BrokerService broker;
 
 	private static Map<String, MessagingConsumer> LISTENERS = Collections.synchronizedMap(new HashMap<String, MessagingConsumer>());
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
+	
+	protected synchronized IRepository getRepository() {
+		if (repository == null) {
+			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		}
+		return repository;
+	}
 
 	/**
 	 * Initialize.
@@ -73,7 +87,7 @@ public class SchedulerManager {
 				broker = new BrokerService();
 				Configuration.loadModuleConfig("/dirigible-messaging.properties");
 				if (Boolean.parseBoolean(Configuration.get("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", "true"))) {
-					PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(dataSource, new OpenWireFormat());
+					PersistenceAdapter persistenceAdapter = new JDBCPersistenceAdapter(getDataSource(), new OpenWireFormat());
 					broker.setPersistenceAdapter(persistenceAdapter);
 				}
 				broker.setPersistent(true);
@@ -120,7 +134,7 @@ public class SchedulerManager {
 	 */
 	public void startListener(ListenerDefinition listener) {
 		if (!LISTENERS.keySet().contains(listener.getLocation())) {
-			IResource resource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
+			IResource resource = getRepository().getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + IRepositoryStructure.SEPARATOR + listener.getHandler());
 			if (!resource.exists()) {
 				logger.error("Listener {} cannot be started, because the handler {} does not exist!", listener.getLocation(), listener.getHandler());
 			}

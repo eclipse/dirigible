@@ -7,9 +7,9 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<link type="text/css" rel="stylesheet" href="../../../../../../../../../../services/v4/core/theme/bootstrap.min.css">
+	<link type="text/css" rel="stylesheet" href="/services/v4/core/theme/bootstrap.min.css">
 	<link type="text/css" rel="stylesheet" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css">
-	<link type="image/png" rel="shortcut icon" href="../../../../../../../../../../services/v4/web/resources/images/favicon.png" />
+	<link type="image/png" rel="shortcut icon" href="/services/v4/web/resources/images/favicon.png" />
 </head>
 
 <body ng-controller="PageController">
@@ -132,9 +132,9 @@
 	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
 	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 #if($includeLaunchpad)
-	<script type="text/javascript" src="../../../../../../../../../../services/v4/web/${projectName}/ui/resources/js/message-hub.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${projectName}/gen/ui/resources/js/message-hub.js"></script>
 #else
-	<script type="text/javascript" src="../../../../../../../../../../services/v4/web/${launchpadName}/ui/resources/js/message-hub.js"></script>
+	<script type="text/javascript" src="/services/v4/web/${launchpadName}/gen/ui/resources/js/message-hub.js"></script>
 #end
 	<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
 	<script type="text/javascript" src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>

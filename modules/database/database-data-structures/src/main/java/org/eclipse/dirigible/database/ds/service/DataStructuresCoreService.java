@@ -45,7 +45,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
  */
 public class DataStructuresCoreService implements IDataStructuresCoreService {
 
-	private DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+	private DataSource dataSource = null;
 
 	private PersistenceManager<DataStructureTableModel> tablePersistenceManager = new PersistenceManager<DataStructureTableModel>();
 
@@ -64,6 +64,13 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 	private PersistenceManager<DataStructureChangelogModel> changelogPersistenceManager = new PersistenceManager<DataStructureChangelogModel>();
 	
 	private PersistenceManager<DataStructureModel> dataStructurePersistenceManager = new PersistenceManager<DataStructureModel>();
+	
+	protected synchronized DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
+		}
+		return dataSource;
+	}
 
 	// Tables
 
@@ -85,7 +92,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				tablePersistenceManager.insert(connection, tableModel);
 				return tableModel;
 			} finally {
@@ -107,7 +114,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return tablePersistenceManager.find(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -128,7 +135,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES")
 						.where("DS_NAME = ? AND DS_TYPE = ?").toString();
 				List<DataStructureTableModel> tableModels = tablePersistenceManager.query(connection, DataStructureTableModel.class, sql,
@@ -160,7 +167,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				tablePersistenceManager.delete(connection, DataStructureTableModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -182,7 +189,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureTableModel tableModel = getTable(location);
 				tableModel.setName(name);
 				tableModel.setHash(hash);
@@ -206,7 +213,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureTableModel> tableModels = tablePersistenceManager.query(connection, DataStructureTableModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_TABLE));
@@ -268,7 +275,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				viewPersistenceManager.insert(connection, viewModel);
 				return viewModel;
 			} finally {
@@ -290,7 +297,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return viewPersistenceManager.find(connection, DataStructureViewModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -311,7 +318,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES")
 						.where("DS_NAME = ? AND DS_TYPE = ?").toString();
 				List<DataStructureViewModel> viewModels = viewPersistenceManager.query(connection, DataStructureViewModel.class, sql,
@@ -343,7 +350,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				viewPersistenceManager.delete(connection, DataStructureViewModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -365,7 +372,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureViewModel viewModel = getView(location);
 				viewModel.setName(name);
 				viewModel.setHash(hash);
@@ -389,7 +396,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureViewModel> viewModels = viewPersistenceManager.query(connection, DataStructureViewModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_VIEW));
@@ -473,7 +480,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				replacePersistenceManager.insert(connection, dataModel);
 				return dataModel;
 			} finally {
@@ -495,7 +502,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return replacePersistenceManager.find(connection, DataStructureDataReplaceModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -516,7 +523,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				replacePersistenceManager.delete(connection, DataStructureDataReplaceModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -538,7 +545,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureDataReplaceModel dataModel = getReplace(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
@@ -562,7 +569,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureDataReplaceModel> dataModels = replacePersistenceManager.query(connection, DataStructureDataReplaceModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_REPLACE));
@@ -617,7 +624,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				appendPersistenceManager.insert(connection, dataModel);
 				return dataModel;
 			} finally {
@@ -639,7 +646,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return appendPersistenceManager.find(connection, DataStructureDataAppendModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -660,7 +667,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				appendPersistenceManager.delete(connection, DataStructureDataAppendModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -682,7 +689,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureDataAppendModel dataModel = getAppend(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
@@ -706,7 +713,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureDataAppendModel> dataModels = appendPersistenceManager.query(connection, DataStructureDataAppendModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_APPEND));
@@ -761,7 +768,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				deletePersistenceManager.insert(connection, dataModel);
 				return dataModel;
 			} finally {
@@ -783,7 +790,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return deletePersistenceManager.find(connection, DataStructureDataDeleteModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -804,7 +811,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				deletePersistenceManager.delete(connection, DataStructureDataDeleteModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -826,7 +833,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureDataDeleteModel dataModel = getDelete(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
@@ -850,7 +857,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureDataDeleteModel> dataModels = deletePersistenceManager.query(connection, DataStructureDataDeleteModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_DELETE));
@@ -905,7 +912,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				updatePersistenceManager.insert(connection, dataModel);
 				return dataModel;
 			} finally {
@@ -927,7 +934,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return updatePersistenceManager.find(connection, DataStructureDataUpdateModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -948,7 +955,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				updatePersistenceManager.delete(connection, DataStructureDataUpdateModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -970,7 +977,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureDataUpdateModel dataModel = getUpdate(location);
 				dataModel.setName(name);
 				dataModel.setHash(hash);
@@ -994,7 +1001,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureDataUpdateModel> dataModels = updatePersistenceManager.query(connection, DataStructureDataUpdateModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_UPDATE));
@@ -1059,7 +1066,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				schemaPersistenceManager.insert(connection, schemaModel);
 				return schemaModel;
 			} finally {
@@ -1081,7 +1088,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return schemaPersistenceManager.find(connection, DataStructureSchemaModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -1102,7 +1109,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				schemaPersistenceManager.delete(connection, DataStructureSchemaModel.class, location);
 			} finally {
 				if (connection != null) {
@@ -1124,7 +1131,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				DataStructureSchemaModel schemaModel = getSchema(location);
 				schemaModel.setName(name);
 				schemaModel.setHash(hash);
@@ -1148,7 +1155,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 				List<DataStructureSchemaModel> dataModels = schemaPersistenceManager.query(connection, DataStructureSchemaModel.class, sql,
 						Arrays.asList(IDataStructureModel.TYPE_SCHEMA));
@@ -1191,7 +1198,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 		try {
 			Connection connection = null;
 			try {
-				connection = dataSource.getConnection();
+				connection = getDataSource().getConnection();
 				return dataStructurePersistenceManager.findAll(connection, DataStructureModel.class);
 			} finally {
 				if (connection != null) {
@@ -1225,7 +1232,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			try {
 				Connection connection = null;
 				try {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					changelogPersistenceManager.insert(connection, dataModel);
 					return dataModel;
 				} finally {
@@ -1247,7 +1254,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			try {
 				Connection connection = null;
 				try {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					return changelogPersistenceManager.find(connection, DataStructureChangelogModel.class, location);
 				} finally {
 					if (connection != null) {
@@ -1268,7 +1275,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			try {
 				Connection connection = null;
 				try {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					changelogPersistenceManager.delete(connection, DataStructureChangelogModel.class, location);
 				} finally {
 					if (connection != null) {
@@ -1290,7 +1297,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			try {
 				Connection connection = null;
 				try {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					DataStructureChangelogModel dataModel = getChangelog(location);
 					dataModel.setName(name);
 					dataModel.setHash(hash);
@@ -1314,7 +1321,7 @@ public class DataStructuresCoreService implements IDataStructuresCoreService {
 			try {
 				Connection connection = null;
 				try {
-					connection = dataSource.getConnection();
+					connection = getDataSource().getConnection();
 					String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_DATA_STRUCTURES").where("DS_TYPE = ?").toString();
 					List<DataStructureChangelogModel> dataModels = changelogPersistenceManager.query(connection, DataStructureChangelogModel.class, sql,
 							Arrays.asList(IDataStructureModel.TYPE_CHANGELOG));

@@ -9,103 +9,103 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function() {
+exports.getTemplate = function () {
 	return {
 		'name': 'Application Launchpad (AngularJS)',
 		'description': 'Application Launchpad for Full-stack Applications',
 		'sources': [{
 			'_section': 'API',
-			'location': '/template-application-launchpad/api/launchpad/menu.js.template', 
+			'location': '/template-application-launchpad/shell/launchpad/menu.js.template',
 			'action': 'generate',
-			'rename': 'api/launchpad/menu.js'
+			'rename': 'gen/shell/launchpad/menu.js'
 		}, {
 			'_section': 'API',
-			'location': '/template-application-launchpad/api/launchpad/perspectives.js.template', 
+			'location': '/template-application-launchpad/shell/launchpad/perspectives.js.template',
 			'action': 'generate',
-			'rename': 'api/launchpad/perspectives.js'
+			'rename': 'gen/shell/launchpad/perspectives.js'
 		}, {
 			'_section': 'API',
-			'location': '/template-application-launchpad/api/launchpad/tiles.js.template', 
+			'location': '/template-application-launchpad/shell/launchpad/tiles.js.template',
 			'action': 'generate',
-			'rename': 'api/launchpad/tiles.js'
+			'rename': 'gen/shell/launchpad/tiles.js'
 		}, {
 			'_section': 'API',
-			'location': '/template-application-launchpad/api/launchpad/views.js.template', 
+			'location': '/template-application-launchpad/shell/launchpad/views.js.template',
 			'action': 'generate',
-			'rename': 'api/launchpad/views.js'
+			'rename': 'gen/shell/launchpad/views.js'
 		},
 
 
 
 		{
 			'_section': 'Extensions',
-			'location': '/template-application-launchpad/extensions/perspective.extensionpoint.template', 
+			'location': '/template-application-launchpad/extensions/perspective.extensionpoint.template',
 			'action': 'generate',
-			'rename': 'extensions/perspective.extensionpoint'
+			'rename': 'gen/shell/extensions/perspective.extensionpoint'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-launchpad/extensions/perspective.extension.template', 
+			'location': '/template-application-launchpad/extensions/perspective.extension.template',
 			'action': 'generate',
-			'rename': 'extensions/perspective.extension'
+			'rename': 'gen/shell/extensions/perspective.extension'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-launchpad/extensions/perspective.js.template', 
+			'location': '/template-application-launchpad/extensions/perspective.js.template',
 			'action': 'generate',
-			'rename': 'extensions/perspective.js'
+			'rename': 'gen/shell/extensions/perspective.js'
 		}, {
 			'_section': 'Extensions',
-			'location': '/template-application-launchpad/extensions/tiles.extensionpoint.template', 
+			'location': '/template-application-launchpad/extensions/tiles.extensionpoint.template',
 			'action': 'generate',
-			'rename': 'extensions/tiles.extensionpoint'
-		}, 
+			'rename': 'gen/shell/extensions/tiles.extensionpoint'
+		},
 
 
 
 		{
 			'_section': 'UI - Index.html',
-			'location': '/template-application-launchpad/index.html.template', 
+			'location': '/template-application-launchpad/index.html.template',
 			'action': 'generate',
-			'rename': 'index.html',
-		}, 
-		
-		
+			'rename': 'gen/index.html',
+		},
+
+
 		{
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/templates/menu.html.template', 
+			'location': '/template-application-launchpad/ui/resources/templates/menu.html.template',
 			'action': 'generate',
-			'start' : '[[',
-			'end' : ']]',
-			'rename': 'resources/templates/menu.html'
+			'start': '[[',
+			'end': ']]',
+			'rename': 'gen/ui/resources/templates/menu.html'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/templates/sidebar.html.template', 
+			'location': '/template-application-launchpad/ui/resources/templates/sidebar.html.template',
 			'action': 'copy',
-			'rename': 'resources/templates/sidebar.html'
+			'rename': 'gen/ui/resources/templates/sidebar.html'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/templates/tiles.html.template', 
+			'location': '/template-application-launchpad/ui/resources/templates/tiles.html.template',
 			'action': 'copy',
-			'rename': 'resources/templates/tiles.html'
+			'rename': 'gen/ui/resources/templates/tiles.html'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/js/message-hub.js.template', 
+			'location': '/template-application-launchpad/ui/resources/js/message-hub.js.template',
 			'action': 'copy',
-			'rename': 'resources/js/message-hub.js'
+			'rename': 'gen/ui/resources/js/message-hub.js'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/js/ui-bootstrap-tpls-0.14.3.min.js.template', 
+			'location': '/template-application-launchpad/ui/resources/js/ui-bootstrap-tpls-0.14.3.min.js.template',
 			'action': 'copy',
-			'rename': 'resources/js/ui-bootstrap-tpls-0.14.3.min.js'
+			'rename': 'gen/ui/resources/js/ui-bootstrap-tpls-0.14.3.min.js'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/js/ui-core-ng-modules.js.template', 
+			'location': '/template-application-launchpad/ui/resources/js/ui-core-ng-modules.js.template',
 			'action': 'generate',
-			'rename': 'resources/js/ui-core-ng-modules.js'
+			'rename': 'gen/ui/resources/js/ui-core-ng-modules.js'
 		}, {
 			'_section': 'UI - Resources',
-			'location': '/template-application-launchpad/resources/js/ui-layout.js.template', 
+			'location': '/template-application-launchpad/ui/resources/js/ui-layout.js.template',
 			'action': 'generate',
-			'rename': 'resources/js/ui-layout.js'
+			'rename': 'gen/ui/resources/js/ui-layout.js'
 		},],
 		'parameters': [{
 			'name': 'extensionName',
