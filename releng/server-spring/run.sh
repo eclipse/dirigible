@@ -1,1 +1,1 @@
-java -jar ./target/dirigible-spring-boot-6.0.0-SNAPSHOT.jar
+java -jar ./target/dirigible-server-spring-7.0.0-SNAPSHOT.jar

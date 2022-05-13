@@ -203,6 +203,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-json</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -266,7 +272,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring.boot.version}</version>
 				<configuration>
-					<mainClass>org.eclipse.dirigible.services.spring.DirigibleRestServiceApplication</mainClass>
+					<mainClass>org.eclipse.dirigible.services.spring.DirigibleApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>

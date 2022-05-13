@@ -21,6 +21,26 @@ for (let i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
 		let editorExtension = require(module);
 		let editor = editorExtension.getEditor();
 		editors.push(editor);
+
+		let duplication = false;
+		for (let i = 0; i < editors.length; i++) {
+			for (let j = 0; j < editors.length; j++) {
+				if (i !== j) {
+					if (editors[i].id === editors[j].id) {
+						if (editors[i].link !== editors[j].link) {
+							console.error('Duplication at editor with id: [' + editors[i].id + '] pointing to links: ['
+								+ editors[i].link + '] and [' + editors[j].link + ']');
+						}
+						duplication = true;
+						break;
+					}
+				}
+			}
+			if (duplication) {
+				break;
+			}
+		}
+
 	} catch (error) {
 		console.error('Error occured while loading metadata for the editor: ' + module);
 		console.error(error);

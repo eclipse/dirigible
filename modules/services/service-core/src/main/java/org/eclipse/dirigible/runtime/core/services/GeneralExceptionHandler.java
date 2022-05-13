@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.runtime.core.services;
 
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.Provider;
 
 import org.eclipse.dirigible.commons.api.service.AbstractExceptionHandler;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class GeneralExceptionHandler.
  */
+@Provider
 public class GeneralExceptionHandler extends AbstractExceptionHandler<Exception> {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeneralExceptionHandler.class);

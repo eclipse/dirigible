@@ -21,6 +21,25 @@ for (let i = 0; i < viewExtensions.length; i++) {
 		let viewExtension = require(module);
 		let view = viewExtension.getView();
 		views.push(view);
+
+		let duplication = false;
+		for (let i = 0; i < views.length; i++) {
+			for (let j = 0; j < views.length; j++) {
+				if (i !== j) {
+					if (views[i].id === views[j].id) {
+						if (views[i].link !== views[j].link) {
+							console.error('Duplication at view with id: [' + views[i].id + '] pointing to links: ['
+								+ views[i].link + '] and [' + views[j].link + ']');
+						}
+						duplication = true;
+						break;
+					}
+				}
+			}
+			if (duplication) {
+				break;
+			}
+		}
 	} catch (error) {
 		console.error('Error occured while loading metadata for the view: ' + module);
 		console.error(error);

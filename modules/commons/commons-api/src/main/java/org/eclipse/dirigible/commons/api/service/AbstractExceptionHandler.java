@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.commons.api.service;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -22,7 +20,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 import org.eclipse.dirigible.commons.api.helpers.AppExceptionMessage;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
@@ -33,9 +30,6 @@ import com.google.gson.Gson;
  *            the generic type
  */
 public abstract class AbstractExceptionHandler<T extends Throwable> implements ExceptionMapper<T> {
-
-	/** The Constant logger. */
-	private static final Logger logger = LoggerFactory.getLogger(AbstractExceptionHandler.class);
 
 	/** The response. */
 	@Context

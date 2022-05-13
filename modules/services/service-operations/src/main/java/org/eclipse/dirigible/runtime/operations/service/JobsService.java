@@ -12,9 +12,12 @@
 package org.eclipse.dirigible.runtime.operations.service;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +27,7 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.runtime.operations.processor.JobsProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +80,44 @@ public class JobsService extends AbstractRestService implements IRestService {
 		}
 
 		return Response.ok().entity(processor.list()).build();
+	}
+	
+	/**
+	 * List all the jobs currently registered.
+	 *
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@POST
+	@Path("enable/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response enableJob(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.enable(IRepository.SEPARATOR + name)).build();
+	}
+	
+	/**
+	 * List all the jobs currently registered.
+	 *
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@POST
+	@Path("disable/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response disableJob(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.disable(IRepository.SEPARATOR + name)).build();
 	}
 
 	/*
