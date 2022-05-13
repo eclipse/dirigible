@@ -350,8 +350,10 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"UserRoleType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUserRole.UserRoleType\",\n" +
                 "\t\"sqlTable\": \"UserRole\",\n" +
+                "\t\"dataStructureType\": \"VIEW\",\n" +
                 "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
                 "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"keyGenerated\": \"ID\",\n" +
                 "\t\"_pk_\" : \"\"\n" +
                 "}";
@@ -375,9 +377,11 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"CustomerType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataCustomer.CustomerType\",\n" +
                 "\t\"sqlTable\": \"CUSTOMER\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ID\": \"ID\",\n" +
                 "\t\"NUMBER\": \"NUMBER\",\n" +
                 "\t\"PAYMENT\": \"PAYMENT\",\n" +
+                "\t\"_parameters_\" : [],\n" +
                 "\t\"aggregationType\" : \"derived\",\n" +
                 "\t\"aggregationProps\" : {\n" +
                 "\t\t\"NUMBER\": \"SUM\",\n" +
