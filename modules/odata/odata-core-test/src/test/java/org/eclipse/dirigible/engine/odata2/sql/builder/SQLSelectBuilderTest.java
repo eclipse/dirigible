@@ -64,9 +64,9 @@ public class SQLSelectBuilderTest {
                 Entity1.class, //
                 Entity2.class, //
                 Entity3.class, //
-                Entity4.class,//
-                Entity5.class,
-                Entity6.class
+                Entity4.class, //
+                Entity5.class, //
+                Entity6.class  //
         };
         provider = new AnnotationEdmProvider(Arrays.asList(classes));
         EdmImplProv edm = new EdmImplProv(provider);

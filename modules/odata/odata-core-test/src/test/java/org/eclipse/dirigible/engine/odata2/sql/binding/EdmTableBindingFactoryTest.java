@@ -38,7 +38,7 @@ public class EdmTableBindingFactoryTest {
         Class<?>[] classes = { //
                 Entity1.class, //
                 Entity2.class, //
-                Entity3.class, //
+                Entity3.class  //
         };
         AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
         edm = new EdmImplProv(provider);

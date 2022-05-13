@@ -152,7 +152,6 @@ public final class SQLUtils {
                         EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
                         literal = evaluateDateTimeExpressions(literal, edmSimpleType);
                         ColumnInfo info = query.getSQLTableColumnInfo(type, property);
-//                        whereClause.append(info.getColumnName()).append(" = ?");
                         params.add(SQLWhereClause.param(literal, edmSimpleType, info));
                     } else {
                         //TODO what to do with complex properties?

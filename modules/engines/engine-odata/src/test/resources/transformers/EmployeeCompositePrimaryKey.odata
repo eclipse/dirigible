@@ -26,8 +26,7 @@
 		{
 			"name": "address",
 			"alias": "Address",
-			"table": "ADDRESS",
-			"dataStructureType": "TABLE"
+			"table": "ADDRESS"
 		}
 	],
 	"associations": [
