@@ -11,8 +11,6 @@
  */
 package org.eclipse.dirigible.api.v3.platform;
 
-import static java.text.MessageFormat.format;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,15 +30,31 @@ import org.eclipse.dirigible.repository.local.LocalCollection;
 
 public class RegistryFacade {
 
+	private static final String META_INF_DIRIGIBLE = "/META-INF/dirigible";
+	private static final String META_INF_WEBJARS = "/META-INF/webjars";
+
 	public static byte[] getContent(String path) throws IOException, ScriptingException {
 		// Check in the repository first
 		IResource resource = RepositoryFacade.getResource(toRepositoryPath(path));
 		if (resource.exists()) {
 			return resource.getContent();
 		}
+		// Check in the pre-delivered content from dirigible folder
+		byte[] content = getFromClasspath(META_INF_DIRIGIBLE + toResourcePath(path));
+		if (content != null) {
+			return content;
+		}
+		// Check in the pre-delivered content from webjars
+		content = getFromClasspath(META_INF_WEBJARS + toResourcePath(path));
+		if (content != null) {
+			return content;
+		}
+		
+		return null;
+	}
 
-		// Check in the pre-delivered content
-		InputStream in = RegistryFacade.class.getResourceAsStream("/META-INF/dirigible" + toResourcePath(path));
+	private static byte[] getFromClasspath(String path) throws IOException {
+		InputStream in = RegistryFacade.class.getResourceAsStream(path);
 		try {
 			if (in != null) {
 				return IOUtils.toByteArray(in);

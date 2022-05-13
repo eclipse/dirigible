@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.runtime.registry.service;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +21,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.dirigible.api.v3.platform.RegistryFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.repository.api.ICollection;
@@ -57,10 +60,12 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 	 * @param path
 	 *            the path
 	 * @return the resource
+	 * @throws IOException io exception
+	 * @throws ScriptingException scripting exception
 	 */
 	@GET
 	@Path("/{path:.*}")
-	public Response getRegistryResource(@PathParam("path") String path) {
+	public Response getRegistryResource(@PathParam("path") String path) throws ScriptingException, IOException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -70,6 +75,10 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 		if (!resource.exists()) {
 			ICollection collection = processor.getCollection(path);
 			if (!collection.exists()) {
+				byte[] content = RegistryFacade.getContent(path);
+				if (content != null) {
+					return Response.ok().entity(content).type(ContentTypeHelper.APPLICATION_OCTET_STREAM).build();
+				}
 				return createErrorResponseNotFound(path);
 			}
 			return Response.ok().entity(processor.renderRegistry(collection)).type(ContentTypeHelper.APPLICATION_JSON).build();
@@ -78,6 +87,8 @@ public class RegistryRestService extends AbstractRestService implements IRestSer
 			return Response.ok().entity(resource.getContent()).type(resource.getContentType()).build();
 		}
 		return Response.ok(new String(resource.getContent(), StandardCharsets.UTF_8)).type(resource.getContentType()).build();
+		
+		
 	}
 
 	/*
