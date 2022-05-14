@@ -272,7 +272,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FINISHED);
 		jobLogDefinition.setTriggeredId(triggeredId);
 		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
-		jobLogDefinition.setTriggeredAt(new Timestamp(new java.util.Date().getTime()));
+		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
 		return registerJobLog(jobLogDefinition);
 	}
 	
@@ -289,7 +289,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FAILED);
 		jobLogDefinition.setTriggeredId(triggeredId);
 		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
-		jobLogDefinition.setTriggeredAt(new Timestamp(new java.util.Date().getTime()));
+		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
 		jobLogDefinition.setMessage(message);
 		return registerJobLog(jobLogDefinition);
 	}

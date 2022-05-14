@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.databases.processor.format;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -71,7 +72,8 @@ public class ResultSetJsonWriter implements ResultSetWriter<String> {
 					value = "[NULL]";
 				}
 				if (!ClassUtils.isPrimitiveOrWrapper(value.getClass()) 
-						&& value.getClass() != String.class) {
+						&& value.getClass() != String.class
+						&& !java.util.Date.class.isAssignableFrom(value.getClass())) {
 					value = "[BINARY]";
 				}
 				record.add(name, GsonHelper.GSON.toJsonTree(value));

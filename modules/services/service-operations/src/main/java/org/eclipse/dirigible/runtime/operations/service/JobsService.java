@@ -132,7 +132,7 @@ public class JobsService extends AbstractRestService implements IRestService {
 	 * @return the response
 	 * @throws SchedulerException the scheduler exception
 	 */
-	@POST
+	@GET
 	@Path("logs/{name:.*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getJobLogs(@PathParam("name") String name, @Context HttpServletRequest request)
