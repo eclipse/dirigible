@@ -185,7 +185,7 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @param name the name of the job 
 	 * @param handler the current handler
 	 * @param triggeredId id of the triggering event
-	 * @param triggredAt the time when has been triggered 
+	 * @param triggeredAt the time when has been triggered 
 	 * @return the Job Log
 	 * @throws SchedulerException exception
 	 */
@@ -197,7 +197,7 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @param name the name of the job 
 	 * @param handler the current handler
 	 * @param triggeredId id of the triggering event
-	 * @param triggredAt the time when has been triggered
+	 * @param triggeredAt the time when has been triggered
 	 * @param message the error message
 	 * @return the Job Log
 	 * @throws SchedulerException exception
@@ -217,7 +217,7 @@ public interface ISchedulerCoreService extends ICoreService {
 	/**
 	 * Delete Job Logs older than a week
 	 * 
-	 * @throws SchedulerException
+	 * @throws SchedulerException exception
 	 */
 	public void deleteOldJobLogs() throws SchedulerException;
 

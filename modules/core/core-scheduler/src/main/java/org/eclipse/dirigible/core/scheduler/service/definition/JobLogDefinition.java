@@ -136,7 +136,7 @@ public class JobLogDefinition {
 	}
 
 	/**
-	 * @param id the triggeredId to set
+	 * @param triggeredId the triggeredId to set
 	 */
 	public void setTriggeredId(long triggeredId) {
 		this.triggeredId = triggeredId;
