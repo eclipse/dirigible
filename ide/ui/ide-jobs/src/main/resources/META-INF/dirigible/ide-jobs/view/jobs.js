@@ -36,5 +36,14 @@ angular.module('jobs', [])
 				});
 		}
 
+		$scope.getLogs = function (job) {
+			$http.get('/services/v4/ops/jobs/logs/' + job.name)
+				.then(function (response) {
+					$scope.name = job.name;
+					$scope.logs = response.data;
+				}, function (response) {
+					console.error(response.data);
+				});
+		}
 
 	}]);
