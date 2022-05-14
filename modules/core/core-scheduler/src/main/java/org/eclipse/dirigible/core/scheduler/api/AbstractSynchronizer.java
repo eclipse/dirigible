@@ -11,7 +11,16 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+import static java.text.MessageFormat.format;
+
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.eclipse.dirigible.api.v3.http.access.IAccessManager;
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
+import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.service.SynchronizerCoreService;
@@ -22,12 +31,6 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static java.text.MessageFormat.format;
 
 /**
  * The AbstractSynchronizer.
@@ -43,8 +46,6 @@ public abstract class AbstractSynchronizer implements ISynchronizer {
 	private final AtomicLong lastSynchronized = new AtomicLong(0);
 	
 	private final AtomicBoolean forcedSynchronization = new AtomicBoolean(false);
-	
-	
 	
 	@Override
 	public boolean beforeSynchronizing() {
