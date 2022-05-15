@@ -94,6 +94,9 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 
 		if (processor.existResource(path)) {
 			IResource resource = processor.getResource(path);
+			if (resource == null) {
+				throw new RepositoryNotFoundException("Resource requested is not exposed.");
+			}
 			String contentType = resource.getContentType();
 			return sendResource(path, resource.isBinary(), resource.getContent(), contentType);
 		}
@@ -104,11 +107,12 @@ public abstract class AbstractWebEngineRestService extends AbstractRestService i
 			if (content != null) {
 				String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(path));
 				return sendResource(path, ContentTypeHelper.isBinary(contentType), content, contentType);
+			} else {
+				throw new RepositoryNotFoundException("Resource requested is not exposed.");
 			}
 		} catch (RepositoryNotFoundException e) {
 			throw new RepositoryNotFoundException(errorMessage, e);
 		}
-		throw new RepositoryNotFoundException(errorMessage);
 	}
 
 	private Response sendResourceNotModified() {
