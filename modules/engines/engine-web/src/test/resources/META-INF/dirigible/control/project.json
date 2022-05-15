@@ -1,0 +1,20 @@
+{
+    "guid":"control",
+    "repository":{
+        "type":"git",
+        "branch":"master",
+        "url":"https://github.com/dirigiblelabs/test1.git"
+    },
+    "dependencies": [
+        {
+            "guid":"test2",
+            "type": "git",
+            "url": "https://github.com/dirigiblelabs/test2.git",
+            "branch":"master"
+    	}
+	],
+    "exposes": [
+        "ui",
+        "samples"
+    ]
+}

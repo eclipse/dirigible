@@ -41,7 +41,10 @@ public class WebEngineProcessor {
 	 * @return the {@link IResource} instance
 	 */
 	public IResource getResource(String path) {
-		return webEngineExecutor.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
+		if (WebExposureManager.isPathExposed(path)) {
+			return webEngineExecutor.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
+		}
+		return null;
 	}
 
 	/**
@@ -52,7 +55,10 @@ public class WebEngineProcessor {
 	 * @return the {@link IResource} content as a byte array
 	 */
 	public byte[] getResourceContent(String path) {
-		return webEngineExecutor.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
+		if (WebExposureManager.isPathExposed(path)) {
+			return webEngineExecutor.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
+		}
+		return null;
 	}
 
 }
