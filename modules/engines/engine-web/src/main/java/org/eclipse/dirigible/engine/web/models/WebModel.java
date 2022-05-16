@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.engine.web.models;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -35,7 +34,7 @@ public class WebModel implements IArtefactDefinition {
 	@Column(name = "WEB_GUID", columnDefinition = "VARCHAR", nullable = false, length = 255)
 	private String guid;
 	
-	@Column(name = "WEB_EXPOSED", columnDefinition = "VARCHAR", nullable = false, length = 2000)
+	@Column(name = "WEB_EXPOSED", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String exposed;
 
 	@Column(name = "WEB_HASH", columnDefinition = "VARCHAR", nullable = false, length = 32)
@@ -109,7 +108,7 @@ public class WebModel implements IArtefactDefinition {
 	 */
 	public void setExposed(String exposed) {
 		this.exposed = exposed;
-		if (this.exposes == null) {
+		if (this.exposes == null && this.exposed != null) {
 			this.exposes = this.exposed.split(",");
 		}
 	}
