@@ -2,10 +2,8 @@
   "edmType": "Entity3",
   "edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.edm.Entity3",
   "sqlTable": "ENTITY3_TABLE",
-  "dataStructureType": "TABLE",
   "Id": "ID",
   "Description": "DESCRIPTION",
-  "_parameters_": [],
   "_pk_": "ID",
   "_ref_CTEntity": {
     "joinColumn": [

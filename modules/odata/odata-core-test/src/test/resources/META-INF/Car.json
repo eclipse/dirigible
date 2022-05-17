@@ -2,13 +2,11 @@
 	"edmType" : "Car",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Car",
 	"sqlTable" : "CARS",
-	"dataStructureType": "TABLE",
 	"Make" : "MAKE",
 	"Year" : "PRODUCTION_YEAR",
 	"Model" : "MODEL",
 	"Price" : "PRICE",
 	"Updated" : "UPDATED",
-	"_parameters_": [],
 	"_pk_" : "ID",
     "_ref_Driver" : {
     	"joinColumn" :["ID"]
