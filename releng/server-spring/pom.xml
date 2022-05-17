@@ -131,19 +131,28 @@
 		</dependency>
 
 		<!-- CMS -->
-		<!-- <dependency> <groupId>org.eclipse.dirigible</groupId> 
-		<artifactId>dirigible-cms</artifactId> 
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-cms</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
-			<exclusions> <exclusion>
-			 <groupId>org.eclipse.dirigible</groupId> 
-			<artifactId>dirigible-cms-managed</artifactId> </exclusion> <exclusion> <groupId>org.eclipse.dirigible</groupId> 
-			<artifactId>dirigible-cms-database</artifactId> </exclusion> </exclusions> 
-			</dependency> -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId> 
+					<artifactId>dirigible-cms-managed</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.dirigible</groupId>
+					<artifactId>dirigible-cms-database</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 		<!-- BPM -->
-		<!-- <dependency> <groupId>org.eclipse.dirigible</groupId> <artifactId>dirigible-bpm</artifactId> 
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-bpm</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
- </dependency> -->
+		</dependency>
 
 		<!-- MAIL -->
 		<dependency>

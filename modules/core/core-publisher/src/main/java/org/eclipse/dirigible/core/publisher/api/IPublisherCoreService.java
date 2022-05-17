@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 
 /**
  * The IPublisherCoreService provides the methods of the Publisher core service.
@@ -103,6 +104,13 @@ public interface IPublisherCoreService extends ICoreService {
 	 *             the publisher exception
 	 */
 	public List<PublishRequestDefinition> getPublishRequests() throws PublisherException;
+	
+	/**
+	 * Delete publish requests older than an hour
+	 * 
+	 * @throws SchedulerException
+	 */
+	public void deleteOldPublishRequests() throws SchedulerException;
 
 	/**
 	 * Creates the publish log.
@@ -166,5 +174,12 @@ public interface IPublisherCoreService extends ICoreService {
 	 *             the publisher exception
 	 */
 	public Timestamp getLatestPublishLog() throws PublisherException;
+	
+	/**
+	 * Delete publish logs older than an hour
+	 * 
+	 * @throws SchedulerException
+	 */
+	public void deleteOldPublishLogs() throws SchedulerException;
 
 }

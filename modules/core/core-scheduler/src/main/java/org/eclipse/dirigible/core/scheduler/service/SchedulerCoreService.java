@@ -17,26 +17,32 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
+import org.eclipse.dirigible.database.sql.SqlFactory;
 
 /**
  * The Scheduler Core Service.
  */
-public class SchedulerCoreService implements ISchedulerCoreService {
+public class SchedulerCoreService implements ISchedulerCoreService, ICleanupService {
 
 	private DataSource dataSource = null;
 
 	private PersistenceManager<JobDefinition> jobPersistenceManager = new PersistenceManager<JobDefinition>();
+	
+	private PersistenceManager<JobLogDefinition> jobLogPersistenceManager = new PersistenceManager<JobLogDefinition>();
 	
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
@@ -234,6 +240,115 @@ public class SchedulerCoreService implements ISchedulerCoreService {
 	@Override
 	public String serializeJob(JobDefinition jobDefinition) {
 		return GsonHelper.GSON.toJson(jobDefinition);
+	}
+	
+	// Job Log
+	
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobTriggered(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobTriggered(String name, String handler) throws SchedulerException {
+		JobLogDefinition jobLogDefinition = new JobLogDefinition();
+		jobLogDefinition.setName(name);
+		jobLogDefinition.setHandler(handler);
+		jobLogDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_TRIGGRED);
+		jobLogDefinition.setTriggeredAt(new Timestamp(new java.util.Date().getTime()));
+		return registerJobLog(jobLogDefinition);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobFinished(java.lang.String, java.lang.String,
+	 * int, java.util.Date)
+	 */
+	@Override
+	public JobLogDefinition jobFinished(String name, String handler, long triggeredId, java.util.Date triggeredAt) throws SchedulerException {
+		JobLogDefinition jobLogDefinition = new JobLogDefinition();
+		jobLogDefinition.setName(name);
+		jobLogDefinition.setHandler(handler);
+		jobLogDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FINISHED);
+		jobLogDefinition.setTriggeredId(triggeredId);
+		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
+		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
+		return registerJobLog(jobLogDefinition);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobFailed(java.lang.String, java.lang.String,
+	 * int, java.util.Date, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt, String message) throws SchedulerException {
+		JobLogDefinition jobLogDefinition = new JobLogDefinition();
+		jobLogDefinition.setName(name);
+		jobLogDefinition.setHandler(handler);
+		jobLogDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FAILED);
+		jobLogDefinition.setTriggeredId(triggeredId);
+		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
+		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
+		jobLogDefinition.setMessage(message);
+		return registerJobLog(jobLogDefinition);
+	}
+	
+	private JobLogDefinition registerJobLog(JobLogDefinition jobLogDefinition) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				jobLogPersistenceManager.insert(connection, jobLogDefinition);
+				return jobLogDefinition;
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobLogs(java.lang.String)
+	 */
+	@Override
+	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_LOGS")
+						.where("JOBLOG_NAME = ?").toString();
+				return jobLogPersistenceManager.query(connection, JobLogDefinition.class, sql, Arrays.asList(name));
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#deleteOldJobLogs()
+	 */
+	@Override
+	public void deleteOldJobLogs() throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_JOB_LOGS")
+						.where("JOBLOG_TRIGGERED_AT < ?")
+						.build();
+				jobLogPersistenceManager.tableCheck(connection, JobLogDefinition.class);
+				jobLogPersistenceManager.execute(connection, sql, new Timestamp(System.currentTimeMillis() - 7*24*60*60*1000)); // older than a week
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	@Override
+	public void cleanup() {
+		try {
+			deleteOldJobLogs();
+		} catch (SchedulerException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 
 public class JobsProcessor {
 	
@@ -60,5 +61,11 @@ public class JobsProcessor {
         return GsonHelper.GSON.toJson(job);
 	}
 
+	public String logs(String name) throws SchedulerException {
+		
+		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
+		
+        return GsonHelper.GSON.toJson(jobLogs);
+	}
 
 }

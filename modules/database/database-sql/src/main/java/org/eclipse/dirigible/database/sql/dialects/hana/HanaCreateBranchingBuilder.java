@@ -14,6 +14,7 @@ package org.eclipse.dirigible.database.sql.dialects.hana;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
+import org.eclipse.dirigible.database.sql.builders.table.CreateTemporaryTableBuilder;
 import org.eclipse.dirigible.database.sql.builders.tableType.CreateTableTypeBuilder;
 
 /**
@@ -50,6 +51,15 @@ public class HanaCreateBranchingBuilder extends CreateBranchingBuilder {
 			throw new IllegalStateException(String.format("Unsupported table type is defined for table %s", table));
 	}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder#temporaryTable(java.lang.String)
+	 */
+	public HanaCreateTemporaryTableBuilder temporaryTable(String table) {
+		return new HanaCreateTemporaryTableBuilder(this.getDialect(), table);
+	}
+
 
 	/**
 	 * Column table.

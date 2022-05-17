@@ -83,8 +83,10 @@ public class JobsService extends AbstractRestService implements IRestService {
 	}
 	
 	/**
-	 * List all the jobs currently registered.
+	 * Enable a job.
 	 *
+	 * @param name the job name
+	 * @param request the request
 	 * @return the response
 	 * @throws SchedulerException the scheduler exception
 	 */
@@ -102,8 +104,10 @@ public class JobsService extends AbstractRestService implements IRestService {
 	}
 	
 	/**
-	 * List all the jobs currently registered.
+	 * Disable a job.
 	 *
+	 * @param name the job name
+	 * @param request the request
 	 * @return the response
 	 * @throws SchedulerException the scheduler exception
 	 */
@@ -118,6 +122,27 @@ public class JobsService extends AbstractRestService implements IRestService {
 		}
 
 		return Response.ok().entity(processor.disable(IRepository.SEPARATOR + name)).build();
+	}
+	
+	/**
+	 * Returns the job logs.
+	 *
+	 * @param name the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@GET
+	@Path("logs/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getJobLogs(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.logs(IRepository.SEPARATOR + name)).build();
 	}
 
 	/*

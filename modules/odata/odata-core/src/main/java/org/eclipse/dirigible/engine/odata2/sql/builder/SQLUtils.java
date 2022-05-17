@@ -45,7 +45,7 @@ public final class SQLUtils {
 
             if(null == value){
                 preparedStatement.setObject(i + 1, null);
-                return;
+                continue;
             }
 
             switch (edmSimpleTypeKind){

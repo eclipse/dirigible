@@ -22,10 +22,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
+import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerArtefactType;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateArtefactDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.SynchronizerStateLogDefinition;
@@ -35,7 +37,7 @@ import org.eclipse.dirigible.database.sql.SqlFactory;
 /**
  * The Synchronizer Core Service.
  */
-public class SynchronizerCoreService implements ISynchronizerCoreService {
+public class SynchronizerCoreService implements ISynchronizerCoreService, ICleanupService {
 
 	private DataSource dataSource = null;
 
@@ -261,6 +263,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_SYNCHRONIZER_STATE_LOG")
 						.where("SYNCHRONIZER_LOG_TIMESTAMP < ?")
 						.build();
+				synchronizerStateLogPersistenceManager.tableCheck(connection, SynchronizerStateLogDefinition.class);
 				synchronizerStateLogPersistenceManager.execute(connection, sql, System.currentTimeMillis() - 60*60*1000); // older than an hour
 			} finally {
 				if (connection != null) {
@@ -514,6 +517,7 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_SYNCHRONIZER_STATE_ARTEFACTS")
 						.where("SYNCHRONIZER_ARTEFACT_LOCATION = ?")
 						.build();
+				synchronizerStateArtefactPersistenceManager.tableCheck(connection, SynchronizerStateArtefactDefinition.class);
 				List<SynchronizerStateArtefactDefinition> list = synchronizerStateArtefactPersistenceManager.query(
 						connection, SynchronizerStateArtefactDefinition.class, sql, location);
 				
@@ -536,6 +540,15 @@ public class SynchronizerCoreService implements ISynchronizerCoreService {
 	public boolean existsSynchronizerStateArtefact(String name, String location) throws SchedulerException {
 		SynchronizerStateArtefactDefinition existing = getSynchronizerStateArtefact(name, location);
 		return (existing != null);
+	}
+
+	@Override
+	public void cleanup() {
+		try {
+			deleteOldSynchronizerStateLogs();
+		} catch (SchedulerException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

@@ -50,6 +50,7 @@
                         <th width="50px">Singleton</th>
                         <th width="180px">Created</th>
                         <th width="150px">Creator</th>
+                        <th width="50px">Logs</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,10 +82,81 @@
                         <td width="150px">
                             <div class="tdSingleLine">{{next.createdBy}}</div>
                         </td>
+                        <td width="50px">
+                            <div class="tdSingleLine"><button class="btn" ng-click="getLogs(next)" data-toggle="modal"
+                                    data-target="#dialogLogs"><i class="fa fa-history" aria-hidden="true"></i></button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+
+
+        <!-- Logs Dialog -->
+        <div class="dirigible-modal modal fade" id="dialogLogs" tabindex="-1" role="dialog"
+            aria-labelledby="dialogLogsLabel" aria-hidden="true">
+            <div class="modal-header">
+                <h3>Job logs for: {{name}}</h3>
+            </div>
+            <div class="modal-body">
+
+                <div class="tableFixHead">
+                    <table class="table" ng-cloak>
+                        <thead>
+                            <tr>
+                                <th width="50px">Status</th>
+                                <th>Id</th>
+                                <th>Handler</th>
+                                <th>Triggered</th>
+                                <th>Correlation</th>
+                                <th>Finished</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="next in logs">
+                                <td width="50px">
+                                    <div ng-show="{{next.status === 0}}" class="tdSingleLine">
+                                        <button class="btn"><i class="fa fa-history" aria-hidden="true"></i></button>
+                                    </div>
+                                    <div ng-show="{{next.status === 1}}" class="tdSingleLine">
+                                        <button class="btn"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                    </div>
+                                    <div ng-show="{{next.status === -1}}" class="tdSingleLine">
+                                        <button class="btn"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.id}}</div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.handler}}</div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.triggeredAt | date:'yyyy-MM-dd hh:mm:ss'}}</div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.triggeredId}}</div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.finishedAt | date:'yyyy-MM-dd hh:mm:ss'}}</div>
+                                </td>
+                                <td>
+                                    <div class="tdSingleLine">{{next.message}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
     </body>
 
 </html>

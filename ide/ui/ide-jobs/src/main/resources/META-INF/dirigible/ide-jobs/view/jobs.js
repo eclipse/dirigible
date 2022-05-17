@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010-2020 SAP and others.
+ * Copyright (c) 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v20.html
  *
- * Contributors:
- *   SAP - initial API and implementation
+ * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('jobs', [])
 	.controller('JobsController', ['$scope', '$http', function ($scope, $http) {
@@ -35,5 +36,14 @@ angular.module('jobs', [])
 				});
 		}
 
+		$scope.getLogs = function (job) {
+			$http.get('/services/v4/ops/jobs/logs/' + job.name)
+				.then(function (response) {
+					$scope.name = job.name;
+					$scope.logs = response.data;
+				}, function (response) {
+					console.error(response.data);
+				});
+		}
 
 	}]);

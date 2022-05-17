@@ -11,10 +11,12 @@
  */
 package org.eclipse.dirigible.databases.processor.format;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 
 import com.google.gson.JsonArray;
@@ -66,6 +68,14 @@ public class ResultSetJsonWriter implements ResultSetWriter<String> {
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 				String name = resultSetMetaData.getColumnName(i);
 				Object value = resultSet.getObject(i);
+				if (value == null) {
+					value = "[NULL]";
+				}
+				if (!ClassUtils.isPrimitiveOrWrapper(value.getClass()) 
+						&& value.getClass() != String.class
+						&& !java.util.Date.class.isAssignableFrom(value.getClass())) {
+					value = "[BINARY]";
+				}
 				record.add(name, GsonHelper.GSON.toJsonTree(value));
 			}
 
