@@ -150,12 +150,17 @@ public final class SQLSelectClause {
         this.target = target;
         this.keyPredicates = keyPredicates;
 
+        Collection<EdmProperty> properties = EdmUtils.getSelectedProperties(selectsFromTargetEntity, target);
+        List<String> sqlTableParameters = this.query.getSQLTableParameters(this.target);
+
         if (isCount) {
+            for (EdmProperty property : properties) {
+                if (sqlTableParameters.contains(property.getName())) {
+                    parameterMapping.put(atParameter++, new EdmTarget(target, property));
+                }
+            }
             columnMapping.put(atColumn++, new EdmTarget(target, null));
         } else {
-            Collection<EdmProperty> properties = EdmUtils.getSelectedProperties(selectsFromTargetEntity, target);
-            List<String> sqlTableParameters = this.query.getSQLTableParameters(this.target);
-
             for (EdmProperty property : properties) {
                 if (sqlTableParameters.contains(property.getName())) {
                     parameterMapping.put(atParameter++, new EdmTarget(target, property));
