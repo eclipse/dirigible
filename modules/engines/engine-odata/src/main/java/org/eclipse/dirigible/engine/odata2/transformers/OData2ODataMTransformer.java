@@ -16,6 +16,7 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.engine.odata2.api.ITableMetadataProvider;
 import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +28,17 @@ import java.util.stream.Collectors;
 public class OData2ODataMTransformer {
 
     private static final Logger logger = LoggerFactory.getLogger(OData2ODataMTransformer.class);
+
     private final ODataPropertyNameEscaper propertyNameEscaper;
+    private final ITableMetadataProvider tableMetadataProvider;
 
-    private DBMetadataUtil dbMetadataUtil = new DBMetadataUtil();
-
-    public OData2ODataMTransformer(ODataPropertyNameEscaper propertyNameEscaper){
-        this.propertyNameEscaper = propertyNameEscaper;
+    public OData2ODataMTransformer() {
+        this(new DefaultTableMetadataProvider(), new DefaultPropertyNameEscaper());
     }
 
-    public OData2ODataMTransformer(){
-        this(new DefaultPropertyNameEscaper());
+    public OData2ODataMTransformer(ITableMetadataProvider metadataProvider, ODataPropertyNameEscaper propertyNameEscaper) {
+        this.tableMetadataProvider = metadataProvider;
+        this.propertyNameEscaper = propertyNameEscaper;
     }
 
     public String[] transform(ODataDefinition model) throws SQLException {
@@ -44,7 +46,7 @@ public class OData2ODataMTransformer {
         List<String> result = new ArrayList<>();
 
         for (ODataEntityDefinition entity : model.getEntities()) {
-            PersistenceTableModel tableMetadata = dbMetadataUtil.getTableMetadata(entity.getTable(), dbMetadataUtil.getOdataArtifactTypeSchema(entity.getTable()));
+            PersistenceTableModel tableMetadata = tableMetadataProvider.getPersistenceTableModel(entity);
 
             StringBuilder buff = new StringBuilder();
             buff.append("{\n")
@@ -68,14 +70,14 @@ public class OData2ODataMTransformer {
 
             List<ODataProperty> entityProperties = entity.getProperties();
             ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
-            //expose all Db columns in case no entity props are defined
+            // Expose all Db columns in case no entity props are defined
             if (entityProperties.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
                     buff.append("\t\"").append(propertyNameEscaper.escape(columnValue)).append("\": \"").append(column.getName()).append("\",\n");
                 });
             } else {
-                //in case entity props are defined expose only them
+                // In case entity props are defined expose only them
                 entityProperties.forEach(prop -> {
                     List<PersistenceTableColumnModel> dbColumnName = tableMetadata.getColumns().stream().filter(x -> x.getName().equals(prop.getColumn())).collect(Collectors.toList());
                     buff.append("\t\"").append(propertyNameEscaper.escape(prop.getName())).append("\": \"").append(dbColumnName.get(0).getName()).append("\",\n");
@@ -83,14 +85,15 @@ public class OData2ODataMTransformer {
             }
 
             List<ODataParameter> entityParameters = entity.getParameters();
-            List<String> parameterNames = new ArrayList<>();
-            if(!entityParameters.isEmpty()) {
+            if (!entityParameters.isEmpty()) {
+                List<String> parameterNames = new ArrayList<>();
                 entityParameters.forEach(parameter -> {
                     parameterNames.add("\"" + parameter.getName() + "\"");
                     buff.append("\t\"").append(propertyNameEscaper.escape(parameter.getName())).append("\": \"").append(parameter.getName()).append("\",\n");
                 });
+                buff.append("\t\"_parameters_\" : [").append(String.join(",", parameterNames)).append("],\n");
             }
-            buff.append("\t\"_parameters_\" : [").append(String.join(",", parameterNames)).append("],\n");
+
 
             //Process FK relations from DB if they exist
             Map<String, List<PersistenceTableRelationModel>> groupRelationsByToTableName = tableMetadata.getRelations().stream()
@@ -117,7 +120,7 @@ public class OData2ODataMTransformer {
             }
 
 
-            //Process Associations from .odata file
+            // Process Associations from .odata file
             List<ODataAssociationDefinition> assWhereEntityIsFROMRole = model.getAssociations().stream().filter(ass -> ass.getFrom().getEntity().equals(entity.getName())).collect(Collectors.toList());
             List<ODataAssociationDefinition> assWhereEntityIsTORole = model.getAssociations().stream().filter(ass -> ass.getTo().getEntity().equals(entity.getName())).collect(Collectors.toList());
 
@@ -157,13 +160,13 @@ public class OData2ODataMTransformer {
                 buff.append(String.join(",\n", assembleRefNav)).append(",\n");
             }
 
-            if(entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
+            if (entity.getKeyGenerated() != null && !entity.getKeyGenerated().isEmpty()) {
                 buff.append("\t\"keyGenerated\": \"").append(entity.getKeyGenerated()).append("\",\n");
             }
 
-            if("aggregate".equals(entity.getAnnotationsEntityType().get("sap:semantics"))) {
+            if ("aggregate".equals(entity.getAnnotationsEntityType().get("sap:semantics"))) {
                 buff.append("\t\"aggregationType\" : ");
-                if(!entity.getAggregationsTypeAndColumn().isEmpty()) {
+                if (!entity.getAggregationsTypeAndColumn().isEmpty()) {
                     buff.append("\"derived\",\n");
                     Map<String, String> aggregationsTypeAndColumn = entity.getAggregationsTypeAndColumn();
                     String aggregationProps = aggregationsTypeAndColumn.keySet().stream()
@@ -230,7 +233,7 @@ public class OData2ODataMTransformer {
         String refSection = "\t\"_ref_" + dependentEntity + "Type" + "\": {\n\t\t\"joinColumn\" : " + "[\n\t\t\t" +
                 fkElements + "\n\t\t]";
 
-        if(mappingTableName != null && !mappingTableName.isEmpty()
+        if (mappingTableName != null && !mappingTableName.isEmpty()
                 && mappingTableJoinColumn != null && !mappingTableJoinColumn.isEmpty()) {
             refSection = refSection + "," + "\n\t\t\"manyToManyMappingTable\" : {" + "\n\t\t\t\"mappingTableName\" : "
                     + "\"" + mappingTableName + "\"," + "\n\t\t\t\"mappingTableJoinColumn\" : "

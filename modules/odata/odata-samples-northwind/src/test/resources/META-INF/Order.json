@@ -2,7 +2,6 @@
 	"edmType": "Order",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Order",
 	"sqlTable": " PUBLIC.ORDER",
-	"dataStructureType": "TABLE",
 	"OrderID": "ORDER_ID",
 	"CustomerId": "CUSTOMER_ID",
 	"EmployeeId": "EMPLOYEE_ID",
@@ -17,6 +16,5 @@
 	"ShipRegion": "SHIP_REGION",
 	"ShipPostalCode": "SHIP_POSTAL_CODE",
 	"ShipCountry": "SHIP_COUNTRY",
-	"_parameters_": [],
 	"_pk_": "ORDER_ID"
 }

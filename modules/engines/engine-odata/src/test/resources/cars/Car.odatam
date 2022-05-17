@@ -2,7 +2,6 @@
 	"edmType" : "Car",
 	"edmTypeFqn": "org.apache.olingo.odata2.ODataCars.Car",
 	"sqlTable" : "CAR",
-	"dataStructureType": "TABLE",
 	"Id" : "CAR_ID",
 	"Model" : "CAR_MODEL",
 	"Price" : "CAR_PRICE",
@@ -11,7 +10,6 @@
     "Updated" : "CAR_UPDATED",
     "ImagePath" : "CAR_IMAGE",
     "ManufacturerId" : "CAR_MAN_ID",
-    "_parameters_" : [],
     "_pk_" : "CAR_ID",
     "_ref_Manufacturer" : {
     	"joinColumn" : ["CAR_MAN_ID"]

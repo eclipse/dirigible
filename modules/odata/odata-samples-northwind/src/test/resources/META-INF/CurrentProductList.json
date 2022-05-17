@@ -2,9 +2,7 @@
 	"edmType": "Current_Product_List",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.CurrentProductList",
 	"sqlTable": " PUBLIC.CURRENT_PRODUCT_LIST",
-	"dataStructureType": "TABLE",
 	"ProductID": "PRODUCT_ID",
 	"ProductName": "PRODUCT_NAME",
-	"_parameters_": [],
 	"_pk_": ["PRODUCT_ID", "PRODUCT_NAME"]
 }

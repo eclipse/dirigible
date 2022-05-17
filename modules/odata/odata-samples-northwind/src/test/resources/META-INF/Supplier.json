@@ -2,7 +2,6 @@
 	"edmType": "Supplier",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Supplier",
 	"sqlTable": " PUBLIC.SUPPLIER",
-	"dataStructureType": "TABLE",
 	"SupplierID": "SUPPLIER_ID",
 	"CompanyName": "COMPANY_NAME",
 	"ContactName": "CONTACT_NAME",
@@ -15,6 +14,5 @@
 	"Phone": "PHONE",
 	"Fax": "FAX",
 	"HomePage": "HOME_PAGE",
-	"_parameters_": [],
 	"_pk_": "SUPPLIER_ID"
 }

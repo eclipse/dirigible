@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
     private DBMetadataUtil dbMetadataUtil;
 
     @InjectMocks
-    OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer(new DefaultPropertyNameEscaper());
+    private DefaultTableMetadataProvider defaultTableMetadataProvider;
 
     @Test
     public void testTransformOrders() throws IOException, SQLException {
@@ -69,7 +70,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Customer\": \"Customer\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_ItemType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"Id\"\n" +
@@ -84,7 +84,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Orderid\": \"OrderId\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_OrderType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"OrderId\"\n" +
@@ -92,7 +91,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"Id\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
@@ -119,7 +118,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Customer\": \"CUSTOMER\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_ItemType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +
@@ -134,7 +132,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ItemId\": \"ITEM_ID\",\n" +
                 "\t\"OrderId\": \"ORDER_ID\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_OrderType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ORDER_ID\"\n" +
@@ -142,7 +139,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ITEM_ID\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
@@ -159,7 +156,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
                 "\t\"Country_Id\": \"Country.Id\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_Entity2Type\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ENTITY1ID\"\n" +
@@ -177,7 +173,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"property3\": \"PROPERTY3\",\n" +
                 "\t\"property4_5\": \"PROPERTY4_5\",\n" +
                 "\t\"Entity1entity1Id\": \"ENTITY1ENTITY1ID\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_Entity1Type\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ENTITY1ENTITY1ID\"\n" +
@@ -192,11 +187,10 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Entity3_id\": \"ENTITY3.ID\",\n" +
                 "\t\"Name_id\": \"NAME.ID\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_pk_\" : \"ENTITY3.ID\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entity1, entity2, entity3}, transformed);
     }
 
@@ -223,7 +217,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
                 "}";
 
-        String[] actualResult = odata2ODataMTransformer.transform(definition);
+        String[] actualResult = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityEmployee}, actualResult);
     }
 
@@ -250,7 +244,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"companyId\": \"COMPANY_ID\",\n" +
                 "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_phoneType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"COMPANY_ID\",\"EMPLOYEE_NUMBER\"\n" +
@@ -266,7 +259,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"number\": \"NUMBER\",\n" +
                 "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
                 "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_employeeType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"FK_COMPANY_ID\",\"FK_EMPLOYEE_NUMBER\"\n" +
@@ -274,7 +266,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"NUMBER\"\n" +
                 "}";
-        String[] actualResult = odata2ODataMTransformer.transform(definition);
+        String[] actualResult = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
@@ -300,7 +292,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_GroupsType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +
@@ -319,7 +310,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"_ref_UsersType\": {\n" +
                 "\t\t\"joinColumn\" : [\n" +
                 "\t\t\t\"ID\"\n" +
@@ -331,7 +321,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ID\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
     }
 
@@ -353,12 +343,11 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"dataStructureType\": \"VIEW\",\n" +
                 "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
                 "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"keyGenerated\": \"ID\",\n" +
                 "\t\"_pk_\" : \"\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityView}, transformed);
     }
 
@@ -381,7 +370,6 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"ID\": \"ID\",\n" +
                 "\t\"NUMBER\": \"NUMBER\",\n" +
                 "\t\"PAYMENT\": \"PAYMENT\",\n" +
-                "\t\"_parameters_\" : [],\n" +
                 "\t\"aggregationType\" : \"derived\",\n" +
                 "\t\"aggregationProps\" : {\n" +
                 "\t\t\"NUMBER\": \"SUM\",\n" +
@@ -390,7 +378,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"_pk_\" : \"ID\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{aggregationEntity}, transformed);
     }
 

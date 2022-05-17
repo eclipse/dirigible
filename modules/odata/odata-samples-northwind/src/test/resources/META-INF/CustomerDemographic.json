@@ -2,9 +2,7 @@
 	"edmType": "CustomerDemographic",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.CustomerDemographic",
 	"sqlTable": " PUBLIC.CUSTOMER_DEMOGRAPHIC",
-	"dataStructureType": "TABLE",
 	"customerTypeId": "CUSTOMER_TYPE_ID",
 	"customerDesc": "CUSTOMER_DESC",
-	"_parameters_": [],
 	"_pk_": "CUSTOMER_TYPE_ID"
 }

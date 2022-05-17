@@ -2,7 +2,6 @@
 	"edmType": "Invoice",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Invoice",
 	"sqlTable": " PUBLIC.INVOICE",
-	"dataStructureType": "TABLE",
 	"ShipName": "SHIP_NAME",
 	"ShipAddress": "SHIP_ADDRESS",
 	"ShipCity": "SHIP_CITY",
@@ -29,6 +28,5 @@
 	"Discount": "DISCOUNT",
 	"ExtendedPrice": "EXTENDED_PRICE",
 	"Freight": "FREIGHT",
-	"_parameters_": [],
 	"_pk_": "CATEGORY_ID"
 }

@@ -376,7 +376,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
     }
 
     @Test
-    public void testTransformOnViewWithPropsAndParameters() throws IOException, SQLException {
+    public void testTransformOnHanaCalculationViewWithPropsAndParameters() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeView.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeView.odata", employee);
 
@@ -395,7 +395,7 @@ public class OData2ODataXTransformerTest extends AbstractDirigibleTest {
 
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2, column3), new ArrayList<>());
 
-        model.setTableType(ISqlKeywords.METADATA_VIEW);
+        model.setTableType(ISqlKeywords.METADATA_CALC_VIEW);
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entitySchema = "<Schema Namespace=\"np\"\n" +

@@ -2,12 +2,10 @@
 	"edmType" : "Driver",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Driver",
 	"sqlTable" : " PUBLIC.DRIVERS",
-	"dataStructureType": "TABLE",
 	"FirstName" : "FIRSTNAME",
 	"LastName" : "LASTNAME",
 	"Contract" : "CONTRACT",
 	"Updated" : "UPDATED",
-	"_parameters_": [],
 	"_pk_" : "ID",
     "_ref_Car" : {
     	"joinColumn" :["CAR_ID"]

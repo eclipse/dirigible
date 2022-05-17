@@ -2,12 +2,10 @@
 	"edmType": "Category",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Category",
 	"sqlTable": " PUBLIC.CATEGORY",
-	"dataStructureType": "TABLE",
 	"CategoryID": "CATEGORY_ID",
 	"CategoryName": "CATEGORY_NAME",
 	"Description": "DESCRIPTION",
 	"Picture": "PICTURE",
-	"_parameters_": [],
 	"_pk_": "CATEGORY_ID",
 	"_ref_Product" : {
 		"joinColumn" :["CATEGORY_ID"]

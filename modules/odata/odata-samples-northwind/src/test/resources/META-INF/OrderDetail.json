@@ -2,12 +2,10 @@
 	"edmType": "Order_Detail",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrderDetail",
 	"sqlTable": " PUBLIC.ORDER_DETAIL",
-	"dataStructureType": "TABLE",
 	"OrderID": "ORDER_ID",
 	"ProductID": "PRODUCT_ID",
 	"UnitPrice": "UNIT_PRICE",
 	"Quantity": "QUANTITY",
 	"Discount": "DISCOUNT",
-	"_parameters_": [],
 	"_pk_": ["ORDER_ID", "PRODUCT_ID"]
 }

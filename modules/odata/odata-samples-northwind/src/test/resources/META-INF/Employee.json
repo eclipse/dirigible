@@ -2,7 +2,6 @@
 	"edmType": "Employee",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Employee",
 	"sqlTable": " PUBLIC.EMPLOYEE",
-	"dataStructureType": "TABLE",
 	"employeeId": "EMPLOYEE_ID",
 	"lastName": "LAST_NAME",
 	"firstName": "FIRST_NAME",
@@ -21,6 +20,5 @@
 	"notes": "NOTES",
 	"reportsTo": "REPORTS_TO",
 	"photoPath": "PHOTO_PATH",
-	"_parameters_": [],
 	"_pk_": "EMPLOYEE_ID"
 }

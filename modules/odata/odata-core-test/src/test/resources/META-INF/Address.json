@@ -2,11 +2,9 @@
 	"edmType" : "Address",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.Address",
 	"sqlTable" : " PUBLIC.ADDRESSES",
-	"dataStructureType": "TABLE",
 	"Street" : "STREET",
 	"City" : "CITY",
 	"PostalCode" : "POSTAL_CODE",
-	"_parameters_": [],
 	"_pk_" : "ID",
     "_ref_Owner" : {
     	"joinColumn" :["OWNER_ID"]

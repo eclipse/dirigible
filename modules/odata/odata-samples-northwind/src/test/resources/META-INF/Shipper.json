@@ -2,10 +2,8 @@
 	"edmType": "Shipper",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.Shipper",
 	"sqlTable": " PUBLIC.SHIPPER",
-	"dataStructureType": "TABLE",
 	"ShipperID": "SHIPPER_ID",
 	"CompanyName": "COMPANY_NAME",
 	"Phone": "PHONE",
-	"_parameters_": [],
 	"_pk_": "SHIPPER_ID"
 }

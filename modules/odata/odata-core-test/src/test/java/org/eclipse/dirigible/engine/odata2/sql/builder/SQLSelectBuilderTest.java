@@ -423,11 +423,26 @@ public class SQLSelectBuilderTest {
 
         SQLSelectBuilder q = builder.buildSelectEntityQuery(uriInfo, null);
         SQLContext context = new SQLContext(DatabaseProduct.HANA);
-        String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
-                "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
-                "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
-                "WHERE \"T0\".\"ID\" = ?";
-        assertEquals(expected, q.buildSelect(context));
+
+        List<String> selectSql = Arrays.asList(q.buildSelect(context).split("SELECT|FROM|WHERE"));
+
+        List<String> selectedColumns = Arrays.asList(selectSql.get(1).trim().split(", "));;
+        assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
+        assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
+        assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
+        assertTrue(selectedColumns.contains("? AS CurrentEmployeeName_T0"));
+
+        List<String> targetDbEntity = Arrays.asList(selectSql.get(2).split("\\(|\\)"));
+        String targetDbEntityName = targetDbEntity.get(0).trim();
+        assertEquals("\"ENTITY6_TABLE\"", targetDbEntityName);
+        List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1).split(", "));
+        assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeId$$\" => ?"));
+        assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
+        String targetDbEntityAlias = targetDbEntity.get(2).trim();
+        assertEquals("AS T0", targetDbEntityAlias);
+
+        String whereClause = selectSql.get(3);
+        assertEquals("\"T0\".\"ID\" = ?", whereClause.trim());
     }
 
     @Test
@@ -439,13 +454,32 @@ public class SQLSelectBuilderTest {
 
         SQLSelectBuilder q = builder.buildSelectEntitySetQuery(uriInfo, null);
         SQLContext context = new SQLContext(DatabaseProduct.HANA);
-        String expected = "SELECT \"T0\".\"ID\" AS \"ID_T0\", \"T0\".\"NAME\" AS \"NAME_T0\", " +
-                "? AS CurrentEmployeeId_T0, ? AS CurrentEmployeeName_T0 " +
-                "FROM \"ENTITY6_TABLE\"(placeholder.\"$$CurrentEmployeeId$$\" => ? ,placeholder.\"$$CurrentEmployeeName$$\" => ? ) AS T0 " +
-                "WHERE \"T0\".\"ID\" = ? " +
-                "ORDER BY CurrentEmployeeId_T0 ASC, CurrentEmployeeName_T0 ASC, \"T0\".\"ID\" ASC " +
-                "LIMIT 1000";
-        assertEquals(expected, q.buildSelect(context));
+
+        List<String> selectSql = Arrays.asList(q.buildSelect(context).split("SELECT|FROM|WHERE|ORDER BY|LIMIT"));
+
+        List<String> selectedColumns = Arrays.asList(selectSql.get(1).trim().split(", "));;
+        assertTrue(selectedColumns.contains("\"T0\".\"ID\" AS \"ID_T0\""));
+        assertTrue(selectedColumns.contains("\"T0\".\"NAME\" AS \"NAME_T0\""));
+        assertTrue(selectedColumns.contains("? AS CurrentEmployeeId_T0"));
+        assertTrue(selectedColumns.contains("? AS CurrentEmployeeName_T0"));
+
+        List<String> targetDbEntity = Arrays.asList(selectSql.get(2).split("\\(|\\)"));
+        String targetDbEntityName = targetDbEntity.get(0).trim();
+        assertEquals("\"ENTITY6_TABLE\"", targetDbEntityName);
+        List<String> targetDbEntityParameters = Arrays.asList(targetDbEntity.get(1).split(", "));
+        assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeId$$\" => ?"));
+        assertTrue(targetDbEntityParameters.contains("placeholder.\"$$CurrentEmployeeName$$\" => ?"));
+        String targetDbEntityAlias = targetDbEntity.get(2).trim();
+        assertEquals("AS T0", targetDbEntityAlias);
+
+        String whereClause = selectSql.get(3);
+        assertEquals("\"T0\".\"ID\" = ?", whereClause.trim());
+
+        String orderByClause = selectSql.get(4);
+        assertEquals("CurrentEmployeeId_T0 ASC, CurrentEmployeeName_T0 ASC, \"T0\".\"ID\" ASC", orderByClause.trim());
+
+        String limitClause = selectSql.get(5);
+        assertEquals("1000", limitClause.trim());
     }
 
     @Test

@@ -115,7 +115,7 @@ public class EdmTableBindingFactoryTest {
     public void testGetDataStructureType() throws Exception {
         try (InputStream stream = stream(Entity1.class)) {
             EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
-            assertEquals("TABLE", config.getDataStructureType());
+            assertEquals(EdmTableBinding.DataStructureType.TABLE, config.getDataStructureType());
         }
     }
 
