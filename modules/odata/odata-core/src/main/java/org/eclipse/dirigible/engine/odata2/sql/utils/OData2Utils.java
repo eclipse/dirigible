@@ -29,7 +29,6 @@ import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
-import org.eclipse.dirigible.engine.odata2.sql.builder.SQLQueryBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 
 import java.util.*;
@@ -55,9 +54,9 @@ public class OData2Utils {
      * Generates the next link for server-side paging. The next-link is based on
      * the URI of the current request, except that {@code $skip} or
      * {@code $skiptoken} will be removed.
-     * 
-     * @param context the context
-     * @param top the top param
+     *
+     * @param context    the context
+     * @param top        the top param
      * @param pagingSize the page size
      * @return the link
      * @throws ODataException in case of an error
@@ -140,19 +139,19 @@ public class OData2Utils {
 
 
     public static boolean isOrderByEntityInExpand(OrderExpression orderExpression, UriInfo uriInfo) throws EdmException {
-        MemberExpression memberExpression = (MemberExpression)orderExpression.getExpression();
+        MemberExpression memberExpression = (MemberExpression) orderExpression.getExpression();
         CommonExpression pathExpression = memberExpression.getPath();
-        EdmType  entityType = pathExpression.getEdmType();
+        EdmType entityType = pathExpression.getEdmType();
         if (!hasExpand(uriInfo.getExpand())) {
             return false;
         }
-        for (List<NavigationPropertySegment> expand: uriInfo.getExpand()) {
-            for (NavigationPropertySegment segment: expand) {
+        for (List<NavigationPropertySegment> expand : uriInfo.getExpand()) {
+            for (NavigationPropertySegment segment : expand) {
                 EdmEntitySet epxandEntity = segment.getTargetEntitySet();
                 if (epxandEntity.getEntityType().getName().equals(entityType.getName())) {
                     return true;
                 }
-             }
+            }
         }
         return false;
     }

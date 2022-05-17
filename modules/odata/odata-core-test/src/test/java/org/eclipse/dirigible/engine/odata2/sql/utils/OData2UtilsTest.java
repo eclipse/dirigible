@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.apache.olingo.odata2.api.edm.EdmEntityType;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
@@ -37,10 +36,7 @@ import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.easymock.EasyMock;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.processor.ExpandCallBack;
-import org.eclipse.dirigible.engine.odata2.sql.processor.ResultSetReader;
 import org.junit.Test;
-
-import javax.persistence.metamodel.EntityType;
 
 public class OData2UtilsTest {
 
@@ -65,6 +61,7 @@ public class OData2UtilsTest {
         assertEquals("No content", errorResponse.getMessage());
         assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
     }
+
     @Test
     public void testWriteEntryWithExpandNotFound2() throws EntityProviderException, ODataException, IOException {
         ODataContext ctx = EasyMock.createMock(ODataContext.class);
@@ -86,6 +83,7 @@ public class OData2UtilsTest {
         assertEquals("No content", errorResponse.getMessage());
         assertEquals(HttpStatusCodes.NOT_FOUND.getStatusCode(), response.getStatus().getStatusCode());
     }
+
     @Test
     public void testGetTenantNameFromContextMultipleBatchParents() {
         String resultTenantName = "TestName";
@@ -139,7 +137,7 @@ public class OData2UtilsTest {
         EasyMock.expect(keyPredicate.getLiteral()).andReturn("TestValue");
         EasyMock.replay(keyPredicate);
 
-        assertEquals( "TestValue", OData2Utils.getKeyPredicateValueByPropertyName("TestProperty", keyPredicates));
+        assertEquals("TestValue", OData2Utils.getKeyPredicateValueByPropertyName("TestProperty", keyPredicates));
         EasyMock.verify(edmProperty);
         EasyMock.verify(keyPredicate);
     }
@@ -161,7 +159,7 @@ public class OData2UtilsTest {
 
         EasyMock.replay(entityType);
 
-        assertEquals( true, OData2Utils.isPropertyParameter(edmProperty, query, entityType));
+        assertEquals(true, OData2Utils.isPropertyParameter(edmProperty, query, entityType));
         EasyMock.verify(edmProperty);
         EasyMock.verify(query);
         EasyMock.verify(entityType);

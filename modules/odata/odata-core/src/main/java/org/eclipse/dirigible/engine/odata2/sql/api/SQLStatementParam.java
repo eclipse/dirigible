@@ -30,7 +30,6 @@ public class SQLStatementParam {
         this.columnInfo = columnInfo;
     }
 
-
     public SQLStatementParam(Object value, EdmType edmType, EdmTableBinding.ColumnInfo columnInfo) {
         this.value = value;
         this.edmType = edmType;

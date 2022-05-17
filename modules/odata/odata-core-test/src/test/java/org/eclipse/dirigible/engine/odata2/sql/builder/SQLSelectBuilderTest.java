@@ -11,9 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.builder;
 
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-
 import org.apache.olingo.odata2.annotation.processor.core.edm.AnnotationEdmProvider;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.edm.EdmLiteralKind;
@@ -24,15 +21,11 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.PathSegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
-import org.apache.olingo.odata2.api.uri.UriNotMatchingException;
 import org.apache.olingo.odata2.api.uri.UriParser;
-import org.apache.olingo.odata2.api.uri.UriSyntaxException;
 import org.apache.olingo.odata2.core.ODataPathSegmentImpl;
 import org.apache.olingo.odata2.core.edm.provider.EdmImplProv;
 import org.apache.olingo.odata2.core.ep.entry.ODataEntryImpl;
 import org.apache.olingo.odata2.core.uri.UriParserImpl;
-import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext.DatabaseProduct;
@@ -43,7 +36,6 @@ import org.eclipse.dirigible.engine.odata2.sql.test.util.OData2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.ResultSet;
 import java.util.*;
 
 import static java.util.Collections.EMPTY_MAP;

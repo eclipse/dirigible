@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -195,21 +194,21 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
     }
 
     @Test
-    public void testTransformEntityWithParameters() throws IOException, SQLException {
+    public void testTransformEntityWithParametersWhenHanaCalculationView() throws IOException, SQLException {
         String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithParameters.odata"), Charset.defaultCharset());
         ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithParameters.odata", employee);
 
         PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
         PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
         PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
-        model.setTableType("VIEW");
+        model.setTableType("CALC VIEW");
         when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
 
         String entityEmployee = "{\n" +
                 "\t\"edmType\": \"employeeType\",\n" +
                 "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
                 "\t\"sqlTable\": \"EMPLOYEES\",\n" +
-                "\t\"dataStructureType\": \"VIEW\",\n" +
+                "\t\"dataStructureType\": \"CALC VIEW\",\n" +
                 "\t\"companyId\": \"COMPANY_ID\",\n" +
                 "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
                 "\t\"EmployeeId\": \"EmployeeId\",\n" +

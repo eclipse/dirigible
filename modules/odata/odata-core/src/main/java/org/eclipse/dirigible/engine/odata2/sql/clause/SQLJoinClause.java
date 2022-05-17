@@ -12,18 +12,15 @@
 package org.eclipse.dirigible.engine.odata2.sql.clause;
 
 import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
 import org.apache.olingo.odata2.api.edm.EdmStructuralType;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLClause;
-import org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLContext;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.builder.SQLUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,7 +61,7 @@ public final class SQLJoinClause implements SQLClause {
     }
 
     public String evaluate(SQLContext context) throws EdmException {
-        if (isEmpty()){
+        if (isEmpty()) {
             return "";
         }
 
@@ -73,18 +70,18 @@ public final class SQLJoinClause implements SQLClause {
         boolean hasFirstJsonMappingTable = query.hasSQLMappingTablePresent(start, target);
         boolean hasSecondJsonMappingTable = query.hasSQLMappingTablePresent(target, start);
 
-        if(hasFirstJsonMappingTable && hasSecondJsonMappingTable) {
+        if (hasFirstJsonMappingTable && hasSecondJsonMappingTable) {
 
             buildMappingTableJoin(join);
 
-        } else if(!hasFirstJsonMappingTable && !hasSecondJsonMappingTable) {
+        } else if (!hasFirstJsonMappingTable && !hasSecondJsonMappingTable) {
 
             buildJoinWithoutMappingTable(join);
 
         } else {
 
             throw new IllegalArgumentException("Missing manyToManyMappingTable definition in the following json file: " +
-                    "" + (hasFirstJsonMappingTable? target.getName() : start.getName()) +
+                    "" + (hasFirstJsonMappingTable ? target.getName() : start.getName()) +
                     ". Both json files need to point to the mapping table");
         }
 
@@ -129,7 +126,7 @@ public final class SQLJoinClause implements SQLClause {
     }
 
     private void buildJoinClause(List<String> joinColumns, String leftTableAlias, String rightTable,
-                                   String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
+                                 String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
 
         join.append(joinType.toString());
@@ -163,12 +160,12 @@ public final class SQLJoinClause implements SQLClause {
         }
     }
 
-    private String getValue(boolean caseSensitive, String value){
+    private String getValue(boolean caseSensitive, String value) {
         return caseSensitive ? surroundWithDoubleQuotes(value) : value;
     }
 
     String surroundWithDoubleQuotes(String value) {
-        if(value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
+        if (value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
             return value;
         }
 
@@ -211,7 +208,7 @@ public final class SQLJoinClause implements SQLClause {
                 if (startPredicates == NO_PREDICATES_USED) {
                     return true;
                 } else {
-                    return ((startPredicates != null && !startPredicates.isEmpty()) && hasKeyPredicatesNonParameterProperty(start, startPredicates) ) ? true : false;
+                    return ((startPredicates != null && !startPredicates.isEmpty()) && hasKeyPredicatesNonParameterProperty(start, startPredicates)) ? true : false;
                 }
             }
         } catch (EdmException e) {

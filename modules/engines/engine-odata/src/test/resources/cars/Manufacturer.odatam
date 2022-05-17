@@ -6,7 +6,6 @@
 	"Id" : "MAN_ID",
 	"Name" : "MAN_NAME",
     "Updated" : "MAN_UPDATED",
-    "_parameters_" : [],
     "_pk_" : "MAN_ID",
     "_ref_Car" : {
     	"joinColumn" : ["MAN_ID"]

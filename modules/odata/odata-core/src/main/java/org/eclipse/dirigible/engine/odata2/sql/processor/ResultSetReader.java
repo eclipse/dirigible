@@ -48,7 +48,7 @@ public class ResultSetReader {
             data.put(property.getName(), readProperty(entityType, property, selectEntityQuery, resultSet));
         }
 
-        if(hasGeneratedId) {
+        if (hasGeneratedId) {
             return new ResultSetEntity(entityType, data, String.valueOf(resultSet.getInt("row_num")));
         }
         return new ResultSetEntity(entityType, data);

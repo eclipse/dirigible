@@ -13,7 +13,6 @@ package org.eclipse.dirigible.engine.odata2.sql.binding;
 
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.edm.provider.Mapping;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
 
 import java.util.ArrayList;
 import java.util.Arrays;

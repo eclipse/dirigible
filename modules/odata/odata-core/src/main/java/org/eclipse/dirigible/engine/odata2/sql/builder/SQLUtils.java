@@ -138,10 +138,11 @@ public final class SQLUtils {
                                                        final List<KeyPredicate> keyPredicates) throws EdmException {
         StringBuilder whereClause = new StringBuilder();
         List<SQLStatementParam> params = new ArrayList<>();
+
         if (keyPredicates != null) {
-            Iterator<KeyPredicate> it = keyPredicates.iterator();
-            while (it.hasNext()) {
-                KeyPredicate keyPredicate = it.next();
+            Iterator<KeyPredicate> keyPredicateIterator = keyPredicates.iterator();
+            while (keyPredicateIterator.hasNext()) {
+                KeyPredicate keyPredicate = keyPredicateIterator.next();
 
                 EdmProperty property = keyPredicate.getProperty();
 
@@ -154,19 +155,19 @@ public final class SQLUtils {
                         ColumnInfo info = query.getSQLTableColumnInfo(type, property);
                         params.add(SQLWhereClause.param(literal, edmSimpleType, info));
                     } else {
-                        //TODO what to do with complex properties?
+                        // TODO what to do with complex properties?
                         throw new IllegalStateException();
                     }
                 }
             }
 
-            Iterator<SQLStatementParam> pi = params.iterator();
+            Iterator<SQLStatementParam> paramIterator = params.iterator();
 
-            while (pi.hasNext()) {
-                SQLStatementParam param = pi.next();
+            while (paramIterator.hasNext()) {
+                SQLStatementParam param = paramIterator.next();
                 whereClause.append(param.getSqlColumnName()).append(" = ?");
 
-                if (pi.hasNext()) {
+                if (paramIterator.hasNext()) {
                     whereClause.append(" AND ");
                 }
             }
