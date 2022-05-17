@@ -104,7 +104,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     @Override
     public ODataResponse readEntityComplexProperty(final GetComplexPropertyUriInfo uriInfo, final String contentType)
             throws ODataException {
-        throw new ODataException("readEntityComplexProperty not implemented: " + uriInfo.toString()));
+        throw new ODataException("readEntityComplexProperty not implemented: " + uriInfo.toString());
     }
 
     protected int doCountEntitySet(SQLSelectBuilder sqlQuery, final Connection connection) throws ODataException, SQLException {
