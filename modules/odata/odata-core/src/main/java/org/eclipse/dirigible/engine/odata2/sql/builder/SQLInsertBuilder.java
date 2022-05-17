@@ -14,6 +14,7 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.exception.ODataException;
+import org.eclipse.dirigible.commons.api.context.InvalidStateException;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatement;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBindingProvider;
@@ -30,6 +31,7 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 	private EdmEntityType target;
 	private final List<String> columnNames = new ArrayList<>();
 	private  ODataEntry entry;
+	private  String tableName;
 
 	public SQLInsertBuilder(final EdmTableBindingProvider tableMappingProvider) {
 		super(tableMappingProvider);
@@ -78,6 +80,24 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 		return entry;
 	}
 
+	public SQLInsertBuilder setTableName(String tableName) {
+		this.tableName = tableName;
+		return this;
+	}
+
+	public String getTargetTableName() {
+		Iterator<String> it = getTablesAliasesForEntitiesInQuery();
+		while (it.hasNext()) {
+			String tableAlias = it.next();
+			EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
+			if (isInsertTarget(target)) {
+				return getSQLTableName(target);
+			}
+		}
+
+		throw new InvalidStateException("Unknown odata table name");
+	}
+
 	protected void initializeQuery() throws ODataException {
 		grantTableAliasForStructuralTypeInQuery(target);
 		Map<String, Object> entryValues = entry.getProperties();
@@ -110,20 +130,9 @@ public class SQLInsertBuilder extends AbstractQueryBuilder {
 
 	protected String buildInto(final SQLContext context) {
 		StringBuilder into = new StringBuilder();
-		Iterator<String> it = getTablesAliasesForEntitiesInQuery();
-		while (it.hasNext()) {
-			String tableAlias = it.next();
-			EdmStructuralType target = getEntityInQueryForAlias(tableAlias);
-			if (isInsertTarget(target)) {
-				into.append(getSQLTableName(target));
-				break;
-			}
-		}
-		into.append(" ").append(buildColumnList(context));
+		into.append(tableName != null ? tableName : getTargetTableName()).append(" ").append(buildColumnList(context));
 		return into.toString();
 	}
-
-
 
 	protected boolean isInsertTarget(final EdmStructuralType target) {
 		// always select the entity target

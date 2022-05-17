@@ -12,53 +12,60 @@
 package org.eclipse.dirigible.engine.odata2.sql.api;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
 import org.apache.olingo.odata2.api.uri.info.DeleteUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PostUriInfo;
 import org.apache.olingo.odata2.api.uri.info.PutMergePatchUriInfo;
+import org.eclipse.dirigible.engine.odata2.api.ODataException;
 
 public interface OData2EventHandler {
-	
+
+	public static final String DIRIGIBLE_ODATA_EVENT_HANDLER_NAME = "DIRIGIBLE_ODATA_EVENT_HANDLER_NAME";
+	public static final String DEFAULT_ODATA_EVENT_HANDLER_NAME = "default";
+
 	void beforeCreateEntity(final PostUriInfo uriInfo,
-			final String requestContentType, final String contentType, ODataEntry entry);
-	
+			final String requestContentType, final String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException;
+
 	void afterCreateEntity(final PostUriInfo uriInfo,
-			final String requestContentType, final String contentType, final ODataEntry entry);
-	
+			final String requestContentType, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+
 	boolean usingOnCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType);
-	
+
 	ODataResponse onCreateEntity(final PostUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final String contentType);
-	
+			final String requestContentType, final String contentType, Map<Object, Object> context) throws ODataException;
+
 	boolean forbidCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType);
-	
+
 	void beforeUpdateEntity(final PutMergePatchUriInfo uriInfo,
-			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry);
-	
+			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+
 	void afterUpdateEntity(final PutMergePatchUriInfo uriInfo,
-			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry);
-	
+			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
+
 	boolean usingOnUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType);
-	
+
 	ODataResponse onUpdateEntity(final PutMergePatchUriInfo uriInfo, final InputStream content,
-			final String requestContentType, final boolean merge, final String contentType);
-	
+			final String requestContentType, final boolean merge, final String contentType, Map<Object, Object> context) throws ODataException;
+
 	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType);
-	
-	void beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
-	
-	void afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
-	
+
+	void beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+
+	void afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+
 	boolean usingOnDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
-	
-	ODataResponse onDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
-	
+
+	ODataResponse onDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+
 	boolean forbidDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
+
+	String getName();
 
 }
