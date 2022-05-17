@@ -14,9 +14,7 @@ package org.eclipse.dirigible.engine.odata2.sql.processor;
 import com.sap.db.jdbc.HanaClob;
 import com.sap.db.jdbc.HanaBlob;
 import org.apache.commons.io.IOUtils;
-import org.apache.olingo.odata2.api.edm.EdmException;
-import org.apache.olingo.odata2.api.edm.EdmProperty;
-import org.apache.olingo.odata2.api.edm.EdmStructuralType;
+import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.core.edm.EdmDouble;
 import org.apache.olingo.odata2.core.edm.EdmInt16;
@@ -34,7 +32,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,35 @@ public class DefaultSQLProcessor extends AbstractSQLProcessor {
 
     @Override
     public Object onCustomizePropertyValue(EdmStructuralType entityType, EdmProperty property, Object entityInstance, Object value) throws EdmException, SQLException, IOException {
-        if (value instanceof BigDecimal) {
+        EdmType propertyType = property.getType();
+
+        if (value instanceof String && !propertyType.equals(EdmSimpleTypeKind.String.getEdmSimpleTypeInstance())) {
+            if (propertyType.equals(EdmSimpleTypeKind.Byte.getEdmSimpleTypeInstance())) {
+                value = Short.parseShort(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.SByte.getEdmSimpleTypeInstance())) {
+                value = Byte.parseByte(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int16.getEdmSimpleTypeInstance())) {
+                value = Short.parseShort(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int32.getEdmSimpleTypeInstance())) {
+                value = Integer.parseInt(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Int64.getEdmSimpleTypeInstance())) {
+                value = Long.parseLong(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Single.getEdmSimpleTypeInstance())) {
+                value = Float.parseFloat(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Double.getEdmSimpleTypeInstance())) {
+                value = Double.parseDouble(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Decimal.getEdmSimpleTypeInstance())) {
+                value = new BigDecimal(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Boolean.getEdmSimpleTypeInstance())) {
+                value = Boolean.parseBoolean(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.Time.getEdmSimpleTypeInstance())) {
+                value = Time.valueOf(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.DateTime.getEdmSimpleTypeInstance())) {
+                value = Timestamp.valueOf(value.toString());
+            } else if (propertyType.equals(EdmSimpleTypeKind.DateTimeOffset.getEdmSimpleTypeInstance())) {
+                value = Date.valueOf(value.toString());
+            }
+        } else if (value instanceof BigDecimal) {
             BigDecimal dec = (BigDecimal) value;
             if (property.getType().equals(EdmInt32.getInstance())) {
                 return dec.toBigInteger().intValue();

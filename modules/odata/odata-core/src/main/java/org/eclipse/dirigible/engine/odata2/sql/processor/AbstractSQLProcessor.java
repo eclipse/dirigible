@@ -104,7 +104,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     @Override
     public ODataResponse readEntityComplexProperty(final GetComplexPropertyUriInfo uriInfo, final String contentType)
             throws ODataException {
-        throw new ODataException(String.format("readEntityComplexProperty not implemented: %s", uriInfo.toString()));
+        throw new ODataException("readEntityComplexProperty not implemented: " + uriInfo.toString());
     }
 
     protected int doCountEntitySet(SQLSelectBuilder sqlQuery, final Connection connection) throws ODataException, SQLException {
@@ -131,6 +131,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             throws SQLException, ODataException {
         String sql = selectQuery.buildSelect(createSQLContext(connection));
         logger.info(sql);
+
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
         setParamsOnStatement(preparedStatement, selectQuery.getStatementParams());
@@ -205,7 +206,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                         boolean hasGeneratedId = query.hasKeyGeneratedPresent(targetEntitySet.getEntityType());
                         ResultSetReader.ResultSetEntity currentTargetEntity = resultSetReader.getResultSetEntity(query,
                                 targetEntityType, properties, resultSet, hasGeneratedId);
-
                         logger.info("Current entity set object is {}", currentTargetEntity);
                         if (!currentAccumulator.isAccumulatorFor(currentTargetEntity)) {
                             currentAccumulator = new ResultSetReader.ExpandAccumulator(currentTargetEntity);

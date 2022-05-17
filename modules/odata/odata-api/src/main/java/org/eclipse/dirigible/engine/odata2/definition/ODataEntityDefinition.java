@@ -28,6 +28,8 @@ public class ODataEntityDefinition {
 
     private List<ODataProperty> properties = new ArrayList<>();
 
+	private List<ODataParameter> parameters = new ArrayList<>();
+
     private List<ODataNavigation> navigations = new ArrayList<>();
 
     private List<ODataHandler> handlers = new ArrayList<>();
@@ -96,6 +98,14 @@ public class ODataEntityDefinition {
 
 	public void setProperties(List<ODataProperty> properties) {
 		this.properties = properties;
+	}
+
+	public List<ODataParameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(List<ODataParameter> parameters) {
+		this.parameters = parameters;
 	}
 
 	public List<ODataNavigation> getNavigations() {

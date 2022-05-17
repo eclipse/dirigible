@@ -2,7 +2,6 @@
 	"edmType": "Alphabetical_list_of_product",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.AlphabeticalListOfProduct",
 	"sqlTable": " PUBLIC.ALPHABETICAL_LIST_OF_PRODUCT",
-
 	"ProductID": "PRODUCT_ID",
 	"ProductName": "PRODUCT_NAME",
 	"SupplierID": "SUPPLIER_ID",
@@ -14,6 +13,5 @@
     "ReorderLevel": "REORDER_LEVEL",
     "Discontinued": "DISCONTINUED",
     "CategoryName": "CATEGORY_NAME",
-
 	"_pk_": ["PRODUCT_ID", "PRODUCT_NAME", "DISCONTINUED", "CATEGORY_NAME"]
 }

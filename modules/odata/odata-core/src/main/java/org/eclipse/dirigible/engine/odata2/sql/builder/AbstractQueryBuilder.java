@@ -39,7 +39,7 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
 
     private final EdmTableBindingProvider tableBinding;
     private final List<SQLJoinClause> joinExpressions = new ArrayList<>();
-    private final List<SQLStatementParam> sqlStatmenetParams;
+    private final List<SQLStatementParam> sqlStatementParams;
     private SQLWhereClause whereClause;
 
     public AbstractQueryBuilder(final EdmTableBindingProvider tableBinding) {
@@ -48,16 +48,16 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
         this.tableAliasesForEntitiesInQuery = new TreeMap<>();
         this.tableAliasesForManyToManyMappingTablesInQuery = new TreeMap<>();
         this.structuralTypesInJoin = new HashSet<>();
-        this.sqlStatmenetParams = new ArrayList<>();
+        this.sqlStatementParams = new ArrayList<>();
     }
 
 
     public List<SQLStatementParam> getStatementParams() {
-        return sqlStatmenetParams;
+        return sqlStatementParams;
     }
 
     public void addStatementParam(SQLStatementParam param) {
-        sqlStatmenetParams.add(param);
+        sqlStatementParams.add(param);
     }
 
     public SQLWhereClause getWhereClause() {
@@ -140,6 +140,14 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
 
     public String getSQLTablePrimaryKey(final EdmStructuralType type) throws EdmException {
         return tableBinding.getEdmTableBinding(type).getPrimaryKey();
+    }
+
+    public List<String> getSQLTableParameters(final EdmStructuralType type) throws EdmException {
+        return tableBinding.getEdmTableBinding(type).getParameters();
+    }
+
+    public EdmTableBinding.DataStructureType getSQLTableDataStructureType(final EdmStructuralType type) throws EdmException {
+        return tableBinding.getEdmTableBinding(type).getDataStructureType();
     }
 
     public String getSQLTableColumn(final EdmStructuralType targetEnitityType, final EdmProperty p) {

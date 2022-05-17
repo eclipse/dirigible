@@ -30,7 +30,6 @@ public class SQLStatementParam {
         this.columnInfo = columnInfo;
     }
 
-
     public SQLStatementParam(Object value, EdmType edmType, EdmTableBinding.ColumnInfo columnInfo) {
         this.value = value;
         this.edmType = edmType;
@@ -116,6 +115,10 @@ public class SQLStatementParam {
 
     public String getSqlType() {
         return columnInfo == null ? null: columnInfo.getJdbcType();
+    }
+
+    public String getSqlColumnName() {
+        return columnInfo == null ? null: columnInfo.getColumnName();
     }
 
     @SuppressWarnings("unchecked")

@@ -8,7 +8,7 @@
 	},
     "Name" : "NAME",
     "Value" : "VALUE",
-    "_pk_" : "ID",
+	"_pk_" : "ID",
     "_ref_Entity1" : {
     	"joinColumn" : ["HEADER_ID"]
     },

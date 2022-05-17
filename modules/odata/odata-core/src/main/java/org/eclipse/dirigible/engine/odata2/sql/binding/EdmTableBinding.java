@@ -14,6 +14,7 @@ package org.eclipse.dirigible.engine.odata2.sql.binding;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.edm.provider.Mapping;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,35 @@ import java.util.Map;
 import static java.lang.String.format;
 
 public class EdmTableBinding extends Mapping {
-    
+
+    public enum DataStructureType {
+        TABLE("TABLE"), CALC_VIEW("CALC VIEW");
+
+        private final String value;
+
+        DataStructureType(String value) {
+            this.value = value;
+        }
+
+        public static DataStructureType getType(String value) {
+            for (DataStructureType type : DataStructureType.values()) {
+                if (type.toString().equals(value)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("DataStructureType not found");
+        }
+
+        public String toString() {
+            return value;
+        }
+    }
+
     private static final String NO_PROPERTY_FOUND = "No sql binding configuration found in the mapping configuration for property %s."
             + " Did you map this property in the %s mapping?";
 
     private static final String PROPERTY_WRONG_CONFIGURATION = "Sql binding configuration in the mapping configuration for property %s is wrongly configured.";
-    
+
     private static final String JOIN_COLUMN_UNSUPPORTED_CONFIGURATION = PROPERTY_WRONG_CONFIGURATION + " The value %s is not of expected type List and String.";
 
     private Map<String, Object> bindingData;
@@ -64,7 +88,7 @@ public class EdmTableBinding extends Mapping {
         if (refKeys.containsKey(property)) {
             Object joinColumn = refKeys.get(property);
             if (joinColumn instanceof List) {
-                return (List<String>)joinColumn;
+                return (List<String>) joinColumn;
             } else if (refKeys.get(property) instanceof String) {
                 return Arrays.asList(String.valueOf(refKeys.get(property)));
             } else if (refKeys.get(property) instanceof Map) {
@@ -101,7 +125,7 @@ public class EdmTableBinding extends Mapping {
 
     public boolean isAggregationTypeExplicit() {
         String key = "aggregationType";
-        if(isPropertyMapped(key)) {
+        if (isPropertyMapped(key)) {
             String aggregationType = readMandatoryConfig(key, String.class);
             return "explicit".equals(aggregationType);
         }
@@ -111,7 +135,7 @@ public class EdmTableBinding extends Mapping {
 
     public boolean isColumnContainedInAggregationProp(String columnName) {
         String key = "aggregationProps";
-        if(isPropertyMapped(key)) {
+        if (isPropertyMapped(key)) {
             Map<String, String> aggregationProps = readMandatoryConfig(key, Map.class);
             return aggregationProps.containsKey(columnName);
         }
@@ -190,7 +214,7 @@ public class EdmTableBinding extends Mapping {
         return readMandatoryConfig("edmTypeFqn", String.class);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ColumnInfo getColumnInfo(String propertyName) {
         if (bindingData.containsKey(propertyName)) {
             if (isOfType(propertyName, String.class)) {
@@ -215,6 +239,24 @@ public class EdmTableBinding extends Mapping {
         } catch (EdmException e) {
             throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, property, targetFqn));
         }
+    }
+
+    public List<String> getParameters() {
+        List<String> parameters = new ArrayList<>();
+        String key = "_parameters_";
+        if (bindingData.containsKey(key)) {
+            parameters = (List<String>) bindingData.get(key);
+        }
+        return parameters;
+    }
+
+    public DataStructureType getDataStructureType() {
+        DataStructureType dataStructureType = DataStructureType.TABLE;
+        String key = "dataStructureType";
+        if (bindingData.containsKey(key)) {
+            dataStructureType = DataStructureType.getType((String) bindingData.get(key));
+        }
+        return dataStructureType;
     }
 
     public String getPrimaryKey() throws EdmException {
