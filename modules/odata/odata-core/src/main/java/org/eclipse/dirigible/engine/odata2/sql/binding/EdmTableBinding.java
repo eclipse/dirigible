@@ -13,7 +13,9 @@ package org.eclipse.dirigible.engine.odata2.sql.binding;
 
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.edm.provider.Mapping;
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.Map;
 import static java.lang.String.format;
 
 public class EdmTableBinding extends Mapping {
+
+    public enum DataStructureType { TABLE, CALC_VIEW };
     
     private static final String NO_PROPERTY_FOUND = "No sql binding configuration found in the mapping configuration for property %s."
             + " Did you map this property in the %s mapping?";
@@ -217,12 +221,22 @@ public class EdmTableBinding extends Mapping {
         }
     }
 
-    public List<String> getParameters() throws EdmException {
-        return readMandatoryConfig("_parameters_", List.class);
+    public List<String> getParameters() {
+        List<String> parameters = new ArrayList<>();
+        String key = "_parameters_";
+        if (bindingData.containsKey(key)) {
+            parameters = (List<String>) bindingData.get(key);
+        }
+        return parameters;
     }
 
-    public String getDataStructureType() throws EdmException {
-        return readMandatoryConfig("dataStructureType", String.class);
+    public DataStructureType getDataStructureType() {
+        DataStructureType dataStructureType = DataStructureType.TABLE;
+        String key = "dataStructureType";
+        if (bindingData.containsKey(key)) {
+            dataStructureType = DataStructureType.valueOf((String) bindingData.get(key));
+        }
+        return dataStructureType;
     }
 
     public String getPrimaryKey() throws EdmException {
