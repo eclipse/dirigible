@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-ext-api-parent</artifactId>
-		<version>6.2.26</version>
+		<version>6.2.27</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -86,7 +86,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
@@ -96,27 +96,27 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-persistence</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-scheduler</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-api</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 		</dependency>
 
 		<!-- Spark dependencies -->
@@ -173,7 +173,7 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 			<scope>test</scope>
 		</dependency>
 <!-- Conflicts with other dependencies -->
@@ -186,13 +186,13 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>6.2.26</version>
+			<version>6.2.27</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
