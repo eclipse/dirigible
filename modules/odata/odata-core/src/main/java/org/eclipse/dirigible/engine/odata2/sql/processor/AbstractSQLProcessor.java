@@ -346,53 +346,56 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             throw new ODataException("Unable to create entity", e);
         }
 
-
-        List<EdmProperty> keyProperties = entityType.getKeyProperties();
-        List<KeyPredicate> keyPredicates = new ArrayList<>();
-        if (!keyProperties.isEmpty()) {
-            for (EdmProperty keyProperty : keyProperties) {
-                if (entry.getProperties().get(keyProperty.getName()) != null) {
-                    keyPredicates.add(new KeyPredicateImpl(
-                            entry.getProperties().get(keyProperty.getName()).toString(),
-                            keyProperty));
-                } else {
-                    throw new ODataException("Cannot create entity without key(s)");
+        try {
+            List<EdmProperty> keyProperties = entityType.getKeyProperties();
+            List<KeyPredicate> keyPredicates = new ArrayList<>();
+            if (!keyProperties.isEmpty()) {
+                for (EdmProperty keyProperty : keyProperties) {
+                    if (entry.getProperties().get(keyProperty.getName()) != null) {
+                        keyPredicates.add(new KeyPredicateImpl(
+                                entry.getProperties().get(keyProperty.getName()).toString(),
+                                keyProperty));
+                    } else {
+                        throw new ODataException("Cannot create entity without key(s)");
+                    }
                 }
-            }
 
-            ((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
+                ((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
 
-            ODataResponse response;
-            try (Connection connection = getDataSource().getConnection()) {
-                if(entryMap != null) {
-                    response = ExpandCallBack.writeEntryWithExpand(getContext(), //
-                            (UriInfo) uriInfo, //
-                            entryMap, //
-                            contentType);
-                } else {
-                    // Re-read the inserted entity to get the auto-generated properties
-                    SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
-                    ResultSetReader.ResultSetEntity currentTargetEntity = new ResultSetReader.ResultSetEntity(entityType, Collections.emptyMap());
-                    Collection<EdmProperty> properties = getProperties(entityType);
-                    try (PreparedStatement statement = createSelectStatement(query, connection)) {
-                        try (ResultSet resultSet = statement.executeQuery()) {
-                            while (resultSet.next()) {
-                                boolean hasGeneratedId = query.hasKeyGeneratedPresent(entitySet.getEntityType());
-                                currentTargetEntity = resultSetReader.getResultSetEntity(query, entityType, properties, resultSet, hasGeneratedId);
+                ODataResponse response;
+                try (Connection connection = getDataSource().getConnection()) {
+                    if (entryMap != null) {
+                        response = ExpandCallBack.writeEntryWithExpand(getContext(), //
+                                (UriInfo) uriInfo, //
+                                entryMap, //
+                                contentType);
+                    } else {
+                        // Re-read the inserted entity to get the auto-generated properties
+                        SQLSelectBuilder query = this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext());
+                        ResultSetReader.ResultSetEntity currentTargetEntity = new ResultSetReader.ResultSetEntity(entityType, Collections.emptyMap());
+                        Collection<EdmProperty> properties = getProperties(entityType);
+                        try (PreparedStatement statement = createSelectStatement(query, connection)) {
+                            try (ResultSet resultSet = statement.executeQuery()) {
+                                while (resultSet.next()) {
+                                    boolean hasGeneratedId = query.hasKeyGeneratedPresent(entitySet.getEntityType());
+                                    currentTargetEntity = resultSetReader.getResultSetEntity(query, entityType, properties, resultSet, hasGeneratedId);
+                                }
                             }
                         }
+                        response = ExpandCallBack.writeEntryWithExpand(getContext(), //
+                                (UriInfo) uriInfo, //
+                                new ResultSetReader.ExpandAccumulator(currentTargetEntity), //
+                                contentType);
                     }
-                    response = ExpandCallBack.writeEntryWithExpand(getContext(), //
-                            (UriInfo) uriInfo, //
-                            new ResultSetReader.ExpandAccumulator(currentTargetEntity), //
-                            contentType);
+                    updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
+                    this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
+                    return response;
+                } catch (Exception e) {
+                    throw new ODataException("Unable to get back the created entity", e);
                 }
-                updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
-                this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
-                return response;
-            } catch (Exception e){
-                throw new ODataException("Unable to get back the created entity", e);
             }
+        } catch (Throwable t) {
+            logger.error("Unable to get back the created entity", t);
         }
 
         ODataContext context = getContext();
