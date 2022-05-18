@@ -42,8 +42,6 @@ public class CloneCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 	
-	/** The Constant PATTERN_USERS_WORKSPACE. */
-	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
 	/** The workspaces core service. */
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
@@ -53,9 +51,6 @@ public class CloneCommand {
 
 	/** The project metadata manager. */
 	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
-
-	/** The git file utils. */
-	private GitFileUtils gitFileUtils = new GitFileUtils();
 
 	/**
 	 * Execute a Clone command.
@@ -148,10 +143,10 @@ public class CloneCommand {
 			GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryURI, username, password, repositoryBranch);
 			logger.debug(String.format("Cloning repository %s finished.", repositoryURI));
 
-			String workspacePath = String.format(PATTERN_USERS_WORKSPACE, user, workspace.getName());
+			String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
 			logger.debug(String.format("Start importing projects for repository directory %s ...", gitDirectory.getCanonicalPath()));
-			List<String> importedProjects = gitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), optionalProjectName);
+			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), optionalProjectName);
 			logger.debug(String.format("Importing projects for repository directory %s finished", gitDirectory.getCanonicalPath()));
 
 			for (String importedProject : importedProjects) {

@@ -15,7 +15,6 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -571,9 +570,13 @@ public class FileSystemUtils {
 	}
 
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
-		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
-		List<File> projects = getGitRepositoryProjects(gitRepository);
+		List<File> projects = getGitRepositoryProjectsFiles(user, workspace, repositoryName);
 		return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+	}
+
+	public static List<File> getGitRepositoryProjectsFiles(String user, String workspace, String repositoryName) {
+		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		return getGitRepositoryProjects(gitRepository);
 	}
 
     public static List<File> getGitRepositoryProjects(File gitRepository) {

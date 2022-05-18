@@ -34,6 +34,7 @@ import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
@@ -52,6 +53,8 @@ public class GitFileUtils {
 
 	public static final String SLASH = "/"; //$NON-NLS-1$
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	/** The Constant PATTERN_USERS_WORKSPACE. */
+	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
 	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
@@ -63,13 +66,13 @@ public class GitFileUtils {
 	private static String GIT_ROOT_FOLDER;
 
 	/** The repository. */
-	private IRepository repository = null;
+	private static IRepository REPOSITORY = null;
 	
-	protected synchronized IRepository getRepository() {
-		if (repository == null) {
-			repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+	private static synchronized IRepository getRepository() {
+		if (REPOSITORY == null) {
+			REPOSITORY = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 		}
-		return repository;
+		return REPOSITORY;
 	}
 
 	static {
@@ -116,6 +119,21 @@ public class GitFileUtils {
 	/**
 	 * Import project.
 	 *
+	 * @param workspace the workspace
+	 * @param repository the repository
+	 * @return the imported project
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static List<String> importProject(String workspace, String repository) throws IOException {
+		String user = UserFacade.getName();
+		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
+		String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace);
+		return GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace, null);
+	}
+
+	/**
+	 * Import project.
+	 *
 	 * @param gitRepository
 	 *            the git directory
 	 * @param basePath
@@ -130,7 +148,7 @@ public class GitFileUtils {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public List<String> importProject(File gitRepository, String basePath, String user, String workspace, String projectName)
+	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace, String projectName)
 			throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> importedProjects = new ArrayList<String>();
@@ -166,8 +184,11 @@ public class GitFileUtils {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
-		getRepository().linkPath(path, gitRepositoryFile.getCanonicalPath());
+	public static void importProjectFromGitRepositoryToWorkspace(File gitRepositoryFile, String path) throws IOException {
+		// Skip already linked paths
+		if (!getRepository().isLinkedPath(path)) {
+			getRepository().linkPath(path, gitRepositoryFile.getCanonicalPath());
+		}
 	}
 
 	/**

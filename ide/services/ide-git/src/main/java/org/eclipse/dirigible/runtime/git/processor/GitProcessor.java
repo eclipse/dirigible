@@ -543,15 +543,7 @@ public class GitProcessor {
 
 	public void importProjects(String workspace, String repository) throws GitConnectorException {
 		try {
-			File repositoryName = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
-			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repository);
-			IWorkspace workspaceObject = getWorkspace(workspace);
-			for (String project : projects) {
-				if (!workspaceObject.getProject(project).exists()) {
-					String targetPath = repositoryName.getCanonicalFile() + File.separator + project;
-					workspaceObject.linkProject(project, targetPath);
-				}
-			}
+			GitFileUtils.importProject(workspace, repository);
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}
