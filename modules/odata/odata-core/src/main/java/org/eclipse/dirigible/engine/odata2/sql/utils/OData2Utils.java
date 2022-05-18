@@ -22,12 +22,14 @@ import org.apache.olingo.odata2.api.exception.ODataRuntimeApplicationException;
 import org.apache.olingo.odata2.api.processor.ODataContext;
 import org.apache.olingo.odata2.api.processor.ODataErrorContext;
 import org.apache.olingo.odata2.api.processor.ODataResponse;
+import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.expression.CommonExpression;
 import org.apache.olingo.odata2.api.uri.expression.MemberExpression;
 import org.apache.olingo.odata2.api.uri.expression.OrderExpression;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
+import org.eclipse.dirigible.engine.odata2.sql.builder.SQLSelectBuilder;
 
 import java.util.*;
 
@@ -52,9 +54,9 @@ public class OData2Utils {
      * Generates the next link for server-side paging. The next-link is based on
      * the URI of the current request, except that {@code $skip} or
      * {@code $skiptoken} will be removed.
-     * 
-     * @param context the context
-     * @param top the top param
+     *
+     * @param context    the context
+     * @param top        the top param
      * @param pagingSize the page size
      * @return the link
      * @throws ODataException in case of an error
@@ -137,19 +139,19 @@ public class OData2Utils {
 
 
     public static boolean isOrderByEntityInExpand(OrderExpression orderExpression, UriInfo uriInfo) throws EdmException {
-        MemberExpression memberExpression = (MemberExpression)orderExpression.getExpression();
+        MemberExpression memberExpression = (MemberExpression) orderExpression.getExpression();
         CommonExpression pathExpression = memberExpression.getPath();
-        EdmType  entityType = pathExpression.getEdmType();
+        EdmType entityType = pathExpression.getEdmType();
         if (!hasExpand(uriInfo.getExpand())) {
             return false;
         }
-        for (List<NavigationPropertySegment> expand: uriInfo.getExpand()) {
-            for (NavigationPropertySegment segment: expand) {
+        for (List<NavigationPropertySegment> expand : uriInfo.getExpand()) {
+            for (NavigationPropertySegment segment : expand) {
                 EdmEntitySet epxandEntity = segment.getTargetEntitySet();
                 if (epxandEntity.getEntityType().getName().equals(entityType.getName())) {
                     return true;
                 }
-             }
+            }
         }
         return false;
     }
@@ -217,5 +219,26 @@ public class OData2Utils {
         errorContext.setLocale(Locale.ENGLISH);
         errorContext.setMessage("No content");
         return EntityProvider.writeErrorDocument(errorContext);
+    }
+
+    public static String getKeyPredicateValueByPropertyName(String propertyName, List<KeyPredicate> keyPredicates) throws EdmException {
+        String keyPredicateValue = "";
+        for (KeyPredicate keyPredicate : keyPredicates) {
+            if (keyPredicate.getProperty().getName().equals(propertyName)) {
+                keyPredicateValue = keyPredicate.getLiteral();
+            }
+        }
+        return keyPredicateValue;
+    }
+
+    public static boolean isPropertyParameter(EdmProperty property, SQLSelectBuilder query, EdmStructuralType entityType) throws EdmException {
+        boolean isParameter = false;
+        List<String> sqlTableParameters = query.getSQLTableParameters(entityType);
+
+        if (sqlTableParameters.contains(property.getName())) {
+            isParameter = true;
+        }
+
+        return isParameter;
     }
 }

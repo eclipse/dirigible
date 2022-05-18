@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.INTERNAL_SERVER_ERROR;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.fqn;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isPropertyParameter;
 
 public final class SQLJoinClause implements SQLClause {
 
@@ -60,7 +61,7 @@ public final class SQLJoinClause implements SQLClause {
     }
 
     public String evaluate(SQLContext context) throws EdmException {
-        if (isEmpty()){
+        if (isEmpty()) {
             return "";
         }
 
@@ -69,18 +70,18 @@ public final class SQLJoinClause implements SQLClause {
         boolean hasFirstJsonMappingTable = query.hasSQLMappingTablePresent(start, target);
         boolean hasSecondJsonMappingTable = query.hasSQLMappingTablePresent(target, start);
 
-        if(hasFirstJsonMappingTable && hasSecondJsonMappingTable) {
+        if (hasFirstJsonMappingTable && hasSecondJsonMappingTable) {
 
             buildMappingTableJoin(join);
 
-        } else if(!hasFirstJsonMappingTable && !hasSecondJsonMappingTable) {
+        } else if (!hasFirstJsonMappingTable && !hasSecondJsonMappingTable) {
 
             buildJoinWithoutMappingTable(join);
 
         } else {
 
             throw new IllegalArgumentException("Missing manyToManyMappingTable definition in the following json file: " +
-                    "" + (hasFirstJsonMappingTable? target.getName() : start.getName()) +
+                    "" + (hasFirstJsonMappingTable ? target.getName() : start.getName()) +
                     ". Both json files need to point to the mapping table");
         }
 
@@ -125,7 +126,7 @@ public final class SQLJoinClause implements SQLClause {
     }
 
     private void buildJoinClause(List<String> joinColumns, String leftTableAlias, String rightTable,
-                                   String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
+                                 String rightTableAlias, List<String> targetKeys, StringBuilder join) throws EdmException {
         boolean caseSensitive = Boolean.parseBoolean(Configuration.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE", "false"));
 
         join.append(joinType.toString());
@@ -159,12 +160,12 @@ public final class SQLJoinClause implements SQLClause {
         }
     }
 
-    private String getValue(boolean caseSensitive, String value){
+    private String getValue(boolean caseSensitive, String value) {
         return caseSensitive ? surroundWithDoubleQuotes(value) : value;
     }
 
     String surroundWithDoubleQuotes(String value) {
-        if(value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
+        if (value.startsWith(DOUBLE_QUOTES) && value.endsWith(DOUBLE_QUOTES)) {
             return value;
         }
 
@@ -185,9 +186,10 @@ public final class SQLJoinClause implements SQLClause {
     // This Method is for internal use ONLY !!! Do NEVER use it !!!
     public SQLSelectBuilder with(List<KeyPredicate> keyPredicates) throws EdmException {
         if (this.keyPredicates != NO_PREDICATES_USED) {
-            throw new OData2Exception("A where clause for the key predicates of this join epxression is already added!",
+            throw new OData2Exception("A where clause for the key predicates of this join expression is already added!",
                     INTERNAL_SERVER_ERROR);
         }
+
         this.keyPredicates = keyPredicates;
         SQLWhereClause where = SQLUtils.whereClauseFromKeyPredicates(query, start, keyPredicates);
         query.and(where);
@@ -198,7 +200,7 @@ public final class SQLJoinClause implements SQLClause {
         return query.getSQLJoinTableName(start, end);
     }
 
-    private static boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
+    private boolean needsJoinQuery(EdmStructuralType start, List<KeyPredicate> startPredicates, EdmStructuralType target) {
         try {
             if (start.getName().equals(target.getName())) {
                 return false;
@@ -206,12 +208,22 @@ public final class SQLJoinClause implements SQLClause {
                 if (startPredicates == NO_PREDICATES_USED) {
                     return true;
                 } else {
-                    return (startPredicates != null && !startPredicates.isEmpty()) ? true : false;
+                    return ((startPredicates != null && !startPredicates.isEmpty()) && hasKeyPredicatesNonParameterProperty(start, startPredicates)) ? true : false;
                 }
             }
         } catch (EdmException e) {
             throw new RuntimeException(e);//should never happen
         }
+    }
+
+    private boolean hasKeyPredicatesNonParameterProperty(EdmStructuralType start, List<KeyPredicate> keyPredicates) throws EdmException {
+        for (KeyPredicate keyPredicate : keyPredicates) {
+            if (!isPropertyParameter(keyPredicate.getProperty(), this.query, start)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

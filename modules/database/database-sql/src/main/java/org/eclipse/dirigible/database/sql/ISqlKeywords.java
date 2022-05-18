@@ -511,4 +511,19 @@ public interface ISqlKeywords {
      * The Constant KEYWORD_ROWSTORE.
      */
     public static final String KEYWORD_ROWSTORE = "ROWSTORE";
+
+    /**
+     * The Constant KEYWORD_LIKE
+     */
+    public static final String KEYWORD_LIKE = "LIKE";
+
+    /**
+     * The Constant KEYWORD_NO
+     */
+    public static final String KEYWORD_NO = "NO";
+
+    /**
+     * The Constant KEYWORD_DATA
+     */
+    public static final String KEYWORD_DATA = "DATA";
 }
