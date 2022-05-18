@@ -20,8 +20,10 @@ import org.eclipse.dirigible.core.git.command.InitCommand;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class InitCommandTest extends AbstractDirigibleTest {
 
     private InitCommand initCommand;
