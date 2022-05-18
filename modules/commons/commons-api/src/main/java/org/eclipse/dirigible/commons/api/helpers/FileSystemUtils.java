@@ -15,6 +15,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -584,7 +585,19 @@ public class FileSystemUtils {
         catch (IOException e) {
             logger.error(e.getMessage(), (Throwable)e);
         }
-        return projectsFinder.getProjects();
+        List<File> gitProjects = projectsFinder.getProjects();
+
+        // No projects containing "project.json" found, fallback to old implementation
+        if (gitProjects.isEmpty()) {
+            File[] gitRepositoryRootFolders = gitRepository.listFiles();
+            for (File next : gitRepositoryRootFolders) {
+                if (next.exists() && next.isDirectory() && !next.getName().startsWith(".")) {
+                    gitProjects.add(next);
+                }
+            }
+        }
+
+        return gitProjects;
     }
 
     private static class ProjectsFinder extends SimpleFileVisitor<Path> {
