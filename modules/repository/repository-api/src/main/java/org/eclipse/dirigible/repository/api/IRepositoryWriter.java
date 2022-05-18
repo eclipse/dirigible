@@ -155,6 +155,14 @@ public interface IRepositoryWriter {
 	public void linkPath(String repositoryPath, String filePath) throws IOException;
 
 	/**
+	 * Delete link together with external folder or file
+	 * 
+	 * @param repositoryPath the relative path
+	 * @throws IOException in case of exception
+	 */
+	public void deleteLinkedPath(String repositoryPath) throws IOException;
+
+	/**
 	 * Check if Link exists between folder or file and an internal Repository artifact
 	 * 
 	 * @param repositoryPath the relative path

@@ -22,7 +22,10 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.core.git.*;
+import org.eclipse.dirigible.core.git.GitCommitInfo;
+import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.GitConnectorFactory;
+import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.CommitCommand;
@@ -59,7 +62,6 @@ import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.transport.URIish;
 
 /**
  * Processing the Git Service incoming requests.
@@ -145,10 +147,13 @@ public class GitProcessor {
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repositoryName);
 
 			IWorkspace workspaceApi = getWorkspace(workspace);
+			IRepository repository = workspaceApi.getRepository();
 			IProject[] workspaceProjects = getProjects(workspaceApi, projects);
 			for (IProject next : workspaceProjects) {
 				if (next.exists()) {					
 					next.delete();
+				} else if (repository.isLinkedPath(repositoryName)) {
+					repository.deleteLinkedPath(repositoryName);
 				}
 			}
 

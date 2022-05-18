@@ -17,7 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -114,7 +116,7 @@ public class GitFileUtils {
 	/**
 	 * Import project.
 	 *
-	 * @param gitDirectory
+	 * @param gitRepository
 	 *            the git directory
 	 * @param basePath
 	 *            the base path
@@ -128,18 +130,22 @@ public class GitFileUtils {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public List<String> importProject(File gitDirectory, String basePath, String user, String workspace, String projectName)
+	public List<String> importProject(File gitRepository, String basePath, String user, String workspace, String projectName)
 			throws IOException {
-		File[] listFiles = FileSystemUtils.listFiles(gitDirectory);
-		List<String> importedProjects = new ArrayList<String>(listFiles.length-1);
-		if (listFiles.length == 1) { // only .git folder
-			if (projectName == null) {
-				projectName = gitDirectory.getName();
+		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
+		List<String> importedProjects = new ArrayList<String>();
+		if (projects.size() == 0) {
+			// No "project.json" files found fallback to the old implementation
+			projects = Arrays.asList(FileSystemUtils.listFiles(gitRepository));
+			if (projects.size() == 1) { // only .git folder
+				if (projectName == null) {
+					projectName = gitRepository.getName();
+				}
+				File implicitProject = new File(gitRepository, projectName);
+				FileUtils.forceMkdir(implicitProject);
 			}
-			File implicitProject = new File(gitDirectory, projectName);
-			FileUtils.forceMkdir(implicitProject);
 		}
-		for (File file : listFiles) {
+		for (File file : projects) {
 			String project = file.getName();
 			if (file.isDirectory() && !project.startsWith(".")) {
 				importProjectFromGitRepositoryToWorkspace(file, basePath + project);
@@ -245,27 +251,18 @@ public class GitFileUtils {
 	/**
 	 * Gets the valid project folders.
 	 *
-	 * @param gitDirectory
+	 * @param gitRepository
 	 *            the git directory
 	 * @return the valid project folders
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static String[] getValidProjectFolders(File gitDirectory) throws IOException {
-		List<String> valid = new ArrayList<String>();
-		String[] all = gitDirectory.list();
-		for (String name : all) {
-			if (name.startsWith(".")) {
-				continue;
-			}
-			File file = new File(gitDirectory.getCanonicalPath() + File.separator + name);
-			if (file.isDirectory()) {
-				valid.add(name);
-			}
-		}
-		return valid.toArray(new String[] {});
+	public static String[] getValidProjectFolders(File gitRepository) throws IOException {
+		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
+		List<String> projectsNames = projects.stream().map(e -> e.getName()).collect(Collectors.toList());
+		return projectsNames.toArray(new String[]{});
 	}
-	
+
 	public static boolean isGitProject(IRepository repository, String repositoryPath) {
 		try {
 			if (repository instanceof FileSystemRepository) {

@@ -12,10 +12,10 @@
 package org.eclipse.dirigible.core.workspace.json;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
@@ -23,6 +23,8 @@ import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
 
 public class WorkspaceGitHelper {
 
+	// {workspace}/{userName}/{gitRepositoryName}
+	private static final int GIT_REPOSITORY_PROJECT_DEPTH = 3;
 	private static final String DOT_GIT = ".git";
 
 	/**
@@ -38,7 +40,7 @@ public class WorkspaceGitHelper {
 	public static Pair<Boolean, String> getGitAware(IRepository repository, String repositoryPath) {
 		File gitFolder = getGitFolderForProject(repository, repositoryPath);
 		if (gitFolder != null && gitFolder.exists()) {
-			return Pair.of(true, gitFolder.getParentFile().getName());
+			return Pair.of(true, gitFolder.getName());
 		}
 		return Pair.of(false, null);
 	}
@@ -55,8 +57,14 @@ public class WorkspaceGitHelper {
 		try {
 			if (repository instanceof FileSystemRepository) {
 				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
-				String gitDirectory = new File(path).getCanonicalPath();
-				return Paths.get(Paths.get(gitDirectory).getParent().toString(), DOT_GIT).toFile();
+				File gitFileDirectory = new File(new File(path).getCanonicalPath());
+				String gitDirectory = gitFileDirectory.getCanonicalPath();
+				String projectLocation = gitDirectory.substring(gitDirectory.lastIndexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
+				int segmentsCount = projectLocation.split(IRepository.SEPARATOR).length - GIT_REPOSITORY_PROJECT_DEPTH;
+				for (int i = 0; i < segmentsCount; i ++) {
+					gitFileDirectory = gitFileDirectory.getParentFile();
+				}
+				return gitFileDirectory;
 			}
 		} catch (Throwable e) {
 			return null;
