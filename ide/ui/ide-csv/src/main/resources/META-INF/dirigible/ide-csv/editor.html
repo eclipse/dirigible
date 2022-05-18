@@ -50,6 +50,7 @@
         ng-mousedown="handleClick($event)" oncontextmenu="return false" ng-keydown="keyDownFunc($event)">
 
         <div class="quick-actions-bar">
+            <div class="pull-left btn-actionbar">Data rows: {{rowsCount}}</div>
             <input class="form-control" type="text" placeholder="Search..." ng-keyup="searchCsv()"
                 ng-model="searchInput">
             <div class="btn-group pull-right" role="group" aria-label="toolbar">

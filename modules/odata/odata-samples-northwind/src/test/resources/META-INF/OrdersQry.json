@@ -2,7 +2,6 @@
 	"edmType": "Orders_Qry",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.OrdersQry",
 	"sqlTable": " PUBLIC.ORDER_QRY",
-
 	"OrderID": "ORDER_ID",
 	"CustomerId": "CUSTOMER_ID",
 	"EmployeeId": "EMPLOYEE_ID",

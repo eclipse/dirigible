@@ -16,10 +16,7 @@ import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnMo
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.sql.ISqlKeywords;
 import org.eclipse.dirigible.engine.odata2.api.ITableMetadataProvider;
-import org.eclipse.dirigible.engine.odata2.definition.ODataAssociationDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataEntityDefinition;
-import org.eclipse.dirigible.engine.odata2.definition.ODataProperty;
+import org.eclipse.dirigible.engine.odata2.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +38,7 @@ public class OData2ODataXTransformer {
         this(tableMetadataProvider, new DefaultPropertyNameEscaper());
     }
 
-    public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider, ODataPropertyNameEscaper propertyNameEscaper){
+    public OData2ODataXTransformer(ITableMetadataProvider tableMetadataProvider, ODataPropertyNameEscaper propertyNameEscaper) {
         this.tableMetadataProvider = tableMetadataProvider;
         this.propertyNameEscaper = propertyNameEscaper;
     }
@@ -75,10 +72,13 @@ public class OData2ODataXTransformer {
 
             boolean isPretty = Boolean.parseBoolean(Configuration.get(DBMetadataUtil.DIRIGIBLE_GENERATE_PRETTY_NAMES, "true"));
 
+            List<ODataParameter> entityParameters = entity.getParameters();
             List<ODataProperty> entityProperties = entity.getProperties();
+
             if (tableMetadata.getTableType().equals(ISqlKeywords.METADATA_TABLE)) {
                 ODataMetadataUtil.validateODataPropertyName(tableMetadata.getColumns(), entityProperties, entity.getName());
             }
+
             buff.append("\t<EntityType Name=\"").append(entity.getName()).append("Type").append("\"");
             entity.getAnnotationsEntityType().forEach((key, value) -> buff.append(" ").append(key).append("=\"").append(value).append("\""));
             buff.append(">\n");
@@ -86,15 +86,17 @@ public class OData2ODataXTransformer {
             List<PersistenceTableColumnModel> entityOrigKeys = checkIfViewHasExposedOriginalKeysFromTable(tableMetadata, entity);
             buff.append("\t\t<Key>\n");
 
-            //keys are explicit defined only on VIEW artifact
+            // Keys are explicit defined only on VIEW artifact
             if (VIEW_TYPES.contains(tableMetadata.getTableType())) {
+                entityParameters.forEach(parameter -> buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(parameter.getName())).append("\" />\n"));
+
                 if (entityOrigKeys.size() > 0) {
                     entityOrigKeys.forEach(key -> {
                         String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(key.getName(), entityProperties, isPretty);
                         buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(columnValue)).append("\" />\n");
                     });
                 } else {
-                    //local key was generated
+                    // Local key was generated
                     entity.getKeys().forEach(key -> buff.append("\t\t\t<PropertyRef Name=\"").append(propertyNameEscaper.escape(key)).append("\" />\n"));
                 }
             } else {
@@ -105,15 +107,22 @@ public class OData2ODataXTransformer {
             }
             buff.append("\t\t</Key>\n");
 
-            //add keys as property
+            // Add keys and parameters as property
             if (VIEW_TYPES.contains(tableMetadata.getTableType())) {
                 if (entityOrigKeys.size() == 0) {
-                    //local key was generated
+                    // Local key was generated
                     entity.getKeys().forEach(key -> buff.append("\t\t<Property Name=\"").append(key).append("\"").append(" Type=\"").append("Edm.String").append("\"").append(" Nullable=\"").append("false").append("\" MaxLength=\"2147483647\"").append(" sap:filterable=\"false\"").append("/>\n"));
                 }
+
+                entityParameters.forEach(parameter -> {
+                    buff.append("\t\t<Property Name=\"").append(parameter.getName()).append("\"")
+                            .append(" Nullable=\"").append(parameter.isNullable()).append("\"").append(" Type=\"").append(parameter.getType() != null ? parameter.getType() : "null").append("\"");
+                    buff.append("/>\n");
+                });
             }
-            //expose all Db columns in case no entity props are defined
-            if (entityProperties.isEmpty()) {
+
+            // Expose all Db columns in case no entity props are defined
+            if (entityProperties.isEmpty() && entityParameters.isEmpty()) {
                 tableMetadata.getColumns().forEach(column -> {
                     String columnValue = DBMetadataUtil.getPropertyNameFromDbColumnName(column.getName(), entityProperties, isPretty);
                     buff.append("\t\t<Property Name=\"").append(propertyNameEscaper.escape(columnValue)).append("\"")
@@ -121,7 +130,7 @@ public class OData2ODataXTransformer {
                     buff.append("/>\n");
                 });
             } else {
-                //in case entity props are defined expose only them
+                // In case entity props are defined expose only them
                 PersistenceTableModel finalTableMetadata = tableMetadata;
                 entityProperties.forEach(prop -> {
                     List<PersistenceTableColumnModel> dbColumn = finalTableMetadata.getColumns().stream().filter(el -> el.getName().equals(prop.getColumn())).collect(Collectors.toList());
@@ -149,7 +158,7 @@ public class OData2ODataXTransformer {
                 buff.append("/>\n");
             });
 
-            // keep associations for later use
+            // Keep associations for later use
             entity.getNavigations().forEach(relation -> {
                 ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
                 String fromRole = association.getFrom().getEntity();
@@ -167,13 +176,13 @@ public class OData2ODataXTransformer {
                         );
             });
 
-            // keep entity sets for later use
+            // Keep entity sets for later use
             entitySets.append("\t\t<EntitySet Name=\"").append(entity.getAlias())
                     .append("\" EntityType=\"").append(model.getNamespace()).append(".").append(entity.getName()).append("Type\"");
             entity.getAnnotationsEntitySet().forEach((key, value) -> entitySets.append(" ").append(key).append("=\"").append(value).append("\""));
             entitySets.append("/>\n");
 
-            // keep associations sets for later use
+            // Keep associations sets for later use
             entity.getNavigations().forEach(relation -> {
                 ODataAssociationDefinition association = ODataMetadataUtil.getAssociation(model, relation.getAssociation(), relation.getName());
                 String fromRole = association.getFrom().getEntity();
@@ -194,11 +203,11 @@ public class OData2ODataXTransformer {
             });
             buff.append("\t</EntityType>\n");
         }
-        buff.append(associations.toString());
+        buff.append(associations);
 
         StringBuilder container = new StringBuilder();
-        container.append(entitySets.toString());
-        container.append(associationsSets.toString());
+        container.append(entitySets);
+        container.append(associationsSets);
 
         buff.append("</Schema>\n");
         result[0] = buff.toString();

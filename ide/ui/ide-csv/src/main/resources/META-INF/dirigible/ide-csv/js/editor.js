@@ -83,7 +83,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     };
     $scope.papaConfig = {
         columnIndex: 0, // Custom property, needed for duplicated column names
-        delimitersToGuess: [',', '\t', '|', ';', '#', Papa.RECORD_SEP, Papa.UNIT_SEP],
+        delimitersToGuess: [',', '\t', '|', ';', '#', '~', Papa.RECORD_SEP, Papa.UNIT_SEP],
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
@@ -94,6 +94,11 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
             this.columnIndex = 0;
         }
     };
+    $scope.rowsCount = 0;
+
+    function setRowsCount(rowsCount) {
+        $scope.rowsCount = rowsCount;
+    }
 
     function checkPlatform() {
         let platform = window.navigator.platform;
@@ -120,6 +125,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
                 parsedData = Papa.parse('"Column"', $scope.papaConfig);
             }
             csvData.data = generateCorrectCsvData(parsedData.data);
+
             let columns = [];
             for (const property in csvData.data[0]) {
                 columns.push(property)
@@ -129,6 +135,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
         if ($scope.papaConfig.delimiter === undefined) {
             $scope.delimiter = parsedData.meta.delimiter;
         }
+        setRowsCount(csvData.data.length);
     }
 
     function getViewParameters() {
@@ -183,6 +190,7 @@ csvView.controller('CsvViewController', ['$scope', '$http', '$window', function 
     function fileChanged() {
         isFileChanged = true;
         messageHub.post({ data: $scope.file }, 'editor.file.dirty');
+        setRowsCount(csvData.data.length);
     }
 
     function loadGrid() {

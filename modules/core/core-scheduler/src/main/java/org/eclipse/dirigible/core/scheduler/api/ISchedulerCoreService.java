@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 
 /**
  * The Scheduler Core Service interface.
@@ -165,5 +166,59 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @return serialized definition as string
 	 */
 	public String serializeJob(JobDefinition jobDefinition);
+	
+	// Job Log
+	
+	/**
+	 * Register triggered job event
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobTriggered(String name, String handler) throws SchedulerException;
+	
+	/**
+	 * Register finished job event
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param triggeredId id of the triggering event
+	 * @param triggeredAt the time when has been triggered 
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobFinished(String name, String handler, long triggeredId, java.util.Date triggeredAt) throws SchedulerException;
+	
+	/**
+	 * Register failed job event
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param triggeredId id of the triggering event
+	 * @param triggeredAt the time when has been triggered
+	 * @param message the error message
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt,  String message) throws SchedulerException;
+	
+	/**
+	 * Get all the log per job's name
+	 * 
+	 * @param name the job name
+	 * @return the list of events
+	 * @throws SchedulerException exception
+	 */
+	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException;
+	
+	
+	/**
+	 * Delete Job Logs older than a week
+	 * 
+	 * @throws SchedulerException exception
+	 */
+	public void deleteOldJobLogs() throws SchedulerException;
 
 }

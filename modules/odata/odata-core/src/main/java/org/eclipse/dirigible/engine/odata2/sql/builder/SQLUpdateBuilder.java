@@ -34,10 +34,11 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 
 	private  EdmEntityType target;
 	private  ODataEntry updateEntry;
+	private  String tableName;
 
 	private final List<String> nonKeyColumnNames = new ArrayList<>();
 
-	public SQLUpdateBuilder(final EdmTableBindingProvider tableMappingProvider, Map<String, Object> uriKeys) {
+	public SQLUpdateBuilder(final EdmTableBindingProvider tableMappingProvider, Map<String, Object> uriKeys) throws ODataException {
 		super(tableMappingProvider);
 		this.uriKeyProperties = uriKeys;
 	}
@@ -61,7 +62,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 				initializeQuery();
 				StringBuilder builder = new StringBuilder();
 				builder.append("UPDATE ");
-				builder.append(buildInto());
+				builder.append(getTargetTableName());
 				builder.append(" SET ");
 				builder.append(buildColumnList()).append(" WHERE ");
 
@@ -87,6 +88,14 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		return target;
 	}
 
+	public SQLUpdateBuilder setTableName(String tableName) {
+		this.tableName = tableName;
+		return this;
+	}
+
+	private String getTargetTableName() {
+		return tableName != null ? tableName : buildInto();
+	}
 
 	public void initializeQuery() throws ODataException {
 
@@ -127,7 +136,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		}
 	}
 
-	private String buildInto() throws EdmException {
+	private String buildInto() {
 		StringBuilder into = new StringBuilder();
 		Iterator<String> it = getTablesAliasesForEntitiesInQuery();
 		while (it.hasNext()) {

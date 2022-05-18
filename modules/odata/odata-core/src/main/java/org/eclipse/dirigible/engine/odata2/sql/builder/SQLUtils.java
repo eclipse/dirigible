@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.olingo.odata2.api.commons.HttpStatusCodes.BAD_REQUEST;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
+import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.isPropertyParameter;
 
 public final class SQLUtils {
 
@@ -44,7 +45,7 @@ public final class SQLUtils {
 
             if(null == value){
                 preparedStatement.setObject(i + 1, null);
-                return;
+                continue;
             }
 
             switch (edmSimpleTypeKind){
@@ -137,27 +138,40 @@ public final class SQLUtils {
                                                        final List<KeyPredicate> keyPredicates) throws EdmException {
         StringBuilder whereClause = new StringBuilder();
         List<SQLStatementParam> params = new ArrayList<>();
+
         if (keyPredicates != null) {
-            Iterator<KeyPredicate> it = keyPredicates.iterator();
-            while (it.hasNext()) {
-                KeyPredicate keyPredicate = it.next();
-                Object literal = keyPredicate.getLiteral();
+            Iterator<KeyPredicate> keyPredicateIterator = keyPredicates.iterator();
+            while (keyPredicateIterator.hasNext()) {
+                KeyPredicate keyPredicate = keyPredicateIterator.next();
 
                 EdmProperty property = keyPredicate.getProperty();
-                if (property.isSimple()) {
-                    EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
-                    literal = evaluateDateTimeExpressions(literal, edmSimpleType);
-                    ColumnInfo info = query.getSQLTableColumnInfo(type, property);
-                    whereClause.append(info.getColumnName()).append(" = ?");
-                    params.add(SQLWhereClause.param(literal, edmSimpleType, info));
-                } else {
-                    //TODO what to do with complex properties?
-                    throw new IllegalStateException();
+
+                if (!isPropertyParameter(property, query, type)){
+                    Object literal = keyPredicate.getLiteral();
+
+                    if (property.isSimple()) {
+                        EdmSimpleType edmSimpleType = (EdmSimpleType) keyPredicate.getProperty().getType();
+                        literal = evaluateDateTimeExpressions(literal, edmSimpleType);
+                        ColumnInfo info = query.getSQLTableColumnInfo(type, property);
+                        params.add(SQLWhereClause.param(literal, edmSimpleType, info));
+                    } else {
+                        // TODO what to do with complex properties?
+                        throw new IllegalStateException();
+                    }
                 }
-                if (it.hasNext()) {
+            }
+
+            Iterator<SQLStatementParam> paramIterator = params.iterator();
+
+            while (paramIterator.hasNext()) {
+                SQLStatementParam param = paramIterator.next();
+                whereClause.append(param.getSqlColumnName()).append(" = ?");
+
+                if (paramIterator.hasNext()) {
                     whereClause.append(" AND ");
                 }
             }
+
             return new SQLWhereClause(whereClause.toString(), params.toArray(new SQLStatementParam[params.size()]));
         } else {
             return new SQLWhereClause();

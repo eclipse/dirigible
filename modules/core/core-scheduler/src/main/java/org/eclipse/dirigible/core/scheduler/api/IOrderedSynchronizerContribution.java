@@ -15,6 +15,8 @@ public interface IOrderedSynchronizerContribution extends ISynchronizer {
 	
 	/**
 	 * Set the order priority
+	 * 
+	 * @return the priority
 	 */
 	public int getPriority();
 

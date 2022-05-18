@@ -1,7 +1,6 @@
 {
 	"edmType" : "Car",
 	"edmTypeFqn": "org.apache.olingo.odata2.ODataCars.Car",
-	
 	"sqlTable" : "CAR",
 	"Id" : "CAR_ID",
 	"Model" : "CAR_MODEL",

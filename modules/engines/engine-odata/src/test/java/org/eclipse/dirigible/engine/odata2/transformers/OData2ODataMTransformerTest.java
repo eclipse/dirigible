@@ -44,7 +44,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
     private DBMetadataUtil dbMetadataUtil;
 
     @InjectMocks
-    OData2ODataMTransformer odata2ODataMTransformer = new OData2ODataMTransformer(new DefaultPropertyNameEscaper());
+    private DefaultTableMetadataProvider defaultTableMetadataProvider;
 
     @Test
     public void testTransformOrders() throws IOException, SQLException {
@@ -66,6 +66,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"OrderType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.OrderType\",\n" +
                 "\t\"sqlTable\": \"ORDERS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Customer\": \"Customer\",\n" +
                 "\t\"_ref_ItemType\": {\n" +
@@ -79,6 +80,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"ItemType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.ItemType\",\n" +
                 "\t\"sqlTable\": \"ITEMS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"Id\",\n" +
                 "\t\"Orderid\": \"OrderId\",\n" +
                 "\t\"_ref_OrderType\": {\n" +
@@ -88,7 +90,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"Id\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
@@ -112,6 +114,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"OrderType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.OrderType\",\n" +
                 "\t\"sqlTable\": \"ORDERS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Customer\": \"CUSTOMER\",\n" +
                 "\t\"_ref_ItemType\": {\n" +
@@ -125,6 +128,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"ItemType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataOrders.ItemType\",\n" +
                 "\t\"sqlTable\": \"ITEMS\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ItemId\": \"ITEM_ID\",\n" +
                 "\t\"OrderId\": \"ORDER_ID\",\n" +
                 "\t\"_ref_OrderType\": {\n" +
@@ -134,7 +138,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ITEM_ID\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityOrder, entityItem}, transformed);
     }
 
@@ -146,6 +150,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity1Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity1Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY1\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"entity1Id\": \"ENTITY1ID\",\n" +
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
@@ -161,6 +166,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity2Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity2Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY2\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"entity2Id\": \"ENTITY2ID\",\n" +
                 "\t\"property2\": \"PROPERTY2\",\n" +
                 "\t\"property3\": \"PROPERTY3\",\n" +
@@ -177,13 +183,41 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"Entity3Type\",\n" +
                 "\t\"edmTypeFqn\": \"mytest.Entity3Type\",\n" +
                 "\t\"sqlTable\": \"ENTITY3\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Entity3_id\": \"ENTITY3.ID\",\n" +
                 "\t\"Name_id\": \"NAME.ID\",\n" +
                 "\t\"_pk_\" : \"ENTITY3.ID\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entity1, entity2, entity3}, transformed);
+    }
+
+    @Test
+    public void testTransformEntityWithParametersWhenHanaCalculationView() throws IOException, SQLException {
+        String employee = IOUtils.toString(ODataDefinitionFactoryTest.class.getResourceAsStream("/transformers/EmployeeWithParameters.odata"), Charset.defaultCharset());
+        ODataDefinition definition = ODataDefinitionFactory.parseOData("/transformers/EmployeeWithParameters.odata", employee);
+
+        PersistenceTableColumnModel column1 = new PersistenceTableColumnModel("COMPANY_ID", "Edm.Int32", true, true);
+        PersistenceTableColumnModel column2 = new PersistenceTableColumnModel("EMPLOYEE_NUMBER", "Edm.Int32", true, true);
+        PersistenceTableModel model = new PersistenceTableModel("EMPLOYEES", Arrays.asList(column1, column2), new ArrayList<>());
+        model.setTableType("CALC VIEW");
+        when(dbMetadataUtil.getTableMetadata("EMPLOYEES", null)).thenReturn(model);
+
+        String entityEmployee = "{\n" +
+                "\t\"edmType\": \"employeeType\",\n" +
+                "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
+                "\t\"sqlTable\": \"EMPLOYEES\",\n" +
+                "\t\"dataStructureType\": \"CALC VIEW\",\n" +
+                "\t\"companyId\": \"COMPANY_ID\",\n" +
+                "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
+                "\t\"EmployeeId\": \"EmployeeId\",\n" +
+                "\t\"_parameters_\" : [\"EmployeeId\"],\n" +
+                "\t\"_pk_\" : \"COMPANY_ID,EMPLOYEE_NUMBER\"\n" +
+                "}";
+
+        String[] actualResult = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
+        assertArrayEquals(new String[]{entityEmployee}, actualResult);
     }
 
     @Test
@@ -206,6 +240,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"employeeType\",\n" +
                 "\t\"edmTypeFqn\": \"np.employeeType\",\n" +
                 "\t\"sqlTable\": \"EMPLOYEES\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"companyId\": \"COMPANY_ID\",\n" +
                 "\t\"employeeNumber\": \"EMPLOYEE_NUMBER\",\n" +
                 "\t\"_ref_phoneType\": {\n" +
@@ -219,6 +254,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"phoneType\",\n" +
                 "\t\"edmTypeFqn\": \"np.phoneType\",\n" +
                 "\t\"sqlTable\": \"PHONES\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"number\": \"NUMBER\",\n" +
                 "\t\"fkCompanyId\": \"FK_COMPANY_ID\",\n" +
                 "\t\"fkEmployeeNumber\": \"FK_EMPLOYEE_NUMBER\",\n" +
@@ -229,7 +265,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"NUMBER\"\n" +
                 "}";
-        String[] actualResult = odata2ODataMTransformer.transform(definition);
+        String[] actualResult = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityEmployee, phoneEntity}, actualResult);
     }
 
@@ -252,6 +288,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"UsersType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.UsersType\",\n" +
                 "\t\"sqlTable\": \"CVUSER\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
                 "\t\"_ref_GroupsType\": {\n" +
@@ -269,6 +306,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"GroupsType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUsers.GroupsType\",\n" +
                 "\t\"sqlTable\": \"CVGROUP\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"Id\": \"ID\",\n" +
                 "\t\"Firstname\": \"FIRSTNAME\",\n" +
                 "\t\"_ref_UsersType\": {\n" +
@@ -282,7 +320,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t},\n" +
                 "\t\"_pk_\" : \"ID\"\n" +
                 "}";
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityUser, entityGroup}, transformed);
     }
 
@@ -301,13 +339,14 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"UserRoleType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataUserRole.UserRoleType\",\n" +
                 "\t\"sqlTable\": \"UserRole\",\n" +
+                "\t\"dataStructureType\": \"VIEW\",\n" +
                 "\t\"ZUSR_ROLE\": \"ZUSR_ROLE\",\n" +
                 "\t\"ZROLE_NAME\": \"ZROLE_NAME\",\n" +
                 "\t\"keyGenerated\": \"ID\",\n" +
                 "\t\"_pk_\" : \"\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{entityView}, transformed);
     }
 
@@ -326,6 +365,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"edmType\": \"CustomerType\",\n" +
                 "\t\"edmTypeFqn\": \"org.apache.olingo.odata2.ODataCustomer.CustomerType\",\n" +
                 "\t\"sqlTable\": \"CUSTOMER\",\n" +
+                "\t\"dataStructureType\": \"TABLE\",\n" +
                 "\t\"ID\": \"ID\",\n" +
                 "\t\"NUMBER\": \"NUMBER\",\n" +
                 "\t\"PAYMENT\": \"PAYMENT\",\n" +
@@ -337,7 +377,7 @@ public class OData2ODataMTransformerTest extends AbstractDirigibleTest {
                 "\t\"_pk_\" : \"ID\"\n" +
                 "}";
 
-        String[] transformed = odata2ODataMTransformer.transform(definition);
+        String[] transformed = new OData2ODataMTransformer(defaultTableMetadataProvider, new DefaultPropertyNameEscaper()).transform(definition);
         assertArrayEquals(new String[]{aggregationEntity}, transformed);
     }
 

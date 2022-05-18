@@ -2,11 +2,9 @@
 	"edmType": "Customer_and_Suppliers_by_City",
 	"edmTypeFqn": "org.eclipse.dirigible.engine.odata2.sql.entities.northwind.CustomerAndSuppliersByCity",
 	"sqlTable": " PUBLIC.CUSTOMER_AND_SUPPLIERS_BY_CITY",
-
 	"City": "City",
 	"CompanyName": "COMPANY_NAME",
 	"ContactName": "CONTACT_NAME",
 	"Relationship": "RELATIONSHIP",
-
 	"_pk_": ["COMPANY_NAME", "RELATIONSHIP"]
 }

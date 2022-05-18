@@ -38,7 +38,7 @@ public class EdmTableBindingFactoryTest {
         Class<?>[] classes = { //
                 Entity1.class, //
                 Entity2.class, //
-                Entity3.class //
+                Entity3.class  //
         };
         AnnotationEdmProvider provider = new AnnotationEdmProvider(Arrays.asList(classes));
         edm = new EdmImplProv(provider);
@@ -108,6 +108,22 @@ public class EdmTableBindingFactoryTest {
             EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
             assertEquals(Arrays.asList("ID"),
                     config.getJoinColumnTo(edm.getEntityType(Entity2.class.getPackage().getName(), Entity2.class.getSimpleName())));
+        }
+    }
+
+    @Test
+    public void testGetDataStructureType() throws Exception {
+        try (InputStream stream = stream(Entity1.class)) {
+            EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+            assertEquals(EdmTableBinding.DataStructureType.TABLE, config.getDataStructureType());
+        }
+    }
+
+    @Test
+    public void testGetParameters() throws Exception {
+        try (InputStream stream = stream(Entity1.class)) {
+            EdmTableBinding config = new EdmTableBindingFactory().createTableBinding(stream);
+            assertEquals(Arrays.asList(), config.getParameters());
         }
     }
 }

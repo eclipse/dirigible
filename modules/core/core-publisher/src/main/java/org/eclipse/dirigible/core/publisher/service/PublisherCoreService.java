@@ -21,12 +21,14 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.ResourcesCache;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.publisher.api.IPublisherCoreService;
 import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.publisher.definition.PublishLogDefinition;
 import org.eclipse.dirigible.core.publisher.definition.PublishRequestDefinition;
+import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -34,7 +36,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 /**
  * The PublisherCoreService implementation managing the requests for publish artifacts.
  */
-public class PublisherCoreService implements IPublisherCoreService {
+public class PublisherCoreService implements IPublisherCoreService, ICleanupService {
 
 	/** The data source. */
 	private DataSource dataSource = null;
@@ -212,6 +214,30 @@ public class PublisherCoreService implements IPublisherCoreService {
 			throw new PublisherException(e);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#deleteOldPublishRequests()
+	 */
+	@Override
+	public void deleteOldPublishRequests() throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = getDataSource().getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS")
+						.where("PUBREQ_CREATED_AT < ?")
+						.build();
+				publishRequestPersistenceManager.execute(connection, sql, new Timestamp(System.currentTimeMillis() - 60*60*1000)); // older than an hour
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
 
 	// Publish Log
 
@@ -341,7 +367,7 @@ public class PublisherCoreService implements IPublisherCoreService {
 			Connection connection = null;
 			try {
 				connection = getDataSource().getConnection();
-				publishRequestPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
+				publishLogPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				Timestamp date = new Timestamp(new java.util.Date().getTime());
 				String sql = SqlFactory.getNative(connection).select().column("MAX(PUBLOG_CREATED_AT)").from("DIRIGIBLE_PUBLISH_LOGS").toString();
 
@@ -365,6 +391,41 @@ public class PublisherCoreService implements IPublisherCoreService {
 			}
 		} catch (SQLException e) {
 			throw new PublisherException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#deleteOldPublishLogs()
+	 */
+	@Override
+	public void deleteOldPublishLogs() throws SchedulerException {
+		try {
+			Connection connection = null;
+			try {
+				connection = getDataSource().getConnection();
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_LOGS")
+						.where("PUBLOG_CREATED_AT < ?")
+						.build();
+				publishLogPersistenceManager.execute(connection, sql, new Timestamp(System.currentTimeMillis() - 60*60*1000)); // older than an hour
+			} finally {
+				if (connection != null) {
+					connection.close();
+				}
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+	
+
+	@Override
+	public void cleanup() {
+		try {
+			deleteOldPublishRequests();
+			deleteOldPublishLogs();
+		} catch (SchedulerException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
