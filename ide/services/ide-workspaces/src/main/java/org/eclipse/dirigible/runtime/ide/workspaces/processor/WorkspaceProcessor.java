@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +177,7 @@ public class WorkspaceProcessor {
         }
 
         if (isGitProject) {
-            FileUtils.forceDelete(projectFile);
+            Files.delete(projectFile.toPath());
         } else {
             workspaceObject.deleteProject(project);
         }
