@@ -31,7 +31,7 @@ import org.eclipse.dirigible.repository.local.LocalCollection;
 public class RegistryFacade {
 
 	private static final String META_INF_DIRIGIBLE = "/META-INF/dirigible";
-	private static final String META_INF_WEBJARS = "/META-INF/webjars";
+	private static final String META_INF_WEBJARS = "/META-INF/resources/webjars";
 
 	public static byte[] getContent(String path) throws IOException, ScriptingException {
 		// Check in the repository first
