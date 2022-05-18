@@ -152,8 +152,8 @@ public class GitProcessor {
 			for (IProject next : workspaceProjects) {
 				if (next.exists()) {					
 					next.delete();
-				} else if (repository.isLinkedPath(repositoryName)) {
-					repository.deleteLinkedPath(repositoryName);
+				} else if (repository.isLinkedPath(next.getPath())) {
+					repository.deleteLinkedPath(next.getPath());
 				}
 			}
 

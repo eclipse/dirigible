@@ -597,9 +597,7 @@ public abstract class FileSystemRepository implements IRepository {
 		if (isLinkedPath(repositoryPath)) {
 			String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
 			Path filePath = Paths.get(workspacePath);
-			if (filePath.toFile().exists()) {
-				Files.delete(filePath);
-			}
+			Files.delete(filePath);
 		}
 	}
 
