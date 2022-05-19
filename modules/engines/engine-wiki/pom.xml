@@ -60,11 +60,17 @@
 		<dependency>
 		    <groupId>org.eclipse.mylyn.docs</groupId>
 		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
-		    <version>3.0.42</version>
+		    <version>${wikitext.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.mylyn.docs</groupId>
+		    <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
+		    <version>${wikitext.version}</version>
 		</dependency>
     </dependencies>
 
     <properties>
+    	<wikitext.version>3.0.42</wikitext.version>
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 

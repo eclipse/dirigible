@@ -98,6 +98,7 @@ angular.module('preview', [])
                         url += '/xsk';
                         break;
                     case 'md':
+                    case 'confluence':
                         url += '/wiki';
                         break;
                     case 'command':

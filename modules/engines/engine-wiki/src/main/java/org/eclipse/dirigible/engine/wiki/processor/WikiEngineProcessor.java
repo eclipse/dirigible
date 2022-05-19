@@ -11,8 +11,14 @@
  */
 package org.eclipse.dirigible.engine.wiki.processor;
 
+import java.io.StringWriter;
+
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
+import org.eclipse.mylyn.wikitext.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
 /**
  * Processing the incoming requests for the wiki pages.
@@ -53,6 +59,30 @@ public class WikiEngineProcessor {
 	 */
 	public byte[] getResourceContent(String path) {
 		return wikiEngineExecutor.getResourceContent(IRepositoryStructure.PATH_REGISTRY_PUBLIC, path);
+	}
+	
+	/**
+	 * Render content.
+	 *
+	 * @param content
+	 *            the content
+	 * @return the string
+	 */
+	public String renderContent(String path, String content) {
+		StringWriter writer = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+		builder.setEmitAsDocument(false);
+		MarkupParser markupParser = new MarkupParser();
+		markupParser.setBuilder(builder);
+		
+		if (path.endsWith(".md")) {
+			markupParser.setMarkupLanguage(new MarkdownLanguage());
+		} else if (path.endsWith(".confluence")) {
+			markupParser.setMarkupLanguage(new ConfluenceLanguage());
+		}
+		markupParser.parse(content);
+		String htmlContent = writer.toString();
+		return htmlContent;
 	}
 
 }
