@@ -428,18 +428,17 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     @Override
     public ODataResponse deleteEntity(final DeleteUriInfo uriInfo, final String contentType) throws ODataException {
         if (this.odata2EventHandler.forbidDeleteEntity(uriInfo, contentType)) {
-            throw new ODataException(String.format("Delete operation on entity: %s is forbidden.", OData2Utils.fqn(uriInfo.getTargetType())));
+            throw new ODataException("Delete operation on entity: " + OData2Utils.fqn(uriInfo.getTargetType()) + " is forbidden.");
         }
 
         SQLDeleteBuilder deleteBuilder = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()), getContext());
 
         try (Connection connection = getDataSource().getConnection()) {
             Map<Object, Object> handlerContext = new HashMap<>();
-            updateDeleteEventHandlerContext(handlerContext, uriInfo);
+            updateDeleteEventHandlerContext(handlerContext, uriInfo, connection);
             this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType, handlerContext);
 
             if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
-                updateDeleteEventHandlerContext(handlerContext, uriInfo);
                 this.odata2EventHandler.onDeleteEntity(uriInfo, contentType, handlerContext);
             } else {
                 try (PreparedStatement statement = createDeleteStatement(deleteBuilder, connection)) {
@@ -642,8 +641,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         context.put(SQL_CONTEXT, createSQLContext(connection));
     }
 
-    private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo) throws ODataException {
+    private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo, Connection connection) throws ODataException, SQLException {
         context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
+        context.put(SQL_CONTEXT, createSQLContext(connection));
     }
 
     private void updateUpdateEventHandlerContext(Map<Object, Object> context, Connection connection, PutMergePatchUriInfo uriInfo, ODataEntry entry) throws ODataException, SQLException {
