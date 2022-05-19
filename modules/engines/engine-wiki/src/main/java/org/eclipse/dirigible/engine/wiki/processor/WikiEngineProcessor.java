@@ -17,7 +17,6 @@ import java.util.Arrays;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.mylyn.wikitext.confluence.ConfluenceLanguage;
-import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
 import org.eclipse.mylyn.wikitext.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 
@@ -77,21 +76,12 @@ public class WikiEngineProcessor {
 	 * @return the string
 	 */
 	public String renderContent(String path, String content) {
-		StringWriter writer = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
-		builder.setEmitAsDocument(false);
-		MarkupParser markupParser = new MarkupParser();
-		markupParser.setBuilder(builder);
-		
 		if (path.endsWith(".md")) {
-//			markupParser.setMarkupLanguage(new MarkdownLanguage());
 			return renderMarkdown(content);
 		} else if (path.endsWith(".confluence")) {
-			markupParser.setMarkupLanguage(new ConfluenceLanguage());
+			return renderConfluence(content);
 		}
-		markupParser.parse(content);
-		String htmlContent = writer.toString();
-		return htmlContent;
+		return "File extension is uknown for Wiki engine: " + path;
 	}
 	
 	private String renderMarkdown(String content) {
@@ -110,6 +100,18 @@ public class WikiEngineProcessor {
         Node document = parser.parse(content);
         String html = renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
         return html;
+	}
+	
+	private String renderConfluence(String content) {
+		StringWriter writer = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+		builder.setEmitAsDocument(false);
+		MarkupParser markupParser = new MarkupParser();
+		markupParser.setBuilder(builder);
+		markupParser.setMarkupLanguage(new ConfluenceLanguage());
+		markupParser.parse(content);
+		String htmlContent = writer.toString();
+		return htmlContent;
 	}
 
 }

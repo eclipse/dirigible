@@ -57,11 +57,7 @@
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
         
-		<dependency>
-		    <groupId>org.eclipse.mylyn.docs</groupId>
-		    <artifactId>org.eclipse.mylyn.wikitext.markdown</artifactId>
-		    <version>${wikitext.version}</version>
-		</dependency>
+		
 		<dependency>
 		    <groupId>org.eclipse.mylyn.docs</groupId>
 		    <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
@@ -70,12 +66,13 @@
 		<dependency>
 		    <groupId>com.vladsch.flexmark</groupId>
 		    <artifactId>flexmark-all</artifactId>
-		    <version>0.64.0</version>
+		    <version>${flexmark.version}</version>
 		</dependency>
     </dependencies>
 
     <properties>
     	<wikitext.version>3.0.42</wikitext.version>
+    	<flexmark.version>0.64.0</flexmark.version>
         <license.header.location>../../../licensing-header.txt</license.header.location>
     </properties>
 
