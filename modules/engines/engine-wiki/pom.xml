@@ -67,6 +67,11 @@
 		    <artifactId>org.eclipse.mylyn.wikitext.confluence</artifactId>
 		    <version>${wikitext.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.vladsch.flexmark</groupId>
+		    <artifactId>flexmark-all</artifactId>
+		    <version>0.64.0</version>
+		</dependency>
     </dependencies>
 
     <properties>
