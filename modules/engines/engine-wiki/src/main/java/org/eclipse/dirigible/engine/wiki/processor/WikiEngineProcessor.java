@@ -33,6 +33,9 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
  */
 public class WikiEngineProcessor {
 
+	private static final String EXT_CONFLUENCE = ".confluence";
+	private static final String EXT_MARKDOWN = ".markdown";
+	private static final String EXT_MD = ".md";
 	private WikiEngineExecutor wikiEngineExecutor = new WikiEngineExecutor();
 
 	/**
@@ -76,9 +79,10 @@ public class WikiEngineProcessor {
 	 * @return the string
 	 */
 	public String renderContent(String path, String content) {
-		if (path.endsWith(".md")) {
+		if (path.endsWith(EXT_MD) 
+				|| path.endsWith(EXT_MARKDOWN)) {
 			return renderMarkdown(content);
-		} else if (path.endsWith(".confluence")) {
+		} else if (path.endsWith(EXT_CONFLUENCE)) {
 			return renderConfluence(content);
 		}
 		return "File extension is uknown for Wiki engine: " + path;
