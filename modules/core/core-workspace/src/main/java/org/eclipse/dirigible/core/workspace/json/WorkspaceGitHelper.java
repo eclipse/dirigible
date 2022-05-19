@@ -57,14 +57,25 @@ public class WorkspaceGitHelper {
 		try {
 			if (repository instanceof FileSystemRepository) {
 				String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
-				File gitFileDirectory = new File(new File(path).getCanonicalPath());
-				String gitDirectory = gitFileDirectory.getCanonicalPath();
-				String projectLocation = gitDirectory.substring(gitDirectory.lastIndexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
-				int segmentsCount = projectLocation.split(IRepository.SEPARATOR).length - GIT_REPOSITORY_PROJECT_DEPTH;
-				for (int i = 0; i < segmentsCount; i ++) {
-					gitFileDirectory = gitFileDirectory.getParentFile();
+				File directory = new File(new File(path).getCanonicalPath());
+				String directoryPath = directory.getCanonicalPath();
+				if (directoryPath.lastIndexOf(DOT_GIT) > 0) {
+					String projectLocation = directoryPath.substring(directoryPath.lastIndexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
+					int segmentsCount = projectLocation.split(IRepository.SEPARATOR).length - GIT_REPOSITORY_PROJECT_DEPTH;
+					for (int i = 0; i < segmentsCount; i ++) {
+						directory = directory.getParentFile();
+					}
+					boolean haveGitDirectory = false;
+					for (File next : directory.listFiles()) {
+						if (next.exists() && next.isDirectory() && next.getName().equals(DOT_GIT)) {
+							haveGitDirectory = true;
+							break;
+						}
+					}
+					if (directory.exists() && haveGitDirectory) {
+						return directory;
+					}
 				}
-				return gitFileDirectory;
 			}
 		} catch (Throwable e) {
 			return null;

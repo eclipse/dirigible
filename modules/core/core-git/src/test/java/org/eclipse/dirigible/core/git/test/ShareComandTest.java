@@ -24,13 +24,11 @@ import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.api.IWorkspacesCoreService;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * The Class ShareComandTest.
  */
-@Ignore
 public class ShareComandTest extends AbstractDirigibleTest {
 
 	/** The clone command. */
