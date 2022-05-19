@@ -357,7 +357,23 @@ public class GitFileUtils {
 		return FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
 	}
 
+	/**
+	 * Get the projects in that git repository.
+	 * @param workspace the workspace
+	 * @param repositoryName the repository
+	 * @return the projects
+	 */
 	public static List<String> getGitRepositoryProjects(String workspace, String repositoryName) {
 		return FileSystemUtils.getGitRepositoryProjects(UserFacade.getName(), workspace, repositoryName);
+	}
+
+	/**
+	 * Get the projects in that git repository.
+	 * @param workspace the workspace
+	 * @param repositoryName the repository
+	 * @return the projects
+	 */
+	public static List<File> getGitRepositoryProjectsFiles(String workspace, String repositoryName) {
+		return FileSystemUtils.getGitRepositoryProjectsFiles(UserFacade.getName(), workspace, repositoryName);
 	}
 }
