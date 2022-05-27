@@ -14,17 +14,15 @@ package org.eclipse.dirigible.databases.processor.format;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 /**
- * The ResultSet JSON Writer.
+ * The ResultSet CSV Writer.
  */
-public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
+public class ResultSetCsvWriter extends AbstractResultSetWriter<String> {
 
 	private boolean limited = true;
 	
@@ -77,35 +75,53 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
-		JsonArray records = new JsonArray();
+		List<String> records = new ArrayList<String>();
 		int count = 0;
-		while (resultSet.next()) {
-			JsonObject record = new JsonObject();
+		if (resultSet.next()) {
+			StringBuffer names = new StringBuffer();
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+				if (i > 1) {
+					names.append(",");
+				}
 				String name = resultSetMetaData.getColumnName(i);
+				names.append("\"" + name + "\"");
+			}
+			records.add(names.toString());
+		} else {
+			return "";
+		}
+		
+		count = 0;
+		do {
+			StringBuffer values = new StringBuffer();
+			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+				if (i > 1) {
+					values.append(",");
+				}
 				Object value = resultSet.getObject(i);
 				if (value == null
 						&& stringify) {
 					value = "[NULL]";
 				}
-				if (!ClassUtils.isPrimitiveOrWrapper(value.getClass()) 
+				if (value != null 
+						&& !ClassUtils.isPrimitiveOrWrapper(value.getClass()) 
 						&& value.getClass() != String.class
 						&& !java.util.Date.class.isAssignableFrom(value.getClass())) {
 					if (stringify) {
 						value = "[BINARY]";
 					}
 				}
-				record.add(name, GsonHelper.GSON.toJsonTree(value));
+				values.append("\"" + value + "\"");
 			}
 
-			records.add(record);
+			records.add(values.toString());
 
 			if (this.isLimited() && (++count > getLimit())) {
 				break;
 			}
-		}
+		} while (resultSet.next());
 
-		return GsonHelper.GSON.toJson(records);
+		return String.join("\n", records);
 	}
 
 }

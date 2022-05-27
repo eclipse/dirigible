@@ -1,1 +1,2 @@
 org.eclipse.dirigible.runtime.databases.service.DatabaseRestService	# Database Service
+org.eclipse.dirigible.runtime.databases.service.DataRestService	# Data Service
