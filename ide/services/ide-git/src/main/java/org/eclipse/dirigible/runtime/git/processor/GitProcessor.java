@@ -22,7 +22,10 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.core.git.*;
+import org.eclipse.dirigible.core.git.GitCommitInfo;
+import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.GitConnectorFactory;
+import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CheckoutCommand;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.CommitCommand;
@@ -59,7 +62,6 @@ import org.eclipse.dirigible.runtime.git.model.GitShareModel;
 import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.transport.URIish;
 
 /**
  * Processing the Git Service incoming requests.
@@ -145,10 +147,13 @@ public class GitProcessor {
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repositoryName);
 
 			IWorkspace workspaceApi = getWorkspace(workspace);
+			IRepository repository = workspaceApi.getRepository();
 			IProject[] workspaceProjects = getProjects(workspaceApi, projects);
 			for (IProject next : workspaceProjects) {
 				if (next.exists()) {					
 					next.delete();
+				} else if (repository.isLinkedPath(next.getPath())) {
+					repository.deleteLinkedPath(next.getPath());
 				}
 			}
 
@@ -503,14 +508,18 @@ public class GitProcessor {
 	public GitDiffModel getFileDiff(String workspace, String repositoryName, String path) throws GitConnectorException {
 		try {
 			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
-			String original = gitConnector.getFileContent(path, Constants.HEAD);
-			String project = path.substring(0, path.indexOf("/"));
-			String filePath = path.substring(path.indexOf("/") + 1);
-			IFile file = getProject(workspace, project).getFile(filePath);
-			String modified = null;
-			if (file.exists()) {
-				modified = new String(file.getContent());
+			File project = getProjectFile(workspace, repositoryName, path);
+			String projectLocation = extractProjectLocation(project);
+			String filePath = null;
+			if (path.startsWith(projectLocation)) {
+				filePath = path.substring(projectLocation.length());
+			} else {
+				// Fallback to old implementation
+				filePath = path.substring(path.indexOf("/") + 1);
 			}
+			IFile file = getProject(workspace, project.getName()).getFile(filePath);
+			String original = getOriginalFileContent(project, filePath, gitConnector);
+			String modified = getModifiedFileContent(file);
 			GitDiffModel diffModel = new GitDiffModel(original, modified);
 			return diffModel;
 		} catch (Exception e) {
@@ -518,6 +527,57 @@ public class GitProcessor {
 		}
 	}
 
+	private File getProjectFile(String workspace, String repositoryName, String path) {
+		String projectName = path.substring(0, path.indexOf("/"));
+		List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
+		File project = null;
+		for (File next : projects) {
+			if (next.exists() && next.getName().equals(projectName)) {
+				project = next;
+				break;
+			}
+		}
+		// Fallback for Project search by full path (e.g. while in Git perspective)
+		if (project == null) {
+			for (File next : projects) {
+				if (path.startsWith(extractProjectLocation(next))) {
+					project = next;
+					break;
+				}
+			}
+		}
+		return project;
+	}
+
+	private String extractProjectLocation(File project) {
+		StringBuilder projectLocation = new StringBuilder();
+		String projectPath = project.getPath();
+		if (projectPath.indexOf(DOT_GIT) > 0) {
+			String path = projectPath.substring(projectPath.indexOf(DOT_GIT) + DOT_GIT.length() + IRepository.SEPARATOR.length());
+			String[] tokens = path.split(IRepository.SEPARATOR);
+			for (int i = 3 ; i < tokens.length; i ++) {
+				projectLocation.append(tokens[i]).append(IRepository.SEPARATOR);
+			}
+		}
+		return projectLocation.toString();
+	}
+
+	private String getOriginalFileContent(File project, String filePath, IGitConnector gitConnector) throws GitConnectorException {
+		String original = null;
+		if (project != null) {
+			String projectLocation = extractProjectLocation(project);
+			original = gitConnector.getFileContent(projectLocation + filePath, Constants.HEAD);
+		}
+		return original;
+	}
+
+	private String getModifiedFileContent(IFile file) {
+		String modified = null;
+		if (file.exists()) {
+			modified = new String(file.getContent());
+		}
+		return modified;
+	}
 	/**
 	 * Get file history
 	 * @param workspace the workspace
@@ -538,15 +598,7 @@ public class GitProcessor {
 
 	public void importProjects(String workspace, String repository) throws GitConnectorException {
 		try {
-			File repositoryName = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
-			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repository);
-			IWorkspace workspaceObject = getWorkspace(workspace);
-			for (String project : projects) {
-				if (!workspaceObject.getProject(project).exists()) {
-					String targetPath = repositoryName.getCanonicalFile() + File.separator + project;
-					workspaceObject.linkProject(project, targetPath);
-				}
-			}
+			GitFileUtils.importProject(workspace, repository);
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
 		}

@@ -13,7 +13,6 @@ package org.eclipse.dirigible.core.git.command;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;

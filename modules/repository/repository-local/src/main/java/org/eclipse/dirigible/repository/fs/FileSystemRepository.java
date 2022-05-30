@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -579,13 +580,7 @@ public abstract class FileSystemRepository implements IRepository {
 		return true;
 	}
 	
-	/**
-	 * Link external folder or file as an internal Repository artifact
-	 * 
-	 * @param repositoryPath the relative path
-	 * @param filePath the target folder or file
-	 * @throws IOException in case of exception
-	 */
+	@Override
 	public void linkPath(String repositoryPath, String filePath) throws IOException {
 		if (!new File(filePath).exists()) {
 			throw new IOException("The source path does not exist: " + filePath);
@@ -595,6 +590,15 @@ public abstract class FileSystemRepository implements IRepository {
 			FileSystemUtils.forceCreateDirectory(Paths.get(workspacePath).getParent().toString());
 		}
 		Files.createSymbolicLink(Paths.get(workspacePath).toAbsolutePath(), Paths.get(filePath).toAbsolutePath());
+	}
+
+	@Override
+	public void deleteLinkedPath(String repositoryPath) throws IOException {
+		if (isLinkedPath(repositoryPath)) {
+			String workspacePath = LocalWorkspaceMapper.getMappedName(this, repositoryPath);
+			Path filePath = Paths.get(workspacePath);
+			Files.delete(filePath);
+		}
 	}
 
 	@Override

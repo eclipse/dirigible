@@ -50,6 +50,7 @@ public class FileSystemUtils {
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
 	private static final String SEPARATOR = "/";
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
 
 	private static String GIT_ROOT_FOLDER;
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
@@ -569,16 +570,63 @@ public class FileSystemUtils {
 	}
 
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
-		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
-		List<String> projects = Arrays.asList(gitRepository.listFiles())
-				.stream()
-				.filter(e -> !e.isFile() && !e.getName().equals(DOT_GIT))
-				.map(e -> e.getName())
-				.collect(Collectors.toList());
-
-		return projects;
+		List<File> projects = getGitRepositoryProjectsFiles(user, workspace, repositoryName);
+		return projects.stream().map(e -> e.getName()).collect(Collectors.toList());
 	}
 
+	public static List<File> getGitRepositoryProjectsFiles(String user, String workspace, String repositoryName) {
+		File gitRepository = getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		return getGitRepositoryProjects(gitRepository);
+	}
+
+    public static List<File> getGitRepositoryProjects(File gitRepository) {
+        EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+        ProjectsFinder projectsFinder = new ProjectsFinder();
+        try {
+            Files.walkFileTree(Paths.get(gitRepository.getAbsolutePath()), opts, Integer.MAX_VALUE, projectsFinder);
+        }
+        catch (IOException e) {
+            logger.error(e.getMessage(), (Throwable)e);
+        }
+        List<File> gitProjects = projectsFinder.getProjects();
+
+        // No projects containing "project.json" found, fallback to old implementation
+        if (gitProjects.isEmpty()) {
+            File[] gitRepositoryRootFolders = gitRepository.listFiles();
+            for (File next : gitRepositoryRootFolders) {
+                if (next.exists() && next.isDirectory() && !next.getName().startsWith(".")) {
+                    gitProjects.add(next);
+                }
+            }
+        }
+
+        return gitProjects;
+    }
+
+    private static class ProjectsFinder extends SimpleFileVisitor<Path> {
+
+    	private List<File> projects = new ArrayList<File>();
+
+    	public List<File> getProjects() {
+			return projects;
+		}
+
+    	@Override
+    	public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+    		File file = path.toFile();
+    		if (file.exists() && file.isFile() && file.getName().equals(PROJECT_METADATA_FILE_NAME)) {
+    			projects.add(file.getParentFile());
+    		}
+    		return CONTINUE;
+    	}
+
+    	@Override
+    	public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+    		logger.error(exc.getMessage(), exc);
+    		return CONTINUE;
+    	}
+    }
+    
 	private static class Finder extends SimpleFileVisitor<Path> {
 
 	    private final PathMatcher matcher;
@@ -599,23 +647,20 @@ public class FileSystemUtils {
 	    }
 
 	    @Override
-	    public FileVisitResult visitFile(Path file,
-	            BasicFileAttributes attrs) {
+	    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 	        find(file);
 	        return CONTINUE;
 	    }
 
 	    @Override
-	    public FileVisitResult preVisitDirectory(Path dir,
-	            BasicFileAttributes attrs) {
+	    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 	        find(dir);
 	        return CONTINUE;
 	    }
 
 	    @Override
-	    public FileVisitResult visitFileFailed(Path file,
-	            IOException exc) {
-	        System.err.println(exc);
+	    public FileVisitResult visitFileFailed(Path file, IOException exc) {
+	        logger.error(exc.getMessage(), exc);
 	        return CONTINUE;
 	    }
 

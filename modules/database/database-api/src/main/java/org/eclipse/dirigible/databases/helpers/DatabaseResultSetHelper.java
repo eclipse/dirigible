@@ -14,6 +14,7 @@ package org.eclipse.dirigible.databases.helpers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.dirigible.databases.processor.format.ResultSetCsvWriter;
 import org.eclipse.dirigible.databases.processor.format.ResultSetJsonWriter;
 import org.eclipse.dirigible.databases.processor.format.ResultSetMonospacedWriter;
 
@@ -47,13 +48,37 @@ public class DatabaseResultSetHelper {
 	 *            the result set
 	 * @param limited
 	 *            the limited
+	 * @param stringify
+	 *            the stringified flag
 	 * @return the string
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static String toJson(ResultSet resultSet, boolean limited) throws SQLException {
+	public static String toJson(ResultSet resultSet, boolean limited, boolean stringify) throws SQLException {
 		ResultSetJsonWriter writer = new ResultSetJsonWriter();
 		writer.setLimited(limited);
+		writer.setStringified(stringify);
+		String result = writer.write(resultSet);
+		return result;
+	}
+	
+	/**
+	 * Prints the provided ResultSet to the {@link ResultCsvJsonWriter} writer.
+	 *
+	 * @param resultSet
+	 *            the result set
+	 * @param limited
+	 *            the limited
+	 * @param stringify
+	 *            the stringified flag
+	 * @return the string
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
+	public static String toCsv(ResultSet resultSet, boolean limited, boolean stringify) throws SQLException {
+		ResultSetCsvWriter writer = new ResultSetCsvWriter();
+		writer.setLimited(limited);
+		writer.setStringified(stringify);
 		String result = writer.write(resultSet);
 		return result;
 	}

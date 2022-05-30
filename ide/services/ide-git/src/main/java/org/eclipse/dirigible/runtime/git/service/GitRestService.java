@@ -30,7 +30,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.google.gson.JsonElement;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -56,14 +55,14 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonObject;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
-
-import com.google.gson.JsonObject;
 /**
  * Front facing REST service serving the Git commands.
  */
@@ -79,9 +78,6 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	
 	@Context
 	private HttpServletResponse response;
-	private String workspace;
-	private String project;
-	private String url;
 
 	/**
 	 * Clone repository.

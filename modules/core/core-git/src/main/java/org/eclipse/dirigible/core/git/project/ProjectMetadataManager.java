@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.core.git.project;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -18,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 
 /**
  * The ProjectMetadataManager is the controller of reading and writing the project.json files.
@@ -65,6 +65,16 @@ public class ProjectMetadataManager {
 			return new ProjectMetadataDependency[] {};
 		}
 		return projectMetadata.getDependencies();
+	}
+
+	/**
+	 * Returns whether the file is "project.json".
+	 *
+	 * @param file the file
+	 * @return true if it's "project.json" file
+	 */
+	public static boolean isProjectMetadata(File file) {
+		return file.exists() && file.isFile() && file.getName().equals(ProjectMetadata.PROJECT_METADATA_FILE_NAME);
 	}
 
 	/**

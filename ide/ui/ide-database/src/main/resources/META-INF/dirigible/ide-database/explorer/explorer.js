@@ -119,6 +119,17 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 											}.bind(this)
 										};
+										ctxmenu.exportData = {
+											"separator_before": false,
+											"label": "Export Data",
+											"action": function (data) {
+												let tree = $.jstree.reference(data.reference);
+												let node = tree.get_node(data.reference);
+												let parentNodeName = tree.get_node(node.parent).text;
+												let sqlCommand = parentNodeName + "." + node.original.text;
+												messageHub.post({ data: sqlCommand }, 'database.data.export.artifact');
+											}.bind(this)
+										};
 										// Drop table
 										if (node.original.type === 'table' || node.original.type === 'base table') {
 											ctxmenu.dropTable = {
@@ -168,6 +179,20 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 													messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 													$('.database').jstree(true).refresh();
 												}
+											}.bind(this)
+										};
+									}
+
+									// Schema related actions
+									if (node.original.kind === 'schema') {
+										ctxmenu.exportData = {
+											"separator_before": false,
+											"label": "Export Data",
+											"action": function (data) {
+												let tree = $.jstree.reference(data.reference);
+												let node = tree.get_node(data.reference);
+												let sqlCommand = node.original.text;
+												messageHub.post({ data: sqlCommand }, 'database.data.export.schema');
 											}.bind(this)
 										};
 									}

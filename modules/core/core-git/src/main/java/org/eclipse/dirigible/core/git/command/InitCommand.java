@@ -13,23 +13,9 @@ package org.eclipse.dirigible.core.git.command;
 
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
-import org.eclipse.dirigible.core.git.IGitConnector;
-import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
-import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
-import org.eclipse.dirigible.core.git.utils.GitFileUtils;
-import org.eclipse.dirigible.core.publisher.api.PublisherException;
-import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
-import org.eclipse.dirigible.core.workspace.api.IProject;
-import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Init a Git repository and optionally publish it.

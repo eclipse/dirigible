@@ -323,6 +323,11 @@ public class CmsDatabaseRepository implements IRepository {
 	}
 
 	@Override
+	public void deleteLinkedPath(String repositoryPath) throws IOException {
+		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
+	}
+
+	@Override
 	public boolean isLinkedPath(String repositoryPath) {
 		throw new UnsupportedOperationException("Linking of external paths not supported for this Repository type");
 	}

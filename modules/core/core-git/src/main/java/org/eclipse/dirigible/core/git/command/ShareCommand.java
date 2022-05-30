@@ -37,9 +37,6 @@ public class ShareCommand {
 	/** The project metadata manager. */
 	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
 
-	/** The git file utils. */
-	private GitFileUtils gitFileUtils = new GitFileUtils();
-
 	/**
 	 * Execute the share command.
 	 *
@@ -125,7 +122,7 @@ public class ShareCommand {
 			
 			// link the already share project
 			File projectGitDirectory = new File(tempGitDirectory, project.getName());
-			gitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, project.getPath());
+			GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, project.getPath());
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);

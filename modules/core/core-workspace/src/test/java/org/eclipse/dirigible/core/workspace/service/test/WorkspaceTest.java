@@ -31,6 +31,7 @@ import org.junit.Test;
 /**
  * The Class WorkspaceTest.
  */
+
 public class WorkspaceTest extends AbstractDirigibleTest {
 
 	/** The workspaces core service. */

@@ -15,6 +15,8 @@ import static java.text.MessageFormat.format;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -221,10 +223,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false);
+			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), true);
+		String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -260,10 +265,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false);
+			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), true);
+		String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -299,10 +307,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false);
+			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), true);
+		String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -338,10 +349,13 @@ public class DatabaseRestService extends AbstractRestService implements IRestSer
 
 		String accept = request.getHeader("Accept");
 		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false);
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
+			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
+		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
+			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
 			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
 		}
-		String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), true);
+		String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
 		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
 	}
 

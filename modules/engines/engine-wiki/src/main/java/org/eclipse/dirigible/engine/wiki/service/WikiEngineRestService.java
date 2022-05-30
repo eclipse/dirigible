@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.wiki.service;
 
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,9 +26,6 @@ import org.eclipse.dirigible.engine.wiki.processor.WikiEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
-import org.eclipse.mylyn.wikitext.markdown.MarkdownLanguage;
-import org.eclipse.mylyn.wikitext.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.parser.builder.HtmlDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +87,7 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 				throw new RepositoryNotFoundException(message);
 			}
 			String content = new String(resource.getContent(), StandardCharsets.UTF_8);
-			String html = renderContent(content);
+			String html = processor.renderContent(path, content);
 			return Response.ok(html).type(resource.getContentType()).build();
 		}
 
@@ -99,33 +95,13 @@ public class WikiEngineRestService extends AbstractRestService implements IRestS
 		try {
 			byte[] content = processor.getResourceContent(path);
 			if (content != null) {
-				String html = renderContent(new String(content, StandardCharsets.UTF_8));
+				String html = processor.renderContent(path, new String(content, StandardCharsets.UTF_8));
 				return Response.ok().entity(html).build();
 			}
 		} catch (RepositoryNotFoundException e) {
 			throw new RepositoryNotFoundException(errorMessage, e);
 		}
 		throw new RepositoryNotFoundException(errorMessage);
-	}
-
-	/**
-	 * Render content.
-	 *
-	 * @param content
-	 *            the content
-	 * @return the string
-	 */
-	private String renderContent(String content) {
-
-		StringWriter writer = new StringWriter();
-		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
-		builder.setEmitAsDocument(false);
-		MarkupParser markupParser = new MarkupParser();
-		markupParser.setBuilder(builder);
-		markupParser.setMarkupLanguage(new MarkdownLanguage());
-		markupParser.parse(content);
-		String htmlContent = writer.toString();
-		return htmlContent;
 	}
 
 	/*

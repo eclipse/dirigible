@@ -20,9 +20,7 @@ import java.util.List;
 /**
  * The ResultSet Monospaced Writer.
  */
-public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
-
-	private static final int LIMIT = 1000;
+public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 
 	private static final String EMPTY_RESULT_SET = "Empty result set";
 
@@ -107,7 +105,7 @@ public class ResultSetMonospacedWriter implements ResultSetWriter<String> {
 
 			buffer.append(this.rowFormat.write(columnHeaderDescriptors, resultSetMetaData, resultSet));
 
-			if (this.isLimited() && (++count > LIMIT)) {
+			if (this.isLimited() && (++count > getLimit())) {
 				buffer.append("..."); //$NON-NLS-1$
 				break;
 			}
