@@ -79,7 +79,7 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	/**
 	 * Sets the stringified.
 	 *
-	 * @param stringified
+	 * @param stringify
 	 *            the new stringified
 	 */
 	public void setStringified(boolean stringify) {
