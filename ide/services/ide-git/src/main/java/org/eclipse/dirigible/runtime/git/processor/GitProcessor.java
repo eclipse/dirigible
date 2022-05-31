@@ -511,7 +511,7 @@ public class GitProcessor {
 			File project = getProjectFile(workspace, repositoryName, path);
 			String projectLocation = extractProjectLocation(project);
 			String filePath = null;
-			if (path.startsWith(projectLocation)) {
+			if (projectLocation.length() > 0 && path.startsWith(projectLocation)) {
 				filePath = path.substring(projectLocation.length());
 			} else {
 				// Fallback to old implementation
