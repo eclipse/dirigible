@@ -121,6 +121,21 @@
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+						<configuration>
+							<argLine>
+								--add-opens java.base/java.lang=ALL-UNNAMED
+								--add-opens java.base/java.math=ALL-UNNAMED
+								--add-opens java.base/java.util=ALL-UNNAMED
+								--add-opens java.base/java.util.concurrent=ALL-UNNAMED
+								--add-opens java.base/java.net=ALL-UNNAMED
+								--add-opens java.base/java.text=ALL-UNNAMED
+							</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>3.3.2</version>
 						<configuration>
@@ -673,6 +688,7 @@
 		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
 		<maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
+		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.scm.plugin.version>1.12.2</maven.scm.plugin.version>
