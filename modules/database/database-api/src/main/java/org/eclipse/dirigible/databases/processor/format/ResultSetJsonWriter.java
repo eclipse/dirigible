@@ -61,7 +61,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	/**
 	 * Sets the stringified.
 	 *
-	 * @param stringified
+	 * @param stringify
 	 *            the new stringified
 	 */
 	public void setStringified(boolean stringify) {
