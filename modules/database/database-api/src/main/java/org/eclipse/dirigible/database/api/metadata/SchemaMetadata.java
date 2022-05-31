@@ -105,6 +105,8 @@ public class SchemaMetadata {
 	
 
 	/**
+	 * Get the procedures metadata.
+	 *
 	 * @return the procedures
 	 */
 	public List<ProcedureMetadata> getProcedures() {
@@ -112,6 +114,7 @@ public class SchemaMetadata {
 	}
 	
 	/**
+	 * Get the functions metadata.
 	 * @return the functions
 	 */
 	public List<FunctionMetadata> getFunctions() {

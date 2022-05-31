@@ -63,7 +63,7 @@ public class DatabaseResultSetHelper {
 	}
 	
 	/**
-	 * Prints the provided ResultSet to the {@link ResultSetCsvJsonWriter} writer.
+	 * Prints the provided ResultSet to the {@link ResultSetCsvWriter} writer.
 	 *
 	 * @param resultSet
 	 *            the result set

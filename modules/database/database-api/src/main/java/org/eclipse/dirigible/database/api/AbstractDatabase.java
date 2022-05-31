@@ -15,6 +15,10 @@ import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 
+/**
+ * The Abstract Database
+ *
+ */
 public abstract class AbstractDatabase implements IDatabase {
 	
 	/*

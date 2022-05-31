@@ -130,6 +130,8 @@ public class ProcedureMetadata {
 	}
 
 	/**
+	 * Get the metadata columns.
+	 *
 	 * @return the columns
 	 */
 	public List<ParameterColumnMetadata> getColumns() {
@@ -137,6 +139,8 @@ public class ProcedureMetadata {
 	}
 
 	/**
+	 * Set the metadata columns.
+	 *
 	 * @param columns the columns to set
 	 */
 	public void setColumns(List<ParameterColumnMetadata> columns) {
@@ -144,6 +148,8 @@ public class ProcedureMetadata {
 	}
 	
 	/**
+	 * Get the metadata kind.
+	 *
 	 * @return the kind
 	 */
 	public String getKind() {
@@ -151,6 +157,8 @@ public class ProcedureMetadata {
 	}
 	
 	/**
+	 * Set the metadata kind.
+	 *
 	 * @param kind the kind
 	 */
 	public void setKind(String kind) {
