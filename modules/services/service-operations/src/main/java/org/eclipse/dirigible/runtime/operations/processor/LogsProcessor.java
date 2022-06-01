@@ -35,13 +35,17 @@ import ch.qos.logback.classic.LoggerContext;
 public class LogsProcessor {
 	
 	private static final String DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT = "DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT";
+	private static final String CATALINA_BASE = "CATALINA_BASE";
+	private static final String CATALINA_HOME = "CATALINA_HOME";
+	private static final String DEFAULT_LOGS_FOLDER = "logs";
+	private static final String DEFAULT_LOGS_LOCATION = ".." + File.separator +DEFAULT_LOGS_FOLDER;
 	
 	public LogsProcessor() {
 		Configuration.loadModuleConfig("/dirigible-operations.properties");
 	}
 	
 	public String list() throws IOException {
-		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
+		String logsFolder = getLogsLocation();
 		List<String> fileNames = new ArrayList<>();
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(logsFolder))) {
             for (Path path : directoryStream) {
@@ -55,7 +59,7 @@ public class LogsProcessor {
 	}
 	
 	public String get(String file) throws IOException {
-		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
+		String logsFolder = getLogsLocation();
 		Path path = Paths.get(logsFolder, file);
 		FileInputStream input = null;
 		try {
@@ -67,6 +71,22 @@ public class LogsProcessor {
 				input.close();
 			}
 		}
+	}
+
+	private String getLogsLocation() {
+		String logsFolder = Configuration.get(DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT);
+		if (logsFolder != null && !logsFolder.equals("")) {
+			return logsFolder;
+		}
+		logsFolder = Configuration.get(CATALINA_BASE);
+		if (logsFolder != null && !logsFolder.equals("")) {
+			return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
+		}
+		logsFolder = Configuration.get(CATALINA_HOME);
+		if (logsFolder != null && !logsFolder.equals("")) {
+			return logsFolder + File.separator + DEFAULT_LOGS_FOLDER;
+		}
+		return DEFAULT_LOGS_LOCATION;
 	}
 	
 	public Object listLoggers() {
