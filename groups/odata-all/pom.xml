@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.2.31</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,12 +34,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-odata-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.31</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-odata-core</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.31</version>
         </dependency>
     </dependencies>
 
