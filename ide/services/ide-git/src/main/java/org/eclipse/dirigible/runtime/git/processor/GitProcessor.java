@@ -514,11 +514,11 @@ public class GitProcessor {
 			if (projectLocation.length() > 0 && path.startsWith(projectLocation)) {
 				filePath = path.substring(projectLocation.length());
 			} else {
-				// Fallback to old implementation
-				if (path.indexOf("/") > 0) {
+				File gitRepo = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+				boolean isRootProject = gitRepo.getCanonicalPath().equals(project.getCanonicalPath());
+				if (!isRootProject || path.startsWith(project.getName())) {
 					filePath = path.substring(path.indexOf("/") + 1);
 				} else {
-					// It's file in the root folder
 					filePath = path;
 				}
 			}
