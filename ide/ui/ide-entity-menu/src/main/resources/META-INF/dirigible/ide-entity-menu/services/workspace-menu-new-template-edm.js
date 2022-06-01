@@ -10,12 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 exports.getTemplate = function () {
-	let view = {
+	let template = {
 		"name": "edm",
 		"label": "Entity Data Model",
 		"extension": "edm",
 		"data": '<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
 		"order": 10
 	};
-	return view;
+	return template;
 };
