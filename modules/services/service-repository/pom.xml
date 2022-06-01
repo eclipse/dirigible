@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.2.30</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,22 +34,22 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.30</version>
         </dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.30</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.30</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.30</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
