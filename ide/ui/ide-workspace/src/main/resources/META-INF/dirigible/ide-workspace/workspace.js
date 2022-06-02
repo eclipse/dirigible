@@ -1014,12 +1014,12 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         }).responseText;
 
         // get available generation templates count
-        let templatesCountNonFile = $.ajax({
+        let templatesCountNonFile = parseInt($.ajax({
             type: "GET",
             url: '/services/v4/js/ide-core/services/templates.js/count',
             cache: false,
             async: false
-        }).responseText;
+        }).responseText);
 
         let priorityFileTemplates = JSON.parse(templates).filter(e => e.order !== undefined).sort((a, b) => a.order - b.order);
         let specificFileTemplates = JSON.parse(templates).filter(e => e.order === undefined);
@@ -1282,7 +1282,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         }.bind(this)
                     };
 
-                    if (this.get_type(node) !== "file" && templatesCountNonFile.length > 0) {
+                    if (this.get_type(node) !== "file" && templatesCountNonFile > 0) {
                         /*Generate*/
                         ctxmenu.generate = {
                             "separator_before": true,
