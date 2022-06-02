@@ -101,21 +101,29 @@ public class ShareCommand {
 			}
 
 			if (!isExistingGitRepository) {
-				logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-						gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-				GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
-				logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
+				try {
+					logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username, gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
+					GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
+					logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
+				} catch (Throwable e) {
+					GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryName);
+					throw e;
+				}
 			} else {
-				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username,
-						gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
+				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username, gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
 			}
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
 
 			GitFileUtils.copyProjectToDirectory(project, tempGitDirectory);
-			gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
-			gitConnector.commit(commitMessage, username, email, true);
-			gitConnector.push(username, password);
+			try {
+				gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
+				gitConnector.commit(commitMessage, username, email, true);
+				gitConnector.push(username, password);
+			} catch (Throwable e) {
+				GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryName);
+				throw e;
+			}
 			
 			// delete the local project
 			project.delete();
