@@ -75,6 +75,16 @@
 		    <artifactId>angularjs</artifactId>
 		    <version>1.8.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>angular-file-upload</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>es5-shim</artifactId>
+			<version>4.6.7</version>
+		</dependency>
 		<!-- <dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angularjs</artifactId>
