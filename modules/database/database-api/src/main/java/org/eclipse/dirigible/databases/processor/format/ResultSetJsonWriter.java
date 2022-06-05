@@ -59,10 +59,10 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 	}
 
 	/**
-	 * Sets the stringified.
+	 * Sets the stringify.
 	 *
-	 * @param stringified
-	 *            the new stringified
+	 * @param stringify
+	 *            the new stringify
 	 */
 	public void setStringified(boolean stringify) {
 		this.stringify = stringify;

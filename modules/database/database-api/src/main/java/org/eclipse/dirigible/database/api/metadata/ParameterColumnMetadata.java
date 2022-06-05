@@ -62,6 +62,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata name
+	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -69,6 +71,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata name
+	 *
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -76,6 +80,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata kind
+	 *
 	 * @return the kind
 	 */
 	public int getKind() {
@@ -83,6 +89,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata kind
+	 *
 	 * @param kind the kind to set
 	 */
 	public void setKind(int kind) {
@@ -90,6 +98,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata type
+	 *
 	 * @return the type
 	 */
 	public String getType() {
@@ -97,6 +107,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata type
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -104,6 +116,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata precision
+	 *
 	 * @return the precision
 	 */
 	public int getPrecision() {
@@ -111,6 +125,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata precision
+	 *
 	 * @param precision the precision to set
 	 */
 	public void setPrecision(int precision) {
@@ -118,6 +134,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata length
+	 *
 	 * @return the length
 	 */
 	public int getLength() {
@@ -125,6 +143,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata length
+	 *
 	 * @param length the length to set
 	 */
 	public void setLength(int length) {
@@ -132,6 +152,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata scale
+	 *
 	 * @return the scale
 	 */
 	public int getScale() {
@@ -139,6 +161,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata scale
+	 *
 	 * @param scale the scale to set
 	 */
 	public void setScale(int scale) {
@@ -146,6 +170,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata radix
+	 *
 	 * @return the radix
 	 */
 	public int getRadix() {
@@ -153,6 +179,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata radix
+	 *
 	 * @param radix the radix to set
 	 */
 	public void setRadix(int radix) {
@@ -160,6 +188,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata nullable
+	 *
 	 * @return the nullable
 	 */
 	public boolean getNullable() {
@@ -167,6 +197,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata nullable
+	 *
 	 * @param nullable the nullable to set
 	 */
 	public void setNullable(boolean nullable) {
@@ -174,6 +206,8 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Get the metadata remarks
+	 *
 	 * @return the remarks
 	 */
 	public String getRemarks() {
@@ -181,15 +215,12 @@ public class ParameterColumnMetadata {
 	}
 
 	/**
+	 * Set the metadata remarks
+	 *
 	 * @param remarks the remarks to set
 	 */
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
-	
-	
-	
-	
 
 }

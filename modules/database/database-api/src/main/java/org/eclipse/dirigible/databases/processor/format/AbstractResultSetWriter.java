@@ -26,6 +26,9 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	
 	private boolean stringify = true;
 	
+	/**
+	 * Default Constructor
+	 */
 	public AbstractResultSetWriter() {
 		this.limit = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_DEFAULT_QUERY_LIMIT, "1000"));
 	}
@@ -79,7 +82,7 @@ public abstract class AbstractResultSetWriter<T> implements ResultSetWriter<T> {
 	/**
 	 * Sets the stringified.
 	 *
-	 * @param stringified
+	 * @param stringify
 	 *            the new stringified
 	 */
 	public void setStringified(boolean stringify) {

@@ -518,6 +518,8 @@ public class FileSystemUtils {
 		String repositoryName = repositoryURI;
 		if (separatorLastIndexOf >= 0 && gitLastIndexOf > 0) {
 			repositoryName = repositoryURI.substring(separatorLastIndexOf, gitLastIndexOf);
+		} else if (separatorLastIndexOf >= 0) {
+			repositoryName = repositoryURI.substring(separatorLastIndexOf);
 		}
 		return repositoryName;
 	}

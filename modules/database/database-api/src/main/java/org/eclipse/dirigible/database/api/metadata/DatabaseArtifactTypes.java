@@ -11,8 +11,35 @@
  */
 package org.eclipse.dirigible.database.api.metadata;
 
+/**
+ * Database Artifact Types Enum
+ *
+ */
 public enum DatabaseArtifactTypes {
 	
-	SCHEMA, TABLE, VIEW, PROCEDURE, FUNCTION
+	/**
+	 * SCHEMA 
+	 */
+	SCHEMA,
+
+	/**
+	 * TABLE
+	 */
+	TABLE,
+
+	/**
+	 * VIEW
+	 */
+	VIEW,
+
+	/**
+	 * PROCEDURE
+	 */
+	PROCEDURE,
+
+	/**
+	 * FUNCTION
+	 */
+	FUNCTION
 
 }

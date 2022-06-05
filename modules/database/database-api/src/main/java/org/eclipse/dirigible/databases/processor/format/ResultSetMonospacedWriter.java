@@ -24,8 +24,14 @@ public class ResultSetMonospacedWriter extends AbstractResultSetWriter<String> {
 
 	private static final String EMPTY_RESULT_SET = "Empty result set";
 
+	/**
+	 * DELIMITER
+	 */
 	public static final String DELIMITER = "|"; //$NON-NLS-1$
 
+	/**
+	 * NEWLINE_CHARACTER
+	 */
 	public static final String NEWLINE_CHARACTER = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	private HeaderFormatter<?> headerFormat = new StringHeaderFormatter();

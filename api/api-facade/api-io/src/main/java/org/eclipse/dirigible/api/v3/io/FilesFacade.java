@@ -513,7 +513,12 @@ public class FilesFacade {
 	 * @throws IOException in case of failure in underlying layer
 	 */
 	public static final String list(String source) throws IOException {
-		return GsonHelper.GSON.toJson(FileSystemUtils.listFiles(new File(source)));
+		File[] listFiles = FileSystemUtils.listFiles(new File(source));
+		List<FileObject> files = new ArrayList<FileObject>();
+		for (File next : listFiles) {
+			files.add(new FileObject(next.getName(), next.getPath(), null));
+		}
+		return GsonHelper.GSON.toJson(files);
 	}
 	
 	/**

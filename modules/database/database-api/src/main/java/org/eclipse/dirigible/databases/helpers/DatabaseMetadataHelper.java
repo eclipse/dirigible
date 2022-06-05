@@ -506,6 +506,7 @@ public class DatabaseMetadataHelper {
 	public interface ProcedureColumnsIteratorCallback {
 
 		/**
+		 * Procedure column callback
 		 * 
 		 * @param name name
 		 * @param kind kind
@@ -526,7 +527,8 @@ public class DatabaseMetadataHelper {
 	public interface FunctionColumnsIteratorCallback {
 
 		/**
-		 * 
+		 * Function column callback
+		 *
 		 * @param name name
 		 * @param kind kind
 		 * @param type type

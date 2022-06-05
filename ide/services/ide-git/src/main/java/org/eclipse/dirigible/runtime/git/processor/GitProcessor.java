@@ -511,11 +511,16 @@ public class GitProcessor {
 			File project = getProjectFile(workspace, repositoryName, path);
 			String projectLocation = extractProjectLocation(project);
 			String filePath = null;
-			if (path.startsWith(projectLocation)) {
+			if (projectLocation.length() > 0 && path.startsWith(projectLocation)) {
 				filePath = path.substring(projectLocation.length());
 			} else {
-				// Fallback to old implementation
-				filePath = path.substring(path.indexOf("/") + 1);
+				File gitRepo = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
+				boolean isRootProject = gitRepo.getCanonicalPath().equals(project.getCanonicalPath());
+				if (!isRootProject || path.startsWith(project.getName())) {
+					filePath = path.substring(path.indexOf("/") + 1);
+				} else {
+					filePath = path;
+				}
 			}
 			IFile file = getProject(workspace, project.getName()).getFile(filePath);
 			String original = getOriginalFileContent(project, filePath, gitConnector);
@@ -528,7 +533,13 @@ public class GitProcessor {
 	}
 
 	private File getProjectFile(String workspace, String repositoryName, String path) {
-		String projectName = path.substring(0, path.indexOf("/"));
+		String projectName = null;
+		if (path.indexOf("/") > 0) {
+			projectName = path.substring(0, path.indexOf("/"));
+		} else {
+			// It's "project.json" file in the root Git folder
+			projectName = repositoryName;
+		}
 		List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
 		File project = null;
 		for (File next : projects) {
