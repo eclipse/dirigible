@@ -1,5 +1,5 @@
 {
 	"description": "{{name}} menu",
 	"extensionPoint": "shell-{{projectName}}-menu",
-	"module": "{{projectName}}/views/{{name}}/menu/item.js"
+	"module": "{{projectName}}/gen/ui/{{perspectiveName}}/views/{{name}}/extensions/menu/item.js"
 }
