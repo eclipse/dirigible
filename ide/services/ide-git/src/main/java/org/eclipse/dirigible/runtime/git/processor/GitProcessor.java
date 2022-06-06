@@ -391,17 +391,31 @@ public class GitProcessor {
 	 * Add file(s) to index
 	 * 
 	 * @param workspace the workspace
-	 * @param project the project
+	 * @param repositoryName the name of the git repository
 	 * @param paths the paths
 	 * @throws GitConnectorException in case of an error
 	 */
-	public void addFileToIndex(String workspace, String project, String paths) throws GitConnectorException {
+	public void addFileToIndex(String workspace, String repositoryName, String paths) throws GitConnectorException {
 		try {
-			IGitConnector gitConnector = getGitConnector(workspace, project);
+			IGitConnector gitConnector = getGitConnector(workspace, repositoryName);
+			List<File> projects = GitFileUtils.getGitRepositoryProjectsFiles(workspace, repositoryName);
+
 			String[] files = paths.split(",");
 			for (String file : files) {
-				IProject projectCollection = getWorkspace(workspace).getProject(project);
-				File canonicalFile = WorkspaceDescriptor.getCanonicalFilePerProjectPath(projectCollection.getRepository(), projectCollection.getParent().getPath() + IRepositoryStructure.SEPARATOR + file);
+				File projectFile = null;
+				String projectLocation = null;
+				for (File next : projects) {
+					projectLocation = extractProjectLocation(next);
+					if (file.startsWith(projectLocation)) {
+						projectFile = next;
+						break;
+					}
+				}
+				if (projectFile == null) {
+					throw new IllegalArgumentException("Project not found in git repository [" + repositoryName + "] for file [" + file + "]");
+				}
+				String fileLocation = projectFile.getPath() + File.separator + file.substring(projectLocation.length());
+				File canonicalFile = new File(fileLocation).getCanonicalFile();
 				if (canonicalFile.exists()) {
 					gitConnector.add(file);
 				} else {
