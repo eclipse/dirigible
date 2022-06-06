@@ -282,6 +282,11 @@ public final class SQLSelectClause {
 
             Iterator<Integer> columnIterator = columnMapping.keySet().iterator();
 
+            if(query.hasKeyGeneratedPresent(target) && columnIterator.hasNext()) {
+                select.append("row_number() over() \"row_num\"");
+                select.append(", ");
+            }
+
             while (columnIterator.hasNext()) {
                 Integer column = columnIterator.next();
                 EdmStructuralType type = getTargetTypeFromColumnMapping(column);
