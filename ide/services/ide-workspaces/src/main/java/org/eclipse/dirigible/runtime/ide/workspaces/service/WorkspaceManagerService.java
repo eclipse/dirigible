@@ -32,6 +32,8 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v3.utils.UrlFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
+import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.processor.PublisherProcessor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -75,6 +77,8 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceManagerService.class);
 
     private WorkspaceProcessor processor = new WorkspaceProcessor();
+
+    private PublisherProcessor publisherProcessor = new PublisherProcessor();
 
     @Context
     private HttpServletResponse response;
@@ -289,11 +293,12 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
      * @throws URISyntaxException           the URI syntax exception
      * @throws UnsupportedEncodingException the unsupported encoding exception
      * @throws DecoderException             the decoder exception
+     * @throws PublisherException           the publisher exception
      */
     @POST
     @Path("{workspace}/move")
     public Response move(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException, PublisherException {
         String user = UserFacade.getName();
         if (user == null) {
             return createErrorResponseForbidden(NO_LOGGED_IN_USER);
@@ -330,6 +335,8 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
         } else {
             return createErrorResponseNotFound(ERROR_PATH_DOES_NOT_EXISTS);
         }
+        publisherProcessor.requestUnpublishing(user, workspace, sourcePath.getPath());
+        publisherProcessor.requestPublishing(user, workspace, targetPath.getPath());
 
         return Response.created(processor.getURI(workspace, null, content.getTarget())).build();
     }
@@ -344,11 +351,12 @@ public class WorkspaceManagerService extends AbstractRestService implements IRes
      * @throws URISyntaxException           the URI syntax exception
      * @throws UnsupportedEncodingException the unsupported encoding exception
      * @throws DecoderException             the decoder exception
+     * @throws PublisherException           the publisher exception
      */
     @POST
     @Path("{workspace}/rename")
     public Response rename(@PathParam("workspace") String workspace, WorkspaceSourceTargetPair content, @Context HttpServletRequest request)
-            throws URISyntaxException, UnsupportedEncodingException, DecoderException {
+            throws URISyntaxException, UnsupportedEncodingException, DecoderException, PublisherException {
         return move(workspace, content, request);
     }
 

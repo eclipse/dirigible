@@ -15,6 +15,7 @@ import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
 import org.apache.olingo.odata2.api.exception.ODataNotImplementedException;
 import org.apache.olingo.odata2.api.uri.expression.*;
+import org.apache.olingo.odata2.core.edm.EdmNull;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding.ColumnInfo;
@@ -69,14 +70,11 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
 
     @Override
     public Object visitBinary(BinaryExpression binaryExpression, BinaryOperator operator, Object leftSide, Object rightSide) {
-
         String leftSideString;
-        String leftSideSqlType = null;
         String rightSideString;
 
         if (leftSide instanceof ColumnInfo) {
             leftSideString = ((ColumnInfo) leftSide).getColumnName();
-            leftSideSqlType = ((ColumnInfo) leftSide).getJdbcType();
         } else {
             leftSideString = (String) leftSide;
         }
@@ -97,9 +95,10 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
             case GT:
             case GE: {
 
+                boolean isNullPredicate = binaryExpression.getRightOperand().getEdmType() instanceof EdmNull;
                 Object res = escapeOperatorPrecedence(binaryExpression, binaryExpression.getLeftOperand(), //
                         writeParam(binaryExpression.getLeftOperand(), leftSideString, null)) + //
-                        " " + translateToSQL(operator) + " " + //
+                        " " + translateToSQL(operator, isNullPredicate) + " " + //
                         escapeOperatorPrecedence(binaryExpression, binaryExpression.getRightOperand(), //
                                 writeParam(binaryExpression.getRightOperand(), rightSideString, null));
                 return res;
@@ -287,13 +286,13 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
         }
     }
 
-    private String translateToSQL(final BinaryOperator operator) {
+    private String translateToSQL(final BinaryOperator operator, boolean isNullPredicate) {
         switch (operator) {
             case EQ:
                 // TODO CLEARIFY: Why not using operator.name() also here ???
-                return "=";
+                return isNullPredicate ? "IS" : "=";
             case NE:
-                return "<>";
+                return isNullPredicate ? "IS NOT" : "<>";
             case LT:
                 return "<";
             case LE:
@@ -310,6 +309,9 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
     private String writeParam(final CommonExpression expression, final String literal, final String format) {
 
         if (expression.getKind() == ExpressionKind.LITERAL) {
+            if(expression.getEdmType() instanceof EdmNull){
+                return "NULL";
+            }
             final String value = (format != null ? String.format(format, literal) : literal);
             Object literalValue = evaluateDateTimeExpressions(value, (EdmSimpleType) expression.getEdmType());
             List<ColumnInfo> columnInfo = getColumnInfo(expression);

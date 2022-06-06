@@ -51,7 +51,7 @@
                	<div view view-extension-point="launchpad-zeus-view"></div>
                 <div class="shell">
                                 <div class="sidebar list-group" sidebar active="Operations"></div>
-                                <div id="operations" class="plane panel">
+                                <div id="operations" class="plane">
                                
                                
                                

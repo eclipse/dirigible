@@ -62,6 +62,17 @@
     </loadData>
   </changeSet>
 
+  <changeSet author="dirigible" id="views-data">
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM VIEW
+      </sqlCheck>
+    </preConditions>
+    <loadData file="data/View.csv"
+              separator=";" tableName="VIEW">
+    </loadData>
+  </changeSet>
+
   <changeSet author="dirigible" id="customers-data">
     <preConditions onFail="MARK_RAN">
       <sqlCheck expectedResult="0">

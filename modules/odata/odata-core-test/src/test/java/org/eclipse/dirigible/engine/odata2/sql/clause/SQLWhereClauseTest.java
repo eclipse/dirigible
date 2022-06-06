@@ -103,6 +103,38 @@ public final class SQLWhereClauseTest {
     }
 
     @Test
+    public void testIsNullFilter() throws Exception {
+        SQLWhereClause where = createWhereClause("MessageGuid eq null");
+        assertTrue("Statement params are not expected for \"Is Null\" filter", where.getStatementParams().isEmpty());
+
+        assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NULL", where.getWhereClause());
+    }
+
+    @Test
+    public void testIsNotNullFilter() throws Exception {
+        SQLWhereClause where = createWhereClause("MessageGuid ne null");
+        assertTrue("Statement params are not expected for \"Is Not Null\" filter", where.getStatementParams().isEmpty());
+
+        assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL", where.getWhereClause());
+    }
+
+    @Test
+    public void testIsNotNullAndNullFilter() throws Exception {
+        SQLWhereClause where = createWhereClause("MessageGuid ne null").and(createWhereClause("Status eq null"));
+        assertTrue("Statement params are not expected filter with Null predicates only", where.getStatementParams().isEmpty());
+
+        assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NOT NULL AND T0.STATUS IS NULL", where.getWhereClause());
+    }
+
+    @Test
+    public void testIsNullWithAdditionalFilter() throws Exception {
+        SQLWhereClause where = createWhereClause("MessageGuid eq null").and(createWhereClause("Status eq 'SUCCESS'"));
+        assertParamListEquals(new String[]{"SUCCESS"}, where.getStatementParams());
+
+        assertEquals("Unexpected where clause generated for Null predicate", "T0.MESSAGEGUID IS NULL AND T0.STATUS = ?", where.getWhereClause());
+    }
+
+    @Test
     public void testOrClauseWithEquals() throws Exception {
 
         // OR combined with empty clause
