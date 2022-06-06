@@ -23,6 +23,7 @@ public class ODataSQLProcessorViewTest extends AbstractSQLProcessorTest {
                 .segments("Views") //
                 .accept("application/atom+xml").executeRequest(GET);
         String content = IOUtils.toString((InputStream) response.getEntity());
-        assertTrue(content.contains("First"));
+        // check the row number
+        assertTrue(content.contains("3"));
     }
 }
