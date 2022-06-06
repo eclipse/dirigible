@@ -81,6 +81,8 @@ public final class SQLUtils {
                     preparedStatement.setBigDecimal(i + 1, (BigDecimal) value);
                     break;
                 case Null:
+                    preparedStatement.setObject(i + 1, null);
+                    break;
                 case Guid:
                     preparedStatement.setObject(i + 1, value);
                     break;
