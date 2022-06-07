@@ -185,9 +185,9 @@ function LayoutController(viewRegistry, messageHub) {
 				let child = this.regions[compId] || views[compId];
 				if (child) {
 					child = copy(child);
-					if (!node.content)
+					if (node && !node.content)
 						node.content = [];
-					if (!node.content.find(function (it) { return it.id == child.id }))
+					if (node && !node.content.find(function (it) { return it.id == child.id }))
 						node.content.push(child);
 					node = child;
 				}
