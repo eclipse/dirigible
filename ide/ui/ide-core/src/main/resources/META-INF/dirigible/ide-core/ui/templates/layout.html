@@ -1,0 +1,44 @@
+<div class="dg-perspective-view">
+    <split direction="horizontal" ng-transclude>
+        <split-pane ng-if="explorerTabs.length > 0" size="20" min-size="0" snap-offset="100" class="pane-left"
+            ng-transclude>
+            <explorer-toolbar items="explorerTabs"></explorer-toolbar>
+            <accordion>
+                <accordion-pane ng-repeat="view in explorerTabs | filter:{hidden:'!true'}" view="view"></accordion-pane>
+            </accordion>
+        </split-pane>
+        <split-pane size="80" min-size="100" snap-offset="0" ng-transclude>
+            <split direction="vertical" state="splitPanesState.main" ng-transclude>
+                <split-pane ng-if="!layoutSettings.hideEditorsPane" size="70" min-size="0" snap-offset="0"
+                    class="pane-center" ng-transclude>
+
+                    <splitted-tabs direction="centerSplittedTabViews.direction" panes="centerSplittedTabViews.panes"
+                        focused-pane="focusedTabView" remove-tab="closeCenterTab(pane)"
+                        split-tabs="splitCenterTabs(direction, pane)" ng-transclude>
+                    </splitted-tabs>
+
+                </split-pane>
+                <split-pane ng-if="bottomTabs.length > 0" size="30" min-size="0" snap-offset="100" class="pane-bottom"
+                    ng-transclude>
+                    <tabs selected-pane="selection.selectedBottomTab">
+                        <buttons ng-if="!layoutSettings.hideEditorsPane" class="dg-split-pane-buttons">
+                            <button class="fd-button fd-button--compact fd-button--transparent"
+                                ng-click="toggleEditorsPane()">
+                                <i
+                                    ng-class="{'sap-icon--navigation-up-arrow': !isEditorsPaneCollapsed(), 'sap-icon--navigation-down-arrow': isEditorsPaneCollapsed()}"></i>
+                            </button>
+                            <button class="fd-button fd-button--compact fd-button--transparent"
+                                ng-click="collapseBottomPane()">
+                                <i class="sap-icon--decline"></i>
+                            </button>
+                        </buttons>
+                        <panes>
+                            <tab-pane ng-repeat="tab in bottomTabs" tab="tab">
+                            </tab-pane>
+                        </panes>
+                    </tabs>
+                </split-pane>
+            </split>
+        </split-pane>
+    </split>
+</div>

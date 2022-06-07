@@ -8,6 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
+
+/*
+ * THIS IS DEPRECATED!
+ * Critical bugfixes only
+ */
+
 let ViewRegistry = function () {
 
 	let _views = {};

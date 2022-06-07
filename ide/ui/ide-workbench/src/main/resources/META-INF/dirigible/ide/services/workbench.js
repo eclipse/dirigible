@@ -9,12 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getPerspective = function () {
-	return {
-		name: "Workbench",
-		link: "../ide/index.html",
-		order: "100",
-		image: "files-o", // deprecated
-		icon: "../ide/images/workbench.svg",
-	};
+const perspectiveData = {
+	id: "workbench",
+	name: "Workbench",
+	link: "../ide/index.html",
+	order: "100",
+	image: "files-o", // deprecated
+	icon: "../ide/images/workbench.svg",
+};
+if (typeof exports !== 'undefined') {
+	exports.getPerspective = function () {
+		return perspectiveData;
+	}
 }

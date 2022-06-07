@@ -29,5 +29,5 @@ for (let i = 0; i < templateExtensions.length; i++) {
 }
 
 templates = templates.sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
-
+response.setContentType("application/json");
 response.println(JSON.stringify(templates));

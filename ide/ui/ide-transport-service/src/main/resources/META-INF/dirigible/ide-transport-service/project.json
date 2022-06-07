@@ -1,0 +1,8 @@
+{
+	"guid": "ide-transport-service",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/ide-transport-service.git"
+	}
+}

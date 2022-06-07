@@ -8,21 +8,28 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 		<title>Code Editor</title>
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
+		<link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.23.0/dist/busy-indicator.css">
 		<link type="text/css" data-name="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main" rel="stylesheet"
 			href="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main.css">
-		<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/monaco.css" />
-		<script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+		<link type="text/css" rel="stylesheet" href="css/editor.css" />
+		<script type="text/javascript" src="/services/v4/web/ide-core/core/message-hub.js"></script>
 		<script type="text/javascript" src="/webjars/diff/5.0.0/dist/diff.js"></script>
-		<script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
 		<script type="text/javascript" src="/webjars/monaco-editor/0.33.0/min/vs/loader.js"></script>
 		<script type="text/javascript" src="js/formatters/css-format-monaco.min.js"></script>
 		<script type="text/javascript" src="js/assignmentsParser.js"></script>
 	</head>
 
-	<body id="monaco-browser" spellcheck="false">
-		<div class="loading-overview">
-			<div class="loading-message">Loading...</div>
+	<body spellcheck="false">
+		<div id="loadingOverview" class="fd-busy-indicator-extended">
+			<div class="fd-busy-indicator fd-busy-indicator--l" aria-hidden="false" aria-label="Loading">
+				<div class="fd-busy-indicator--circle-0"></div>
+				<div class="fd-busy-indicator--circle-1"></div>
+				<div class="fd-busy-indicator--circle-2"></div>
+			</div>
+			<div id="loadingMessage" class="fd-busy-indicator-extended__label">Loading data...</div>
 		</div>
+
 		<div id="embeddedEditor"></div>
 		<script type="text/javascript" src="js/editor.js"></script>
 	</body>

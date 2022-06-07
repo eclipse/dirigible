@@ -1,0 +1,23 @@
+<div class="fd-tool-header__element dg-hamburger-menu">
+    <button class="fd-button fd-button--compact fd-button--transparent fd-tool-header__button"
+        ng-click="menuClicked($event.target)" aria-label="menu">
+        <i class="sap-icon--menu2"></i>
+    </button>
+    <nav class="fd-menu dg-fixed-menu dg-hidden">
+        <ul class="fd-menu__list" role="menu">
+            <li class="fd-menu__item" role="presentation" ng-repeat="item in menuList track by $index">
+                <span class="fd-menu__link has-child" role="menuitem" aria-expanded="false" aria-haspopup="true"
+                    ng-init="menuId = ('HSM' + $index + item.label | removeSpaces)" aria-controls="{{ menuId }}"
+                    ng-click="$event.stopPropagation()" ng-mouseenter="showSubmenu(menuId)"
+                    ng-mouseleave="hideSubmenu(menuId, $event.relatedTarget)">
+                    <span class="fd-menu__title">{{ item.label }}</span>
+                    <span class="fd-menu__addon-after fd-menu__addon-after--submenu"></span>
+                </span>
+                <header-submenu id="{{ ('HSM' + $index + item.label | removeSpaces) }}" test="asdsa" parent-item="item"
+                    menu-handler="menuHandler" hide-menu-fn="hideAllMenus" submenu-index="$index" is-toplevel="true"
+                    id-prefix="H">
+                </header-submenu>
+            </li>
+        </ul>
+    </nav>
+</div>

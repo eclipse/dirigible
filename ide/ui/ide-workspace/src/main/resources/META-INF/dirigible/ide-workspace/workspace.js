@@ -868,30 +868,46 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             this.send('file.created', fileDescriptor);
         };
         let announceFileOpen = function (fileDescriptor, editor) {
-            this.send('file.open', {
-                file: fileDescriptor,
-                editor: editor
-            });
+            let extraArgs;
+            if (fileDescriptor.gitName) {
+                extraArgs = {
+                    gitName: fileDescriptor.gitName
+                }
+            }
+            messageHub.post({
+                resourcePath: fileDescriptor.path,
+                resourceLabel: fileDescriptor.label,
+                contentType: fileDescriptor.contentType,
+                editorId: editor,
+                extraArgs: extraArgs
+            }, 'ide-core.openEditor');
         };
         let announceFileDeleted = function (fileDescriptor) {
-            this.send('file.deleted', fileDescriptor);
+            this.send(
+                'ide-core.closeEditor',
+                {
+                    fileName: fileDescriptor.path
+                },
+                true
+            );
         };
         let announceFileRenamed = function (fileDescriptor, oldName, newName) {
-            let data = {
-                "file": fileDescriptor,
-                "oldName": oldName,
-                "newName": newName
-            };
-            this.send('file.renamed', data);
+            this.send(
+                'ide-core.closeEditor',
+                {
+                    fileName: fileDescriptor.path
+                },
+                true
+            );
         };
         let announceFileMoved = function (fileDescriptor, sourcepath, targetpath, workspace) {
-            let data = {
-                "file": fileDescriptor,
-                "sourcepath": sourcepath,
-                "targetpath": targetpath,
-                "workspace": workspace
-            };
-            this.send('file.moved', data);
+            this.send(
+                'ide-core.closeEditor',
+                {
+                    fileName: `/${workspace}${sourcepath}/${fileDescriptor}`
+                },
+                true
+            );
         };
         let announceFileCopied = function (fileDescriptor, sourcepath, targetpath) {
             let data = {
@@ -1012,14 +1028,6 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             cache: false,
             async: false
         }).responseText;
-
-        // get available generation templates count
-        let templatesCountNonFile = parseInt($.ajax({
-            type: "GET",
-            url: '/services/v4/js/ide-core/services/templates.js/count',
-            cache: false,
-            async: false
-        }).responseText);
 
         let priorityFileTemplates = JSON.parse(templates).filter(e => e.order !== undefined).sort((a, b) => a.order - b.order);
         let specificFileTemplates = JSON.parse(templates).filter(e => e.order === undefined);
@@ -1282,7 +1290,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                         }.bind(this)
                     };
 
-                    if (this.get_type(node) !== "file" && templatesCountNonFile > 0) {
+                    if (this.get_type(node) !== "file") {
                         /*Generate*/
                         ctxmenu.generate = {
                             "separator_before": true,

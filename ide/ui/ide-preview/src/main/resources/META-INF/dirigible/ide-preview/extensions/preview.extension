@@ -1,0 +1,5 @@
+{
+    "module": "ide-preview/services/preview-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Preview View"
+}

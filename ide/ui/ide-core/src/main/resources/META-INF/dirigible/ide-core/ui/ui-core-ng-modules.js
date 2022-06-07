@@ -8,10 +8,16 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-/**
+
+/*
  * Provides key microservices for constructing and managing the IDE UI
- *
  */
+
+/*
+ * THIS IS DEPRECATED!
+ * Critical bugfixes only
+ */
+
 let defaultEditorId = "monaco";
 angular.module('ideUiCore', ['ngResource'])
 	.provider('messageHub', function MessageHubProvider() {
