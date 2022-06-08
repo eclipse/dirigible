@@ -88,7 +88,7 @@ public class ResultSetJsonWriter extends AbstractResultSetWriter<String> {
 						&& stringify) {
 					value = "[NULL]";
 				}
-				if (!ClassUtils.isPrimitiveOrWrapper(value.getClass()) 
+				if (value != null && !ClassUtils.isPrimitiveOrWrapper(value.getClass())
 						&& value.getClass() != String.class
 						&& !java.util.Date.class.isAssignableFrom(value.getClass())) {
 					if (stringify) {
