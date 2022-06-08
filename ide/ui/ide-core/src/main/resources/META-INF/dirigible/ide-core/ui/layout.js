@@ -700,9 +700,9 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     true
                 );
 
-                messageHub.onDidReceiveMessage('editor.file.saved', function (msg) {
+                messageHub.onFileSaved(function (fileDescriptor) {
                     if (closingFileArgs) {
-                        let fileName = msg.data;
+                        let fileName = `/${fileDescriptor.workspace}${fileDescriptor.path}`;
                         if (fileName === closingFileArgs.file) {
                             closeCenterTab(fileName);
 
@@ -727,7 +727,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                             reloadingFileArgs = null;
                         }
                     }
-                }, true);
+                });
 
                 messageHub.onDidReceiveMessage('editor.focus.gained', function (msg) {
                     const file = msg.data.file;

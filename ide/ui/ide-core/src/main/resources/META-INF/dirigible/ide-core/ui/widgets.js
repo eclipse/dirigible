@@ -2305,7 +2305,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * compact: Boolean - Pagination buttons size
          * displayTotalItems: Boolean - Whether to display the total number of items
          * itemsPerPageOptions: Array<Number> - The options for items per page dropdown. If not specified the dropdown will not be displayed
-         * pageChage: Function - Callback called when the page has changed. Args: (pageNumber : Number)
+         * pageChange: Function - Callback called when the page has changed. Args: (pageNumber : Number)
          * itemsPerPageChange: Function - Callback called when the 'itemsPerPage' dropdown selection has changed: Args: (itemsPerPage : Number)
          * itemsPerPagePlacement: String - Placement of the dropdown for items per page. See 'placement' on fdSelect.
          */
@@ -2319,7 +2319,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 compact: '<',
                 displayTotalItems: '<',
                 itemsPerPageOptions: '<',
-                pageChage: '&',
+                pageChange: '&',
                 itemsPerPageChange: '&',
                 itemsPerPagePlacement: '@',
             },
@@ -2364,7 +2364,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         scope.currentPage = pageNumber;
                         scope.currentPageInput = pageNumber;
 
-                        scope.pageChange && scope.pageChange(pageNumber);
+                        scope.pageChange && scope.pageChange({ pageNumber });
                     }
                 }
 
@@ -2489,9 +2489,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     return `${scope.totalItems} Results`;
                 }
 
-                scope.$watch('itemsPerPage', function () {
-                    if (scope.itemsPerPageChange)
-                        scope.itemsPerPageChange(scope.itemsPerPage);
+                scope.$watch('itemsPerPage', function (newVal, oldVal) {
+                    if (newVal !== oldVal) {
+                        if (scope.itemsPerPageChange)
+                            scope.itemsPerPageChange({ itemsPerPage: scope.itemsPerPage });
+                    }
 
                     const pageCount = scope.getPageCount();
                     if (scope.currentPage > pageCount) {

@@ -342,6 +342,105 @@ angular.module('ideMessageHub', [])
             let unsubscribe = function (handler) {
                 messageHub.unsubscribe(handler);
             };
+            /**
+             * fileDescriptor object:
+             * {
+             *   name: 'example.js',
+             *   path: '/project/folder/example.js',
+             *   contentType: 'text/javascript',
+             *   workspace: 'example'
+             * }
+            */
+            let announceFileSelected = function (fileDescriptor) {
+                if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
+                    throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');
+                messageHub.post(fileDescriptor, 'ide.file.selected');
+            };
+            let onFileSelected = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.selected');
+            };
+            let announceFileOpened = function (fileDescriptor) {
+                messageHub.post(fileDescriptor, 'ide.file.opened');
+            };
+            let onFileOpened = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.opened');
+            };
+            let announceFileCreated = function (fileDescriptor) {
+                if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
+                    throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');
+                messageHub.post(fileDescriptor, 'ide.file.created');
+            };
+            let onFileCreated = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.created');
+            };
+            let announceFileDeleted = function (fileDescriptor) {
+                if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
+                    throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');
+                messageHub.post(fileDescriptor, 'ide.file.deleted');
+            };
+            let onFileDeleted = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.deleted');
+            };
+            let announceFileRenamed = function (fileDescriptor) {
+                if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
+                    throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');
+                messageHub.post(fileDescriptor, 'ide.file.renamed');
+            };
+            let onFileRenamed = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.renamed');
+            };
+            let announceFileSaved = function (fileDescriptor) {
+                if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
+                    throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');
+                messageHub.post(fileDescriptor, 'ide.file.saved');
+            };
+            let onFileSaved = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.saved');
+            };
+            let announceFileMoved = function (fileDescriptor) {
+                messageHub.post(fileDescriptor, 'ide.file.moved');
+            };
+            let onFileMoved = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.moved');
+            };
+            let announceFileCopied = function (fileDescriptor) {
+                messageHub.post(fileDescriptor, 'ide.file.copied');
+            };
+            let onFileCopied = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.file.copied');
+            };
+            let announcePublish = function (fileDescriptor) {
+                messageHub.post(fileDescriptor, 'ide.event.publish');
+            };
+            let onPublish = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.event.publish');
+            };
+            let announceUnpublish = function (fileDescriptor) {
+                messageHub.post(fileDescriptor, 'ide.event.unpublish');
+            };
+            let onUnpublish = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.event.unpublish');
+            };
             return {
                 showStatusBusy: showStatusBusy,
                 hideStatusBusy: hideStatusBusy,
@@ -372,7 +471,27 @@ angular.module('ideMessageHub', [])
                 triggerEvent: trigger,
                 'postMessage': post,
                 onDidReceiveMessage: onMessage,
-                unsubscribe: unsubscribe
+                unsubscribe: unsubscribe,
+                announceFileSelected: announceFileSelected,
+                onFileSelected: onFileSelected,
+                announceFileOpened: announceFileOpened,
+                onFileOpened: onFileOpened,
+                announceFileCreated: announceFileCreated,
+                onFileCreated: onFileCreated,
+                announceFileDeleted: announceFileDeleted,
+                onFileDeleted: onFileDeleted,
+                announceFileRenamed: announceFileRenamed,
+                onFileRenamed: onFileRenamed,
+                announceFileSaved: announceFileSaved,
+                onFileSaved: onFileSaved,
+                announceFileMoved: announceFileMoved,
+                onFileMoved: onFileMoved,
+                announceFileCopied: announceFileCopied,
+                onFileCopied: onFileCopied,
+                announcePublish: announcePublish,
+                onPublish: onPublish,
+                announceUnpublish: announceUnpublish,
+                onUnpublish: onUnpublish,
             };
         }];
     });

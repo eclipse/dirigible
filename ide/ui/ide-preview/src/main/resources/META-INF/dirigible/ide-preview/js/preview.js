@@ -76,10 +76,11 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
         }
     }
 
-    this.gotoUrl = function (url) {
+    this.gotoUrl = function (url, shouldReload = true) {
         const currentUrl = this.getCurrentUrl();
         if (currentUrl && currentUrl === url) {
-            this.reload();
+            if (shouldReload)
+                this.reload();
             return;
         };
 
@@ -98,12 +99,12 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
     }
 
     this.inputUrlKeyUp = function (e) {
-        switch (e.keyCode) {
-            case 27: //cancel
+        switch (e.key) {
+            case 'Escape': // cancel url edit
                 const currentUrl = this.getCurrentUrl();
                 this.previewUrl = currentUrl || '';
                 break;
-            case 13: //enter
+            case 'Enter':
                 if (this.previewUrl) {
                     this.gotoUrl(this.previewUrl);
                 }
@@ -111,12 +112,8 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
         }
     };
 
-    messageHub.onDidReceiveMessage('workspace.file.selected', (msg) => {
-        if (this.urlLocked)
-            return;
-
-        let resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
-        let url = window.location.protocol + '//' + window.location.host + window.location.pathname.substr(0, window.location.pathname.indexOf('/web/'));
+    this.makeUrlFromPath = function (resourcePath) {
+        let url = window.location.protocol + '//' + window.location.host + window.location.pathname.substring(window.location.pathname.indexOf('/web/'), 0);
         let type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
         let isOData = resourcePath.endsWith(".odata");
         if (isOData) {
@@ -195,28 +192,47 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
             }
             url += resourcePath;
         }
+        return url;
+    }
 
-        this.gotoUrl(url);
-        $scope.$apply();
-    }, true);
-
-    messageHub.onDidReceiveMessage('workspace.file.published', () => {
+    messageHub.onFileSelected(function (data) {
         if (this.urlLocked)
             return;
 
-        this.reload();
+        let url = this.makeUrlFromPath(data.path);
+        this.gotoUrl(url, false);
         $scope.$apply();
-    }, true);
+    }.bind(this));
 
-    messageHub.onDidReceiveMessage('workspace.file.unpublished', () => {
+    messageHub.onPublish((data) => {
         if (this.urlLocked)
             return;
 
-        this.reload();
-        $scope.$apply();
-    }, true);
+        if (data) {
+            let url = this.makeUrlFromPath(data.path);
+            this.gotoUrl(url);
+            $scope.$apply();
+        } else {
+            this.reload();
+            $scope.$apply();
+        }
+    });
 
-    messageHub.onDidReceiveMessage('ide.themeChange', () => {
-        this.reload();
-    }, true);
+    messageHub.onUnpublish((data) => {
+        if (this.urlLocked)
+            return;
+
+        if (data) {
+            let url = this.makeUrlFromPath(data.path);
+            this.gotoUrl(url);
+            $scope.$apply();
+        } else {
+            this.reload();
+            $scope.$apply();
+        }
+    });
+
+    // messageHub.onDidReceiveMessage('ide.themeChange', () => {
+    //     this.reload();
+    // }, true);
 }]);

@@ -25,10 +25,10 @@ let parameters = {
 let monacoTheme = 'vs-light';
 
 function setTheme(init = true) {
-    let theme = JSON.parse(localStorage.getItem('DIRIGIBLE.theme'));
+    let theme = JSON.parse(localStorage.getItem('DIRIGIBLE.theme') || '{}');
     if (theme.type === 'light') monacoTheme = 'vs-light';
     else monacoTheme = 'vs-dark';
-    if (theme) {
+    if (theme.links) {
         if (!init) {
             let themeLinks = headElement.querySelectorAll("link[data-type='theme']");
             for (let i = 0; i < themeLinks.length; i++) {
@@ -230,13 +230,13 @@ function FileIO() {
 
                         resolve(fileName);
 
-                        messageHub.post({ data: fileName }, 'editor.file.saved');
                         messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
                         messageHub.post({
-                            data: {
-                                path: fileName
-                            }
-                        }, 'workspace.file.selected');
+                            name: fileName.substring(fileName.lastIndexOf('/') + 1),
+                            path: fileName.substring(fileName.indexOf('/', 1)),
+                            contentType: parameters.contentType,
+                            workspace: fileName.substring(1, fileName.indexOf('/', 1)),
+                        }, 'ide.file.saved');
                         messageHub.post({
                             message: `File '${fileName}' saved`
                         }, 'ide.status.message');

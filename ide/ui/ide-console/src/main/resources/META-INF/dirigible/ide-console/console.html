@@ -52,11 +52,10 @@
 
     <body ng-app="console" ng-controller="ConsoleController as ctrl">
         <div class="main-container">
-            <fd-toolbar has-title="false" dg-type="solid">
-                <fd-popover compact="true">
+            <fd-toolbar dg-size="cozy" has-title="false" dg-type="solid">
+                <fd-popover>
                     <fd-popover-control>
-                        <fd-button dg-label="{{ getLogLevelLabel() }}" compact="true" is-menu="true"
-                            dg-type="transparent">
+                        <fd-button dg-label="{{ getLogLevelLabel() }}" is-menu="true" dg-type="transparent">
                         </fd-button>
                     </fd-popover-control>
                     <fd-popover-body no-arrow="true">
@@ -79,10 +78,10 @@
                     </fd-popover-body>
                 </fd-popover>
                 <fd-toolbar-spacer></fd-toolbar-spacer>
-                <fd-input type="text" compact="true" placeholder="Search..." ng-model="search.text"
-                    ng-change="selectLogLevel()" style="max-width:30%;"></fd-input>
+                <fd-input type="text" placeholder="Search..." ng-model="search.text" ng-change="selectLogLevel()"
+                    style="max-width:30%;"></fd-input>
                 <fd-toolbar-separator></fd-toolbar-separator>
-                <fd-button compact="true" dg-type="transparent" dg-label="Clear log" ng-click="clearLog()"></fd-button>
+                <fd-button dg-type="transparent" dg-label="Clear log" ng-click="clearLog()"></fd-button>
             </fd-toolbar>
 
             <div id="logContent" class="console-log">

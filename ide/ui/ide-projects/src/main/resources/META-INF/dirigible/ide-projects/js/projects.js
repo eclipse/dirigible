@@ -102,6 +102,16 @@ projectsView.controller('ProjectsViewController', [
             },
         };
 
+        $scope.jstreeWidget.on('select_node.jstree', function (event, data) {
+            if (data.event && data.event.type === 'click' && data.node.type === 'file')
+                messageHub.announceFileSelected({
+                    name: data.node.text,
+                    path: data.node.data.path,
+                    contentType: data.node.data.contentType,
+                    workspace: data.node.data.workspace,
+                });
+        });
+
         $scope.jstreeWidget.on('dblclick.jstree', function (event) {
             let node = $scope.jstreeWidget.jstree(true).get_node(event.target);
             if (node.type === 'file') {
@@ -394,17 +404,20 @@ projectsView.controller('ProjectsViewController', [
                                 deleteObj,
                                 publishObj,
                                 unpublishObj,
-                                generateObj,
-                                {
-                                    id: "exportProject",
-                                    label: "Export",
-                                    icon: "sap-icon--download-from-cloud",
-                                    divider: true,
-                                    data: node,
-                                }
                             ]
                         };
-                        setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
+                        if ($scope.genericTemplates.length) {
+                            menuObj.items.push(generateObj);
+                            menuObj.items.push(generateObj);
+                            setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
+                        }
+                        menuObj.items.push({
+                            id: "exportProject",
+                            label: "Export",
+                            icon: "sap-icon--download-from-cloud",
+                            divider: true,
+                            data: node,
+                        });
                         return menuObj;
                     } else if (node.type === "folder") {
                         let menuObj = {
@@ -447,7 +460,7 @@ projectsView.controller('ProjectsViewController', [
                                 unpublishObj,
                             ]
                         };
-                        if ($scope.modelTemplateExtensions.includes(getFileExtension(node.text))) {
+                        if ($scope.modelTemplates.length && $scope.modelTemplateExtensions.includes(getFileExtension(node.text))) {
                             let genObj = {
                                 id: "generateModel",
                                 label: "Generate",
@@ -929,6 +942,16 @@ projectsView.controller('ProjectsViewController', [
         //     messageHub.postMessage('projects.tree.select', { filePath: '/ide/index.html' }, true);
         // };
 
+        messageHub.onFileSaved(function (data) {
+            delete data.topic;
+            publisherApi.publish(`/${data.workspace}${data.path}`).then(function (response) {
+                if (response.status !== 201)
+                    messageHub.setStatusError(`Unable to publish '${data.path}'`);
+                else
+                    messageHub.announcePublish(data);
+            });
+        });
+
         messageHub.onDidReceiveMessage(
             'ide.workspace.changed',
             function (msg) {
@@ -1250,11 +1273,15 @@ projectsView.controller('ProjectsViewController', [
                     publisherApi.publish(msg.data.data).then(function (response) {
                         if (response.status !== 201)
                             messageHub.setStatusError(`Unable to publish '${msg.data.data}'`);
+                        else
+                            messageHub.announcePublish();
                     });
                 } else if (msg.data.itemId === 'unpublish') {
                     publisherApi.unpublish(msg.data.data).then(function (response) {
                         if (response.status !== 201)
                             messageHub.setStatusError(`Unable to unpublish '${msg.data.data}'`);
+                        else
+                            messageHub.announceUnpublish();
                     });
                 } else if (msg.data.itemId === 'unpublishAll') {
                     $scope.unpublishAll();
