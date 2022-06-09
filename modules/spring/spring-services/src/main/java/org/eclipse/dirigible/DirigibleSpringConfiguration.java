@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.services.spring;
+package org.eclipse.dirigible;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,15 +34,15 @@ import org.eclipse.dirigible.runtime.core.version.VersionProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@SpringBootApplication
-public class DirigibleSpringBootConfiguration {
+@Configuration
+public class DirigibleSpringConfiguration {
 
-	private static final Logger logger = LoggerFactory.getLogger(DirigibleSpringBootConfiguration.class);
+	private static final Logger logger = LoggerFactory.getLogger(DirigibleSpringConfiguration.class);
 
 	@Autowired
 	private Bus bus;

@@ -9,15 +9,17 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.services.spring;
+package org.eclipse.dirigible;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class DirigibleApplication {
 	
 
     public static void main(String[] args) {
-        SpringApplication.run(DirigibleSpringBootConfiguration.class, args);
+        SpringApplication.run(DirigibleApplication.class, args);
     }
 
 }
