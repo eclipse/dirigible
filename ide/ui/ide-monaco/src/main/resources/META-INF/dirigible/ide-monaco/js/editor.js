@@ -22,7 +22,6 @@ let parameters = {
     file: ""
 };
 
-
 const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
     if (oldText[oldText.length - 1] !== "\n" || newText[newText.length - 1] !== "\n") {
         oldText += "\n";
@@ -51,6 +50,7 @@ const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
             }
     });
     return addedLines
+};
 
 const eslintConfig = {
     "env": {
@@ -131,7 +131,7 @@ const eslintConfig = {
         "rest-spread-spacing": 2,
         "template-curly-spacing": 2
     }
-};
+}
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -671,14 +671,12 @@ function createQuickfixCodeAction(title, marker, model, fix) {
     require.config({
         paths: {
             'vs': '/webjars/monaco-editor/0.33.0/min/vs',
-            'parser': 'js/parser'
+            'parser': 'js/parser',
             'linters': 'js/linters'
         }
     });
 
     loadModuleSuggestions(modulesSuggestions);
-
-    //@ts-ignore
     try {
     require(['vs/editor/editor.main', 'parser/acorn-loose', 'linters/eslint_bundle'], function (monaco, acornLoose, eslint) {
         let fileIO = new FileIO();
@@ -687,160 +685,46 @@ function createQuickfixCodeAction(title, marker, model, fix) {
         let _fileObject;
         let _fileType;
         linters.eslint = eslint;
+        
+        fileIO.getFileType(fileName)
+            .then((fileType) => {
 
-        fileIO.loadText(fileName)
-            .then((fileObject) => {
-                _fileObject = fileObject;
-                return createEditorInstance(readOnly);
-            })
-            .catch((status) => {
-                if (fileName) messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
-                console.error(status);
-            })
-            .then((editor) => {
-                _editor = editor;
-                return _fileObject.modified;
-            })
-            .then((fileText) => {
-                if (fileName) {
-                    let fileType = fileIO.resolveFileType(fileName);
+                _fileType = fileType;
 
-                    let moduleImports = getModuleImports(fileText);
-                    codeCompletionAssignments = parseAssignments(acornLoose, fileText);
+                fileIO.loadText(fileName)
+                    .then((fileObject) => {
+                        _fileObject = fileObject;
+                        return createEditorInstance(readOnly);
+                    })
+                    .catch((status) => {
+                        if (fileName) messageHub.post({ fileName: fileName }, 'ide-core.closeEditor');
+                        console.error(status);
+                    })
+                    .then((editor) => {
+                        _editor = editor;
+                        return _fileObject.modified;
+                    })
+                    .then((fileText) => {
+                        if (fileName) {
+                            let fileType = _fileType;
 
-                    moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
+                            let moduleImports = getModuleImports(fileText);
+                            codeCompletionAssignments = parseAssignments(acornLoose, fileText);
 
-                    messageHub.subscribe(function () {
-                        if (dirty) {
-                            fileIO.saveText(_editor.getModel().getValue());
-                        }
-                    }, "workbench.editor.save");
+                            moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
 
-                    _editor.onDidChangeModel(function () {
-                        if (_fileObject.isGit) {
-                            lineDecorations = highlight_changed(
-                                getNewLines(_fileObject.git, fileText),
-                                _editor
-                            );
-                        }
-                    });
-                    let model = monaco.editor.createModel(fileText, fileType || 'text');
-                    _editor.setModel(model);
-                    if (!readOnly) {
-                        _editor.addAction(createSaveAction());
-                    }
-                    _editor.addAction(createSearchAction());
-                    _editor.addAction(createCloseAction());
-                    _editor.addAction(createCloseOthersAction());
-                    _editor.addAction(createCloseAllAction());
-                    _editor.onDidChangeCursorPosition(function (e) {
-                        let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
-                        messageHub.post({ data: caretInfo }, 'status.caret');
-                    });
-                    _editor.onDidChangeModelContent(function (e) {
-                        if (e.changes && e.changes[0].text === ".") {
-                            codeCompletionAssignments = parseAssignments(acornLoose, _editor.getValue());
-                        }
-                        if (_fileObject.isGit && e.changes) {
-                            let content = _editor.getValue();
-                            lineDecorations = highlight_changed(
-                                getNewLines(_fileObject.git, content),
-                                _editor
-                            );
-                        }
-                        let newModuleImports = getModuleImports(_editor.getValue());
-                        if (e && !dirty) {
-                            dirty = true;
-                            messageHub.post({ data: fileName }, 'editor.file.dirty');
-                        }
-                        newModuleImports.forEach(function (module) {
-                            if (module.module.split("/").length > 0) {
-                                let newModule = moduleImports.filter(e => e.keyWord === module.keyWord && e.module === module.module)[0];
-                                let moduleChanged = moduleImports.filter(e => e.keyWord === module.keyWord && e.module !== module.module)[0];
-                                let keyWordChanged = moduleImports.filter(e => e.keyWord !== module.keyWord && e.module === module.module)[0];
-                                if (!newModule) {
-                                    loadSuggestions(module.module, codeCompletionSuggestions);
-                                    moduleImports.push(module);
-                                } else if (moduleChanged) {
-                                    moduleChanged.module = module.module;
-                                    loadSuggestions(module.module, codeCompletionSuggestions);
-                                } else if (keyWordChanged) {
-                                    keyWordChanged.keyWord = module.keyWord;
+                            messageHub.subscribe(function () {
+                                if (dirty) {
+                                    fileIO.saveText(_editor.getModel().getValue());
                                 }
-                            }
-                        });
+                            }, "workbench.editor.save");
 
-                        runEslint(fileName);
-                    });
-
-                    monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
-                    monaco.languages.typescript.javascriptDefaults.addExtraLib('/** $. XSJS API */ var $: any;', 'ts:$.js');
-                    loadDTS();
-
-                    monaco.languages.registerCompletionItemProvider('javascript', {
-                        triggerCharacters: ["\"", "'"],
-                        provideCompletionItems: function (model, position) {
-                            let token = model.getValueInRange({
-                                startLineNumber: position.lineNumber,
-                                startColumn: 1,
-                                endLineNumber: position.lineNumber,
-                                endColumn: position.column
-                            })
-                            if (token.indexOf('require("') < 0 && token.indexOf('require(\'') < 0
-                                && token.indexOf('from "') < 0 && token.indexOf('from \'') < 0) {
-                                return { suggestions: [] };
-                            }
-                            let wordPosition = model.getWordUntilPosition(position);
-                            let word = wordPosition.word;
-                            let range = {
-                                startLineNumber: position.lineNumber,
-                                endLineNumber: position.lineNumber,
-                                startColumn: wordPosition.startColumn,
-                                endColumn: wordPosition.endColumn
-                            };
-                            return {
-                                suggestions: modulesSuggestions
-                                    .filter(function (e) {
-                                        if (word.length > 0) {
-                                            return e.name.toLowerCase().indexOf(word.toLowerCase()) >= 0;
-                                        }
-                                        return true;
-                                    }).map(function (e) {
-                                        return {
-                                            label: e.name,
-                                            kind: monaco.languages.CompletionItemKind.Module,
-                                            documentation: e.documentation,
-                                            detail: e.description,
-                                            insertText: e.name,
-                                            range: range
-                                        }
-                                    })
-                            };
-                        }
-                    });
-                    monaco.languages.registerCompletionItemProvider('javascript', {
-                        triggerCharacters: ["."],
-                        provideCompletionItems: function (model, position) {
-                            let token = model.getValueInRange({
-                                startLineNumber: position.lineNumber,
-                                startColumn: 1,
-                                endLineNumber: position.lineNumber,
-                                endColumn: position.column
-                            })
-
-                            let moduleImport = moduleImports.filter(e => token.match(new RegExp(e.keyWord + "." + "([a-zA-Z0-9]+)?", "g")))[0];
-                            // let afterDotToken = token.substring(token.indexOf(".") + 1);
-                            let tokenParts = token.split(".");
-                            let moduleName = moduleImport ? moduleImport.module : null;
-                            if (tokenParts != null && tokenParts.length > 2) {
-                                moduleName = null;
-                            }
-                            let nestedObjectKeyword = null;
-                            if (!moduleName) {
-                                let nestedKeyword = token.split(" ").filter(e => e.indexOf(".") > 0)[0]
-                                if (nestedKeyword) {
-                                    nestedObjectKeyword = nestedKeyword.split(".")[0];
->>>>>>> 44fc6a6dfb (feat: add quickfix support)
+                            _editor.onDidChangeModel(function () {
+                                if (_fileObject.isGit) {
+                                    lineDecorations = highlight_changed(
+                                        getNewLines(_fileObject.git, fileText),
+                                        _editor
+                                    );
                                 }
                             });
                             let model = monaco.editor.createModel(fileText, fileType || 'text');
@@ -888,6 +772,8 @@ function createQuickfixCodeAction(title, marker, model, fix) {
                                         }
                                     }
                                 });
+
+                                runEslint(fileName);
                             });
 
                             monaco.languages.typescript.javascriptDefaults.addExtraLib('/** Loads external module: \n\n> ```\nlet res = require("http/v4/response");\nres.println("Hello World!");``` */ var require = function(moduleName: string) {return new Module();};', 'js:require.js');
