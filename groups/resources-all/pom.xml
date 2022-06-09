@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>6.2.34</version>
+		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -21,42 +21,42 @@
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-fonts</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-goldenlayout</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-dev-tools</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-resources</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-themes</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-default</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-theme-fiori</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-resources-mxgraph</artifactId>
-            <version>6.2.34</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- WebJars -->
