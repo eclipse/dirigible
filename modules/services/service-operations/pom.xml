@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-service-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.2.35</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -42,47 +42,47 @@
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.35</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.35</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-api-facade-utils</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.35</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-scheduler</artifactId>
-        	<version>7.0.0-SNAPSHOT</version>
+        	<version>6.2.35</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-security</artifactId>
-        	<version>7.0.0-SNAPSHOT</version>
+        	<version>6.2.35</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-messaging</artifactId>
-        	<version>7.0.0-SNAPSHOT</version>
+        	<version>6.2.35</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-database-data-structures</artifactId>
-        	<version>7.0.0-SNAPSHOT</version>
+        	<version>6.2.35</version>
         </dependency>
         <dependency>
         	<groupId>org.eclipse.dirigible</groupId>
         	<artifactId>dirigible-core-websockets</artifactId>
-        	<version>7.0.0-SNAPSHOT</version>
+        	<version>6.2.35</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-core-problems</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.2.35</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
