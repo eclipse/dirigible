@@ -229,14 +229,19 @@ function FileIO() {
                         }
 
                         resolve(fileName);
-
-                        messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
-                        messageHub.post({
+                        let fileDescriptor = {
                             name: fileName.substring(fileName.lastIndexOf('/') + 1),
                             path: fileName.substring(fileName.indexOf('/', 1)),
                             contentType: parameters.contentType,
                             workspace: fileName.substring(1, fileName.indexOf('/', 1)),
-                        }, 'ide.file.saved');
+                        };
+                        if (parameters.gitName) {
+                            if (lineDecorations.length)
+                                fileDescriptor.status = 'modified';
+                            else fileDescriptor.status = 'unmodified';
+                        }
+                        messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
+                        messageHub.post(fileDescriptor, 'ide.file.saved');
                         messageHub.post({
                             message: `File '${fileName}' saved`
                         }, 'ide.status.message');

@@ -11,11 +11,11 @@
  */
 exports.getView = function () {
 	return {
-		"id": "import",
-		"name": "Import",
+		"id": "search",
+		"name": "Search",
 		"factory": "frame",
 		"region": "left-top",
-		"label": "Import",
-		"link": "../ide-workspace/import.html"
+		"label": "Search",
+		"link": "../ide-workspace/search.html"
 	};
 };

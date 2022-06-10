@@ -35,6 +35,7 @@ body {
   box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
   border-bottom: hidden;
   border-top: hidden;
+  z-index: 1;
 }
 
 .dg-table--no-outer-horizontal-borders .dg-table__header-sticky th.fd-table__cell,
@@ -113,12 +114,12 @@ body {
   right: var(--sapGroup_BorderWidth);
 }
 
-.dg-popover--align-left-start {
+.dg-popover--align-right-start {
   top: var(--sapGroup_BorderWidth);
   left: 100%;
 }
 
-.dg-popover--align-left-end {
+.dg-popover--align-right-end {
   top: auto;
   left: 100%;
   bottom: var(--sapGroup_BorderWidth);
