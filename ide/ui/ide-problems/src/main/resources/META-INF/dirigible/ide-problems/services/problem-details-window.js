@@ -10,15 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-    id: "problems",
-    factory: "frame",
-    region: "bottom",
-    label: "Problems",
-    link: "../ide-problems/problems.html"
+    id: "problem-details",
+    label: "Problem Details",
+    link: "../ide-problems/problem-details.html"
 };
-
 if (typeof exports !== 'undefined') {
-    exports.getView = function () {
+    exports.getDialogWindow = function () {
         return viewData;
     }
 }

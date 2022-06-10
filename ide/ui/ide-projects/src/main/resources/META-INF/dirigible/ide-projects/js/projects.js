@@ -120,7 +120,6 @@ projectsView.controller('ProjectsViewController', [
         });
 
         $scope.jstreeWidget.on('rename_node.jstree', function (event, data) {
-            console.log('rename', data);
             if (!data.node.state.failedRename) {
                 if (data.old !== data.text) {
                     let validate = new RegExp('^[^/]+$');
@@ -162,23 +161,13 @@ projectsView.controller('ProjectsViewController', [
                 let spinnerId = showSpinner(parent);
                 let workspace;
                 let path;
-                if (copyObj.parent === '#') {
-                    workspace = $scope.selectedWorkspace.name;
-                    path = copyObj.original.data.path;
-                    copyObj.node.data = {
-                        path: path,
-                        contentType: copyObj.original.data.contentType,
-                        workspace: workspace,
-                    };
-                } else {
-                    workspace = parent.data.workspace;
-                    path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/') + copyObj.node.text;
-                    copyObj.node.data = {
-                        path: path,
-                        contentType: copyObj.original.data.contentType,
-                        workspace: workspace,
-                    };
-                }
+                workspace = parent.data.workspace;
+                path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
+                copyObj.node.data = {
+                    path: path,
+                    contentType: copyObj.original.data.contentType,
+                    workspace: workspace,
+                };
                 workspaceApi.copy(
                     copyObj.original.data.path,
                     path,
@@ -387,6 +376,20 @@ projectsView.controller('ProjectsViewController', [
                         divider: true,
                         data: node,
                     };
+                    // let importObj = {
+                    //     id: "import",
+                    //     label: "Import",
+                    //     icon: "sap-icon--attachment",
+                    //     divider: true,
+                    //     data: node,
+                    // };
+                    let importZipObj = {
+                        id: "importZip",
+                        label: "Import from zip",
+                        icon: "sap-icon--attachment-zip-file",
+                        divider: true,
+                        data: node,
+                    };
                     if (node.type === 'project') {
                         let menuObj = {
                             callbackTopic: 'projects.tree.contextmenu',
@@ -408,9 +411,10 @@ projectsView.controller('ProjectsViewController', [
                         };
                         if ($scope.genericTemplates.length) {
                             menuObj.items.push(generateObj);
-                            menuObj.items.push(generateObj);
                             setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
                         }
+                        // menuObj.items.push(importObj);
+                        menuObj.items.push(importZipObj);
                         menuObj.items.push({
                             id: "exportProject",
                             label: "Export",
@@ -432,6 +436,8 @@ projectsView.controller('ProjectsViewController', [
                                 publishObj,
                                 unpublishObj,
                                 generateObj,
+                                // importObj,
+                                importZipObj,
                             ]
                         };
                         setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
@@ -783,7 +789,6 @@ projectsView.controller('ProjectsViewController', [
 
         let to = 0;
         $scope.search = function () {
-            console.log($scope.searchField.text);
             if (to) { clearTimeout(to); }
             to = setTimeout(function () {
                 $scope.jstreeWidget.jstree(true).search($scope.searchField.text);
@@ -950,6 +955,27 @@ projectsView.controller('ProjectsViewController', [
                 else
                     messageHub.announcePublish(data);
             });
+            // Temp solution until we fix the back-end API
+            if (data.status) {
+                let objects = $scope.jstreeWidget.jstree(true).get_json(
+                    $scope.jstreeWidget.jstree(true).root,
+                    {
+                        no_li_attr: true,
+                        no_a_attr: true,
+                        flat: true
+                    }
+                );
+                for (let i = 0; i < objects.length; i++) {
+                    if (objects[i].data.path === data.path) {
+                        let node = $scope.jstreeWidget.jstree(true).get_node(objects[i]);
+                        if (data.status === 'modified')
+                            node.state.status = 'M';
+                        else node.state.status = undefined;
+                        $scope.jstreeWidget.jstree(true).redraw_node(node.id);
+                        break;
+                    }
+                }
+            }
         });
 
         messageHub.onDidReceiveMessage(
@@ -1265,6 +1291,23 @@ projectsView.controller('ProjectsViewController', [
                     $scope.exportProjects();
                 } else if (msg.data.itemId === 'exportProject') {
                     transportApi.exportProject(msg.data.data.data.workspace, msg.data.data.text);
+                } else if (msg.data.itemId === 'import') {
+                    messageHub.showDialogWindow(
+                        "import",
+                        {
+                            importType: 'file',
+                            uploadPath: msg.data.data.data.path,
+                            workspace: msg.data.data.data.workspace,
+                        }
+                    );
+                } else if (msg.data.itemId === 'importZip') {
+                    messageHub.showDialogWindow(
+                        "import",
+                        {
+                            uploadPath: msg.data.data.data.path,
+                            workspace: msg.data.data.data.workspace,
+                        }
+                    );
                 } else if (msg.data.itemId === 'unpublishAll') {
                     $scope.unpublishAll();
                 } else if (msg.data.itemId === 'publishAll') {

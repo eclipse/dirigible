@@ -2018,7 +2018,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dropdownFill: Boolean - Adjusts the popover body that wraps the dropdown to match the text length
          * labelId: String - The id of the label element if present (Necessary for aria-labelledby)
          * dropdownFixed: Boolean - Dropdown css position will be fixed, allowing for use in dialogs.
-         * placement: String - Placement of the dropdown. It can be any of 'top', 'bottom', 'left', and then can be suffixed with '-start' or '-end'. Deafult is 'bottom-start'. Incompatible with dropdownFixed.
+         * placement: String - Placement of the dropdown. It can be any of 'top', 'bottom', 'right', and then can be suffixed with '-start' or '-end'. Deafult is 'bottom-start'. Incompatible with dropdownFixed.
          */
         return {
             restrict: 'EA',
@@ -2084,12 +2084,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             case 'top-end':
                                 classList.push('dg-popover--align-top-end');
                                 break;
-                            case 'left':
-                            case 'left-start':
-                                classList.push('dg-popover--align-left-start');
+                            case 'right':
+                            case 'right-start':
+                                classList.push('dg-popover--align-right-start');
                                 break;
-                            case 'left-end':
-                                classList.push('dg-popover--align-left-end');
+                            case 'right-end':
+                                classList.push('dg-popover--align-right-end');
                                 break;
                             default:
                                 break;

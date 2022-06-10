@@ -9,7 +9,7 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="console" ng-controller="ConsoleController as ctrl">
 
     <head>
         <meta charset="utf-8" />
@@ -50,7 +50,7 @@
         </style>
     </head>
 
-    <body ng-app="console" ng-controller="ConsoleController as ctrl">
+    <body>
         <div class="main-container">
             <fd-toolbar dg-size="cozy" has-title="false" dg-type="solid">
                 <fd-popover>
@@ -78,7 +78,7 @@
                     </fd-popover-body>
                 </fd-popover>
                 <fd-toolbar-spacer></fd-toolbar-spacer>
-                <fd-input type="text" placeholder="Search..." ng-model="search.text" ng-change="selectLogLevel()"
+                <fd-input type="search" placeholder="Search..." ng-model="search.text" ng-change="selectLogLevel()"
                     style="max-width:30%;"></fd-input>
                 <fd-toolbar-separator></fd-toolbar-separator>
                 <fd-button dg-type="transparent" dg-label="Clear log" ng-click="clearLog()"></fd-button>

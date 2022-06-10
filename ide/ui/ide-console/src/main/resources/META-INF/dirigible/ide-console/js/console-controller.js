@@ -136,13 +136,18 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         $scope.$apply();
     }
 
-    messageHub.onDidReceiveMessage('workspace.file.published', () => $scope.$apply(), true);
-    messageHub.onDidReceiveMessage('workspace.file.unpublished', () => $scope.$apply(), true);
+    messageHub.onPublish(function () {
+        $scope.$apply();
+    });
+
+    messageHub.onUnpublish(function () {
+        $scope.$apply();
+    });
 
     let logContentEl = $('#logContent');
     logContentEl.on('scroll', function () {
-        var scrollHeight = logContentEl.get(0).scrollHeight;
-        var scrollPosition = logContentEl.height() + logContentEl.scrollTop();
+        let scrollHeight = logContentEl.get(0).scrollHeight;
+        let scrollPosition = logContentEl.height() + logContentEl.scrollTop();
         $scope.autoScroll = ((scrollHeight - scrollPosition) / scrollHeight === 0);
     });
 

@@ -349,7 +349,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
 
                 scope.menuClick = function (item) {
                     if (item.action === 'openView') {
-                        messageHub.openView(item.id, { "test": "somedata" });
+                        messageHub.openView(item.id, item.data);
                     } else if (item.action === 'openPerspective') {
                         messageHub.openPerspective(item.link);
                     } else if (item.action === 'openDialogWindow') {

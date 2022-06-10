@@ -343,13 +343,13 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     return views.find(v => v.id === view.id);
                 }
 
-                function mapViewToTab(view, params = {}) {
+                function mapViewToTab(view) {
                     return {
                         id: view.id,
                         type: VIEW,
                         label: view.label,
                         path: view.settings.path,
-                        params: params,
+                        params: view.params,
                     };
                 }
 
@@ -923,15 +923,18 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     }
                 };
                 $scope.openView = function (viewId, params = {}) {
+                    if (params !== undefined && !(typeof params === 'object' && !Array.isArray(params) && params !== null))
+                        throw Error("openView: params must be an object");
                     let view = $scope.views.find(v => v.id === viewId);
                     if (view) {
+                        view.params = params;
                         if (view.region.startsWith('left')) {
                             let explorerViewTab = findView($scope.explorerTabs, view);
                             if (explorerViewTab) {
                                 explorerViewTab.hidden = false;
                                 explorerViewTab.expanded = true;
                             } else {
-                                explorerViewTab = mapViewToTab(view, params);
+                                explorerViewTab = mapViewToTab(view);
                                 explorerViewTab.expanded = true;
                                 $scope.explorerTabs.push(explorerViewTab);
                             }
@@ -942,8 +945,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                             if (result) {
                                 currentTabsView.selectedTab = view.id;
                             } else {
-                                let centerViewTab = mapViewToTab(view, params);
-                                centerViewTab["params"] = params;
+                                let centerViewTab = mapViewToTab(view);
                                 currentTabsView.selectedTab = view.id;
                                 currentTabsView.tabs.push(centerViewTab);
                             }
@@ -952,7 +954,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                             if (bottomViewTab) {
                                 $scope.selection.selectedBottomTab = bottomViewTab.id;
                             } else {
-                                bottomViewTab = mapViewToTab(view, params);
+                                bottomViewTab = mapViewToTab(view);
                                 $scope.selection.selectedBottomTab = bottomViewTab.id;
                                 $scope.bottomTabs.push(bottomViewTab);
                             }

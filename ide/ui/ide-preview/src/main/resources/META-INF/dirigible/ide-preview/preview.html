@@ -9,10 +9,11 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="preview" ng-controller="PreviewController as preview">
 
     <head>
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
@@ -46,6 +47,10 @@
                 min-height: 0;
             }
 
+            iframe {
+                background-color: white;
+            }
+
             .input-url {
                 flex-grow: 1;
             }
@@ -54,7 +59,7 @@
 
     </head>
 
-    <body ng-app="preview" ng-controller="PreviewController as preview">
+    <body>
         <div class="main-container">
             <fd-bar cozy="true">
                 <fd-bar-left>

@@ -21,33 +21,12 @@
         <title dg-view-title></title>
 
         <!-- View data -->
-        <script type="text/javascript" src="/services/v4/web/ide-projects/services/projects-view.js"></script>
+        <script type="text/javascript" src="services/projects-view.js"></script>
 
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-        <script type="text/javascript" src="/webjars/angular-aria/1.8.2/angular-aria.min.js"></script>
-
-        <!-- Fundamental-styles -->
-        <link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.23.0/dist/fundamental-styles.css">
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
         <theme></theme>
 
-        <!-- Dirigible styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
-        <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/widgets.css" />
-
-        <!-- MessageHub -->
-        <script type="text/javascript" src="/services/v4/web/ide-core/core/message-hub.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/core/ide-message-hub.js"></script>
-
-        <!-- IDE Core -->
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/theming.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/widgets.js"></script>
         <script type="text/javascript" src="/services/v4/web/ide-core/ui/editors.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/view.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/core/uri-builder.js"></script>
 
         <!-- Services -->
         <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
@@ -60,6 +39,8 @@
         <script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
         <script type="text/javascript" src="/services/v4/web/ide-core/ui/widgets/indicator.plugin.js"></script>
         <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/jstree.css" />
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
 
         <!-- Project-specific stuff -->
         <script type="text/javascript" src="js/projects.js"></script>
@@ -110,9 +91,9 @@
                 <fd-button compact="true" dg-type="transparent" dg-label="Duplicate project" glyph="sap-icon--duplicate"
                     is-overflow="true" ng-click="duplicateProject()">
                 </fd-button>
-                <fd-button compact="true" dg-type="transparent" dg-label="Link project" glyph="sap-icon--chain-link"
+                <!-- <fd-button compact="true" dg-type="transparent" dg-label="Link project" glyph="sap-icon--chain-link"
                     is-overflow="true" ng-click="linkProject()">
-                </fd-button>
+                </fd-button> -->
                 <fd-button compact="true" dg-type="transparent" dg-label="Export projects"
                     glyph="sap-icon--download-from-cloud" is-overflow="true" ng-click="exportProjects()">
                 </fd-button>
@@ -120,7 +101,7 @@
         </fd-toolbar>
 
         <fd-toolbar dg-size="cozy" ng-show="searchVisible">
-            <fd-input type="text" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
+            <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
         </fd-toolbar>
 
         <div id="dgProjects" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"

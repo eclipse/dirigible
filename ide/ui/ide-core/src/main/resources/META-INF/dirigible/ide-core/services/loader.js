@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var request = require("http/v4/request");
-var response = require("http/v4/response");
-var registry = require("platform/v4/registry");
+let request = require("http/v4/request");
+let response = require("http/v4/response");
+let registry = require("platform/v4/registry");
 
 let id = request.getParameter("id");
 if (id) {
@@ -28,7 +28,8 @@ if (id) {
             "/ide-core/core/ide-message-hub.js",
             "/ide-core/ui/theming.js",
             "/ide-core/ui/widgets.js",
-            "/ide-core/ui/view.js"
+            "/ide-core/ui/view.js",
+            "/ide-core/core/uri-builder.js"
         ]
     );
 

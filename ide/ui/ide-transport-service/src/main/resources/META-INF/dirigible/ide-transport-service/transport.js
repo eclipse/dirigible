@@ -25,9 +25,14 @@ angular.module('ideTransport', [])
                 return new UriBuilder().path(this.transportServiceUrl.split('/')).path('project').build();
             }.bind(this);
 
+            let getZipImportUrl = function () {
+                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('zipimport').build();
+            }.bind(this);
+
             return {
                 exportProject: exportProject,
                 getProjectImportUrl: getProjectImportUrl,
+                getZipImportUrl: getZipImportUrl,
             };
         }];
     });
