@@ -53,6 +53,7 @@ public class GitFileUtils {
 
 	public static final String SLASH = "/"; //$NON-NLS-1$
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
@@ -354,7 +355,23 @@ public class GitFileUtils {
 	 * @return the directory
 	 */
 	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-		return FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		if (gitDirectoryByRepositoryName == null) {
+			return getGitDeepDirectoryByRepositoryName(UserFacade.getName(), workspace, repositoryName);
+		}
+		return gitDirectoryByRepositoryName;
+	}
+	
+	/**
+	 * Get the directory for git for deep projects
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository URI
+	 * @return the directory
+	 */
+	private static File getGitDeepDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
+		return FileSystemUtils.getGitDeepDirectoryByRepositoryName(user, workspace, repositoryName);
 	}
 
 	/**

@@ -20,6 +20,7 @@ import org.eclipse.dirigible.core.workspace.api.ProjectStatus;
 import org.eclipse.dirigible.core.workspace.api.Status;
 import org.eclipse.dirigible.repository.api.ICollection;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 
@@ -93,17 +94,7 @@ public class WorkspaceJsonHelper {
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 
-		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
-
-		projectPojo.setGit(gitInfo.getLeft());
-		projectPojo.setGitName(gitInfo.getRight());
-		ProjectStatus status = null;
-		if (gitInfo.getLeft()) {
-			for (IProjectStatusProvider statusProvider : statusProviders) {
-				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
-				break;
-			}
-		}
+		ProjectStatus status = getProjectStatus(collection, projectPojo, repositoryPath);
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -116,6 +107,21 @@ public class WorkspaceJsonHelper {
 		}
 
 		return projectPojo;
+	}
+
+	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo,
+			RepositoryPath repositoryPath) {
+		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
+		projectPojo.setGit(gitInfo.getLeft());
+		projectPojo.setGitName(gitInfo.getRight());
+		ProjectStatus status = null;
+		if (gitInfo.getLeft()) {
+			for (IProjectStatusProvider statusProvider : statusProviders) {
+				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
+				break;
+			}
+		}
+		return status;
 	}
 	
 	/**
@@ -154,7 +160,23 @@ public class WorkspaceJsonHelper {
 	 * @return the folder descriptor
 	 */
 	public static FolderDescriptor describeFolder(ICollection collection, String removePathPrefix, String addPathPrefix) {
-		return describeFolder(collection, removePathPrefix, addPathPrefix, null);
+		ProjectDescriptor projectPojo = getProjectForStatus(collection, removePathPrefix, addPathPrefix);
+		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
+		
+		ProjectStatus status = getProjectStatus(collection.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
+		return describeFolder(collection, removePathPrefix, addPathPrefix, status);
+	}
+
+	private static ProjectDescriptor getProjectForStatus(ICollection collection, String removePathPrefix,
+			String addPathPrefix) {
+		String path = collection.getPath().substring(removePathPrefix.length());
+		String[] paths = path.split(IRepositoryStructure.SEPARATOR);
+		String workspaceName = paths[1];
+		String projectName = paths[2];
+		ProjectDescriptor projectPojo = new ProjectDescriptor();
+		projectPojo.setName(projectName);
+		projectPojo.setPath(addPathPrefix + IRepositoryStructure.SEPARATOR + workspaceName + IRepositoryStructure.SEPARATOR + projectName);
+		return projectPojo;
 	}
 
 	/**
@@ -208,7 +230,11 @@ public class WorkspaceJsonHelper {
 	 * @return the file descriptor
 	 */
 	public static FileDescriptor describeFile(IResource resource, String removePathPrefix, String addPathPrefix) {
-		return describeFile(resource, removePathPrefix, addPathPrefix, null);
+		ProjectDescriptor projectPojo = getProjectForStatus(resource.getParent(), removePathPrefix, addPathPrefix);
+		RepositoryPath repositoryPath = new RepositoryPath(removePathPrefix + projectPojo.getPath());
+		
+		ProjectStatus status = getProjectStatus(resource.getRepository().getCollection(repositoryPath.toString()), projectPojo, repositoryPath);
+		return describeFile(resource, removePathPrefix, addPathPrefix, status);
 	}
 	
 	/**

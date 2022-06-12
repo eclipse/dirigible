@@ -11,9 +11,19 @@
  */
 package org.eclipse.dirigible.core.workspace.api;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ProjectStatus {
+	
+	private static final String DIRIGIBLE_FOLDER = "/dirigible/";
+
+	private static final Logger logger = LoggerFactory.getLogger(ProjectStatus.class);
+	
+	private String project;
 	
 	private Set<String> added;
 	
@@ -31,17 +41,22 @@ public class ProjectStatus {
 	
 	private Set<String> untrackedFolders;
 
-	public ProjectStatus(Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
+	public ProjectStatus(String project, Set<String> added, Set<String> changed, Set<String> removed, Set<String> missing,
 			Set<String> modified, Set<String> conflicting, Set<String> untracked, Set<String> untrackedFolders) {
 		super();
-		this.added = added;
-		this.changed = changed;
-		this.removed = removed;
-		this.missing = missing;
-		this.modified = modified;
-		this.conflicting = conflicting;
-		this.untracked = untracked;
-		this.untrackedFolders = untrackedFolders;
+		this.project = project;
+		this.added = remapFilesIfNeeded(added, project);
+		this.changed = remapFilesIfNeeded(changed, project);
+		this.removed = remapFilesIfNeeded(removed, project);
+		this.missing = remapFilesIfNeeded(missing, project);
+		this.modified = remapFilesIfNeeded(modified, project);
+		this.conflicting = remapFilesIfNeeded(conflicting, project);
+		this.untracked = remapFilesIfNeeded(untracked, project);
+		this.untrackedFolders = remapFilesIfNeeded(untrackedFolders, project);
+	}
+	
+	public String getProject() {
+		return project;
 	}
 
 	public Set<String> getAdded() {
@@ -74,6 +89,26 @@ public class ProjectStatus {
 	
 	public Set<String> getUntrackedFolders() {
 		return untrackedFolders;
+	}
+	
+	private Set<String> remapFilesIfNeeded(Set<String> originals, String project) {
+		Set<String> result = new HashSet<String>();
+		for (String original : originals) {
+			if (original.startsWith(project)) {
+				result.add(original);
+			} else {
+				String search = DIRIGIBLE_FOLDER + project;
+				int index = original.indexOf(search);
+				if (index > 0) {
+					result.add(original.substring(index + DIRIGIBLE_FOLDER.length()));
+				} else {
+					logger.error("Wrong layout of project: " + project);
+					result.add(original);
+					
+				}
+			}
+		}
+		return result;
 	}
 
 }

@@ -47,16 +47,19 @@ import org.slf4j.LoggerFactory;
  */
 public class FileSystemUtils {
 
+	private static final String FOLDER_TARGET = "target";
+	private static final String PREFIX_DOT = ".";
+	private static final String PROJECT_JSON = "project.json";
 	private static final Logger logger = LoggerFactory.getLogger(FileSystemUtils.class);
 	private static final String SEPARATOR = "/";
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
-	public static final String PROJECT_METADATA_FILE_NAME = "project.json"; //$NON-NLS-1$
+	public static final String PROJECT_METADATA_FILE_NAME = PROJECT_JSON; //$NON-NLS-1$
 
 	private static String GIT_ROOT_FOLDER;
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
 	private static final String DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER = "DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER"; //$NON-NLS-1$
 	private static final String REPOSITORY_GIT_FOLDER = "dirigible" + File.separator + "repository" + File.separator + DOT_GIT;
-	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = "target" + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
+	private static final String DEFAULT_DIRIGIBLE_GIT_ROOT_FOLDER = FOLDER_TARGET + File.separator + REPOSITORY_GIT_FOLDER; //$NON-NLS-1$
 
 	static {
 		if (!StringUtils.isEmpty(Configuration.get(DIRIGIBLE_GIT_ROOT_FOLDER))) {
@@ -152,8 +155,8 @@ public class FileSystemUtils {
 			String fileTitle = "";
 			String fileExt = "";
 			if (fileName.indexOf('.') != -1) {
-				fileTitle = fileName.substring(0, fileName.lastIndexOf("."));
-				fileExt = fileName.substring(fileName.lastIndexOf("."));
+				fileTitle = fileName.substring(0, fileName.lastIndexOf(PREFIX_DOT));
+				fileExt = fileName.substring(fileName.lastIndexOf(PREFIX_DOT));
 			} else {
 				fileTitle = fileName;
 			}
@@ -568,7 +571,67 @@ public class FileSystemUtils {
 	 * @return the directory
 	 */
 	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-		return FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+		File directGitDirectory = FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace, repositoryName);
+		return directGitDirectory;
+	}
+	
+	/**
+	 * Get the directory for git for deep projects
+	 *
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository URI
+	 * @return the directory
+	 */
+	public static File getGitDeepDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
+		File workspaceGitDirectory = FileSystemUtils.getDirectory(GIT_ROOT_FOLDER, user, workspace);
+		if (workspaceGitDirectory == null) {
+			return null;
+		}
+		File[] files = workspaceGitDirectory.listFiles();
+		for (File child : files) {
+			if (child.isDirectory()) {
+				File foundMaybe = checkSubfolder(child, repositoryName);
+				if (foundMaybe != null) {
+					return foundMaybe;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private static File checkSubfolder(File rootFolder, String repositoryName) {
+		if (rootFolder.getName().startsWith(PREFIX_DOT)
+				|| rootFolder.getName().equals(FOLDER_TARGET)) {
+			return null;
+		}
+		if (rootFolder.getName().equals(repositoryName)) {
+			File[] rootFiles = rootFolder.listFiles();
+			for (File projectMaybe : rootFiles) {
+				if (projectMaybe.isFile()) {
+					if (projectMaybe.getName().equals(PROJECT_JSON)) {
+						return projectMaybe.getParentFile();
+					}
+				} else {
+					File foundMaybe = checkSubfolder(projectMaybe, repositoryName);
+					if (foundMaybe != null) {
+						return foundMaybe;
+					}
+				}
+			}
+		} else {
+			File[] rootFiles = rootFolder.listFiles();
+			for (File projectMaybe : rootFiles) {
+				if (projectMaybe.isDirectory()) {
+					File foundMaybe = checkSubfolder(projectMaybe, repositoryName);
+					if (foundMaybe != null) {
+						return foundMaybe;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static List<String> getGitRepositoryProjects(String user, String workspace, String repositoryName) {
@@ -596,7 +659,7 @@ public class FileSystemUtils {
         if (gitProjects.isEmpty()) {
             File[] gitRepositoryRootFolders = gitRepository.listFiles();
             for (File next : gitRepositoryRootFolders) {
-                if (next.exists() && next.isDirectory() && !next.getName().startsWith(".")) {
+                if (next.exists() && next.isDirectory() && !next.getName().startsWith(PREFIX_DOT)) {
                     gitProjects.add(next);
                 }
             }

@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.core.git.project;
 
 import java.io.File;
-import java.nio.file.Paths;
 
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
@@ -23,6 +22,8 @@ import org.eclipse.dirigible.repository.fs.FileSystemRepository;
  * Verify that the given project is Git aware.
  */
 public class ProjectPropertiesVerifier {
+	
+	private static final String DOT_GIT = ".git";
 
 	/** The repository. */
 	private IRepository repository = null;
@@ -47,8 +48,7 @@ public class ProjectPropertiesVerifier {
 		try {
 			if (getRepository() instanceof FileSystemRepository) {
 				File gitRepository = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repositoryName);
-				String gitDirectory = gitRepository.getCanonicalPath();
-				return Paths.get(Paths.get(gitDirectory).toString(), ".git").toFile().exists();
+				return (gitRepository != null);
 			}
 		} catch (Exception e) {
 			// do nothing
