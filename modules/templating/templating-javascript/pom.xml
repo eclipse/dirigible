@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-templating-parent</artifactId>
-		<version>6.3.0</version>
+		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,36 +34,36 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-templating</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine-javascript-graalvm</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-core</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-javascript-core</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-repository-local</artifactId>
-			<version>6.3.0</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     </dependencies>
