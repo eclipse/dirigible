@@ -129,7 +129,7 @@
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-test</artifactId>
-			<version>0.5.4</version>
+			<version>0.7.1</version>
 		</dependency>
 		<!-- / Etcd dependencies -->
 
