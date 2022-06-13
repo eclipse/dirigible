@@ -45,6 +45,8 @@ angular.module('page', [])
 			getViewParameters();
 			contents = loadContents($scope.file);
 			$scope.job = JSON.parse(contents);
+			if (!$scope.job.parameters)
+				$scope.job.parameters = [];
 		}
 
 		load();
@@ -78,5 +80,65 @@ angular.module('page', [])
 				messageHub.post({ data: $scope.file }, 'editor.file.dirty');
 			}
 		});
+
+		$scope.types = [
+			{ "key": "string", "label": "string" },
+			{ "key": "number", "label": "number" },
+			{ "key": "boolean", "label": "boolean" }
+		];
+
+		$scope.openNewDialog = function () {
+			$scope.actionType = 'new';
+			$scope.entity = {};
+			$scope.entity.type = "string";
+			toggleEntityModal();
+		};
+
+		$scope.openEditDialog = function (entity) {
+			$scope.actionType = 'update';
+			$scope.entity = entity;
+			toggleEntityModal();
+		};
+
+		$scope.openDeleteDialog = function (entity) {
+			$scope.actionType = 'delete';
+			$scope.entity = entity;
+			toggleEntityModal();
+		};
+
+		$scope.close = function () {
+			load();
+			toggleEntityModal();
+		};
+
+		$scope.create = function () {
+			let exists = $scope.job.parameters.filter(function (e) {
+				return e.name === $scope.entity.name;
+			});
+			if (exists.length === 0) {
+				$scope.job.parameters.push($scope.entity);
+				toggleEntityModal();
+			} else {
+				$scope.error = "Parameter with a name [" + $scope.entity.name + "] already exists!";
+			}
+		};
+
+		$scope.update = function () {
+			// auto-wired
+			toggleEntityModal();
+		};
+
+		$scope.delete = function () {
+			$scope.job.parameters = $scope.job.parameters.filter(function (e) {
+				return e !== $scope.entity;
+			});
+			toggleEntityModal();
+		};
+
+
+		function toggleEntityModal() {
+			$('#entityModal').modal('toggle');
+			$scope.error = null;
+		}
 
 	});
