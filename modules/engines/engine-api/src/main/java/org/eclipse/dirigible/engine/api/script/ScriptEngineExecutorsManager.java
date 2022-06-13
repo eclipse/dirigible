@@ -19,11 +19,16 @@ import java.util.Set;
 import org.eclipse.dirigible.commons.api.context.ThreadContextFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Script Engine Executors Manager.
  */
 public class ScriptEngineExecutorsManager {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ScriptEngineExecutorsManager.class);
 
     /**
      * Execute service module.
@@ -39,8 +44,14 @@ public class ScriptEngineExecutorsManager {
         if (scriptEngineExecutor != null) {
             try {
                 ThreadContextFacade.setUp();
-
-                return scriptEngineExecutor.executeServiceModule(module, executionContext);
+                if (scriptEngineExecutor.existsModule(IRepositoryStructure.PATH_REGISTRY_PUBLIC, module)) {
+                	return scriptEngineExecutor.executeServiceModule(module, executionContext);
+                } else {
+                	String notFound = format("Script Module [{0}] does not exist, hence cannot be processed", module);
+                	logger.error(notFound);
+//					throw new ScriptingException(notFound);
+                	return null;
+                }
             } finally {
                 ThreadContextFacade.tearDown();
             }
