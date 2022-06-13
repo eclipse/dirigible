@@ -11,6 +11,7 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.olingo.odata2.api.batch.BatchHandler;
 import org.apache.olingo.odata2.api.batch.BatchRequestPart;
 import org.apache.olingo.odata2.api.batch.BatchResponsePart;
@@ -172,7 +173,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         return ExpandCallBack.writeEntryWithExpand(getContext(), (UriInfo) uriInfo, currentAccumulator, contentType);
     }
 
-
     @Override
     public ODataResponse readEntitySet(final GetEntitySetUriInfo uriInfo, final String contentType)
             throws ODataException {
@@ -247,7 +247,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         }
         return idsOfLeadingEntities;
     }
-
 
     /**
      * Generates the next link for server-side paging. The next-link is based on the
@@ -343,7 +342,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                 }
             }
         } catch (Exception e) {
-            throw new ODataException("Unable to create entity", e);
+            throw new ODataException("Unable to create entity. " + ExceptionUtils.getRootCauseMessage(e), e);
         }
 
         try {
@@ -450,7 +449,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, handlerContext);
             return response;
         } catch (Exception e) {
-            throw new ODataException("Unable to delete entry", e);
+            throw new ODataException("Unable to delete entry. " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
 
@@ -515,7 +514,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
             return response;
         } catch (Exception e) {
-            throw new ODataException("Unable to update entity", e);
+            throw new ODataException("Unable to update entity. " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
 
