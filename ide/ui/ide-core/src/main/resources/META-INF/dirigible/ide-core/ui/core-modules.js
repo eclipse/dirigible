@@ -950,7 +950,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     }
                     if (element[0].classList.contains("dg-hidden"))
                         element[0].classList.remove("dg-hidden");
-                    ideDialogWindow.classList.add("fd-message-box--active");
+                    ideDialogWindow.classList.add("fd-dialog--active");
                     scope.activeDialog = 'window';
                 };
 

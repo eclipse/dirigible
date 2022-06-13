@@ -48,6 +48,10 @@ projectsView.controller('ProjectsViewController', [
         $scope.modelFileExts = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
         $scope.selectedWorkspace = JSON.parse(localStorage.getItem('DIRIGIBLE.workspace') || '{}');
+        if (!$scope.selectedWorkspace.name) {
+            $scope.selectedWorkspace = { name: 'workspace' }; // Default
+            saveSelectedWorkspace();
+        }
 
         $scope.projects = [];
 
@@ -82,22 +86,30 @@ projectsView.controller('ProjectsViewController', [
                     return true;
                 },
             },
-            state: { "key": "ideWorkspace" },
+            state: { key: 'ide-projects' },
             types: {
+                '#': {
+                    valid_children: ["project"]
+                },
                 "default": {
-                    icon: "sap-icon--question-mark"
+                    icon: "sap-icon--question-mark",
+                    valid_children: [],
                 },
                 file: {
-                    icon: "jstree-file"
+                    icon: "jstree-file",
+                    valid_children: [],
                 },
                 folder: {
-                    icon: "jstree-folder"
+                    icon: "jstree-folder",
+                    valid_children: ['folder', 'file', 'spinner'],
                 },
                 project: {
-                    icon: "jstree-project"
+                    icon: "jstree-project",
+                    valid_children: ['folder', 'file', 'spinner'],
                 },
                 spinner: {
-                    icon: "jstree-spinner"
+                    icon: "jstree-spinner",
+                    valid_children: [],
                 },
             },
         };
@@ -164,7 +176,7 @@ projectsView.controller('ProjectsViewController', [
                 workspace = parent.data.workspace;
                 path = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
                 copyObj.node.data = {
-                    path: path,
+                    path: path + copyObj.node.text,
                     contentType: copyObj.original.data.contentType,
                     workspace: workspace,
                 };
@@ -175,6 +187,13 @@ projectsView.controller('ProjectsViewController', [
                     workspace,
                 ).then(function (response) {
                     if (response.status === 201) {
+                        for (let i = 0; i < parent.children.length; i++) { // Temp solution
+                            let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
+                            if (node.text === copyObj.node.text && node.id !== copyObj.node.id) {
+                                $scope.reloadWorkspace();
+                                return;
+                            }
+                        }
                         $scope.jstreeWidget.jstree(true).show_node(copyObj.node);
                     } else {
                         copyObj.node.state.failedCopy = true;
@@ -188,8 +207,21 @@ projectsView.controller('ProjectsViewController', [
 
         $scope.jstreeWidget.on('move_node.jstree', function (event, moveObj) {
             if (!moveObj.node.state.failedMove) {
-                $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
                 let parent = $scope.jstreeWidget.jstree(true).get_node(moveObj.parent);
+                for (let i = 0; i < parent.children.length; i++) { // Temp solution
+                    let node = $scope.jstreeWidget.jstree(true).get_node(parent.children[i]);
+                    if (node.text === moveObj.node.text && node.id !== moveObj.node.id) {
+                        moveObj.node.state.failedMove = true;
+                        $scope.jstreeWidget.jstree(true).move_node(
+                            moveObj.node,
+                            $scope.jstreeWidget.jstree(true).get_node(moveObj.old_parent),
+                            moveObj.old_position,
+                        );
+                        messageHub.showAlertError('Could not move file', 'The destination contains a file with the same name.');
+                        return;
+                    }
+                }
+                $scope.jstreeWidget.jstree(true).hide_node(moveObj.node);
                 let spinnerId = showSpinner(parent);
                 workspaceApi.move(
                     moveObj.node.data.path,
@@ -201,7 +233,7 @@ projectsView.controller('ProjectsViewController', [
                         moveObj.node.data.workspace = parent.data.workspace;
                         $scope.jstreeWidget.jstree(true).show_node(moveObj.node);
                     } else {
-                        data.node.state.failedMove = true;
+                        moveObj.node.state.failedMove = true;
                         messageHub.setStatusError(`Unable to move '${moveObj.node.text}'.`);
                         $scope.jstreeWidget.jstree(true).move_node(
                             moveObj.node,
@@ -273,9 +305,15 @@ projectsView.controller('ProjectsViewController', [
                         callbackTopic: "projects.tree.contextmenu",
                         items: [
                             {
+                                id: "newProject",
+                                label: "New Project",
+                                icon: "sap-icon--create",
+                            },
+                            {
                                 id: "publishAll",
                                 label: "Publish All",
                                 icon: "sap-icon--arrow-top",
+                                divider: true,
                             },
                             {
                                 id: "unpublishAll",
@@ -290,6 +328,8 @@ projectsView.controller('ProjectsViewController', [
                             }
                         ]
                     }
+                } else {
+                    id = element.id;
                 }
                 if (id) {
                     let node = $scope.jstreeWidget.jstree(true).get_node(id);
@@ -677,6 +717,7 @@ projectsView.controller('ProjectsViewController', [
 
         $scope.duplicateProject = function (node) {
             let title = 'Duplicate project';
+            let projectName = '';
             let workspaces = [];
             for (let i = 0; i < $scope.workspaceNames.length; i++) {
                 workspaces.push({
@@ -711,6 +752,7 @@ projectsView.controller('ProjectsViewController', [
                     items: projectNames,
                 });
             } else {
+                projectName = `${node.text} 2`;
                 $scope.duplicateProjectData.originalPath = node.data.path;
                 $scope.duplicateProjectData.originalWorkspace = node.data.workspace;
                 title = `Duplicate project '${node.text}'`;
@@ -722,7 +764,7 @@ projectsView.controller('ProjectsViewController', [
                 required: true,
                 placeholder: "project name",
                 pattern: '^[^/]*$',
-                value: node.text || '',
+                value: projectName,
             });
             messageHub.showFormDialog(
                 'duplicateProjectForm',
@@ -1285,6 +1327,8 @@ projectsView.controller('ProjectsViewController', [
                     $scope.jstreeWidget.jstree(true).copy(msg.data.data);
                 } else if (msg.data.itemId === 'paste') {
                     $scope.jstreeWidget.jstree(true).paste(msg.data.data);
+                } else if (msg.data.itemId === 'newProject') {
+                    $scope.createProject();
                 } else if (msg.data.itemId === 'duplicateProject') {
                     $scope.duplicateProject(msg.data.data);
                 } else if (msg.data.itemId === 'exportProjects') {
@@ -1472,11 +1516,6 @@ projectsView.controller('ProjectsViewController', [
         );
 
         // Initialization
-
-        if (!$scope.selectedWorkspace.name) {
-            $scope.selectedWorkspace = { name: 'workspace' }; // Default
-            saveSelectedWorkspace();
-        }
         $scope.reloadWorkspace(true);
         $scope.reloadWorkspaceList();
         $scope.loadTemplates();

@@ -111,8 +111,7 @@
                         </thead>
                         <tbody fd-table-body>
                             <tr fd-table-row ng-repeat="next in problems.problemsList track by next.id" hoverable="true"
-                                activable="false" dg-selected="next.selected"
-                                ng-dblclick="problems.openFile(next.location)">
+                                activable="false" dg-selected="next.selected">
                                 <td fd-table-cell content-type="checkbox">
                                     <fd-checkbox compact="true" id="cb-{{next.id}}" ng-model="next.selected"
                                         ng-change="problems.selectionChanged()"></fd-checkbox>

@@ -13,6 +13,7 @@ angular.module('ideWorkspace', [])
     .provider('workspaceApi', function WorkspaceApiProvider() {
         this.workspacesServiceUrl = '/services/v4/ide/workspaces';
         this.workspaceManagerServiceUrl = '/services/v4/ide/workspace';
+        this.workspaceSearchServiceUrl = '/services/v4/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {
             let listWorkspaceNames = function () {
                 return $http.get(this.workspacesServiceUrl)
@@ -166,6 +167,17 @@ angular.module('ideWorkspace', [])
                     });
             }.bind(this);
 
+            let search = function (workspace, resourcePath, searchTerm) {
+                let url = new UriBuilder().path(this.workspaceSearchServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
+                return $http.post(url, searchTerm)
+                    .then(function successCallback(response) {
+                        return { status: response.status, data: response.data };
+                    }, function errorCallback(response) {
+                        console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }.bind(this);
+
             return {
                 listWorkspaceNames: listWorkspaceNames,
                 load: load,
@@ -179,6 +191,7 @@ angular.module('ideWorkspace', [])
                 createProject: createProject,
                 linkProject: linkProject,
                 deleteProject: deleteProject,
+                search: search,
             };
         }];
     });

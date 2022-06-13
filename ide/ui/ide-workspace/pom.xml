@@ -17,7 +17,6 @@
 		<profile.content.phase>generate-sources</profile.content.phase> 
 		<content.repository.name>ide-workspace</content.repository.name>
 		<content.project.name>ide-workspace</content.project.name>
-		<content.repository.branch>dg-next</content.repository.branch>
 
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>

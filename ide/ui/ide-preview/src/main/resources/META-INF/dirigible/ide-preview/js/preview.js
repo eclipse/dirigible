@@ -231,8 +231,4 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
             $scope.$apply();
         }
     });
-
-    // messageHub.onDidReceiveMessage('ide.themeChange', () => {
-    //     this.reload();
-    // }, true);
 }]);

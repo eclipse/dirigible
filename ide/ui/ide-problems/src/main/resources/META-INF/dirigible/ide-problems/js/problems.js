@@ -144,11 +144,11 @@ problemsView.controller('ProblemsController', ['$http', '$timeout', 'messageHub'
         }
     }
 
-    this.openFile = function (fullPath) {
-        const fullName = fullPath.split("/").pop();
-        const [name, extension] = fullName.split('.');
-        messageHub.openEditor("/workspace" + fullPath, fullName, extension);
-    }
+    // this.openFile = function (fullPath) {
+    //     const fullName = fullPath.split("/").pop();
+    //     const [name, extension] = fullName.split('.');
+    //     messageHub.openEditor("/workspace" + fullPath, fullName, extension);
+    // }
 
     this.showInfo = function (problem) {
         messageHub.showDialogWindow(

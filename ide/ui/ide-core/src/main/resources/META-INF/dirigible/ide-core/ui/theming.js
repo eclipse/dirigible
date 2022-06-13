@@ -9,7 +9,7 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
             $http.get('/services/v4/js/theme/resources.js/themes?legacy=false')
                 .then(function (response) {
                     themes = response.data;
-                    if (!theme.version) setTheme("quartz-light");
+                    if (!theme.version) setTheme("quartz-light"); // Default theme
                     else {
                         for (let i = 0; i < themes.length; i++) {
                             if (themes[i].id === theme.id) {
@@ -58,8 +58,8 @@ angular.module('ideTheming', ['ngResource', 'ideMessageHub'])
                 },
                 getCurrentTheme: function () {
                     return {
-                        "id": theme["id"],
-                        "name": theme["name"],
+                        id: theme["id"] || 'quartz-light',
+                        name: theme["name"] || 'Quartz Light',
                     };
                 },
                 reset: function () {

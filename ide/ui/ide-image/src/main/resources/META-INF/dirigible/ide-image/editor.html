@@ -8,24 +8,42 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="image-app" ng-controller="ImageViewController">
 
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+		<title dg-view-title></title>
+		<script type="text/javascript" src="/services/v4/web/ide-image/services/image-editor.js"></script>
 		<script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
 		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-		<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-		<!-- Project-specific stuff -->
+		<script type="text/javascript" src="/webjars/angular-aria/1.8.2/angular-aria.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.23.0/dist/fundamental-styles.css">
+		<theme></theme>
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
+		<link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/widgets.css" />
+		<script type="text/javascript" src="/services/v4/web/ide-core/core/message-hub.js"></script>
+		<script type="text/javascript" src="/services/v4/web/ide-core/core/ide-message-hub.js"></script>
+		<script type="text/javascript" src="/services/v4/web/ide-core/ui/theming.js"></script>
+		<script type="text/javascript" src="/services/v4/web/ide-core/ui/widgets.js"></script>
+		<script type="text/javascript" src="/services/v4/web/ide-core/ui/view.js"></script>
 		<script type="text/javascript" src="js/editor.js"></script>
 	</head>
 
-	<body ng-app="image-app" ng-controller="ImageViewController" class="view flex-center">
-		<img id="image-view" class="checkered contain-image" ng-src="{{imageLink}}" alt="Image" ng-show="dataLoaded" />
+	<body class="fd-scrollbar dg-center">
+		<div class="fd-busy-indicator-extended" ng-hide="dataLoaded">
+			<div class="fd-busy-indicator fd-busy-indicator--l" aria-hidden="false" aria-label="Loading">
+				<div class="fd-busy-indicator--circle-0"></div>
+				<div class="fd-busy-indicator--circle-1"></div>
+				<div class="fd-busy-indicator--circle-2"></div>
+			</div>
+			<div class="fd-busy-indicator-extended__label">Loading image...</div>
+		</div>
+
+		<img id="image-view" class="dg-checkered-bg dg-contain-image" ng-src="{{ imageLink }}" alt="Image"
+			ng-show="dataLoaded" />
 	</body>
 
 </html>

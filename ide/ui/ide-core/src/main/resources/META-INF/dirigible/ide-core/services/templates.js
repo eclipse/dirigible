@@ -29,8 +29,26 @@ rs.service()
 		let templates = getTemplates();
 		let fileExtensions = [];
 		templates.forEach(template => { if (template.extension) fileExtensions.push(template.extension); });
-		response.setContentType("application/json");
-		response.println(JSON.stringify(fileExtensions));
+		let uniqueFileExtensions = [...new Set(fileExtensions)]
+    response.setContentType("application/json");
+		response.println(JSON.stringify(uniqueFileExtensions));
+	})
+	.resource("count")
+	.get(function (ctx, request, response) {
+		let templates = getTemplates();
+		let count = 0;
+		templates.forEach(template => { if (!template.extension) count++; });
+    response.setContentType("application/json");
+		response.println(JSON.stringify(count));
+	})
+	.resource("countFileTemplates")
+	.get(function (ctx, request, response) {
+		let templates = getTemplates();
+		let count = 0;
+		templates.forEach(template => { if (template.extension) count++; });
+    response.setContentType("application/json");
+		response.println(JSON.stringify(count));
+
 	})
 	.execute();
 

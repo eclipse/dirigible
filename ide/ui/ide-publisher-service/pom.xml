@@ -17,7 +17,6 @@
 		<profile.content.phase>generate-sources</profile.content.phase>
 		<content.repository.name>ide-publisher-service</content.repository.name>
 		<content.project.name>ide-publisher-service</content.project.name>
-        <content.repository.branch>master</content.repository.branch>
 
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
