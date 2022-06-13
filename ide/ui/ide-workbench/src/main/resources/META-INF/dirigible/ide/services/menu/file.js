@@ -11,69 +11,51 @@
  */
 exports.getMenu = function () {
 	return {
-		"name": "File",
-		"link": "#",
-		"order": "100",
-		"items": [
+		label: "File",
+		order: 1,
+		items: [
 			{
-				"name": "New",
-				"link": "#",
-				"order": "101",
-				"event": "",
-				"data": "",
-				"items": [
+				label: "New",
+				order: 1,
+				items: [
 					{
-						"name": "Project",
-						"link": "#",
-						"order": "101",
-						"event": "workspace.create.project",
-						"data": ""
+						label: "Project",
+						order: 1,
+						event: "projects.create.project",
+						data: { isMenu: true },
 					},
-					{
-						"name": "Linked Project",
-						"link": "#",
-						"order": "102",
-						"event": "workspace.link.project",
-						"data": ""
-					},
-					{
-						"name": "Workspace",
-						"link": "#",
-						"order": "103",
-						"event": "workspace.create.workspace",
-						"data": ""
-					}
-				]
+					// {
+					// 	label: "Linked Project",
+					// 	order: 2,
+					// 	event: "projects.link.project",
+					// 	data: { isMenu: true },
+					// },
+				],
 			},
 			{
-				"name": "Publish All",
-				"link": "#",
-				"order": "102",
-				"event": "workspace.publish.all",
-				"data": ""
+				label: "Save All",
+				order: 2,
+				event: "editor.file.save.all",
+				divider: true,
 			},
 			{
-				"name": "Export All",
-				"link": "#",
-				"order": "103",
-				"event": "workspace.export.all",
-				"data": ""
+				label: "Publish All",
+				order: 3,
+				event: "projects.tree.contextmenu",
+				data: { itemId: "publishAll" },
 			},
 			{
-				"name": "Save All",
-				"link": "#",
-				"order": "105",
-				"event": "workbench.editor.save",
-				"data": "",
-				"divider": true
+				label: "Unpublish All",
+				order: 4,
+				event: "projects.tree.contextmenu",
+				divider: true,
+				data: { itemId: "unpublishAll" },
 			},
 			{
-				"name": "Exit",
-				"link": "/logout",
-				"order": "199",
-				"event": "workbench.editor.save",
-				"data": ""
-			}
+				label: "Export All",
+				order: 5,
+				event: "projects.export.all",
+			},
 		]
 	};
 }

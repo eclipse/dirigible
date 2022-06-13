@@ -26,6 +26,14 @@
 		<module>ide-git</module>
 		<module>ide-preview</module>
 		<module>ide-problems</module>
+		<module>ide-projects</module>
+		<module>ide-publisher-service</module>
+		<module>ide-template-service</module>
+		<module>ide-transport-service</module>
+		<module>ide-workspace-service</module>
+		<module>ide-generate-service</module>
+		<module>ide-search</module>
+		<module>ide-import</module>
 		<module>ide-properties</module>
 		<module>ide-sql</module>
 		<module>ide-result</module>

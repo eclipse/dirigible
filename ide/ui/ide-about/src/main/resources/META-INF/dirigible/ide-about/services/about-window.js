@@ -9,10 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getDialogWindow = function () {
-    return {
-        "id": "about",
-        "title": "About",
-        "link": "../ide-about/about.html"
-    };
+const viewData = {
+    id: "about",
+    label: "About",
+    link: "../ide-about/about.html"
+};
+if (typeof exports !== 'undefined') {
+    exports.getDialogWindow = function () {
+        return viewData;
+    }
 }

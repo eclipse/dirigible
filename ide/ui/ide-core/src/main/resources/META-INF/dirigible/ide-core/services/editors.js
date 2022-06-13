@@ -48,12 +48,18 @@ for (let i = 0; editorExtensions != null && i < editorExtensions.length; i++) {
 }
 
 editors = editors.sort(function (a, b) {
-	if (a.defaultEditor) {
-		return -1;
-	} else if (b.defaultEditor) {
-		return 1;
+	if (a.label && b.label) {
+		const res = a.label.localeCompare(b.label);
+		if (res <= -1) return -1;
+		else if (res >= 1) return 1;
+	} else {
+		let eId;
+		if (!a.label) eId = a.id;
+		else eId = b.id;
+		console.error("Editor with id '" + eId + "' does not have a label.");
 	}
 	return 0;
 });
 
+response.setContentType("application/json");
 response.println(JSON.stringify(editors));

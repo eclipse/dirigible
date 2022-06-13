@@ -1,6 +1,7 @@
 let messageHub = new FramesMessageHub();
 let csrfToken;
-let dirty = false;
+let _dirty = false;
+let lastSavedVersionId;
 
 let modulesSuggestions = [];
 let codeCompletionSuggestions = {};
@@ -9,8 +10,9 @@ let _editor;
 let resourceApiUrl;
 let editorUrl;
 let gitApiUrl;
-let loadingOverview = document.getElementsByClassName('loading-overview')[0];
-let loadingMessage = document.getElementsByClassName('loading-message')[0];
+let headElement = document.getElementsByTagName('head')[0];
+let loadingOverview = document.getElementById('loadingOverview');
+let loadingMessage = document.getElementById('loadingMessage');
 let lineDecorations = [];
 let useParameters = false; // Temp boolean used for transitioning to new parameter method.
 let parameters = {
@@ -20,36 +22,29 @@ let parameters = {
     gitName: "",
     file: ""
 };
+let monacoTheme = 'vs-light';
 
-const computeNewLines = (oldText, newText, isWhitespaceIgnored = true) => {
-    if (oldText[oldText.length - 1] !== "\n" || newText[newText.length - 1] !== "\n") {
-        oldText += "\n";
-        newText += "\n"
-    }
-    let lineDiff;
-    if (isWhitespaceIgnored) {
-        lineDiff = Diff.diffTrimmedLines(oldText, newText)
-    } else {
-        lineDiff = Diff.diffLines(oldText, newText)
-    }
-    let addedCount = 0;
-    let addedLines = [];
-    lineDiff.forEach(part => {
-        let { added, removed, value } = part;
-        let count = value.split("\n").length - 1;
-        if (!added && !removed) {
-            addedCount += count
-        }
-        else
-            if (added) {
-                for (let i = 0; i < count; i++) {
-                    addedLines.push(addedCount + i + 1)
-                }
-                addedCount += count
+function setTheme(init = true) {
+    let theme = JSON.parse(localStorage.getItem('DIRIGIBLE.theme') || '{}');
+    if (theme.type === 'light') monacoTheme = 'vs-light';
+    else monacoTheme = 'vs-dark';
+    if (theme.links) {
+        if (!init) {
+            let themeLinks = headElement.querySelectorAll("link[data-type='theme']");
+            for (let i = 0; i < themeLinks.length; i++) {
+                headElement.removeChild(themeLinks[i]);
             }
-    });
-    return addedLines
-};
+        }
+        for (let i = 0; i < theme.links.length; i++) {
+            const link = document.createElement('link');
+            link.type = 'text/css';
+            link.href = theme.links[i];
+            link.rel = 'stylesheet';
+            link.setAttribute("data-type", "theme");
+            headElement.appendChild(link);
+        }
+    }
+}
 
 /*eslint-disable no-extend-native */
 String.prototype.replaceAll = function (search, replacement) {
@@ -189,7 +184,7 @@ function FileIO() {
                             let fileObject = JSON.parse(xhr.responseText);
                             resolve({
                                 isGit: true,
-                                git: fileObject.original || "", // Means it`s not in git
+                                git: fileObject.original || "", // File is not in git
                                 modified: fileObject.modified,
                             });
                         } else {
@@ -200,7 +195,10 @@ function FileIO() {
                             });
                         }
                     } else {
-                        reject(`HTTP ${xhr.status} - ${xhr.statusText}`)
+                        reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
+                        messageHub.post({
+                            message: `Error loading '${fileName}'`
+                        }, 'ide.status.error');
                     }
                     csrfToken = xhr.getResponseHeader("x-csrf-token");
                 };
@@ -216,22 +214,45 @@ function FileIO() {
         return new Promise((resolve, reject) => {
             fileName = fileName || this.resolveFileName();
             if (fileName) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('PUT', resourceApiUrl + fileName);
-                xhr.setRequestHeader('X-Requested-With', 'Fetch');
-                xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-                xhr.setRequestHeader('Dirigible-Editor', 'Monaco');
-                xhr.onload = () => resolve(fileName);
-                xhr.onerror = () => reject(xhr.statusText);
-                xhr.send(text);
-                messageHub.post({ data: fileName }, 'editor.file.saved');
-                messageHub.post({
-                    data: {
-                        path: fileName
+                fetch(resourceApiUrl + fileName, {
+                    method: 'PUT',
+                    body: text,
+                    headers: {
+                        'X-Requested-With': 'Fetch',
+                        'X-CSRF-Token': csrfToken,
+                        'Dirigible-Editor': 'Monaco'
                     }
-                }, 'workspace.file.selected');
-                messageHub.post({ data: 'File [' + fileName + '] saved.' }, 'status.message');
-                dirty = false;
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+
+                        resolve(fileName);
+                        let fileDescriptor = {
+                            name: fileName.substring(fileName.lastIndexOf('/') + 1),
+                            path: fileName.substring(fileName.indexOf('/', 1)),
+                            contentType: parameters.contentType,
+                            workspace: fileName.substring(1, fileName.indexOf('/', 1)),
+                        };
+                        if (parameters.gitName) {
+                            if (lineDecorations.length)
+                                fileDescriptor.status = 'modified';
+                            else fileDescriptor.status = 'unmodified';
+                        }
+                        messageHub.post({ resourcePath: fileName, isDirty: false }, 'ide-core.setEditorDirty');
+                        messageHub.post(fileDescriptor, 'ide.file.saved');
+                        messageHub.post({
+                            message: `File '${fileName}' saved`
+                        }, 'ide.status.message');
+                    })
+                    .catch(ex => {
+                        reject(ex.message);
+                        messageHub.post({
+                            message: `Error saving '${fileName}'`
+                        }, 'ide.status.error');
+                        // messageHub.post({ data: { file: fileName, error: ex.message } }, 'editor.file.save.failed');
+                    });
             } else {
                 reject('file query parameter is not present in the URL');
             }
@@ -284,7 +305,7 @@ function createEditorInstance(readOnly = false) {
                 window.onresize = function () {
                     editor.layout();
                 };
-                if (loadingOverview) loadingOverview.classList.add("hide");
+                if (loadingOverview) loadingOverview.classList.add("dg-hidden");
             } catch (err) {
                 reject(err);
             }
@@ -319,11 +340,14 @@ function createSaveAction() {
         // @param editor The editor instance is passed in as a convinience
         run: function (editor) {
             loadingMessage.innerText = 'Saving...';
-            if (loadingOverview) loadingOverview.classList.remove("hide");
+            if (loadingOverview) loadingOverview.classList.remove("dg-hidden");
             editor.getAction('editor.action.formatDocument').run().then(() => {
                 let fileIO = new FileIO();
-                fileIO.saveText(editor.getModel().getValue());
-                if (loadingOverview) loadingOverview.classList.add("hide");
+                fileIO.saveText(editor.getModel().getValue()).then(() => {
+                    lastSavedVersionId = editor.getModel().getAlternativeVersionId();
+                    _dirty = false;
+                });
+                if (loadingOverview) loadingOverview.classList.add("dg-hidden");
             });
         }
     };
@@ -465,6 +489,12 @@ function loadModuleSuggestions(modulesSuggestions) {
         let modules = JSON.parse(xhrModules.target.responseText);
         modules.forEach(e => modulesSuggestions.push(e));
     };
+    xhrModules.onerror = function (error) {
+        console.error('Error loading module suggestions', error);
+        messageHub.post({
+            message: 'Error loading module suggestions'
+        }, 'ide.status.error');
+    };
     xhrModules.send();
 }
 
@@ -480,6 +510,12 @@ function loadDTS() {
             let dtsContent = xhrModules.target.responseText;
             monaco.languages.typescript.javascriptDefaults.addExtraLib(dtsContent, "")
             window.sessionStorage.setItem('dtsContent', dtsContent);
+        };
+        xhrModules.onerror = function (error) {
+            console.error('Error loading DTS', error);
+            messageHub.post({
+                message: 'Error loading DTS'
+            }, 'ide.status.error');
         };
         xhrModules.send();
     }
@@ -502,6 +538,12 @@ function loadSuggestions(moduleName, suggestions) {
             let loadedSuggestions = JSON.parse(xhr.target.responseText);
             suggestions[moduleName] = loadedSuggestions;
         }
+    };
+    xhr.onerror = function (error) {
+        console.error('Error loading suggestions', error);
+        messageHub.post({
+            message: 'Error loading suggestions'
+        }, 'ide.status.error');
     };
     xhr.send();
 }
@@ -538,7 +580,12 @@ function traverseAssignment(assignment, assignmentInfo) {
     }
 }
 
+function isDirty(model) {
+    return lastSavedVersionId !== model.getAlternativeVersionId();
+}
+
 (function init() {
+    setTheme();
     setResourceApiUrl();
     require.config({
         paths: {
@@ -551,6 +598,11 @@ function traverseAssignment(assignment, assignmentInfo) {
 
     //@ts-ignore
     require(['vs/editor/editor.main', 'parser/acorn-loose'], function (monaco, acornLoose) {
+        messageHub.subscribe(function () {
+            setTheme(false);
+            monaco.editor.setTheme(monacoTheme);
+        }, 'ide.themeChange');
+
         let fileIO = new FileIO();
         let fileName = fileIO.resolveFileName();
         let readOnly = fileIO.isReadOnly();
@@ -584,11 +636,41 @@ function traverseAssignment(assignment, assignmentInfo) {
 
                             moduleImports.forEach(e => loadSuggestions(e.module, codeCompletionSuggestions));
 
-                            messageHub.subscribe(function () {
-                                if (dirty) {
-                                    fileIO.saveText(_editor.getModel().getValue());
+                            messageHub.subscribe(function (msg) {
+                                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                                if (file && file !== fileName)
+                                    return;
+
+                                let model = _editor.getModel();
+                                if (isDirty(model)) {
+                                    fileIO.saveText(model.getValue()).then(() => {
+                                        lastSavedVersionId = model.getAlternativeVersionId();
+                                        _dirty = false;
+                                    });
                                 }
-                            }, "workbench.editor.save");
+                            }, "editor.file.save");
+
+                            messageHub.subscribe(function () {
+                                let model = _editor.getModel();
+                                if (isDirty(model)) {
+                                    fileIO.saveText(model.getValue()).then(() => {
+                                        lastSavedVersionId = model.getAlternativeVersionId();
+                                        _dirty = false;
+                                    });
+                                }
+                            }, "editor.file.save.all");
+
+                            messageHub.subscribe(function (msg) {
+                                let file = msg.data.file;
+                                if (file !== fileName)
+                                    return;
+
+                                _editor.focus();
+                            }, "editor.focus.gain");
+
+                            _editor.onDidFocusEditorText(function () {
+                                messageHub.post({ data: { file: fileName } }, 'editor.focus.gained');
+                            });
 
                             _editor.onDidChangeModel(function () {
                                 if (_fileObject.isGit) {
@@ -599,6 +681,7 @@ function traverseAssignment(assignment, assignmentInfo) {
                                 }
                             });
                             let model = monaco.editor.createModel(fileText, fileType || 'text');
+                            lastSavedVersionId = model.getAlternativeVersionId();
                             _editor.setModel(model);
                             if (!readOnly) {
                                 _editor.addAction(createSaveAction());
@@ -608,8 +691,12 @@ function traverseAssignment(assignment, assignmentInfo) {
                             _editor.addAction(createCloseOthersAction());
                             _editor.addAction(createCloseAllAction());
                             _editor.onDidChangeCursorPosition(function (e) {
-                                let caretInfo = "Line " + e.position.lineNumber + " : Column " + e.position.column;
-                                messageHub.post({ data: caretInfo }, 'status.caret');
+                                messageHub.post(
+                                    {
+                                        text: `Line ${e.position.lineNumber} : Column ${e.position.column}`
+                                    },
+                                    'ide.status.caret',
+                                );
                             });
                             _editor.onDidChangeModelContent(function (e) {
                                 if (e.changes && e.changes[0].text === ".") {
@@ -623,9 +710,10 @@ function traverseAssignment(assignment, assignmentInfo) {
                                     );
                                 }
                                 let newModuleImports = getModuleImports(_editor.getValue());
-                                if (e && !dirty) {
-                                    dirty = true;
-                                    messageHub.post({ data: fileName }, 'editor.file.dirty');
+                                let dirty = isDirty(_editor.getModel());
+                                if (dirty !== _dirty) {
+                                    _dirty = dirty;
+                                    messageHub.post({ resourcePath: fileName, isDirty: dirty }, 'ide-core.setEditorDirty');
                                 }
                                 newModuleImports.forEach(function (module) {
                                     if (module.module.split("/").length > 0) {

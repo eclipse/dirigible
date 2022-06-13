@@ -1,0 +1,79 @@
+<div class="fd-tool-header fd-tool-header--menu">
+    <div class="fd-tool-header__group">
+        <header-hamburger-menu menu-handler="menuClick" menu-list="menu"></header-hamburger-menu>
+        <a class="fd-tool-header__element dg-header-logo" href="{{ branding.brandUrl }}">
+            <img class="fd-tool-header__logo" ng-src="{{ branding.logo }}" alt="" />
+        </a>
+        <a class="fd-tool-header__element" href="{{ branding.brandUrl }}" style="text-decoration: none">
+            <h4 class="fd-title fd-title--h5 fd-tool-header__title">{{ branding.brand }}</h4>
+        </a>
+        <header-menu menu-handler="menuClick" menu-list="menu"></header-menu>
+    </div>
+    <div class="fd-tool-header__group">
+        <div class="fd-tool-header__element dg-backdrop-element">
+            <button id="themePopoverButton"
+                class="fd-button fd-button--compact fd-button--transparent fd-button--menu fd-tool-header__button"
+                ng-click="themeButtonClicked()" aria-label="themes menu button" aria-controls="themePopover"
+                aria-expanded="false" aria-haspopup="true">
+                <span class="fd-button__text">Theme</span>
+                <i class="sap-icon--slim-arrow-down"></i>
+            </button>
+            <div class="fd-popover__body fd-popover__body--right fd-popover__body--no-arrow dg-fixed-menu dg-hidden"
+                aria-hidden="true" id="themePopover">
+                <div class="fd-popover__wrapper" style="max-height: 250px;">
+                    <nav class="fd-menu">
+                        <ul class="fd-menu__list" role="menu">
+                            <li class="fd-menu__item" role="presentation" ng-repeat="theme in themes">
+                                <a class="fd-menu__link" href="#" role="menuitem"
+                                    ng-click="setTheme(theme.id, theme.name)">
+                                    <span class="fd-menu__addon-before">
+                                        <i ng-if="theme.id === currentTheme.id" class="sap-icon--accept"
+                                            role="presentation"></i>
+                                    </span>
+                                    <span class="fd-menu__title">{{ theme.name }}</span>
+                                </a>
+                            </li>
+                            <span class="fd-menu__separator"></span>
+                            <li class="fd-menu__item" role="presentation">
+                                <a class="fd-menu__link" href="#" role="menuitem" ng-click="resetTheme()">
+                                    <span class="fd-menu__addon-before">
+                                        <i class="sap-icon--reset" role="presentation"></i>
+                                    </span>
+                                    <span class="fd-menu__title">Reset</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="fd-tool-header__element dg-backdrop-element">
+            <button id="userPopoverButton"
+                class="fd-button fd-button--compact fd-button--transparent fd-tool-header__button"
+                ng-click="userButtonClicked()" aria-label="user menu button" aria-controls="userPopover"
+                aria-expanded="false" aria-haspopup="true">
+                <i class="sap-icon--account" role="presentation"></i>
+                <span class="fd-button__text">{{ user.name }}</span>
+            </button>
+            <div class="fd-popover__body fd-popover__body--right fd-popover__body--no-arrow dg-fixed-menu dg-hidden"
+                aria-hidden="true" id="userPopover">
+                <div class="fd-popover__wrapper" style="max-height: 250px;">
+                    <nav class="fd-menu">
+                        <ul class="fd-menu__list" role="menu">
+                            <li class="fd-menu__item" role="presentation">
+                                <a class="fd-menu__link" href="/logout" role="menuitem" aria-label="logout"
+                                    ng-click="resetTheme()">
+                                    <span class="fd-menu__addon-before">
+                                        <i class="sap-icon--log" role="presentation"></i>
+                                    </span>
+                                    <span class="fd-menu__title">Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dg-menu__backdrop dg-hidden"></div>
+</div>

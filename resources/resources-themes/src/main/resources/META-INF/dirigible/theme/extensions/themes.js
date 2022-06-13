@@ -9,16 +9,19 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-var extensions = require('core/v4/extensions');
+let extensions = require('core/v4/extensions');
 
-exports.getThemes = function() {
-	var themes = [];
+exports.getThemes = function (legacy = true) {
+	let themes = [];
 	try {
-		var themeExtensions = extensions.getExtensions('ide-themes');
-		for (var i = 0; themeExtensions  !== null && i < themeExtensions .length; i++) {
-			var themeExtension = require(themeExtensions[i]);
-			var theme = themeExtension.getTheme();
-			themes.push(theme);
+		let themeExtensions = extensions.getExtensions('ide-themes');
+		for (let i = 0; themeExtensions !== null && i < themeExtensions.length; i++) {
+			let themeExtension = require(themeExtensions[i]);
+			let theme = themeExtension.getTheme();
+			if (legacy) {
+				if (!('type' in theme)) themes.push(theme);
+			}
+			else if ('type' in theme) themes.push(theme);
 		}
 		themes = sort(themes);
 	} catch (e) {
@@ -28,7 +31,7 @@ exports.getThemes = function() {
 };
 
 function sort(themes) {
-	return themes.sort(function(a, b) {
+	return themes.sort(function (a, b) {
 		if (a.order !== undefined && b.order !== undefined) {
 			return a.order - b.order;
 		} else if (a.order !== undefined) {

@@ -1,0 +1,8 @@
+{
+	"guid": "ide-workspace-service",
+	"repository": {
+		"type": "git",
+		"branch": "master",
+		"url": "https://github.com/dirigiblelabs/ide-workspace-service.git"
+	}
+}
