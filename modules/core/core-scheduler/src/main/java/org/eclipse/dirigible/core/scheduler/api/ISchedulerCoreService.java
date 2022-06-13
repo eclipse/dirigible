@@ -11,11 +11,13 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 
 /**
  * The Scheduler Core Service interface.
@@ -56,12 +58,14 @@ public interface ISchedulerCoreService extends ICoreService {
 	 *            the expression
 	 * @param singleton
 	 *            the singleton
+	 * @param parameters
+	 *            the parameters list
 	 * @return the job definition
 	 * @throws SchedulerException
 	 *             the scheduler exception
 	 */
 	public JobDefinition createJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException;
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException;
 
 	/**
 	 * Creates the job by definition.
@@ -114,11 +118,13 @@ public interface ISchedulerCoreService extends ICoreService {
 	 *            the expression
 	 * @param singleton
 	 *            the singleton
+	 * @param parameters
+	 *            the parameters list
 	 * @throws SchedulerException
 	 *             the scheduler exception
 	 */
 	public void updateJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException;
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException;
 
 	/**
 	 * Gets the jobs.

@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -30,6 +31,9 @@ import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
+import org.eclipse.dirigible.database.ds.model.IDataStructureModel;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 
@@ -43,6 +47,8 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	private PersistenceManager<JobDefinition> jobPersistenceManager = new PersistenceManager<JobDefinition>();
 	
 	private PersistenceManager<JobLogDefinition> jobLogPersistenceManager = new PersistenceManager<JobLogDefinition>();
+	
+	private PersistenceManager<JobParameterDefinition> jobParameterPersistenceManager = new PersistenceManager<JobParameterDefinition>();
 	
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
@@ -60,7 +66,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	 */
 	@Override
 	public JobDefinition createJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException {
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException {
 		JobDefinition jobDefinition = new JobDefinition();
 		jobDefinition.setName(name);
 		jobDefinition.setGroup(group);
@@ -72,6 +78,9 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobDefinition.setSingleton(singleton);
 		jobDefinition.setCreatedBy(UserFacade.getName());
 		jobDefinition.setCreatedAt(new Timestamp(new java.util.Date().getTime()));
+		for (JobParameterDefinition parameter : parameters) {
+			jobDefinition.addParameter(parameter.getName(), parameter.getType(), parameter.getDefaultValue(), parameter.getChoices(), parameter.getDescription());
+		}
 
 		return createOrUpdateJob(jobDefinition);
 	}
@@ -97,8 +106,10 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 				JobDefinition existing = getJob(jobDefinition.getName());
 				if (existing != null) {
 					jobPersistenceManager.update(connection, jobDefinition);
+					createOrUpdateParameters(connection, jobDefinition);
 				} else {
 					jobPersistenceManager.insert(connection, jobDefinition);
+					createOrUpdateParameters(connection, jobDefinition);
 				}
 				return jobDefinition;
 			} finally {
@@ -108,6 +119,17 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			}
 		} catch (SQLException e) {
 			throw new SchedulerException(e);
+		}
+	}
+
+	private void createOrUpdateParameters(Connection connection, JobDefinition jobDefinition) {
+		for (JobParameterDefinition parameter : jobDefinition.getParameters()) {
+			JobParameterDefinition existingParameter = jobParameterPersistenceManager.find(connection, JobParameterDefinition.class, parameter.getId());
+			if (existingParameter == null) {
+				jobParameterPersistenceManager.insert(connection, parameter);
+			} else {
+				jobParameterPersistenceManager.update(connection, parameter);
+			}
 		}
 	}
 
@@ -121,7 +143,18 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			Connection connection = null;
 			try {
 				connection = getDataSource().getConnection();
-				return jobPersistenceManager.find(connection, JobDefinition.class, name);
+				JobDefinition jobDefinition = jobPersistenceManager.find(connection, JobDefinition.class, name);
+				if (jobDefinition == null) {
+					return null;
+				}
+				jobParameterPersistenceManager.tableCheck(connection, JobParameterDefinition.class);
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_PARAMETERS").where("JOBPARAM_JOB_NAME = ?").toString();
+				List<JobParameterDefinition> parameters = jobParameterPersistenceManager.query(connection, JobParameterDefinition.class, sql,
+						Arrays.asList(jobDefinition.getName()));
+				for (JobParameterDefinition parameter : parameters) {
+					jobDefinition.addParameter(parameter.getName(), parameter.getType(), parameter.getDefaultValue(), parameter.getChoices(), parameter.getDescription());
+				}
+				return jobDefinition;
 			} finally {
 				if (connection != null) {
 					connection.close();
@@ -160,28 +193,20 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	 */
 	@Override
 	public void updateJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException {
-		try {
-			Connection connection = null;
-			try {
-				connection = getDataSource().getConnection();
-				JobDefinition jobDefinition = getJob(name);
-				jobDefinition.setGroup(group);
-				jobDefinition.setClazz(clazz);
-				jobDefinition.setHandler(handler);
-				jobDefinition.setEngine(engine);
-				jobDefinition.setDescription(description);
-				jobDefinition.setExpression(expression);
-				jobDefinition.setSingleton(singleton);
-				jobPersistenceManager.update(connection, jobDefinition);
-			} finally {
-				if (connection != null) {
-					connection.close();
-				}
-			}
-		} catch (SQLException e) {
-			throw new SchedulerException(e);
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException {
+		
+		JobDefinition jobDefinition = getJob(name);
+		jobDefinition.setGroup(group);
+		jobDefinition.setClazz(clazz);
+		jobDefinition.setHandler(handler);
+		jobDefinition.setEngine(engine);
+		jobDefinition.setDescription(description);
+		jobDefinition.setExpression(expression);
+		jobDefinition.setSingleton(singleton);
+		for (JobParameterDefinition parameter : parameters) {
+			jobDefinition.addParameter(parameter.getName(), parameter.getType(), parameter.getDefaultValue(), parameter.getChoices(), parameter.getDescription());
 		}
+		createOrUpdateJob(jobDefinition);
 	}
 
 	/*
@@ -222,6 +247,10 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	public JobDefinition parseJob(String json) {
 		JobDefinition jobDefinition = GsonHelper.GSON.fromJson(json, JobDefinition.class);
 		jobDefinition.setGroup(ISchedulerCoreService.JOB_GROUP_DEFINED);
+		for (JobParameterDefinition parameter : jobDefinition.getParameters()) {
+			parameter.setId(jobDefinition.getName(), parameter.getName());
+			parameter.setJobName(jobDefinition.getName());
+		}
 		return jobDefinition;
 	}
 

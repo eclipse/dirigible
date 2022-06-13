@@ -142,10 +142,11 @@ public class PersistenceAnnotationsParser {
 	private void parseColumns(Class<? extends Object> clazz, PersistenceTableModel persistenceModel) {
 		Field[] fields = collectFields(clazz);
 		for (Field field : fields) {
-			boolean isTransient = Modifier.isTransient(field.getModifiers());
-			if (isTransient) {
-				continue;
-			}
+			// use annotation @Transient always to show it is not a persistent column
+//			boolean isTransient = Modifier.isTransient(field.getModifiers());
+//			if (isTransient) {
+//				continue;
+//			}
 			// @Column
 			Annotation annotationColumn = field.getAnnotation(Column.class);
 			if (annotationColumn == null) {

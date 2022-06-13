@@ -12,10 +12,15 @@
 package org.eclipse.dirigible.core.scheduler.service.definition;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -59,6 +64,9 @@ public class JobDefinition implements IArtefactDefinition {
 
 	@Column(name = "JOB_CREATED_AT", columnDefinition = "TIMESTAMP", nullable = false)
 	private Timestamp createdAt;
+	
+	@Transient
+	private Map<String, JobParameterDefinition> parameters = new HashMap<String, JobParameterDefinition>();
 
 	/**
 	 * Gets the name.
@@ -380,6 +388,30 @@ public class JobDefinition implements IArtefactDefinition {
 	@Override
 	public String getArtefactLocation() {
 		return getName();
+	}
+	
+	
+	public void addParameter(String name, String type, String defaultValue, String choices, String description) {
+		JobParameterDefinition parameter = new JobParameterDefinition();
+		parameter.setId(this.name, name);
+		parameter.setJobName(this.name);
+		parameter.setName(name);
+		parameter.setType(type);
+		parameter.setDefaultValue(defaultValue);
+		parameter.setChoices(choices);
+		parameter.setDescription(description);
+		if (parameters.containsKey(name)) {
+			parameters.remove(name);
+		}
+		parameters.put(name, parameter);
+	}
+	
+	public void removeParameter(String name) {
+		parameters.remove(name);
+	}
+	
+	public Collection<JobParameterDefinition> getParameters() {
+		return Collections.unmodifiableCollection(parameters.values());
 	}
 
 }
