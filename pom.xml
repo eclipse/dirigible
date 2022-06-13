@@ -742,7 +742,7 @@
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.2.2</jackson.databind.version>
 		<spring.boot.version>2.6.6</spring.boot.version>
-		<webjars-locator>0.30</webjars-locator>
+		<webjars-locator>0.45</webjars-locator>
 
 		<profile.content.phase>none</profile.content.phase>
 
