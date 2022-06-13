@@ -732,7 +732,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.11</mongodb.version>
 		<caffeine.version>3.0.5</caffeine.version>
-		<liquibase-core.version>4.7.1</liquibase-core.version>
+		<liquibase-core.version>4.11.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<classgraph.version>4.8.139</classgraph.version>
