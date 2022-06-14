@@ -60,7 +60,9 @@ public class JobParameterDefinition {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param jobName the jobName to set
+	 * @param name the name to set
+	 *
 	 */
 	public void setId(String jobName, String name) {
 		this.id = "\"" + jobName + "\":\"" + name + "\"";
