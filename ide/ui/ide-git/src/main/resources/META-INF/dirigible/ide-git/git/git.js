@@ -616,8 +616,7 @@ GitService.prototype.cloneProject = function (
 	repository,
 	branch = '',
 	username,
-	password,
-	projectName
+	password
 ) {
 	let messageHub = this.$messageHub;
 	let gitBranch = branch;
@@ -628,8 +627,7 @@ GitService.prototype.cloneProject = function (
 			branch: gitBranch,
 			publish: true,
 			username: username,
-			password: btoa(password),
-			projectName: projectName
+			password: btoa(password)
 		})
 		.then(
 			function (response) {
@@ -1257,8 +1255,7 @@ angular
 						this.clone.url,
 						this.branch,
 						this.username,
-						this.password,
-						this.projectName
+						this.password
 					);
 				}
 			};

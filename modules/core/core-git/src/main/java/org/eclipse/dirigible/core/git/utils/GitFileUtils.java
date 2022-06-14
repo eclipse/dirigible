@@ -17,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -129,7 +128,7 @@ public class GitFileUtils {
 		String user = UserFacade.getName();
 		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
 		String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace);
-		return GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace, null);
+		return GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace);
 	}
 
 	/**
@@ -143,13 +142,11 @@ public class GitFileUtils {
 	 *            the user
 	 * @param workspace
 	 *            the workspace
-	 * @param projectName
-	 *            an optional project name in case of an empty repository
 	 * @return the list
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace, String projectName)
+	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace)
 			throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> importedProjects = new ArrayList<String>();

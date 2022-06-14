@@ -96,7 +96,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException the git connector exception
 	 */
 	public void clone(String workspace, GitCloneModel model) throws GitConnectorException {
-		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), getPassword(model), workspace, model.isPublish(), model.getProjectName());
+		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), getPassword(model), workspace, model.isPublish());
 	}
 
 	/**
