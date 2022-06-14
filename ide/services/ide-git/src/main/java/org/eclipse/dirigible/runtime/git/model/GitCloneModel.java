@@ -23,9 +23,6 @@ public class GitCloneModel extends BaseGitModel {
 
 	@ApiModelProperty(value = "Whether to publish the project(s) after clone", example = "true")
 	private boolean publish;
-	
-	@ApiModelProperty(value = "An optional project name in case of an empty repository", example = "myproject")
-	private String projectName;
 
 	/**
 	 * Gets the repository.
@@ -63,22 +60,4 @@ public class GitCloneModel extends BaseGitModel {
 		this.publish = publish;
 	}
 	
-	/**
-	 * Getter for the optional project name
-	 * 
-	 * @return the project name if set or null
-	 */
-	public String getProjectName() {
-		return projectName;
-	}
-	
-	/**
-	 * Setter for the optional project name
-	 * 
-	 * @param projectName the project name
-	 */
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
 }

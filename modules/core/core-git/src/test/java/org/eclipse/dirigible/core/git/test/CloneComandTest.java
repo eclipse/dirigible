@@ -61,7 +61,7 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
@@ -87,7 +87,7 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceNoGitTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
@@ -113,7 +113,7 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceNoProjectTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_no_project_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
+			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_no_project_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());

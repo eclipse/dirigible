@@ -64,7 +64,7 @@ public class ResetComandTest extends AbstractDirigibleTest {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
 			String repositoryName = "sample_git_test";
-			cloneCommand.execute("https://github.com/dirigiblelabs/" + repositoryName + ".git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
+			cloneCommand.execute("https://github.com/dirigiblelabs/" + repositoryName + ".git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());

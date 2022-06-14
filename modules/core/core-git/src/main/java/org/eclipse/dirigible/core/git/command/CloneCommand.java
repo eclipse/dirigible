@@ -67,13 +67,11 @@ public class CloneCommand {
 	 *            the workspace name
 	 * @param publishAfterClone
 	 *            the publish after clone
-	 * @param projectName
-	 *            the workspace name
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
 	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
-			boolean publishAfterClone, String projectName) throws GitConnectorException {
+			boolean publishAfterClone) throws GitConnectorException {
 		try {
 			if (repositoryUri != null && !repositoryUri.endsWith(GitFileUtils.DOT_GIT)) {
 				repositoryUri += GitFileUtils.DOT_GIT;
@@ -83,7 +81,7 @@ public class CloneCommand {
 			IWorkspace workspace = workspacesCoreService.getWorkspace(workspaceName);
 			String user = UserFacade.getName();
 			File gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryUri);
-			cloneProject(user, repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects, projectName);
+			cloneProject(user, repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects);
 			logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath()));
 			if (publishAfterClone) {
 				publishProjects(workspace, clonedProjects);
@@ -136,7 +134,7 @@ public class CloneCommand {
 	 *             the git connector exception
 	 */
 	protected void cloneProject(final String user, final String repositoryURI, String repositoryBranch, final String username, final String password,
-			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects, String optionalProjectName) throws GitConnectorException {
+			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects) throws GitConnectorException {
 		try {
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getCanonicalPath()));
@@ -146,7 +144,7 @@ public class CloneCommand {
 			String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
 			logger.debug(String.format("Start importing projects for repository directory %s ...", gitDirectory.getCanonicalPath()));
-			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), optionalProjectName);
+			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName());
 			logger.debug(String.format("Importing projects for repository directory %s finished", gitDirectory.getCanonicalPath()));
 
 			for (String importedProject : importedProjects) {
@@ -224,7 +222,7 @@ public class CloneCommand {
 					logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 							projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
 					cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
-							clonedProjects, null); // assume
+							clonedProjects); // assume
 				} else {
 					logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
 				}
