@@ -154,21 +154,13 @@ public class GitFileUtils {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> importedProjects = new ArrayList<String>();
 		if (projects.size() == 0) {
-			// No "project.json" files found fallback to the old implementation
-			projects = Arrays.asList(FileSystemUtils.listFiles(gitRepository));
-			if (projects.size() == 1) { // only .git folder
-				if (projectName == null) {
-					projectName = gitRepository.getName();
-				}
-				File implicitProject = new File(gitRepository, projectName);
-				FileUtils.forceMkdir(implicitProject);
-			}
+			// Empty Git repository, using it as a root project
+			projects.add(gitRepository);
 		}
 		for (File file : projects) {
 			String project = file.getName();
 			if (file.isDirectory() && !project.startsWith(".")) {
 				importProjectFromGitRepositoryToWorkspace(file, basePath + project);
-//				saveGitPropertiesFile(properties, user, workspace, project);
 				importedProjects.add(project);
 			}
 		}

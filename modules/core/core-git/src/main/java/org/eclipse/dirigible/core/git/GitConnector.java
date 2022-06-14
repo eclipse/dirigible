@@ -51,7 +51,6 @@ import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.api.RemoteSetUrlCommand;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -162,10 +161,17 @@ public class GitConnector implements IGitConnector {
 	 */
 	@Override
 	public void remove(String path) throws IOException, NoFilepatternException, GitAPIException {
-		ResetCommand reset = new Git(repository).reset();
-		reset.setRef(Constants.HEAD);
-		reset.addPath(path);
-		reset.call();
+		if (repository.resolve(Constants.HEAD) != null) {
+			ResetCommand reset = git.reset();
+			reset.setRef(Constants.HEAD);
+			reset.addPath(path);
+			reset.call();
+		} else {
+			RmCommand rmCommand = git.rm();
+			rmCommand.setCached(true);
+			rmCommand.addFilepattern(path);
+			rmCommand.call();
+		}
 	}
 
 	/*
@@ -466,6 +472,10 @@ public class GitConnector implements IGitConnector {
 		InputStream in = null;
 		try {
 			ObjectId lastCommitId = repository.resolve(revStr);
+			if (lastCommitId == null) {
+				// New and empty repository
+				return null;
+			}
 			revWalk = new RevWalk(repository);
 			RevCommit commit = revWalk.parseCommit(lastCommitId);
 			RevTree tree = commit.getTree();
@@ -503,26 +513,27 @@ public class GitConnector implements IGitConnector {
 	public List<GitCommitInfo> getHistory(String path) throws GitConnectorException {
 		try {
 			final List<GitCommitInfo> history = new ArrayList<GitCommitInfo>();
-			final SimpleDateFormat dtfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+			if (repository.resolve(Constants.HEAD) != null) {
+				LogCommand logCommand = git.log();
+				if (path != null) {
+					logCommand.addPath(path);
+				}
+				Iterable<RevCommit> gitLog = logCommand.call();
+				final SimpleDateFormat dtfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+				gitLog.forEach(log -> {
+					PersonIdent personIdentity = log.getAuthorIdent();
+					dtfmt.setTimeZone(personIdentity.getTimeZone());
 
-			LogCommand logCommand = git.log();
-			if (path != null) {
-				logCommand.addPath(path);
+					GitCommitInfo info = new GitCommitInfo();
+					info.setId(log.getId().getName());
+					info.setAuthor(personIdentity.getName());
+					info.setEmailAddress(personIdentity.getEmailAddress());
+					info.setDateTime(dtfmt.format(personIdentity.getWhen()));
+					info.setMessage(log.getFullMessage());
+
+					history.add(info);
+				});
 			}
-			Iterable<RevCommit> gitLog = logCommand.call();
-			gitLog.forEach(log -> {
-				PersonIdent personIdentity = log.getAuthorIdent();
-				dtfmt.setTimeZone(personIdentity.getTimeZone());
-
-				GitCommitInfo info = new GitCommitInfo();
-				info.setId(log.getId().getName());
-				info.setAuthor(personIdentity.getName());
-				info.setEmailAddress(personIdentity.getEmailAddress());
-				info.setDateTime(dtfmt.format(personIdentity.getWhen()));
-				info.setMessage(log.getFullMessage());
-
-				history.add(info);
-			});
 			return history;
 		} catch (Exception e) {
 			throw new GitConnectorException(e);
