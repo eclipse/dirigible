@@ -36,6 +36,21 @@ angular.module('ideWorkspace', [])
                     });
             }.bind(this);
 
+            let getMetadata = function (resourceUrl) {
+                return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
+                    .then(function successCallback(response) {
+                        return { status: response.status, data: response.data };
+                    }, function errorCallback(response) {
+                        console.error('Workspace service:', response);
+                        return { status: response.status };
+                    });
+            }
+
+            let getMetadataByPath = function (workspace, path) {
+                let resourceUrl = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(path.split('/')).build();
+                return getMetadata(resourceUrl);
+            }.bind(this);
+
             let rename = function (oldName, newName, path, workspaceName) {
                 let pathSegments = path.split('/');
                 pathSegments = pathSegments.slice(1, -1);
@@ -101,8 +116,7 @@ angular.module('ideWorkspace', [])
                     .then(function successCallback(response) {
                         return {
                             status: response.status,
-                            // data: $http.get(response.config.url, { headers: { 'describe': 'application/json' } }) // This isn't ok
-                            //     .then(function (response) { return response.data; }),
+                            data: response.config.url,
                         };
                     }, function errorCallback(response) {
                         console.error('Workspace service:', response);
@@ -181,6 +195,8 @@ angular.module('ideWorkspace', [])
             return {
                 listWorkspaceNames: listWorkspaceNames,
                 load: load,
+                getMetadata: getMetadata,
+                getMetadataByPath: getMetadataByPath,
                 rename: rename,
                 remove: remove,
                 copy: copy,

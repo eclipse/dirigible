@@ -14,8 +14,11 @@ angular.module('idePublisher', [])
         this.publisherServiceUrl = '/services/v4/ide/publisher/request';
         this.$get = ['$http', function publisherApiFactory($http) {
 
-            let publish = function (resourcePath) {
-                let url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            let publish = function (resourcePath, workspace) {
+                let url;
+                if (workspace) {
+                    url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
+                } else url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
                 return $http.post(url, {}, {
                     headers: {
                         "Dirigible-Editor": "Publish"
@@ -28,8 +31,11 @@ angular.module('idePublisher', [])
                 });
             }.bind(this);
 
-            let unpublish = function (resourcePath) {
-                let url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            let unpublish = function (resourcePath, workspace) {
+                let url;
+                if (workspace) {
+                    url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
+                } else url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
                 return $http.delete(url, {
                     headers: {
                         "Dirigible-Editor": "Publish"
