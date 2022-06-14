@@ -1000,7 +1000,7 @@ projectsView.controller('ProjectsViewController', [
             // Temp solution until we fix the back-end API
             if (data.status) {
                 let objects = $scope.jstreeWidget.jstree(true).get_json(
-                    $scope.jstreeWidget.jstree(true).root,
+                    '#',
                     {
                         no_li_attr: true,
                         no_a_attr: true,
@@ -1041,7 +1041,7 @@ projectsView.controller('ProjectsViewController', [
             'projects.tree.select',
             function (msg) {
                 let objects = $scope.jstreeWidget.jstree(true).get_json(
-                    $scope.jstreeWidget.jstree(true).root,
+                    '#',
                     {
                         no_state: true,
                         no_li_attr: true,

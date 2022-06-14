@@ -61,8 +61,13 @@ function main(container, outline, toolbar, sidebar, status) {
 				}
 			}
 			xhr.send(text);
-			messageHub.post({ data: file }, 'editor.file.saved');
-			messageHub.post({ data: 'File [' + file + '] saved.' }, 'status.message');
+			messageHub.post({
+				name: file.substring(file.lastIndexOf('/') + 1),
+				path: file.substring(file.indexOf('/', 1)),
+				contentType: 'application/database-schema-model+xml', // TODO: Take this from data-parameters
+				workspace: file.substring(1, file.indexOf('/', 1)),
+			}, 'ide.file.saved');
+			messageHub.post({ message: `File '${file}' saved` }, 'ide.status.message');
 		} else {
 			console.error('file parameter is not present in the request');
 		}
@@ -79,7 +84,13 @@ function main(container, outline, toolbar, sidebar, status) {
 				}
 			};
 			xhr.send('');
-			messageHub.post({ data: file }, 'editor.file.saved');
+			messageHub.post({
+				name: file.substring(file.lastIndexOf('/') + 1),
+				path: file.substring(file.indexOf('/', 1)),
+				contentType: 'application/database-schema-model+xml', // TODO: Take this from data-parameters
+				workspace: file.substring(1, file.indexOf('/', 1)),
+			}, 'ide.file.saved');
+			messageHub.post({ message: `File '${file}' saved` }, 'ide.status.message');
 		} else {
 			console.error('file parameter is not present in the request');
 		}
@@ -92,10 +103,21 @@ function main(container, outline, toolbar, sidebar, status) {
 		saveContents(schemaJson, file.substring(0, file.lastIndexOf('.')) + '.schema');
 	}
 
-	messageHub.subscribe(function (graph) {
-		saveSchema(graph);
-	}, 'workbench.editor.save');
+	messageHub.subscribe(
+		function () {
+			saveSchema(graph);
+		},
+		"editor.file.save.all"
+	);
 
+	messageHub.subscribe(
+		function (msg) {
+			let mfile = msg.data && typeof msg.data === 'object' && msg.data.file;
+			if (mfile && mfile === file)
+				saveSchema(graph);
+		},
+		"editor.file.save"
+	);
 
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported()) {

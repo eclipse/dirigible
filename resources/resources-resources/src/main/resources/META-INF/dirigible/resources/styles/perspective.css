@@ -177,6 +177,7 @@ body {
 .dg-statusbar-message,
 .dg-statusbar-error {
   flex: 2;
+  max-width: 40%;
 }
 .dg-statusbar-busy > *,
 .dg-statusbar-message > *,
