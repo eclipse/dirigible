@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.slf4j.Logger;
 
 /**
@@ -23,8 +24,24 @@ import org.slf4j.Logger;
  */
 public abstract class AbstractClasspathContentHandler implements IClasspathContentHandler {
 
+	private static final String DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS = "DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS";
+
+	private static final String EXCLUDE_SEPARATOR = ",";
+
 	/** The resources. */
 	private final Set<String> resources = Collections.synchronizedSet(new HashSet<String>());
+	
+	private static Set<String> EXCLUDES = Collections.synchronizedSet(new HashSet<String>());
+	static {
+		String pathsToExclude = Configuration.get(DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS);
+		if (pathsToExclude != null
+				&& !"".equals(pathsToExclude.trim())) {
+			String[] paths = pathsToExclude.split(EXCLUDE_SEPARATOR);
+			for (String path : paths) {
+				EXCLUDES.add(path);
+			}
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -32,6 +49,14 @@ public abstract class AbstractClasspathContentHandler implements IClasspathConte
 	 */
 	@Override
 	public void accept(String path) {
+		if (EXCLUDES.size() > 0) {
+			for (String exclude : EXCLUDES) {
+				if (path.startsWith(exclude)) {
+					getLogger().info("Excluded: " + path);
+					return;
+				}
+			}
+		}
 		if (isValid(path)) {
 			resources.add(path);
 			getLogger().info("Added: " + path);
