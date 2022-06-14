@@ -655,16 +655,6 @@ public class FileSystemUtils {
         }
         List<File> gitProjects = projectsFinder.getProjects();
 
-        // No projects containing "project.json" found, fallback to old implementation
-        if (gitProjects.isEmpty()) {
-            File[] gitRepositoryRootFolders = gitRepository.listFiles();
-            for (File next : gitRepositoryRootFolders) {
-                if (next.exists() && next.isDirectory() && !next.getName().startsWith(PREFIX_DOT)) {
-                    gitProjects.add(next);
-                }
-            }
-        }
-
         return gitProjects;
     }
 
