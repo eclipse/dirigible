@@ -128,8 +128,6 @@ public class CloneCommand {
 	 *            the workspace
 	 * @param clonedProjects
 	 *            the cloned projects
-	 * @param optionalProjectName
-	 *            an optional project name in case of an empty reposiotry
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */

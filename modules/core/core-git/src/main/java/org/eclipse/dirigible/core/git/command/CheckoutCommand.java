@@ -61,7 +61,7 @@ public class CheckoutCommand {
 	 *            the branch
 	 * @param publishAfterPull
 	 *            the publish after pull
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, String repositoryName, final String username, final String password, 
 			final String branch, final boolean publishAfterPull) throws GitConnectorException {
@@ -90,7 +90,7 @@ public class CheckoutCommand {
 	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	boolean checkoutProjectFromGitRepository(final IWorkspace workspace, String repositoryName, 
 			final String username, final String password, final String branch) throws GitConnectorException {

@@ -55,7 +55,7 @@ public class CommitCommand {
 	 *            the branch
 	 * @param add
 	 *            the add
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, List<String> repositories, final String commitMessage, final String username,
 			final String password, final String email, final String branch, boolean add) throws GitConnectorException {
@@ -89,7 +89,7 @@ public class CommitCommand {
 	 *            the password
 	 * @param email
 	 *            the email
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private void commitProjectToGitRepository(final IWorkspace workspace, String repositoryName, final String commitMessage,
 			final String username, final String password, final String email, final String branch,  boolean add) throws GitConnectorException {

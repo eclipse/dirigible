@@ -62,7 +62,7 @@ public class PullCommand {
 	 *            the branch
 	 * @param publishAfterPull
 	 *            the publish after pull
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, List<String> repositories, final String username, final String password, 
 			final String branch, final boolean publishAfterPull) throws GitConnectorException {
@@ -98,7 +98,7 @@ public class PullCommand {
 	 * @param repositoryName
 	 *            the selected project
 	 * @return true, if successful
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, final String username, final String password, final String branch) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);

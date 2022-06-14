@@ -64,7 +64,7 @@ public class PushCommand {
 	 *            the add
 	 * @param commit
 	 *            the add
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, List<String> repositories, final String commitMessage, final String username,
 			final String password, final String email, final String branch, boolean add, boolean commit) throws GitConnectorException {
@@ -98,7 +98,7 @@ public class PushCommand {
 	 *            the password
 	 * @param email
 	 *            the email
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private void pushProjectToGitRepository(final IWorkspace workspace, String repositoryName, final String commitMessage,
 			final String username, final String password, final String email, final String branch, boolean add, boolean commit) throws GitConnectorException {

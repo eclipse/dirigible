@@ -56,7 +56,7 @@ public class ShareCommand {
 	 *            the password
 	 * @param email
 	 *            the email
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, final IProject project, String repositoryUri, String repositoryBranch, final String commitMessage,
 			final String username, final String password, final String email) throws GitConnectorException {
@@ -83,7 +83,7 @@ public class ShareCommand {
 	 *            the git repository URI
 	 * @param gitRepositoryBranch
 	 *            the git repository branch
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private void shareToGitRepository(final String user, final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
 			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) throws GitConnectorException {

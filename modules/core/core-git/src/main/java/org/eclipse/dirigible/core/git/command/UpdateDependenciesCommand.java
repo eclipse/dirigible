@@ -43,7 +43,7 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	 *            the password
 	 * @param publishAfterClone
 	 *            the publish after clone
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) throws GitConnectorException {
 		for (IProject selectedProject : projects) {

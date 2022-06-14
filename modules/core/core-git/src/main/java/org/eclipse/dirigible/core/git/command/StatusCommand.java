@@ -45,7 +45,7 @@ public class StatusCommand {
 	 * @param project
 	 *            the project
 	 * @return project status
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public ProjectStatus execute(String workspace, String project) throws GitConnectorException {
 
@@ -68,7 +68,7 @@ public class StatusCommand {
 	 * @param project
 	 *            the project
 	 * @return project status
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private ProjectStatus getStatus(String workspace, String project) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred whilegetting the status for project [%s].", project);
