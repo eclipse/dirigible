@@ -12,10 +12,10 @@
 package org.eclipse.dirigible.core.scheduler.service.definition;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -66,7 +66,7 @@ public class JobDefinition implements IArtefactDefinition {
 	private Timestamp createdAt;
 	
 	@Transient
-	private Map<String, JobParameterDefinition> parameters = new HashMap<String, JobParameterDefinition>();
+	private List<JobParameterDefinition> parameters = new ArrayList<JobParameterDefinition>();
 
 	/**
 	 * Gets the name.
@@ -400,18 +400,21 @@ public class JobDefinition implements IArtefactDefinition {
 		parameter.setDefaultValue(defaultValue);
 		parameter.setChoices(choices);
 		parameter.setDescription(description);
-		if (parameters.containsKey(name)) {
-			parameters.remove(name);
-		}
-		parameters.put(name, parameter);
+		removeParameter(name);
+		parameters.add(parameter);
 	}
 	
 	public void removeParameter(String name) {
-		parameters.remove(name);
+		for (JobParameterDefinition p : parameters) {
+			if (p.getName().equals(name)) {
+				parameters.remove(p);
+				break;
+			}
+		}
 	}
 	
 	public Collection<JobParameterDefinition> getParameters() {
-		return Collections.unmodifiableCollection(parameters.values());
+		return Collections.unmodifiableCollection(parameters);
 	}
 
 }

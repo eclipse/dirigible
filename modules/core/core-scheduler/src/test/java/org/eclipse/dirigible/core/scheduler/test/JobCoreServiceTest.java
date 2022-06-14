@@ -165,7 +165,7 @@ public class JobCoreServiceTest extends AbstractDirigibleTest {
 	 */
 	@Test
 	public void parseJob() throws SchedulerException {
-		String content = "{\"name\":\"test_job\",\"group\":\"test_group\",\"clazz\":\"\",\"description\":\"description ...\",\"expression\":\"0/1 * * * * ?\",\"handler\":\"test_handler.js\",\"engine\":\"js\",\"singleton\":false,\"enabled\":true,\"parameters\":{\"param1\":{\"name\":\"param1\",\"type\":\"string\",\"defaultValue\":\"\",\"choices\":\"\"},\"param2\":{\"name\":\"param2\",\"type\":\"number\",\"defaultValue\":\"0\",\"choices\":\"\"}}}";
+		String content = "{\"name\":\"test_job\",\"group\":\"test_group\",\"clazz\":\"\",\"description\":\"description ...\",\"expression\":\"0/1 * * * * ?\",\"handler\":\"test_handler.js\",\"engine\":\"js\",\"singleton\":false,\"enabled\":true,\"parameters\":[{\"name\":\"param1\",\"type\":\"string\",\"defaultValue\":\"\",\"choices\":\"\"},{\"name\":\"param2\",\"type\":\"number\",\"defaultValue\":\"0\",\"choices\":\"\"}]}";
 		JobDefinition jobDefinition = jobCoreService.parseJob(content);
 		JobParameterDefinition parameter = jobDefinition.getParameters().toArray(new JobParameterDefinition[] {})[0];
 		assertEquals("\"test_job\":\"param1\"", parameter.getId());
