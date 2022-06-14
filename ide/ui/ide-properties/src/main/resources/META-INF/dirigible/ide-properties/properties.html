@@ -58,8 +58,8 @@
         $scope.properties = {};
         messageHub.onFileSelected(function (fileDescriptor) {
           $scope.$apply(function () {
-            delete fileDescriptor.topic;
-            $scope.properties = fileDescriptor;
+            const {topic, ...props} = fileDescriptor;
+            $scope.properties = props;
           });
         });
       }]);

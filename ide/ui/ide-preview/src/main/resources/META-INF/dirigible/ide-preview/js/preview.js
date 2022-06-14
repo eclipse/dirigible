@@ -195,14 +195,16 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
         return url;
     }
 
-    messageHub.onFileSelected(function (fileDescriptor) {
+    messageHub.onFileSelected((fileDescriptor) => {
         if (this.urlLocked)
             return;
 
         let url = this.makeUrlFromPath(fileDescriptor.path);
-        this.gotoUrl(url, false);
-        $scope.$apply();
-    }.bind(this));
+        if (url) {
+            this.gotoUrl(url, false);
+            $scope.$apply();
+        }
+    });
 
     messageHub.onPublish((fileDescriptor) => {
         if (this.urlLocked)
@@ -210,8 +212,10 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
 
         if (fileDescriptor.path) {
             let url = this.makeUrlFromPath(fileDescriptor.path);
-            this.gotoUrl(url);
-            $scope.$apply();
+            if (url) {
+                this.gotoUrl(url);
+                $scope.$apply();
+            }
         } else {
             this.reload();
             $scope.$apply();
@@ -224,8 +228,10 @@ previewView.controller('PreviewController', ['$scope', 'messageHub', function ($
 
         if (fileDescriptor.path) {
             let url = this.makeUrlFromPath(fileDescriptor.path);
-            this.gotoUrl(url);
-            $scope.$apply();
+            if (url) {
+                this.gotoUrl(url);
+                $scope.$apply();
+            }
         } else {
             this.reload();
             $scope.$apply();

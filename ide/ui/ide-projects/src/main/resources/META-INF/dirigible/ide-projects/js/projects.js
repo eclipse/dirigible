@@ -115,13 +115,14 @@ projectsView.controller('ProjectsViewController', [
         };
 
         $scope.jstreeWidget.on('select_node.jstree', function (event, data) {
-            if (data.event && data.event.type === 'click' && data.node.type === 'file')
+            if (data.event && data.event.type === 'click' && data.node.type === 'file') {
                 messageHub.announceFileSelected({
                     name: data.node.text,
                     path: data.node.data.path,
                     contentType: data.node.data.contentType,
                     workspace: data.node.data.workspace,
                 });
+            }
         });
 
         $scope.jstreeWidget.on('dblclick.jstree', function (event) {
@@ -150,9 +151,30 @@ projectsView.controller('ProjectsViewController', [
                             data.node.data.workspace
                         ).then(function (response) {
                             if (response.status === 201) {
-                                data.node.data.path = data.node.data.path.substring(data.node.data.path.length - data.old.length, 0) + data.text; // Temporary until back-end is fixed
-                                if (data.node.type === "file")
-                                    messageHub.closeEditor(`/${data.node.data.workspace}${data.node.data.path}`);
+                                let guessedPath = `${data.node.data.path.substring(data.node.data.path.length - data.old.length, 0)}${data.text}`; // Temporary until back-end is fixed
+                                if (data.node.type === "file") {
+                                    workspaceApi.getMetadataByPath(data.node.data.workspace, guessedPath).then(function (metadata) {
+                                        if (metadata.status === 200) {
+                                            messageHub.closeEditor(`/${data.node.data.workspace}${data.node.data.path}`);
+                                            data.node.text = metadata.data.name;
+                                            data.node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
+                                            data.node.data.contentType = metadata.data.contentType;
+                                            data.node.state.status = metadata.data.status;
+                                            data.node.icon = getFileIcon(metadata.data.name);
+                                            $scope.jstreeWidget.jstree(true).redraw_node(data.node);
+                                        } else {
+                                            data.node.state.failedRename = true;
+                                            $scope.jstreeWidget.jstree(true).rename_node(data.node, data.old);
+                                            messageHub.setStatusError(`Unable to rename '${data.old}'. Reverted.`);
+                                        }
+                                    });
+                                } else {
+                                    for (let i = 0; i < data.node.children_d.length; i++) {
+                                        let child = $scope.jstreeWidget.jstree(true).get_node(data.node.children_d[i]);
+                                        child.data.path = guessedPath + child.data.path.substring(data.node.data.path.length);
+                                    }
+                                    data.node.data.path = guessedPath;
+                                }
                             } else {
                                 data.node.state.failedRename = true;
                                 $scope.jstreeWidget.jstree(true).rename_node(data.node, data.old);
@@ -895,6 +917,8 @@ projectsView.controller('ProjectsViewController', [
                 icon = "sap-icon--picture";
             } else if ($scope.modelFileExts.indexOf(ext) !== -1) {
                 icon = "sap-icon--document-text";
+            } else {
+                icon = 'jstree-file';
             }
             return icon;
         }
@@ -950,18 +974,30 @@ projectsView.controller('ProjectsViewController', [
         function createFile(parent, name, workspace, path, content = '') {
             workspaceApi.createNode(name, `/${workspace}${path}`, false, content).then(function (response) {
                 if (response.status === 201) {
-                    $scope.jstreeWidget.jstree(true).create_node(
-                        parent,
-                        {
-                            text: name,
-                            type: 'file',
-                            data: {
-                                path: (path.endsWith('/') ? path : path + '/') + name,
-                                workspace: workspace,
-                                contentType: 'plain/text',
-                            }
-                        },
-                    );
+                    workspaceApi.getMetadata(response.data).then(function (metadata) {
+                        if (metadata.status === 200) {
+                            $scope.jstreeWidget.jstree(true).create_node(
+                                parent,
+                                {
+                                    text: metadata.data.name,
+                                    type: 'file',
+                                    state: {
+                                        status: metadata.data.status
+                                    },
+                                    icon: getFileIcon(metadata.data.name),
+                                    data: {
+                                        path: metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length),
+                                        workspace: $scope.selectedWorkspace.name,
+                                        contentType: metadata.data.contentType,
+                                    }
+                                },
+                            );
+                        } else {
+                            messageHub.showAlertError('Could not create file', `There was an error while creating '${name}'`);
+                        }
+                    });
+                } else {
+                    messageHub.showAlertError('Could not create file', `There was an error while creating '${name}'`);
                 }
             });
         }
@@ -1305,19 +1341,33 @@ projectsView.controller('ProjectsViewController', [
                     $scope.jstreeWidget.jstree(true).edit(msg.data.data);
                 } else if (msg.data.itemId === 'delete') {
                     if (msg.data.data.type === 'project') {
-                        workspaceApi.deleteProject(msg.data.data.data.workspace, msg.data.data.text).then(function (response) {
-                            if (response.status !== 204) {
-                                messageHub.setStatusError(`Unable to delete '${msg.data.data.text}'.`);
+                        publisherApi.unpublish(msg.data.data.data.path, msg.data.data.data.workspace).then(function (unpublish) {
+                            if (unpublish.status !== 201) {
+                                messageHub.setStatusError(`Unable to unpublish '${msg.data.data.text}'.`);
                             } else {
-                                $scope.jstreeWidget.jstree(true).delete_node(msg.data.data);
+                                workspaceApi.deleteProject(msg.data.data.data.workspace, msg.data.data.text).then(function (response) {
+                                    if (response.status !== 204) {
+                                        messageHub.setStatusError(`Unable to delete '${msg.data.data.text}'.`);
+                                    } else {
+                                        $scope.jstreeWidget.jstree(true).delete_node(msg.data.data);
+                                        messageHub.setStatusMessage(`Deleted and unpublished '${msg.data.data.text}'.`);
+                                    }
+                                });
                             }
                         });
                     } else {
-                        workspaceApi.remove(msg.data.data.data.workspace + msg.data.data.data.path).then(function (response) {
-                            if (response.status !== 204) {
-                                messageHub.setStatusError(`Unable to delete '${msg.data.data.text}'.`);
+                        publisherApi.unpublish(msg.data.data.data.path, msg.data.data.data.workspace).then(function (unpublish) {
+                            if (unpublish.status !== 201) {
+                                messageHub.setStatusError(`Unable to unpublish '${msg.data.data.text}'.`);
                             } else {
-                                $scope.jstreeWidget.jstree(true).delete_node(msg.data.data);
+                                workspaceApi.remove(msg.data.data.data.workspace + msg.data.data.data.path).then(function (response) {
+                                    if (response.status !== 204) {
+                                        messageHub.setStatusError(`Unable to delete '${msg.data.data.text}'.`);
+                                    } else {
+                                        $scope.jstreeWidget.jstree(true).delete_node(msg.data.data);
+                                        messageHub.setStatusMessage(`Deleted and unpublished '${msg.data.data.text}'.`);
+                                    }
+                                });
                             }
                         });
                     }

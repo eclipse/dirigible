@@ -1287,9 +1287,9 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     return JSON.stringify(scope.view.params);
                 }
 
-                scope.$watch(scope.view, function () {
+                scope.$watch('view', function () {
                     accordionCtrl.updateSizes();
-                });
+                }, true);
 
                 scope.$on('$destroy', function () {
                     accordionCtrl.removeView(scope.view);
