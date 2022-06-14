@@ -153,13 +153,12 @@ public class CloneCommand {
 				logger.info(String.format("Project [%s] was cloned", importedProject));
 			}
 
-			String[] projectNames = GitFileUtils.getValidProjectFolders(gitDirectory);
-			for (String projectName : projectNames) {
+			for (String projectName : importedProjects) {
 				projectMetadataManager.ensureProjectMetadata(workspace, projectName);
 				clonedProjects.add(projectName);
 			}
 			logger.debug("Start cloning dependencies ...");
-			for (String projectName : projectNames) {
+			for (String projectName : importedProjects) {
 				logger.debug(String.format("Start cloning dependencies of the project %s...", projectName));
 				cloneDependencies(user, username, password, workspace, clonedProjects, projectName);
 				logger.debug(String.format("Cloning of dependencies of the project %s finished", projectName));
