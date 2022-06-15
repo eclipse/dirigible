@@ -685,7 +685,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.2.0</maven.resource.plugin.version>
-		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
 		<maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
@@ -738,7 +738,7 @@
 		<classgraph.version>4.8.139</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.2</testcontainers.elasticsearch.version>
-		<logcaptor.version>2.7.8</logcaptor.version>
+		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.2.2</jackson.databind.version>
 		<spring.boot.version>2.7.0</spring.boot.version>
