@@ -16,6 +16,7 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * The JobParameterDefinition serialization object.
@@ -51,6 +52,9 @@ public class JobParameterDefinition {
 	/** The choices. */
 	@Column(name = "JOBPARAM_CHOICES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String choices = "";
+	
+	@Transient
+	private String value;
 	
 	/**
 	 * @return the id
@@ -170,6 +174,20 @@ public class JobParameterDefinition {
 				&& Objects.equals(description, other.description) && id == other.id
 				&& Objects.equals(jobName, other.jobName) && Objects.equals(name, other.name)
 				&& Objects.equals(type, other.type);
+	}
+	
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+	
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 	

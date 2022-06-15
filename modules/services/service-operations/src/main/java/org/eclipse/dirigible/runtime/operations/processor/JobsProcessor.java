@@ -16,11 +16,17 @@ import static java.text.MessageFormat.format;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.api.helpers.NameValuePair;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
+import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
+import org.quartz.JobExecutionException;
 
 public class JobsProcessor {
 	
@@ -66,6 +72,39 @@ public class JobsProcessor {
 		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
 		
         return GsonHelper.GSON.toJson(jobLogs);
+	}
+	
+	public String parameters(String name) throws SchedulerException {
+		
+		List<JobParameterDefinition> parameters = schedulerCoreService.getJobParameters(name);
+		for (JobParameterDefinition parameter : parameters) {
+			parameter.setValue(Configuration.get(parameter.getName(), parameter.getDefaultValue()));
+		}
+		
+        return GsonHelper.GSON.toJson(parameters);
+	}
+	
+	public boolean trigger(String name, List<NameValuePair> parameters) throws JobExecutionException, SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			
+			for (NameValuePair pair : parameters) {
+				Configuration.set(pair.getName(), pair.getValue());
+			}
+			
+			String engine = job.getEngine();
+			String handler = job.getHandler();
+			try {
+				ScriptEngineExecutorsManager.executeServiceModule(engine, handler, null);
+			} catch (ScriptingException e) {
+				throw new JobExecutionException(e);
+			}
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+			throw new JobExecutionException(error);
+		}
+		
+        return true;
 	}
 
 }

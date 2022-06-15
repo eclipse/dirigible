@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.runtime.operations.service;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,11 +26,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.helpers.NameValuePair;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.runtime.operations.processor.JobsProcessor;
+import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +147,50 @@ public class JobsService extends AbstractRestService implements IRestService {
 		}
 
 		return Response.ok().entity(processor.logs(IRepository.SEPARATOR + name)).build();
+	}
+	
+	/**
+	 * Returns the job parameters.
+	 *
+	 * @param name the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@GET
+	@Path("parameters/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getJobParameters(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.parameters(IRepository.SEPARATOR + name)).build();
+	}
+	
+	/**
+	 * Triggers the job with parameters.
+	 *
+	 * @param name the job name
+	 * @param parameters the job parameters
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 * @throws JobExecutionException the execution exception
+	 */
+	@POST
+	@Path("trigger/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response triggerJob(@PathParam("name") String name, List<NameValuePair> parameters, @Context HttpServletRequest request)
+			throws SchedulerException, JobExecutionException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.trigger(IRepository.SEPARATOR + name, parameters)).build();
 	}
 
 	/*

@@ -377,5 +377,23 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobParameters(java.lang.String)
+	 */
+	@Override
+	public List<JobParameterDefinition> getJobParameters(String name) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_PARAMETERS")
+						.where("JOBPARAM_JOB_NAME = ?").toString();
+				return jobParameterPersistenceManager.query(connection, JobParameterDefinition.class, sql, Arrays.asList(name));
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
 
 }

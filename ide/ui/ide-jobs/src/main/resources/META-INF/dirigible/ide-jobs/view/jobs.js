@@ -37,10 +37,40 @@ angular.module('jobs', [])
 		}
 
 		$scope.getLogs = function (job) {
+			$scope.job = job;
 			$http.get('/services/v4/ops/jobs/logs/' + job.name)
 				.then(function (response) {
 					$scope.name = job.name;
 					$scope.logs = response.data;
+				}, function (response) {
+					console.error(response.data);
+				});
+		}
+
+		$scope.getParameters = function (job) {
+			$scope.job = job;
+			$scope.map = new Array();
+			$http.get('/services/v4/ops/jobs/parameters/' + job.name)
+				.then(function (response) {
+					$scope.name = job.name;
+					$scope.parameters = response.data;
+				}, function (response) {
+					console.error(response.data);
+				});
+		}
+
+		$scope.triggerJob = function () {
+			$scope.map = new Array();
+			for (let i in $scope.parameters) {
+				let parameter = $scope.parameters[i];
+				let entry = {};
+				entry.name = parameter.name;
+				entry.value = parameter.value;
+				$scope.map.push(entry);
+			}
+			$http.post('/services/v4/ops/jobs/trigger/' + $scope.job.name, $scope.map)
+				.then(function (response) {
+					$scope.result = "Job: " + $scope.job.name + " has been triggered successfully";
 				}, function (response) {
 					console.error(response.data);
 				});

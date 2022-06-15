@@ -226,5 +226,14 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @throws SchedulerException exception
 	 */
 	public void deleteOldJobLogs() throws SchedulerException;
+	
+	/**
+	 * Get all the parameters per job's name
+	 * 
+	 * @param name the job name
+	 * @return the list of parameters
+	 * @throws SchedulerException exception
+	 */
+	public List<JobParameterDefinition> getJobParameters(String name) throws SchedulerException;
 
 }

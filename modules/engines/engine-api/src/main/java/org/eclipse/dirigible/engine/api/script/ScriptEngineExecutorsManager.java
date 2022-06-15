@@ -40,6 +40,9 @@ public class ScriptEngineExecutorsManager {
      * @throws ScriptingException the scripting exception
      */
     public static Object executeServiceModule(String engineType, String module, Map<Object, Object> executionContext) throws ScriptingException {
+    	if (engineType == null) {
+        	engineType = "javascript";
+        }
         IScriptEngineExecutor scriptEngineExecutor = ScriptEngineExecutorFactory.getScriptEngineExecutor(engineType);
         if (scriptEngineExecutor != null) {
             try {
