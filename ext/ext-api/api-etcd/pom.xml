@@ -123,7 +123,7 @@
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-launcher</artifactId>
-			<version>0.6.1</version>
+			<version>0.7.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
