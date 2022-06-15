@@ -735,7 +735,7 @@
 		<liquibase-core.version>4.11.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
-		<classgraph.version>4.8.139</classgraph.version>
+		<classgraph.version>4.8.147</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
 		<testcontainers.elasticsearch.version>1.17.2</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
