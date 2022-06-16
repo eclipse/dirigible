@@ -711,13 +711,13 @@
 		<logback.version>1.2.11</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.0.206</h2database.version>
-		<postgresql.version>42.3.3</postgresql.version>
+		<postgresql.version>42.4.0</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.17.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
-		<lucene.version>8.5.1</lucene.version>
+		<lucene.version>9.2.0</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
@@ -731,7 +731,7 @@
 		<kafka.version>3.2.0</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.11</mongodb.version>
-		<caffeine.version>3.0.5</caffeine.version>
+		<caffeine.version>3.1.1</caffeine.version>
 		<liquibase-core.version>4.11.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -740,7 +740,7 @@
 		<testcontainers.elasticsearch.version>1.17.2</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		<jackson.databind.version>2.13.2.2</jackson.databind.version>
+		<jackson.databind.version>2.13.3</jackson.databind.version>
 		<spring.boot.version>2.7.0</spring.boot.version>
 		<webjars-locator>0.45</webjars-locator>
 
