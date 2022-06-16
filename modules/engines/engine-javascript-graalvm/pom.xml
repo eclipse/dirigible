@@ -316,7 +316,7 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
-			<version>1.16.3</version>
+			<version>1.17.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -362,7 +362,7 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>4.9.1</version>
+			<version>4.10.0</version>
 		</dependency>
 	</dependencies>
 
