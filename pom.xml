@@ -727,7 +727,7 @@
 		<persistence.api.version>2.2.3</persistence.api.version>
 		<jgit.version>6.2.0.202206071550-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
-		<olingo.version>2.0.11</olingo.version>
+		<olingo.version>2.0.12</olingo.version>
 		<kafka.version>3.2.0</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.11</mongodb.version>
