@@ -14,10 +14,8 @@ package org.eclipse.dirigible.runtime.git.processor;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -34,7 +32,6 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
-import org.eclipse.dirigible.core.git.model.BaseGitModel;
 import org.eclipse.dirigible.core.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.git.model.GitDiffModel;
@@ -48,6 +45,8 @@ import org.eclipse.dirigible.core.git.model.GitShareModel;
 import org.eclipse.dirigible.core.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
+import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -71,6 +70,8 @@ public class GitProcessor {
 	private static final String DOT_GIT = ".git";
 
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
+
+	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	private CloneCommand cloneCommand = new CloneCommand();
 
@@ -137,9 +138,11 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repositoryName
+	 * @param unpublish whether to unpublish the project(s)
 	 * @throws GitConnectorException in case of exception
+	 * @throws PublisherException in case of exception
 	 */
-	public void delete(String workspace, String repositoryName) throws GitConnectorException {
+	public void delete(String workspace, String repositoryName, boolean unpublish) throws GitConnectorException, PublisherException {
 		try {
 			File gitRepository = getGitRepository(workspace, repositoryName);
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repositoryName);
@@ -152,6 +155,9 @@ public class GitProcessor {
 					next.delete();
 				} else if (repository.isLinkedPath(next.getPath())) {
 					repository.deleteLinkedPath(next.getPath());
+				}
+				if (unpublish) {
+					publisherCoreService.createUnpublishRequest(workspace, next.getName(), IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 				}
 			}
 

@@ -20,3 +20,4 @@ derby.log
 *.iml
 *.factorypath
 *.log
+dependency-reduced-pom.xml

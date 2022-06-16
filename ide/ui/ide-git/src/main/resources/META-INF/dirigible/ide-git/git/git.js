@@ -746,17 +746,19 @@ GitService.prototype.importProjects = function (wsTree, workspace, repository) {
 		}
 	);
 };
-GitService.prototype.deleteRepository = function (wsTree, workspace, repositoryName) {
+GitService.prototype.deleteRepository = function (wsTree, workspace, repositoryName, unpublish) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder()
 		.path(this.gitServiceUrl.split('/'))
 		.path(workspace)
 		.path(repositoryName)
-		.path('delete')
+		.path("delete")
 		.build();
+	url += `?unpublish=${unpublish}`;
 	return this.$http.delete(url).then(
 		function (response) {
 			wsTree.refresh();
+			messageHub.announceUnpublish(repositoryName);
 			return response.data;
 		},
 		function (response) {
@@ -1328,17 +1330,7 @@ angular
 			};
 
 			this.okDelete = function () {
-				if ($scope.unpublishOnDelete) {
-					for (let i = 0; i < this.selectedProjectData.folders.length; i++) {
-						let resourcePath = `/${this.selectedWorkspace}/${this.selectedProjectData.folders[i].name}`;
-						publishService.unpublish(resourcePath).then(
-							function () {
-								return $messageHub.announceUnpublish(this.selectedProjectData);
-							}.bind(this)
-						);
-					}
-				}
-				gitService.deleteRepository(this.wsTree, this.selectedWorkspace, this.selectedProject);
+				gitService.deleteRepository(this.wsTree, this.selectedWorkspace, this.selectedProject, $scope.unpublishOnDelete);
 			};
 
 			this.okShare = function () {

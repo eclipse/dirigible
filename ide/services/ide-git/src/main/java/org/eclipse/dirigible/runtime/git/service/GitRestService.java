@@ -49,6 +49,7 @@ import org.eclipse.dirigible.core.git.model.GitResetModel;
 import org.eclipse.dirigible.core.git.model.GitShareModel;
 import org.eclipse.dirigible.core.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
+import org.eclipse.dirigible.core.publisher.api.PublisherException;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.runtime.git.processor.GitProcessor;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -253,6 +254,7 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	 * @param repositoryName the project
 	 * @return the response
 	 * @throws GitConnectorException in case of exception 
+	 * @throws PublisherException in case of exception
 	 */
 	@DELETE
 	@Path("/{repositoryName}/delete")
@@ -260,12 +262,12 @@ public class GitRestService extends AbstractRestService implements IRestService 
 	@ApiOperation("Delete Git Repository")
 	@ApiResponses({ @ApiResponse(code = 200, message = "Git Project Reset") })
 	public Response deleteGitRepository(@ApiParam(value = "Name of the Workspace", required = true) @PathParam("workspace") String workspace,
-			@ApiParam(value = "Name of the Project", required = true) @PathParam("repositoryName") String repositoryName) throws GitConnectorException {
+			@ApiParam(value = "Name of the Project", required = true) @PathParam("repositoryName") String repositoryName, @QueryParam("unpublish") boolean unpublish) throws GitConnectorException, PublisherException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
-		processor.delete(workspace, repositoryName);
+		processor.delete(workspace, repositoryName, unpublish);
 		return Response.ok().build();
 	}
 
