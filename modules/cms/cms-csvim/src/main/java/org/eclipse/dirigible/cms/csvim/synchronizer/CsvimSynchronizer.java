@@ -183,6 +183,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			CsvDefinition csvDefinition = new CsvDefinition();
 			csvDefinition.setLocation(csvPath);
+			csvDefinition.setHash(DigestUtils.md5Hex(json.getBytes()));
 			CSV_PREDELIVERED.put(csvPath, csvDefinition);
 		} finally {
 			if (in != null) {
