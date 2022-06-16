@@ -94,8 +94,8 @@ public class TableDropProcessor {
 		try {
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(sql);
-			logger.error(e.getMessage(), e);
+			logger.warn(sql);
+			logger.warn(e.getMessage());
 		} finally {
 			if (statement != null) {
 				statement.close();
