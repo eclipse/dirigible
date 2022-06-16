@@ -9,17 +9,38 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * The Git Pull Model.
+ * The Git Clone Model.
  */
-public class GitPullModel extends BaseGitProjectModel {
+public class GitCloneModel extends BaseGitModel {
 
-	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
+	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
+	private String repository;
+
+	@ApiModelProperty(value = "Whether to publish the project(s) after clone", example = "true")
 	private boolean publish;
+
+	/**
+	 * Gets the repository.
+	 *
+	 * @return the repository
+	 */
+	public String getRepository() {
+		return repository;
+	}
+
+	/**
+	 * Sets the repository.
+	 *
+	 * @param repository the new repository
+	 */
+	public void setRepository(String repository) {
+		this.repository = repository;
+	}
 
 	/**
 	 * Checks if is publish.
@@ -38,4 +59,5 @@ public class GitPullModel extends BaseGitProjectModel {
 	public void setPublish(boolean publish) {
 		this.publish = publish;
 	}
+	
 }

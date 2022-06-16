@@ -45,6 +45,10 @@ import org.slf4j.LoggerFactory;
  */
 public class GitFileUtils {
 
+	private static final int USER_WORKSPACE_PROJECT_SEGMENTS_COUNT = 4;
+
+	private static final int USER_WORKSPACE_SEGMENTS_COUNT = 3;
+
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 	
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
@@ -217,25 +221,41 @@ public class GitFileUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void copyProjectToDirectory(IFolder source, File tempGitDirectory) throws IOException {
+		copyProjectToDirectory(source, tempGitDirectory, false);
+	}
+
+	/**
+	 * Copy project to directory.
+	 *
+	 * @param source
+	 *            the source
+	 * @param tempGitDirectory
+	 *            the temp git directory
+	 * @param shareInRootFolder
+	 *            the whether to share project in the repository root folder
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public static void copyProjectToDirectory(IFolder source, File tempGitDirectory, boolean shareInRootFolder) throws IOException {
 		if (!source.exists()) {
 			return;
 		}
 		for (IFile file : source.getFiles()) {
-			RepositoryPath path = new RepositoryPath(source.getPath());
-			StringBuilder resourceDirectory = new StringBuilder();
-			for (int i = 3; i < (path.getSegments().length - 1); i++) {
-				resourceDirectory.append(File.separator + path.getSegments()[i]);
+			RepositoryPath path = new RepositoryPath(file.getPath());
+			StringBuilder resourcePath = new StringBuilder();
+			int startSegmentIndex = shareInRootFolder ? USER_WORKSPACE_PROJECT_SEGMENTS_COUNT : USER_WORKSPACE_SEGMENTS_COUNT;
+			String[] pathSegments = path.getSegments();
+			for (int i = startSegmentIndex; i < pathSegments.length; i++) {
+				resourcePath.append(File.separator).append(pathSegments[i]);
 			}
-			resourceDirectory.append(File.separator);
-			File fileResource = new File(tempGitDirectory, resourceDirectory.toString());
-			FileUtils.forceMkdir(fileResource.getCanonicalFile());
-			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
+			File fileResource = new File(tempGitDirectory, resourcePath.toString());
+			FileUtils.forceMkdirParent(fileResource.getCanonicalFile());
 
 			InputStream in = null;
 			FileOutputStream out = null;
 			try {
 				in = new ByteArrayInputStream(file.getContent());
-				File outputFile = new File(tempGitDirectory, resourcePath);
+				File outputFile = new File(tempGitDirectory, resourcePath.toString());
 				FileUtils.forceMkdir(outputFile.getParentFile().getCanonicalFile());
 				boolean fileCreated = outputFile.createNewFile();
 				if (!fileCreated) {
@@ -254,7 +274,7 @@ public class GitFileUtils {
 			}
 		}
 		for (IFolder folder : source.getFolders()) {
-			copyProjectToDirectory(folder, tempGitDirectory);
+			copyProjectToDirectory(folder, tempGitDirectory, shareInRootFolder);
 		}
 
 	}

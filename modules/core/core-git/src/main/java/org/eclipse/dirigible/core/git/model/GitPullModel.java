@@ -9,39 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * The Git Checkout Model.
+ * The Git Pull Model.
  */
-public class GitCheckoutModel extends BaseGitModel {
+public class GitPullModel extends BaseGitProjectModel {
 
-	@ApiModelProperty(hidden = true)
-	private String project;
-	
-	@ApiModelProperty(value = "Whether to publish the project(s) after checkout", example = "true")
+	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
 	private boolean publish;
 
-	/**
-	 * Gets the project.
-	 *
-	 * @return the project
-	 */
-	public String getProject() {
-		return project;
-	}
-
-	/**
-	 * Sets the project.
-	 *
-	 * @param project the new project
-	 */
-	public void setProject(String project) {
-		this.project = project;
-	}
-	
 	/**
 	 * Checks if is publish.
 	 *
@@ -59,5 +38,4 @@ public class GitCheckoutModel extends BaseGitModel {
 	public void setPublish(boolean publish) {
 		this.publish = publish;
 	}
-
 }

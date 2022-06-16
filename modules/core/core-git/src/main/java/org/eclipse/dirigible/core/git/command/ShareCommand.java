@@ -19,10 +19,12 @@ import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.model.GitShareModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
+import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,56 +46,36 @@ public class ShareCommand {
 	 *            the workspace
 	 * @param project
 	 *            the project
-	 * @param repositoryUri
-	 *            the repository uri
-	 * @param repositoryBranch
-	 *            the repository branch
-	 * @param commitMessage
-	 *            the commit message
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param email
-	 *            the email
+	 * @param model
+	 *            the git share model
 	 * @throws GitConnectorException in case of exception
 	 */
-	public void execute(final IWorkspace workspace, final IProject project, String repositoryUri, String repositoryBranch, final String commitMessage,
-			final String username, final String password, final String email) throws GitConnectorException {
+	public void execute(final IWorkspace workspace, final IProject project, GitShareModel model) throws GitConnectorException {
 		String user = UserFacade.getName();
-		shareToGitRepository(user, workspace, project, commitMessage, username, email, password, repositoryUri, repositoryBranch);
+		shareToGitRepository(user, workspace, project, model);
 	}
 
 	/**
 	 * Share to git repository.
 	 *
+	 * @param user
+	 *            the user
 	 * @param workspace
 	 *            the workspace
 	 * @param project
 	 *            the project
-	 * @param commitMessage
-	 *            the commit message
-	 * @param username
-	 *            the username
-	 * @param email
-	 *            the email
-	 * @param password
-	 *            the password
-	 * @param gitRepositoryURI
-	 *            the git repository URI
-	 * @param gitRepositoryBranch
-	 *            the git repository branch
+	 * @param model
+	 *            the git share model
 	 * @throws GitConnectorException in case of exception
 	 */
-	private void shareToGitRepository(final String user, final IWorkspace workspace, final IProject project, final String commitMessage, final String username,
-			final String email, final String password, final String gitRepositoryURI, final String gitRepositoryBranch) throws GitConnectorException {
+	private void shareToGitRepository(final String user, final IWorkspace workspace, final IProject project, GitShareModel model) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while sharing project [%s].", project.getName());
 
 		projectMetadataManager.ensureProjectMetadata(workspace, project.getName());
 
 		File tempGitDirectory = null;
 		try {
-			final String repositoryName = GitFileUtils.generateGitRepositoryName(gitRepositoryURI); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
+			final String repositoryName = GitFileUtils.generateGitRepositoryName(model.getRepository()); //gitRepositoryURI.substring(gitRepositoryURI.lastIndexOf("/") + 1, gitRepositoryURI.lastIndexOf(DOT_GIT));
 			tempGitDirectory = GitFileUtils.getGitDirectory(user, workspace.getName(), repositoryName);
 			boolean isExistingGitRepository = tempGitDirectory != null;
 			if (!isExistingGitRepository) {
@@ -102,24 +84,24 @@ public class ShareCommand {
 
 			if (!isExistingGitRepository) {
 				try {
-					logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username, gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
-					GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), gitRepositoryURI, username, password, gitRepositoryBranch);
-					logger.debug(String.format("Cloning repository %s finished.", gitRepositoryURI));
+					logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));
+					GitConnectorFactory.cloneRepository(tempGitDirectory.getCanonicalPath(), model.getRepository(), model.getUsername(), model.getPassword(), model.getBranch());
+					logger.debug(String.format("Cloning repository %s finished.", model.getRepository()));
 				} catch (Throwable e) {
 					GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryName);
 					throw e;
 				}
 			} else {
-				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", gitRepositoryURI, username, gitRepositoryBranch, tempGitDirectory.getCanonicalPath()));
+				logger.debug(String.format("Sharing to existing git repository %s, with username %s for branch %s in the directory %s ...", model.getRepository(), model.getUsername(), model.getBranch(), tempGitDirectory.getCanonicalPath()));
 			}
 
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(tempGitDirectory.getCanonicalPath());
 
-			GitFileUtils.copyProjectToDirectory(project, tempGitDirectory);
+			GitFileUtils.copyProjectToDirectory(project, tempGitDirectory, model.isShareInRootFolder());
 			try {
 				gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
-				gitConnector.commit(commitMessage, username, email, true);
-				gitConnector.push(username, password);
+				gitConnector.commit(model.getCommitMessage(), model.getUsername(), model.getEmail(), true);
+				gitConnector.push(model.getUsername(), model.getPassword());
 			} catch (Throwable e) {
 				GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryName);
 				throw e;
@@ -129,8 +111,22 @@ public class ShareCommand {
 			project.delete();
 			
 			// link the already share project
-			File projectGitDirectory = new File(tempGitDirectory, project.getName());
-			GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, project.getPath());
+			File projectGitDirectory = null;
+			String projectPath = null;
+			if (model.isShareInRootFolder()) {
+				projectGitDirectory = tempGitDirectory;
+				StringBuilder projectPathBuilder = new StringBuilder();
+				String[] projectPathSegments = new RepositoryPath(project.getPath()).getSegments();
+				for (int i = 0; i < projectPathSegments.length - 1; i ++) {
+					projectPathBuilder.append(File.separator).append(projectPathSegments[i]);
+				}
+				projectPathBuilder.append(File.separator).append(projectGitDirectory.getName());
+				projectPath = projectPathBuilder.toString();
+			} else {				
+				projectGitDirectory = new File(tempGitDirectory, project.getName());
+				projectPath = project.getPath();
+			}
+			GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectPath);
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);

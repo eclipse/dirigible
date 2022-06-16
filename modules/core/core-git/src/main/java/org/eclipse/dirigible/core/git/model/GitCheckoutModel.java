@@ -9,39 +9,39 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * The Git Clone Model.
+ * The Git Checkout Model.
  */
-public class GitCloneModel extends BaseGitModel {
+public class GitCheckoutModel extends BaseGitModel {
 
-	@ApiModelProperty(value = "The Git Repository URL", example = "https://github.com/dirigiblelabs/sample_git_test.git", required = true)
-	private String repository;
-
-	@ApiModelProperty(value = "Whether to publish the project(s) after clone", example = "true")
+	@ApiModelProperty(hidden = true)
+	private String project;
+	
+	@ApiModelProperty(value = "Whether to publish the project(s) after checkout", example = "true")
 	private boolean publish;
 
 	/**
-	 * Gets the repository.
+	 * Gets the project.
 	 *
-	 * @return the repository
+	 * @return the project
 	 */
-	public String getRepository() {
-		return repository;
+	public String getProject() {
+		return project;
 	}
 
 	/**
-	 * Sets the repository.
+	 * Sets the project.
 	 *
-	 * @param repository the new repository
+	 * @param project the new project
 	 */
-	public void setRepository(String repository) {
-		this.repository = repository;
+	public void setProject(String project) {
+		this.project = project;
 	}
-
+	
 	/**
 	 * Checks if is publish.
 	 *
@@ -59,5 +59,5 @@ public class GitCloneModel extends BaseGitModel {
 	public void setPublish(boolean publish) {
 		this.publish = publish;
 	}
-	
+
 }

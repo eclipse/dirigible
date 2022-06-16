@@ -9,11 +9,32 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
-/**
- * The Git Reset Model.
- */
-public class GitResetModel extends BaseGitProjectModel {
+import java.util.List;
+
+import org.eclipse.dirigible.core.git.GitBranch;
+
+public class GitProjectLocalBranches {
+	
+	private List<GitBranch> local;
+	
+	/**
+	 * Getter for the local branches
+	 * 
+	 * @return the local
+	 */
+	public List<GitBranch> getLocal() {
+		return local;
+	}
+
+	/**
+	 * Setter for the local branches
+	 * 
+	 * @param local the local to set
+	 */
+	public void setLocal(List<GitBranch> local) {
+		this.local = local;
+	}
 
 }

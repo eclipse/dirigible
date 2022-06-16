@@ -775,7 +775,8 @@ GitService.prototype.shareProject = function (
 	commitMessage,
 	username,
 	password,
-	email
+	email,
+	shareInRootFolder
 ) {
 	let messageHub = this.$messageHub;
 	let url = new UriBuilder().path(this.gitServiceUrl.split('/')).path(workspace).path(project).path('share').build();
@@ -787,7 +788,8 @@ GitService.prototype.shareProject = function (
 			commitMessage: commitMessage,
 			username: username,
 			password: btoa(password),
-			email: email
+			email: email,
+			shareInRootFolder: shareInRootFolder
 		})
 		.then(
 			function (response) {
@@ -1349,7 +1351,8 @@ angular
 					this.commitMessage,
 					this.username,
 					this.password,
-					this.email
+					this.email,
+					this.shareInRootFolder
 				);
 			};
 

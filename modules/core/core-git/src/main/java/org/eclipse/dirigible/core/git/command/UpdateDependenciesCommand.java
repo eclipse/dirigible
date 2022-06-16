@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.slf4j.Logger;
@@ -37,21 +38,17 @@ public class UpdateDependenciesCommand extends CloneCommand {
 	 *            the workspace
 	 * @param projects
 	 *            the projects
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param publishAfterClone
-	 *            the publish after clone
+	 * @param model
+	 *            the git update dependencies model
 	 * @throws GitConnectorException in case of exception
 	 */
-	public void execute(final IWorkspace workspace, final IProject[] projects, String username, String password, boolean publishAfterClone) throws GitConnectorException {
+	public void execute(final IWorkspace workspace, final IProject[] projects, GitUpdateDependenciesModel model) throws GitConnectorException {
 		for (IProject selectedProject : projects) {
 			String user = UserFacade.getName();
 			try {
 				Set<String> clonedProjects = new HashSet<String>();
-				cloneDependencies(user, username, password, workspace, clonedProjects, selectedProject.getName());
-				if (publishAfterClone) {
+				cloneDependencies(user, model.getUsername(), model.getPassword(), workspace, clonedProjects, selectedProject.getName());
+				if (model.isPublish()) {
 					publishProjects(workspace, clonedProjects);
 				}
 				logger.info(String.format("Project's [%s] dependencies has been updated successfully.", selectedProject.getName()));

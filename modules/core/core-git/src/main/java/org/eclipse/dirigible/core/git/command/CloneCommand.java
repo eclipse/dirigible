@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
@@ -29,7 +30,6 @@ import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.publisher.synchronizer.PublisherSynchronizer;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
@@ -42,10 +42,6 @@ public class CloneCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 	
-
-	/** The workspaces core service. */
-	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
-
 	/** The publisher core service. */
 	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
@@ -55,35 +51,26 @@ public class CloneCommand {
 	/**
 	 * Execute a Clone command.
 	 *
-	 * @param repositoryUri
-	 *            the repository uri
-	 * @param repositoryBranch
-	 *            the repository branch
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param workspaceName
-	 *            the workspace name
-	 * @param publishAfterClone
-	 *            the publish after clone
+	 * @param workspace
+	 *            the workspace
+	 * @param model
+	 *            the git clone model
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
-	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
-			boolean publishAfterClone) throws GitConnectorException {
+	public void execute(IWorkspace workspace, GitCloneModel model) throws GitConnectorException {
+		String repositoryUri = model.getRepository();
 		try {
 			if (repositoryUri != null && !repositoryUri.endsWith(GitFileUtils.DOT_GIT)) {
 				repositoryUri += GitFileUtils.DOT_GIT;
 			}
 			Set<String> clonedProjects = new HashSet<String>();
 			logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
-			IWorkspace workspace = workspacesCoreService.getWorkspace(workspaceName);
 			String user = UserFacade.getName();
-			File gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryUri);
-			cloneProject(user, repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects);
+			File gitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryUri);
+			cloneProject(user, repositoryUri, model.getBranch(), model.getUsername(), model.getPassword(), gitDirectory, workspace, clonedProjects);
 			logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath()));
-			if (publishAfterClone) {
+			if (model.isPublish()) {
 				publishProjects(workspace, clonedProjects);
 			}
 			logger.info(String.format("Project(s) has been cloned successfully from repository: [%s]", repositoryUri));
@@ -91,23 +78,6 @@ public class CloneCommand {
 			throw new GitConnectorException(String.format("An error occurred while cloning repository: [%s]", repositoryUri), e);
 		}
 	}
-
-//	/**
-//	 * Creates the git directory.
-//	 *
-//	 * @param user the logged in user
-//	 * @param workspace the current workspace
-//	 * @param repositoryURI
-//	 *            the repository URI
-//	 * @return the file
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	protected File createGitDirectory(String user, String workspace, String repositoryURI) throws IOException {
-//		String repositoryName = GitFileUtils.generateGitRepositoryName(repositoryURI);
-//		File gitDirectory = GitFileUtils.createGitDirectory(user, workspace, repositoryName);
-//		return gitDirectory;
-//	}
 
 	/**
 	 * Clone project execute several low level Git commands.

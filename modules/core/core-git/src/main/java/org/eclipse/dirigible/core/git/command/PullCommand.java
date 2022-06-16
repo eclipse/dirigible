@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.model.GitPullModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
@@ -52,29 +53,20 @@ public class PullCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param repositories
-	 *            the projects
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param branch
-	 *            the branch
-	 * @param publishAfterPull
-	 *            the publish after pull
+	 * @param model
+	 *            the git pull model
 	 * @throws GitConnectorException in case of exception
 	 */
-	public void execute(final IWorkspace workspace, List<String> repositories, final String username, final String password, 
-			final String branch, final boolean publishAfterPull) throws GitConnectorException {
-		if (repositories.size() == 0) {
+	public void execute(final IWorkspace workspace, GitPullModel model) throws GitConnectorException {
+		if (model.getProjects().size() == 0) {
 			logger.warn("No repository is selected for the Pull action");
 		}
 		List<String> pulledProjects = new ArrayList<String>();
 		boolean atLeastOne = false;
-		for (String repositoryName : repositories) {
+		for (String repositoryName : model.getProjects()) {
 			if (verifier.verify(workspace.getName(), repositoryName)) {
 				logger.debug(String.format("Start pulling %s repository...", repositoryName));
-				boolean pulled = pullProjectFromGitRepository(workspace, repositoryName, username, password, branch);
+				boolean pulled = pullProjectFromGitRepository(workspace, repositoryName, model);
 				atLeastOne = atLeastOne ? atLeastOne : pulled;
 				logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
 				List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
@@ -84,7 +76,7 @@ public class PullCommand {
 			}
 		}
 
-		if (atLeastOne && publishAfterPull) {
+		if (atLeastOne && model.isPublish()) {
 			publishProjects(workspace, pulledProjects);
 		}
 
@@ -97,10 +89,12 @@ public class PullCommand {
 	 *            the workspace
 	 * @param repositoryName
 	 *            the selected project
+	 * @param model
+	 *            the git pull model
 	 * @return true, if successful
 	 * @throws GitConnectorException in case of exception
 	 */
-	boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, final String username, final String password, final String branch) throws GitConnectorException {
+	private boolean pullProjectFromGitRepository(final IWorkspace workspace, String repositoryName, GitPullModel model) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);
 
 		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
@@ -115,7 +109,7 @@ public class PullCommand {
 
 			String gitRepositoryBranch = gitConnector.getBranch();
 			logger.debug(String.format("Starting pull of the repository [%s] for the branch %s...", repositoryName, gitRepositoryBranch));
-			gitConnector.pull(username, password);
+			gitConnector.pull(model.getUsername(), model.getPassword());
 			logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
@@ -153,7 +147,7 @@ public class PullCommand {
 	 * @param pulledProjects
 	 *            the pulled projects
 	 */
-	protected void publishProjects(IWorkspace workspace, List<String> pulledProjects) {
+	private void publishProjects(IWorkspace workspace, List<String> pulledProjects) {
 		if (pulledProjects.size() > 0) {
 			for (String pulledProject : pulledProjects) {
 				List<IProject> projects = workspace.getProjects();

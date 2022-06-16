@@ -9,35 +9,34 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
-
-import java.util.List;
+package org.eclipse.dirigible.core.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * The Base Git Project Model.
+ * The Git Update Dependencies Model.
  */
-public class BaseGitProjectModel extends BaseGitModel {
+public class GitUpdateDependenciesModel extends BaseGitProjectModel {
 
-	@ApiModelProperty(value = "List of projects, on which a Git Operation will be performed", required = true, example = "[core_api]")
-	private List<String> projects;
+	@ApiModelProperty(value = "Whether to publish the project(s) after update of dependencies", example = "true")
+	private boolean publish;
 
 	/**
-	 * Gets the projects.
+	 * Checks if is publish.
 	 *
-	 * @return the projects
+	 * @return true, if is publish
 	 */
-	public List<String> getProjects() {
-		return projects;
+	public boolean isPublish() {
+		return publish;
 	}
 
 	/**
-	 * Sets the projects.
+	 * Sets the publish.
 	 *
-	 * @param projects the new projects
+	 * @param publish the new publish
 	 */
-	public void setProjects(List<String> projects) {
-		this.projects = projects;
+	public void setPublish(boolean publish) {
+		this.publish = publish;
 	}
+
 }

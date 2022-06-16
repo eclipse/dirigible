@@ -9,7 +9,10 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 
@@ -56,7 +59,10 @@ public class BaseGitModel {
 	 * @return the password
 	 */
 	public String getPassword() {
-		return password;
+		if (password == null) {
+			return null;
+		}
+		return new String(Base64.getDecoder().decode(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 	}
 
 	/**

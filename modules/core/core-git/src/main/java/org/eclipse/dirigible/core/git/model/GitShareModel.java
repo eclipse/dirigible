@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -26,6 +26,9 @@ public class GitShareModel extends BaseGitModel {
 
 	@ApiModelProperty(value = "The Commit Message", example = "Initial Commit", required = true)
 	private String commitMessage;
+
+	@ApiModelProperty(value = "Whether to Share the Project in the Root Folder", example = "true", required = true)
+	private boolean shareInRootFolder;
 
 	/**
 	 * Gets the project.
@@ -81,4 +84,21 @@ public class GitShareModel extends BaseGitModel {
 		this.commitMessage = commitMessage;
 	}
 
+	/**
+	 * Returns whether should share the project in the root folder.
+	 *
+	 * @return true if should share the project in the root folder
+	 */
+	public boolean isShareInRootFolder() {
+		return shareInRootFolder;
+	}
+
+	/**
+	 * Sets whether should share the project in the root folder.
+	 *
+	 * @param shareInRootFolder the value
+	 */
+	public void setShareInRootFolder(boolean shareInRootFolder) {
+		this.shareInRootFolder = shareInRootFolder;
+	}
 }

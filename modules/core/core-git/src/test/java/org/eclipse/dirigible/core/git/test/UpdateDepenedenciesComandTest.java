@@ -18,6 +18,8 @@ import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
+import org.eclipse.dirigible.core.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -61,8 +63,12 @@ public class UpdateDepenedenciesComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel cloneModel = new GitCloneModel();
+			cloneModel.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+			cloneModel.setBranch(IGitConnector.GIT_MASTER);
+			cloneModel.setPublish(true);
+			cloneCommand.execute(workspace1, cloneModel);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			IProject project1 = workspace1.getProject("project1");
@@ -70,9 +76,12 @@ public class UpdateDepenedenciesComandTest extends AbstractDirigibleTest {
 			assertTrue(project1.exists());
 			String username = System.getProperty("dirigibleTestGitUsername");
 			String password = System.getProperty("dirigibleTestGitPassword");
-			String email = System.getProperty("dirigibleTestGitEmail");
-			if (username != null) {
-				updateDependenciesCommand.execute(workspace1, new IProject[] { project1 }, username, password, true);
+			if (username != null && password != null) {
+				GitUpdateDependenciesModel model = new GitUpdateDependenciesModel();
+				model.setUsername(username);
+				model.setPassword(password);
+				model.setPublish(true);
+				updateDependenciesCommand.execute(workspace1, new IProject[] { project1 }, model);
 			}
 		}
 	}

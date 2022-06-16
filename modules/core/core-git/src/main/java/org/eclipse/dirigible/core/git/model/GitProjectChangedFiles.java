@@ -9,32 +9,32 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.runtime.git.model;
+package org.eclipse.dirigible.core.git.model;
 
 import java.util.List;
 
-import org.eclipse.dirigible.core.git.GitBranch;
+import org.eclipse.dirigible.core.git.GitChangedFile;
 
-public class GitProjectRemoteBranches {
+public class GitProjectChangedFiles {
 	
-	private List<GitBranch> remote;
-
+	private List<GitChangedFile> files;
+	
 	/**
-	 * Getter for the remote branches
+	 * Getter for the files
 	 * 
-	 * @return the remote
+	 * @return the files
 	 */
-	public List<GitBranch> getRemote() {
-		return remote;
+	public List<GitChangedFile> getFiles() {
+		return files;
 	}
 
 	/**
-	 * Setter for the remote branches
+	 * Setter for the files
 	 * 
-	 * @param remote the remote to set
+	 * @param files the files to set
 	 */
-	public void setRemote(List<GitBranch> remote) {
-		this.remote = remote;
+	public void setFiles(List<GitChangedFile> files) {
+		this.files = files;
 	}
 
 }
