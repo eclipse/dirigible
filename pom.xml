@@ -740,7 +740,7 @@
 		<testcontainers.elasticsearch.version>1.17.2</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		<jackson.databind.version>2.13.2.2</jackson.databind.version>
+		<jackson.databind.version>2.13.3</jackson.databind.version>
 		<spring.boot.version>2.7.0</spring.boot.version>
 		<webjars-locator>0.45</webjars-locator>
 
