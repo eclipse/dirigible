@@ -87,7 +87,7 @@ public class CommitCommand {
 					gitConnector.add(projectName);
 				}
 			}
-			gitConnector.commit(model.getCommitMessage(), model.getUsername(), model.getPassword(), model.isAutoAdd());
+			gitConnector.commit(model.getCommitMessage(), model.getUsername(), model.getEmail(), model.isAutoAdd());
 		} catch (IOException | GitAPIException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
