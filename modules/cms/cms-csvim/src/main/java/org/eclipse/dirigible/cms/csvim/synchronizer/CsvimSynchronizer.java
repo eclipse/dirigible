@@ -351,9 +351,17 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 
 		for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
 			try {
-				csvimProcessor.process(csvFileDefinition, connection);
-				csvimCoreService.updateCsv(csvFileDefinition.getFile(), null, true);
-			} catch (SQLException | CsvimException e) {
+				IResource resource = csvimProcessor.getCsvResource(csvFileDefinition);
+				String content = csvimProcessor.getCsvContent(resource);
+				CsvDefinition csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
+				String hash = DigestUtils.md5Hex(content.getBytes());
+				if (hash.equals(csvDefinition.getHash())
+						&& csvDefinition.getImported()) {
+					continue;
+				}
+				csvimProcessor.process(csvFileDefinition, content, connection);
+				csvimCoreService.updateCsv(csvFileDefinition.getFile(), hash, true);
+			} catch (SQLException | CsvimException | IOException e) {
 				logger.error(
 						String.format("An error occurred while trying to execute the data import: %s", e.getMessage()),
 						e);

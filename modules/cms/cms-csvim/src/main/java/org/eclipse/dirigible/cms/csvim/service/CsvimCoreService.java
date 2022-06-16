@@ -337,6 +337,7 @@ public class CsvimCoreService implements ICsvimCoreService {
 				if (hash != null) {
 					csvDefinition.setHash(hash);
 				}
+				csvDefinition.setImported(imported);
 				csvPersistenceManager.update(connection, csvDefinition);
 			} finally {
 				if (connection != null) {

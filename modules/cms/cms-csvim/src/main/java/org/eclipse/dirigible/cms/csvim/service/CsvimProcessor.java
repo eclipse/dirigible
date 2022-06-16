@@ -49,6 +49,7 @@ import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
+import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,13 +84,22 @@ public class CsvimProcessor {
 		}
 		return repository;
 	}
-
-
-	public void process(CsvFileDefinition csvFileDefinition, Connection connection)
-			throws CsvimException, SQLException {
+	
+	public IResource getCsvResource(CsvFileDefinition csvFileDefinition) {
 		IResource resource = getRepository().getResource(convertToActualFileName(csvFileDefinition.getFile()));
+		return resource;
+	}
+	
+	public String getCsvContent(IResource resource) throws RepositoryReadException, IOException {
+		String contentAsString = IOUtils.toString(
+				new InputStreamReader(new ByteArrayInputStream(resource.getContent()), StandardCharsets.UTF_8));
+		return contentAsString;
+	}
+
+	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection)
+			throws CsvimException, SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
-		CSVParser csvParser = getCsvParser(csvFileDefinition, resource);
+		CSVParser csvParser = getCsvParser(csvFileDefinition, content);
 		PersistenceTableModel tableMetadata = getTableMetadata(csvFileDefinition);
 		if (tableMetadata == null || csvParser == null) {
 			return;
@@ -231,18 +241,16 @@ public class CsvimProcessor {
 		}
 		return null;
 	}
-
-	private CSVParser getCsvParser(CsvFileDefinition csvimConfigurationDefinition, IResource resource)
+	
+	private CSVParser getCsvParser(CsvFileDefinition csvFileDefinition, String contentAsString)
 			throws CsvimException {
 		try {
-			String contentAsString = IOUtils.toString(
-					new InputStreamReader(new ByteArrayInputStream(resource.getContent()), StandardCharsets.UTF_8));
-			CSVFormat csvFormat = createCSVFormat(csvimConfigurationDefinition);
+			CSVFormat csvFormat = createCSVFormat(csvFileDefinition);
 			return CSVParser.parse(contentAsString, csvFormat);
 		} catch (IOException e) {
 			String errorMessage = String.format("Error occurred while trying to parse csv imported from CSV file: %s",
-					csvimConfigurationDefinition.getFile());
-			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvimConfigurationDefinition.getFile(),
+					csvFileDefinition.getFile());
+			logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(),
 					ARTEFACT_TYPE_CSVIM);
 			logger.error(errorMessage, e);
 		}
