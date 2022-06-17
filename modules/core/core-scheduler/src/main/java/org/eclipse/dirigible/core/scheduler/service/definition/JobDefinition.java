@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -313,20 +314,84 @@ public class JobDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
+//		result = prime * result + ((description == null) ? 0 : description.hashCode());
+//		result = prime * result + (enabled ? 1231 : 1237);
+//		result = prime * result + ((engine == null) ? 0 : engine.hashCode());
+//		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+//		result = prime * result + ((group == null) ? 0 : group.hashCode());
+//		result = prime * result + ((handler == null) ? 0 : handler.hashCode());
+//		result = prime * result + ((name == null) ? 0 : name.hashCode());
+//		result = prime * result + (singleton ? 1231 : 1237);
+//		return result;
+//	}
+
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		JobDefinition other = (JobDefinition) obj;
+//		if (clazz == null) {
+//			if (other.clazz != null)
+//				return false;
+//		} else if (!clazz.equals(other.clazz))
+//			return false;
+//		if (description == null) {
+//			if (other.description != null)
+//				return false;
+//		} else if (!description.equals(other.description))
+//			return false;
+//		if (enabled != other.enabled)
+//			return false;
+//		if (engine == null) {
+//			if (other.engine != null)
+//				return false;
+//		} else if (!engine.equals(other.engine))
+//			return false;
+//		if (expression == null) {
+//			if (other.expression != null)
+//				return false;
+//		} else if (!expression.equals(other.expression))
+//			return false;
+//		if (group == null) {
+//			if (other.group != null)
+//				return false;
+//		} else if (!group.equals(other.group))
+//			return false;
+//		if (handler == null) {
+//			if (other.handler != null)
+//				return false;
+//		} else if (!handler.equals(other.handler))
+//			return false;
+//		if (name == null) {
+//			if (other.name != null)
+//				return false;
+//		} else if (!name.equals(other.name))
+//			return false;
+//		if (singleton != other.singleton)
+//			return false;
+//		return true;
+//	}
+	
+	
+
+	@Override
+	public String getArtefactName() {
+		return getName();
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (enabled ? 1231 : 1237);
-		result = prime * result + ((engine == null) ? 0 : engine.hashCode());
-		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((handler == null) ? 0 : handler.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + (singleton ? 1231 : 1237);
-		return result;
+		return Objects.hash(clazz, description, enabled, engine, expression, group, handler, name, parameters,
+				singleton);
 	}
 
 	@Override
@@ -338,51 +403,11 @@ public class JobDefinition implements IArtefactDefinition {
 		if (getClass() != obj.getClass())
 			return false;
 		JobDefinition other = (JobDefinition) obj;
-		if (clazz == null) {
-			if (other.clazz != null)
-				return false;
-		} else if (!clazz.equals(other.clazz))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (enabled != other.enabled)
-			return false;
-		if (engine == null) {
-			if (other.engine != null)
-				return false;
-		} else if (!engine.equals(other.engine))
-			return false;
-		if (expression == null) {
-			if (other.expression != null)
-				return false;
-		} else if (!expression.equals(other.expression))
-			return false;
-		if (group == null) {
-			if (other.group != null)
-				return false;
-		} else if (!group.equals(other.group))
-			return false;
-		if (handler == null) {
-			if (other.handler != null)
-				return false;
-		} else if (!handler.equals(other.handler))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (singleton != other.singleton)
-			return false;
-		return true;
-	}
-
-	@Override
-	public String getArtefactName() {
-		return getName();
+		return Objects.equals(clazz, other.clazz) && Objects.equals(description, other.description)
+				&& enabled == other.enabled && Objects.equals(engine, other.engine)
+				&& Objects.equals(expression, other.expression) && Objects.equals(group, other.group)
+				&& Objects.equals(handler, other.handler) && Objects.equals(name, other.name)
+				&& Objects.equals(parameters, other.parameters) && singleton == other.singleton;
 	}
 
 	@Override

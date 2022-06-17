@@ -173,12 +173,21 @@
             <div class="form-group row modal-header">
                 <h3>Job parameters for: {{name}}</h3>
             </div>
-            <form class="" style="padding: 1em;">
+            <form class="container" style="padding: 1em;">
                 <div class="form-group row" ng-repeat="parameter in parameters">
                     <label class="col-xs-3 col-form-label">{{parameter.name}}</label>
                     <div class="col-xs-5">
-                        <input class="form-control" type="text" placeholder="" ng-model="parameter.value"
-                            required="required">
+                        <input ng-show="parameter.type === 'string'" class="form-control" type="text" placeholder=""
+                            ng-model="parameter.value" required="required">
+                        <input ng-show="parameter.type === 'number'" class="form-control" type="text" placeholder=""
+                            ng-model="parameter.value" required="required" pattern="[0-9]+"
+                            onInput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <select ng-show="parameter.type === 'boolean'" ng-model="parameter.value"
+                            ng-options="o as o for o in ['true','false']"
+                            class="dropdown btn btn-default dropdown-toggle dropdown-top"></select>
+                        <select ng-show="parameter.type === 'choice'" ng-model="parameter.value"
+                            ng-options="o as o for o in parameter.choices.split(',')"
+                            class="dropdown btn btn-default dropdown-toggle dropdown-top"></select>
                     </div>
                 </div>
             </form>

@@ -129,6 +129,22 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 				jobParameterPersistenceManager.update(connection, parameter);
 			}
 		}
+		jobParameterPersistenceManager.tableCheck(connection, JobParameterDefinition.class);
+		String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_PARAMETERS").where("JOBPARAM_JOB_NAME = ?").toString();
+		List<JobParameterDefinition> parameters = jobParameterPersistenceManager.query(connection, JobParameterDefinition.class, sql,
+				Arrays.asList(jobDefinition.getName()));
+		for (JobParameterDefinition parameter : parameters) {
+			boolean exists = false;
+			for (JobParameterDefinition existing : jobDefinition.getParameters()) {
+				if (existing.getName().equals(parameter.getName())) {
+					exists = true;
+					break;
+				}
+			}
+			if (!exists) {
+				jobParameterPersistenceManager.delete(connection, JobParameterDefinition.class, parameter.getId());
+			}
+		}
 	}
 
 	/*

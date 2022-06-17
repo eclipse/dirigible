@@ -49,6 +49,7 @@ angular.module('jobs', [])
 
 		$scope.getParameters = function (job) {
 			$scope.job = job;
+			$scope.result = "Job: " + $scope.job.name + " has not been triggered yet";
 			$scope.map = new Array();
 			$http.get('/services/v4/ops/jobs/parameters/' + job.name)
 				.then(function (response) {

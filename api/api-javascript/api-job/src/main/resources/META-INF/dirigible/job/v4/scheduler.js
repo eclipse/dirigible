@@ -28,17 +28,10 @@ exports.getJobs = function () {
 };
 
 exports.getJob = function (name) {
-	let data = JSON.parse(org.eclipse.dirigible.api.v3.job.JobFacade.getJob(name));
+	let jobData = org.eclipse.dirigible.api.v3.job.JobFacade.getJob(name);
+	let data = JSON.parse(jobData);
 	let job = new Job(data);
 	return job;
-};
-
-exports.getParameter = function (name) {
-	return configurations.get(name);
-};
-
-exports.setParameter = function (name, value) {
-	return configurations.set(name, value);
 };
 
 /**
@@ -94,6 +87,20 @@ function Job(data) {
 
 	this.getParameters = function () {
 		return new JobParameters(data.parameters);
+	};
+
+	this.getParameter = function (name) {
+		if (this.data) {
+			for (let i in this.data.parameters) {
+				if (this.data.parameters[i].name === name) {
+					let value = configurations.get(name);
+					return value && value !== null ? value : data.parameters[i].defaultValue;
+				}
+			}
+		} else {
+			console.error("Job is not valid");
+		}
+		return null;
 	};
 
 }

@@ -110,7 +110,8 @@ angular.module('page', [])
 		$scope.types = [
 			{ "key": "string", "label": "string" },
 			{ "key": "number", "label": "number" },
-			{ "key": "boolean", "label": "boolean" }
+			{ "key": "boolean", "label": "boolean" },
+			{ "key": "choice", "label": "choice" }
 		];
 
 		$scope.openNewDialog = function () {
