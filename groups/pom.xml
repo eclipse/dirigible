@@ -15,9 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-        <module>api-all</module>
-        <module>api-facade-all</module>
-		<module>api-javascript-all</module>
 		<module>ext-all</module>
 		<module>ide-all</module>
 		<module>ide-services-all</module>

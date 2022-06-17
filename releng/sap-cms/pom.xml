@@ -91,11 +91,7 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-api-facade-git</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.dirigible</groupId>
-					<artifactId>dirigible-api-javascript-git</artifactId>
+					<artifactId>dirigible-api-git</artifactId>
 				</exclusion>
 			</exclusions>
 

@@ -11,12 +11,30 @@
 
 	<name>API - Parent</name>
 	<artifactId>dirigible-api-parent</artifactId>
-	<description>WebIDE Plugins</description>
     <packaging>pom</packaging>
 
 	<modules>
-		<module>api-facade</module>
-		<module>api-javascript</module>
+		<module>api-all</module>
+		<module>api-bpm</module>
+		<module>api-cms</module>
+		<module>api-core</module>
+		<module>api-database</module>
+		<module>api-documents</module>
+		<module>api-git</module>
+		<module>api-http</module>
+		<module>api-http-async</module>
+		<module>api-indexing</module>
+		<module>api-io</module>
+		<module>api-job</module>
+		<module>api-log</module>
+		<module>api-mail</module>
+		<module>api-messaging</module>
+		<module>api-net</module>
+		<module>api-platform</module>
+		<module>api-security</module>
+		<module>api-test</module>
+		<module>api-tests</module>
+		<module>api-utils</module>
 	</modules>
 
 	<properties>

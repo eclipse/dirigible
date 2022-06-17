@@ -50,13 +50,13 @@
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-facade-core</artifactId>
+			<artifactId>dirigible-api-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-api-javascript-core</artifactId>
+			<artifactId>dirigible-api-core</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>

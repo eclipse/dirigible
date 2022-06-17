@@ -49,7 +49,7 @@
 		<!-- API Facade HTTP -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-api-facade-http</artifactId>
+		 	<artifactId>dirigible-api-http</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
