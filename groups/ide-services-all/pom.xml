@@ -73,7 +73,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-ext-acorn</artifactId>
+            <artifactId>dirigible-api-ext-acorn</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

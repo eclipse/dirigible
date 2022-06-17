@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>ext-all</module>
 		<module>ide-all</module>
 		<module>ide-services-all</module>
 		<module>ide-ui-all</module>

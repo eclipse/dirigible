@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>7.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<name>API - Ext - Parent</name>
+	<artifactId>dirigible-api-ext-parent</artifactId>
+    <packaging>pom</packaging>
+
+	<modules>
+		<module>api-ext-all</module>
+		<module>api-ext-acorn</module>
+		<module>api-ext-cassandra</module>
+		<module>api-ext-elasticsearch</module>
+		<module>api-ext-etcd</module>
+		<module>api-ext-jasmine</module>
+		<module>api-ext-kafka</module>
+		<module>api-ext-mongodb</module>
+		<module>api-ext-qunit</module>
+		<module>api-ext-rabbitmq</module>
+		<module>api-ext-redis</module>
+		<module>api-ext-spark</module>
+	</modules>
+
+	<properties>
+		<license.header.location>../licensing-header.txt</license.header.location>
+	</properties>
+
+</project>

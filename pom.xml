@@ -510,11 +510,11 @@
 
 	<modules>
 		<module>api</module>
+		<module>api-ext</module>
 		<module>modules</module>
 		<module>ide</module>
 		<module>templates</module>
 		<module>resources</module>
-		<module>ext</module>
 		<module>groups</module>
 		<module>releng</module>
     </modules>

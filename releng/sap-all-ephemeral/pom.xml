@@ -96,6 +96,13 @@
 			</exclusions>
 		</dependency>
 
+		<!-- External API modules -->
+		<dependency>
+		 	<groupId>org.eclipse.dirigible</groupId>
+		 	<artifactId>dirigible-api-ext</artifactId>
+		 	<version>7.0.0-SNAPSHOT</version>
+		</dependency>
+
 		<!-- Repository -->
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
@@ -262,13 +269,6 @@
 		<dependency>
 		 	<groupId>org.eclipse.dirigible</groupId>
 		 	<artifactId>dirigible-resources</artifactId>
-		 	<version>7.0.0-SNAPSHOT</version>
-		</dependency>
-
-		<!-- External API modules -->
-		<dependency>
-		 	<groupId>org.eclipse.dirigible</groupId>
-		 	<artifactId>dirigible-ext</artifactId>
 		 	<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 
