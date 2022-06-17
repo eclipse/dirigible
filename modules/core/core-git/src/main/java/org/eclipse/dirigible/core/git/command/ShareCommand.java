@@ -22,6 +22,8 @@ import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.model.GitShareModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
+import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
@@ -38,6 +40,8 @@ public class ShareCommand {
 
 	/** The project metadata manager. */
 	private ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
+
+	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	/**
 	 * Execute the share command.
@@ -122,6 +126,7 @@ public class ShareCommand {
 				}
 				projectPathBuilder.append(File.separator).append(projectGitDirectory.getName());
 				projectPath = projectPathBuilder.toString();
+				publisherCoreService.createUnpublishRequest(workspace.getName(), project.getName());
 			} else {				
 				projectGitDirectory = new File(tempGitDirectory, project.getName());
 				projectPath = project.getPath();
@@ -130,7 +135,7 @@ public class ShareCommand {
 
 			String message = String.format("Project [%s] successfully shared.", project.getName());
 			logger.info(message);
-		} catch (IOException | GitAPIException | GitConnectorException e) {
+		} catch (IOException | GitAPIException | PublisherException | GitConnectorException e) {
 			Throwable rootCause = e.getCause();
 			if (rootCause != null) {
 				rootCause = rootCause.getCause();
