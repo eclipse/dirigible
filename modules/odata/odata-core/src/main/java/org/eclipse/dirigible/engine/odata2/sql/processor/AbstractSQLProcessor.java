@@ -68,6 +68,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     private static final String UPDATE_BUILDER = "updateBuilder";
     private static final String SQL_CONTEXT = "sqlContext";
     private static final String ENTRY_MAP = "entryMap";
+    private static final String ERROR_DOCUMENT = "errorDocument";
 
     public AbstractSQLProcessor() {
         this(new DummyOData2EventHandler());
@@ -330,11 +331,17 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.beforeCreateEntity(uriInfo,
                     requestContentType, contentType, entry, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
 
             if (this.odata2EventHandler.usingOnCreateEntity(uriInfo, requestContentType, contentType)) {
                 updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 this.odata2EventHandler.onCreateEntity(uriInfo, content,
                         requestContentType, contentType, handlerContext);
+                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                    return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+                }
                 entryMap = (HashMap<String, Object>) handlerContext.get(ENTRY_MAP);
             } else {
                 SQLInsertBuilder insertBuilder = this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext());
@@ -389,6 +396,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                     }
                     updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                     this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
+                    if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                        return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+                    }
                     return response;
                 } catch (Exception e) {
                     throw new ODataException("Unable to get back the created entity", e);
@@ -407,6 +417,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
         } catch (Exception e) {
             throw new ODataException("Unable to execute after create handler", e);
         }
@@ -431,15 +444,23 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             throw new ODataException("Delete operation on entity: " + OData2Utils.fqn(uriInfo.getTargetType()) + " is forbidden.");
         }
 
-        SQLDeleteBuilder deleteBuilder = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, mapKeys(uriInfo.getKeyPredicates()), getContext());
+        Map<String, Object> keys = mapKeys(uriInfo.getKeyPredicates());
+        SQLDeleteBuilder deleteBuilder = this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, keys, getContext());
 
         try (Connection connection = getDataSource().getConnection()) {
             Map<Object, Object> handlerContext = new HashMap<>();
-            updateDeleteEventHandlerContext(handlerContext, uriInfo, connection);
+            updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
             this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
 
             if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
+                updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
                 this.odata2EventHandler.onDeleteEntity(uriInfo, contentType, handlerContext);
+                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                    return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+                }
             } else {
                 try (PreparedStatement statement = createDeleteStatement(deleteBuilder, connection)) {
                     statement.executeUpdate();
@@ -447,7 +468,11 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             }
 
             ODataResponse response = ODataResponse.newBuilder().build();
+            updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
             this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
             return response;
         } catch (Exception e) {
             throw new ODataException("Unable to delete entry", e);
@@ -484,10 +509,16 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.beforeUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
 
             if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
                 updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType, handlerContext);
+                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                    return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+                }
             } else {
                 ResultSetReader.ResultSetEntity currentTargetEntity = new ResultSetReader.ResultSetEntity(targetEntityType, Collections.emptyMap());
                 Collection<EdmProperty> properties = targetEntityType.getKeyProperties();
@@ -513,6 +544,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             ODataResponse response = ODataResponse.newBuilder().status(HttpStatusCodes.NO_CONTENT).build();
             updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
+            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
+            }
             return response;
         } catch (Exception e) {
             throw new ODataException("Unable to update entity", e);
@@ -641,12 +675,15 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         context.put(SQL_CONTEXT, createSQLContext(connection));
     }
 
-    private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo, Connection connection) throws ODataException, SQLException {
+    private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo, Map<String, Object> keys, Connection connection) throws ODataException, SQLException {
+        context.put(DUMMY_BUILDER, this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, keys, getContext()));
         context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
         context.put(SQL_CONTEXT, createSQLContext(connection));
     }
 
     private void updateUpdateEventHandlerContext(Map<Object, Object> context, Connection connection, PutMergePatchUriInfo uriInfo, ODataEntry entry) throws ODataException, SQLException {
+        context.put(DUMMY_BUILDER, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
+                mapKeys(uriInfo.getKeyPredicates()), getContext()));
         context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
         context.put(UPDATE_BUILDER, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
                 mapKeys(uriInfo.getKeyPredicates()), getContext()));

@@ -93,7 +93,7 @@ public class SQLUpdateBuilder extends AbstractQueryBuilder {
 		return this;
 	}
 
-	private String getTargetTableName() {
+	public String getTargetTableName() {
 		return tableName != null ? tableName : buildInto();
 	}
 
