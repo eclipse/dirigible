@@ -52,6 +52,7 @@ let config = require("core/v4/configurations");
 exports.getMenu = function () {
 	let menu = {
 		label: "Help",
+		order: 900,
 		items: [
 			{
 				label: "About",

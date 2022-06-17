@@ -21,6 +21,10 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
     $scope.search = { text: '' };
     $scope.autoScroll = true;
 
+    let lastKnownScrollPosition = -1;
+    let isScrolling = false;
+    let logContentEl = $('#logContent');
+
     $scope.logLevels = {
         'LOG': { enabled: true },
         'INFO': { name: 'Info', enabled: true },
@@ -40,6 +44,7 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         $scope.logs = [];
         $scope.allLogs = [];
         $scope.autoScroll = true;
+        lastKnownScrollPosition = -1;
     };
 
     $scope.search = function () {
@@ -107,11 +112,7 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
 
                 consoleLogMessage(record);
 
-                if ($scope.autoScroll) {
-                    $('#logContent').animate({
-                        scrollTop: $('#logContent').get(0).scrollHeight
-                    }, 1000);
-                }
+                scrollToBottom();
 
                 if (record.level === 'ERROR' || record.level === 'WARN') {
                     messageHub.setStatusError(record.message);
@@ -136,6 +137,29 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         $scope.$apply();
     }
 
+    function isScrolledToBottom() {
+        let scrollHeight = logContentEl.get(0).scrollHeight;
+        let scrollPosition = logContentEl.height() + logContentEl.scrollTop();
+        return (Math.round(((scrollHeight - scrollPosition) / scrollHeight) * 100) / 100 === 0);
+    }
+
+    function scrollToBottom() {
+        if ($scope.autoScroll) {
+
+            if (!isScrolling && !isScrolledToBottom()) {
+                isScrolling = true;
+                logContentEl.animate({
+                    scrollTop: logContentEl.get(0).scrollHeight,
+                }, {
+                    always: () => {
+                        isScrolling = false;
+                        scrollToBottom();
+                    }
+                });
+            }
+        }
+    }
+
     messageHub.onPublish(function () {
         $scope.$apply();
     });
@@ -144,11 +168,25 @@ consoleView.controller('ConsoleController', ['$scope', 'messageHub', function ($
         $scope.$apply();
     });
 
-    let logContentEl = $('#logContent');
     logContentEl.on('scroll', function () {
-        let scrollHeight = logContentEl.get(0).scrollHeight;
+        if (isScrolling) return;
+
         let scrollPosition = logContentEl.height() + logContentEl.scrollTop();
-        $scope.autoScroll = ((scrollHeight - scrollPosition) / scrollHeight === 0);
+        if (lastKnownScrollPosition !== -1) {
+            if ($scope.autoScroll) {
+                if (scrollPosition < lastKnownScrollPosition) { //scroll up
+                    $scope.autoScroll = false
+                    $scope.$apply();
+                }
+            } else {
+                if (scrollPosition > lastKnownScrollPosition && isScrolledToBottom()) {
+                    $scope.autoScroll = true
+                    $scope.$apply();
+                }
+            }
+        }
+
+        lastKnownScrollPosition = scrollPosition;
     });
 
     connectToLog();
