@@ -1240,8 +1240,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                 }
 
                 angular.element($window).on('resize', function () {
-                    updateSize();
-                    $scope.$digest();
+                    $scope.$apply(updateSize);
                 });
 
                 $scope.$on('$destroy', function () {

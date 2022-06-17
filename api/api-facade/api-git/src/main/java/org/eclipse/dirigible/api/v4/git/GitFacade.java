@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.scripting.IScriptingFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -22,7 +23,6 @@ import org.eclipse.dirigible.core.git.*;
 import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
 import org.eclipse.dirigible.core.workspace.json.WorkspaceGitHelper;
 import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.*;
 import java.io.File;
@@ -32,12 +32,12 @@ import java.util.List;
 
 public class GitFacade implements IScriptingFacade {
 
-    private static WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
+    private static final WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
 
     public static void initRepository(String username, String email, String workspaceName, String projectName, String repositoryName, String commitMessage) throws IOException, GitAPIException, GitConnectorException {
-
         IWorkspace workspaceObject = workspacesCoreService.getWorkspace(workspaceName);
         IProject projectObject = workspaceObject.getProject(projectName);
+        ensureProjectJsonIsCreatedForProject(workspaceObject, projectName);
         String user = UserFacade.getName();
         File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspaceName, repositoryName);
         boolean isExistingGitRepository = gitDirectory != null;
@@ -52,15 +52,19 @@ public class GitFacade implements IScriptingFacade {
         projectObject.delete();
 
         File projectGitDirectory = new File(gitDirectory, projectObject.getName());
-        GitFileUtils gitFileUtils = new GitFileUtils();
 
         GitConnectorFactory.initRepository(gitDirectory.getCanonicalPath(), false);
-        gitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectObject.getPath());
+        GitFileUtils.importProjectFromGitRepositoryToWorkspace(projectGitDirectory, projectObject.getPath());
 
         //the code below is needed because otherwise getHistory method will throw an error in the git perspective
         IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
         gitConnector.add(IGitConnector.GIT_ADD_ALL_FILE_PATTERN);
         gitConnector.commit(commitMessage, username, email, true);
+    }
+
+    private static void ensureProjectJsonIsCreatedForProject(IWorkspace workspace, String projectName) {
+        ProjectMetadataManager projectMetadataManager = new ProjectMetadataManager();
+        projectMetadataManager.ensureProjectMetadata(workspace, projectName);
     }
 
     public static void commit(String username, String email, final String workspaceName, String repositoryName, String commitMessage, Boolean add) throws GitAPIException, IOException, GitConnectorException {

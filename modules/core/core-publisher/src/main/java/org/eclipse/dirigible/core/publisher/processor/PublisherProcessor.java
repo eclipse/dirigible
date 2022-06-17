@@ -87,8 +87,7 @@ public class PublisherProcessor {
 		if ("*".equals(path)) {
 			path = "";
 		}
-		PublishRequestDefinition publishRequestDefinition = publishCoreService.createUnpublishRequest(workspacePath.toString(), path,
-				IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+		PublishRequestDefinition publishRequestDefinition = publishCoreService.createUnpublishRequest(workspacePath.toString(), path);
 		logger.debug("Unpublishing request created [{}]", publishRequestDefinition.getId());
 		// force synchronization ?
 		PublisherSynchronizer.forceSynchronization();

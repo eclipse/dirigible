@@ -157,7 +157,7 @@ public class GitProcessor {
 					repository.deleteLinkedPath(next.getPath());
 				}
 				if (unpublish) {
-					publisherCoreService.createUnpublishRequest(workspace, next.getName(), IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+					publisherCoreService.createUnpublishRequest(workspace, next.getName());
 				}
 			}
 

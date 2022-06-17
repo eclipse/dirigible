@@ -11,7 +11,9 @@
  */
 package org.eclipse.dirigible.core.workspace.json;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -47,8 +49,9 @@ public class WorkspaceJsonHelper {
 		workspacePojo.setName(collection.getName());
 		workspacePojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		List<ICollection> collections = collection.getCollections();
+		Map<String, ProjectStatus> projectStatusCache = new HashMap<String, ProjectStatus>();
 		for (ICollection childCollection : collections) {
-			workspacePojo.getProjects().add(describeProject(childCollection, removePathPrefix, addPathPrefix));
+			workspacePojo.getProjects().add(describeProject(childCollection, removePathPrefix, addPathPrefix, projectStatusCache));
 		}
 
 		return workspacePojo;
@@ -89,12 +92,16 @@ public class WorkspaceJsonHelper {
 	 * @return the project descriptor
 	 */
 	public static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix) {
+		return describeProject(collection, removePathPrefix, addPathPrefix, new HashMap<String, ProjectStatus>());
+	}
+
+	private static ProjectDescriptor describeProject(ICollection collection, String removePathPrefix, String addPathPrefix, Map<String, ProjectStatus> projectStatusCache) {
 		ProjectDescriptor projectPojo = new ProjectDescriptor();
 		projectPojo.setName(collection.getName());
 		projectPojo.setPath(addPathPrefix + collection.getPath().substring(removePathPrefix.length()));
 		RepositoryPath repositoryPath = new RepositoryPath(collection.getPath());
 
-		ProjectStatus status = getProjectStatus(collection, projectPojo, repositoryPath);
+		ProjectStatus status = getProjectStatus(collection, projectPojo, repositoryPath, projectStatusCache);
 		
 		List<ICollection> collections = collection.getCollections();
 		for (ICollection childCollection : collections) {
@@ -109,15 +116,21 @@ public class WorkspaceJsonHelper {
 		return projectPojo;
 	}
 
-	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo,
-			RepositoryPath repositoryPath) {
+	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath) {
+		return getProjectStatus(collection, projectPojo, repositoryPath, new HashMap<String, ProjectStatus>());
+	}
+
+	private static ProjectStatus getProjectStatus(ICollection collection, ProjectDescriptor projectPojo, RepositoryPath repositoryPath, Map<String, ProjectStatus> projectStatusCache) {
 		Pair<Boolean, String> gitInfo = WorkspaceGitHelper.getGitAware(collection.getRepository(), repositoryPath.toString());
 		projectPojo.setGit(gitInfo.getLeft());
 		projectPojo.setGitName(gitInfo.getRight());
 		ProjectStatus status = null;
-		if (gitInfo.getLeft()) {
+		if (projectStatusCache.containsKey(projectPojo.getGitName())) {
+			status = projectStatusCache.get(projectPojo.getGitName());
+		} else if (projectPojo.isGit()) {
 			for (IProjectStatusProvider statusProvider : statusProviders) {
 				status = statusProvider.getProjectStatus(collection.getParent().getName(), collection.getName());
+				projectStatusCache.put(projectPojo.getGitName(), status);
 				break;
 			}
 		}

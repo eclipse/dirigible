@@ -131,6 +131,16 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#createUnpublishRequest(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public PublishRequestDefinition createUnpublishRequest(String workspace, String path) throws PublisherException {
+		return createUnpublishRequest(workspace, path, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.dirigible.core.publisher.api.IPublisherCoreService#getPublishRequest(long)
 	 */
 	@Override
