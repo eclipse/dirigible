@@ -34,6 +34,18 @@ exports.getJob = function (name) {
 	return job;
 };
 
+exports.enableJob = function (name) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.enable(name);
+};
+
+exports.disableJob = function (name) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.disable(name);
+};
+
+exports.triggerJob = function (name, parameters) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.trigger(name, JSON.stringify(parameters));
+};
+
 /**
  * Job object
  */
@@ -101,6 +113,18 @@ function Job(data) {
 			console.error("Job is not valid");
 		}
 		return null;
+	};
+
+	this.enable = function () {
+		org.eclipse.dirigible.api.v3.job.JobFacade.enable(this.getName());
+	};
+
+	this.disable = function () {
+		org.eclipse.dirigible.api.v3.job.JobFacade.disable(this.getName());
+	};
+
+	this.trigger = function (parameters) {
+		org.eclipse.dirigible.api.v3.job.JobFacade.trigger(this.getName(), JSON.stringify(parameters));
 	};
 
 }

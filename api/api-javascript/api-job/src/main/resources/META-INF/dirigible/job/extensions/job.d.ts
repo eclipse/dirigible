@@ -4,9 +4,11 @@ declare module "@dirigible/job" {
 
         function getJob(name: string): Job
 
-        function getParameter(name: string): string
+        function enableJob(name: string)
 
-        function setParameter(name: string, value: string)
+        function disableJob(name: string)
+
+        function triggerJob(name: string, parameters: Object)
 
     }
 
@@ -72,6 +74,22 @@ declare module "@dirigible/job" {
          * Returns the parameters of the job
          */
         getParameters(): JobParameters
+
+        /**
+         * Enable execution of a Job
+         */
+        enable()
+
+        /**
+         * Disable execution of a Job
+         */
+        disable()
+
+        /**
+         * Trigger execution of a Job
+         */
+        trigger(parameters: Object)
+
 
     }
 

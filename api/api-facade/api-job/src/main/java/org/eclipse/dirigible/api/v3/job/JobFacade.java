@@ -11,10 +11,21 @@
  */
 package org.eclipse.dirigible.api.v3.job;
 
+import static java.text.MessageFormat.format;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.api.scripting.ScriptingException;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
+import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.engine.api.script.ScriptEngineExecutorsManager;
+import org.quartz.JobExecutionException;
 
 public class JobFacade {
 	
@@ -26,6 +37,65 @@ public class JobFacade {
 	
 	public static String getJob(String name) throws SchedulerException {
 		return GsonHelper.GSON.toJson(schedulerCoreService.getJob(name));
+	}
+	
+	public static String enable(String name) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			job.setEnabled(true);
+			schedulerCoreService.createOrUpdateJob(job);
+			SchedulerManager.scheduleJob(job);
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be enabled", name);
+			throw new SchedulerException(error);
+		}
+		
+        return GsonHelper.GSON.toJson(job);
+	}
+	
+	public static String disable(String name) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			job.setEnabled(false);
+			schedulerCoreService.createOrUpdateJob(job);
+			SchedulerManager.unscheduleJob(job.getName(), job.getGroup());
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be disabled", name);
+			throw new SchedulerException(error);
+		}
+		
+        return GsonHelper.GSON.toJson(job);
+	}
+	
+	public static boolean trigger(String name, String parameters) throws JobExecutionException, SchedulerException {
+		Map<String, String> parametersMap = GsonHelper.GSON.fromJson(parameters, Map.class);
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			Map<String, String> memento = new HashMap<String, String>();
+			try {
+				for (Map.Entry<String, String> entry : parametersMap.entrySet()) {
+					memento.put(entry.getKey(), Configuration.get(entry.getKey()));
+					Configuration.set(entry.getKey(), entry.getValue());
+				}
+				
+				String engine = job.getEngine();
+				String handler = job.getHandler();
+				try {
+					ScriptEngineExecutorsManager.executeServiceModule(engine, handler, null);
+				} catch (ScriptingException e) {
+					throw new JobExecutionException(e);
+				}
+			} finally {
+				for (Map.Entry<String, String> entry : memento.entrySet()) {
+					Configuration.set(entry.getKey(), entry.getValue());
+				}
+			}
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be triggered", name);
+			throw new JobExecutionException(error);
+		}
+		
+        return true;
 	}
 	
 }
