@@ -88,6 +88,13 @@ public class BpmRestService extends AbstractRestService implements IRestService 
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
+		// Sanitize path
+		if (path.indexOf("?") > 0) {
+			path = path.substring(0, path.indexOf("?"));
+		} else if (path.indexOf("&") > 0) {
+			path = path.substring(0, path.indexOf("&"));
+		}
+
 		String model = processor.getModel(workspace, project, path);
 		
 		if (model == null) {
