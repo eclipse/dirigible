@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.2.36</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -36,72 +36,72 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-core</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-database</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-http</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-http-async</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-indexing</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-io</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-log</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-mail</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-messaging</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-platform</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-utils</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-net</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-git</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.2.36</version>
 		</dependency>
 	</dependencies>
 
