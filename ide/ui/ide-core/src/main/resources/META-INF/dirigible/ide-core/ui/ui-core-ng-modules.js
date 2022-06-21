@@ -162,7 +162,11 @@ angular.module('ideUiCore', ['ngResource'])
 						if (componentState.extraArgs) {
 							const extraArgs = Object.keys(componentState.extraArgs);
 							for (let i = 0; i < extraArgs.length; i++) {
-								src += `&${extraArgs[i]}=${encodeURIComponent(componentState.extraArgs[extraArgs[i]])}`;
+								let queryParamSeparator = "&";
+								if (src.indexOf("?") < 0) {
+									queryParamSeparator = "?";
+								}
+								src += `${queryParamSeparator}${extraArgs[i]}=${encodeURIComponent(componentState.extraArgs[extraArgs[i]])}`;
 							}
 						}
 					} else {
