@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('roles', [])
-	.controller('RolesController', ['$scope', '$http', function ($scope, $http) {
+const rolesView = angular.module('roles', ['ideUI', 'ideView']);
 
-		$http.get('/services/v4/ops/security/roles').then(function (response) {
-			$scope.rolesList = response.data;
-		});
+rolesView.config(["messageHubProvider", function (messageHubProvider) {
+	messageHubProvider.eventIdPrefix = 'roles-view';
+}]);
 
-	}]);
+rolesView.controller('RolesController', ['$scope', '$http', function ($scope, $http) {
+
+	$http.get('/services/v4/ops/security/roles').then(function (response) {
+		$scope.accessList = response.data;
+	});
+
+}]);
