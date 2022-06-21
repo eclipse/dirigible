@@ -9,12 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getPerspective = function () {
-	return {
-		name: "Operations",
-		link: "../ide-operations/index.html",
-		order: "810",
-		image: "area-chart", // deprecated
-		icon: "../ide-operations/images/operations.svg",
-	};
-};
+const configurationsView = angular.module('configurations', ['ideUI', 'ideView']);
+
+configurationsView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'configurations-view';
+}]);
+
+configurationsView.controller('ConfigurationsController', ['$scope', '$http', function ($scope, $http) {
+
+    $http.get('/services/v4/core/configurations').then(function (response) {
+        $scope.configurations = response.data;
+    });
+
+}]);
