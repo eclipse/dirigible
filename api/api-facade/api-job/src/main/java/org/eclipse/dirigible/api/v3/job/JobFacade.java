@@ -98,4 +98,48 @@ public class JobFacade {
         return true;
 	}
 	
+	public static void log(String name, String message) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			String handler = job.getHandler();
+			schedulerCoreService.jobLogged(name, handler, message);
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
+			throw new SchedulerException(error);
+		}
+	}
+	
+	public static void error(String name, String message) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			String handler = job.getHandler();
+			schedulerCoreService.jobLoggedError(name, handler, message);
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
+			throw new SchedulerException(error);
+		}
+	}
+	
+	public static void warn(String name, String message) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			String handler = job.getHandler();
+			schedulerCoreService.jobLoggedWarning(name, handler, message);
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
+			throw new SchedulerException(error);
+		}
+	}
+	
+	public static void info(String name, String message) throws SchedulerException {
+		JobDefinition job = schedulerCoreService.getJob(name);
+		if (job != null) {
+			String handler = job.getHandler();
+			schedulerCoreService.jobLoggedInfo(name, handler, message);
+		} else {
+			String error = format("Job with name {0} does not exist, hence cannot be used to log messages", name);
+			throw new SchedulerException(error);
+		}
+	}
+	
 }

@@ -68,6 +68,12 @@ public class JobDefinition implements IArtefactDefinition {
 	
 	@Transient
 	private List<JobParameterDefinition> parameters = new ArrayList<JobParameterDefinition>();
+	
+	@Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = false)
+	private short status;
+	
+	@Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+	private String message;
 
 	/**
 	 * Gets the name.
@@ -314,75 +320,6 @@ public class JobDefinition implements IArtefactDefinition {
 		return toJson();
 	}
 
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = 1;
-//		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
-//		result = prime * result + ((description == null) ? 0 : description.hashCode());
-//		result = prime * result + (enabled ? 1231 : 1237);
-//		result = prime * result + ((engine == null) ? 0 : engine.hashCode());
-//		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
-//		result = prime * result + ((group == null) ? 0 : group.hashCode());
-//		result = prime * result + ((handler == null) ? 0 : handler.hashCode());
-//		result = prime * result + ((name == null) ? 0 : name.hashCode());
-//		result = prime * result + (singleton ? 1231 : 1237);
-//		return result;
-//	}
-
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		JobDefinition other = (JobDefinition) obj;
-//		if (clazz == null) {
-//			if (other.clazz != null)
-//				return false;
-//		} else if (!clazz.equals(other.clazz))
-//			return false;
-//		if (description == null) {
-//			if (other.description != null)
-//				return false;
-//		} else if (!description.equals(other.description))
-//			return false;
-//		if (enabled != other.enabled)
-//			return false;
-//		if (engine == null) {
-//			if (other.engine != null)
-//				return false;
-//		} else if (!engine.equals(other.engine))
-//			return false;
-//		if (expression == null) {
-//			if (other.expression != null)
-//				return false;
-//		} else if (!expression.equals(other.expression))
-//			return false;
-//		if (group == null) {
-//			if (other.group != null)
-//				return false;
-//		} else if (!group.equals(other.group))
-//			return false;
-//		if (handler == null) {
-//			if (other.handler != null)
-//				return false;
-//		} else if (!handler.equals(other.handler))
-//			return false;
-//		if (name == null) {
-//			if (other.name != null)
-//				return false;
-//		} else if (!name.equals(other.name))
-//			return false;
-//		if (singleton != other.singleton)
-//			return false;
-//		return true;
-//	}
-	
-	
-
 	@Override
 	public String getArtefactName() {
 		return getName();
@@ -440,6 +377,44 @@ public class JobDefinition implements IArtefactDefinition {
 	
 	public Collection<JobParameterDefinition> getParameters() {
 		return Collections.unmodifiableCollection(parameters);
+	}
+	
+	/**
+	 * Gets the latest status
+	 *
+	 * @return the latest status
+	 */
+	public short getStatus() {
+		return status;
+	}
+	
+	/**
+	 * Sets the latest status
+	 *
+	 * @param status
+	 *            the latest status
+	 */
+	public void setStatus(short status) {
+		this.status = status;
+	}
+	
+	/**
+	 * Gets the latest message
+	 *
+	 * @return the latest message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	
+	/**
+	 * Sets the latest message
+	 *
+	 * @param message
+	 *            the latest message
+	 */
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }

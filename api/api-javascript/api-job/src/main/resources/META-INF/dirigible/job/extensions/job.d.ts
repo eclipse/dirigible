@@ -4,11 +4,19 @@ declare module "@dirigible/job" {
 
         function getJob(name: string): Job
 
-        function enableJob(name: string)
+        function enable(name: string)
 
-        function disableJob(name: string)
+        function disable(name: string)
 
-        function triggerJob(name: string, parameters: Object)
+        function trigger(name: string, parameters: Object)
+
+        function log(name: string, message: string)
+
+        function error(name: string, message: string)
+
+        function warn(name: string, message: string)
+
+        function info(name: string, message: string)
 
     }
 
@@ -89,6 +97,26 @@ declare module "@dirigible/job" {
          * Trigger execution of a Job
          */
         trigger(parameters: Object)
+
+        /**
+         * Logs a message with normal severity
+         */
+        log(parameters: string)
+
+        /**
+         * Logs a message with error severity
+         */
+        error(parameters: string)
+
+        /**
+         * Logs a message with warn severity
+         */
+        warn(parameters: string)
+
+        /**
+         * Logs a message with info severity
+         */
+        info(parameters: string)
 
 
     }

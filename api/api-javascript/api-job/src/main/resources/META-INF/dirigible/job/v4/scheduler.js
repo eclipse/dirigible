@@ -34,16 +34,32 @@ exports.getJob = function (name) {
 	return job;
 };
 
-exports.enableJob = function (name) {
+exports.enable = function (name) {
 	org.eclipse.dirigible.api.v3.job.JobFacade.enable(name);
 };
 
-exports.disableJob = function (name) {
+exports.disable = function (name) {
 	org.eclipse.dirigible.api.v3.job.JobFacade.disable(name);
 };
 
-exports.triggerJob = function (name, parameters) {
+exports.trigger = function (name, parameters) {
 	org.eclipse.dirigible.api.v3.job.JobFacade.trigger(name, JSON.stringify(parameters));
+};
+
+exports.log = function (name, message) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.log(name, message);
+};
+
+exports.error = function (name, message) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.error(name, message);
+};
+
+exports.warn = function (name, message) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.warn(name, message);
+};
+
+exports.info = function (name, message) {
+	org.eclipse.dirigible.api.v3.job.JobFacade.info(name, message);
 };
 
 /**
@@ -125,6 +141,22 @@ function Job(data) {
 
 	this.trigger = function (parameters) {
 		org.eclipse.dirigible.api.v3.job.JobFacade.trigger(this.getName(), JSON.stringify(parameters));
+	};
+
+	this.log = function (message) {
+		org.eclipse.dirigible.api.v3.job.JobFacade.log(this.getName(), message);
+	};
+
+	this.error = function (message) {
+		org.eclipse.dirigible.api.v3.job.JobFacade.error(this.getName(), message);
+	};
+
+	this.warn = function (message) {
+		org.eclipse.dirigible.api.v3.job.JobFacade.warn(this.getName(), message);
+	};
+
+	this.info = function (message) {
+		org.eclipse.dirigible.api.v3.job.JobFacade.info(this.getName(), message);
 	};
 
 }

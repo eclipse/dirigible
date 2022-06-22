@@ -126,13 +126,31 @@
                             <tr ng-repeat="next in logs">
                                 <td width="50px">
                                     <div ng-show="{{next.status === 0}}" class="tdSingleLine">
-                                        <button class="btn"><i class="fa fa-history" aria-hidden="true"></i></button>
+                                        <span class="btn btn-primary"><i class="fa fa-history"
+                                                aria-hidden="true"></i></span>
                                     </div>
                                     <div ng-show="{{next.status === 1}}" class="tdSingleLine">
-                                        <button class="btn"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                        <span class="btn btn-success"><i class="fa fa-check"
+                                                aria-hidden="true"></i></span>
                                     </div>
                                     <div ng-show="{{next.status === -1}}" class="tdSingleLine">
-                                        <button class="btn"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        <span class="btn btn-danger"><i class="fa fa-times-rectangle"
+                                                aria-hidden="true"></i></span>
+                                    </div>
+                                    <div ng-show="{{next.status === 2}}" class="tdSingleLine">
+                                        <span class="btn btn-info"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div ng-show="{{next.status === 3}}" class="tdSingleLine">
+                                        <span class="btn btn-danger"><i class="fa fa-times-circle"
+                                                aria-hidden="true"></i></span>
+                                    </div>
+                                    <div ng-show="{{next.status === 4}}" class="tdSingleLine">
+                                        <span class="btn btn-warning"><i class="fa fa-warning"
+                                                aria-hidden="true"></i></span>
+                                    </div>
+                                    <div ng-show="{{next.status === 5}}" class="tdSingleLine">
+                                        <span class="btn btn-info"><i class="fa fa-info-circle"
+                                                aria-hidden="true"></i></span>
                                     </div>
                                 </td>
                                 <td>

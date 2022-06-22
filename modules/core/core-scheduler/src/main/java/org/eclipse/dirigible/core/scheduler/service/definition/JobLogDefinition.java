@@ -30,6 +30,14 @@ public class JobLogDefinition {
 	public static final short JOB_LOG_STATUS_FINISHED = 1;
 	
 	public static final short JOB_LOG_STATUS_FAILED = -1;
+	
+	public static final short JOB_LOG_STATUS_LOGGED = 2;
+	
+	public static final short JOB_LOG_STATUS_ERROR = 3;
+	
+	public static final short JOB_LOG_STATUS_WARN = 4;
+	
+	public static final short JOB_LOG_STATUS_INFO = 5;
 
 	/** The id. */
 	@Id
@@ -56,6 +64,7 @@ public class JobLogDefinition {
 	@Column(name = "JOBLOG_FINISHED_AT", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp finishedAt;
 
+	/** The status */
 	@Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
 	private short status;
 

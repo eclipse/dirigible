@@ -208,7 +208,51 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @return the Job Log
 	 * @throws SchedulerException exception
 	 */
-	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt,  String message) throws SchedulerException;
+	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLogged(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for error
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedError(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for warning
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedWarning(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for info
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedInfo(String name, String handler, String message) throws SchedulerException;
 	
 	/**
 	 * Get all the log per job's name
@@ -218,7 +262,6 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @throws SchedulerException exception
 	 */
 	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException;
-	
 	
 	/**
 	 * Delete Job Logs older than a week

@@ -332,7 +332,11 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setTriggeredId(triggeredId);
 		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
 		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
-		return registerJobLog(jobLogDefinition);
+		jobLogDefinition = registerJobLog(jobLogDefinition);
+		JobDefinition jobDefinition = getJob(name);
+		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FINISHED);
+		createOrUpdateJob(jobDefinition);
+		return jobLogDefinition;
 	}
 	
 	/*
@@ -350,6 +354,57 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setTriggeredAt(new Timestamp(triggeredAt.getTime()));
 		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
 		jobLogDefinition.setMessage(message);
+		jobLogDefinition = registerJobLog(jobLogDefinition);
+		JobDefinition jobDefinition = getJob(name);
+		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FAILED);
+		jobDefinition.setMessage(message);
+		createOrUpdateJob(jobDefinition);
+		return jobLogDefinition;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLogged(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobLogged(String name, String handler, String message) throws SchedulerException {
+		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_LOGGED);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedError(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobLoggedError(String name, String handler, String message) throws SchedulerException {
+		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_ERROR);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedWarning(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobLoggedWarning(String name, String handler, String message) throws SchedulerException {
+		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_WARN);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#jobLoggedInfo(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public JobLogDefinition jobLoggedInfo(String name, String handler, String message) throws SchedulerException {
+		return jobLogged(name, handler, message, JobLogDefinition.JOB_LOG_STATUS_INFO);
+	}
+	
+	private JobLogDefinition jobLogged(String name, String handler, String message, short severity) throws SchedulerException {
+		JobLogDefinition jobLogDefinition = new JobLogDefinition();
+		jobLogDefinition.setName(name);
+		jobLogDefinition.setHandler(handler);
+		jobLogDefinition.setMessage(message);
+		jobLogDefinition.setStatus(severity);
+		jobLogDefinition.setTriggeredAt(new Timestamp(new java.util.Date().getTime()));
 		return registerJobLog(jobLogDefinition);
 	}
 	
