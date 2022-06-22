@@ -743,6 +743,7 @@
 		<jackson.databind.version>2.13.3</jackson.databind.version>
 		<spring.boot.version>2.7.0</spring.boot.version>
 		<webjars-locator>0.45</webjars-locator>
+		<keycloak-adapter-bom.version>18.0.1</keycloak-adapter-bom.version>
 
 		<profile.content.phase>none</profile.content.phase>
 
