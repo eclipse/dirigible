@@ -43,19 +43,48 @@
             <table class="table table-striped" ng-cloak>
                 <thead>
                     <tr>
+                        <th width="50px">Status</th>
                         <th width="50px">Enabled</th>
                         <th>Name</th>
                         <th>Expression</th>
                         <th>Handler</th>
-                        <th width="50px">Singleton</th>
-                        <th width="180px">Created</th>
-                        <th width="150px">Creator</th>
+                        <th width="180px">Timestamp</th>
+                        <th width="150px">Message</th>
                         <th width="50px">Logs</th>
                         <th width="50px">Trigger</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="next in jobsList">
+                        <td width="50px">
+                            <div ng-show="{{next.status === 0}}" class="tdSingleLine">
+                                <span class="btn btn-primary"><i class="fa fa-history" aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 1}}" class="tdSingleLine">
+                                <span class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === -1}}" class="tdSingleLine">
+                                <span class="btn btn-danger"><i class="fa fa-times-rectangle"
+                                        aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 2}}" class="tdSingleLine">
+                                <span class="btn btn-info"><i class="fa fa-file" aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 3}}" class="tdSingleLine">
+                                <span class="btn btn-danger"><i class="fa fa-times-circle"
+                                        aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 4}}" class="tdSingleLine">
+                                <span class="btn btn-warning"><i class="fa fa-warning" aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 5}}" class="tdSingleLine">
+                                <span class="btn btn-info"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+                            </div>
+                            <div ng-show="{{next.status === 99}}" class="tdSingleLine">
+                                <span class="btn btn-warning"><i class="fa fa-question-circle"
+                                        aria-hidden="true"></i></span>
+                            </div>
+                        </td>
                         <td width="50px">
                             <div ng-show="next.enabled" class="tdSingleLine">
                                 <button class="btn" ng-click="disable(next)"><i class="fa fa-toggle-on"
@@ -75,13 +104,11 @@
                         <td>
                             <div class="tdSingleLine">{{next.handler}}</div>
                         </td>
-                        <td width="50px"><i class="fa fa-mail-reply" ng-show="{{next.singleton}}"></i><i
-                                class="fa fa-mail-reply-all" ng-hide="{{next.singleton}}"></i></td>
                         <td width="180px">
-                            <div class="tdSingleLine">{{next.createdAt}}</div>
+                            <div class="tdSingleLine">{{next.executedAt}}</div>
                         </td>
                         <td width="150px">
-                            <div class="tdSingleLine">{{next.createdBy}}</div>
+                            <div class="tdSingleLine">{{next.message}}</div>
                         </td>
                         <td width="50px">
                             <div class="tdSingleLine"><button class="btn" ng-click="getLogs(next)" data-toggle="modal"

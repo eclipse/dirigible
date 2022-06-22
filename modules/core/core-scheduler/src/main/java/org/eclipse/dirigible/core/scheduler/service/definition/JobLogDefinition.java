@@ -38,6 +38,8 @@ public class JobLogDefinition {
 	public static final short JOB_LOG_STATUS_WARN = 4;
 	
 	public static final short JOB_LOG_STATUS_INFO = 5;
+	
+	public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
 	/** The id. */
 	@Id

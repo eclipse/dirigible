@@ -335,6 +335,8 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition = registerJobLog(jobLogDefinition);
 		JobDefinition jobDefinition = getJob(name);
 		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FINISHED);
+		jobDefinition.setMessage(null);
+		jobDefinition.setExecutedAt(jobLogDefinition.getFinishedAt());
 		createOrUpdateJob(jobDefinition);
 		return jobLogDefinition;
 	}
@@ -358,6 +360,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		JobDefinition jobDefinition = getJob(name);
 		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FAILED);
 		jobDefinition.setMessage(message);
+		jobDefinition.setExecutedAt(jobLogDefinition.getFinishedAt());
 		createOrUpdateJob(jobDefinition);
 		return jobLogDefinition;
 	}

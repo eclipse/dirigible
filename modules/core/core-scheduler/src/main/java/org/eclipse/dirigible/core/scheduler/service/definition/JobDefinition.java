@@ -69,11 +69,14 @@ public class JobDefinition implements IArtefactDefinition {
 	@Transient
 	private List<JobParameterDefinition> parameters = new ArrayList<JobParameterDefinition>();
 	
-	@Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = false)
-	private short status;
+	@Column(name = "JOB_STATUS", columnDefinition = "SMALLINT", nullable = true)
+	private short status = 99;
 	
 	@Column(name = "JOBLOG_MESSAGE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
 	private String message;
+	
+	@Column(name = "JOB_EXECUTED_AT", columnDefinition = "TIMESTAMP", nullable = true)
+	private Timestamp executedAt;
 
 	/**
 	 * Gets the name.
@@ -415,6 +418,32 @@ public class JobDefinition implements IArtefactDefinition {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	
+	/**
+	 * Gets the executed at.
+	 *
+	 * @return the executed at
+	 */
+	public Timestamp getExecutedAt() {
+		if (executedAt == null) {
+			return null;
+		}
+		return new Timestamp(executedAt.getTime());
+	}
+
+	/**
+	 * Sets the executed at.
+	 *
+	 * @param executedAt
+	 *            the new executed at
+	 */
+	public void setExecutedAt(Timestamp executedAt) {
+		if (executedAt == null) {
+			this.executedAt = null;
+			return;
+		}
+		this.executedAt = new Timestamp(executedAt.getTime());
 	}
 
 }
