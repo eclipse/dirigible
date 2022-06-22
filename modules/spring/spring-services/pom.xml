@@ -30,6 +30,18 @@
         </plugins>
     </build>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.keycloak.bom</groupId>
+				<artifactId>keycloak-adapter-bom</artifactId>
+				<version>${keycloak-adapter-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
     <dependencies>
     	
     	<!-- Commons -->
@@ -103,13 +115,18 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-boot-starter</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-rs-service-description-openapi-v3</artifactId>

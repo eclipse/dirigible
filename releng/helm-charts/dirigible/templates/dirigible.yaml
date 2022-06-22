@@ -93,22 +93,22 @@ spec:
               value: "true"
             {{- end }}
             {{- if .Values.keycloak.enabled }}
-            - name: KEYCLOAK_CONFIDENTIAL_PORT
+            - name: DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT
               value: "443"
-            - name: KEYCLOAK_SSL_REQUIRED
+            - name: DIRIGIBLE_KEYCLOAK_SSL_REQUIRED
               value: "none"
-            - name: KEYCLOAK_REALM
+            - name: DIRIGIBLE_KEYCLOAK_REALM
               value: {{ required "Missing Keycloak realm" .Values.keycloak.realm }}
-            - name: KEYCLOAK_CLIENT_ID
+            - name: DIRIGIBLE_KEYCLOAK_CLIENT_ID
               value: {{ required "Missing Keycloak client id" .Values.keycloak.clientId }}
             {{- if .Values.ingress.enabled }}
-            - name: KEYCLOAK_AUTH_SERVER_URL
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
               value: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing ingress host" .Values.ingress.host }}/auth/
             {{- else if .Values.kyma.apirule.host }}
-            - name: KEYCLOAK_AUTH_SERVER_URL
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ required "Missing Keycloak name" .Values.keycloak.name }}.{{ required "Missing Kyma api rule host" .Values.kyma.apirule.host }}/auth/
             {{- else }}
-            - name: KEYCLOAK_AUTH_SERVER_URL
+            - name: DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL
               value: https://{{ required "Missing Keycloak name" .Values.keycloak.name }}/auth/
             {{- end }}
             {{- end }}
