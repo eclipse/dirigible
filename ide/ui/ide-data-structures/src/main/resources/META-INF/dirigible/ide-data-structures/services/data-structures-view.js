@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('dataStructures', [])
-	.controller('DataStructuresController', ['$scope', '$http', function ($scope, $http) {
+const viewData = {
+	id: "datastructures",
+	factory: "frame",
+	region: "center",
+	label: "Data Structures",
+	link: "../ide-data-structures/views/data-structures.html"
+};
 
-		$http.get('/services/v4/ops/data-structures').then(function (response) {
-			$scope.dataStructuresList = response.data;
-		});
-
-	}]);
+if (typeof exports !== 'undefined') {
+	exports.getView = function () {
+		return viewData;
+	}
+}

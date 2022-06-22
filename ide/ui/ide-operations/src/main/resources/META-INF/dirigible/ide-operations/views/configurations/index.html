@@ -30,34 +30,12 @@
         <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
 
-        <style>
-            .main-container {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                overflow: hidden;
-                height: 100%;
-                width: 100%;
-            }
-
-            .configurations-table {
-                flex-grow: 1;
-                min-height: 0;
-            }
-
-            .main-container .fd-pagination,
-            .main-container .fd-toolbar {
-                flex-shrink: 0;
-            }
-
-        </style>
-
     </head>
 
     <body>
-        <div class="main-container">
-            <div class="configurations-table">
-                <fd-scrollbar style="height: 100%">
+        <div>
+            <div>
+                <fd-scrollbar>
                     <table fd-table display-mode="compact">
                         <thead fd-table-header sticky="true">
                             <tr fd-table-row>
