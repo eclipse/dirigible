@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.ICleanupService;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
@@ -34,11 +35,15 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Scheduler Core Service.
  */
 public class SchedulerCoreService implements ISchedulerCoreService, ICleanupService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerCoreService.class);
 
 	private DataSource dataSource = null;
 
@@ -53,6 +58,17 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 			dataSource = (DataSource) StaticObjects.get(StaticObjects.SYSTEM_DATASOURCE);
 		}
 		return dataSource;
+	}
+	
+	private static String DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD = "DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD";
+	private static int logsRetantionInHours = 24*7;
+	static {
+		try {
+			logsRetantionInHours = Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD, logsRetantionInHours +""));
+		} catch (Throwable e) {
+			logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");
+			logsRetantionInHours = 24*7;
+		}
 	}
 
 	// Jobs
@@ -378,7 +394,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 						.where("JOBLOG_TRIGGERED_AT < ?")
 						.build();
 				jobLogPersistenceManager.tableCheck(connection, JobLogDefinition.class);
-				jobLogPersistenceManager.execute(connection, sql, new Timestamp(System.currentTimeMillis() - 7*24*60*60*1000)); // older than a week
+				jobLogPersistenceManager.execute(connection, sql, new Timestamp(System.currentTimeMillis() - logsRetantionInHours*60*60*1000)); // older than a week
 			}
 		} catch (SQLException e) {
 			throw new SchedulerException(e);
