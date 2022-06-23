@@ -66,45 +66,42 @@
                             <tr fd-table-row ng-repeat="next in list" hoverable="true" activable="false">
                                 <td fd-table-cell width="50px">
                                     <div ng-show="{{next.status === 0}}" class="tdSingleLine">
-                                        <span class="btn btn-primary"><i class="fa fa-history"
-                                                aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--play sap-icon--color-neutral"></span>
                                     </div>
                                     <div ng-show="{{next.status === 1}}" class="tdSingleLine">
-                                        <span class="btn btn-success"><i class="fa fa-check"
-                                                aria-hidden="true"></i></span>
+                                        <span
+                                            class="sap-icon sap-icon--status-positive sap-icon--color-positive"></span>
                                     </div>
                                     <div ng-show="{{next.status === -1}}" class="tdSingleLine">
-                                        <span class="btn btn-danger"><i class="fa fa-times-rectangle"
-                                                aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--status-error sap-icon--color-negative"></span>
                                     </div>
                                     <div ng-show="{{next.status === 2}}" class="tdSingleLine">
-                                        <span class="btn btn-info"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--information sap-icon--color-neutral"></span>
                                     </div>
                                     <div ng-show="{{next.status === 3}}" class="tdSingleLine">
-                                        <span class="btn btn-danger"><i class="fa fa-times-circle"
-                                                aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--status-error sap-icon--color-negative"></span>
                                     </div>
                                     <div ng-show="{{next.status === 4}}" class="tdSingleLine">
-                                        <span class="btn btn-warning"><i class="fa fa-warning"
-                                                aria-hidden="true"></i></span>
+                                        <span
+                                            class="sap-icon sap-icon--status-critical sap-icon--color-critical"></span>
                                     </div>
                                     <div ng-show="{{next.status === 5}}" class="tdSingleLine">
-                                        <span class="btn btn-info"><i class="fa fa-info-circle"
-                                                aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--information sap-icon--color-information"></span>
                                     </div>
                                     <div ng-show="{{next.status === 99}}" class="tdSingleLine">
-                                        <span class="btn btn-warning"><i class="fa fa-question-circle"
-                                                aria-hidden="true"></i></span>
+                                        <span class="sap-icon sap-icon--question-mark sap-icon--color-neutral"></span>
                                     </div>
                                 </td>
                                 <td fd-table-cell width="50px">
                                     <div ng-show="next.enabled" class="tdSingleLine">
-                                        <button class="btn" ng-click="disable(next)"><i class="fa fa-toggle-on"
-                                                aria-hidden="true"></i></button>
+                                        <fd-button dg-type="transparent" glyph="sap-icon--connected" title="Disable"
+                                            aria-label="Disable" ng-click="disable(next)" aria-hidden="true">
+                                        </fd-button>
                                     </div>
                                     <div ng-hide="!!next.enabled" class="tdSingleLine">
-                                        <button class="btn" ng-click="enable(next)"><i class="fa fa-toggle-off"
-                                                aria-hidden="true"></i></button>
+                                        <fd-button dg-type="transparent" glyph="sap-icon--disconnected" title="Enable"
+                                            aria-label="Enable" ng-click="enable(next)" aria-hidden="true">
+                                        </fd-button>
                                     </div>
                                 </td>
                                 <td fd-table-cell>
@@ -123,15 +120,19 @@
                                     <div class="tdSingleLine">{{next.message}}</div>
                                 </td>
                                 <td fd-table-cell width="50px">
-                                    <div class="tdSingleLine"><button class="btn" ng-click="getLogs(next)"
-                                            data-toggle="modal" data-target="#dialogLogs"><i class="fa fa-history"
-                                                aria-hidden="true"></i></button>
+                                    <div class="tdSingleLine">
+                                        <fd-button dg-type="transparent" glyph="sap-icon--history" title="Logs"
+                                            aria-label="Logs" ng-click="getLogs(next)" aria-hidden="true"
+                                            data-toggle="modal" data-target="#dialogLogs">
+                                        </fd-button>
                                     </div>
                                 </td>
                                 <td fd-table-cell width="50px">
-                                    <div class="tdSingleLine"><button class="btn" ng-click="getParameters(next)"
-                                            data-toggle="modal" data-target="#dialogTrigger">&nbsp;<i
-                                                class="fa fa-ellipsis-v" aria-hidden="true"></i>&nbsp;</button>
+                                    <div class="tdSingleLine">
+                                        <fd-button dg-type="transparent" glyph="sap-icon--play" title="Trigger"
+                                            aria-label="Trigger" ng-click="getParameters(next)" aria-hidden="true"
+                                            data-toggle="modal" data-target="#dialogTrigger">
+                                        </fd-button>
                                     </div>
                                 </td>
                             </tr>
@@ -146,89 +147,90 @@
         <!-- Logs Dialog -->
         <div class="dirigible-modal modal fade" id="dialogLogs" tabindex="-1" role="dialog"
             aria-labelledby="dialogLogsLabel" aria-hidden="true" style="background-color: rgb(255 255 255 / 90%)">
-            <div class="fd-fieldset">
-                <h3 class="fd-form-header__text">Job logs for: {{name}}</h3>
-            </div>
-            <div class="modal-body">
-                <div class="modal-footer">
-                    <button class="fd-button is-selected" data-dismiss="modal">Close</button>
-                </div>
-                <div>
-                    <div>
-                        <fd-scrollbar>
-                            <table fd-table display-mode="compact">
-                                <thead fd-table-header sticky="true">
-                                    <tr fd-table-row>
-                                        <th fd-table-header-cell width="50px">Status</th>
-                                        <th fd-table-header-cell>Id</th>
-                                        <th fd-table-header-cell>Handler</th>
-                                        <th fd-table-header-cell>Triggered</th>
-                                        <th fd-table-header-cell>Correlation</th>
-                                        <th fd-table-header-cell>Finished</th>
-                                        <th fd-table-header-cell>Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody fd-table-body>
-                                    <tr fd-table-row ng-repeat="next in logs" hoverable="true" activable="false">
-                                        <td fd-table-cell width="50px">
-                                            <div ng-show="{{next.status === 0}}" class="tdSingleLine">
-                                                <span class="btn btn-primary"><i class="fa fa-history"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === 1}}" class="tdSingleLine">
-                                                <span class="btn btn-success"><i class="fa fa-check"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === -1}}" class="tdSingleLine">
-                                                <span class="btn btn-danger"><i class="fa fa-times-rectangle"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === 2}}" class="tdSingleLine">
-                                                <span class="btn btn-info"><i class="fa fa-file"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === 3}}" class="tdSingleLine">
-                                                <span class="btn btn-danger"><i class="fa fa-times-circle"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === 4}}" class="tdSingleLine">
-                                                <span class="btn btn-warning"><i class="fa fa-warning"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                            <div ng-show="{{next.status === 5}}" class="tdSingleLine">
-                                                <span class="btn btn-info"><i class="fa fa-info-circle"
-                                                        aria-hidden="true"></i></span>
-                                            </div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.id}}</div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.handler}}</div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.triggeredAt | date:'yyyy-MM-dd hh:mm:ss'}}
-                                            </div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.triggeredId}}</div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.finishedAt | date:'yyyy-MM-dd hh:mm:ss'}}
-                                            </div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.message}}</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </fd-scrollbar>
+            <div class="modal-body fd-margin--md">
+                <fd-form-group dg-header="Job log for: {{name}}">
+                    <div class="modal-footer">
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="fd-button is-selected" data-dismiss="modal">Close</button>
-                </div>
+                    <div>
+                        <div>
+                            <fd-scrollbar>
+                                <table fd-table display-mode="compact">
+                                    <thead fd-table-header sticky="true">
+                                        <tr fd-table-row>
+                                            <th fd-table-header-cell width="50px">Status</th>
+                                            <th fd-table-header-cell>Id</th>
+                                            <th fd-table-header-cell>Handler</th>
+                                            <th fd-table-header-cell>Triggered</th>
+                                            <th fd-table-header-cell>Correlation</th>
+                                            <th fd-table-header-cell>Finished</th>
+                                            <th fd-table-header-cell>Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody fd-table-body>
+                                        <tr fd-table-row ng-repeat="next in logs" hoverable="true" activable="false">
+                                            <td fd-table-cell width="50px">
+                                                <div ng-show="{{next.status === 0}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--play sap-icon--color-neutral"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === 1}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--status-positive sap-icon--color-positive"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === -1}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--status-error sap-icon--color-negative"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === 2}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--information sap-icon--color-neutral"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === 3}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--status-error sap-icon--color-negative"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === 4}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--status-critical sap-icon--color-critical"></span>
+                                                </div>
+                                                <div ng-show="{{next.status === 5}}" class="tdSingleLine">
+                                                    <span
+                                                        class="sap-icon sap-icon--information sap-icon--color-information"></span>
+                                                </div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.id}}</div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.handler}}</div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">
+                                                    {{next.triggeredAt | date:'yyyy-MM-dd hh:mm:ss'}}
+                                                </div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.triggeredId}}</div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">
+                                                    {{next.finishedAt | date:'yyyy-MM-dd hh:mm:ss'}}
+                                                </div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.message}}</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </fd-scrollbar>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="fd-button is-selected" data-dismiss="modal">Close</button>
+                    </div>
+                </fd-form-group>
             </div>
         </div>
 
@@ -236,60 +238,64 @@
         <!-- Trigger Dialog -->
         <div class="dirigible-modal modal fade container" id="dialogTrigger" tabindex="-1" role="dialog"
             aria-labelledby="dialogTriggerLabel" aria-hidden="true" style="background-color: rgb(255 255 255 / 90%)">
+            <div class="fd-margin--md">
+                <fd-fieldset>
+                    <fd-form-group dg-header="Job parameters for: {{name}}">
+                        <fd-form-item horizontal="true" ng-repeat="parameter in parameters">
+                            <fd-form-label for="iid" dg-required="true" dg-colon="true">{{parameter.name}}
+                            </fd-form-label>
+                            <fd-input ng-show="parameter.type === 'string'" class="fd-input--compact" type="text"
+                                placeholder="Enter {{parameter.name}}" ng-model="parameter.value" required="required">
+                            </fd-input>
+                            <fd-input ng-show="parameter.type === 'number'" class="fd-input--compact" type="text"
+                                placeholder="Enter {{parameter.name}}" ng-model="parameter.value" required="required"
+                                pattern="[0-9]+"
+                                onInput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </fd-input>
+                            <select ng-show="parameter.type === 'boolean'" ng-model="parameter.value"
+                                ng-options="o as o for o in ['true','false']" class="fd-combobox-input"></select>
+                            <select ng-show="parameter.type === 'choice'" ng-model="parameter.value"
+                                ng-options="o as o for o in parameter.choices.split(',')"
+                                class="fd-combobox-input"></select>
+                        </fd-form-item>
 
-            <div class="fd-fieldset">
-                <h3 class="fd-form-header__text">Job parameters for: {{name}}</h3>
-            </div>
-            <form class="fd-form-header" style="padding: 1em;">
-                <div class="fd-form-item fd-form-item--horizontal" ng-repeat="parameter in parameters">
-                    <label class="fd-form-label fd-form-label--colon">{{parameter.name}}</label>
-                    <div class="">
-                        <input ng-show="parameter.type === 'string'" class="fd-input--compact" type="text"
-                            placeholder="" ng-model="parameter.value" required="required">
-                        <input ng-show="parameter.type === 'number'" class="fd-input--compact" type="text"
-                            placeholder="" ng-model="parameter.value" required="required" pattern="[0-9]+"
-                            onInput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                        <select ng-show="parameter.type === 'boolean'" ng-model="parameter.value"
-                            ng-options="o as o for o in ['true','false']"
-                            class="fd-select fd-popover__control"></select>
-                        <select ng-show="parameter.type === 'choice'" ng-model="parameter.value"
-                            ng-options="o as o for o in parameter.choices.split(',')"
-                            class="fd-select fd-popover__control"></select>
-                    </div>
-                </div>
-            </form>
-            <div class="container">
-                <div class="modal-footer">
-                    <button class="fd-button is-selected" ng-click="triggerJob()"
-                        data-target="#dialogTrigger">Trigger</button>
-                    <button class="fd-button" data-dismiss="modal">Close</button>
-                </div>
-                <p>{{result}}</p>
+                    </fd-form-group>
+                </fd-fieldset>
+
                 <div>
+                    <div class="modal-footer">
+                        <button class="fd-button fd-button--compact is-selected" ng-click="triggerJob()"
+                            data-target="#dialogTrigger">Trigger</button>
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
+                    </div>
+                    <p>{{result}}</p>
                     <div>
-                        <fd-scrollbar>
-                            <table fd-table display-mode="compact">
-                                <thead fd-table-header sticky="true">
-                                    <tr fd-table-row>
-                                        <th fd-table-header-cell>Name</th>
-                                        <th fd-table-header-cell>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody fd-table-body>
-                                    <tr fd-table-row ng-repeat="next in map" hoverable="true" activable="false">
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.name}}</div>
-                                        </td>
-                                        <td fd-table-cell>
-                                            <div class="tdSingleLine">{{next.value}}</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </fd-scrollbar>
+                        <div>
+                            <fd-scrollbar>
+                                <table fd-table display-mode="compact">
+                                    <thead fd-table-header sticky="true">
+                                        <tr fd-table-row>
+                                            <th fd-table-header-cell>Name</th>
+                                            <th fd-table-header-cell>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody fd-table-body>
+                                        <tr fd-table-row ng-repeat="next in map" hoverable="true" activable="false">
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.name}}</div>
+                                            </td>
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.value}}</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </fd-scrollbar>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
 
     </body>
