@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
+package org.eclipse.dirigible.engine.js.graalium.platform.internal.modules;
 
 import java.util.Objects;
 
-public class ApiModule {
+public class DirigibleApiModule {
     private final String name;
     private final String api;
     private final String[] versionedPaths;
@@ -21,7 +21,7 @@ public class ApiModule {
     private final boolean isPackageDescription;
     private final Boolean shouldBeUnexposedToESM;
 
-    ApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription, Boolean shouldBeUnexposedToESM) {
+    DirigibleApiModule(String name, String api, String[] versionedPaths, String pathDefault, boolean isPackageDescription, Boolean shouldBeUnexposedToESM) {
         this.name = name;
         this.api = api;
         this.versionedPaths = versionedPaths;

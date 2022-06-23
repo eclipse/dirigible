@@ -31,6 +31,11 @@
     </build>
     
     <dependencies>
+        <dependency>
+            <groupId>com.github.chrisvest</groupId>
+            <artifactId>stormpot</artifactId>
+            <version>3.1</version>
+        </dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-api</artifactId>
@@ -63,6 +68,12 @@
 		    <version>1.1</version>
 		    <scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-engine-javascript-graalium-dirigible</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <properties>

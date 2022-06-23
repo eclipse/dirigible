@@ -478,6 +478,10 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -747,6 +751,7 @@
 		<hikaricp.version>5.0.1</hikaricp.version>
 		<validator.version>1.7</validator.version>
 		<quartz.version>2.3.2</quartz.version>
+		<graalvm.version>22.0.0.2</graalvm.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

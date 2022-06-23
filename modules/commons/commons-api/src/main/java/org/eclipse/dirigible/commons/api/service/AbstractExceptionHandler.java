@@ -31,10 +31,6 @@ import com.google.gson.Gson;
  */
 public abstract class AbstractExceptionHandler<T extends Throwable> implements ExceptionMapper<T> {
 
-	/** The response. */
-	@Context
-	private HttpServletResponse response;
-
 	/** The Constant GSON. */
 	private static final Gson GSON = new Gson();
 

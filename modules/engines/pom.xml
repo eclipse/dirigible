@@ -23,7 +23,8 @@
 		<module>engine-wiki</module>
 		<module>engine-command</module>
 		<module>engine-odata</module>
-	</modules>
+        <module>engine-javascript-graalium-dirigible</module>
+    </modules>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>

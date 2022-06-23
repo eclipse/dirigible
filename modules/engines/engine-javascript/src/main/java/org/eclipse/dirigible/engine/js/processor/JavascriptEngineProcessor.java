@@ -26,36 +26,36 @@ import org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor;
  */
 public class JavascriptEngineProcessor implements IJavascriptEngineProcessor {
 
-	private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
+    private static final ServiceLoader<IJavascriptEngineExecutor> JAVASCRIPT_ENGINE_EXECUTORS = ServiceLoader.load(IJavascriptEngineExecutor.class);
 
-	private IJavascriptEngineExecutor engineExecutor = new DefaultJavascriptEngineExecutor();
+    private final IJavascriptEngineExecutor engineExecutor = new DefaultJavascriptEngineExecutor();
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
-	 */
-	@Override
-	public void executeService(String module) throws ScriptingException {
-		Map<Object, Object> executionContext = new HashMap<Object, Object>();
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.dirigible.engine.js.api.IJavascriptEngineProcessor#executeService(java.lang.String)
+     */
+    @Override
+    public void executeService(String module) throws ScriptingException {
+        Map<Object, Object> executionContext = new HashMap<>();
 		getEngineExecutor().executeServiceModule(module, executionContext);
-	}
+    }
 
-	/**
-	 * Gets the engine executor.
-	 *
-	 * @return the engine executor
-	 */
-	private IJavascriptEngineExecutor getEngineExecutor() {
-		if (HttpRequestFacade.isValid()) {
-			String headerEngineType =  HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
-			if (!StringUtils.isEmpty(headerEngineType)) {
-				for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
-					if (next.getType().equals(headerEngineType)) {
-						return next;
-					}
-				}
-			}
-		}
-		return engineExecutor;
-	}
+    /**
+     * Gets the engine executor.
+     *
+     * @return the engine executor
+     */
+    private IJavascriptEngineExecutor getEngineExecutor() {
+        if (HttpRequestFacade.isValid()) {
+            String headerEngineType = HttpRequestFacade.getHeader(IJavascriptEngineExecutor.DIRIGIBLE_JAVASCRIPT_ENGINE_TYPE_HEADER);
+            if (!StringUtils.isEmpty(headerEngineType)) {
+                for (IJavascriptEngineExecutor next : JAVASCRIPT_ENGINE_EXECUTORS) {
+                    if (next.getType().equals(headerEngineType)) {
+                        return next;
+                    }
+                }
+            }
+        }
+        return engineExecutor;
+    }
 }

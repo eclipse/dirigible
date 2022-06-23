@@ -50,9 +50,6 @@ public class JavascriptEngineRestService extends AbstractRestService implements 
 
 	private JavascriptEngineProcessor processor = new JavascriptEngineProcessor();
 
-	@Context
-	private HttpServletResponse response;
-
 	/**
 	 * Execute service.
 	 *
