@@ -35,10 +35,10 @@ public class LogoutServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.logout();
 		request.getSession(true).invalidate();
 		((HttpServletResponse) response).addCookie(new Cookie(JWT_COOKIE_NAME, null));
-		response.sendRedirect("logout.html");
-
+		response.sendRedirect("home");
 	}
 
 }
