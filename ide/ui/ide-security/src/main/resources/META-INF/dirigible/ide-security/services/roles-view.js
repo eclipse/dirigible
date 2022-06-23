@@ -14,7 +14,7 @@ const viewData = {
 	factory: "frame",
 	region: "bottom",
 	label: "Roles",
-	link: "../ide-security/views/roles/index.html"
+	link: "../ide-security/views/roles.html"
 };
 
 if (typeof exports !== 'undefined') {

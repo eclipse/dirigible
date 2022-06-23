@@ -14,7 +14,7 @@ const viewData = {
 	factory: "frame",
 	region: "center",
 	label: "Configurations",
-	link: "../ide-operations/views/configurations/index.html"
+	link: "../ide-operations/views/configurations.html"
 };
 
 if (typeof exports !== 'undefined') {

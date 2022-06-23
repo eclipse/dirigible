@@ -9,16 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const viewData = {
-	id: "access",
-	factory: "frame",
-	region: "bottom",
-	label: "Access",
-	link: "../ide-security/views/access.html"
-};
+const extensionsView = angular.module('extensions', ['ideUI', 'ideView']);
 
-if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
-}
+extensionsView.config(["messageHubProvider", function (messageHubProvider) {
+    messageHubProvider.eventIdPrefix = 'extensions-view';
+}]);
+
+extensionsView.controller('ExtensionsController', ['$scope', '$http', function ($scope, $http) {
+
+    $http.get('/services/v4/core/extensions').then(function (response) {
+        $scope.list = response.data;
+    });
+
+}]);

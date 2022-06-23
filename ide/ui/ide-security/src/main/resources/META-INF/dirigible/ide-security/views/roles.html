@@ -9,7 +9,7 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="roles" ng-controller="RolesController as roles">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="roles" ng-controller="RolesController as controller">
 
     <head>
         <meta charset="utf-8" />
@@ -25,7 +25,7 @@
 
         <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
 
-        <script type="text/javascript" src="controller.js"></script>
+        <script type="text/javascript" src="roles.js"></script>
 
         <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
@@ -47,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody fd-table-body>
-                            <tr fd-table-row ng-repeat="next in rolesList" hoverable="true" activable="false">
+                            <tr fd-table-row ng-repeat="next in list" hoverable="true" activable="false">
                                 <td fd-table-cell>
                                     <div class="tdSingleLine">{{next.name}}</div>
                                 </td>
