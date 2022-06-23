@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.dirigible.commons.config.Configuration;
+
 /**
  * The Logout Servlet.
  */
@@ -38,7 +40,11 @@ public class LogoutServlet extends HttpServlet {
 		request.logout();
 		request.getSession(true).invalidate();
 		((HttpServletResponse) response).addCookie(new Cookie(JWT_COOKIE_NAME, null));
-		response.sendRedirect("home");
+		if (Configuration.isAnonymousModeEnabled() || Configuration.isAnonymousUserEnabled()) {
+			response.sendRedirect("logout.html");
+		} else {
+			response.sendRedirect("home");
+		}
 	}
 
 }
