@@ -1,1 +1,1 @@
-{"module":"ide-extensions/services/extensions.js","extensionPoint":"ide-view","description":"Extensions View"}
+{"module":"ide-extensions/services/extensions-view.js","extensionPoint":"ide-view","description":"Extensions View"}
