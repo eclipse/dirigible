@@ -12,22 +12,34 @@
 package org.eclipse.dirigible.core.scheduler.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.eclipse.dirigible.api.v3.mail.MailFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
+import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.commons.api.service.ICleanupService;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
+import org.eclipse.dirigible.core.generation.api.GenerationEnginesManager;
+import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
+//import org.eclipse.dirigible.api.v3.platform.RegistryFacade;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
@@ -35,6 +47,7 @@ import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
 import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.eclipse.dirigible.engine.api.resource.RegistryResourceExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,16 +73,66 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		return dataSource;
 	}
 	
-	private static String DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD = "DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD";
+	private static final String DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD = "DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SENDER = "DIRIGIBLE_SCHEDULER_EMAIL_SENDER";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS = "DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME = "DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST = "DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST";
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT = "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT";
+	
 	private static int logsRetantionInHours = 24*7;
+	private static String emailSender = null;
+	private static String emailRecipientsLine = null; 
+	private static String[] emailRecipients = null;
+	private static String emailSubjectError = null;
+	private static String emailSubjectNormal = null;
+	private static String emailTemplateError = null;
+	private static String emailTemplateNormal = null;
+	private static String emailUrlScheme = null;
+	private static String emailUrlHost = null;
+	private static String emailUrlPort = null;
+	
+	private static final String DEFAULT_EMAIL_SUBJECT_ERROR = "Job execution failed: [%s]";
+	private static final String DEFAULT_EMAIL_SUBJECT_NORMAL = "Job execution is back to normal: [%s]";
+
+	private static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
+	private static final String EMAIL_TEMPLATE_ERROR = "/job/templates/template-error.txt";
+	
 	static {
 		try {
-			logsRetantionInHours = Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD, logsRetantionInHours +""));
+			logsRetantionInHours = Integer.parseInt(Configuration.get(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD, logsRetantionInHours + ""));
 		} catch (Throwable e) {
-			logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");
+			logger.warn(DIRIGIBLE_SCHEDULER_LOGS_RETENTION_PERIOD + " is not correctly set, so it will be backed up to a week timeframe (24x7)");
 			logsRetantionInHours = 24*7;
 		}
+		
+		emailSender = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SENDER);
+		
+		emailRecipientsLine = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS);
+		if (emailRecipientsLine != null) {
+			emailRecipients = emailRecipientsLine.split(",");
+			for (String maybe : emailRecipients) {
+				if (!EmailValidator.getInstance().isValid(maybe)) {
+					emailRecipients = null;
+					logger.warn(DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS + " contains invalid e-mail address: " + maybe);
+					break;
+				}
+			}
+		}
+		
+		emailSubjectError = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR, DEFAULT_EMAIL_SUBJECT_ERROR);
+		emailSubjectNormal = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL, DEFAULT_EMAIL_SUBJECT_NORMAL);
+		emailTemplateError = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR);
+		emailTemplateNormal = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL);
+		emailUrlScheme = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME);
+		emailUrlHost = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST);
+		emailUrlPort = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT);
 	}
+	
 
 	// Jobs
 
@@ -334,10 +397,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setFinishedAt(new Timestamp(new java.util.Date().getTime()));
 		jobLogDefinition = registerJobLog(jobLogDefinition);
 		JobDefinition jobDefinition = getJob(name);
+		boolean statusChanged = jobDefinition.getStatus() != JobLogDefinition.JOB_LOG_STATUS_FINISHED;
 		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FINISHED);
-		jobDefinition.setMessage(null);
+		jobDefinition.setMessage("");
 		jobDefinition.setExecutedAt(jobLogDefinition.getFinishedAt());
 		createOrUpdateJob(jobDefinition);
+		if (statusChanged) {
+			String content = prepareEmail(jobDefinition, emailTemplateNormal, EMAIL_TEMPLATE_NORMAL);
+			sendEmail(jobDefinition, emailSubjectNormal, content);
+		}
 		return jobLogDefinition;
 	}
 	
@@ -358,10 +426,15 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		jobLogDefinition.setMessage(message);
 		jobLogDefinition = registerJobLog(jobLogDefinition);
 		JobDefinition jobDefinition = getJob(name);
+		boolean statusChanged = jobDefinition.getStatus() != JobLogDefinition.JOB_LOG_STATUS_FAILED;
 		jobDefinition.setStatus(JobLogDefinition.JOB_LOG_STATUS_FAILED);
 		jobDefinition.setMessage(message);
 		jobDefinition.setExecutedAt(jobLogDefinition.getFinishedAt());
 		createOrUpdateJob(jobDefinition);
+		if (statusChanged) {
+			String content = prepareEmail(jobDefinition, emailTemplateError, EMAIL_TEMPLATE_ERROR);
+			sendEmail(jobDefinition, emailSubjectError, content);
+		}
 		return jobLogDefinition;
 	}
 	
@@ -484,6 +557,57 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		} catch (SQLException e) {
 			throw new SchedulerException(e);
 		}
+	}
+	
+	private String prepareEmail(JobDefinition jobDefinition, String templateLocation, String defaultLocation) {
+		RegistryResourceExecutor registryResourceExecutor = new RegistryResourceExecutor();
+		byte[] template = registryResourceExecutor.getRegistryContent(templateLocation);
+		if (template == null) {
+			template = registryResourceExecutor.getRegistryContent(defaultLocation);
+			if (template == null) {
+				logger.error("Template for the e-mail has not been set nor the default one is available");
+				return null;
+			}
+		}
+		IGenerationEngine generationEngine = GenerationEnginesManager.getGenerationEngine("mustache");
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("job.name", jobDefinition.getName());
+		parameters.put("job.message", jobDefinition.getMessage());
+		parameters.put("job.scheme", emailUrlScheme);
+		parameters.put("job.host", emailUrlHost);
+		parameters.put("job.port", emailUrlPort);
+		try {
+			byte[] generated = generationEngine.generate(parameters, "~/temp", template);
+			return new String(generated, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			logger.error("Error on generating the e-mail body: " + e.getMessage(),e);
+			return null;
+		}
+	}
+	
+	private void sendEmail(JobDefinition jobDefinition, String emailSubject, String emailContent) {
+		try {
+			if (emailSender != null
+					&& emailRecipients != null) {
+				
+				List<Map> parts = new ArrayList<Map>();
+				Map<String, String> map  = new HashedMap();
+				map.put("contentType", ContentTypeHelper.TEXT_PLAIN);
+				map.put("type", "text");
+				map.put("text", emailContent);
+				parts.add(map);
+				MailFacade.getInstance().send(emailSender, emailRecipients, null, null, 
+						String.format(emailSubject, jobDefinition.getName()), parts);
+	//		String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
+			} else {
+				if (emailRecipientsLine != null) {
+					logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");
+				}
+			}
+		} catch (MessagingException | IOException e) {
+			logger.error("Sending an e-mail failed with: " + e.getMessage(), e);
+		}
+		
 	}
 
 }

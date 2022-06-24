@@ -70,7 +70,8 @@ public class MailClient {
 				throw new IllegalStateException("Unexpected transport property: " + transportProperty);
 		}
 
-		if (this.properties.getProperty("ProxyType").equals("OnPremise")) {
+		String proxyType = this.properties.getProperty("ProxyType");
+		if (proxyType != null && proxyType.equals("OnPremise")) {
 			Socket socket =
 					new ConnectivitySocks5ProxySocket(getTransportProperty(transportProperty, "socks.host"),
 							getTransportProperty(transportProperty, "socks.port"),
@@ -119,11 +120,15 @@ public class MailClient {
 		for (String next : to) {
 			mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(next));
 		}
-		for (String next : cc) {
-			mimeMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(next));
+		if (cc != null) {
+			for (String next : cc) {
+				mimeMessage.addRecipients(Message.RecipientType.CC, InternetAddress.parse(next));
+			}
 		}
-		for (String next : bcc) {
-			mimeMessage.addRecipients(Message.RecipientType.BCC, InternetAddress.parse(next));
+		if (bcc != null) {
+			for (String next : bcc) {
+				mimeMessage.addRecipients(Message.RecipientType.BCC, InternetAddress.parse(next));
+			}
 		}
 		mimeMessage.setSubject(subjectText, "UTF-8"); //$NON-NLS-1$
 
