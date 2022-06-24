@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-spring-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.3.6</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -48,19 +48,19 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
     	</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-config</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 		</dependency>
 
 		<!-- API -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -73,14 +73,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 		</dependency>
 		
 		<!-- Services -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-services</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.dirigible</groupId>
@@ -93,14 +93,14 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-engine</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 		</dependency>
 		
 		<!-- IDE Plugins -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-ide</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
+			<version>6.3.6</version>
 		</dependency>
 
     	<!-- Spring Boot -->
