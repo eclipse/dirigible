@@ -26,7 +26,6 @@
 		<module>core-workspace</module>
 		<module>core-migrations</module>
 		<module>core-websockets</module>
-		<module>core-afterburner</module>
 	</modules>
 
 	<properties>

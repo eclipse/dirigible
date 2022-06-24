@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
 	<modules>
+		<module>afterburner</module>
 		<module>engines</module>
 		<module>services</module>
 		<module>repository</module>
