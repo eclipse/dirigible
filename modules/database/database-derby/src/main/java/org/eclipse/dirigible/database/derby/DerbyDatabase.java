@@ -13,6 +13,8 @@ package org.eclipse.dirigible.database.derby;
 
 import static java.text.MessageFormat.format;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -25,7 +27,6 @@ import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class DerbyDatabase extends AbstractDatabase {
 	public static final String DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_DERBY_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
 
 	/** The Constant DATASOURCES. */
-	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
+	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
 	/**
 	 * Constructor with default root folder - user.dir
@@ -134,15 +135,17 @@ public class DerbyDatabase extends AbstractDatabase {
 
 		synchronized (DerbyDatabase.class) {
 			try {
-				DataSource dataSource = new EmbeddedDataSource();
 				String derbyRoot = prepareRootFolder(name);
-				((EmbeddedDataSource) dataSource).setDatabaseName(derbyRoot);
-				((EmbeddedDataSource) dataSource).setCreateDatabase("create");
 				logger.warn(String.format("Embedded Derby at: %s", derbyRoot));
 
-				WrappedDataSource wrappedDataSource = new WrappedDataSource(dataSource);
-				DATASOURCES.put(name, wrappedDataSource);
-				return wrappedDataSource;
+				HikariConfig config = new HikariConfig();
+				config.setDriverClassName("org.apache.derby.jdbc.EmbeddedDriver");
+				config.setJdbcUrl("jdbc:derby:" + derbyRoot + ";create=true");
+
+				HikariDataSource ds = new HikariDataSource(config);
+
+				DATASOURCES.put(name, ds);
+				return ds;
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 				throw new DerbyDatabaseException(e);
@@ -182,7 +185,7 @@ public class DerbyDatabase extends AbstractDatabase {
 	 */
 	@Override
 	public Map<String, DataSource> getDataSources() {
-		Map<String, DataSource> datasources = new HashMap<String, DataSource>();
+		Map<String, DataSource> datasources = new HashMap<>();
 		datasources.putAll(DATASOURCES);
 		return datasources;
 	}

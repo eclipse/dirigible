@@ -13,6 +13,8 @@ package org.eclipse.dirigible.database.h2;
 
 import static java.text.MessageFormat.format;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -21,11 +23,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
-import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class H2Database extends AbstractDatabase {
 	public static final String DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT = DIRIGIBLE_DATABASE_H2_ROOT_FOLDER + "_DEFAULT"; //$NON-NLS-1$
 
 	/** The Constant DATASOURCES. */
-	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
+	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
 	/**
 	 * Constructor with default root folder - user.dir
@@ -128,34 +128,33 @@ public class H2Database extends AbstractDatabase {
 	 */
 	protected DataSource createDataSource(String name) {
 		logger.debug("Creating an embedded H2 datasource...");
-
 		synchronized (H2Database.class) {
 			try {
 				String h2Root = prepareRootFolder(name);
-				
-				String databaseDriver = Configuration.get("DIRIGIBLE_DATABASE_H2_DRIVER");
+
 				String databaseUrl = Configuration.get("DIRIGIBLE_DATABASE_H2_URL");
 				String databaseUsername = Configuration.get("DIRIGIBLE_DATABASE_H2_USERNAME");
 				String databasePassword = Configuration.get("DIRIGIBLE_DATABASE_H2_PASSWORD");
-				if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
-					BasicDataSource basicDataSource = new BasicDataSource();
-					basicDataSource.setDriverClassName(databaseDriver);
-					basicDataSource.setUrl(databaseUrl + "/" + name);
-					basicDataSource.setUsername(databaseUsername);
-					basicDataSource.setPassword(databasePassword);
-					basicDataSource.setDefaultAutoCommit(true);
-					basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
-					logger.warn(String.format("Embedded H2 at: %s", h2Root));
+				if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
+					HikariConfig config = new HikariConfig();
 
-					WrappedDataSource wrappedDataSource = new WrappedDataSource(basicDataSource);
-					DATASOURCES.put(name, wrappedDataSource);
-					return wrappedDataSource;
+					config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
+					config.setPoolName("H2SystemDBHikariPool");
+					config.setConnectionTestQuery("VALUES 1");
+					config.addDataSourceProperty("URL", databaseUrl + "/" + name);
+					config.addDataSourceProperty("user", databaseUsername);
+					config.addDataSourceProperty("password", databasePassword);
+
+					HikariDataSource ds = new HikariDataSource(config);
+
+					logger.warn("Embedded H2 at: {}", h2Root);
+
+					DATASOURCES.put(name, ds);
+					return ds;
 				} else {
 					throw new H2DatabaseException("Invalid datasource parameters provided for H2 database");
 				}
-				
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
 				throw new H2DatabaseException(e);
 			}
 		}
@@ -193,7 +192,7 @@ public class H2Database extends AbstractDatabase {
 	 */
 	@Override
 	public Map<String, DataSource> getDataSources() {
-		Map<String, DataSource> datasources = new HashMap<String, DataSource>();
+		Map<String, DataSource> datasources = new HashMap<>();
 		datasources.putAll(DATASOURCES);
 		return datasources;
 	}

@@ -58,16 +58,17 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.hasExpan
 public abstract class AbstractSQLProcessor extends ODataSingleProcessor implements SQLProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractSQLProcessor.class);
+    private static final String DATASOURCE_CONTEXT_KEY = "DATASOURCE";
 
     private final OData2EventHandler odata2EventHandler;
     private DataSource dataSource;
     private final ResultSetReader resultSetReader;
 
-    private static final String DUMMY_BUILDER = "dummyBuilder";
-    private static final String SELECT_BUILDER = "selectBuilder";
-    private static final String INSERT_BUILDER = "insertBuilder";
-    private static final String UPDATE_BUILDER = "updateBuilder";
-    private static final String SQL_CONTEXT = "sqlContext";
+    private static final String DUMMY_BUILDER_CONTEXT_KEY = "dummyBuilder";
+    private static final String SELECT_BUILDER_CONTEXT_KEY = "selectBuilder";
+    private static final String INSERT_BUILDER_CONTEXT_KEY = "insertBuilder";
+    private static final String UPDATE_BUILDER_CONTEXT_KEY = "updateBuilder";
+    private static final String SQL_CONTEXT_CONTEXT_KEY = "sqlContext";
     private static final String ENTRY_MAP = "entryMap";
 
     public AbstractSQLProcessor() {
@@ -634,21 +635,24 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
     }
 
     private void updateCreateEventHandlerContext(Map<Object, Object> context, Connection connection, PostUriInfo uriInfo, ODataEntry entry) throws SQLException, ODataException {
-        context.put(DUMMY_BUILDER, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
-        context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(INSERT_BUILDER, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
-        context.put(SQL_CONTEXT, createSQLContext(connection));
+        context.put(DUMMY_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
+        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
+        context.put(INSERT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
+        context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
+        context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
     }
 
     private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo, Connection connection) throws ODataException, SQLException {
-        context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(SQL_CONTEXT, createSQLContext(connection));
+        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
+        context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
+        context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
     }
 
     private void updateUpdateEventHandlerContext(Map<Object, Object> context, Connection connection, PutMergePatchUriInfo uriInfo, ODataEntry entry) throws ODataException, SQLException {
-        context.put(SELECT_BUILDER, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(UPDATE_BUILDER, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
+        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
+        context.put(UPDATE_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
                 mapKeys(uriInfo.getKeyPredicates()), getContext()));
-        context.put(SQL_CONTEXT, createSQLContext(connection));
+        context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
+        context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
     }
 }
