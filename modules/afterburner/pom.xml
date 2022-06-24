@@ -33,9 +33,10 @@
     <modules>
         <module>execution</module>
         <module>execution-dirigible</module>
+        <module>web-service</module>
         <module>web-quarkus</module>
         <module>web-quarkus-extension</module>
-        <module>web-dirigible</module>
+        <module>web-quarkus-blocking</module>
     </modules>
 
 </project>
