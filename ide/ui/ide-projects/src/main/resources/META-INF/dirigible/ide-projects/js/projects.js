@@ -654,6 +654,16 @@ projectsView.controller('ProjectsViewController', [
             });
         };
 
+        $scope.publish = function (path, workspace) {
+            messageHub.showStatusBusy(`Publishing '${path}'...`);
+            publisherApi.publish(path, workspace).then(function (response) {
+                messageHub.hideStatusBusy();
+                if (response.status !== 201)
+                    messageHub.setStatusError(`Unable to publish '${path}'`);
+                else messageHub.setStatusMessage(`Published '${path}'`);
+            });
+        };
+
         $scope.switchWorkspace = function (workspace) {
             if ($scope.selectedWorkspace.name !== workspace) {
                 $scope.selectedWorkspace.name = workspace;
@@ -844,6 +854,7 @@ projectsView.controller('ProjectsViewController', [
                     if (response.status === 204) {
                         $scope.switchWorkspace('workspace');
                         $scope.reloadWorkspaceList();
+                        messageHub.announceWorkspacesModified();
                     } else {
                         messageHub.setStatusError(`Unable to delete workspace '${$scope.selectedWorkspace.name}'`);
                     }
@@ -1026,12 +1037,12 @@ projectsView.controller('ProjectsViewController', [
         // };
 
         messageHub.onFileSaved(function (data) {
-            delete data.topic;
-            publisherApi.publish(`/${data.workspace}${data.path}`).then(function (response) {
+            const { topic, ...fileDescriptor } = data;
+            publisherApi.publish(`/${fileDescriptor.workspace}${fileDescriptor.path}`).then(function (response) {
                 if (response.status !== 201)
-                    messageHub.setStatusError(`Unable to publish '${data.path}'`);
+                    messageHub.setStatusError(`Unable to publish '${fileDescriptor.path}'`);
                 else
-                    messageHub.announcePublish(data);
+                    messageHub.announcePublish(fileDescriptor);
             });
             // Temp solution until we fix the back-end API
             if (data.status) {
@@ -1056,14 +1067,17 @@ projectsView.controller('ProjectsViewController', [
             }
         });
 
-        messageHub.onDidReceiveMessage(
-            'ide.workspace.changed',
-            function (msg) {
-                if (msg.data.workspace === $scope.selectedWorkspace.name)
-                    $scope.reloadWorkspace();
-            },
-            true
-        );
+        messageHub.onWorkspaceChanged(function (workspace) {
+            if (workspace.data.name === $scope.selectedWorkspace.name)
+                $scope.reloadWorkspace();
+            if (workspace.data.publish) {
+                if (workspace.data.publish.workspace) {
+                    $scope.publish(`/${workspace.data.name}/*`);
+                } else if (workspace.data.publish.path) {
+                    $scope.publish(workspace.data.publish.path, workspace.data.name);
+                }
+            }
+        });
 
         messageHub.onDidReceiveMessage(
             'projects.export.all',
@@ -1110,7 +1124,7 @@ projectsView.controller('ProjectsViewController', [
                         } else {
                             $scope.reloadWorkspaceList();
                             messageHub.setStatusMessage(`Created workspace '${msg.data.formData[0].value}'`);
-                            messageHub.triggerEvent('ide.workspaces.changed', true);
+                            messageHub.announceWorkspacesModified();
                         }
                     });
                 } else messageHub.hideFormDialog('createWorkspaceForm');

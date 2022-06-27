@@ -77,14 +77,6 @@
             </fd-popover>
             <fd-toolbar-separator></fd-toolbar-separator>
             <fd-toolbar-overflow>
-                <fd-button compact="true" dg-type="transparent" dg-label="Create workspace" glyph="sap-icon--add"
-                    is-overflow="true" ng-click="createWorkspace()">
-                </fd-button>
-                <fd-button compact="true" dg-type="transparent" dg-label="Delete workspace" glyph="sap-icon--delete"
-                    is-overflow="true" state="{{ selectedWorkspace.name === 'workspace' ? 'disabled' : '' }}"
-                    ng-click="deleteWorkspace()">
-                </fd-button>
-                <fd-toolbar-separator></fd-toolbar-separator>
                 <fd-button compact="true" dg-type="transparent" dg-label="Create project" glyph="sap-icon--create"
                     is-overflow="true" ng-click="createProject()">
                 </fd-button>
@@ -96,6 +88,14 @@
                 </fd-button> -->
                 <fd-button compact="true" dg-type="transparent" dg-label="Export projects"
                     glyph="sap-icon--download-from-cloud" is-overflow="true" ng-click="exportProjects()">
+                </fd-button>
+                <fd-toolbar-separator></fd-toolbar-separator>
+                <fd-button compact="true" dg-type="transparent" dg-label="Create workspace" glyph="sap-icon--add"
+                    is-overflow="true" ng-click="createWorkspace()">
+                </fd-button>
+                <fd-button compact="true" dg-type="transparent" dg-label="Delete workspace" glyph="sap-icon--delete"
+                    is-overflow="true" state="{{ selectedWorkspace.name === 'workspace' ? 'disabled' : '' }}"
+                    ng-click="deleteWorkspace()">
                 </fd-button>
             </fd-toolbar-overflow>
         </fd-toolbar>

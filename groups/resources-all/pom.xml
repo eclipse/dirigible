@@ -159,12 +159,12 @@
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>fundamental-styles</artifactId>
-			<version>0.23.0</version>
+			<version>0.24.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>sap-theming__theming-base-content</artifactId>
-			<version>11.1.39</version>
+			<version>11.1.40</version>
 		</dependency>
 	</dependencies>
 </project>

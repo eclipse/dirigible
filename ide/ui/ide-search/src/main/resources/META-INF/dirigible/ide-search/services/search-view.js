@@ -13,6 +13,7 @@ const viewData = {
 	id: "search",
 	label: "Search",
 	factory: "frame",
+	lazyLoad: true,
 	region: "left",
 	link: "../ide-search/search.html"
 };
