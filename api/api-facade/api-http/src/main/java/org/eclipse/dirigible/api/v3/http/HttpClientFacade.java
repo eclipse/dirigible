@@ -15,9 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -196,6 +194,20 @@ public class HttpClientFacade implements IScriptingFacade {
 		}
 	}
 
+	private static final String[] supportedTextMimeTypes = new String[] {
+			"application/CSV",
+			"application/csv",
+			"text/csv",
+			ContentType.TEXT_PLAIN.getMimeType(),
+			ContentType.TEXT_HTML.getMimeType(),
+			ContentType.TEXT_XML.getMimeType(),
+			ContentType.APPLICATION_JSON.getMimeType(),
+			ContentType.APPLICATION_ATOM_XML.getMimeType(),
+			ContentType.APPLICATION_XML.getMimeType(),
+			ContentType.APPLICATION_XHTML_XML.getMimeType()
+	};
+	private static final Set<String> recognizedTextMimeTypes = new HashSet<>(Arrays.asList(supportedTextMimeTypes));
+
 	public static HttpClientResponse processHttpClientResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		try {
 			HttpClientResponse httpClientResponse = new HttpClientResponse();
@@ -206,21 +218,10 @@ public class HttpClientFacade implements IScriptingFacade {
 			HttpEntity entity = response.getEntity();
 			if (entity != null && entity.getContent() != null) {
 				byte[] content = IOUtils.toByteArray(entity.getContent());
+				final String processedContentType = ContentType.getOrDefault(entity).getMimeType();
+				final boolean isSupportedTextType = recognizedTextMimeTypes.contains(processedContentType);
 
-				 HashMap<String, Boolean> textMimeTypes = new HashMap<String, Boolean>();
-						textMimeTypes.put("application/CSV", true);
-						textMimeTypes.put("application/csv", true);
-						textMimeTypes.put("text/csv", true);
-						textMimeTypes.put(ContentType.TEXT_PLAIN.getMimeType(), true);
-						textMimeTypes.put(ContentType.TEXT_HTML.getMimeType(), true);
-						textMimeTypes.put(ContentType.TEXT_XML.getMimeType(), true);
-						textMimeTypes.put(ContentType.APPLICATION_JSON.getMimeType(), true);
-						textMimeTypes.put(ContentType.APPLICATION_ATOM_XML.getMimeType(), true);
-						textMimeTypes.put(ContentType.APPLICATION_XML.getMimeType(), true);
-						textMimeTypes.put(ContentType.APPLICATION_XHTML_XML.getMimeType(), true);
-				final boolean isTextType = textMimeTypes.get(ContentType.getOrDefault(entity).getMimeType()) != null;
-
-				if (isTextType && (!binary)) {
+				if (!binary && isSupportedTextType) {
 					Charset charset = ContentType.getOrDefault(entity).getCharset();
 					String text = new String(content, charset != null ? charset : StandardCharsets.UTF_8);
 					httpClientResponse.setText(text);
