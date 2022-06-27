@@ -90,7 +90,7 @@ public class XTerminalWebsocketService {
 	//					new Thread(processRunnable).start();
 	//					processRunnable.getProcess().waitFor();
 						
-						createShellScript(ttydShell, "/usr/local/opt/ttyd/bin/ttyd -p 9000 bash");
+						createShellScript(ttydShell, "ttyd -p 9000 bash");
 						ttydShell.setExecutable(true);
 					}
 				} else if (os.indexOf("win") >= 0) {
