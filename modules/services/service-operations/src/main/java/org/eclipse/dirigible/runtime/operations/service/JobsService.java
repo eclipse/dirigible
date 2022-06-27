@@ -150,6 +150,28 @@ public class JobsService extends AbstractRestService implements IRestService {
 	}
 	
 	/**
+	 * Clear the job logs.
+	 *
+	 * @param name the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@POST
+	@Path("clear/{name:.*}")
+	public Response clearJobLogs(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		
+		processor.clear(IRepository.SEPARATOR + name);
+
+		return Response.ok().build();
+	}
+	
+	/**
 	 * Returns the job parameters.
 	 *
 	 * @param name the job name

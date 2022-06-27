@@ -15,7 +15,7 @@ jobsView.config(["messageHubProvider", function (messageHubProvider) {
 	messageHubProvider.eventIdPrefix = 'jobs-view';
 }]);
 
-jobsView.controller('JobsController', ['$scope', '$http', function ($scope, $http) {
+jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
 	$http.get('/services/v4/ops/jobs').then(function (response) {
 		$scope.list = response.data;
@@ -77,6 +77,25 @@ jobsView.controller('JobsController', ['$scope', '$http', function ($scope, $htt
 		$http.post('/services/v4/ops/jobs/trigger/' + $scope.job.name, $scope.map)
 			.then(function (response) {
 				$scope.result = "Job: " + $scope.job.name + " has been triggered successfully";
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.clearLogs = function (name) {
+		$http.post('/services/v4/ops/jobs/clear/' + $scope.job.name)
+			.then(function (response) {
+				messageHub.showAlertInfo(
+					"Job Logs",
+					'Execution logs of the job ' + name + ' has been deleted.'
+				);
+				$http.get('/services/v4/ops/jobs/logs/' + name)
+					.then(function (response) {
+						$scope.name = name;
+						$scope.logs = response.data;
+					}, function (response) {
+						console.error(response.data);
+					});
 			}, function (response) {
 				console.error(response.data);
 			});

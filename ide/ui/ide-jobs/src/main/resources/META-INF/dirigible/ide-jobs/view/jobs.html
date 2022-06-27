@@ -150,6 +150,7 @@
             <div class="modal-body fd-margin--md">
                 <fd-form-group dg-header="Job log for: {{name}}">
                     <div class="modal-footer">
+                        <button class="fd-button fd-button--compact is-selected" ng-click="clearLogs()">Clear</button>
                         <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
                     </div>
                     <div>
@@ -228,7 +229,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="fd-button is-selected" data-dismiss="modal">Close</button>
+                        <button class="fd-button fd-button--compact is-selected"
+                            ng-click="clearLogs(name)">Clear</button>
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
                     </div>
                 </fd-form-group>
             </div>

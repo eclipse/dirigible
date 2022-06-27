@@ -264,6 +264,14 @@ public interface ISchedulerCoreService extends ICoreService {
 	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException;
 	
 	/**
+	 * Clear all the log per job's name
+	 * 
+	 * @param name the job name
+	 * @throws SchedulerException exception
+	 */
+	public void clearJobLogs(String name) throws SchedulerException;
+	
+	/**
 	 * Delete Job Logs older than a week
 	 * 
 	 * @throws SchedulerException exception

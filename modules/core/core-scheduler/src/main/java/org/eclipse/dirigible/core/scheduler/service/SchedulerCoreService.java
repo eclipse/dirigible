@@ -504,9 +504,28 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		try {
 			try (Connection connection = getDataSource().getConnection()) {
 				
-				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_LOGS")
-						.where("JOBLOG_NAME = ?").toString();
+				String sql = SqlFactory.getNative(connection).select().limit(1000).column("*").from("DIRIGIBLE_JOB_LOGS")
+						.where("JOBLOG_NAME = ?").order("JOBLOG_TRIGGERED_AT", false).toString();
 				return jobLogPersistenceManager.query(connection, JobLogDefinition.class, sql, Arrays.asList(name));
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#clearJobLogs()
+	 */
+	@Override
+	public void clearJobLogs(String name) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_JOB_LOGS")
+						.where("JOBLOG_NAME = ?")
+						.build();
+				jobLogPersistenceManager.tableCheck(connection, JobLogDefinition.class);
+				jobLogPersistenceManager.execute(connection, sql, Arrays.asList(name));
 			}
 		} catch (SQLException e) {
 			throw new SchedulerException(e);

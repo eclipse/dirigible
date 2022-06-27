@@ -46,10 +46,13 @@ public class JobsProcessor {
 	}
 
 	public String logs(String name) throws SchedulerException {
-		
 		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
 		
         return GsonHelper.GSON.toJson(jobLogs);
+	}
+	
+	public void clear(String name) throws SchedulerException {
+		schedulerCoreService.clearJobLogs(name);
 	}
 	
 	public String parameters(String name) throws SchedulerException {
