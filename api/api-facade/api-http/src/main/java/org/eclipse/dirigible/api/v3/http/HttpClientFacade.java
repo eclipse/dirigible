@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -206,13 +207,19 @@ public class HttpClientFacade implements IScriptingFacade {
 			if (entity != null && entity.getContent() != null) {
 				byte[] content = IOUtils.toByteArray(entity.getContent());
 
-				if ((ContentType.getOrDefault(entity).getMimeType().equals(ContentType.TEXT_PLAIN.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.TEXT_HTML.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.TEXT_XML.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_JSON.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_ATOM_XML.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_XML.getMimeType())
-						|| ContentType.getOrDefault(entity).getMimeType().equals(ContentType.APPLICATION_XHTML_XML.getMimeType())) && (!binary)) {
+				String[] textMimeTypes = {
+						"application/CSV", "application/csv", "text/csv",
+						ContentType.TEXT_PLAIN.getMimeType(),
+						ContentType.TEXT_HTML.getMimeType(),
+						ContentType.TEXT_XML.getMimeType(),
+						ContentType.APPLICATION_JSON.getMimeType(),
+						ContentType.APPLICATION_ATOM_XML.getMimeType(),
+						ContentType.APPLICATION_XML.getMimeType(),
+						ContentType.APPLICATION_XHTML_XML.getMimeType()
+				};
+				boolean isTextType = Arrays.stream(textMimeTypes).anyMatch(ContentType.getOrDefault(entity).getMimeType()::equals);
+
+				if (isTextType && (!binary)) {
 					Charset charset = ContentType.getOrDefault(entity).getCharset();
 					String text = new String(content, charset != null ? charset : StandardCharsets.UTF_8);
 					httpClientResponse.setText(text);
