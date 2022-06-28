@@ -194,7 +194,7 @@ public class HttpClientFacade implements IScriptingFacade {
 		}
 	}
 
-	private static final String[] supportedTextMimeTypes = new String[] {
+	private static final HashSet<String> recognizedTextMimeTypes = new HashSet<>(Arrays.asList(
 			"application/CSV",
 			"application/csv",
 			"text/csv",
@@ -205,8 +205,7 @@ public class HttpClientFacade implements IScriptingFacade {
 			ContentType.APPLICATION_ATOM_XML.getMimeType(),
 			ContentType.APPLICATION_XML.getMimeType(),
 			ContentType.APPLICATION_XHTML_XML.getMimeType()
-	};
-	private static final Set<String> recognizedTextMimeTypes = new HashSet<>(Arrays.asList(supportedTextMimeTypes));
+	));
 
 	public static HttpClientResponse processHttpClientResponse(CloseableHttpResponse response, boolean binary) throws IOException {
 		try {
@@ -218,8 +217,8 @@ public class HttpClientFacade implements IScriptingFacade {
 			HttpEntity entity = response.getEntity();
 			if (entity != null && entity.getContent() != null) {
 				byte[] content = IOUtils.toByteArray(entity.getContent());
-				final String processedContentType = ContentType.getOrDefault(entity).getMimeType();
-				final boolean isSupportedTextType = recognizedTextMimeTypes.contains(processedContentType);
+				String processedContentType = ContentType.getOrDefault(entity).getMimeType();
+				boolean isSupportedTextType = recognizedTextMimeTypes.contains(processedContentType);
 
 				if (!binary && isSupportedTextType) {
 					Charset charset = ContentType.getOrDefault(entity).getCharset();
