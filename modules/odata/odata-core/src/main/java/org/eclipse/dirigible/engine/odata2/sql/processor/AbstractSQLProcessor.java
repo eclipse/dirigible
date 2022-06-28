@@ -331,7 +331,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.beforeCreateEntity(uriInfo,
                     requestContentType, contentType, entry, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
 
@@ -339,7 +339,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                 updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 this.odata2EventHandler.onCreateEntity(uriInfo, content,
                         requestContentType, contentType, handlerContext);
-                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                if (isErrorDocumentPresent(handlerContext)) {
                     return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
                 }
                 entryMap = (HashMap<String, Object>) handlerContext.get(ENTRY_MAP);
@@ -396,7 +396,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                     }
                     updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                     this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
-                    if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                    if (isErrorDocumentPresent(handlerContext)) {
                         return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
                     }
                     return response;
@@ -417,7 +417,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
         } catch (Exception e) {
@@ -451,14 +451,14 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             Map<Object, Object> handlerContext = new HashMap<>();
             updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
             this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
 
             if (this.odata2EventHandler.usingOnDeleteEntity(uriInfo, contentType)) {
                 updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
                 this.odata2EventHandler.onDeleteEntity(uriInfo, contentType, handlerContext);
-                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                if (isErrorDocumentPresent(handlerContext)) {
                     return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
                 }
             } else {
@@ -470,7 +470,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             ODataResponse response = ODataResponse.newBuilder().build();
             updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection);
             this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
             return response;
@@ -509,14 +509,14 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.beforeUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
 
             if (this.odata2EventHandler.usingOnUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
                 updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType, handlerContext);
-                if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+                if (isErrorDocumentPresent(handlerContext)) {
                     return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
                 }
             } else {
@@ -544,7 +544,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             ODataResponse response = ODataResponse.newBuilder().status(HttpStatusCodes.NO_CONTENT).build();
             updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry);
             this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
-            if(handlerContext.containsKey(ERROR_DOCUMENT) && handlerContext.get(ERROR_DOCUMENT) != null) {
+            if (isErrorDocumentPresent(handlerContext)) {
                 return (ODataResponse) handlerContext.get(ERROR_DOCUMENT);
             }
             return response;
@@ -688,5 +688,9 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         context.put(UPDATE_BUILDER, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
                 mapKeys(uriInfo.getKeyPredicates()), getContext()));
         context.put(SQL_CONTEXT, createSQLContext(connection));
+    }
+
+    private boolean isErrorDocumentPresent(Map<Object, Object> context) {
+        return context.containsKey(ERROR_DOCUMENT) && context.get(ERROR_DOCUMENT) != null;
     }
 }
