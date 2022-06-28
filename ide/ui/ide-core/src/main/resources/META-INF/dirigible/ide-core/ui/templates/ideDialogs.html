@@ -69,6 +69,24 @@
             </footer>
         </div>
     </section>
+    <!-- Busy Dialog -->
+    <section class="fd-dialog" id="dgIdeBusyDialog">
+        <div class="fd-dialog__content fd-dialog__content--s" role="dialog" aria-modal="true">
+            <div class="fd-dialog__body dg-center">
+                <fd-busy-indicator-extended dg-size="l">{{ busyDialog.text }}</fd-busy-indicator-extended>
+            </div>
+            <footer ng-if="busyDialog.callbackTopic" class="fd-dialog__footer fd-bar fd-bar--footer">
+                <div class="fd-bar__right">
+                    <div class="fd-bar__element">
+                        <button class="fd-dialog__decisive-button fd-button fd-button--transparent fd-button--compact"
+                            ng-click="hideBusyDialog(busyDialog.id, true)">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </section>
     <!-- Form Dialog -->
     <section class="fd-dialog" id="dgIdeFormDialog">
         <div ng-if="activeDialog === 'form'" role="dialog" aria-modal="true" aria-label="System Dialog"
@@ -91,7 +109,7 @@
                 </div>
             </div>
             <div class="fd-dialog__body fd-scrollbar">
-                <fieldset ng-hide="formDialog.loader" class="fd-fieldset" ng-form="fromFieldset">
+                <fieldset ng-hide="formDialog.loader" class="fd-fieldset" ng-form="formFieldset">
                     <div class="fd-form-group">
                         <div ng-repeat="item in formDialog.items">
                             <div ng-if="item.type === 'input' " class="fd-form-item" ng-hide="shouldHide(item)">
@@ -105,7 +123,7 @@
                                         dg-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-maxlength="item.maxlength || -1" ng-pattern="item.pattern || ''"
-                                        ng-change="inputValidation(fromFieldset['i' + item.id].$valid, item)">
+                                        ng-change="inputValidation(formFieldset['i' + item.id].$valid, item)">
                                     </fd-input>
                                     <fd-form-message dg-type="error">{{ item.errorMsg || "Incorrect input" }}
                                     </fd-form-message>
@@ -137,9 +155,11 @@
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-select dg-placeholder="{{ item.placeholder }}" label-id="{{ item.id }}"
-                                    selected-value="item.value" dropdown-fixed="true" ng-model="item.value">
+                                    ng-required="{{ isRequired(item.id, item.required) }}" selected-value="item.value"
+                                    dropdown-fixed="true" ng-model="item.value">
                                     <fd-option text="{{ menuItem.label }}" value="menuItem.value"
-                                        ng-repeat="menuItem in item.items"></fd-option>
+                                        ng-repeat="menuItem in item.items">
+                                    </fd-option>
                                 </fd-select>
                             </div>
                         </div>
@@ -163,7 +183,7 @@
                     <div class="fd-bar__element" ng-repeat="btn in formDialog.buttons">
                         <fd-button class="fd-dialog__decisive-button" compact="true" dg-label="{{ btn.label }}"
                             dg-type="{{ btn.type }}"
-                            state="{{ btn.whenValid && !fromFieldset.$valid ? 'disabled' : ''  }}"
+                            state="{{ btn.whenValid && !formFieldset.$valid ? 'disabled' : ''  }}"
                             ng-click="formDialogAction(btn.id)"></fd-button>
                     </div>
                 </div>
@@ -243,12 +263,12 @@
             <footer class="fd-dialog__footer fd-bar fd-bar--footer">
                 <div class="fd-bar__right">
                     <div class="fd-bar__element">
-                        <button ng-click="hideSelectDialog('select')"
+                        <button ng-click="hideSelectDialog(selectDialog.id, 'select')"
                             class="fd-dialog__decisive-button fd-button fd-button--emphasized fd-button--compact"
                             ng-disabled="!selectDialog.selectedItems">Select</button>
                     </div>
                     <div class="fd-bar__element">
-                        <button ng-click="hideSelectDialog('cancel')"
+                        <button ng-click="hideSelectDialog(selectDialog.id, 'cancel')"
                             class="fd-dialog__decisive-button fd-button fd-button--transparent fd-button--compact">Cancel</button>
                     </div>
                 </div>
