@@ -136,17 +136,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenu.setAttribute("aria-hidden", false);
                 };
 
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
                 messageHub.onDidReceiveMessage(
                     'ide-contextmenu.open',
                     function (msg) {
@@ -209,17 +198,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
                 };
             },
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
@@ -369,9 +347,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     if (themePopover.classList.contains("dg-hidden")) {
                         scope.showBackdrop();
                         messageHub.triggerEvent('header-menu.closeAll', true);
-                        let offset = themePopoverButton.getBoundingClientRect();
-                        themePopover.style.top = `${offset.bottom}px`;
-                        themePopover.style.right = `${$window.innerWidth - offset.right}px`;
                         toggleThemePopover(false);
                     } else {
                         scope.hideBackdrop();
@@ -384,9 +359,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     if (userPopover.classList.contains("dg-hidden")) {
                         scope.showBackdrop();
                         messageHub.triggerEvent('header-menu.closeAll', true);
-                        let offset = userPopoverButton.getBoundingClientRect();
-                        userPopover.style.top = `${offset.bottom}px`;
-                        userPopover.style.right = `${$window.innerWidth - offset.right}px`;
                         toggleUserPopover(false);
                     } else {
                         scope.hideBackdrop();
@@ -487,16 +459,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                    }
                 };
             },
             templateUrl: "/services/v4/web/ide-core/ui/templates/headerHamburgerMenu.html",
@@ -599,17 +561,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenu.setAttribute("aria-hidden", false);
                 };
 
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
                 scope.menuItemClick = function (item, subItem) {
                     scope.hideAllMenus();
                     scope.menuHandler(item, subItem);
@@ -679,17 +630,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
                 };
 
                 scope.menuItemClick = function (item, subItem) {

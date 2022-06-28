@@ -11,8 +11,7 @@
         </span>
         <span ng-if="menuItem.items" class="fd-menu__link has-child" aria-expanded="false" aria-haspopup="true"
             role="menuitem" ng-init="menuId = ('CSM' + submenuIndex + $index + menuItem.id | removeSpaces)"
-            ng-mouseenter="showSubmenu(menuId)" ng-mouseleave="hideSubmenu(menuId, $event.relatedTarget)"
-            ng-click="$event.stopPropagation()" aria-controls="{{ menuId }}">
+            ng-mouseenter="showSubmenu(menuId)" ng-click="$event.stopPropagation()" aria-controls="{{ menuId }}">
             <span class="fd-menu__addon-before">
                 <i ng-if="menuItem.icon" class="{{ menuItem.icon }}" role="presentation"></i>
             </span>

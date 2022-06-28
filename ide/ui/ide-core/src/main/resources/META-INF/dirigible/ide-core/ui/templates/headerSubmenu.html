@@ -7,8 +7,7 @@
         <span ng-if="menuItem.items" class="fd-menu__link has-child" aria-expanded="false" aria-haspopup="true"
             role="menuitem"
             ng-init="subMenuId = (idPrefix + 'SM' + submenuIndex + $parent.$index + $index + menuItem.label + parentItem.items.length + menuItem.items.length | removeSpaces)"
-            aria-controls="{{ subMenuId }}" ng-click="$event.stopPropagation()" ng-mouseenter="showSubmenu(subMenuId)"
-            ng-mouseleave="hideSubmenu(subMenuId, $event.relatedTarget)">
+            aria-controls="{{ subMenuId }}" ng-click="$event.stopPropagation()" ng-mouseenter="showSubmenu(subMenuId)">
             <span class="fd-menu__title">{{ menuItem.label }}</span>
             <span class="fd-menu__addon-after fd-menu__addon-after--submenu"></span>
         </span>

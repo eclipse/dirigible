@@ -15,7 +15,7 @@
                     <span ng-if="item.items" class="fd-menu__link has-child" aria-expanded="false" aria-haspopup="true"
                         role="menuitem" ng-init="menuId = ('SM' + $parent.$index + $index + item.label | removeSpaces)"
                         aria-controls="{{ menuId }}" ng-click="$event.stopPropagation()"
-                        ng-mouseenter="showSubmenu(menuId)" ng-mouseleave="hideSubmenu(menuId, $event.relatedTarget)">
+                        ng-mouseenter="showSubmenu(menuId)">
                         <span class="fd-menu__title">{{ item.label }}</span>
                         <span class="fd-menu__addon-after fd-menu__addon-after--submenu"></span>
                     </span>
