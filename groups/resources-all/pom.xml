@@ -78,22 +78,22 @@
 		<dependency>
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>fontawesome</artifactId>
-		    <version>4.7.0</version>
+		    <version>${fontawesome.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>angularjs</artifactId>
-		    <version>1.8.2</version>
+		    <version>${angularjs.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>angular-file-upload</artifactId>
-			<version>2.6.1</version>
+			<version>${angular-file-upload.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>es5-shim</artifactId>
-			<version>4.6.7</version>
+			<version>${es5-shim.version}</version>
 		</dependency>
 		<!-- <dependency>
 		    <groupId>org.webjars</groupId>
@@ -103,7 +103,7 @@
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>bootstrap</artifactId>
-		    <version>3.3.7</version>
+		    <version>${bootstrap.version}</version>
 		</dependency>
 		<!-- <dependency>
 		    <groupId>org.webjars.npm</groupId>
@@ -113,12 +113,12 @@
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>jqplot</artifactId>
-		    <version>1.0.8r1250</version>
+		    <version>${jqplot.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>jquery</artifactId>
-		    <version>3.6.0</version>
+		    <version>${jquery.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
@@ -128,43 +128,43 @@
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>jstree</artifactId>
-		    <version>3.3.12</version>
+		    <version>${jstree.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>requirejs</artifactId>
-		    <version>2.3.6</version>
+		    <version>${requirejs.version}</version>
 		    <scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>monaco-editor</artifactId>
-			<version>0.33.0</version>
+			<version>${monaco-editor.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>diff</artifactId>
-			<version>5.0.0</version>
+			<version>${diff.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>split.js</artifactId>
-			<version>1.6.5</version>
+			<version>${split.js.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>angular-aria</artifactId>
-			<version>1.8.2</version>
+			<version>${angular-aria.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>fundamental-styles</artifactId>
-			<version>0.23.0</version>
+			<version>${fundamental-styles.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars.npm</groupId>
 			<artifactId>sap-theming__theming-base-content</artifactId>
-			<version>11.1.39</version>
+			<version>${sap-theming__theming-base-content.version}</version>
 		</dependency>
 	</dependencies>
 </project>
