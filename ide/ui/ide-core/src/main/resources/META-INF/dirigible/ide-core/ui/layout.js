@@ -33,9 +33,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                         }
                         v.factory = v.factory || 'frame';
                         v.settings = {
-                            path: v.link
+                            path: v.link,
+                            loadType: (v.lazyLoad ? 'lazy' : 'eager'),
                         };
-                        v.region = v.region || 'left-top';
+                        v.region = v.region || 'left';
                         return v;
                     });
                     return data;
@@ -51,14 +52,15 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
             restrict: 'E',
             replace: true,
             scope: {
-                name: '@', // Shouldn't this be id?
+                id: '@',
                 settings: '=',
             },
             link: function (scope) {
                 Views.get().then(function (views) {
-                    const view = views.find(v => v.id === scope.name);
+                    const view = views.find(v => v.id === scope.id);
                     if (view) {
                         scope.path = view.settings.path;
+                        scope.loadType = view.settings.loadType;
                         if (!view.params) {
                             scope.params = {
                                 container: 'layout',
@@ -76,7 +78,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     return JSON.stringify(scope.params);
                 }
             },
-            template: '<iframe loading="lazy" src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
+            template: '<iframe loading="{{loadType}}" src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
         }
     }])
     .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', function (Views, Editors, SplitPaneState, messageHub, perspective) {
@@ -308,7 +310,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                             }
                         } else {
                             ret = {
-                                tabs: parent.tabs.map(x => ({ id: x.id, type: x.type, label: x.label, path: x.path, params: x.params })),
+                                tabs: parent.tabs.map(x => ({ id: x.id, type: x.type, label: x.label, path: x.path, loadType: x.loadType, params: x.params })),
                                 selectedTab: parent.selectedTab
                             };
                         }
@@ -318,10 +320,10 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     let state = {
                         initialOpenViews: $scope.initialOpenViews,
                         explorer: {
-                            tabs: $scope.explorerTabs.map(({ id, type, label, path, hidden, params }) => ({ id, type, label, path, hidden, params }))
+                            tabs: $scope.explorerTabs.map(({ id, type, label, path, hidden, loadType, params }) => ({ id, type, label, path, hidden, loadType, params }))
                         },
                         bottom: {
-                            tabs: $scope.bottomTabs.map(({ id, type, label, path, params }) => ({ id, type, label, path, params })),
+                            tabs: $scope.bottomTabs.map(({ id, type, label, path, loadType, params }) => ({ id, type, label, path, loadType, params })),
                             selected: $scope.selection.selectedBottomTab
                         },
                         center: saveCenterSplittedTabViews($scope.centerSplittedTabViews)
@@ -349,6 +351,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                         type: VIEW,
                         label: view.label,
                         path: view.settings.path,
+                        loadType: view.settings.loadType,
                         params: view.params,
                     };
                 }
@@ -1495,7 +1498,7 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
 
                 scope.isPaneSelected = function () {
                     return scope.tab.id === tabsCtrl.getSelectedPane();
-                }
+                };
 
                 scope.getParams = function () {
                     if (!scope.tab.params) {
@@ -1508,14 +1511,14 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                         scope.tab.params['perspectiveId'] = perspective.id;
                     }
                     return JSON.stringify(scope.tab.params);
-                }
+                };
 
                 scope.$on('$destroy', function () {
                     tabsCtrl.removePane(scope.tab);
                 });
             },
             template: `<div aria-expanded="{{isPaneSelected()}}" class="fd-tabs__panel" role="tabpanel" ng-transclude>
-                <iframe loading="lazy" ng-src="{{tab.path}}" data-parameters="{{getParams()}}"></iframe>
+                <iframe loading="{{tab.loadType}}" ng-src="{{tab.path}}" data-parameters="{{getParams()}}"></iframe>
             </div>`
         };
     }])

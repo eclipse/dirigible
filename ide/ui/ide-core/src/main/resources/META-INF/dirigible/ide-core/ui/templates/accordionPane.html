@@ -6,6 +6,6 @@
     <h4 class="fd-panel__title">{{view.label}}</h4>
   </div>
   <div role="region" class="fd-panel__content" aria-hidden="{{!view.expanded}}" ng-style="view.style">
-    <iframe loading="lazy" ng-src="{{view.path}}" data-parameters="{{getParams()}}"></iframe>
+    <iframe loading="{{view.loadType}}" ng-src="{{view.path}}" data-parameters="{{getParams()}}"></iframe>
   </div>
 </div>

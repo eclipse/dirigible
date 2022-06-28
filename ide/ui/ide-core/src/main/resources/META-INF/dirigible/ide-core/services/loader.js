@@ -29,16 +29,55 @@ if (id) {
             "/ide-core/ui/theming.js",
             "/ide-core/ui/widgets.js",
             "/ide-core/ui/view.js",
-            "/ide-core/core/uri-builder.js"
+            "/ide-core/core/uri-builder.js",
+        ]
+    );
+
+    namedScripts.set(
+        "ide-perspective-js",
+        [
+            "/jquery/3.6.0/jquery.min.js",
+            "/angularjs/1.8.2/angular.min.js",
+            "/angularjs/1.8.2/angular-resource.min.js",
+            "/angular-aria/1.8.2/angular-aria.min.js",
+            "/ide-core/core/message-hub.js",
+            "/ide-core/core/ide-message-hub.js",
+            "/ide-branding/branding.js",
+            "/split.js/1.6.5/dist/split.min.js",
+            "/ide-core/ui/editors.js",
+            "/ide-core/ui/core-modules.js",
+            "/ide-core/ui/theming.js",
+            "/ide-core/ui/layout.js",
+            "/ide-core/ui/widgets.js",
+            "/ide-core/core/uri-builder.js",
+        ]
+    );
+
+    namedScripts.set(
+        "file-upload-js",
+        [
+            "/es5-shim/4.6.7/es5-shim.min.js",
+            "/angular-file-upload/2.6.1/dist/angular-file-upload.min.js",
         ]
     );
 
     namedScripts.set(
         "ide-view-css",
         [
-            "/fundamental-styles/0.23.0/dist/fundamental-styles.css",
+            "/fundamental-styles/0.24.0/dist/fundamental-styles.css",
             "/resources/styles/core.css",
-            "/resources/styles/widgets.css"
+            "/resources/styles/widgets.css",
+        ]
+    );
+
+    namedScripts.set(
+        "ide-perspective-css",
+        [
+            "/fundamental-styles/0.24.0/dist/fundamental-styles.css",
+            "/resources/styles/core.css",
+            "/resources/styles/layout.css",
+            "/resources/styles/widgets.css",
+            "/resources/styles/perspective.css",
         ]
     );
 

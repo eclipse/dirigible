@@ -796,6 +796,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdPopover', ['uuid', function (uuid) {
         /**
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
+         * closeInnerclick: Boolean - If the popover should close when there is a click event inside it. Default is true.
          */
         return {
             restrict: 'E',
@@ -806,6 +807,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgAlign: '@',
+                closeInnerclick: '@'
             },
             link: {
                 pre: function (scope) {
@@ -821,8 +823,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         }
                     });
 
-                    element.on('mouseup', function () {
+                    element.on('mouseup', function (e) {
                         if (hidePopoverOnMouseUp) {
+                            if (scope.closeInnerclick === 'false' && element[0].contains(e.target)) {
+                                return;
+                            }
                             scope.$apply(scope.hidePopover);
                             hidePopoverOnMouseUp = false;
                         }
@@ -2869,5 +2874,224 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             transclude: true,
             template: `<div class="fd-badge" ng-transclude></div>`
+        }
+    }]).directive('fdWizard', [function () {
+        /**
+         * currentStep: Number - Wizard current step starting from 1
+         * completedSteps: Number - The number of the completed steps
+         * dgSize: String - When specified adds horizontal paddings to the content. Could be one of: 'sm', 'md', 'lg', 'xl'
+         */
+        return {
+            restrict: 'EA',
+            replace: true,
+            transclude: true,
+            scope: {
+                currentStep: '<',
+                completedSteps: '<',
+                dgSize: '@'
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.steps = [];
+                const validSizes = ['sm', 'md', 'lg', 'xl'];
+                if ($scope.dgSize && !validSizes.includes($scope.dgSize)) {
+                    console.error(`fd-wizard error: 'dgSize' must be one of: ${validSizes.join(', ')}`);
+                }
+
+                this.addStep = function (step) {
+                    $scope.steps.push(step);
+                };
+
+                this.removeStep = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    if (index >= 0)
+                        $scope.steps.splice(index, 1);
+                }
+
+                this.getSteps = function () {
+                    return $scope.steps;
+                }
+
+                this.onStepClick = function (index) {
+                    $scope.steps[index].stepClick({ step: index + 1 });
+                }
+
+                this.isStepCompleted = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 <= $scope.completedSteps;
+                }
+
+                this.isStepUpcoming = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 > $scope.currentStep;
+                }
+
+                this.isStepUpcomingIncompleted = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 > $scope.completedSteps && index + 1 > $scope.currentStep;
+                }
+
+                this.isStepCurrent = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 === $scope.currentStep;
+                }
+
+                this.hasCurrentStep = function () {
+                    return $scope.currentStep > 1 && $scope.currentStep <= $scope.steps.length;
+                }
+
+                this.allStepsCompleted = function () {
+                    return $scope.completedSteps >= $scope.steps.length;
+                }
+
+                this.getSize = function () {
+                    return $scope.dgSize;
+                }
+
+                this.isValidSize = function () {
+                    return validSizes.includes($scope.dgSize);
+                }
+            }],
+            template: `<section class="fd-wizard" ng-transclude></section>`
+        }
+    }]).directive('fdWizardNavigation', ['classNames', function (classNames) {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^^fdWizard',
+            link: function (scope, element, attrs, wizCtrl) {
+
+                scope.onStepClick = function (step) {
+                    wizCtrl.onStepClick(step);
+                }
+
+                scope.getSteps = function () {
+                    return wizCtrl.getSteps();
+                }
+                scope.getProgressBarClasses = () => classNames('fd-wizard__progress-bar', {
+                    [`fd-wizard__progress-bar--${wizCtrl.getSize()}`]: wizCtrl.isValidSize()
+                });
+                scope.getConnectorClasses = (step) => classNames('fd-wizard__connector', {
+                    'fd-wizard__connector--active': wizCtrl.isStepCompleted(step)
+                });
+                scope.getLabelContainerClasses = (step) => classNames('fd-wizard__label-container', {
+                    'fd-wizard__label-container--optional': !!step.optionalLabel
+                });
+                scope.getStepClasses = (step) => classNames('fd-wizard__step', {
+                    'fd-wizard__step--upcoming': wizCtrl.isStepUpcoming(step),
+                    'fd-wizard__step--current': wizCtrl.isStepCurrent(step),
+                    'fd-wizard__step--completed': wizCtrl.isStepCompleted(step),
+                    'fd-wizard__step--no-label': step.noLabel
+                });
+                scope.getAriaDisabled = (step) => wizCtrl.isStepUpcomingIncompleted(step) ? 'true' : undefined;
+                scope.getAriaCurrent = (step) => wizCtrl.isStepCurrent(step) ? 'step' : undefined;
+                scope.getIndicatorLabel = (step) => !step.indicatorGlyph ? step.indicatorLabel : undefined;
+            },
+            template: `<nav class="fd-wizard__navigation">
+                <ul ng-class="getProgressBarClasses()">
+                    <li ng-repeat="step in getSteps()" ng-class="getStepClasses(step)">
+                        <div class="fd-wizard__step-wrapper">
+                            <a ng-click="onStepClick($index)" class="fd-wizard__step-container" tabindex="0" aria-label="{{ step.dgLabel }}" ng-attr-aria-disabled="{{getAriaDisabled(step)}}" ng-attr-aria-current="{{getAriaCurrent(step) }}">
+                                <span class="fd-wizard__step-indicator">{{ getIndicatorLabel(step) }}
+                                    <i ng-if="step.indicatorGlyph" class="fd-wizard__icon {{step.indicatorGlyph}}" role="presentation"></i>
+                                </span>
+                                <div ng-class="getLabelContainerClasses(step)">
+                                    <span class="fd-wizard__label">{{ step.dgLabel }}</span>
+                                    <span ng-if="step.optionalLabel" class="fd-wizard__optional-text">{{ step.optionalLabel }}</span>
+                                </div>
+                            </a>
+                            <span ng-if="!$last" ng-class="getConnectorClasses(step)"></span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>`
+        };
+    }]).directive('fdWizardContent', ['classNames', function (classNames) {
+        /**
+         * dgBackground: String - When specified applies specific background. Could be one of: 'solid', 'list', 'transparent'
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            scope: {
+                dgBackground: '@'
+            },
+            link: function (scope, element, attrs, wizCtrl) {
+                const validBackgrounds = ['solid', 'list', 'transparent'];
+                if (scope.dgBackground && !validBackgrounds.includes(scope.dgBackground)) {
+                    console.error(`fd-wizard-content error: 'dgBackground' must be one of: ${validBackgrounds.join(', ')}`);
+                }
+
+                scope.getClasses = () => classNames('fd-wizard__content', {
+                    [`fd-wizard__content--${wizCtrl.getSize()}`]: wizCtrl.isValidSize(),
+                    [`fd-wizard__content--${scope.dgBackground}`]: validBackgrounds.includes(scope.dgBackground)
+                });
+            },
+            template: `<section ng-class="getClasses()" ng-transclude></section>`
+        }
+    }]).directive('fdWizardStep', ['classNames', function (classNames) {
+        /**
+         * dgLabel: String - The step label
+         * optionalLabel: String - An optional text displayed below the label
+         * indicatorGlyph: String - Indicator icon class/classes. When specified overrides the 'indicatorLabel' attribute
+         * indicatorLabel: String - Indicator label
+         * noLabel: Boolean - When true hides the step label
+         * stepClick: Function - Callback called when the step (indicator + label) has been clicked
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            scope: {
+                dgLabel: '@',
+                optionalLabel: '@',
+                indicatorGlyph: '@',
+                indicatorLabel: '@',
+                noLabel: '<',
+                stepClick: '&',
+            },
+            link: function (scope, element, attrs, wizCtrl) {
+                wizCtrl.addStep(scope);
+
+                scope.isStepCurrent = function () {
+                    return wizCtrl.isStepCurrent(scope);
+                }
+
+                scope.onNextClick = function () {
+                    wizCtrl.gotoNextStep();
+                }
+
+                scope.getClasses = () => classNames('fd-wizard__step-content-container', {
+                    [`fd-wizard__step-content-container--${wizCtrl.getSize()}`]: wizCtrl.isValidSize()
+                });
+
+                scope.$on('$destroy', function () {
+                    wizCtrl.removeStep(scope);
+                });
+            },
+            template: `<div ng-show="isStepCurrent()" ng-class="getClasses()" ng-transclude></div>`
+        };
+    }]).directive('fdWizardSummary', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            link: function (scope, element, attrs, wizCtrl) {
+                scope.allStepsCompleted = function () {
+                    return wizCtrl.allStepsCompleted() && !wizCtrl.hasCurrentStep();
+                }
+            },
+            template: `<div ng-show="allStepsCompleted()" class="fd-wizard__step-content-container" ng-transclude></div>`
+        };
+    }]).directive('fdWizardNextStep', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-wizard__next-step" ng-transclude></div>`
         }
     }]);
