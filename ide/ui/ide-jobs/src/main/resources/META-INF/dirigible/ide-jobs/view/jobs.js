@@ -101,4 +101,43 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 			});
 	}
 
+	$scope.getEmails = function (job) {
+		$scope.job = job;
+		$http.get('/services/v4/ops/jobs/emails/' + job.name)
+			.then(function (response) {
+				$scope.name = job.name;
+				$scope.job.email = 'my-email@examle.com';
+				$scope.emails = response.data;
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.addEmail = function () {
+		$http.post('/services/v4/ops/jobs/emailadd/' + $scope.job.name, $scope.job.email)
+			.then(function (response) {
+				$scope.getEmails($scope.job);
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.removeEmail = function (id) {
+		$http.delete('/services/v4/ops/jobs/emailremove/' + id)
+			.then(function (response) {
+				$scope.getEmails($scope.job);
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.checkIfValid = function () {
+		console.log("Value is = " + $scope.job.email);
+	}
+
+	$scope.$watch(
+		function ($scope) { return angular.toJson($scope); },
+		function () { console.log("changed"); }
+	);
+
 }]);
