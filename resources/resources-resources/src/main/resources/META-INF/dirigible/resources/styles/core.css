@@ -52,6 +52,9 @@ body {
 .dg-hidden {
   display: none;
 }
+.dg-invisible {
+  visibility: hidden;
+}
 .dg-overlay {
   position: fixed;
   width: 100vw;
