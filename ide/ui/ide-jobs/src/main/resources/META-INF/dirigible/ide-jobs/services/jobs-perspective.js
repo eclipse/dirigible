@@ -11,7 +11,7 @@
  */
 const perspectiveData = {
     id: "jobs",
-    name: "jobs",
+    name: "Jobs",
     link: "../ide-jobs/index.html",
     order: "750",
     image: "history", // deprecated
