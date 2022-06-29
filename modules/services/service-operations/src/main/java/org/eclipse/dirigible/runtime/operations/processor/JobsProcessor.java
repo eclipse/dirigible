@@ -22,6 +22,7 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobEmailDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 import org.quartz.JobExecutionException;
@@ -74,6 +75,19 @@ public class JobsProcessor {
 		}
 		
 		return JobFacade.trigger(name, GsonHelper.GSON.toJson(parametersMap));
+	}
+
+	public String emails(String name) throws SchedulerException {
+		List<JobEmailDefinition> jobEmails = schedulerCoreService.getJobEmails(name);
+		return GsonHelper.GSON.toJson(jobEmails);
+	}
+
+	public void addEmail(String name, String email) throws SchedulerException {
+		schedulerCoreService.addJobEmail(name, email);
+	}
+
+	public void removeEmail(Long id) throws SchedulerException {
+		schedulerCoreService.removeJobEmail(id);
 	}
 
 }

@@ -43,6 +43,7 @@ import org.eclipse.dirigible.core.generation.api.IGenerationEngine;
 import org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobEmailDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 import org.eclipse.dirigible.database.persistence.PersistenceManager;
@@ -65,6 +66,8 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	private PersistenceManager<JobLogDefinition> jobLogPersistenceManager = new PersistenceManager<JobLogDefinition>();
 	
 	private PersistenceManager<JobParameterDefinition> jobParameterPersistenceManager = new PersistenceManager<JobParameterDefinition>();
+
+	private PersistenceManager<JobEmailDefinition> jobEmailPersistenceManager = new PersistenceManager<JobEmailDefinition>();
 	
 	protected synchronized DataSource getDataSource() {
 		if (dataSource == null) {
@@ -78,8 +81,16 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS = "DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL";
+
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE";
+
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE = "DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL";
+
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE";
+
+	private static final String DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE = "DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME = "DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST = "DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST";
 	private static final String DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT = "DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT";
@@ -90,8 +101,16 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	private static String[] emailRecipients = null;
 	private static String emailSubjectError = null;
 	private static String emailSubjectNormal = null;
+
+	private static String emailSubjectEnable = null;
+
+	private static String emailSubjectDisable = null;
 	private static String emailTemplateError = null;
 	private static String emailTemplateNormal = null;
+
+	private static String emailTemplateEnable = null;
+
+	private static String emailTemplateDisable = null;
 	private static String emailUrlScheme = null;
 	private static String emailUrlHost = null;
 	private static String emailUrlPort = null;
@@ -99,8 +118,17 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	private static final String DEFAULT_EMAIL_SUBJECT_ERROR = "Job execution failed: [%s]";
 	private static final String DEFAULT_EMAIL_SUBJECT_NORMAL = "Job execution is back to normal: [%s]";
 
-	private static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
+	private static final String DEFAULT_EMAIL_SUBJECT_ENABLE = "Job execution has been enabled: [%s]";
+
+	private static final String DEFAULT_EMAIL_SUBJECT_DISABLE = "Job execution has been disabled: [%s]";
+
 	private static final String EMAIL_TEMPLATE_ERROR = "/job/templates/template-error.txt";
+
+	private static final String EMAIL_TEMPLATE_NORMAL = "/job/templates/template-normal.txt";
+
+	private static final String EMAIL_TEMPLATE_ENABLE = "/job/templates/template-enable.txt";
+
+	private static final String EMAIL_TEMPLATE_DISABLE = "/job/templates/template-disable.txt";
 	
 	static {
 		try {
@@ -126,8 +154,12 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 		
 		emailSubjectError = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR, DEFAULT_EMAIL_SUBJECT_ERROR);
 		emailSubjectNormal = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL, DEFAULT_EMAIL_SUBJECT_NORMAL);
+		emailSubjectEnable = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ENABLE, DEFAULT_EMAIL_SUBJECT_ENABLE);
+		emailSubjectDisable = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_DISABLE, DEFAULT_EMAIL_SUBJECT_DISABLE);
 		emailTemplateError = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR);
 		emailTemplateNormal = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL);
+		emailTemplateEnable = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ENABLE);
+		emailTemplateDisable = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_DISABLE);
 		emailUrlScheme = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME);
 		emailUrlHost = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST);
 		emailUrlPort = Configuration.get(DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT);
@@ -184,6 +216,13 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 				if (existing != null) {
 					jobPersistenceManager.update(connection, jobDefinition);
 					createOrUpdateParameters(connection, jobDefinition);
+					if (existing.isEnabled() && !jobDefinition.isEnabled()) {
+						String content = prepareEmail(jobDefinition, emailTemplateDisable, EMAIL_TEMPLATE_DISABLE);
+						sendEmail(jobDefinition, emailSubjectDisable, content);
+					} else if (!existing.isEnabled() && jobDefinition.isEnabled()) {
+						String content = prepareEmail(jobDefinition, emailTemplateEnable, EMAIL_TEMPLATE_ENABLE);
+						sendEmail(jobDefinition, emailSubjectEnable, content);
+					}
 				} else {
 					jobPersistenceManager.insert(connection, jobDefinition);
 					createOrUpdateParameters(connection, jobDefinition);
@@ -606,8 +645,18 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	
 	private void sendEmail(JobDefinition jobDefinition, String emailSubject, String emailContent) {
 		try {
+			
+			List<JobEmailDefinition> emailDefinitions = getJobEmails(jobDefinition.getName());
+			String[] emails = new String[emailDefinitions.size()];
+			for (int i = 0; i < emails.length; i++) {
+				emails[i] = emailDefinitions.get(i).getEmail();
+			}
+			
 			if (emailSender != null
-					&& emailRecipients != null) {
+					&& (
+						(emailRecipients != null && emailRecipients.length > 0) 
+							|| emails.length > 0)
+					) {
 				
 				List<Map> parts = new ArrayList<Map>();
 				Map<String, String> map  = new HashedMap();
@@ -615,7 +664,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 				map.put("type", "text");
 				map.put("text", emailContent);
 				parts.add(map);
-				MailFacade.getInstance().send(emailSender, emailRecipients, null, null, 
+				MailFacade.getInstance().send(emailSender, emails.length > 0 ? emails : emailRecipients, null, null, 
 						String.format(emailSubject, jobDefinition.getName()), parts);
 	//		String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts
 			} else {
@@ -623,10 +672,65 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 					logger.error("DIRIGIBLE_SCHEDULER_EMAIL_* environment variables are not set correctly");
 				}
 			}
-		} catch (MessagingException | IOException e) {
+		} catch (MessagingException | IOException | SchedulerException e) {
 			logger.error("Sending an e-mail failed with: " + e.getMessage(), e);
 		}
 		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#getJobEmails(java.lang.String)
+	 */
+	@Override
+	public List<JobEmailDefinition> getJobEmails(String name) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				String sql = SqlFactory.getNative(connection).select().column("*").from("DIRIGIBLE_JOB_EMAILS")
+						.where("JOBEMAIL_JOB_NAME = ?").toString();
+				return jobEmailPersistenceManager.query(connection, JobEmailDefinition.class, sql, Arrays.asList(name));
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#addJobEmail(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void addJobEmail(String name, String email) throws SchedulerException {
+		
+		if (EmailValidator.getInstance().isValid(email)) {
+			throw new SchedulerException("e-mail provided is not valid: " + email);
+		}
+		
+		try {
+			JobEmailDefinition jobEmailDefinition = new JobEmailDefinition();
+			jobEmailDefinition.setJobName(name);
+			jobEmailDefinition.setEmail(email);
+			try (Connection connection = getDataSource().getConnection()) {
+				jobEmailPersistenceManager.insert(connection, jobEmailDefinition);
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.dirigible.core.scheduler.api.ISchedulerCoreService#removeJobEmail(java.lang.Long)
+	 */
+	@Override
+	public void removeJobEmail(Long id) throws SchedulerException {
+		try {
+			try (Connection connection = getDataSource().getConnection()) {
+				jobEmailPersistenceManager.delete(connection, JobEmailDefinition.class, id);
+			}
+		} catch (SQLException e) {
+			throw new SchedulerException(e);
+		}
 	}
 
 }
