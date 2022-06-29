@@ -11,14 +11,11 @@
  */
 exports.getMenu = function () {
 	return {
-		"name": "Git",
-		"link": "#",
-		"order": "100",
-		"onClick": "alert('Git has been clicked')",
+		"label": "Git",
+		"order": "1",
 		"items": [
 			{
-				"name": "Properties",
-				"link": "#",
+				"label": "Properties",
 				"order": "110",
 				"onClick": "alert('Properties has been clicked')"
 			}
