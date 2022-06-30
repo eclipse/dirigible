@@ -212,7 +212,8 @@ public class WorkspaceJsonHelper {
 		if (status != null) {
 			
 			String path = folderPojo.getPath().substring(1);
-			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1);
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove workspace name
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
 			
 			if (status.getUntrackedFolders().contains(path)) {
 				folderPojo.setStatus(Status.U.name());
@@ -271,7 +272,8 @@ public class WorkspaceJsonHelper {
 		if (status != null) {
 			
 			String path = resourcePojo.getPath().substring(1);
-			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1);
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove workspace name
+			path = path.substring(path.indexOf(IRepository.SEPARATOR) + 1); // remove project name
 			
 			if (status.getAdded().contains(path)) {
 				resourcePojo.setStatus(Status.A.name());
