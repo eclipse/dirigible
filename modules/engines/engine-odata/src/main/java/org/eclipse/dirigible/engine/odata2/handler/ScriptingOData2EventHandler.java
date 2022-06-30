@@ -12,7 +12,6 @@
 package org.eclipse.dirigible.engine.odata2.handler;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +51,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	private ODataCoreService odataCoreService = new ODataCoreService();
 
 	@Override
-	public void beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
+	public ODataResponse beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
@@ -70,10 +69,11 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override
-	public void afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
+	public ODataResponse afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
@@ -91,6 +91,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+	public ODataResponse beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
@@ -169,10 +170,11 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override
-	public void afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+	public ODataResponse afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
@@ -191,6 +193,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override
@@ -251,7 +254,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
+	public ODataResponse beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
@@ -266,10 +269,11 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override
-	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
+	public ODataResponse afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) throws ODataException {
 		try {
 			String namespace = uriInfo.getTargetType().getNamespace();
 			String name = uriInfo.getTargetType().getName();
@@ -284,6 +288,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 		} catch (ScriptingException e) {
 			throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
 		}
+		return null;
 	}
 
 	@Override

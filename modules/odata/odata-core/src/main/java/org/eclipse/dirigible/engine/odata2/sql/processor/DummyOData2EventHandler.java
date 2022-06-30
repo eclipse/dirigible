@@ -26,13 +26,15 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	private static final String ODATA2_EVENT_HANDLER_NAME = "dummy";
 
 	@Override
-	public void beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
+	public ODataResponse beforeCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType, ODataEntry entry, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override
-	public void afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
+	public ODataResponse afterCreateEntity(PostUriInfo uriInfo, String requestContentType,
 			String contentType, ODataEntry entry, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override
@@ -54,13 +56,15 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+	public ODataResponse beforeUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override
-	public void afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+	public ODataResponse afterUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
 			boolean merge, String contentType, ODataEntry entry, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override
@@ -82,11 +86,13 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public void beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
+	public ODataResponse beforeDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override
-	public void afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
+	public ODataResponse afterDeleteEntity(DeleteUriInfo uriInfo, String contentType, Map<Object, Object> context) {
+		return null;
 	}
 
 	@Override

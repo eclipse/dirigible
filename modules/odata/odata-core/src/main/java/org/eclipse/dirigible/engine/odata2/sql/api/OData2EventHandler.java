@@ -26,10 +26,10 @@ public interface OData2EventHandler {
 	public static final String DIRIGIBLE_ODATA_EVENT_HANDLER_NAME = "DIRIGIBLE_ODATA_EVENT_HANDLER_NAME";
 	public static final String DEFAULT_ODATA_EVENT_HANDLER_NAME = "default";
 
-	void beforeCreateEntity(final PostUriInfo uriInfo,
+	ODataResponse beforeCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType, ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
-	void afterCreateEntity(final PostUriInfo uriInfo,
+	ODataResponse afterCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
 	boolean usingOnCreateEntity(final PostUriInfo uriInfo,
@@ -41,10 +41,10 @@ public interface OData2EventHandler {
 	boolean forbidCreateEntity(final PostUriInfo uriInfo,
 			final String requestContentType, final String contentType);
 
-	void beforeUpdateEntity(final PutMergePatchUriInfo uriInfo,
+	ODataResponse beforeUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
-	void afterUpdateEntity(final PutMergePatchUriInfo uriInfo,
+	ODataResponse afterUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType, final ODataEntry entry, Map<Object, Object> context) throws ODataException;
 
 	boolean usingOnUpdateEntity(final PutMergePatchUriInfo uriInfo,
@@ -56,9 +56,9 @@ public interface OData2EventHandler {
 	boolean forbidUpdateEntity(final PutMergePatchUriInfo uriInfo,
 			final String requestContentType, final boolean merge, final String contentType);
 
-	void beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse beforeDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
 
-	void afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
+	ODataResponse afterDeleteEntity(final DeleteUriInfo uriInfo, final String contentType, Map<Object, Object> context) throws ODataException;
 
 	boolean usingOnDeleteEntity(final DeleteUriInfo uriInfo, final String contentType);
 
