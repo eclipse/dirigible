@@ -11,12 +11,12 @@
  */
 exports.getMenu = function () {
 	return {
-		name: "Documents",
+		label: "Documents",
 		link: "#",
-		order: "150",
+		order: "1",
 		items: [
 			{
-				name: "Properties",
+				label: "Properties",
 				link: "#",
 				order: "160"
 			}
