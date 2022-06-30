@@ -702,7 +702,7 @@ public class SchedulerCoreService implements ISchedulerCoreService, ICleanupServ
 	@Override
 	public void addJobEmail(String name, String email) throws SchedulerException {
 		
-		if (EmailValidator.getInstance().isValid(email)) {
+		if (!EmailValidator.getInstance().isValid(email)) {
 			throw new SchedulerException("e-mail provided is not valid: " + email);
 		}
 		
