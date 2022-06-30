@@ -263,11 +263,9 @@ let stagingApp = angular
 			let announceAlert = function (title, message, type) {
 				messageHub.post(
 					{
-						data: {
-							title: title,
-							message: message,
-							type: type
-						}
+						title: title,
+						message: message,
+						type: type
 					},
 					'ide.alert'
 				);

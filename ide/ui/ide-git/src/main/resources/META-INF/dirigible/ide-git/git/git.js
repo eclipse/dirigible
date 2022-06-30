@@ -952,16 +952,11 @@ angular
 				);
 			};
 			let announceAlert = function (title, message, type) {
-				messageHub.post(
-					{
-						data: {
-							title: title,
-							message: message,
-							type: type
-						}
-					},
-					'ide.alert'
-				);
+				messageHub.post({
+					title: title,
+					message: message,
+					type: type
+				}, 'ide.alert');
 			};
 			let announceAlertSuccess = function (title, message) {
 				announceAlert(title, message, 'success');
