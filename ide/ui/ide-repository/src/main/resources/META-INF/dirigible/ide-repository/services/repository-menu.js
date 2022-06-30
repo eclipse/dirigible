@@ -11,13 +11,11 @@
  */
 exports.getMenu = function () {
 	return {
-		"name": "Repository",
-		"link": "#",
-		"order": "100",
-		"onClick": "alert('Repository has been clicked')",
+		"label": "Repository",
+		"order": "1",
 		"items": [
 			{
-				"name": "Properties",
+				"label": "Properties",
 				"link": "#",
 				"order": "110",
 				"onClick": "alert('Properties has been clicked')"
