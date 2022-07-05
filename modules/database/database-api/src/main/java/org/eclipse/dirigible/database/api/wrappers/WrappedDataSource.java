@@ -15,15 +15,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 import javax.sql.DataSource;
-
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,31 +25,13 @@ import org.slf4j.LoggerFactory;
  */
 public class WrappedDataSource implements DataSource {
 
-	private static final Logger logger = LoggerFactory.getLogger(WrappedDataSource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WrappedDataSource.class);
 
 	private static final String DATABASE_NAME_HDB = "HDB";
 
 	private String databaseName;
 
-	private DataSource originalDataSource;
-
-	private static final Collection<WrappedConnection> connections = Collections.synchronizedCollection(new ArrayList<WrappedConnection>());
-
-	private static int MAX_CONNECTIONS_COUNT = 8;
-
-	// default timeout before kill the victim connection
-	private static long WAIT_TIMEOUT = 500;
-
-	private static int WAIT_COUNT = 5;
-
-	private static boolean AUTO_COMMIT_ENABLED = false;
-
-	{
-		initAutoCommitEnabled();
-		initMaxConnectionsCount();
-		initWaitTimeout();
-		initWaitCount();
-	}
+	private final DataSource originalDataSource;
 
 	/**
 	 * Wrapper of the default datasource provided by the underlying platform
@@ -65,48 +40,7 @@ public class WrappedDataSource implements DataSource {
 	 * @param originalDataSource the original data source
 	 */
 	public WrappedDataSource(DataSource originalDataSource) {
-		super();
 		this.originalDataSource = originalDataSource;
-	}
-
-	/**
-	 * Inits the auto commit enabled.
-	 */
-	protected void initAutoCommitEnabled() {
-		String param = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_SET_AUTO_COMMIT);
-		if (param != null) {
-			AUTO_COMMIT_ENABLED = Boolean.parseBoolean(param);
-		}
-	}
-
-	/**
-	 * Inits the max connections count.
-	 */
-	protected void initMaxConnectionsCount() {
-		String param = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_MAX_CONNECTIONS_COUNT);
-		if (param != null) {
-			MAX_CONNECTIONS_COUNT = Integer.parseInt(param);
-		}
-	}
-
-	/**
-	 * Inits the wait timeout.
-	 */
-	protected void initWaitTimeout() {
-		String param = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT);
-		if (param != null) {
-			WAIT_TIMEOUT = Long.parseLong(param);
-		}
-	}
-
-	/**
-	 * Inits the wait count.
-	 */
-	protected void initWaitCount() {
-		String param = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_DEFAULT_WAIT_COUNT);
-		if (param != null) {
-			WAIT_COUNT = Integer.parseInt(param);
-		}
 	}
 
 	/*
@@ -115,8 +49,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public Connection getConnection() throws SQLException {
-		logger.trace("entering - getConnection()");
-
 		return getConnection(null, null);
 	}
 
@@ -126,139 +58,22 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
-		logger.trace("entering - getConnection(String username, String password)");
-		checkConnections();
-		Connection connection = username == null && password == null ?
-				originalDataSource.getConnection() : originalDataSource.getConnection(username, password);
-
-		WrappedConnection wrappedConnection = new WrappedConnection(connection, this);
+		Connection connection = originalDataSource.getConnection();
 
 		if (this.databaseName == null) {
-			this.databaseName = wrappedConnection.getMetaData().getDatabaseProductName();
+			this.databaseName = connection.getMetaData().getDatabaseProductName();
 		}
 
 		if (databaseName.equals(DATABASE_NAME_HDB)) {
-			wrappedConnection.setClientInfo("APPLICATIONUSER", UserFacade.getName());
+			String userName = UserFacade.getName();
+			LOGGER.debug("Setting APPLICATIONUSER:{} for connection: {}", userName, connection);
+			connection.setClientInfo("APPLICATIONUSER", userName);
+
+			LOGGER.debug("Setting XS_APPLICATIONUSER:{} for connection: {}", userName, connection);
+			connection.setClientInfo("XS_APPLICATIONUSER", userName);
 		}
 
-		addConnection(wrappedConnection);
-		wrappedConnection.setAutoCommit(AUTO_COMMIT_ENABLED);
-		logger.trace("Connection acquired: " + wrappedConnection.hashCode() + " count: " + connections.size());
-		logger.trace("exiting - getConnection(String username, String password)");
-		return wrappedConnection;
-	}
-
-	/**
-	 * Check connections.
-	 *
-	 * @throws SQLException the SQL exception
-	 */
-	private void checkConnections() throws SQLException {
-		for (int i = 0; i < WAIT_COUNT; i++) {
-			if (connections.size() == MAX_CONNECTIONS_COUNT) {
-				try {
-					synchronized (this) {
-						while (getOldestConnection().getTimeUsed() < (WAIT_TIMEOUT * WAIT_COUNT)) {
-							// wait some time and re-check
-							this.wait(WAIT_TIMEOUT);
-						}
-					}
-				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
-				}
-			} else {
-				return;
-			}
-		}
-		forceRelaseConnection();
-	}
-
-	/**
-	 * Force relase connection.
-	 *
-	 * @throws SQLException the SQL exception
-	 */
-	private void forceRelaseConnection() throws SQLException {
-		logger.trace("entering - forceRelaseConnection()");
-		WrappedConnection oldestConnection = getOldestConnection();
-		if (oldestConnection != null) {
-			logger.error("Potential connection leak; victim connection is: " + oldestConnection.hashCode() + ", used (ms): "
-					+ oldestConnection.getTimeUsed());
-			logger.error(oldestConnection.getOperationalInfo());
-			oldestConnection.close();
-		}
-		logger.trace("exiting - forceRelaseConnection()");
-	}
-
-	/**
-	 * Gets the oldest connection.
-	 *
-	 * @return the oldest connection
-	 */
-	protected WrappedConnection getOldestConnection() {
-		WrappedConnection oldestConnection = null;
-		synchronized (connections) {
-			for (WrappedConnection connection : connections) {
-				if (oldestConnection == null) {
-					oldestConnection = connection;
-				}
-				if (oldestConnection.getTimeAcquired() < connection.getTimeAcquired()) {
-					oldestConnection = connection;
-				}
-			}
-		}
-		return oldestConnection;
-	}
-
-	/**
-	 * Adds the connection.
-	 *
-	 * @param connection the connection
-	 */
-	private void addConnection(WrappedConnection connection) {
-		logger.trace("entering - addConnection()");
-		String operationalInfo = getOperationalInfo();
-		connection.setOperationalInfo(operationalInfo);
-		connections.add(connection);
-		logger.trace("exiting - addConnection()");
-	}
-
-	/**
-	 * Gets the operational info.
-	 *
-	 * @return the operational info
-	 */
-	private String getOperationalInfo() {
-		StringBuilder buff = new StringBuilder();
-		for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-			buff.append(element.toString()).append(System.getProperty("line.separator"));
-		}
-		String operationalInfo = buff.toString();
-		return operationalInfo;
-	}
-
-	/**
-	 * Removes the connection.
-	 *
-	 * @param connection the connection
-	 */
-	private void removeConnection(WrappedConnection connection) {
-		logger.trace("entering - removeConnection()");
-		connections.remove(connection);
-		logger.trace("exiting - removeConnection()");
-	}
-
-	/**
-	 * Closed connection.
-	 *
-	 * @param wrappedConnection the wrapped connection
-	 */
-	public void closedConnection(WrappedConnection wrappedConnection) {
-		logger.trace("entering - closeConnection()");
-		removeConnection(wrappedConnection);
-		logger.trace("Connection released: " + wrappedConnection.hashCode() + " count: " + connections.size() + " time used: "
-				+ wrappedConnection.getTimeUsed() + "ms");
-		logger.trace("exiting - closeConnection()");
+		return connection;
 	}
 
 	/*
@@ -267,7 +82,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
-		logger.debug("called - getLogWriter()");
 		return originalDataSource.getLogWriter();
 	}
 
@@ -277,7 +91,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public int getLoginTimeout() throws SQLException {
-		logger.debug("called - getLoginTimeout()");
 		return originalDataSource.getLoginTimeout();
 	}
 
@@ -287,7 +100,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		logger.debug("called - isWrapperFor(Class<?> arg0)");
 		return originalDataSource.isWrapperFor(arg0);
 	}
 
@@ -297,7 +109,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public void setLogWriter(PrintWriter arg0) throws SQLException {
-		logger.debug("called - setLogWriter(PrintWriter arg0)");
 		originalDataSource.setLogWriter(arg0);
 	}
 
@@ -307,7 +118,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public void setLoginTimeout(int arg0) throws SQLException {
-		logger.debug("called - setLoginTimeout(int arg0)");
 		originalDataSource.setLoginTimeout(arg0);
 	}
 
@@ -317,7 +127,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public <T> T unwrap(Class<T> arg0) throws SQLException {
-		logger.debug("called - unwrap(Class<T> arg0)");
 		return originalDataSource.unwrap(arg0);
 	}
 
@@ -327,7 +136,6 @@ public class WrappedDataSource implements DataSource {
 	 */
 	@Override
 	public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		logger.debug("called - getParentLogger()");
 		throw new SQLFeatureNotSupportedException();
 	}
 

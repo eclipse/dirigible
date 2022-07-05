@@ -11,14 +11,17 @@
  */
 package org.eclipse.dirigible.database.custom;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.AbstractDatabase;
 import org.eclipse.dirigible.database.api.IDatabase;
@@ -31,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CustomDatabase extends AbstractDatabase {
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomDatabase.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomDatabase.class);
 
 	/** The Constant NAME. */
 	public static final String NAME = "basic";
@@ -39,17 +42,17 @@ public class CustomDatabase extends AbstractDatabase {
 	/** The Constant TYPE. */
 	public static final String TYPE = "custom";
 
-	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<String, DataSource>());
+	private static final Map<String, DataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
 
 	/**
 	 * The default constructor
 	 */
 	public CustomDatabase() {
-		logger.debug("Initializing the custom datasources...");
+		LOGGER.debug("Initializing the custom datasources...");
 
 		initialize();
 
-		logger.debug("Custom datasources initialized.");
+		LOGGER.debug("Custom datasources initialized.");
 	}
 
 	/*
@@ -61,17 +64,17 @@ public class CustomDatabase extends AbstractDatabase {
 		Configuration.loadModuleConfig("/dirigible-database-custom.properties");
 		String customDataSourcesList = Configuration.get(IDatabase.DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES);
 		if ((customDataSourcesList != null) && !"".equals(customDataSourcesList)) {
-			logger.trace("Custom datasources list: " + customDataSourcesList);
+			LOGGER.trace("Custom datasources list: " + customDataSourcesList);
 			StringTokenizer tokens = new StringTokenizer(customDataSourcesList, ",");
 			while (tokens.hasMoreTokens()) {
 				String name = tokens.nextToken();
-				logger.info("Initializing a custom datasource with name: " + name);
+				LOGGER.info("Initializing a custom datasource with name: " + name);
 				initializeDataSource(name);
 			}
 		} else {
-			logger.trace("No custom datasources configured");
+			LOGGER.trace("No custom datasources configured");
 		}
-		logger.debug(this.getClass().getCanonicalName() + " module initialized.");
+		LOGGER.debug(this.getClass().getCanonicalName() + " module initialized.");
 	}
 
 	
@@ -102,25 +105,38 @@ public class CustomDatabase extends AbstractDatabase {
 		String databaseUrl = Configuration.get(name + "_URL");
 		String databaseUsername = Configuration.get(name + "_USERNAME");
 		String databasePassword = Configuration.get(name + "_PASSWORD");
-		int databaseTimeout = Integer.parseInt(Configuration.get(name + "_TIMEOUT", "60"));
-		String databaseConnectionProperties = Configuration.get(name + "_CONNECTION_PROPERTIES");
-		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
-			BasicDataSource basicDataSource = new BasicDataSource();
-			basicDataSource.setDriverClassName(databaseDriver);
-			basicDataSource.setUrl(databaseUrl);
-			basicDataSource.setUsername(databaseUsername);
-			basicDataSource.setPassword(databasePassword);
-			basicDataSource.setDefaultAutoCommit(true);
-			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
-			basicDataSource.setDefaultQueryTimeout(databaseTimeout);
-			if (databaseConnectionProperties != null && !databaseConnectionProperties.isEmpty()) {
-				basicDataSource.setConnectionProperties(databaseConnectionProperties);
-			}
-			WrappedDataSource wrappedDataSource = new WrappedDataSource(basicDataSource);
+		if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
+			Properties props = new Properties();
+			props.setProperty("driverClassName", databaseDriver );
+			props.setProperty("dataSource.user", databaseUsername );
+			props.setProperty("dataSource.password", databasePassword );
+			props.setProperty("jdbcUrl", databaseUrl);
+			props.setProperty("leakDetectionThreshold", "10000" );
+			props.setProperty("poolName", name + "HikariPool");
+
+			Map<String, String> hikariProperties = getHikariProperties(name);
+			hikariProperties.forEach(props::setProperty);
+
+			HikariConfig config = new HikariConfig(props);
+			HikariDataSource ds = new HikariDataSource(config);
+
+			WrappedDataSource wrappedDataSource = new WrappedDataSource(ds);
 			DATASOURCES.put(name, wrappedDataSource);
 			return wrappedDataSource;
 		}
+
 		throw new IllegalArgumentException("Invalid configuration for the custom datasource: " + name);
+	}
+
+	private Map<String, String> getHikariProperties(String databaseName) {
+		Map<String, String> properties = new HashMap<>();
+		String hikariDelimiter = "_HIKARI_";
+		String databaseKeyPrefix = databaseName + hikariDelimiter;
+		int hikariDelimiterLength = hikariDelimiter.length();
+		Arrays.stream(Configuration.getKeys()).filter(key -> key.startsWith(databaseKeyPrefix))//
+			.map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength)).forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
+
+		return properties;
 	}
 
 	/*
@@ -147,7 +163,7 @@ public class CustomDatabase extends AbstractDatabase {
 	 */
 	@Override
 	public Map<String, DataSource> getDataSources() {
-		Map<String, DataSource> datasources = new HashMap<String, DataSource>();
+		Map<String, DataSource> datasources = new HashMap<>();
 		datasources.putAll(DATASOURCES);
 		return datasources;
 	}
