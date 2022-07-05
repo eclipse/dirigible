@@ -60,6 +60,7 @@
                                 <th fd-table-header-cell width="150px">Message</th>
                                 <th fd-table-header-cell width="50px">Logs</th>
                                 <th fd-table-header-cell width="50px">Trigger</th>
+                                <th fd-table-header-cell width="50px">Assign</th>
                             </tr>
                         </thead>
                         <tbody fd-table-body>
@@ -135,6 +136,14 @@
                                         </fd-button>
                                     </div>
                                 </td>
+                                <td fd-table-cell width="50px">
+                                    <div class="tdSingleLine">
+                                        <fd-button dg-type="transparent" glyph="sap-icon--email" title="Assign"
+                                            aria-label="Assign" ng-click="getEmails(next)" aria-hidden="true"
+                                            data-toggle="modal" data-target="#dialogAssign">
+                                        </fd-button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -150,6 +159,7 @@
             <div class="modal-body fd-margin--md">
                 <fd-form-group dg-header="Job log for: {{name}}">
                     <div class="modal-footer">
+                        <button class="fd-button fd-button--compact is-selected" ng-click="clearLogs()">Clear</button>
                         <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
                     </div>
                     <div>
@@ -228,7 +238,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="fd-button is-selected" data-dismiss="modal">Close</button>
+                        <button class="fd-button fd-button--compact is-selected"
+                            ng-click="clearLogs(name)">Clear</button>
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
                     </div>
                 </fd-form-group>
             </div>
@@ -293,6 +305,66 @@
                             </fd-scrollbar>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Assign Dialog -->
+        <div class="dirigible-modal modal fade container" id="dialogAssign" tabindex="-1" role="dialog"
+            aria-labelledby="dialogAssignLabel" aria-hidden="true" style="background-color: rgb(255 255 255 / 90%)">
+            <div class="fd-margin--md">
+                <fd-fieldset>
+                    <fd-form-group dg-header="Job administrators for: {{name}}">
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="email" dg-required="true" dg-colon="true">e-mail
+                            </fd-form-label>
+                            <fd-input id="email" class="fd-input--compact" type="text" placeholder="Enter e-mail"
+                                ng-model="job.email" required="required" ng-change="checkIfValid()">
+                            </fd-input>
+                        </fd-form-item>
+                    </fd-form-group>
+                </fd-fieldset>
+
+
+                <div>
+                    <div class="modal-footer">
+                        <button class="fd-button fd-button--compact is-selected" ng-click="addEmail()"
+                            data-target="#dialogAssign">Add</button>
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
+                    </div>
+                    <p>Administrators who will be notified for this jobs events:</p>
+                    <div>
+                        <div>
+                            <fd-scrollbar>
+                                <table fd-table display-mode="compact">
+                                    <thead fd-table-header sticky="true">
+                                        <tr fd-table-row>
+                                            <th fd-table-header-cell>e-mail</th>
+                                            <th fd-table-header-cell width="50px">Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody fd-table-body>
+                                        <tr fd-table-row ng-repeat="next in emails" hoverable="true" activable="false">
+                                            <td fd-table-cell>
+                                                <div class="tdSingleLine">{{next.email}}</div>
+                                            </td>
+                                            <td fd-table-cell width="50px">
+                                                <div class="tdSingleLine">
+                                                    <fd-button dg-type="transparent" glyph="sap-icon--delete"
+                                                        title="Remove" aria-label="Remove"
+                                                        ng-click="removeEmail(next.id)" aria-hidden="true">
+                                                    </fd-button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </fd-scrollbar>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

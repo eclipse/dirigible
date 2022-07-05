@@ -49,10 +49,17 @@ body {
   position: sticky;
   bottom: 0;
 }
-
+/* General helper classes */
 .dg-fill-parent {
   width: 100%;
   height: 100%;
+}
+
+.dg-full-height {
+  height: 100%;
+}
+.dg-full-width {
+  width: 100%;
 }
 
 .dg-vbox {
@@ -124,13 +131,31 @@ body {
   left: 100%;
   bottom: var(--sapGroup_BorderWidth);
 }
-
-/* Temp fix for fundamental styles issue #3300 */
-.fd-message-page__icon [class*="sap-icon"],
-.fd-message-page__icon[class*="sap-icon"] {
-  opacity: 50%;
+/* fd-page helper classes */
+.dg-page__content-card {
+  padding: 2rem;
 }
-
+.dg-page__content-card > .fd-card {
+  margin: auto;
+  max-width: 1024px;
+  min-height: auto;
+}
+/* fd-wizard helper classes */
+.dg-flex--wizard {
+  display: flex;
+  flex-direction: column;
+}
+/* fd-form-layout-grid-container fixes */
+.fd-container.fd-form-layout-grid-container .fd-row .fd-col {
+  overflow: visible;
+}
+.fd-container.fd-form-layout-grid-container .fd-popover__body {
+  z-index: 5;
+}
+.fd-container.fd-form-layout-grid-container .fd-input-group {
+  margin: 0;
+}
+/* Dialog padding fixes */
 .fd-dialog__body.fd-scrollbar:not(.fd-dialog__body--no-vertical-padding) {
   padding-top: 1rem;
   padding-bottom: 1rem;

@@ -349,7 +349,7 @@
 					    <dependency>
 					      <groupId>com.github.spotbugs</groupId>
 					      <artifactId>spotbugs</artifactId>
-					      <version>4.7.0</version>
+					      <version>4.7.1</version>
 					    </dependency>
 					  </dependencies>
 					</plugin>
@@ -687,7 +687,7 @@
 		<maven.resource.plugin.version>3.2.0</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
-		<maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -697,7 +697,7 @@
 		<commons.codec>1.15</commons.codec>
 		<commons.lang3>3.12.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
-		<cxf.version>3.5.2</cxf.version>
+		<cxf.version>3.5.3</cxf.version>
 		<gson.version>2.9.0</gson.version>
 		<mockito.version>4.6.1</mockito.version>
 		<powermock-api-mockito2.version>2.0.9</powermock-api-mockito2.version>
@@ -717,7 +717,7 @@
 		<activemq.version>5.17.1</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
-		<lucene.version>9.2.0</lucene.version>
+		<lucene.version>8.5.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
 		<jaxb.version>2.3.0</jaxb.version>
@@ -732,19 +732,36 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.11</mongodb.version>
 		<caffeine.version>3.1.1</caffeine.version>
-		<liquibase-core.version>4.11.0</liquibase-core.version>
+		<liquibase-core.version>4.12.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
+		<sap-theming__theming-base-content.version>11.1.40</sap-theming__theming-base-content.version>
+		<fundamental-styles.version>0.24.0</fundamental-styles.version>
+		<angular-aria.version>1.8.2</angular-aria.version>
+		<split.js.version>1.6.5</split.js.version>
+		<diff.version>5.0.0</diff.version>
+		<monaco-editor.version>0.33.0</monaco-editor.version>
+		<requirejs.version>2.3.6</requirejs.version>
+		<jstree.version>3.3.12</jstree.version>
+		<jquery.version>3.6.0</jquery.version>
+		<jqplot.version>1.0.8r1250</jqplot.version>
+		<bootstrap.version>3.3.7</bootstrap.version>
+		<es5-shim.version>4.6.7</es5-shim.version>
+		<angular-file-upload.version>2.6.1</angular-file-upload.version>
+		<angularjs.version>1.8.2</angularjs.version>
+		<fontawesome.version>4.7.0</fontawesome.version>
 		<classgraph.version>4.8.147</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
-		<testcontainers.elasticsearch.version>1.17.2</testcontainers.elasticsearch.version>
+		<testcontainers.elasticsearch.version>1.17.3</testcontainers.elasticsearch.version>
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.3</jackson.databind.version>
-		<spring.boot.version>2.7.0</spring.boot.version>
+		<spring.boot.version>2.7.1</spring.boot.version>
 		<webjars-locator>0.45</webjars-locator>
-		<keycloak-adapter-bom.version>18.0.1</keycloak-adapter-bom.version>
+		<keycloak-adapter-bom.version>18.0.2</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
+		<validator.version>1.7</validator.version>
+		<quartz.version>2.3.2</quartz.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

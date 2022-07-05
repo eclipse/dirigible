@@ -8,8 +8,7 @@
             <li class="fd-menu__item" role="presentation" ng-repeat="item in menuList track by $index">
                 <span class="fd-menu__link has-child" role="menuitem" aria-expanded="false" aria-haspopup="true"
                     ng-init="menuId = ('HSM' + $index + item.label | removeSpaces)" aria-controls="{{ menuId }}"
-                    ng-click="$event.stopPropagation()" ng-mouseenter="showSubmenu(menuId)"
-                    ng-mouseleave="hideSubmenu(menuId, $event.relatedTarget)">
+                    ng-click="$event.stopPropagation()" ng-mouseenter="showSubmenu(menuId)">
                     <span class="fd-menu__title">{{ item.label }}</span>
                     <span class="fd-menu__addon-after fd-menu__addon-after--submenu"></span>
                 </span>

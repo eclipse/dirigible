@@ -9,19 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getMenu = function () {
-	return {
-		"name": "Terminal",
-		"link": "#",
-		"order": "100",
-		"onClick": "alert('Terminal has been clicked')",
-		"items": [
-			{
-				"name": "Properties",
-				"link": "#",
-				"order": "110",
-				"onClick": "alert('Properties has been clicked')"
-			}
-		]
-	};
+const perspectiveData = {
+	id: "database",
+	name: "Database",
+	link: "../ide-database/index.html",
+	order: "110",
+	image: "database", // deprecated
+	icon: "../ide-database/images/database.svg",
+};
+if (typeof exports !== 'undefined') {
+	exports.getPerspective = function () {
+		return perspectiveData;
+	}
 }

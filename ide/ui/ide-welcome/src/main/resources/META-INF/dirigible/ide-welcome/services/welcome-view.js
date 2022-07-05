@@ -12,9 +12,10 @@
 
 const viewData = {
 	id: "welcome",
-	factory: "frame",
-	region: "center",
 	label: "Welcome",
+	factory: "frame",
+	lazyLoad: true,
+	region: "center",
 	link: "../ide-welcome/welcome.html"
 }
 

@@ -34,12 +34,16 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractResourceExecutor implements IResourceExecutor {
 
+	private static final String LOCATION_META_INF_DIRIGIBLE = "/META-INF/dirigible";
+	
+	private static final String LOCATION_META_INF_WEBJARS = "/META-INF/resources/webjars";
+	
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractResourceExecutor.class);
 
 	private IRepository repository = null;
 
 	private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
-	
 	
 
 	/**
@@ -71,19 +75,57 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 	 */
 	@Override
 	public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
+		
+		byte[] result = null;
+		
 		if ((module == null) || "".equals(module.trim())) {
 			throw new RepositoryException("Module name cannot be empty or null.");
 		}
 		if (module.trim().endsWith(IRepositoryStructure.SEPARATOR)) {
 			throw new RepositoryException("Module name cannot point to a collection.");
 		}
+		
+		// try from repository
+		result = tryFromRepositoryLocation(root, module, extension);
+		if (result == null) {
+			// try from the classloader - dirigible
+			result = tryFromDirigibleLocation(module, extension);
+			if (result == null) {
+				// try from the classloader - webjars
+				result = tryFromWebJarsLocation(module, extension);
+			}
+		}
+		
+		if (result != null) {
+			return result;
+		}
+
+		String repositoryPath = createResourcePath(root, module, extension);
+		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
+		logger.error(logMsg);
+		throw new RepositoryNotFoundException(logMsg);
+	}
+
+	private byte[] tryFromRepositoryLocation(String root, String module, String extension) {
+		byte[] result = null;
 		String repositoryPath = createResourcePath(root, module, extension);
 		final IResource resource = getRepository().getResource(repositoryPath);
 		if (resource.exists()) {
-			return resource.getContent();
+			result = resource.getContent();
 		}
-
-		// try from the classloader
+		return result;
+	}
+	
+	private byte[] tryFromDirigibleLocation(String module, String extension) {
+		return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_DIRIGIBLE);
+	}
+	
+	private byte[] tryFromWebJarsLocation(String module, String extension) {
+		return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_WEBJARS);
+	}
+	
+	private byte[] tryFromClassloaderLocation(String module, String extension, String path) {
+		byte[] result = null;
 		try {
 			String prefix = Character.toString(module.charAt(0)).equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
 			String location = prefix + module + (extension != null ? extension : "");
@@ -91,12 +133,12 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 			if (content != null) {
 				return content;
 			}
-			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream("/META-INF/dirigible" + location);
+			InputStream bundled = AbstractScriptExecutor.class.getResourceAsStream(path + location);
 			try {
 				if (bundled != null) {
 					content = IOUtils.toByteArray(bundled);
 					PREDELIVERED.put(location, content);
-					return content;
+					result = content;
 				} 
 			} finally {
 				if (bundled != null) {
@@ -106,10 +148,7 @@ public abstract class AbstractResourceExecutor implements IResourceExecutor {
 		} catch (IOException e) {
 			throw new RepositoryException(e);
 		}
-
-		final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
-		logger.error(logMsg);
-		throw new RepositoryNotFoundException(logMsg);
+		return result;
 	}
 
 	/*

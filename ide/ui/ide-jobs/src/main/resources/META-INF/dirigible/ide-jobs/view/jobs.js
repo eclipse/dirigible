@@ -15,7 +15,7 @@ jobsView.config(["messageHubProvider", function (messageHubProvider) {
 	messageHubProvider.eventIdPrefix = 'jobs-view';
 }]);
 
-jobsView.controller('JobsController', ['$scope', '$http', function ($scope, $http) {
+jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
 
 	$http.get('/services/v4/ops/jobs').then(function (response) {
 		$scope.list = response.data;
@@ -81,5 +81,63 @@ jobsView.controller('JobsController', ['$scope', '$http', function ($scope, $htt
 				console.error(response.data);
 			});
 	}
+
+	$scope.clearLogs = function (name) {
+		$http.post('/services/v4/ops/jobs/clear/' + $scope.job.name)
+			.then(function (response) {
+				messageHub.showAlertInfo(
+					"Job Logs",
+					'Execution logs of the job ' + name + ' has been deleted.'
+				);
+				$http.get('/services/v4/ops/jobs/logs/' + name)
+					.then(function (response) {
+						$scope.name = name;
+						$scope.logs = response.data;
+					}, function (response) {
+						console.error(response.data);
+					});
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.getEmails = function (job) {
+		$scope.job = job;
+		$http.get('/services/v4/ops/jobs/emails/' + job.name)
+			.then(function (response) {
+				$scope.name = job.name;
+				$scope.job.email = 'my-email@examle.com';
+				$scope.emails = response.data;
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.addEmail = function () {
+		$http.post('/services/v4/ops/jobs/emailadd/' + $scope.job.name, $scope.job.email)
+			.then(function (response) {
+				$scope.getEmails($scope.job);
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.removeEmail = function (id) {
+		$http.delete('/services/v4/ops/jobs/emailremove/' + id)
+			.then(function (response) {
+				$scope.getEmails($scope.job);
+			}, function (response) {
+				console.error(response.data);
+			});
+	}
+
+	$scope.checkIfValid = function () {
+		console.log("Value is = " + $scope.job.email);
+	}
+
+	$scope.$watch(
+		function ($scope) { return angular.toJson($scope); },
+		function () { console.log("changed"); }
+	);
 
 }]);

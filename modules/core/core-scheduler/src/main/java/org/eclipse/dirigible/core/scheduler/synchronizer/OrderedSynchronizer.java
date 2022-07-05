@@ -70,7 +70,15 @@ public class OrderedSynchronizer extends AbstractSynchronizer {
 							}
 						});
 						for (IOrderedSynchronizerContribution next : orderedContributions) {
-							next.synchronize();
+							try {
+								next.synchronize();
+							} catch (Exception e) {
+								try {
+									failedSynchronization(next.getClass().getCanonicalName(), e.getMessage());
+								} catch (SchedulerException e1) {
+									logger.error("Synchronizing process for Ordered Synchronizers failed in registering the state log.", e);
+								}
+							}
 						}
 						
 						successfulSynchronization(SYNCHRONIZER_NAME, "Details in the previous log messages");

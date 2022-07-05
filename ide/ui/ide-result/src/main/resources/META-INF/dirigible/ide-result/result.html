@@ -9,88 +9,96 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en">
+<html lang="en" ng-app="result" ng-controller="DatabaseResultController as controller"
+    xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- Font Awesome -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
         <!-- jQuery -->
         <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
 
         <!-- Twitter Bootstrap with Theme Support -->
         <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
         <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
 
-        <!-- Message Hub -->
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <!-- View data -->
+        <script type="text/javascript" src="services/result-view.js"></script>
 
-        <!-- Result Controller -->
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
         <script type="text/javascript" src="result.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
 
     </head>
 
-    <body ng-app="result" ng-controller="DatabaseResultController">
-        <h4 ng-hide="hasMultipleProcedureResults" ng-show="result">{{result}}</h4>
-        <div class="tableFixHead">
-            <table class="table table-striped" ng-hide="hasMultipleProcedureResults" ng-show="columns">
-                <thead>
-                    <tr>
-                        <th ng-repeat="column in columns">{{column}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="row in rows">
-                        <td ng-repeat="cell in row">
-                            <div class="tdSingleLine">
-                                {{cell}}
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <body>
+        <div>
+            <div>
+                <fd-scrollbar>
 
-            <div ng-show="hasMultipleProcedureResults">
-                <ul class="nav nav-tabs">
-                    <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults"><a data-toggle="pill"
-                            href="#{{$index + 1}}">Result {{$index + 1}}</a></li>
-                </ul>
 
-                <div class="tab-content">
-                    <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
-                        ng-class="{active: $index === 0}">
-                        <table class="table table-striped"">
-						<thead>
-							<tr>
-								<th ng-repeat=" column in procedureResults[$index].columns">{{column}}</th>
+
+                    <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults" ng-show="columns">
+                        <thead fd-table-header sticky="true">
+                            <tr fd-table-row>
+                                <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="row in procedureResults[$index].rows">
-                                    <td ng-repeat="cell in row">
-                                        <div class="tdSingleLine">
-                                            {{cell}}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="row in rows">
+                                <td fd-table-cell ng-repeat="cell in row">
+                                    <div class="tdSingleLine">
+                                        {{cell}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
+                    <div ng-show="hasMultipleProcedureResults">
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{active: $index === 0}" ng-repeat="next in procedureResults"><a
+                                    data-toggle="pill" href="#{{$index + 1}}">Result {{$index + 1}}</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div ng-repeat="next in procedureResults" id="{{$index + 1}}" class="tab-pane fade in"
+                                ng-class="{active: $index === 0}">
+                                <table class="table table-striped"">
+						<thead fd-table-header sticky=" true">
+                                    <tr fd-table-row>
+                                        <th ng-repeat=" column in procedureResults[$index].columns">{{column}}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody fd-table-body>
+                                        <tr fd-table-row ng-repeat="row in procedureResults[$index].rows">
+                                            <td fd-table-cell ng-repeat="cell in row">
+                                                <div class="tdSingleLine">
+                                                    {{cell}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </fd-scrollbar>
+            </div>
         </div>
 
     </body>

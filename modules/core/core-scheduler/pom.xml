@@ -81,11 +81,26 @@
 			<artifactId>dirigible-api-facade-security</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-api-facade-mail</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-core-templating</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+    	</dependency>
 
     	<dependency>
 		    <groupId>org.quartz-scheduler</groupId>
 		    <artifactId>quartz</artifactId>
-		    <version>2.3.2</version>
+		    <version>${quartz.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-validator</groupId>
+		    <artifactId>commons-validator</artifactId>
+		    <version>${validator.version}</version>
 		</dependency>
 
 		<dependency>

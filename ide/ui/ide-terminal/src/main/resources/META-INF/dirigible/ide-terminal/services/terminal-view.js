@@ -14,7 +14,7 @@ exports.getView = function () {
 		"id": "terminal",
 		"name": "Terminal",
 		"factory": "frame",
-		"region": "center-bottom",
+		"region": "center",
 		"label": "Terminal",
 		"link": "../ide-terminal/terminal.html"
 	};

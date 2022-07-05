@@ -1,1 +1,1 @@
-{"module":"ide/services/menu/help","extensionPoint":"ide-git-menu","description":"Help Menu"}
+{"module":"ide-core/services/menus/help.js","extensionPoint":"ide-git-menu","description":"Help Menu"}

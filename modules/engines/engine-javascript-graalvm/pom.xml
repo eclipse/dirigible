@@ -316,19 +316,19 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
-			<version>1.17.2</version>
+			<version>1.17.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>rabbitmq</artifactId>
-			<version>1.17.2</version>
+			<version>1.17.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>cassandra</artifactId>
-			<version>1.17.2</version>
+			<version>1.17.3</version>
 			<scope>test</scope>
 		</dependency>
 

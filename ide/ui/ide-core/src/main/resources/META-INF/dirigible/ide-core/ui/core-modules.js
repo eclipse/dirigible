@@ -136,17 +136,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenu.setAttribute("aria-hidden", false);
                 };
 
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
                 messageHub.onDidReceiveMessage(
                     'ide-contextmenu.open',
                     function (msg) {
@@ -209,17 +198,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
                 };
             },
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
@@ -286,7 +264,10 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                 }
 
                 function loadMenu() {
-                    scope.menu = $resource(scope.url).query();
+                    $resource(scope.url).query().$promise
+                        .then(function (data) {
+                            scope.menu = data;
+                        });
                 }
 
                 scope.branding = branding;
@@ -366,9 +347,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     if (themePopover.classList.contains("dg-hidden")) {
                         scope.showBackdrop();
                         messageHub.triggerEvent('header-menu.closeAll', true);
-                        let offset = themePopoverButton.getBoundingClientRect();
-                        themePopover.style.top = `${offset.bottom}px`;
-                        themePopover.style.right = `${$window.innerWidth - offset.right}px`;
                         toggleThemePopover(false);
                     } else {
                         scope.hideBackdrop();
@@ -381,9 +359,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     if (userPopover.classList.contains("dg-hidden")) {
                         scope.showBackdrop();
                         messageHub.triggerEvent('header-menu.closeAll', true);
-                        let offset = userPopoverButton.getBoundingClientRect();
-                        userPopover.style.top = `${offset.bottom}px`;
-                        userPopover.style.right = `${$window.innerWidth - offset.right}px`;
                         toggleUserPopover(false);
                     } else {
                         scope.hideBackdrop();
@@ -484,16 +459,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
-                };
-
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                    }
                 };
             },
             templateUrl: "/services/v4/web/ide-core/ui/templates/headerHamburgerMenu.html",
@@ -596,17 +561,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenu.setAttribute("aria-hidden", false);
                 };
 
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
                 scope.menuItemClick = function (item, subItem) {
                     scope.hideAllMenus();
                     scope.menuHandler(item, subItem);
@@ -678,17 +632,6 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     submenu.setAttribute("aria-hidden", false);
                 };
 
-                scope.hideSubmenu = function (submenuId, target) {
-                    let submenu = element[0].querySelector(`#${submenuId}`);
-                    if (!submenu.contains(target)) {
-                        let submenuLink = element[0].querySelector(`span[aria-controls="${submenuId}"]`);
-                        submenuLink.setAttribute("aria-expanded", false);
-                        submenuLink.classList.remove("is-expanded");
-                        submenu.setAttribute("aria-hidden", true);
-                        openedMenuId = "";
-                    }
-                };
-
                 scope.menuItemClick = function (item, subItem) {
                     scope.hideMenuFn();
                     if (scope.isToplevel) scope.menuHandler(subItem); // Temp fix for legacy menu api
@@ -718,7 +661,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
             </div>`
         }
     }])
-    .directive('ideSidebar', ['Perspectives', 'perspective', function (Perspectives, perspective) {
+    .directive('ideSidebar', ['Perspectives', 'perspective', 'messageHub', function (Perspectives, perspective, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -730,6 +673,23 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                         if (icon) return icon;
                         return "/services/v4/web/resources/images/unknown.svg";
                     }
+                },
+                post: function () {
+                    messageHub.onDidReceiveMessage(
+                        'ide-core.openPerspective',
+                        function (data) {
+                            let url = data.link;
+                            if (data.params) {
+                                let urlParams = '';
+                                for (const property in data.params) {
+                                    urlParams += `${property}=${encodeURIComponent(data.params[property])}&`;
+                                }
+                                url += `?${urlParams.slice(0, -1)}`;
+                            }
+                            window.location.href = url;
+                        },
+                        true
+                    );
                 },
             },
             templateUrl: '/services/v4/web/ide-core/ui/templates/ideSidebar.html'
@@ -746,12 +706,14 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                 let dialogWindows = DialogWindows.query();
                 let messageBox = element[0].querySelector("#dgIdeAlert");
                 let ideDialog = element[0].querySelector("#dgIdeDialog");
+                let ideBusyDialog = element[0].querySelector("#dgIdeBusyDialog");
                 let ideFormDialog = element[0].querySelector("#dgIdeFormDialog");
                 let ideSelectDialog = element[0].querySelector("#dgIdeSelectDialog");
                 let ideDialogWindow = element[0].querySelector("#dgIdeDialogWindow");
                 let alerts = [];
                 let windows = [];
                 let dialogs = [];
+                let busyDialogs = [];
                 let loadingDialogs = [];
                 let formDialogs = [];
                 let selectDialogs = [];
@@ -773,6 +735,11 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     buttons: [],
                     callbackTopic: null,
                     loader: false,
+                };
+                scope.busyDialog = {
+                    id: null,
+                    text: '',
+                    callbackTopic: '',
                 };
                 scope.formDialog = {
                     id: null,
@@ -848,10 +815,19 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     messageHub.postMessage(scope.formDialog.callbackTopic, { buttonId: buttonId, formData: scope.formDialog.items }, true);
                 };
 
-                scope.hideFormDialog = function () {
-                    ideFormDialog.classList.remove("fd-dialog--active");
-                    formDialogs.shift();
-                    checkForDialogs();
+                scope.hideFormDialog = function (id) {
+                    if (id === scope.formDialog.id) {
+                        ideFormDialog.classList.remove("fd-dialog--active");
+                        formDialogs.shift();
+                        checkForDialogs();
+                    } else {
+                        for (let i = 0; i < formDialogs.length; i++) {
+                            if (formDialogs[i].id === id) {
+                                formDialogs.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
                 };
 
                 scope.showLoadingDialog = function () {
@@ -862,10 +838,43 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     scope.activeDialog = 'dialog';
                 };
 
-                scope.hideLoadingDialog = function () {
-                    ideDialog.classList.remove("fd-dialog--active");
-                    loadingDialogs.shift();
-                    checkForDialogs();
+                scope.hideLoadingDialog = function (id) {
+                    if (id === scope.dialog.id) {
+                        ideDialog.classList.remove("fd-dialog--active");
+                        loadingDialogs.shift();
+                        checkForDialogs();
+                    } else {
+                        for (let i = 0; i < loadingDialogs.length; i++) {
+                            if (loadingDialogs[i].id === id) {
+                                loadingDialogs.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                };
+
+                scope.showBusyDialog = function () {
+                    if (element[0].classList.contains("dg-hidden"))
+                        element[0].classList.remove("dg-hidden");
+                    scope.busyDialog = busyDialogs[0];
+                    ideBusyDialog.classList.add("fd-dialog--active");
+                    scope.activeDialog = 'busy';
+                };
+
+                scope.hideBusyDialog = function (id, fromUser = false) {
+                    if (id === scope.busyDialog.id) {
+                        if (fromUser) messageHub.triggerEvent(scope.busyDialog.callbackTopic, true);
+                        ideBusyDialog.classList.remove("fd-dialog--active");
+                        busyDialogs.shift();
+                        checkForDialogs();
+                    } else {
+                        for (let i = 0; i < busyDialogs.length; i++) {
+                            if (busyDialogs[i].id === id) {
+                                busyDialogs.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
                 };
 
                 scope.itemSelected = function (item) {
@@ -902,40 +911,48 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     scope.activeDialog = 'select';
                 };
 
-                scope.hideSelectDialog = function (action) {
-                    if (action === "select") {
-                        if (scope.selectDialog.selectedItems > 0 || scope.selectDialog.selectedItemId !== "")
-                            if (scope.selectDialog.isSingleChoice)
-                                messageHub.postMessage(
+                scope.hideSelectDialog = function (id, action) {
+                    if (id === scope.selectDialog.id) {
+                        if (action === "select") {
+                            if (scope.selectDialog.selectedItems > 0 || scope.selectDialog.selectedItemId !== "")
+                                if (scope.selectDialog.isSingleChoice)
+                                    messageHub.postMessage(
+                                        scope.selectDialog.callbackTopic,
+                                        {
+                                            selected: scope.selectDialog.selectedItemId
+                                        },
+                                        true
+                                    );
+                                else messageHub.postMessage(
                                     scope.selectDialog.callbackTopic,
                                     {
-                                        selected: scope.selectDialog.selectedItemId
+                                        selected: getSelectedItems()
                                     },
                                     true
                                 );
-                            else messageHub.postMessage(
+                            else return;
+                        } else {
+                            let selected;
+                            if (scope.selectDialog.isSingleChoice) selected = "";
+                            else selected = [];
+                            messageHub.postMessage(
                                 scope.selectDialog.callbackTopic,
-                                {
-                                    selected: getSelectedItems()
-                                },
+                                { selected: selected },
                                 true
                             );
-                        else return;
+                        }
+                        ideSelectDialog.classList.remove("fd-dialog--active");
+                        element[0].classList.add("dg-hidden");
+                        selectDialogs.shift();
+                        checkForDialogs();
+                    } else {
+                        for (let i = 0; i < selectDialogs.length; i++) {
+                            if (selectDialogs[i].id === id) {
+                                selectDialogs.splice(i, 1);
+                                break;
+                            }
+                        }
                     }
-                    else {
-                        let selected;
-                        if (scope.selectDialog.isSingleChoice) selected = "";
-                        else selected = [];
-                        messageHub.postMessage(
-                            scope.selectDialog.callbackTopic,
-                            { selected: selected },
-                            true
-                        );
-                    }
-                    ideSelectDialog.classList.remove("fd-dialog--active");
-                    element[0].classList.add("dg-hidden");
-                    selectDialogs.shift();
-                    checkForDialogs();
                 };
 
                 scope.showWindow = function () {
@@ -988,6 +1005,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                     else if (dialogs.length > 0) scope.showDialog();
                     else if (alerts.length > 0) scope.showAlert();
                     else if (loadingDialogs.length > 0) scope.showLoadingDialog();
+                    else if (busyDialogs.length > 0) scope.showBusyDialog();
                     else if (windows.length > 0) scope.showWindow();
                     else element[0].classList.add("dg-hidden");
                 }
@@ -1021,7 +1039,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                 message: data.message,
                                 type: type,
                             });
-                            scope.showAlert();
+                            if (!scope.activeDialog && alerts.length < 2) {
+                                scope.showAlert();
+                            }
                         });
                     },
                     true
@@ -1041,7 +1061,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                 buttons: data.buttons,
                                 callbackTopic: data.callbackTopic
                             });
-                            scope.showDialog();
+                            if (!scope.activeDialog && dialogs.length < 2) {
+                                scope.showDialog();
+                            }
                         });
                     },
                     true
@@ -1063,7 +1085,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                 buttons: data.buttons,
                                 callbackTopic: data.callbackTopic,
                             });
-                            scope.showFormDialog();
+                            if (!scope.activeDialog && formDialogs.length < 2) {
+                                scope.showFormDialog();
+                            }
                         });
                     },
                     true
@@ -1104,9 +1128,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
 
                 messageHub.onDidReceiveMessage(
                     "ide.formDialog.hide",
-                    function () {
+                    function (data) {
                         scope.$apply(function () {
-                            scope.hideFormDialog();
+                            scope.hideFormDialog(data.id);
                         });
                     },
                     true
@@ -1125,7 +1149,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                 status: data.status,
                                 loader: true,
                             });
-                            scope.showLoadingDialog();
+                            if (!scope.activeDialog && loadingDialogs.length < 2) {
+                                scope.showLoadingDialog();
+                            }
                         });
                     },
                     true
@@ -1152,9 +1178,36 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
 
                 messageHub.onDidReceiveMessage(
                     "ide.loadingDialog.hide",
-                    function () {
+                    function (data) {
                         scope.$apply(function () {
-                            scope.hideLoadingDialog();
+                            scope.hideLoadingDialog(data.id);
+                        });
+                    },
+                    true
+                );
+
+                messageHub.onDidReceiveMessage(
+                    "ide.busyDialog.show",
+                    function (data) {
+                        scope.$apply(function () {
+                            busyDialogs.push({
+                                id: data.id,
+                                text: data.text,
+                                callbackTopic: data.callbackTopic,
+                            });
+                            if (!scope.activeDialog && busyDialogs.length < 2) {
+                                scope.showBusyDialog();
+                            }
+                        });
+                    },
+                    true
+                );
+
+                messageHub.onDidReceiveMessage(
+                    "ide.busyDialog.hide",
+                    function (data) {
+                        scope.$apply(function () {
+                            scope.hideBusyDialog(data.id);
                         });
                     },
                     true
@@ -1210,7 +1263,9 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                 isSingleChoice: data.isSingleChoice,
                                 hasSearch: data.hasSearch
                             });
-                            scope.showSelectDialog();
+                            if (!scope.activeDialog && selectDialogs.length < 2) {
+                                scope.showSelectDialog();
+                            }
                         });
                     },
                     true
@@ -1243,8 +1298,11 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                                     break;
                                 }
                             }
-                            if (found) scope.showWindow();
-                            else console.error(
+                            if (found) {
+                                if (!scope.activeDialog && windows.length < 2) {
+                                    scope.showWindow();
+                                }
+                            } else console.error(
                                 "Dialog Window Error: There is no window dialog with such id."
                             );
                         });

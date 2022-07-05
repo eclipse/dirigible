@@ -9,12 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getPerspective = function () {
+exports.getMenu = function () {
 	return {
-		name: "Debugger",
-		link: "../ide-debugger/index.html",
-		order: "106",
-		image: "bug", // deprecated
-		icon: "../ide-debugger/images/debugger.svg",
+		"label": "Debugger",
+		"order": "1",
+		"items": [
+			{
+				"label": "Properties",
+				"order": "110",
+				"onClick": "alert('Properties has been clicked')"
+			}
+		]
 	};
 }

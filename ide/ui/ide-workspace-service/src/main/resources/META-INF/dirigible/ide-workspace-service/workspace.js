@@ -15,6 +15,12 @@ angular.module('ideWorkspace', [])
         this.workspaceManagerServiceUrl = '/services/v4/ide/workspace';
         this.workspaceSearchServiceUrl = '/services/v4/ide/workspace-search';
         this.$get = ['$http', function workspaceApiFactory($http) {
+            let setWorkspace = function (workspaceName) {
+                if (workspaceName !== undefined && !(typeof workspaceName === 'string'))
+                    throw Error("setWorkspace: workspaceName must be an string");
+                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ name: workspaceName }));
+            };
+
             let listWorkspaceNames = function () {
                 return $http.get(this.workspacesServiceUrl)
                     .then(function successCallback(response) {
@@ -193,6 +199,7 @@ angular.module('ideWorkspace', [])
             }.bind(this);
 
             return {
+                setWorkspace: setWorkspace,
                 listWorkspaceNames: listWorkspaceNames,
                 load: load,
                 getMetadata: getMetadata,

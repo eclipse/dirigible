@@ -1,5 +1,43 @@
 angular.module('ideView', ['ngResource', 'ideTheming'])
-    .constant('view', (typeof viewData != 'undefined') ? viewData : editorData)
+    .constant('view', (typeof viewData != 'undefined') ? viewData : (typeof editorData != 'undefined' ? editorData : ''))
+    .factory('Views', ['$resource', function ($resource) {
+        let cachedViews;
+        let get = function () {
+            if (cachedViews) return cachedViews;
+            else {
+                return $resource('/services/v4/js/ide-core/services/views.js').query().$promise
+                    .then(function (data) {
+                        data = data.map(function (v) {
+                            if (!v.id) {
+                                console.error(`Views: view '${v.label || 'undefined'}' does not have an id`);
+                                return;
+                            }
+                            if (!v.label) {
+                                console.error(`Views: view '${v.id}' does not have a label`);
+                                return;
+                            }
+                            if (!v.link) {
+                                console.error(`Views: view '${v.id}' does not have a link`);
+                                return;
+                            }
+                            v.factory = v.factory || 'frame';
+                            v.settings = {
+                                path: v.link,
+                                loadType: (v.lazyLoad ? 'lazy' : 'eager'),
+                            };
+                            v.region = v.region || 'left';
+                            return v;
+                        });
+                        cachedViews = data;
+                        return data;
+                    });
+            }
+        };
+
+        return {
+            get: get
+        };
+    }])
     .factory('baseHttpInterceptor', function () {
         let csrfToken = null;
         return {
@@ -20,7 +58,55 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
     })
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('baseHttpInterceptor');
-    }]).directive('dgContextmenu', ['messageHub', '$window', function (messageHub, $window) {
+    }])
+    .directive('embeddedView', ['Views', 'view', function (Views, view) {
+        return {
+            restrict: 'E',
+            transclude: false,
+            replace: true,
+            scope: {
+                viewId: '@',
+                params: '<',
+            },
+            link: {
+                pre: function (scope) {
+                    if (scope.params !== undefined && !(typeof scope.params === 'object' && !Array.isArray(scope.params) && scope.params !== null))
+                        throw Error("embeddedView: view-parameters must be an object");
+                    Views.get().then(function (views) {
+                        const embeddedView = views.find(v => v.id === scope.viewId);
+                        if (embeddedView) {
+                            scope.path = embeddedView.settings.path;
+                            scope.loadType = embeddedView.settings.loadType;
+                            scope.parameters = {
+                                container: 'embedded',
+                                viewId: view.id
+                            };
+                            if (embeddedView.params) {
+                                scope.parameters = {
+                                    ...scope.parameters,
+                                    ...embeddedView.params,
+                                };
+                            }
+                            if (scope.params) {
+                                scope.parameters = {
+                                    ...scope.parameters,
+                                    ...scope.params,
+                                }
+                            }
+                        } else {
+                            throw Error(`embeddedView: view with id '${scope.viewId}' not found`);
+                        }
+                    });
+
+                    scope.getParams = function () {
+                        return JSON.stringify(scope.parameters);
+                    };
+                },
+            },
+            template: '<iframe loading="{{loadType}}" ng-src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
+        }
+    }])
+    .directive('dgContextmenu', ['messageHub', '$window', function (messageHub, $window) {
         return {
             restrict: 'A',
             replace: false,
@@ -85,6 +171,8 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
             transclude: false,
             replace: true,
             link: function (scope) {
+                if (!view)
+                    throw Error("dgViewTitle: Not in view, missing data");
                 scope.label = view.label;
             },
             template: '<title>{{label}}</title>'

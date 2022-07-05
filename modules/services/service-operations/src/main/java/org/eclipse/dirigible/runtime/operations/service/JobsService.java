@@ -17,6 +17,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -150,6 +151,28 @@ public class JobsService extends AbstractRestService implements IRestService {
 	}
 	
 	/**
+	 * Clear the job logs.
+	 *
+	 * @param name the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@POST
+	@Path("clear/{name:.*}")
+	public Response clearJobLogs(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		
+		processor.clear(IRepository.SEPARATOR + name);
+
+		return Response.ok().build();
+	}
+	
+	/**
 	 * Returns the job parameters.
 	 *
 	 * @param name the job name
@@ -192,6 +215,79 @@ public class JobsService extends AbstractRestService implements IRestService {
 
 		return Response.ok().entity(processor.trigger(IRepository.SEPARATOR + name, parameters)).build();
 	}
+
+	/**
+	 * Returns the job emails.
+	 *
+	 * @param name the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@GET
+	@Path("emails/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getJobEmails(@PathParam("name") String name, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		return Response.ok().entity(processor.emails(IRepository.SEPARATOR + name)).build();
+	}
+
+	/**
+	 * Add the job email.
+	 *
+	 * @param name the job name
+	 * @param email the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@POST
+	@Path("emailadd/{name:.*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addJobEmails(@PathParam("name") String name, String email, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		if (email != null && email.indexOf(',') > -1) {
+			String[] emails = email.split(",");
+			for (String e : emails) {
+				processor.addEmail(IRepository.SEPARATOR + name, e);
+			}
+		} else {
+			processor.addEmail(IRepository.SEPARATOR + name, email);
+		}
+		return Response.ok().build();
+	}
+
+	/**
+	 * Add the job email.
+	 *
+	 * @param id the job name
+	 * @param request the request
+	 * @return the response
+	 * @throws SchedulerException the scheduler exception
+	 */
+	@DELETE
+	@Path("emailremove/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response removeJobEmail(@PathParam("id") Long id, @Context HttpServletRequest request)
+			throws SchedulerException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		processor.removeEmail(id);
+		return Response.ok().build();
+	}
+
 
 	/*
 	 * (non-Javadoc)

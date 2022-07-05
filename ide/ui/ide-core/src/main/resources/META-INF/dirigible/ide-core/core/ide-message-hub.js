@@ -234,6 +234,24 @@ angular.module('ideMessageHub', [])
                     throw Error("Loading Dialog: You must specify a dialog id");
                 messageHub.post({ id: id }, 'ide.loadingDialog.hide');
             };
+            let showBusyDialog = function (
+                id,
+                text = '',
+                callbackTopic = '',
+            ) {
+                if (!id)
+                    throw Error("Busy Dialog: You must specify a dialog id");
+                messageHub.post({
+                    id: id,
+                    text: text,
+                    callbackTopic: callbackTopic
+                }, 'ide.busyDialog.show');
+            };
+            let hideBusyDialog = function (id) {
+                if (!id)
+                    throw Error("Busy Dialog: You must specify a dialog id");
+                messageHub.post({ id: id }, 'ide.busyDialog.hide');
+            };
             let showSelectDialog = function (
                 title,
                 listItems,
@@ -441,6 +459,24 @@ angular.module('ideMessageHub', [])
                     throw Error('Callback argument must be a function');
                 return messageHub.subscribe(callbackFunc, 'ide.event.unpublish');
             };
+            let announceWorkspaceChanged = function (workspace) {
+                if (workspace !== undefined && !(typeof workspace === 'object' && !Array.isArray(workspace) && workspace !== null) && !workspace.hasOwnProperty('name'))
+                    throw Error('You must provide an appropriate workspace object, containing the "name" key');
+                messageHub.post({ data: workspace }, 'ide.workspace.changed');
+            };
+            let onWorkspaceChanged = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.workspace.changed');
+            };
+            let announceWorkspacesModified = function () {
+                trigger('ide.workspaces.modified', true);
+            };
+            let onWorkspacesModified = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.workspaces.modified');
+            };
             return {
                 showStatusBusy: showStatusBusy,
                 hideStatusBusy: hideStatusBusy,
@@ -459,6 +495,8 @@ angular.module('ideMessageHub', [])
                 showLoadingDialog: showLoadingDialog,
                 updateLoadingDialog: updateLoadingDialog,
                 hideLoadingDialog: hideLoadingDialog,
+                showBusyDialog: showBusyDialog,
+                hideBusyDialog: hideBusyDialog,
                 showSelectDialog: showSelectDialog,
                 showDialogWindow: showDialogWindow,
                 openView: openView,
@@ -492,6 +530,10 @@ angular.module('ideMessageHub', [])
                 onPublish: onPublish,
                 announceUnpublish: announceUnpublish,
                 onUnpublish: onUnpublish,
+                announceWorkspaceChanged: announceWorkspaceChanged,
+                onWorkspaceChanged: onWorkspaceChanged,
+                announceWorkspacesModified: announceWorkspacesModified,
+                onWorkspacesModified: onWorkspacesModified,
             };
         }];
     });

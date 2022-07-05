@@ -134,7 +134,6 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdBusyIndicator', [function () {
         /**
          * dgSize: String - The size of the avatar. Possible options are 'm' and 'l'.
-         * dgHidden: Boolean - Show/hide the busy indicator.
          * contrast: Boolean - Contrast mode.
          */
         return {
@@ -143,13 +142,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgSize: '@',
-                dgHidden: '@',
                 contrast: '@',
             },
             link: {
                 pre: function (scope) {
-                    if (!scope.dgHidden)
-                        scope.dgHidden = false;
                     scope.getClasses = function () {
                         let classList = [];
                         if (scope.dgSize) classList.push(`fd-busy-indicator--${scope.dgSize}`);
@@ -158,16 +154,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                 },
             },
-            template: `<div class="fd-busy-indicator" ng-class="getClasses()" ng-hide="dgHidden === 'true'" aria-label="Loading">
-                <div class="fd-busy-indicator--circle-0"></div>
-                <div class="fd-busy-indicator--circle-1"></div>
-                <div class="fd-busy-indicator--circle-2"></div>
+            template: `<div class="fd-busy-indicator" ng-class="getClasses()" aria-label="Loading">
+                <div class="fd-busy-indicator__circle"></div>
+				<div class="fd-busy-indicator__circle"></div>
+				<div class="fd-busy-indicator__circle"></div>
             </div>`,
         }
     }]).directive('fdBusyIndicatorExtended', [function () {
         /**
          * dgSize: String - The size of the avatar. Possible options are 'm' and 'l'.
-         * dgHidden: Boolean - Show/hide the busy indicator.
          * contrast: Boolean - Contrast mode.
          */
         return {
@@ -176,18 +171,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgSize: '@',
-                dgHidden: '@',
                 contrast: '@',
             },
-            link: {
-                pre: function (scope) {
-                    if (!scope.dgHidden)
-                        scope.dgHidden = false;
-                },
-            },
-            template: `<div class="fd-busy-indicator-extended" ng-hide="dgHidden === 'true'">
-                <fd-busy-indicator dg-size="{{ dgSize }}" dg-hidden="{{ dgHidden }}" contrast="{{ contrast }}"></fd-busy-indicator>
-                <div class="fd-busy-indicator-extended__label" ng-hide="dgHidden === 'true'" ng-transclude></div>
+            template: `<div class="fd-busy-indicator-extended">
+                <fd-busy-indicator dg-size="{{dgSize}}" contrast="{{contrast}}"></fd-busy-indicator>
+                <div class="fd-busy-indicator-extended__label" ng-transclude></div>
             </div>`,
         }
     }]).directive('fdFieldset', [function () {
@@ -332,7 +320,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     };
                 },
             },
-            template: `<input class="fd-input" ng-class="getClasses()" ng-disabled="dgDisabled" ng-required="dgRequired === 'true'" ng-transclude>`,
+            template: `<input class="fd-input" ng-class="getClasses()" ng-disabled="dgDisabled" ng-transclude>`,
         }
     }]).directive('fdInputGroup', [function () {
         /**
@@ -796,6 +784,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdPopover', ['uuid', function (uuid) {
         /**
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
+         * closeInnerclick: Boolean - If the popover should close when there is a click event inside it. Default is true.
          */
         return {
             restrict: 'E',
@@ -806,6 +795,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             scope: {
                 dgAlign: '@',
+                closeInnerclick: '@'
             },
             link: {
                 pre: function (scope) {
@@ -821,8 +811,11 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         }
                     });
 
-                    element.on('mouseup', function () {
+                    element.on('mouseup', function (e) {
                         if (hidePopoverOnMouseUp) {
+                            if (scope.closeInnerclick === 'false' && element[0].contains(e.target)) {
+                                return;
+                            }
                             scope.$apply(scope.hidePopover);
                             hidePopoverOnMouseUp = false;
                         }
@@ -878,6 +871,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * dgAlign: String - Relative position of the popover. Possible values are "left" and "right". If not provided, left is assumed.
          * maxHeight: Number - Maximum popover height in pixels before it starts scrolling. Default is 250 px.
          * noArrow: Boolean - If the popup should have an arrow.
+         * dropdownFill: Boolean - The dropdown body will be adjusted to match the text length.
          */
         return {
             restrict: 'E',
@@ -887,6 +881,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 maxHeight: '@',
                 dgAlign: '@',
                 noArrow: '@',
+                dropdownFill: '@',
             },
             link: {
                 pre: function (scope) {
@@ -897,7 +892,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     scope.getClasses = function () {
                         let classList = [];
                         if (scope.dgAlign === 'right') classList.push('fd-popover__body--right');
-                        if (scope.noArrow) classList.push('fd-popover__body--no-arrow');
+                        if (scope.noArrow === "true") classList.push('fd-popover__body--no-arrow');
+                        if (scope.dropdownFill === "true") classList.push('fd-popover__body--dropdown-fill');
                         return classList.join(' ');
                     };
                 },
@@ -2485,7 +2481,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                     <a ng-if="pageNumber !== currentPage || isShortMode()" ng-repeat-start="pageNumber in pageNumbers = getPageNumbers()" href="javascript:void(0)" ng-class="getNumberButtonClasses(pageNumber)" aria-label="{{ getNumberButtonAriaLabel(pageNumber) }}" aria-current="{{ currentPage === pageNumber }}" ng-click="gotoPage(pageNumber)">{{ pageNumber }}</a>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageLabelId }}" class="fd-form-label fd-pagination__label" aria-label="Page input, Current page, Page {currentPage}">Page:</label>
-                    <fd-input ng-if="pageNumber === currentPage" aria-labelledby="{{ getCurrentPageInputAriaLabelledBy() }}" class="fd-pagination__input" type="number" min="1" max="{{ getPageCount() }}" compact="{{ compact }}" dg-required="true" state="{{ currentPageInputState }}" ng-model="$parent.$parent.currentPageInput" ng-keydown="$event.keyCode === 13 && changePage()" ng-blur="onCurrentPageInputBlur()" ng-change="onCurrentPageInputChange()"></fd-input>
+                    <fd-input ng-if="pageNumber === currentPage" aria-labelledby="{{ getCurrentPageInputAriaLabelledBy() }}" class="fd-pagination__input" type="number" min="1" max="{{ getPageCount() }}" compact="{{ compact }}" ng-required state="{{ currentPageInputState }}" ng-model="$parent.$parent.currentPageInput" ng-keydown="$event.keyCode === 13 && changePage()" ng-blur="onCurrentPageInputBlur()" ng-change="onCurrentPageInputChange()"></fd-input>
                     <label ng-if="pageNumber === currentPage" id="{{ currentPageOfLabelId }}" class="fd-form-label fd-pagination__label">of {{ getPageCount() }}</label>
                     <span ng-if="showEllipsys($index, pageNumbers.length)" ng-repeat-end class="fd-pagination__more" role="presentation"></span>
 
@@ -2501,10 +2497,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 </div>
             </div>`
         }
-    }]).directive('fdBar', [function () {
+    }]).directive('fdBar', ['classNames', function (classNames) {
         /**
          * barDesign: String - Whether the Bar component is used as a header, subheader, header-with-subheader, footer or floating-footer. Types available: 'header','subheader','header-with-subheader','footer','floating-footer'
          * cozy: Boolean - Whether to apply cozy mode to the Bar.
+         * inPage: Boolean - Whether the Bar component is used in Page Layout.
+         * size: String - The size of the Page in Page responsive design. Available sizes: 's' | 'm_l' | 'xl'
          */
         return {
             restrict: 'EA',
@@ -2513,26 +2511,27 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 barDesign: '@',
                 cozy: '<',
+                inPage: '<',
+                size: '@'
             },
             link: function (scope) {
                 const barDesigns = ['header', 'subheader', 'header-with-subheader', 'footer', 'floating-footer'];
+                const sizes = ['s', 'm_l', 'xl'];
+
                 if (scope.barDesign && !barDesigns.includes(scope.barDesign)) {
                     console.error(`fd-bar error: 'bar-design' must be one of: ${barDesigns.join(', ')}`);
                 }
 
-                scope.getClasses = function () {
-                    let classList = ['fd-bar'];
-
-                    if (scope.barDesign && barDesigns.includes(scope.barDesign)) {
-                        classList.push(`fd-bar--${scope.barDesign}`);
-                    }
-
-                    if (scope.cozy) {
-                        classList.push('fd-bar--cozy');
-                    }
-
-                    return classList.join(' ');
+                if (scope.size && !sizes.includes(scope.size)) {
+                    console.error(`fd-bar error: 'size' must be one of: ${sizes.join(', ')}`);
                 }
+
+                scope.getClasses = () => classNames('fd-bar', {
+                    [`fd-bar--${scope.barDesign}`]: barDesigns.includes(scope.barDesign),
+                    'fd-bar--cozy': scope.cozy,
+                    'fd-bar--page': scope.inPage,
+                    [`fd-bar--page-${scope.size}`]: sizes.includes(scope.size)
+                });
             },
             template: `<div ng-class="getClasses()" ng-transclude></div>`
         }
@@ -2796,12 +2795,14 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             scope: {
                 interactive: '<'
             },
-            link: function (scope, element) {
+            link: function (scope, element, attributes, controller, $transclude) {
                 if (scope.interactive === undefined)
                     scope.interactive = true;
 
                 const avatarEl = element.find('.fd-avatar');
                 avatarEl.addClass('fd-card__avatar');
+
+                scope.isSubtitleFilled = () => { return $transclude.isSlotFilled('fdCardSubtitle') };
 
                 scope.getClasses = () => classNames('fd-card__header', {
                     'fd-card__header--non-interactive': !scope.interactive
@@ -2814,8 +2815,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                         <ng-transclude ng-transclude-slot="title"></ng-transclude>
                         <ng-transclude ng-transclude-slot="status"></ng-transclude>
                     </div>
-                    <div class="fd-card__subtitle-area">
-                        <ng-transclude ng-transclude-slot="subtitle"></ng-transclude>
+                    <div ng-if="isSubtitleFilled()" class="fd-card__subtitle-area" ng-transclude="subtitle">
                     </div>
                 </div>
             </a>`
@@ -2869,5 +2869,424 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             replace: true,
             transclude: true,
             template: `<div class="fd-badge" ng-transclude></div>`
+        }
+    }]).directive('fdWizard', [function () {
+        /**
+         * currentStep: Number - Wizard current step starting from 1
+         * completedSteps: Number - The number of the completed steps
+         * dgSize: String - When specified adds horizontal paddings to the content. Could be one of: 'sm', 'md', 'lg', 'xl'
+         */
+        return {
+            restrict: 'EA',
+            replace: true,
+            transclude: true,
+            scope: {
+                currentStep: '<',
+                completedSteps: '<',
+                dgSize: '@',
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.steps = [];
+                const validSizes = ['sm', 'md', 'lg', 'xl'];
+                if ($scope.dgSize && !validSizes.includes($scope.dgSize)) {
+                    console.error(`fd-wizard error: 'dg-size' must be one of: ${validSizes.join(', ')}`);
+                }
+
+                this.addStep = function (step) {
+                    $scope.steps.push(step);
+                };
+
+                this.removeStep = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    if (index >= 0)
+                        $scope.steps.splice(index, 1);
+                }
+
+                this.getSteps = function () {
+                    return $scope.steps;
+                }
+
+                this.onStepClick = function (index) {
+                    $scope.steps[index].stepClick({ step: index + 1 });
+                }
+
+                this.isStepCompleted = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 <= $scope.completedSteps;
+                }
+
+                this.isStepUpcoming = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 > $scope.currentStep;
+                }
+
+                this.isStepUpcomingIncompleted = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 > $scope.completedSteps && index + 1 > $scope.currentStep;
+                }
+
+                this.isStepCurrent = function (step) {
+                    let index = $scope.steps.indexOf(step);
+                    return index + 1 === $scope.currentStep;
+                }
+
+                this.hasCurrentStep = function () {
+                    return $scope.currentStep >= 1 && $scope.currentStep <= $scope.steps.length;
+                }
+
+                this.allStepsCompleted = function () {
+                    return $scope.completedSteps >= $scope.steps.length;
+                }
+
+                this.getSize = function () {
+                    return $scope.dgSize;
+                }
+
+                this.isValidSize = function (size) {
+                    if (size) return validSizes.includes(size);
+                    return validSizes.includes($scope.dgSize);
+                }
+
+                this.getValidSizes = function () {
+                    return validSizes;
+                }
+            }],
+            template: `<section class="fd-wizard" ng-transclude></section>`
+        }
+    }]).directive('fdWizardNavigation', ['classNames', function (classNames) {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^^fdWizard',
+            link: function (scope, element, attrs, wizCtrl) {
+
+                scope.onStepClick = function (step) {
+                    wizCtrl.onStepClick(step);
+                }
+
+                scope.getSteps = function () {
+                    return wizCtrl.getSteps();
+                }
+                scope.getProgressBarClasses = () => classNames('fd-wizard__progress-bar', {
+                    [`fd-wizard__progress-bar--${wizCtrl.getSize()}`]: wizCtrl.isValidSize()
+                });
+                scope.getConnectorClasses = (step) => classNames('fd-wizard__connector', {
+                    'fd-wizard__connector--active': wizCtrl.isStepCompleted(step)
+                });
+                scope.getLabelContainerClasses = (step) => classNames('fd-wizard__label-container', {
+                    'fd-wizard__label-container--optional': !!step.optionalLabel
+                });
+                scope.getStepClasses = (step) => classNames('fd-wizard__step', {
+                    'fd-wizard__step--upcoming': wizCtrl.isStepUpcoming(step),
+                    'fd-wizard__step--current': wizCtrl.isStepCurrent(step),
+                    'fd-wizard__step--completed': wizCtrl.isStepCompleted(step),
+                    'fd-wizard__step--no-label': step.noLabel
+                });
+                scope.getAriaDisabled = (step) => wizCtrl.isStepUpcomingIncompleted(step) ? 'true' : undefined;
+                scope.getAriaCurrent = (step) => wizCtrl.isStepCurrent(step) ? 'step' : undefined;
+                scope.getIndicatorLabel = (step) => !step.indicatorGlyph ? step.indicatorLabel : undefined;
+            },
+            template: `<nav class="fd-wizard__navigation">
+                <ul ng-class="getProgressBarClasses()">
+                    <li ng-repeat="step in getSteps()" ng-class="getStepClasses(step)">
+                        <div class="fd-wizard__step-wrapper">
+                            <a ng-click="onStepClick($index)" class="fd-wizard__step-container" tabindex="0" aria-label="{{ step.dgLabel }}" ng-attr-aria-disabled="{{getAriaDisabled(step)}}" ng-attr-aria-current="{{getAriaCurrent(step) }}">
+                                <span class="fd-wizard__step-indicator">{{ getIndicatorLabel(step) }}
+                                    <i ng-if="step.indicatorGlyph" class="fd-wizard__icon {{step.indicatorGlyph}}" role="presentation"></i>
+                                </span>
+                                <div ng-class="getLabelContainerClasses(step)">
+                                    <span class="fd-wizard__label">{{ step.dgLabel }}</span>
+                                    <span ng-if="step.optionalLabel" class="fd-wizard__optional-text">{{ step.optionalLabel }}</span>
+                                </div>
+                            </a>
+                            <span ng-if="!$last" ng-class="getConnectorClasses(step)"></span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>`
+        };
+    }]).directive('fdWizardContent', ['classNames', function (classNames) {
+        /**
+         * dgBackground: String - When specified applies specific background. Could be one of: 'solid', 'list', 'transparent'
+         * dgSize: String - When specified adds horizontal paddings to the content. Could be one of: 'sm', 'md', 'lg', 'xl'
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            scope: {
+                dgBackground: '@',
+                dgSize: '@',
+            },
+            link: function (scope, element, attrs, wizCtrl) {
+                const validBackgrounds = ['solid', 'list', 'transparent'];
+                if (scope.dgSize && !wizCtrl.isValidSize(scope.dgSize)) {
+                    console.error(`fd-wizard-content error: 'dg-size' must be one of: ${wizCtrl.getValidSizes().join(', ')}`);
+                }
+                if (scope.dgBackground && !validBackgrounds.includes(scope.dgBackground)) {
+                    console.error(`fd-wizard-content error: 'dgBackground' must be one of: ${validBackgrounds.join(', ')}`);
+                }
+
+                scope.getClasses = () => classNames('fd-wizard__content', {
+                    [`fd-wizard__content--${scope.dgSize}`]: wizCtrl.isValidSize(scope.dgSize),
+                    [`fd-wizard__content--${scope.dgBackground}`]: validBackgrounds.includes(scope.dgBackground)
+                });
+            },
+            template: `<section ng-class="getClasses()" ng-transclude></section>`
+        }
+    }]).directive('fdWizardStep', ['classNames', function (classNames) {
+        /**
+         * dgLabel: String - The step label
+         * dgSize: String - When specified adds horizontal paddings to the content. Could be one of: 'sm', 'md', 'lg', 'xl'
+         * optionalLabel: String - An optional text displayed below the label
+         * indicatorGlyph: String - Indicator icon class/classes. When specified overrides the 'indicatorLabel' attribute
+         * indicatorLabel: String - Indicator label
+         * noLabel: Boolean - When true hides the step label
+         * stepClick: Function - Callback called when the step (indicator + label) has been clicked
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            scope: {
+                dgLabel: '@',
+                dgSize: '@',
+                optionalLabel: '@',
+                indicatorGlyph: '@',
+                indicatorLabel: '@',
+                noLabel: '<',
+                stepClick: '&',
+            },
+            link: function (scope, element, attrs, wizCtrl) {
+                if (scope.dgSize && !wizCtrl.isValidSize(scope.dgSize)) {
+                    console.error(`fd-wizard-content error: 'dg-size' must be one of: ${wizCtrl.getValidSizes().join(', ')}`);
+                }
+                wizCtrl.addStep(scope);
+
+                scope.isStepCurrent = function () {
+                    return wizCtrl.isStepCurrent(scope);
+                }
+
+                scope.onNextClick = function () {
+                    wizCtrl.gotoNextStep();
+                }
+
+                scope.getClasses = () => classNames('fd-wizard__step-content-container', {
+                    [`fd-wizard__step-content-container--${scope.dgSize}`]: wizCtrl.isValidSize(scope.dgSize),
+                });
+
+                scope.$on('$destroy', function () {
+                    wizCtrl.removeStep(scope);
+                });
+            },
+            template: `<div ng-show="isStepCurrent()" ng-class="getClasses()" ng-transclude></div>`
+        };
+    }]).directive('fdWizardSummary', ['classNames', function (classNames) {
+        /**
+         * dgSize: String - When specified adds horizontal paddings to the content. Could be one of: 'sm', 'md', 'lg', 'xl'
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdWizard',
+            scope: {
+                dgSize: '@',
+            },
+            link: function (scope, element, attrs, wizCtrl) {
+                if (scope.dgSize && !wizCtrl.isValidSize(scope.dgSize)) {
+                    console.error(`fd-wizard-content error: 'dg-size' must be one of: ${wizCtrl.getValidSizes().join(', ')}`);
+                }
+                scope.allStepsCompleted = function () {
+                    return wizCtrl.allStepsCompleted() && !wizCtrl.hasCurrentStep();
+                }
+                scope.getClasses = () => classNames('fd-wizard__step-content-container', {
+                    [`fd-wizard__step-content-container--${scope.dgSize}`]: wizCtrl.isValidSize(scope.dgSize),
+                });
+            },
+            template: `<div ng-show="allStepsCompleted()" ng-class="getClasses()" ng-transclude></div>`
+        };
+    }]).directive('fdWizardNextStep', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-wizard__next-step" ng-transclude></div>`
+        }
+    }]).directive('fdPanel', [function () {
+        /**
+         * expanded: Boolean - Whether the panel is expanded or not
+         * fixed: Boolean - Whether the panel is expandable or not
+         * compact: Boolean - Panel size
+         * expandedChange: Function - A callback called when the Expand button is clicked
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                expanded: '<',
+                fixed: '<',
+                compact: '<',
+                expandedChange: '&'
+            },
+            controller: ['$scope', 'classNames', function ($scope, classNames) {
+                $scope.expanded = !!$scope.expanded;
+
+                this.isFixed = () => $scope.fixed;
+                this.isExpanded = () => $scope.expanded;
+                this.isCompact = () => $scope.compact;
+                this.getContentId = () => $scope.contentId;
+                this.getTitleId = () => $scope.titleId;
+
+                this.setContentId = (id) => {
+                    $scope.contentId = id;
+                }
+
+                this.setTitleId = (id) => {
+                    $scope.titleId = id;
+                }
+
+                this.toggleExpanded = function () {
+                    $scope.expanded = !$scope.expanded;
+
+                    if ($scope.expandedChange) {
+                        $scope.expandedChange({ expanded: $scope.expanded });
+                    }
+                }
+
+                $scope.getClasses = () => classNames('fd-panel', {
+                    'fd-panel--compact': $scope.compact,
+                    'fd-panel--fixed': $scope.fixed
+                });
+            }],
+            template: `<div ng-class="getClasses()" ng-transclude></div>`
+        }
+    }]).directive('fdPanelHeader', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-panel__header" ng-transclude></div>`
+        }
+    }]).directive('fdPanelExpand', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^^fdPanel',
+            link: function (scope, element, attrs, panelCtrl) {
+                scope.isFixed = () => panelCtrl.isFixed();
+                scope.isCompact = () => panelCtrl.isCompact();
+                scope.isExpanded = () => panelCtrl.isExpanded();
+                scope.getContentId = () => panelCtrl.getContentId();
+                scope.getTitleId = () => panelCtrl.getTitleId();
+                scope.toggleExpanded = function () {
+                    panelCtrl.toggleExpanded();
+                }
+                scope.getExpandButtonIcon = function () {
+                    return panelCtrl.isExpanded() ? 'sap-icon--slim-arrow-down' : 'sap-icon--slim-arrow-right';
+                }
+            },
+            template: `<div ng-show="!isFixed()" class="fd-panel__expand">
+                <fd-button ng-click="toggleExpanded()" glyph="{{ getExpandButtonIcon() }}" dg-type="transparent" compact="{{ isCompact() || 'false' }}" class="fd-panel__button" 
+                    aria-haspopup="true" aria-expanded="{{ isExpanded() }}" aria-controls="{{ getContentId() }}" aria-labelledby="{{ getTitleId() }}" 
+                    aria-label="expand/collapse panel"></fd-button>
+            </div>`
+        }
+    }]).directive('fdPanelTitle', ['uuid', function (uuid) {
+        return {
+            restrict: 'A',
+            require: '^^fdPanel',
+            link: function (scope, element, attrs, panelCtrl) {
+                element.addClass('fd-panel__title');
+
+                let id = attrs.id;
+                if (!id) {
+                    id = `pt-${uuid.generate()}`;
+                    element[0].setAttribute('id', id);
+                }
+
+                panelCtrl.setTitleId(id);
+            }
+        }
+    }]).directive('fdPanelContent', ['uuid', function (uuid) {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            require: '^fdPanel',
+            link: function (scope, element, attrs, panelCtrl) {
+                scope.isHidden = function () {
+                    return !panelCtrl.isFixed() && !panelCtrl.isExpanded();
+                }
+
+                let id = attrs.id;
+                if (!id) {
+                    id = `ph-${uuid.generate()}`;
+                    element[0].setAttribute('id', id);
+                }
+
+                panelCtrl.setContentId(id);
+            },
+            template: `<div role="region" class="fd-panel__content" aria-hidden="{{ isHidden() }}" ng-transclude></div>`
+        }
+    }]).directive('fdMessagePage', ['classNames', function (classNames) {
+        /**
+         * glyph: String - Icon class
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                glyph: '@'
+            },
+            link: function (scope) {
+                if (!scope.glyph) {
+                    console.error('fd-message-page error: You should provide glpyh icon using the "glyph" attribute');
+                }
+
+                scope.getIconClasses = () => classNames(scope.glyph, 'fd-message-page__icon');
+            },
+            template: `<div class="fd-message-page">
+                <div class="fd-message-page__container">
+                    <div class="fd-message-page__icon-container">
+                        <i role="presentation" ng-class="getIconClasses()"></i>
+                    </div>
+                    <div role="status" aria-live="polite" class="fd-message-page__content" ng-transclude></div>
+                </div>
+            </div>`
+        }
+    }]).directive('fdMessagePageTitle', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-message-page__title" ng-transclude></div>`
+        }
+    }]).directive('fdMessagePageSubtitle', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-message-page__subtitle" ng-transclude></div>`
+        }
+    }]).directive('fdMessagePageActions', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-message-page__actions" ng-transclude></div>`
+        }
+    }]).directive('fdMessagePageMore', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-message-page__more" ng-transclude></div>`
         }
     }]);

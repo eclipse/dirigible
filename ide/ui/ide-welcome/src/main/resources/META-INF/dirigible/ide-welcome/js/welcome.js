@@ -137,7 +137,7 @@ app.controller('welcomeCtrl', ['$scope', '$http', 'messageHub', function ($scope
         return new Promise((resolve, reject) => {
             $http.post(url, { template: $scope.selectedTemplate.id, parameters })
                 .then(response => {
-                    messageHub.postMessage('ide.workspace.changed', { workspace }, true);
+                    messageHub.announceWorkspaceChanged({ name: workspace, publish: { path: `/${projectName}` } });
                     resolve(response.data);
                 }).catch(ex => {
                     reject(ex);

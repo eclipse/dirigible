@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobEmailDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 
@@ -264,6 +265,14 @@ public interface ISchedulerCoreService extends ICoreService {
 	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException;
 	
 	/**
+	 * Clear all the log per job's name
+	 * 
+	 * @param name the job name
+	 * @throws SchedulerException exception
+	 */
+	public void clearJobLogs(String name) throws SchedulerException;
+	
+	/**
 	 * Delete Job Logs older than a week
 	 * 
 	 * @throws SchedulerException exception
@@ -278,5 +287,30 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @throws SchedulerException exception
 	 */
 	public List<JobParameterDefinition> getJobParameters(String name) throws SchedulerException;
+
+	/**
+	 * Get e-mail addresses assigned as watchers of this job
+	 *
+	 * @param name the job name
+	 * @return the list of e-mails
+	 * @throws SchedulerException in case of an error
+	 */
+	public List<JobEmailDefinition> getJobEmails(String name) throws SchedulerException;
+
+	/**
+	 * Add an e-mail to the list of e-mail watchers
+	 *
+	 * @param name the name of the job
+	 * @param email the e-mail
+	 * @throws SchedulerException in case of an error
+	 */
+	public void addJobEmail(String name, String email) throws SchedulerException;
+
+	/**
+	 * Remove the e-mail from the list
+	 * @param id the id of the e-mail definition
+	 * @throws SchedulerException in case of an error
+	 */
+	public void removeJobEmail(Long id) throws SchedulerException;
 
 }

@@ -13,6 +13,7 @@ const viewData = {
     id: "import",
     label: "Import",
     factory: "frame",
+    lazyLoad: true,
     region: "left",
     link: "../ide-import/import.html"
 };

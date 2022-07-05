@@ -68,7 +68,12 @@ public class CloneCommand {
 			logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
 			String user = UserFacade.getName();
 			File gitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryUri);
-			cloneProject(user, repositoryUri, model.getBranch(), model.getUsername(), model.getPassword(), gitDirectory, workspace, clonedProjects);
+			try {
+				cloneProject(user, repositoryUri, model.getBranch(), model.getUsername(), model.getPassword(), gitDirectory, workspace, clonedProjects);
+			} catch (GitConnectorException e) {
+				GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryUri);
+				throw e;
+			}
 			logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath()));
 			if (model.isPublish()) {
 				publishProjects(workspace, clonedProjects);
@@ -189,8 +194,13 @@ public class CloneCommand {
 					File projectGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), projectRepositoryURI);
 					logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 							projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
-					cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
-							clonedProjects); // assume
+					try {
+						cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
+								clonedProjects); // assume
+					} catch (GitConnectorException e) {
+						GitFileUtils.deleteGitDirectory(user, workspace.getName(), projectRepositoryURI);
+						throw e;
+					}
 				} else {
 					logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
 				}

@@ -172,13 +172,9 @@ searchView.controller('SearchController', ['$scope', 'messageHub', 'workspaceApi
         true
     );
 
-    messageHub.onDidReceiveMessage(
-        'ide.workspaces.changed',
-        function () {
-            $scope.reloadWorkspaceList();
-        },
-        true
-    );
+    messageHub.onWorkspacesModified(function () {
+        $scope.reloadWorkspaceList();
+    });
 
     // Initialization
     $scope.reloadWorkspaceList();

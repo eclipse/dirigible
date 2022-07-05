@@ -11,16 +11,14 @@
  */
 exports.getMenu = function () {
 	return {
-		"name": "Repository",
-		"link": "#",
-		"order": "100",
-		"onClick": "alert('Repository has been clicked')",
-		"items": [
+		label: "Documents",
+		link: "#",
+		order: "1",
+		items: [
 			{
-				"name": "Properties",
-				"link": "#",
-				"order": "110",
-				"onClick": "alert('Properties has been clicked')"
+				label: "Properties",
+				link: "#",
+				order: "160"
 			}
 		]
 	};
