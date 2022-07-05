@@ -152,6 +152,9 @@ body {
 .fd-container.fd-form-layout-grid-container .fd-popover__body {
   z-index: 5;
 }
+.fd-container.fd-form-layout-grid-container .fd-input-group {
+  margin: 0;
+}
 /* Dialog padding fixes */
 .fd-dialog__body.fd-scrollbar:not(.fd-dialog__body--no-vertical-padding) {
   padding-top: 1rem;

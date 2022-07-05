@@ -47,8 +47,9 @@ if (id) {
             "/ide-core/ui/editors.js",
             "/ide-core/ui/core-modules.js",
             "/ide-core/ui/theming.js",
-            "/ide-core/ui/layout.js",
             "/ide-core/ui/widgets.js",
+            "/ide-core/ui/view.js",
+            "/ide-core/ui/layout.js",
             "/ide-core/core/uri-builder.js",
         ]
     );

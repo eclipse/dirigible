@@ -661,7 +661,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
             </div>`
         }
     }])
-    .directive('ideSidebar', ['Perspectives', 'perspective', function (Perspectives, perspective) {
+    .directive('ideSidebar', ['Perspectives', 'perspective', 'messageHub', function (Perspectives, perspective, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -673,6 +673,23 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
                         if (icon) return icon;
                         return "/services/v4/web/resources/images/unknown.svg";
                     }
+                },
+                post: function () {
+                    messageHub.onDidReceiveMessage(
+                        'ide-core.openPerspective',
+                        function (data) {
+                            let url = data.link;
+                            if (data.params) {
+                                let urlParams = '';
+                                for (const property in data.params) {
+                                    urlParams += `${property}=${encodeURIComponent(data.params[property])}&`;
+                                }
+                                url += `?${urlParams.slice(0, -1)}`;
+                            }
+                            window.location.href = url;
+                        },
+                        true
+                    );
                 },
             },
             templateUrl: '/services/v4/web/ide-core/ui/templates/ideSidebar.html'

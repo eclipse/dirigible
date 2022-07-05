@@ -8,45 +8,12 @@
  * Contributors:
  *   SAP - initial API and implementation
  */
-angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
+angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub', 'ideView'])
     .constant('SplitPaneState', {
         EXPANDED: 0,
         COLLAPSED: 1
     })
     .constant('perspective', perspectiveData)
-    .factory('Views', ['$resource', function ($resource) {
-        let get = function () {
-            return $resource('/services/v4/js/ide-core/services/views.js').query().$promise
-                .then(function (data) {
-                    data = data.map(function (v) {
-                        if (!v.id) {
-                            console.error(`Views: view '${v.label || 'undefined'}' does not have an id`);
-                            return;
-                        }
-                        if (!v.label) {
-                            console.error(`Views: view '${v.id}' does not have a label`);
-                            return;
-                        }
-                        if (!v.link) {
-                            console.error(`Views: view '${v.id}' does not have a link`);
-                            return;
-                        }
-                        v.factory = v.factory || 'frame';
-                        v.settings = {
-                            path: v.link,
-                            loadType: (v.lazyLoad ? 'lazy' : 'eager'),
-                        };
-                        v.region = v.region || 'left';
-                        return v;
-                    });
-                    return data;
-                });
-        };
-
-        return {
-            get: get
-        };
-    }])
     .directive('view', ['Views', 'perspective', function (Views, perspective) {
         return {
             restrict: 'E',
@@ -71,14 +38,16 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                             scope.params['container'] = 'layout';
                             scope.params['perspectiveId'] = perspective.id;
                         }
+                    } else {
+                        throw Error(`view: view with id '${scope.id}' not found`);
                     }
                 });
 
                 scope.getParams = function () {
                     return JSON.stringify(scope.params);
-                }
+                };
             },
-            template: '<iframe loading="{{loadType}}" src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
+            template: '<iframe loading="{{loadType}}" ng-src="{{path}}" data-parameters="{{getParams()}}"></iframe>'
         }
     }])
     .directive('ideLayout', ['Views', 'Editors', 'SplitPaneState', 'messageHub', 'perspective', function (Views, Editors, SplitPaneState, messageHub, perspective) {
@@ -682,23 +651,6 @@ angular.module('ideLayout', ['idePerspective', 'ideEditors', 'ideMessageHub'])
                     'ide-core.openView',
                     function (data) {
                         $scope.$apply($scope.openView(data.viewId, data.params));
-                    },
-                    true
-                );
-
-                messageHub.onDidReceiveMessage(
-                    'ide-core.openPerspective',
-                    function (data) {
-                        let url = data.link;
-                        if (data.params) {
-                            let urlParams = '';
-                            for (const property in data.params) {
-                                urlParams += `${property} = ${encodeURIComponent(data.params[property])
-                                    }& `
-                            }
-                            url += `? ${urlParams.slice(0, -1)} `;
-                        }
-                        window.location.href = url;
                     },
                     true
                 );

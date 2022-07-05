@@ -49,11 +49,9 @@
                 <div ng-show="dialog.loader && dialog.status">
                     <strong>Status: </strong>{{ dialog.status }}
                 </div>
-                <div class="fd-dialog__loader fd-busy-indicator--l" ng-class="{'dg-hidden' : dialog.loader === false}"
+                <div class="fd-dialog__loader" ng-class="{'dg-hidden' : dialog.loader === false}"
                     aria-hidden="{{ dialog.loader }}" aria-label="loading">
-                    <div class="fd-busy-indicator--circle-0"></div>
-                    <div class="fd-busy-indicator--circle-1"></div>
-                    <div class="fd-busy-indicator--circle-2"></div>
+                    <fd-busy-indicator dg-size="l"></fd-busy-indicator>
                 </div>
             </div>
             <footer ng-if="dialog.buttons.length > 0" class="fd-dialog__footer fd-bar fd-bar--footer">
@@ -120,7 +118,7 @@
                                 <fd-form-input-message-group dg-inactive="{{ item.error ? false : true }}">
                                     <fd-input id="{{ item.id }}" type="text" placeholder="{{ item.placeholder}}"
                                         state="{{ item.error ? 'error' : '' }}" name="{{ 'i' + item.id }}"
-                                        dg-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
+                                        ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
                                         ng-maxlength="item.maxlength || -1" ng-pattern="item.pattern || ''"
                                         ng-change="inputValidation(formFieldset['i' + item.id].$valid, item)">

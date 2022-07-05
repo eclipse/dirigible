@@ -83,12 +83,18 @@ importView.controller('ImportViewController', [
                     'Content-Type': 'application/octet-stream',
                     'Content-Transfer-Encoding': 'base64'
                 };
-                item.url = new UriBuilder().path('/services/v4/ide/workspaces'.split('/')).path($scope.selectedWorkspace.name).path(uploadPath.split('/')).path(item.name).build();
+                item.url = new UriBuilder().path('/services/v4/ide/workspaces'.split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
             }
         };
 
         $scope.uploader.onCompleteAll = function () {
-            messageHub.postMessage('ide.workspace.changed', { workspace: $scope.selectedWorkspace.name }, true);
+            if ($scope.inDialog) {
+                // Temporary, publishes all files in the import directory, not just imported ones
+                messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { path: $scope.uploadPath } });
+            } else {
+                messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { workspace: true } });
+            }
+
         };
 
         $scope.isSelectedWorkspace = function (name) {
@@ -125,13 +131,9 @@ importView.controller('ImportViewController', [
             });
         };
 
-        messageHub.onDidReceiveMessage(
-            'ide.workspaces.changed',
-            function () {
-                $scope.reloadWorkspaceList();
-            },
-            true
-        );
+        messageHub.onWorkspacesModified(function () {
+            $scope.reloadWorkspaceList();
+        });
 
         // Initialization
         $scope.getViewParameters();
