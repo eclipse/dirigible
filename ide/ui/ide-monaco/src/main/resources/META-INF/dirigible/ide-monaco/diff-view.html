@@ -51,7 +51,7 @@
                     parameters.contentType = params["contentType"] || '';
                     parameters.original = params["original"] || '';
                     parameters.modified = params["modified"] || '';
-                    useParameters = true;
+                    if (parameters.original) useParameters = true;
                 }
             }
 
