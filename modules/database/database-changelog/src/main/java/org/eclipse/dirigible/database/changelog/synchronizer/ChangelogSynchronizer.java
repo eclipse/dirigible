@@ -100,16 +100,16 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 						synchronizePredelivered();
 						synchronizeRegistry();
 						updateChangelogs();
-						int immutableSchemaCount = CHANGELOG_PREDELIVERED.size();
+						int immutableChangelogCount = CHANGELOG_PREDELIVERED.size();
 						
-						int mutableSchemaCount = DATA_STRUCTURE_CHANGELOG_MODELS.size();
+						int mutableChangelogCount = DATA_STRUCTURE_CHANGELOG_MODELS.size();
 						
 						cleanup(); // TODO drop tables and views for non-existing models
 						clearCache();
 						
 						successfulSynchronization(SYNCHRONIZER_NAME, format("Immutable: [ Changelog: {1}], "
 								+ "Mutable: [Changelog: {9}]", 
-								immutableSchemaCount, mutableSchemaCount));
+								immutableChangelogCount, mutableChangelogCount));
 					} else {
 						logger.debug("Synchronization has been disabled");
 					}
@@ -141,14 +141,14 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	}
 
 	/**
-	 * Register predelivered schema files.
+	 * Register predelivered changelog files.
 	 *
 	 * @param contentPath
 	 *            the data path
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void registerPredeliveredSchema(String contentPath) throws IOException {
+	public void registerPredeliveredChangelog(String contentPath) throws IOException {
 		String data = loadResourceContent(contentPath);
 		DataStructureChangelogModel model = dataStructuresCoreService.parseChangelog(contentPath, data);
 		CHANGELOG_PREDELIVERED.put(contentPath, model);
@@ -182,12 +182,12 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	private void synchronizePredelivered() throws SynchronizationException {
 		logger.trace("Synchronizing predelivered Changelogs...");
 		
-		// Schema
-		for (DataStructureChangelogModel schema : CHANGELOG_PREDELIVERED.values()) {
+		// Changelog
+		for (DataStructureChangelogModel changelog : CHANGELOG_PREDELIVERED.values()) {
 			try {
-				synchronizeSchema(schema);
+				synchronizeChangelog(changelog);
 			} catch (Exception e) {
-				logger.error(format("Update schema [{0}] skipped due to an error: {1}", schema, e.getMessage()), e);
+				logger.error(format("Update Changelog [{0}] skipped due to an error: {1}", changelog, e.getMessage()), e);
 			}
 		}
 		
@@ -195,32 +195,32 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	}
 	
 	/**
-	 * Synchronize schema.
+	 * Synchronize changelog.
 	 *
-	 * @param schemaModel
-	 *            the schema model
+	 * @param changelogModel
+	 *            the changelog model
 	 * @throws SynchronizationException
 	 *             the synchronization exception
 	 */
-	private void synchronizeSchema(DataStructureChangelogModel schemaModel) throws SynchronizationException {
+	private void synchronizeChangelog(DataStructureChangelogModel changelogModel) throws SynchronizationException {
 		try {
-			if (!dataStructuresCoreService.existsSchema(schemaModel.getLocation())) {
-				dataStructuresCoreService.createSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
-				DATA_STRUCTURE_CHANGELOG_MODELS.put(schemaModel.getName(), schemaModel);
-				logger.info("Synchronized a new Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
-				applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
+			if (!dataStructuresCoreService.existsChangelog(changelogModel.getLocation())) {
+				dataStructuresCoreService.createChangelog(changelogModel.getLocation(), changelogModel.getName(), changelogModel.getHash());
+				DATA_STRUCTURE_CHANGELOG_MODELS.put(changelogModel.getName(), changelogModel);
+				logger.info("Synchronized a new Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
+				applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_CREATE);
 			} else {
-				DataStructureChangelogModel existing = dataStructuresCoreService.getChangelog(schemaModel.getLocation());
-				if (!schemaModel.equals(existing)) {
-					dataStructuresCoreService.updateSchema(schemaModel.getLocation(), schemaModel.getName(), schemaModel.getHash());
-					DATA_STRUCTURE_CHANGELOG_MODELS.put(schemaModel.getName(), schemaModel);
-					logger.info("Synchronized a modified Schema file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
-					applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
+				DataStructureChangelogModel existing = dataStructuresCoreService.getChangelog(changelogModel.getLocation());
+				if (!changelogModel.equals(existing)) {
+					dataStructuresCoreService.updateChangelog(changelogModel.getLocation(), changelogModel.getName(), changelogModel.getHash());
+					DATA_STRUCTURE_CHANGELOG_MODELS.put(changelogModel.getName(), changelogModel);
+					logger.info("Synchronized a modified Changelog file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
+					applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.SUCCESSFUL_UPDATE);
 				}
 			}
-			CHANGELOG_SYNCHRONIZED.add(schemaModel.getLocation());
+			CHANGELOG_SYNCHRONIZED.add(changelogModel.getLocation());
 		} catch (DataStructuresException e) {
-			applyArtefactState(schemaModel, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
+			applyArtefactState(changelogModel, CHANGELOG_ARTEFACT, ArtefactState.FAILED_CREATE_UPDATE, e.getMessage());
 			throw new SynchronizationException(e);
 		}
 	}
@@ -256,9 +256,9 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 		}
 		
 		if (resourceName.endsWith(IDataStructureModel.FILE_EXTENSION_CHANGELOG)) {
-			DataStructureChangelogModel schemaModel = dataStructuresCoreService.parseChangelog(registryPath, contentAsString);
-			schemaModel.setLocation(registryPath);
-			synchronizeSchema(schemaModel);
+			DataStructureChangelogModel changelogModel = dataStructuresCoreService.parseChangelog(registryPath, contentAsString);
+			changelogModel.setLocation(registryPath);
+			synchronizeChangelog(changelogModel);
 			return;
 		}
 	}
@@ -277,11 +277,11 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 			try {
 				connection = getDataSource().getConnection();
 				
-				List<DataStructureChangelogModel> schemaModels = dataStructuresCoreService.getChangelogs();
-				for (DataStructureChangelogModel schemaModel : schemaModels) {
-					if (!CHANGELOG_SYNCHRONIZED.contains(schemaModel.getLocation())) {
-						dataStructuresCoreService.removeSchema(schemaModel.getLocation());
-						logger.warn("Cleaned up Schema Data file [{}] from location: {}", schemaModel.getName(), schemaModel.getLocation());
+				List<DataStructureChangelogModel> changelogModels = dataStructuresCoreService.getChangelogs();
+				for (DataStructureChangelogModel changelogModel : changelogModels) {
+					if (!CHANGELOG_SYNCHRONIZED.contains(changelogModel.getLocation())) {
+						dataStructuresCoreService.removeChangelog(changelogModel.getLocation());
+						logger.warn("Cleaned up Changelog Data file [{}] from location: {}", changelogModel.getName(), changelogModel.getLocation());
 					}
 				}
 			} finally {
@@ -297,7 +297,7 @@ public class ChangelogSynchronizer extends AbstractSynchronizer implements IOrde
 	}
 
 	/**
-	 * Update database schema.
+	 * Update database changelogs.
 	 */
 	private void updateChangelogs() {
 

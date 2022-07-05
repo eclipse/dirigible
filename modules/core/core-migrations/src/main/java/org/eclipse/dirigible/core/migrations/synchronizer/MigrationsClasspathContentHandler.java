@@ -33,18 +33,16 @@ public class MigrationsClasspathContentHandler extends AbstractClasspathContentH
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IMigrationsCoreService.FILE_EXTENSION_MIGRATE)) {
-				isValid = true;
 				migrationsSynchronizer.registerPredeliveredMigrations(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Migrations artifact is not valid", e);
+			logger.error("Predelivered Migrations artifact at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

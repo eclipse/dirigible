@@ -33,20 +33,18 @@ public class WikiClasspathContentHandler extends AbstractClasspathContentHandler
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IWikiCoreService.FILE_EXTENSION_MARKDOWN)
 					|| path.endsWith(IWikiCoreService.FILE_EXTENSION_MD)
 					|| path.endsWith(IWikiCoreService.FILE_EXTENSION_CONFLUENCE)) {
-				isValid = true;
 				wikiSynchronizer.registerPredeliveredWiki(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Wiki is not valid", e);
+			logger.error("Predelivered Wiki at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

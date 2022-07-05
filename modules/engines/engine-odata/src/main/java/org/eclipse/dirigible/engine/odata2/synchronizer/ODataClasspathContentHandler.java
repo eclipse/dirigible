@@ -33,23 +33,21 @@ public class ODataClasspathContentHandler extends AbstractClasspathContentHandle
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IODataCoreService.FILE_EXTENSION_ODATA_SCHEMA)) {
-				isValid = true;
 				odataSynchronizer.registerPredeliveredSchema(path);
+				return true;
 			}
 
 			if (path.endsWith(IODataCoreService.FILE_EXTENSION_ODATA_MAPPING)) {
-				isValid = true;
 				odataSynchronizer.registerPredeliveredMapping(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered OData Schema or Mapping is not valid", e);
+			logger.error("Predelivered OData Schema or Mapping at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*
