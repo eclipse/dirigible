@@ -11,7 +11,7 @@
 /*
  * Provides key microservices for constructing and managing the IDE UI
  */
-angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
+angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideMessageHub'])
     .constant('branding', brandingInfo)
     .constant('perspective', perspectiveData)
     .service('Perspectives', ['$resource', function ($resource) {
@@ -203,7 +203,7 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
         };
     })
-    .directive('ideHeader', ['$window', '$resource', 'branding', 'theming', 'User', 'messageHub', function ($window, $resource, branding, theming, User, messageHub) {
+    .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, messageHub) {
         return {
             restrict: 'E',
             replace: true,
@@ -375,6 +375,11 @@ angular.module('idePerspective', ['ngResource', 'ideTheming', 'ideMessageHub'])
 
                 scope.resetTheme = function () {
                     scope.resetViews();
+                    for (let cookie in $cookies.getAll()) {
+                        if (cookie.startsWith("DIRIGIBLE")) {
+                            $cookies.remove(cookie, { path: "/" });
+                        }
+                    }
                 };
 
                 scope.resetViews = function () {
