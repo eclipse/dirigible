@@ -183,6 +183,7 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			CsvDefinition csvDefinition = new CsvDefinition();
 			csvDefinition.setLocation(csvPath);
+			csvDefinition.setContent(json);
 			csvDefinition.setHash(DigestUtils.md5Hex(json.getBytes()));
 			CSV_PREDELIVERED.put(csvPath, csvDefinition);
 		} finally {
@@ -351,11 +352,20 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 
 		for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
 			try {
+				CsvDefinition csvDefinition = null;
+				String content = null;
 				IResource resource = csvimProcessor.getCsvResource(csvFileDefinition);
-				String content = csvimProcessor.getCsvContent(resource);
-				CsvDefinition csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
-				String hash = DigestUtils.md5Hex(content.getBytes());
-				if (hash.equals(csvDefinition.getHash())
+				if (resource.exists()) {
+					csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
+					content = csvimProcessor.getCsvContent(resource);
+				} else {
+					csvDefinition = CSV_PREDELIVERED.get(csvFileDefinition.getFile());
+					content = csvDefinition != null ? csvDefinition.getContent() : null;
+				}
+				String hash = content != null ? DigestUtils.md5Hex(content.getBytes()) : null;
+				if (hash == null) {
+					logger.error("CSV content not found for file [" + csvFileDefinition.getFile() + "]");
+				} else if (hash.equals(csvDefinition.getHash())
 						&& csvDefinition.getImported()) {
 					continue;
 				}

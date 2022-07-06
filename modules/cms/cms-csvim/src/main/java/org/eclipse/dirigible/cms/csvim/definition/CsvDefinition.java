@@ -18,6 +18,7 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.eclipse.dirigible.commons.api.artefacts.IArtefactDefinition;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
@@ -37,6 +38,9 @@ public class CsvDefinition implements IArtefactDefinition {
 	
 	@Column(name = "CSV_IMPORTED", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean imported;
+
+	@Transient
+	private String content;
 
 	@Column(name = "CSV_CREATED_BY", columnDefinition = "VARCHAR", nullable = false, length = 128)
 	private String createdBy;
@@ -93,6 +97,24 @@ public class CsvDefinition implements IArtefactDefinition {
 	 */
 	public void setImported(boolean imported) {
 		this.imported = imported;
+	}
+
+	/**
+	 * Getter for content
+	 *
+	 * @return the content
+	 */
+	public String getContent() {
+		return content;
+	}
+
+	/**
+	 * Setter for content
+	 *
+	 * @param content the content
+	 */
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	/**
