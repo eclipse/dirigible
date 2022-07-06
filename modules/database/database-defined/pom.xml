@@ -4,13 +4,13 @@
 
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
-		<artifactId>dirigible-ide-service-parent</artifactId>
+		<artifactId>dirigible-database-parent</artifactId>
 		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>IDE - Service - Databases</name>
-	<artifactId>dirigible-ide-service-databases</artifactId>
+	<name>Database - Defined</name>
+	<artifactId>dirigible-database-defined</artifactId>
     <packaging>jar</packaging>
     
     <build>
@@ -32,10 +32,10 @@
     
     <dependencies>
     	<dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-commons-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
-        </dependency>
+	    	<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-commons-api</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
+    	</dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
@@ -43,23 +43,19 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-database-sql</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-api-facade-security</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-databases</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+        
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${hikaricp.version}</version>
+		</dependency>
     </dependencies>
 
-    <properties>
-        <license.header.location>../../../licensing-header.txt</license.header.location>
-    </properties>
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+	</properties>
 
 </project>

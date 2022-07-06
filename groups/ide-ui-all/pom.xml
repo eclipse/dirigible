@@ -282,5 +282,10 @@
             <artifactId>dirigible-ide-ui-welcome</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-ide-ui-databases</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

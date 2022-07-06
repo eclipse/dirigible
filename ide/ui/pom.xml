@@ -73,6 +73,7 @@
 		<module>ide-csvim</module>
 		<module>ide-documents</module>
 		<module>ide-documents-ext-content-type-ms</module>
+		<module>ide-databases</module>
 	</modules>
 
 	<properties>

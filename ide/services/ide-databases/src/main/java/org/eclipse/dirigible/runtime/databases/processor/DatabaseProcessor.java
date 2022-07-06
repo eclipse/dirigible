@@ -31,6 +31,10 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.api.IDatabase;
 import org.eclipse.dirigible.database.api.metadata.DatabaseArtifactTypes;
+import org.eclipse.dirigible.database.databases.api.DatabasesException;
+import org.eclipse.dirigible.database.databases.api.IDatabasesCoreService;
+import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
+import org.eclipse.dirigible.database.databases.service.DatabasesCoreService;
 import org.eclipse.dirigible.databases.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper;
@@ -59,6 +63,8 @@ public class DatabaseProcessor {
 	private boolean LIMITED = true;
 
 	private IDatabase database = null;
+	
+	private IDatabasesCoreService databasesCoreService = new DatabasesCoreService();
 	
 	protected synchronized IDatabase getDatabase() {
 		if (database == null) {
@@ -507,6 +513,26 @@ public class DatabaseProcessor {
 			return PROCEDURE_DELIMITER;
 		}
 		return SCRIPT_DELIMITER;
+	}
+	
+	public List<DatabaseDefinition> getDefinedDatabases() throws DatabasesException {
+		return databasesCoreService.getDatabases();
+	}
+	
+	public DatabaseDefinition getDefinedDatabase(long id) throws DatabasesException {
+		return databasesCoreService.getDatabase(id);
+	}
+	
+	public DatabaseDefinition createDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
+		return databasesCoreService.createDatabase(definition);
+	}
+	
+	public void removeDefinedDatabase(long id) throws DatabasesException {
+		databasesCoreService.removeDatabase(id);
+	}
+	
+	public void updateDefinedDatabase(DatabaseDefinition definition) throws DatabasesException {
+		databasesCoreService.createDatabase(definition);
 	}
 
 }

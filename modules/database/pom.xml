@@ -25,6 +25,8 @@
 		<module>database-h2</module>
 		<module>database-dynamic</module>
 		<module>database-changelog</module>
+		<module>database-databases</module>
+		<module>database-defined</module>
 	</modules>
 
 	<properties>

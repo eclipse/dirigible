@@ -105,7 +105,7 @@ public class CustomDatabase extends AbstractDatabase {
 		String databaseUrl = Configuration.get(name + "_URL");
 		String databaseUsername = Configuration.get(name + "_USERNAME");
 		String databasePassword = Configuration.get(name + "_PASSWORD");
-		if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
+		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
 			Properties props = new Properties();
 			props.setProperty("driverClassName", databaseDriver );
 			props.setProperty("dataSource.user", databaseUsername );

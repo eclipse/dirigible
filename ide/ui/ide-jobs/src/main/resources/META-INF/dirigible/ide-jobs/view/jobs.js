@@ -135,9 +135,4 @@ jobsView.controller('JobsController', ['$scope', '$http', 'messageHub', function
 		console.log("Value is = " + $scope.job.email);
 	}
 
-	$scope.$watch(
-		function ($scope) { return angular.toJson($scope); },
-		function () { console.log("changed"); }
-	);
-
 }]);

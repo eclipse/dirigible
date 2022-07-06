@@ -13,32 +13,22 @@ package org.eclipse.dirigible.runtime.databases.service;
 
 import static java.text.MessageFormat.format;
 
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
-import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

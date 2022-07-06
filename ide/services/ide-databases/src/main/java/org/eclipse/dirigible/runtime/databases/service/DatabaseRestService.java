@@ -11,34 +11,25 @@
  */
 package org.eclipse.dirigible.runtime.databases.service;
 
-import static java.text.MessageFormat.format;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.dirigible.api.v3.security.UserFacade;
-import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.database.api.metadata.DatabaseMetadata;
-import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
+import org.eclipse.dirigible.database.databases.api.DatabasesException;
+import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
 import org.eclipse.dirigible.runtime.databases.processor.DatabaseProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,327 +42,147 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 /**
- * Front facing REST service serving the raw database content.
+ * Front facing REST service serving the defined database management.
  */
-@Path("/ide/databases")
-@Api(value = "IDE - Databases", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
+@Path("/ide/database")
+@Api(value = "IDE - Database", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DatabaseRestService extends AbstractRestService implements IRestService {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseRestService.class);
 
 	private DatabaseProcessor processor = new DatabaseProcessor();
 
 	@Context
 	private HttpServletResponse response;
-
+	
 	/**
-	 * List database types.
+	 * List defined database.
 	 *
 	 * @return the response
+	 * @throws DatabasesException 
 	 */
 	@GET
 	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation("List all the databases types")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of Databases Types", response = String.class, responseContainer = "List") })
-	public Response listDatabaseTypes() {
+	@ApiOperation("List all the defined databases")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List of the defined databases", response = String.class, responseContainer = "List") })
+	public Response listDefinedDatabases() throws DatabasesException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		List<String> databaseTypes = processor.getDatabaseTypes();
-		return Response.ok().entity(databaseTypes).build();
-	}
-
-	/**
-	 * List data sources.
-	 *
-	 * @param type
-	 *            the type
-	 * @return the response
-	 */
-	@GET
-	@Path("{type}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation("Returns all the available data sources for the given database {type}")
-	@ApiResponses({ @ApiResponse(code = 200, message = "List of Data Sources", response = String.class, responseContainer = "List"),
-			@ApiResponse(code = 404, message = "Data Sources for the requested database {type} does not exist") })
-	public Response listDataSources(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type) {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		Set<String> list = processor.getDataSources(type);
-		if (list == null) {
-			String error = format("Database Type {0} not known.", type);
-			return createErrorResponseNotFound(error);
-		}
-		return Response.ok().entity(list).build();
-
-	}
-
-	/**
-	 * List artifacts.
-	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the name
-	 * @return the response
-	 * @throws SQLException
-	 *             the SQL exception
-	 */
-	@GET
-	@Path("{type}/{name}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation("Returns the metadata of the given data source with {name} and {type}")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Database Metadata", response = DatabaseMetadata.class),
-			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })
-	public Response listArtifacts(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name) throws SQLException {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		DataSource dataSource = processor.getDataSource(type, name);
-		if (dataSource == null) {
-			String error = format("DataSource {0} of Type {1} not known.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-		String metadata = DatabaseMetadataHelper.getMetadataAsJson(dataSource);
-		return Response.ok().entity(metadata).build();
-
+		List<DatabaseDefinition> databases = processor.getDefinedDatabases();
+		return Response.ok().entity(databases).build();
 	}
 	
 	/**
-	 * List artifacts.
+	 * Get a defined database.
 	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the datasource name
-	 * @param schema
-	 * 			  the schema name
-	 * @param artifact
-	 * 			  the artifact name
-	 * @param kind
-	 * 			  the artifact kind
 	 * @return the response
-	 * @throws SQLException
-	 *             the SQL exception
+	 * @throws DatabasesException 
 	 */
 	@GET
-	@Path("{type}/{name}/{schema}/{artifact}")
+	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation("Returns the metadata of the given data source with {name} and {type}")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Database Metadata", response = DatabaseMetadata.class),
-			@ApiResponse(code = 404, message = "Database Metadata for the requested database {type} does not exist") })
-	public Response describeArtifact(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name,
-			@ApiParam(value = "Schema Name", required = true) @PathParam("schema") String schema,
-			@ApiParam(value = "Artifact Name", required = true) @PathParam("artifact") String artifact, @QueryParam("kind") String kind) throws SQLException {
+	@ApiOperation("Get a defined database by {id}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Get a defined database by {id}", response = DatabaseDefinition.class) })
+	public Response getDefinedDatabases(@ApiParam(value = "Database definition id", required = true) @PathParam("id") long id) throws DatabasesException {
 		String user = UserFacade.getName();
 		if (user == null) {
 			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
 		}
 
-		DataSource dataSource = processor.getDataSource(type, name);
-		if (dataSource == null) {
-			String error = format("DataSource {0} of Type {1} not known.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-		String metadata = processor.describeArtifact(dataSource, schema, artifact, kind);
-		return Response.ok().entity(metadata).build();
-
+		DatabaseDefinition database = processor.getDefinedDatabase(id);
+		return Response.ok().entity(database).build();
 	}
+	
+	/**
+	 * Create a defined database.
+	 *
+	 * @return the response
+	 * @throws DatabasesException 
+	 */
+	@POST
+	@Path("")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Create a defined database")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Create a defined database", response = DatabaseDefinition.class) })
+	public Response createDefinedDatabases(@ApiParam(value = "Database definition", required = true) DatabaseDefinition definition) throws DatabasesException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		
+		if (definition == null) {
+			return createErrorResponseBadRequest("Database definition not provided");
+		}
 
+		DatabaseDefinition database = processor.createDefinedDatabase(definition);
+		return Response.ok().entity(database).build();
+	}
+	
+	/**
+	 * Delete a defined database.
+	 *
+	 * @param id the id
+	 * @return the response
+	 * @throws DatabasesException 
+	 */
+	@DELETE
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Delete a defined database by {id}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Delete a defined database by {id}") })
+	public Response removeDefinedDatabases(@ApiParam(value = "Database definition id", required = true) @PathParam("id") long id) throws DatabasesException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+
+		processor.removeDefinedDatabase(id);
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Update a defined database.
+	 * 
+	 * @param id the id
+	 * @param definition the definition
+	 * @return the response
+	 * @throws DatabasesException 
+	 */
+	@PUT
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation("Create a defined database")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Create a defined database") })
+	public Response updateDefinedDatabases(@ApiParam(value = "Database definition id", required = true) @PathParam("id") long id, 
+			@ApiParam(value = "Database definition", required = true) DatabaseDefinition definition) throws DatabasesException {
+		String user = UserFacade.getName();
+		if (user == null) {
+			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
+		}
+		
+		if (definition == null) {
+			return createErrorResponseBadRequest("Database definition not provided");
+		}
+
+		if (definition.getId() != id) {
+			logger.warn("The id provided in the body of the database definition update operation differs from the one requested via the URI");
+			definition.setId(id);
+		}
+		processor.updateDefinedDatabase(definition);
+		return Response.ok().build();
+	}
 	
 
-	/**
-	 * Execute query.
-	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the name
-	 * @param sql
-	 *            the sql
-	 * @param request
-	 *            the request
-	 * @return the response
-	 */
-	@POST
-	@Path("{type}/{name}/query")
-	@ApiOperation("Executes a query operation on the datasource {name} and {type} and returns the result in a tabular format")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
-			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
-	public Response executeQuery(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		if (!processor.existsDatabase(type, name)) {
-			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-
-		String accept = request.getHeader("Accept");
-		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}
-		String result = processor.executeQuery(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
-		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Execute update.
-	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the name
-	 * @param sql
-	 *            the sql
-	 * @param request
-	 *            the request
-	 * @return the response
-	 */
-	@POST
-	@Path("{type}/{name}/update")
-	@ApiOperation("Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
-			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
-	public Response executeUpdate(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		if (!processor.existsDatabase(type, name)) {
-			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-
-		String accept = request.getHeader("Accept");
-		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}
-		String result = processor.executeUpdate(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
-		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Execute procedure.
-	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the name
-	 * @param sql
-	 *            the sql
-	 * @param request
-	 *            the request
-	 * @return the response
-	 */
-	@POST
-	@Path("{type}/{name}/procedure")
-	@ApiOperation("Executes an update operation on the datasource {name} and {type} and returns the result in a tabular format")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
-			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
-	public Response executeProcedure(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		if (!processor.existsDatabase(type, name)) {
-			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-
-		String accept = request.getHeader("Accept");
-		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}  else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}
-		String result = processor.executeProcedure(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
-		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
-	}
-
-	/**
-	 * Execute.
-	 *
-	 * @param type
-	 *            the type
-	 * @param name
-	 *            the name
-	 * @param sql
-	 *            the sql
-	 * @param request
-	 *            the request
-	 * @return the response
-	 */
-	@POST
-	@Path("{type}/{name}/execute")
-	@ApiOperation("Executes a query or update operation on the datasource {name} and {type} and returns the result in a tabular format")
-	@ApiResponses({ @ApiResponse(code = 200, message = "Datasource updated successfully", response = String.class),
-			@ApiResponse(code = 404, message = "Datasource with {name} for the requested database {type} does not exist") })
-	public Response execute(@ApiParam(value = "Database Type", required = true) @PathParam("type") String type,
-			@ApiParam(value = "DataSource Name", required = true) @PathParam("name") String name, byte[] sql, @Context HttpServletRequest request) {
-		String user = UserFacade.getName();
-		if (user == null) {
-			return createErrorResponseForbidden(NO_LOGGED_IN_USER);
-		}
-
-		if (!processor.existsDatabase(type, name)) {
-			String error = format("Datasource {0} does not exist as {1}.", name, type);
-			return createErrorResponseNotFound(error);
-		}
-
-		String accept = request.getHeader("Accept");
-		if (ContentTypeHelper.TEXT_PLAIN.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, false);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		} else if (ContentTypeHelper.TEXT_CSV.equals(accept)) {
-			String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), false, true);
-			return Response.ok().entity(result).type(MediaType.TEXT_PLAIN).build();
-		}
-		String result = processor.execute(type, name, new String(sql, StandardCharsets.UTF_8), true, false);
-		return Response.ok().entity(result).type(MediaType.APPLICATION_JSON).build();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.commons.api.service.IRestService#getType()
-	 */
 	@Override
 	public Class<? extends IRestService> getType() {
 		return DatabaseRestService.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dirigible.commons.api.service.AbstractRestService#getLogger()
-	 */
 	@Override
 	protected Logger getLogger() {
 		return logger;
