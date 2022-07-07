@@ -352,15 +352,14 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 
 		for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
 			try {
-				CsvDefinition csvDefinition = null;
+				CsvDefinition csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
 				String content = null;
 				IResource resource = csvimProcessor.getCsvResource(csvFileDefinition);
 				if (resource.exists()) {
-					csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
 					content = csvimProcessor.getCsvContent(resource);
 				} else {
-					csvDefinition = CSV_PREDELIVERED.get(csvFileDefinition.getFile());
-					content = csvDefinition != null ? csvDefinition.getContent() : null;
+					CsvDefinition predeliveredCsvDefinition = CSV_PREDELIVERED.get(csvFileDefinition.getFile());
+					content = predeliveredCsvDefinition != null ? predeliveredCsvDefinition.getContent() : null;
 				}
 				String hash = content != null ? DigestUtils.md5Hex(content.getBytes()) : null;
 				if (hash == null) {
