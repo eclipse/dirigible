@@ -11,11 +11,14 @@
  */
 package org.eclipse.dirigible.core.scheduler.api;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dirigible.commons.api.service.ICoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobEmailDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
 
 /**
  * The Scheduler Core Service interface.
@@ -56,12 +59,14 @@ public interface ISchedulerCoreService extends ICoreService {
 	 *            the expression
 	 * @param singleton
 	 *            the singleton
+	 * @param parameters
+	 *            the parameters list
 	 * @return the job definition
 	 * @throws SchedulerException
 	 *             the scheduler exception
 	 */
 	public JobDefinition createJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException;
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException;
 
 	/**
 	 * Creates the job by definition.
@@ -114,11 +119,13 @@ public interface ISchedulerCoreService extends ICoreService {
 	 *            the expression
 	 * @param singleton
 	 *            the singleton
+	 * @param parameters
+	 *            the parameters list
 	 * @throws SchedulerException
 	 *             the scheduler exception
 	 */
 	public void updateJob(String name, String group, String clazz, String handler, String engine, String description, String expression,
-			boolean singleton) throws SchedulerException;
+			boolean singleton, Collection<JobParameterDefinition> parameters) throws SchedulerException;
 
 	/**
 	 * Gets the jobs.
@@ -202,7 +209,51 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @return the Job Log
 	 * @throws SchedulerException exception
 	 */
-	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt,  String message) throws SchedulerException;
+	public JobLogDefinition jobFailed(String name, String handler, long triggeredId, java.util.Date triggeredAt, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLogged(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for error
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedError(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for warning
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedWarning(String name, String handler, String message) throws SchedulerException;
+	
+	/**
+	 * Register logged job event for info
+	 * 
+	 * @param name the name of the job 
+	 * @param handler the current handler
+	 * @param message the message logged
+	 * @return the Job Log
+	 * @throws SchedulerException exception
+	 */
+	public JobLogDefinition jobLoggedInfo(String name, String handler, String message) throws SchedulerException;
 	
 	/**
 	 * Get all the log per job's name
@@ -213,6 +264,13 @@ public interface ISchedulerCoreService extends ICoreService {
 	 */
 	public List<JobLogDefinition> getJobLogs(String name) throws SchedulerException;
 	
+	/**
+	 * Clear all the log per job's name
+	 * 
+	 * @param name the job name
+	 * @throws SchedulerException exception
+	 */
+	public void clearJobLogs(String name) throws SchedulerException;
 	
 	/**
 	 * Delete Job Logs older than a week
@@ -220,5 +278,39 @@ public interface ISchedulerCoreService extends ICoreService {
 	 * @throws SchedulerException exception
 	 */
 	public void deleteOldJobLogs() throws SchedulerException;
+	
+	/**
+	 * Get all the parameters per job's name
+	 * 
+	 * @param name the job name
+	 * @return the list of parameters
+	 * @throws SchedulerException exception
+	 */
+	public List<JobParameterDefinition> getJobParameters(String name) throws SchedulerException;
+
+	/**
+	 * Get e-mail addresses assigned as watchers of this job
+	 *
+	 * @param name the job name
+	 * @return the list of e-mails
+	 * @throws SchedulerException in case of an error
+	 */
+	public List<JobEmailDefinition> getJobEmails(String name) throws SchedulerException;
+
+	/**
+	 * Add an e-mail to the list of e-mail watchers
+	 *
+	 * @param name the name of the job
+	 * @param email the e-mail
+	 * @throws SchedulerException in case of an error
+	 */
+	public void addJobEmail(String name, String email) throws SchedulerException;
+
+	/**
+	 * Remove the e-mail from the list
+	 * @param id the id of the e-mail definition
+	 * @throws SchedulerException in case of an error
+	 */
+	public void removeJobEmail(Long id) throws SchedulerException;
 
 }

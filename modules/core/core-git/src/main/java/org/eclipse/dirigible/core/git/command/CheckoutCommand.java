@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
 import org.eclipse.dirigible.core.git.IGitConnector;
+import org.eclipse.dirigible.core.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
@@ -51,32 +52,23 @@ public class CheckoutCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param repositoryName
-	 *            the project
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param branch
-	 *            the branch
-	 * @param publishAfterPull
-	 *            the publish after pull
-	 * @throws GitConnectorException 
+	 * @param model
+	 *            the git checkout model
+	 * @throws GitConnectorException in case of exception
 	 */
-	public void execute(final IWorkspace workspace, String repositoryName, final String username, final String password, 
-			final String branch, final boolean publishAfterPull) throws GitConnectorException {
+	public void execute(final IWorkspace workspace, GitCheckoutModel model) throws GitConnectorException {
 		boolean atLeastOne = false;
-		if (verifier.verify(workspace.getName(), repositoryName)) {
-			logger.debug(String.format("Start checkout %s repository and %s branch...", repositoryName, branch));
-			boolean checkedout = checkoutProjectFromGitRepository(workspace, repositoryName, username, password, branch);
+		if (verifier.verify(workspace.getName(), model.getProject())) {
+			logger.debug(String.format("Start checkout %s repository and %s branch...", model.getProject(), model.getBranch()));
+			boolean checkedout = checkoutProjectFromGitRepository(workspace, model);
 			atLeastOne = atLeastOne ? atLeastOne : checkedout;
-			logger.debug(String.format("Pull of the repository %s finished.", repositoryName));
+			logger.debug(String.format("Pull of the repository %s finished.", model.getProject()));
 		} else {
-			logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", repositoryName));
+			logger.warn(String.format("Project %s is local only. Select a previously cloned project for Checkout operation.", model.getProject()));
 		}
 
-		if (atLeastOne && publishAfterPull) {
-			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+		if (atLeastOne && model.isPublish()) {
+			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), model.getProject());
 			publishProjects(workspace, projects);
 		}
 
@@ -87,35 +79,34 @@ public class CheckoutCommand {
 	 *
 	 * @param workspace
 	 *            the workspace
-	 * @param repositoryName
-	 *            the selected project
+	 * @param model
+	 *            the git checkout model
 	 * @return true, if successful
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
-	boolean checkoutProjectFromGitRepository(final IWorkspace workspace, String repositoryName, 
-			final String username, final String password, final String branch) throws GitConnectorException {
-		String errorMessage = String.format("Error occurred while pulling repository [%s].", repositoryName);
+	private boolean checkoutProjectFromGitRepository(final IWorkspace workspace,  GitCheckoutModel model) throws GitConnectorException {
+		String errorMessage = String.format("Error occurred while pulling repository [%s].", model.getProject());
 
-		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), repositoryName);
+		List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace.getName(), model.getProject());
 		for (String projectName : projects) {
 			projectMetadataManager.ensureProjectMetadata(workspace, projectName);
 		}
 
 		try {
-			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), repositoryName);
+			File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace.getName(), model.getProject());
 			IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
 
-			logger.debug(String.format("Starting checkout of the repository [%s] and branch %s ...", repositoryName, branch));
-			gitConnector.checkout(branch);
-			logger.debug(String.format("Checkout of the repository %s and branch %s finished.", repositoryName, branch));
+			logger.debug(String.format("Starting checkout of the repository [%s] and branch %s ...", model.getProject(), model.getBranch()));
+			gitConnector.checkout(model.getBranch());
+			logger.debug(String.format("Checkout of the repository %s and branch %s finished.", model.getProject(), model.getBranch()));
 
 			int numberOfConflictingFiles = gitConnector.status().getConflicting().size();
-			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", repositoryName, numberOfConflictingFiles));
+			logger.debug(String.format("Number of conflicting files in the repository [%s]: %d.", model.getProject(), numberOfConflictingFiles));
 			
 			if (numberOfConflictingFiles > 0) {
 				String message = String.format(
 					"Repository [%s] has %d conflicting file(s). You can use Push to submit your changes in a new branch for further merge or use Reset to abandon your changes.",
-					repositoryName, numberOfConflictingFiles);
+					model.getProject(), numberOfConflictingFiles);
 				logger.error(message);
 			}
 		} catch (IOException | GitAPIException | GitConnectorException e) {

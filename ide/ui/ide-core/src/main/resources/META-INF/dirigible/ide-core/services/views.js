@@ -45,5 +45,5 @@ for (let i = 0; i < viewExtensions.length; i++) {
 		console.error(error);
 	}
 }
-
+response.setContentType("application/json");
 response.println(JSON.stringify(views));

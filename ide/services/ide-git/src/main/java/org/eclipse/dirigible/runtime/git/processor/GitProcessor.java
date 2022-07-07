@@ -14,10 +14,8 @@ package org.eclipse.dirigible.runtime.git.processor;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -34,8 +32,21 @@ import org.eclipse.dirigible.core.git.command.PushCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
 import org.eclipse.dirigible.core.git.command.UpdateDependenciesCommand;
+import org.eclipse.dirigible.core.git.model.GitCheckoutModel;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
+import org.eclipse.dirigible.core.git.model.GitDiffModel;
+import org.eclipse.dirigible.core.git.model.GitProjectChangedFiles;
+import org.eclipse.dirigible.core.git.model.GitProjectLocalBranches;
+import org.eclipse.dirigible.core.git.model.GitProjectRemoteBranches;
+import org.eclipse.dirigible.core.git.model.GitPullModel;
+import org.eclipse.dirigible.core.git.model.GitPushModel;
+import org.eclipse.dirigible.core.git.model.GitResetModel;
+import org.eclipse.dirigible.core.git.model.GitShareModel;
+import org.eclipse.dirigible.core.git.model.GitUpdateDependenciesModel;
 import org.eclipse.dirigible.core.git.project.ProjectOriginUrls;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
+import org.eclipse.dirigible.core.publisher.api.PublisherException;
+import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -48,18 +59,6 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryWriteException;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
-import org.eclipse.dirigible.runtime.git.model.BaseGitModel;
-import org.eclipse.dirigible.runtime.git.model.GitCheckoutModel;
-import org.eclipse.dirigible.runtime.git.model.GitCloneModel;
-import org.eclipse.dirigible.runtime.git.model.GitDiffModel;
-import org.eclipse.dirigible.runtime.git.model.GitProjectChangedFiles;
-import org.eclipse.dirigible.runtime.git.model.GitProjectLocalBranches;
-import org.eclipse.dirigible.runtime.git.model.GitProjectRemoteBranches;
-import org.eclipse.dirigible.runtime.git.model.GitPullModel;
-import org.eclipse.dirigible.runtime.git.model.GitPushModel;
-import org.eclipse.dirigible.runtime.git.model.GitResetModel;
-import org.eclipse.dirigible.runtime.git.model.GitShareModel;
-import org.eclipse.dirigible.runtime.git.model.GitUpdateDependenciesModel;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 
@@ -71,6 +70,8 @@ public class GitProcessor {
 	private static final String DOT_GIT = ".git";
 
 	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
+
+	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
 	private CloneCommand cloneCommand = new CloneCommand();
 
@@ -96,7 +97,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException the git connector exception
 	 */
 	public void clone(String workspace, GitCloneModel model) throws GitConnectorException {
-		cloneCommand.execute(model.getRepository(), model.getBranch(), model.getUsername(), getPassword(model), workspace, model.isPublish(), model.getProjectName());
+		cloneCommand.execute(getWorkspace(workspace), model);
 	}
 
 	/**
@@ -107,8 +108,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException 
 	 */
 	public void pull(String workspace, GitPullModel model) throws GitConnectorException {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		pullCommand.execute(workspaceApi, model.getProjects(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
+		pullCommand.execute(getWorkspace(workspace), model);
 	}
 
 	/**
@@ -119,8 +119,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException 
 	 */
 	public void push(String workspace, GitPushModel model) throws GitConnectorException {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		pushCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd(), model.isAutoCommit());
+		pushCommand.execute(getWorkspace(workspace), model);
 	}
 
 	/**
@@ -139,9 +138,11 @@ public class GitProcessor {
 	 *
 	 * @param workspace the workspace
 	 * @param repositoryName the repositoryName
+	 * @param unpublish whether to unpublish the project(s)
 	 * @throws GitConnectorException in case of exception
+	 * @throws PublisherException in case of exception
 	 */
-	public void delete(String workspace, String repositoryName) throws GitConnectorException {
+	public void delete(String workspace, String repositoryName, boolean unpublish) throws GitConnectorException, PublisherException {
 		try {
 			File gitRepository = getGitRepository(workspace, repositoryName);
 			List<String> projects = GitFileUtils.getGitRepositoryProjects(workspace, repositoryName);
@@ -154,6 +155,9 @@ public class GitProcessor {
 					next.delete();
 				} else if (repository.isLinkedPath(next.getPath())) {
 					repository.deleteLinkedPath(next.getPath());
+				}
+				if (unpublish) {
+					publisherCoreService.createUnpublishRequest(workspace, next.getName());
 				}
 			}
 
@@ -173,8 +177,7 @@ public class GitProcessor {
 	public void share(String workspace, GitShareModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject project = getProject(workspaceApi, model.getProject());
-		shareCommand.execute(workspaceApi, project, model.getRepository(), model.getBranch(), model.getCommitMessage(), model.getUsername(),
-				getPassword(model), model.getEmail());
+		shareCommand.execute(workspaceApi, project, model);
 	}
 	
 	/**
@@ -185,8 +188,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException 
 	 */
 	public void checkout(String workspace, GitCheckoutModel model) throws GitConnectorException {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		checkoutCommand.execute(workspaceApi, model.getProject(), model.getUsername(), getPassword(model), model.getBranch(), model.isPublish());
+		checkoutCommand.execute(getWorkspace(workspace), model);
 	}
 	
 	/**
@@ -197,8 +199,7 @@ public class GitProcessor {
 	 * @throws GitConnectorException 
 	 */
 	public void commit(String workspace, GitPushModel model) throws GitConnectorException {
-		IWorkspace workspaceApi = getWorkspace(workspace);
-		commitCommand.execute(workspaceApi, model.getProjects(), model.getCommitMessage(), model.getUsername(), getPassword(model), model.getEmail(), model.getBranch(), model.isAutoAdd());
+		commitCommand.execute(getWorkspace(workspace), model);
 	}
 
 	/**
@@ -211,7 +212,7 @@ public class GitProcessor {
 	public void updateDependencies(String workspace, GitUpdateDependenciesModel model) throws GitConnectorException {
 		IWorkspace workspaceApi = getWorkspace(workspace);
 		IProject[] projects = getProjects(workspaceApi, model.getProjects());
-		updateDependenciesCommand.execute(workspaceApi, projects, model.getUsername(), getPassword(model), model.isPublish());
+		updateDependenciesCommand.execute(workspaceApi, projects, model);
 	}
 
 	/**
@@ -259,19 +260,6 @@ public class GitProcessor {
 			projects.add(workspace.getProject(next));
 		}
 		return projects.toArray(new IProject[] {});
-	}
-
-	/**
-	 * Gets the password.
-	 *
-	 * @param model the model
-	 * @return the password
-	 */
-	private String getPassword(BaseGitModel model) {
-		if (model.getPassword() == null) {
-			return null;
-		}
-		return new String(Base64.getDecoder().decode(model.getPassword().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 	}
 
 	/**

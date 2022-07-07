@@ -9,13 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function () {
-    return {
-        "id": "problems",
-        "name": "Problems",
-        "factory": "frame",
-        "region": "center-bottom",
-        "label": "Problems",
-        "link": "../ide-problems/view/problems.html"
-    };
+const viewData = {
+    id: "problems",
+    factory: "frame",
+    region: "bottom",
+    label: "Problems",
+    link: "../ide-problems/problems.html"
+};
+
+if (typeof exports !== 'undefined') {
+    exports.getView = function () {
+        return viewData;
+    }
 }

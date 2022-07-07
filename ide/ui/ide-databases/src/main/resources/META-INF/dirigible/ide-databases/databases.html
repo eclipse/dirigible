@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="databases" ng-controller="DatabaseController as controller"
+    xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- Font Awesome -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+        <!-- View data -->
+        <script type="text/javascript" src="services/databases-view.js"></script>
+
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
+        <script type="text/javascript" src="databases.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+
+    </head>
+
+    <body>
+        <div>
+            <div>
+                <fd-scrollbar>
+
+                    <fd-button class="pull-right" dg-type="transparent" glyph="sap-icon--write-new-document" title="New"
+                        aria-label="Edit" ng-click="newDatabase()" aria-hidden="true" data-toggle="modal"
+                        data-target="#dialogDatabase">
+                    </fd-button>
+
+
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header sticky="true">
+                            <tr fd-table-row>
+                                <th fd-table-header-cell>Name</th>
+                                <th fd-table-header-cell>Driver</th>
+                                <th fd-table-header-cell>URL</th>
+                                <th fd-table-header-cell>Username</th>
+                                <th fd-table-header-cell>Password</th>
+                                <th fd-table-header-cell>Parameters</th>
+                                <th fd-table-header-cell width="50px">Trigger</th>
+                                <th fd-table-header-cell width="50px">Assign</th>
+                            </tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="next in list" hoverable="true" activable="false">
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.name}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.driver}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.url}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.username}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.password}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{next.parameters}}</div>
+                                </td>
+                                <td fd-table-cell width="50px">
+                                    <div class="tdSingleLine">
+                                        <fd-button dg-type="transparent" glyph="sap-icon--edit" title="Edit"
+                                            aria-label="Edit" ng-click="editDatabase(next)" aria-hidden="true"
+                                            data-toggle="modal" data-target="#dialogDatabase">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                                <td fd-table-cell width="50px">
+                                    <div class="tdSingleLine">
+                                        <fd-button dg-type="transparent" glyph="sap-icon--delete" title="Delete"
+                                            aria-label="Delete" ng-click="deleteDatabase(next)" aria-hidden="true"
+                                            data-toggle="modal">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </fd-scrollbar>
+            </div>
+        </div>
+
+
+
+        <!-- Database Dialog -->
+        <div class="dirigible-modal modal fade container" id="dialogDatabase" tabindex="-1" role="dialog"
+            aria-labelledby="NewAssignLabel" aria-hidden="true" style="background-color: rgb(255 255 255 / 90%)">
+            <div class="fd-margin--md">
+                <fd-fieldset>
+                    <fd-form-group>
+                        <h3 ng-show="isNew">New Database</h3>
+                        <h3 ng-show="!isNew">Edit Database {{database.name}}</h3>
+                        <br>
+                        <fd-form-item horizontal="true" ng-show="isNew">
+                            <fd-form-label for="name" dg-required="true" dg-colon="true">Name
+                            </fd-form-label>
+                            <fd-input id="name" class="fd-input--compact" type="text" placeholder="Enter name"
+                                ng-model="database.name" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="driver" dg-required="true" dg-colon="true">Driver
+                            </fd-form-label>
+                            <fd-input id="driver" class="fd-input--compact" type="text" placeholder="Enter driver"
+                                ng-model="database.driver" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="url" dg-required="true" dg-colon="true">URL
+                            </fd-form-label>
+                            <fd-input id="url" class="fd-input--compact" type="text" placeholder="Enter url"
+                                ng-model="database.url" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="username" dg-required="true" dg-colon="true">Username
+                            </fd-form-label>
+                            <fd-input id="username" class="fd-input--compact" type="text" placeholder="Enter username"
+                                ng-model="database.username" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="password" dg-required="true" dg-colon="true">Password
+                            </fd-form-label>
+                            <fd-input id="password" class="fd-input--compact" type="password"
+                                placeholder="Enter password" ng-model="database.password" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                        <fd-form-item horizontal="true">
+                            <fd-form-label for="parameters" dg-required="true" dg-colon="true">Parameters
+                            </fd-form-label>
+                            <fd-input id="parameters" class="fd-input--compact" type="text"
+                                placeholder="Enter parameters" ng-model="database.parameters" required="required">
+                            </fd-input>
+                        </fd-form-item>
+                    </fd-form-group>
+                </fd-fieldset>
+
+
+                <div>
+                    <div class="modal-footer">
+                        <button ng-show="isNew" class="fd-button fd-button--compact is-selected"
+                            ng-click="createDatabase()" data-target="#dialogDatabase"
+                            data-dismiss="modal">Create</button>
+                        <button ng-show="!isNew" class="fd-button fd-button--compact is-selected"
+                            ng-click="updateDatabase()" data-target="#dialogDatabase"
+                            data-dismiss="modal">Update</button>
+                        <button class="fd-button fd-button--compact" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </body>

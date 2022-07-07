@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IFolder;
@@ -61,8 +62,12 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel model = new GitCloneModel();
+			model.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+			model.setBranch(IGitConnector.GIT_MASTER);
+			model.setPublish(true);
+			cloneCommand.execute(workspace1, model);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			IProject project1 = workspace1.getProject("project1");
@@ -87,8 +92,12 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceNoGitTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel model = new GitCloneModel();
+			model.setRepository("https://github.com/dirigiblelabs/sample_git_test");
+			model.setBranch(IGitConnector.GIT_MASTER);
+			model.setPublish(true);
+			cloneCommand.execute(workspace1, model);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			IProject project1 = workspace1.getProject("project1");
@@ -113,8 +122,12 @@ public class CloneComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceNoProjectTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_no_project_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel model = new GitCloneModel();
+			model.setRepository("https://github.com/dirigiblelabs/sample_git_no_project_test.git");
+			model.setBranch(IGitConnector.GIT_MASTER);
+			model.setPublish(true);
+			cloneCommand.execute(workspace1, model);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			List<IProject> projects = workspace1.getProjects();

@@ -1,63 +1,52 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="debugger" ng-controller="DebuggerController as debugger">
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="debugger" ng-controller="DebuggerController as debugger" xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title brandtitle perspective-name="Debugger"></title>
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
 
-        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brandicon />
+        <title dg-brand-title></title>
 
-        <!-- FontAwesome icon set -->
-        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <script type="text/javascript" src="/services/v4/web/ide-debugger/services/debugger-perspective.js">
+        </script>
 
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <theme></theme>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-js"></script>
 
-        <!-- GoldenLayout with Theme Support -->
         <link type="text/css" rel="stylesheet"
-            href="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout-base.css" />
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/goldenlayout-theme.css" />
-
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+            href="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-css" />
     </head>
 
     <body>
 
-        <div menu menu-data-url="/services/v4/js/ide-debugger/services/menu-debugger.js"></div>
+        <ide-header menu-data-url="/services/v4/js/ide-debugger/services/menu-debugger.js"></ide-header>
+        <ide-contextmenu></ide-contextmenu>
 
-        <div class="shell">
-            <div class="sidebar list-group" sidebar active="Debugger"></div>
-            <div id="debugger" class="plane" views-layout views-layout-model="debugger.layoutModel"></div>
-        </div>
-        <div class="statusbar" status-bar>{{message}}</div>
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- Twitter Bootstrap with Theme Support -->
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-
-        <!-- GoldenLayout with Theme Support -->
-        <script type="text/javascript" src="/services/v4/web/resources/goldenlayout/1.5.9/goldenlayout.min.js"></script>
-
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-layout.js"></script>
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-core-ng-modules.js"></script>
+        <ide-container>
+            <ide-layout views-layout-model="debugger.layoutModel"></ide-layout>
+        </ide-container>
+        <ide-dialogs></ide-dialogs>
+        <ide-status-bar></ide-status-bar>
 
         <script type="text/javascript">
-            angular.module('debugger', ['ngResource', 'ideUiCore'])
+            angular.module('debugger', ['ngResource', 'ideLayout', 'ideUI'])
             .config(["messageHubProvider", function (messageHubProvider) {
                 messageHubProvider.evtNamePrefix = 'debugger';
             }])
-            .controller('DebuggerController', ['Layouts', function (Layouts) {
+            .controller('DebuggerController', ["$scope", "messageHub", function ($scope, messageHub) {
 
                 this.layoutModel = {
                     views: ['workspace', 'debugger', 'debug-preview', 'console'],

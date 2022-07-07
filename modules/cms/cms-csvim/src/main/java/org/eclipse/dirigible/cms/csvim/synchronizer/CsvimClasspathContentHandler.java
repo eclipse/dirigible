@@ -33,23 +33,22 @@ public class CsvimClasspathContentHandler extends AbstractClasspathContentHandle
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(ICsvimCoreService.FILE_EXTENSION_CSVIM)) {
-				isValid = true;
 				csvimSynchronizer.registerPredeliveredCsvim(path);
+				return true;
 			}
+
 			if (path.endsWith(ICsvimCoreService.FILE_EXTENSION_CSV)) {
-				isValid = true;
 				csvimSynchronizer.registerPredeliveredCsv(path);
+				return true;
 			}
 
 		} catch (IOException e) {
-			logger.error("Predelivered CSVIM is not valid", e);
+			logger.error("Predelivered CSVIM at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

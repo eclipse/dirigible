@@ -93,11 +93,9 @@ let historyApp = angular.module('historyApp', ['git.config', 'ngAnimate', 'ngSan
 		let messageHub = new FramesMessageHub();
 		let announceAlert = function (title, message, type) {
 			messageHub.post({
-				data: {
-					title: title,
-					message: message,
-					type: type
-				}
+				title: title,
+				message: message,
+				type: type
 			}, 'ide.alert');
 		};
 		let announceAlertSuccess = function (title, message) {

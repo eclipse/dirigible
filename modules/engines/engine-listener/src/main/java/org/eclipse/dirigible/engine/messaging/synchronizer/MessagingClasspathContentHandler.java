@@ -33,18 +33,16 @@ public class MessagingClasspathContentHandler extends AbstractClasspathContentHa
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IMessagingCoreService.FILE_EXTENSION_LISTENER)) {
-				isValid = true;
 				messagingSynchronizer.registerPredeliveredListener(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Listener is not valid", e);
+			logger.error("Predelivered Listener at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

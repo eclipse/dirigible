@@ -17,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +45,10 @@ import org.slf4j.LoggerFactory;
  */
 public class GitFileUtils {
 
+	private static final int USER_WORKSPACE_PROJECT_SEGMENTS_COUNT = 4;
+
+	private static final int USER_WORKSPACE_SEGMENTS_COUNT = 3;
+
 	private static final Logger logger = LoggerFactory.getLogger(GitFileUtils.class);
 	
 	private static final String DIRIGIBLE_GIT_ROOT_FOLDER = "DIRIGIBLE_GIT_ROOT_FOLDER"; //$NON-NLS-1$
@@ -53,6 +56,7 @@ public class GitFileUtils {
 
 	public static final String SLASH = "/"; //$NON-NLS-1$
 	public static final String DOT_GIT = ".git"; //$NON-NLS-1$
+	
 	/** The Constant PATTERN_USERS_WORKSPACE. */
 	public static final String PATTERN_USERS_WORKSPACE = IRepositoryStructure.PATH_USERS + "/%s/%s/"; // /users/john/workspace1
 
@@ -128,7 +132,7 @@ public class GitFileUtils {
 		String user = UserFacade.getName();
 		File gitDirectory = GitFileUtils.getGitDirectoryByRepositoryName(workspace, repository);
 		String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace);
-		return GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace, null);
+		return GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace);
 	}
 
 	/**
@@ -142,32 +146,22 @@ public class GitFileUtils {
 	 *            the user
 	 * @param workspace
 	 *            the workspace
-	 * @param projectName
-	 *            an optional project name in case of an empty repository
 	 * @return the list
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace, String projectName)
+	public static List<String> importProject(File gitRepository, String basePath, String user, String workspace)
 			throws IOException {
 		List<File> projects = FileSystemUtils.getGitRepositoryProjects(gitRepository);
 		List<String> importedProjects = new ArrayList<String>();
 		if (projects.size() == 0) {
-			// No "project.json" files found fallback to the old implementation
-			projects = Arrays.asList(FileSystemUtils.listFiles(gitRepository));
-			if (projects.size() == 1) { // only .git folder
-				if (projectName == null) {
-					projectName = gitRepository.getName();
-				}
-				File implicitProject = new File(gitRepository, projectName);
-				FileUtils.forceMkdir(implicitProject);
-			}
+			// Empty Git repository, using it as a root project
+			projects.add(gitRepository);
 		}
 		for (File file : projects) {
 			String project = file.getName();
 			if (file.isDirectory() && !project.startsWith(".")) {
 				importProjectFromGitRepositoryToWorkspace(file, basePath + project);
-//				saveGitPropertiesFile(properties, user, workspace, project);
 				importedProjects.add(project);
 			}
 		}
@@ -227,25 +221,41 @@ public class GitFileUtils {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void copyProjectToDirectory(IFolder source, File tempGitDirectory) throws IOException {
+		copyProjectToDirectory(source, tempGitDirectory, false);
+	}
+
+	/**
+	 * Copy project to directory.
+	 *
+	 * @param source
+	 *            the source
+	 * @param tempGitDirectory
+	 *            the temp git directory
+	 * @param shareInRootFolder
+	 *            the whether to share project in the repository root folder
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public static void copyProjectToDirectory(IFolder source, File tempGitDirectory, boolean shareInRootFolder) throws IOException {
 		if (!source.exists()) {
 			return;
 		}
 		for (IFile file : source.getFiles()) {
-			RepositoryPath path = new RepositoryPath(source.getPath());
-			StringBuilder resourceDirectory = new StringBuilder();
-			for (int i = 3; i < (path.getSegments().length - 1); i++) {
-				resourceDirectory.append(File.separator + path.getSegments()[i]);
+			RepositoryPath path = new RepositoryPath(file.getPath());
+			StringBuilder resourcePath = new StringBuilder();
+			int startSegmentIndex = shareInRootFolder ? USER_WORKSPACE_PROJECT_SEGMENTS_COUNT : USER_WORKSPACE_SEGMENTS_COUNT;
+			String[] pathSegments = path.getSegments();
+			for (int i = startSegmentIndex; i < pathSegments.length; i++) {
+				resourcePath.append(File.separator).append(pathSegments[i]);
 			}
-			resourceDirectory.append(File.separator);
-			File fileResource = new File(tempGitDirectory, resourceDirectory.toString());
-			FileUtils.forceMkdir(fileResource.getCanonicalFile());
-			String resourcePath = resourceDirectory + file.getPath().substring(path.getParentPath().getPath().length() + 1);
+			File fileResource = new File(tempGitDirectory, resourcePath.toString());
+			FileUtils.forceMkdirParent(fileResource.getCanonicalFile());
 
 			InputStream in = null;
 			FileOutputStream out = null;
 			try {
 				in = new ByteArrayInputStream(file.getContent());
-				File outputFile = new File(tempGitDirectory, resourcePath);
+				File outputFile = new File(tempGitDirectory, resourcePath.toString());
 				FileUtils.forceMkdir(outputFile.getParentFile().getCanonicalFile());
 				boolean fileCreated = outputFile.createNewFile();
 				if (!fileCreated) {
@@ -264,7 +274,7 @@ public class GitFileUtils {
 			}
 		}
 		for (IFolder folder : source.getFolders()) {
-			copyProjectToDirectory(folder, tempGitDirectory);
+			copyProjectToDirectory(folder, tempGitDirectory, shareInRootFolder);
 		}
 
 	}
@@ -354,7 +364,23 @@ public class GitFileUtils {
 	 * @return the directory
 	 */
 	public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-		return FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
+		if (gitDirectoryByRepositoryName == null) {
+			return getGitDeepDirectoryByRepositoryName(UserFacade.getName(), workspace, repositoryName);
+		}
+		return gitDirectoryByRepositoryName;
+	}
+	
+	/**
+	 * Get the directory for git for deep projects
+	 * 
+	 * @param user logged-in user
+	 * @param workspace the workspace
+	 * @param repositoryName the repository URI
+	 * @return the directory
+	 */
+	private static File getGitDeepDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
+		return FileSystemUtils.getGitDeepDirectoryByRepositoryName(user, workspace, repositoryName);
 	}
 
 	/**

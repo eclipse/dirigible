@@ -21,9 +21,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.AbstractDatabase;
-import org.eclipse.dirigible.database.api.IDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +44,11 @@ public class DynamicDatabase extends AbstractDatabase {
 	 * The default constructor
 	 */
 	public DynamicDatabase() {
-		logger.debug("Initializing the custom datasources...");
+		logger.debug("Initializing the dynamic datasources...");
 
 		initialize();
 
-		logger.debug("Custom datasources initialized.");
+		logger.debug("Dynamic datasources initialized.");
 	}
 
 	/*

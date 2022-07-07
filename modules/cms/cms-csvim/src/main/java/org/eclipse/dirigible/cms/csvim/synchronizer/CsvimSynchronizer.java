@@ -183,6 +183,8 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 			String json = IOUtils.toString(in, StandardCharsets.UTF_8);
 			CsvDefinition csvDefinition = new CsvDefinition();
 			csvDefinition.setLocation(csvPath);
+			csvDefinition.setContent(json);
+			csvDefinition.setHash(DigestUtils.md5Hex(json.getBytes()));
 			CSV_PREDELIVERED.put(csvPath, csvDefinition);
 		} finally {
 			if (in != null) {
@@ -350,9 +352,25 @@ public class CsvimSynchronizer extends AbstractSynchronizer implements IOrderedS
 
 		for (CsvFileDefinition csvFileDefinition : sortedConfigurationDefinitions) {
 			try {
-				csvimProcessor.process(csvFileDefinition, connection);
-				csvimCoreService.updateCsv(csvFileDefinition.getFile(), null, true);
-			} catch (SQLException | CsvimException e) {
+				CsvDefinition csvDefinition = csvimCoreService.getCsv(csvFileDefinition.getFile());
+				String content = null;
+				IResource resource = csvimProcessor.getCsvResource(csvFileDefinition);
+				if (resource.exists()) {
+					content = csvimProcessor.getCsvContent(resource);
+				} else {
+					CsvDefinition predeliveredCsvDefinition = CSV_PREDELIVERED.get(csvFileDefinition.getFile());
+					content = predeliveredCsvDefinition != null ? predeliveredCsvDefinition.getContent() : null;
+				}
+				String hash = content != null ? DigestUtils.md5Hex(content.getBytes()) : null;
+				if (hash == null) {
+					logger.error("CSV content not found for file [" + csvFileDefinition.getFile() + "]");
+				} else if (hash.equals(csvDefinition.getHash())
+						&& csvDefinition.getImported()) {
+					continue;
+				}
+				csvimProcessor.process(csvFileDefinition, content, connection);
+				csvimCoreService.updateCsv(csvFileDefinition.getFile(), hash, true);
+			} catch (SQLException | CsvimException | IOException e) {
 				logger.error(
 						String.format("An error occurred while trying to execute the data import: %s", e.getMessage()),
 						e);

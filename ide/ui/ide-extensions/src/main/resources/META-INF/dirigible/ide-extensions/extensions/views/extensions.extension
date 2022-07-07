@@ -1,5 +1,0 @@
-{
-	"module": "ide-extensions/views/extensions/extensions.js",
-	"extensionPoint": "ide-view",
-	"description": "Extensions View"
-}

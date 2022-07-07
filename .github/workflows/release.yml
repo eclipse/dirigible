@@ -18,6 +18,13 @@ jobs:
       with:
         java-version: 13
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+        architecture: x64
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+    - name: Set Multi-Builder Docker Buildx
+      run: docker buildx create --use --name multi-builder --platform linux/arm64,linux/amd64,linux/arm64/v8
     - name: Set Dirigible Version
       run: echo DIRIGIBLE_VERSION=${GITHUB_REF#refs/*/} | tr v " " | sed 's/ //'  >> $GITHUB_ENV
     - name: Updates /.m2/settings.xml
@@ -33,10 +40,10 @@ jobs:
     - name: Push Anonymous
       run: |
         cd releng/anonymous-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-anonymous -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-anonymous -f Dockerfile-base .
         docker tag dirigible-base-platform-anonymous dirigiblelabs/dirigible-base-platform-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-anonymous:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-anonymous .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-anonymous .
         docker tag dirigible-anonymous dirigiblelabs/dirigible-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-anonymous:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -44,10 +51,10 @@ jobs:
     - name: Push Anonymous - Runtime
       run: |
         cd releng/anonymous-runtime
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime-anonymous -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime-anonymous -f Dockerfile-base .
         docker tag dirigible-base-platform-runtime-anonymous dirigiblelabs/dirigible-base-platform-runtime-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-runtime-anonymous:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-anonymous .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-anonymous .
         docker tag dirigible-runtime-anonymous dirigiblelabs/dirigible-runtime-anonymous:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime-anonymous:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -55,10 +62,10 @@ jobs:
     - name: Push OpenShift
       run: |
         cd releng/openshift-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-openshift -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-openshift -f Dockerfile-base .
         docker tag dirigible-base-platform-openshift dirigiblelabs/dirigible-base-platform-openshift:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-openshift:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-openshift .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-openshift .
         docker tag dirigible-openshift dirigiblelabs/dirigible-openshift:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-openshift:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -66,20 +73,20 @@ jobs:
     - name: Push SAP Cloud Foundry
       run: |
         cd releng/sap-cf-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-cf -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-cf -f Dockerfile-base .
         docker tag dirigible-base-platform-sap-cf dirigiblelabs/dirigible-base-platform-sap-cf:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-sap-cf:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-cf .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-cf .
         docker tag dirigible-sap-cf dirigiblelabs/dirigible-sap-cf:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-cf:$DIRIGIBLE_VERSION
         cd ../../
     - name: Push SAP Cloud Foundry - Runtime
       run: |
         cd releng/sap-cf-runtime
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-cf-runtime -f Dockerfile-base .
         docker tag dirigible-base-platform-sap-cf-runtime dirigiblelabs/dirigible-base-platform-sap-cf-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-sap-cf-runtime:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-cf-runtime .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-cf-runtime .
         docker tag dirigible-sap-cf-runtime dirigiblelabs/dirigible-sap-cf-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-cf-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -87,20 +94,20 @@ jobs:
     - name: Push SAP Kyma
       run: |
         cd releng/sap-kyma-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-kyma -f Dockerfile-base .
         docker tag dirigible-base-platform-sap-kyma dirigiblelabs/dirigible-base-platform-sap-kyma:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-sap-kyma:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-kyma .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-kyma .
         docker tag dirigible-sap-kyma dirigiblelabs/dirigible-sap-kyma:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-kyma:$DIRIGIBLE_VERSION
         cd ../../
     - name: Push SAP Kyma - Runtime
       run: |
         cd releng/sap-kyma-runtime
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-sap-kyma-runtime -f Dockerfile-base .
         docker tag dirigible-base-platform-sap-kyma-runtime dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-sap-kyma-runtime:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-kyma-runtime .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-sap-kyma-runtime .
         docker tag dirigible-sap-kyma-runtime dirigiblelabs/dirigible-sap-kyma-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-sap-kyma-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -108,10 +115,10 @@ jobs:
     - name: Push Dirigible
       run: |
         cd releng/server-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform -f Dockerfile-base .
         docker tag dirigible-base-platform dirigiblelabs/dirigible-base-platform:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-all .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-all .
         docker tag dirigible-all dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-all:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -119,10 +126,10 @@ jobs:
     - name: Push Dirigible - Runtime
       run: |
         cd releng/server-runtime
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime -f Dockerfile-base .
         docker tag dirigible-base-platform-runtime dirigiblelabs/dirigible-base-platform-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-runtime:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime .
         docker tag dirigible-runtime dirigiblelabs/dirigible-runtime:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -130,10 +137,10 @@ jobs:
     - name: Push Dirigible - Trial
       run: |
         cd releng/trial-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-trial -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-trial -f Dockerfile-base .
         docker tag dirigible-base-platform-trial dirigiblelabs/dirigible-base-platform-trial:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-trial:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-trial .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-trial .
         docker tag dirigible-trial dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-trial:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -141,10 +148,10 @@ jobs:
     - name: Push Dirigible - Keycloak
       run: |
         cd releng/server-keycloak-all
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-keycloak -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-keycloak -f Dockerfile-base .
         docker tag dirigible-base-platform-keycloak dirigiblelabs/dirigible-base-platform-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-keycloak:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-keycloak .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-keycloak .
         docker tag dirigible-keycloak dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -152,10 +159,10 @@ jobs:
     - name: Push Dirigible - Keycloak - Runtime
       run: |
         cd releng/server-runtime-keycloak
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-base-platform-runtime-keycloak -f Dockerfile-base .
         docker tag dirigible-base-platform-runtime-keycloak dirigiblelabs/dirigible-base-platform-runtime-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-base-platform-runtime-keycloak:$DIRIGIBLE_VERSION
-        docker build --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-keycloak .
+        docker build --load --build-arg DIRIGIBLE_VERSION=$DIRIGIBLE_VERSION -t dirigible-runtime-keycloak .
         docker tag dirigible-runtime-keycloak dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
         docker push dirigiblelabs/dirigible-runtime-keycloak:$DIRIGIBLE_VERSION
         docker image prune -a -f
@@ -165,13 +172,13 @@ jobs:
     - name: Eclipse Dirigible Buildpack
       run: |
         cd releng/buildpacks/server/
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible . --target base
         docker tag dirigiblelabs/buildpacks-stack-base-dirigible dirigiblelabs/buildpacks-stack-base-dirigible:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-base-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible . --target run
         docker tag dirigiblelabs/buildpacks-stack-run-dirigible dirigiblelabs/buildpacks-stack-run-dirigible:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-run-dirigible:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible . --target build
         docker tag dirigiblelabs/buildpacks-stack-build-dirigible dirigiblelabs/buildpacks-stack-build-dirigible:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-build-dirigible:${{ env.DIRIGIBLE_VERSION }}
         cd buildpack/
@@ -186,13 +193,13 @@ jobs:
     - name: Eclipse Dirigible Kyma Buildpack
       run: |
         cd releng/buildpacks/sap-kyma/
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-kyma . --target base
         docker tag dirigiblelabs/buildpacks-stack-base-dirigible-kyma dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-base-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-kyma . --target run
         docker tag dirigiblelabs/buildpacks-stack-run-dirigible-kyma dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-run-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-kyma . --target build
         docker tag dirigiblelabs/buildpacks-stack-build-dirigible-kyma dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-build-dirigible-kyma:${{ env.DIRIGIBLE_VERSION }}
         cd buildpack/
@@ -207,13 +214,13 @@ jobs:
     - name: Eclipse Dirigible Cloud Foundry Buildpack
       run: |
         cd releng/buildpacks/sap-cf/
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-base-dirigible-cf . --target base
         docker tag dirigiblelabs/buildpacks-stack-base-dirigible-cf dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-base-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-run-dirigible-cf . --target run
         docker tag dirigiblelabs/buildpacks-stack-run-dirigible-cf dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-run-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
-        docker build --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
+        docker build --load --build-arg DIRIGIBLE_VERSION=${{ env.DIRIGIBLE_VERSION }} -t dirigiblelabs/buildpacks-stack-build-dirigible-cf . --target build
         docker tag dirigiblelabs/buildpacks-stack-build-dirigible-cf dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
         docker push dirigiblelabs/buildpacks-stack-build-dirigible-cf:${{ env.DIRIGIBLE_VERSION }}
         cd buildpack/

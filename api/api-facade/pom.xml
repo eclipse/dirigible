@@ -33,6 +33,7 @@
 		<module>api-bpm</module>
 		<module>api-cms</module>
 		<module>api-documents</module>
+		<module>api-job</module>
 	</modules>
 
 	<properties>

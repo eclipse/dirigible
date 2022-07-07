@@ -33,18 +33,16 @@ public class WebsocketsClasspathContentHandler extends AbstractClasspathContentH
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IWebsocketsCoreService.FILE_EXTENSION_WEBSOCKET)) {
-				isValid = true;
 				websocketSynchronizer.registerPredeliveredWebsocket(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Websocket is not valid", e);
+			logger.error("Predelivered Websocket at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

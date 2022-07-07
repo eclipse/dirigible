@@ -11,16 +11,21 @@
  */
 package org.eclipse.dirigible.runtime.operations.processor;
 
-import static java.text.MessageFormat.format;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.dirigible.api.v3.job.JobFacade;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
+import org.eclipse.dirigible.commons.api.helpers.NameValuePair;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.core.scheduler.api.SchedulerException;
-import org.eclipse.dirigible.core.scheduler.manager.SchedulerManager;
 import org.eclipse.dirigible.core.scheduler.service.SchedulerCoreService;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobEmailDefinition;
 import org.eclipse.dirigible.core.scheduler.service.definition.JobLogDefinition;
+import org.eclipse.dirigible.core.scheduler.service.definition.JobParameterDefinition;
+import org.quartz.JobExecutionException;
 
 public class JobsProcessor {
 	
@@ -34,38 +39,55 @@ public class JobsProcessor {
 	}
 	
 	public String enable(String name) throws SchedulerException {
-		JobDefinition job = schedulerCoreService.getJob(name);
-		if (job != null) {
-			job.setEnabled(true);
-			schedulerCoreService.createOrUpdateJob(job);
-			SchedulerManager.scheduleJob(job);
-		} else {
-			String error = format("Job with name {0} does not exist, hence cannot be enabled", name);
-			throw new SchedulerException(error);
-		}
-		
-        return GsonHelper.GSON.toJson(job);
+        return JobFacade.enable(name);
 	}
 	
 	public String disable(String name) throws SchedulerException {
-		JobDefinition job = schedulerCoreService.getJob(name);
-		if (job != null) {
-			job.setEnabled(false);
-			schedulerCoreService.createOrUpdateJob(job);
-			SchedulerManager.unscheduleJob(job.getName(), job.getGroup());
-		} else {
-			String error = format("Job with name {0} does not exist, hence cannot be disabled", name);
-			throw new SchedulerException(error);
-		}
-		
-        return GsonHelper.GSON.toJson(job);
+		return JobFacade.disable(name);
 	}
 
 	public String logs(String name) throws SchedulerException {
-		
 		List<JobLogDefinition> jobLogs = schedulerCoreService.getJobLogs(name);
 		
         return GsonHelper.GSON.toJson(jobLogs);
+	}
+	
+	public void clear(String name) throws SchedulerException {
+		schedulerCoreService.clearJobLogs(name);
+	}
+	
+	public String parameters(String name) throws SchedulerException {
+		
+		List<JobParameterDefinition> parameters = schedulerCoreService.getJobParameters(name);
+		for (JobParameterDefinition parameter : parameters) {
+			parameter.setValue(Configuration.get(parameter.getName(), parameter.getDefaultValue()));
+		}
+		
+        return GsonHelper.GSON.toJson(parameters);
+	}
+	
+	public boolean trigger(String name, List<NameValuePair> parameters) throws JobExecutionException, SchedulerException {
+		
+		Map<String, String> parametersMap = new HashMap<String, String>();
+		
+		for (NameValuePair pair : parameters) {
+			parametersMap.put(pair.getName(), pair.getValue());
+		}
+		
+		return JobFacade.trigger(name, GsonHelper.GSON.toJson(parametersMap));
+	}
+
+	public String emails(String name) throws SchedulerException {
+		List<JobEmailDefinition> jobEmails = schedulerCoreService.getJobEmails(name);
+		return GsonHelper.GSON.toJson(jobEmails);
+	}
+
+	public void addEmail(String name, String email) throws SchedulerException {
+		schedulerCoreService.addJobEmail(name, email);
+	}
+
+	public void removeEmail(Long id) throws SchedulerException {
+		schedulerCoreService.removeJobEmail(id);
 	}
 
 }

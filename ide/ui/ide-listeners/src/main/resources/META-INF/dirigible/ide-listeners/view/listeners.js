@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('listeners', [])
-	.controller('ListenersController', ['$scope', '$http', function ($scope, $http) {
+const listenersView = angular.module('listeners', ['ideUI', 'ideView']);
 
-		$http.get('/services/v4/ops/listeners').then(function (response) {
-			$scope.listenersList = response.data;
-		});
+listenersView.config(["messageHubProvider", function (messageHubProvider) {
+	messageHubProvider.eventIdPrefix = 'listeners-view';
+}]);
 
-	}]);
+listenersView.controller('ListenersController', ['$scope', '$http', function ($scope, $http) {
+
+	$http.get('/services/v4/ops/listeners').then(function (response) {
+		$scope.list = response.data;
+	});
+
+}]);

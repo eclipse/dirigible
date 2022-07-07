@@ -11,6 +11,8 @@
  */
 package org.eclipse.dirigible.cms.csvim.synchronizer;
 
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.dirigible.core.scheduler.api.AbstractSynchronizerJob;
 import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
 
@@ -18,6 +20,8 @@ import org.eclipse.dirigible.core.scheduler.api.ISynchronizer;
  * The Class CSVIM SynchronizerJob.
  */
 public class CsvimSynchronizerJob extends AbstractSynchronizerJob {
+
+	private static final int TIMEOUT_TIME_IN_MINUTES = 10;
 
 	private CsvimSynchronizer csvimSynchronizer = new CsvimSynchronizer();
 
@@ -39,4 +43,13 @@ public class CsvimSynchronizerJob extends AbstractSynchronizerJob {
 		return CsvimSynchronizerJobDefinitionProvider.CSVIM_SYNCHRONIZER_JOB;
 	}
 
+	@Override
+	protected int getTimeout() {
+		return TIMEOUT_TIME_IN_MINUTES;
+	}
+
+	@Override
+	protected TimeUnit getTimeoutUnit() {
+		return TimeUnit.MINUTES;
+	}
 }

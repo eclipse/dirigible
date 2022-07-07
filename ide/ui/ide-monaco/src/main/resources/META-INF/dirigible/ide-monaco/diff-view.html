@@ -8,111 +8,88 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title>Diff Viewer</title>
+        <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/core.css" />
+        <link type="text/css" rel="stylesheet" href="/webjars/fundamental-styles/0.24.0/dist/busy-indicator.css">
         <link type="text/css" data-name="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main" rel="stylesheet"
             href="/webjars/monaco-editor/0.33.0/min/vs/editor/editor.main.css">
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/monaco.css" />
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
-        <script type="text/javascript" src="/services/v4/js/theme/resources.js/monaco.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/editor.css" />
+        <script type="text/javascript" src="/services/v4/web/ide-core/core/message-hub.js"></script>
+        <script type="text/javascript" src="js/theme.js"></script>
     </head>
 
     <body id="diff-browser" spellcheck="false">
 
-        <div class="loading-overview">
-            <div class="loading-message">Loading...</div>
+        <div id="loadingOverview" class="fd-busy-indicator-extended">
+            <div class="fd-busy-indicator fd-busy-indicator--l" aria-hidden="false" aria-label="Loading">
+                <div class="fd-busy-indicator--circle-0"></div>
+                <div class="fd-busy-indicator--circle-1"></div>
+                <div class="fd-busy-indicator--circle-2"></div>
+            </div>
+            <div id="loadingMessage" class="fd-busy-indicator-extended__label">Loading difference...</div>
         </div>
 
         <div id="embeddedEditor"></div>
 
         <script type="text/javascript" src="/webjars/monaco-editor/0.33.0/min/vs/loader.js"></script>
         <script>
-            let loadingOverview = document.getElementsByClassName('loading-overview')[0];
-            let loadingMessage = document.getElementsByClassName('loading-message')[0];
+            let loadingOverview = document.getElementById('loadingOverview');
+            let loadingMessage = document.getElementById('loadingMessage');
             let messageHub = new FramesMessageHub();
             let csrfToken;
             let dirty = false;
             let diffEditor;
+            let useParameters = false;
+            let parameters = {
+                contentType: "",
+                original: '',
+                modified: '',
+            };
+
+            function getViewParameters() {
+                if (window.frameElement.hasAttribute("data-parameters")) {
+                    let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
+                    parameters.contentType = params["contentType"] || '';
+                    parameters.original = params["original"] || '';
+                    parameters.modified = params["modified"] || '';
+                    if (parameters.original) useParameters = true;
+                }
+            }
 
             function FileIO() {
                 let __URL = URL;
                 this.gitApiUrl = "/services/v4/ide/git";
 
-                this.resolveFileType = function (file) {
-                    if (!file) return "text";
+                this.resolveFileType = function (fileName) {
+                    if (!fileName) return "text";
+                    // TODO: Cache response
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("GET", "/services/v4/js/ide-monaco/api/fileTypes.js");
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                let fileTypes = JSON.parse(xhr.responseText);
 
-                    let mappings = [
-                        {
-                            extension: ".js",
-                            type: "javascript",
-                        },
-                        {
-                            extension: ".html",
-                            type: "html",
-                        },
-                        {
-                            extension: ".css",
-                            type: "css",
-                        },
-                        {
-                            extension: ".json",
-                            type: "json",
-                        },
-                        {
-                            extension: ".table",
-                            type: "json",
-                        },
-                        {
-                            extension: ".view",
-                            type: "json",
-                        },
-                        {
-                            extension: ".extensionpoint",
-                            type: "json",
-                        },
-                        {
-                            extension: ".extension",
-                            type: "json",
-                        },
-                        {
-                            extension: ".job",
-                            type: "json",
-                        },
-                        {
-                            extension: ".listener",
-                            type: "json",
-                        },
-                        {
-                            extension: ".access",
-                            type: "json",
-                        },
-                        {
-                            extension: ".roles",
-                            type: "json",
-                        },
-                        {
-                            extension: ".command",
-                            type: "json",
-                        },
-                        {
-                            extension: ".xml",
-                            type: "xml",
-                        },
-                        {
-                            extension: ".bpmn",
-                            type: "xml",
-                        },
-                        {
-                            extension: ".xsjs",
-                            type: "javascript",
-                        },
-                    ];
+                                let fileType = "text";
+                                if (fileName) {
+                                    for (let fileExtension in fileTypes) {
+                                        if (fileName.endsWith(fileExtension)) {
+                                            fileType = fileTypes[fileExtension];
+                                        }
+                                    }
+                                }
+                                if (fileName && fileName.indexOf(".") === -1 && fileName.toLowerCase().indexOf("dockerfile") > 0) {
+                                    fileType = "dockerfile";
+                                }
 
-                    for (let i = 0; i < mappings.length; i++) {
-                        if (file.endsWith(mappings[i].extension)) {
-                            return mappings[i].type;
-                        }
-                    }
-
-                    return "text";
+                                resolve(fileType);
+                            } else {
+                                reject(`HTTP ${xhr.status} - ${xhr.statusText}`)
+                            }
+                            csrfToken = xhr.getResponseHeader("x-csrf-token");
+                        };
+                        xhr.onerror = () => reject(`HTTP ${xhr.status} - ${xhr.statusText}`);
+                        xhr.send();
+                    });
                 };
 
                 this.loadDiff = function (project, file) {
@@ -177,39 +154,65 @@
             }
 
             (function init() {
+                setTheme();
+                getViewParameters();
                 require.config({ paths: { vs: "/webjars/monaco-editor/0.33.0/min/vs" } });
 
                 require(["vs/editor/editor.main"], function () {
+                    messageHub.subscribe(function () {
+                        setTheme(false);
+                        monaco.editor.setTheme(monacoTheme);
+                    }, 'ide.themeChange');
                     createEditorInstance().then((editor) => {
                         diffEditor = editor;
-                        diffEditor.setModel({
-                            original: monaco.editor.createModel("", "text"),
-                            modified: monaco.editor.createModel("", "text"),
-                        });
+                        if (useParameters) {
+                            if (loadingOverview) loadingOverview.classList.remove("hide");
+                            diffEditor.setModel({
+                                original: monaco.editor.createModel(parameters.original, parameters.contentType),
+                                modified: monaco.editor.createModel(parameters.modified, parameters.contentType),
+                            });
+                            if (loadingOverview) loadingOverview.classList.add("hide");
+                        } else {
+                            diffEditor.setModel({
+                                original: monaco.editor.createModel("", "text"),
+                                modified: monaco.editor.createModel("", "text"),
+                            });
+                        }
                     });
                     monaco.editor.setTheme(monacoTheme);
                 });
 
                 messageHub.subscribe(function (msg) {
-                    if (loadingOverview) loadingOverview.classList.remove("hide");
-                    let project = msg.data.project;
-                    let file = msg.data.file;
-                    fileIO.loadDiff(project, file).then((diff) => {
-                        let fileType = fileIO.resolveFileType(file);
-                        diffEditor.setModel({
-                            original: monaco.editor.createModel(diff.original, fileType),
-                            modified: monaco.editor.createModel(diff.modified, fileType),
-                        });
-                        if (loadingOverview) loadingOverview.classList.add("hide");
-                    });
-                }, "git.staging.file.diff");
+                    if (msg.data.type === 'unified') {
+                        diffEditor.updateOptions({ renderSideBySide: false });
+                    } else {
+                        diffEditor.updateOptions({ renderSideBySide: true });
+                    }
+                }, "git.diff.view.type");
 
-                messageHub.subscribe(function () {
-                    diffEditor.setModel({
-                        original: monaco.editor.createModel("", "text"),
-                        modified: monaco.editor.createModel("", "text"),
-                    });
-                }, "git.diff.view.clear");
+                if (!useParameters) {
+                    messageHub.subscribe(function (msg) {
+                        
+                        let project = msg.data.project;
+                        let file = msg.data.file;
+                        fileIO.loadDiff(project, file).then((diff) => {
+                            fileIO.resolveFileType(file).then((fileType) => {
+                                diffEditor.setModel({
+                                    original: monaco.editor.createModel(diff.original, fileType),
+                                    modified: monaco.editor.createModel(diff.modified, fileType),
+                                });
+                                if (loadingOverview) loadingOverview.classList.add("hide");
+                            });
+                        });
+                    }, "git.staging.file.diff");
+
+                    messageHub.subscribe(function () {
+                        diffEditor.setModel({
+                            original: monaco.editor.createModel("", "text"),
+                            modified: monaco.editor.createModel("", "text"),
+                        });
+                    }, "git.diff.view.clear");
+                }
             })();
         </script>
     </body>

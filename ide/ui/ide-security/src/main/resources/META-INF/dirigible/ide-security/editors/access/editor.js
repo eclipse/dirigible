@@ -147,8 +147,13 @@ angular.module('page', [])
                     }
                 };
                 xhr.send(text);
-                messageHub.post({ data: $scope.file }, 'editor.file.saved');
-                messageHub.post({ data: 'File [' + $scope.file + '] saved.' }, 'status.message');
+                messageHub.post({
+                    name: $scope.file.substring($scope.file.lastIndexOf('/') + 1),
+                    path: $scope.file.substring($scope.file.indexOf('/', 1)),
+                    contentType: 'application/json+access', // TODO: Take this from data-parameters
+                    workspace: $scope.file.substring(1, $scope.file.indexOf('/', 1)),
+                }, 'ide.file.saved');
+                messageHub.post({ message: `File '${$scope.file}' saved` }, 'ide.status.message');
             } else {
                 console.error('file parameter is not present in the request');
             }
@@ -172,11 +177,35 @@ angular.module('page', [])
             saveContents(contents);
         };
 
+        messageHub.subscribe(
+            function () {
+                let accessContents = serializeAccess();
+                let access = JSON.stringify(accessContents);
+                if (contents !== access) {
+                    $scope.save();
+                }
+            },
+            "editor.file.save.all"
+        );
+
+        messageHub.subscribe(
+            function (msg) {
+                let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                let accessContents = serializeAccess();
+                let access = JSON.stringify(accessContents);
+                if (file && file === $scope.file && contents !== access)
+                    $scope.save();
+            },
+            "editor.file.save"
+        );
+
         $scope.$watch(function () {
             let accessContents = serializeAccess();
             let access = JSON.stringify(accessContents);
             if (contents !== access) {
-                messageHub.post({ data: $scope.file }, 'editor.file.dirty');
+                messageHub.post({ resourcePath: $scope.file, isDirty: true }, 'ide-core.setEditorDirty');
+            } else {
+                messageHub.post({ resourcePath: $scope.file, isDirty: false }, 'ide-core.setEditorDirty');
             }
         });
 

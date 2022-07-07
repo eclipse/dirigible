@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataDependency;
 import org.eclipse.dirigible.core.git.project.ProjectMetadataManager;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
@@ -29,7 +30,6 @@ import org.eclipse.dirigible.core.publisher.service.PublisherCoreService;
 import org.eclipse.dirigible.core.publisher.synchronizer.PublisherSynchronizer;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
-import org.eclipse.dirigible.core.workspace.service.WorkspacesCoreService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
@@ -42,10 +42,6 @@ public class CloneCommand {
 
 	private static final Logger logger = LoggerFactory.getLogger(CloneCommand.class);
 	
-
-	/** The workspaces core service. */
-	private WorkspacesCoreService workspacesCoreService = new WorkspacesCoreService();
-
 	/** The publisher core service. */
 	private PublisherCoreService publisherCoreService = new PublisherCoreService();
 
@@ -55,37 +51,31 @@ public class CloneCommand {
 	/**
 	 * Execute a Clone command.
 	 *
-	 * @param repositoryUri
-	 *            the repository uri
-	 * @param repositoryBranch
-	 *            the repository branch
-	 * @param username
-	 *            the username
-	 * @param password
-	 *            the password
-	 * @param workspaceName
-	 *            the workspace name
-	 * @param publishAfterClone
-	 *            the publish after clone
-	 * @param projectName
-	 *            the workspace name
+	 * @param workspace
+	 *            the workspace
+	 * @param model
+	 *            the git clone model
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
-	public void execute(String repositoryUri, String repositoryBranch, String username, String password, String workspaceName,
-			boolean publishAfterClone, String projectName) throws GitConnectorException {
+	public void execute(IWorkspace workspace, GitCloneModel model) throws GitConnectorException {
+		String repositoryUri = model.getRepository();
 		try {
 			if (repositoryUri != null && !repositoryUri.endsWith(GitFileUtils.DOT_GIT)) {
 				repositoryUri += GitFileUtils.DOT_GIT;
 			}
 			Set<String> clonedProjects = new HashSet<String>();
 			logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
-			IWorkspace workspace = workspacesCoreService.getWorkspace(workspaceName);
 			String user = UserFacade.getName();
-			File gitDirectory = GitFileUtils.createGitDirectory(user, workspaceName, repositoryUri);
-			cloneProject(user, repositoryUri, repositoryBranch, username, password, gitDirectory, workspace, clonedProjects, projectName);
+			File gitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryUri);
+			try {
+				cloneProject(user, repositoryUri, model.getBranch(), model.getUsername(), model.getPassword(), gitDirectory, workspace, clonedProjects);
+			} catch (GitConnectorException e) {
+				GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryUri);
+				throw e;
+			}
 			logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath()));
-			if (publishAfterClone) {
+			if (model.isPublish()) {
 				publishProjects(workspace, clonedProjects);
 			}
 			logger.info(String.format("Project(s) has been cloned successfully from repository: [%s]", repositoryUri));
@@ -93,23 +83,6 @@ public class CloneCommand {
 			throw new GitConnectorException(String.format("An error occurred while cloning repository: [%s]", repositoryUri), e);
 		}
 	}
-
-//	/**
-//	 * Creates the git directory.
-//	 *
-//	 * @param user the logged in user
-//	 * @param workspace the current workspace
-//	 * @param repositoryURI
-//	 *            the repository URI
-//	 * @return the file
-//	 * @throws IOException
-//	 *             Signals that an I/O exception has occurred.
-//	 */
-//	protected File createGitDirectory(String user, String workspace, String repositoryURI) throws IOException {
-//		String repositoryName = GitFileUtils.generateGitRepositoryName(repositoryURI);
-//		File gitDirectory = GitFileUtils.createGitDirectory(user, workspace, repositoryName);
-//		return gitDirectory;
-//	}
 
 	/**
 	 * Clone project execute several low level Git commands.
@@ -130,13 +103,11 @@ public class CloneCommand {
 	 *            the workspace
 	 * @param clonedProjects
 	 *            the cloned projects
-	 * @param optionalProjectName
-	 *            an optional project name in case of an empty reposiotry
 	 * @throws GitConnectorException
 	 *             the git connector exception
 	 */
 	protected void cloneProject(final String user, final String repositoryURI, String repositoryBranch, final String username, final String password,
-			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects, String optionalProjectName) throws GitConnectorException {
+			File gitDirectory, IWorkspace workspace, Set<String> clonedProjects) throws GitConnectorException {
 		try {
 			logger.debug(String.format("Cloning repository %s, with username %s for branch %s in the directory %s ...", repositoryURI, username,
 					repositoryBranch, gitDirectory.getCanonicalPath()));
@@ -146,20 +117,19 @@ public class CloneCommand {
 			String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
 			logger.debug(String.format("Start importing projects for repository directory %s ...", gitDirectory.getCanonicalPath()));
-			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName(), optionalProjectName);
+			List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName());
 			logger.debug(String.format("Importing projects for repository directory %s finished", gitDirectory.getCanonicalPath()));
 
 			for (String importedProject : importedProjects) {
 				logger.info(String.format("Project [%s] was cloned", importedProject));
 			}
 
-			String[] projectNames = GitFileUtils.getValidProjectFolders(gitDirectory);
-			for (String projectName : projectNames) {
+			for (String projectName : importedProjects) {
 				projectMetadataManager.ensureProjectMetadata(workspace, projectName);
 				clonedProjects.add(projectName);
 			}
 			logger.debug("Start cloning dependencies ...");
-			for (String projectName : projectNames) {
+			for (String projectName : importedProjects) {
 				logger.debug(String.format("Start cloning dependencies of the project %s...", projectName));
 				cloneDependencies(user, username, password, workspace, clonedProjects, projectName);
 				logger.debug(String.format("Cloning of dependencies of the project %s finished", projectName));
@@ -224,8 +194,13 @@ public class CloneCommand {
 					File projectGitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), projectRepositoryURI);
 					logger.debug(String.format("Start cloning of the project %s from the repository %s and branch %s into the directory %s ...",
 							projectGuid, projectRepositoryURI, projectRepositoryBranch, projectGitDirectory.getCanonicalPath()));
-					cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
-							clonedProjects, null); // assume
+					try {
+						cloneProject(user, projectRepositoryURI, projectRepositoryBranch, username, password, projectGitDirectory, workspace,
+								clonedProjects); // assume
+					} catch (GitConnectorException e) {
+						GitFileUtils.deleteGitDirectory(user, workspace.getName(), projectRepositoryURI);
+						throw e;
+					}
 				} else {
 					logger.debug(String.format("Project %s has been already cloned, hence do pull instead.", projectGuid));
 				}

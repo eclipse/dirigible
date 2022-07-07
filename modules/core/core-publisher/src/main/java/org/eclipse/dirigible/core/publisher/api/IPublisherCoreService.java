@@ -68,6 +68,19 @@ public interface IPublisherCoreService extends ICoreService {
 	public PublishRequestDefinition createPublishRequest(String workspace, String path) throws PublisherException;
 
 	/**
+	 * Creates the unpublish request.
+	 *
+	 * @param workspace
+	 *            the workspace
+	 * @param path
+	 *            the path
+	 * @return the publish request definition
+	 * @throws PublisherException
+	 *             the publisher exception
+	 */
+	public PublishRequestDefinition createUnpublishRequest(String workspace, String path) throws PublisherException;
+
+	/**
 	 * Gets the publish request.
 	 *
 	 * @param id

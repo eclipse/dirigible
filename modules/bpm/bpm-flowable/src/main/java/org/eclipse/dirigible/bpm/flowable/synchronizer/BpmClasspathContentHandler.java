@@ -33,18 +33,16 @@ public class BpmClasspathContentHandler extends AbstractClasspathContentHandler 
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(BpmProviderFlowable.FILE_EXTENSION_BPMN)) {
-				isValid = true;
 				bpmnSynchronizer.registerPredeliveredBpmnFiles(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered BPMN is not valid", e);
+			logger.error("Predelivered BPMN at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

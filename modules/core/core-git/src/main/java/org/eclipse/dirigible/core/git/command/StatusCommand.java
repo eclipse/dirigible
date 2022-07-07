@@ -13,6 +13,7 @@ package org.eclipse.dirigible.core.git.command;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.GitConnectorFactory;
@@ -44,7 +45,7 @@ public class StatusCommand {
 	 * @param project
 	 *            the project
 	 * @return project status
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public ProjectStatus execute(String workspace, String project) throws GitConnectorException {
 
@@ -67,7 +68,7 @@ public class StatusCommand {
 	 * @param project
 	 *            the project
 	 * @return project status
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private ProjectStatus getStatus(String workspace, String project) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred whilegetting the status for project [%s].", project);
@@ -79,6 +80,7 @@ public class StatusCommand {
 			try {
 				Status status = gitConnector.status();
 				projectStatus = new ProjectStatus(
+						project,
 						status.getAdded(),
 						status.getChanged(),
 						status.getRemoved(),
@@ -100,5 +102,5 @@ public class StatusCommand {
 		}
 		return null;
 	}
-
+	
 }

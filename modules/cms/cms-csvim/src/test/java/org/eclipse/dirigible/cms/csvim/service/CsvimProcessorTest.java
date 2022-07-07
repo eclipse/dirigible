@@ -37,7 +37,8 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 		
 		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
-		repository.createResource(path, "1,John,Doe\n2,Jane,Doe\n".getBytes());
+		String content = "1,John,Doe\n2,Jane,Doe\n";
+		repository.createResource(path, content.getBytes());
 		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
 		csvFileDefinition.setFile("/csvim/test.csv");
 		csvFileDefinition.setTable("TEST_CSV");
@@ -47,7 +48,7 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 				stmt.executeUpdate("CREATE TABLE TEST_CSV (ID INT PRIMARY KEY, FIRST_NAME VARCHAR(20), LAST_NAME VARCHAR(20))");
 			}
 			
-			csvimProcessor.process(csvFileDefinition, connection);
+			csvimProcessor.process(csvFileDefinition, content, connection);
 			
 			try (Statement stmt = connection.createStatement()) {
 				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");
@@ -69,7 +70,8 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 		
 		String path = IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/csvim/test.csv";
-		repository.createResource(path, "1,John,Doe\n2,Jane,Doe\n".getBytes());
+		String content = "1,John,Doe\n2,Jane,Doe\n";
+		repository.createResource(path, content.getBytes());
 		CsvFileDefinition csvFileDefinition = new CsvFileDefinition();
 		csvFileDefinition.setFile("/csvim/test.csv");
 		csvFileDefinition.setTable("TEST_CSV");
@@ -82,7 +84,7 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 				stmt.executeUpdate("INSERT INTO TEST_CSV VALUES (2,'Jennifer','Doe')");
 			}
 			
-			csvimProcessor.process(csvFileDefinition, connection);
+			csvimProcessor.process(csvFileDefinition, content, connection);
 			
 			try (Statement stmt = connection.createStatement()) {
 				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST_CSV");

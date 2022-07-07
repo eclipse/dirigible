@@ -11,21 +11,27 @@
  */
 package org.eclipse.dirigible.api.v4.git.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.api.v3.platform.WorkspaceFacade;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.api.v4.git.GitFacade;
 import org.eclipse.dirigible.core.git.GitCommitInfo;
 import org.eclipse.dirigible.core.git.GitConnectorException;
+import org.eclipse.dirigible.core.git.project.ProjectMetadata;
 import org.eclipse.dirigible.core.git.utils.GitFileUtils;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
+import org.eclipse.dirigible.core.workspace.api.IFile;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
 import org.eclipse.dirigible.core.workspace.json.ProjectDescriptor;
@@ -39,6 +45,7 @@ public class GitFacadeTest extends AbstractDirigibleTest {
     private String projectName = "project1";
     private String workspaceName = "workspace";
     private String repository = "project1-repo";
+    private final Gson gson = new Gson();
 
     @Test
     public void testInitRepositoryAndCommit() throws GitAPIException, GitConnectorException, IOException {
@@ -62,11 +69,27 @@ public class GitFacadeTest extends AbstractDirigibleTest {
         List<GitCommitInfo> history = GitFacade.getHistory(repository, workspaceName, projectName);
         assertTrue(history.size() == 2);
         assertTrue(history.get(0).getMessage().equals(message));
-        GitFacade.deleteRepository(workspaceName, repository);
+        assertProjectJsonExists(project);
 
+        GitFacade.deleteRepository(workspaceName, repository);
         assertTrue(GitFileUtils.getGitDirectory(user, workspaceName, repository) == null);
-        
+
         FileUtils.deleteDirectory(new File("./target/.git"));
+    }
+
+    private void assertProjectJsonExists(IProject project) {
+        IFile maybeProjectJson = project.getFile("project.json");
+        assertTrue("project.json does not exist", maybeProjectJson.exists());
+
+        String projectJsonContent = new String(maybeProjectJson.getContent(), StandardCharsets.UTF_8);
+        Map<String, String> parsedProjectJsonContent = gson.fromJson(
+                projectJsonContent,
+                new TypeToken<Map<String, String>>() {
+                }.getType()
+        );
+
+        assertEquals("Unexpected project.json project id", project.getName(), parsedProjectJsonContent.get("guid"));
+        assertEquals("Unexpected project.json properties cound", 1, parsedProjectJsonContent.size());
     }
 
 }

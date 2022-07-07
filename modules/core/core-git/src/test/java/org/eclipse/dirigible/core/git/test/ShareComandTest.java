@@ -18,6 +18,8 @@ import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.ShareCommand;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
+import org.eclipse.dirigible.core.git.model.GitShareModel;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -61,8 +63,12 @@ public class ShareComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			cloneCommand.execute("https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel cloneModel = new GitCloneModel();
+			cloneModel.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+			cloneModel.setBranch(IGitConnector.GIT_MASTER);
+			cloneModel.setPublish(true);
+			cloneCommand.execute(workspace1, cloneModel);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			IProject project1 = workspace1.getProject("project1");
@@ -72,8 +78,14 @@ public class ShareComandTest extends AbstractDirigibleTest {
 			String password = System.getProperty("dirigibleTestGitPassword");
 			String email = System.getProperty("dirigibleTestGitEmail");
 			if (username != null) {
-				shareCommand.execute(workspace1, project1, "https://github.com/dirigiblelabs/sample_git_test.git", IGitConnector.GIT_MASTER,
-						"test commit", username, password, email);
+				GitShareModel shareModel = new GitShareModel();
+				shareModel.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+				shareModel.setBranch(IGitConnector.GIT_MASTER);
+				shareModel.setCommitMessage("test commit");
+				shareModel.setUsername(username);
+				shareModel.setPassword(password);
+				shareModel.setEmail(email);
+				shareCommand.execute(workspace1, project1, shareModel);
 			}
 		}
 	}

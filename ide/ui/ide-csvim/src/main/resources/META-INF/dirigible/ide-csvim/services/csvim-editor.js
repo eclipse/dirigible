@@ -9,15 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function () {
-	return {
-		"id": "csvim-editor",
-		"name": "CSVIM Editor",
-		"factory": "frame",
-		"region": "center-top",
-		"label": "CSVIM Editor",
-		"link": "../ide-csvim/editor.html",
-		"defaultEditor": true,
-		"contentTypes": ["application/json+csvim"]
-	};
+const editorData = {
+	id: "csvim-editor",
+	factory: "frame",
+	region: "center",
+	label: "CSVIM Editor",
+	link: "../ide-csvim/editor.html",
+	contentTypes: ["application/json+csvim"],
+};
+if (typeof exports !== 'undefined') {
+	exports.getEditor = function () {
+		return editorData;
+	}
 }

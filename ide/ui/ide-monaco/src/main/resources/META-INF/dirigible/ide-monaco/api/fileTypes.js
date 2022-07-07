@@ -13,7 +13,7 @@ for (let i = 0; i < fileTypeExtensions.length; i++) {
         }
     }
 }
-
+response.setContentType("application/json");
 response.println(JSON.stringify(mappings));
 response.flush();
 response.close();

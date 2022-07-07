@@ -9,22 +9,23 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getEditor = function () {
-	return {
-		"id": "Image Viewer",
-		"name": "Image Viewer",
-		"factory": "frame",
-		"region": "center-top",
-		"label": "Image Viewer",
-		"link": "../ide-image/editor.html",
-		"defaultEditor": true,
-		"contentTypes": [
-			"image/jpeg",
-			"image/svg+xml",
-			"image/png",
-			"image/x-icon",
-			"image/gif",
-			"image/bmp"
-		]
-	};
+const editorData = {
+	id: "ideImage",
+	factory: "frame",
+	region: "center",
+	label: "Image Viewer",
+	link: "../ide-image/editor.html",
+	contentTypes: [
+		"image/jpeg",
+		"image/svg+xml",
+		"image/png",
+		"image/x-icon",
+		"image/gif",
+		"image/bmp"
+	]
+};
+if (typeof exports !== 'undefined') {
+	exports.getEditor = function () {
+		return editorData;
+	}
 }

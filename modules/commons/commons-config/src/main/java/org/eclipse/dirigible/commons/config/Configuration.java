@@ -248,9 +248,12 @@ public class Configuration {
 		} catch (ClassNotFoundException e) {
 			return false;
 		}
-		return true;
+		return !isProtectedModeEnabled();
 	}
 
+	private static boolean isProtectedModeEnabled() {
+		return isKeycloakModeEnabled() || isOAuthAuthenticationEnabled() || isJwtModeEnabled();
+	}
 	/**
 	 * Checks if is anonymous user enabled.
 	 *
@@ -262,11 +265,25 @@ public class Configuration {
 		} catch (ClassNotFoundException e) {
 			return false;
 		}
-		return true;
+		return !isProtectedModeEnabled();
 	}
 
+	/**
+	 * Checks if the OAuth authentication is enabled.
+	 *
+	 * @return true, if the OAuth authentication is enabled
+	 */
 	public static boolean isOAuthAuthenticationEnabled() {
 		return Boolean.parseBoolean(get("DIRIGIBLE_OAUTH_ENABLED", Boolean.FALSE.toString()));
+	}
+
+	/**
+	 * Checks if the Keycloak authentication is enabled.
+	 *
+	 * @return true, if the Keycloak authentication is enabled
+	 */
+	public static boolean isKeycloakModeEnabled() {
+		return Boolean.parseBoolean(get("DIRIGIBLE_KEYCLOAK_ENABLED", Boolean.FALSE.toString()));
 	}
 
 	/**
@@ -392,7 +409,18 @@ public class Configuration {
 			"DIRIGIBLE_SCHEDULER_DATASOURCE_TYPE",
 			"DIRIGIBLE_SCHEDULER_DATASOURCE_NAME",
 			"DIRIGIBLE_SCHEDULER_DATABASE_DELEGATE",
+			"DIRIGIBLE_SCHEDULER_LOGS_RETANTION_PERIOD",
+			"DIRIGIBLE_SCHEDULER_EMAIL_SENDER",
+			"DIRIGIBLE_SCHEDULER_EMAIL_RECIPIENTS",
+			"DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_ERROR",
+			"DIRIGIBLE_SCHEDULER_EMAIL_SUBJECT_NORMAL",
+			"DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_ERROR",
+			"DIRIGIBLE_SCHEDULER_EMAIL_TEMPLATE_NORMAL",
+			"DIRIGIBLE_SCHEDULER_EMAIL_URL_SCHEME",
+			"DIRIGIBLE_SCHEDULER_EMAIL_URL_HOST",
+			"DIRIGIBLE_SCHEDULER_EMAIL_URL_PORT",
 			"DIRIGIBLE_SYNCHRONIZER_IGNORE_DEPENDENCIES",
+			"DIRIGIBLE_SYNCHRONIZER_EXCLUDE_PATHS",
 			"DIRIGIBLE_HOME_URL",
 			"DIRIGIBLE_JOB_EXPRESSION_BPM",
 			"DIRIGIBLE_JOB_EXPRESSION_DATA_STRUCTURES",
@@ -470,7 +498,13 @@ public class Configuration {
 			"DIRIGIBLE_MAIL_SMTPS_AUTH",
 			"DIRIGIBLE_MAIL_SMTP_HOST",
 			"DIRIGIBLE_MAIL_SMTP_PORT",
-			"DIRIGIBLE_MAIL_SMTP_AUTH"
+			"DIRIGIBLE_MAIL_SMTP_AUTH",
+			"DIRIGIBLE_KEYCLOAK_ENABLED",
+			"DIRIGIBLE_KEYCLOAK_REALM",
+			"DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL",
+			"DIRIGIBLE_KEYCLOAK_SSL_REQUIRED",
+			"DIRIGIBLE_KEYCLOAK_CLIENT_ID",
+			"DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT"
 	};
 
 	public static String getOS() {

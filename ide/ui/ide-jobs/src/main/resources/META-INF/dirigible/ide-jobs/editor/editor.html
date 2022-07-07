@@ -45,8 +45,110 @@
                     <textarea class="form-control" placeholder="Enter description" ng-model="job.description" cols=20
                         rows=5></textarea>
                 </div>
+
+
+                <div class="container">
+                    <button type="button" ng-click="openNewDialog()"
+                        class="btn btn-lg btn-outline-primary pull-right"><i class="fa fa-plus"
+                            aria-hidden="true"></i></button>
+                    <table class="table product-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Default Value</th>
+                                <th>Choices</th>
+                                <th>Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="next in job.parameters">
+                                <td>{{next.name}}</td>
+                                <td>{{next.type}}</td>
+                                <td>{{next.defaultValue}}</td>
+                                <td>{{next.choices}}</td>
+                                <td>{{next.description}}</td>
+                                <td>
+                                    <i class="close fa fa-2x fa-remove" ng-click="openDeleteDialog(next)"></i>
+                                    <i class="close fa fa-2x fa-bars" ng-click="openEditDialog(next)"
+                                        style="margin-right: 0.5em"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
                 <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
             </form>
+        </div>
+
+        <div class="dirigible-modal modal fade" id="entityModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 ng-show="actionType === 'new'" class="modal-title" id="exampleModalLabel">Create Parameter
+                        </h3>
+                        <h3 ng-show="actionType === 'update'" class="modal-title" id="exampleModalLabel">Update
+                            Parameter
+                        </h3>
+                        <h3 ng-show="actionType === 'delete'" class="modal-title" id="exampleModalLabel">Delete
+                            Parameter
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" ng-show="error">
+                            {{error}}
+                        </div>
+                        <form ng-hide="actionType === 'delete'">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" placeholder="Enter name" ng-model="entity.name">
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Type: </label>
+                                <div>
+                                    <select class="form-control" name="type" id="type" ng-model="entity.type">
+                                        <option ng-repeat="option in types" value="{{option.key}}">{{option.label}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Default Value</label>
+                                <input type="text" class="form-control" placeholder="Enter default value"
+                                    ng-model="entity.defaultValue">
+                            </div>
+                            <div class="form-group" ng-show="entity.type === 'choice'">
+                                <label>Choices</label>
+                                <input type="text" class="form-control" placeholder="Enter comma separated choices"
+                                    ng-model="entity.choices">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="form-control" placeholder="Enter description"
+                                    ng-model="entity.description">
+                            </div>
+                        </form>
+                        <div ng-show="actionType === 'delete'">
+                            You are going to delete <b>Parameter</b> with <b>name = {{entity.name}}</b>?
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'new'"
+                            ng-click="create()">Save</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'update'"
+                            ng-click="update()">Update</button>
+                        <button type="button" class="btn btn-primary" ng-show="actionType === 'delete'"
+                            ng-click="delete()">Delete</button>
+                        <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script type="text/javascript" src="editor.js"></script>

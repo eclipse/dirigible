@@ -33,15 +33,13 @@ public class ChangelogClasspathContentHandler extends AbstractClasspathContentHa
 	 */
 	@Override
 	protected boolean isValid(String path) {
-
 		try {
-			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_SCHEMA)) {
-				changeSynchronizer.registerPredeliveredSchema(path);
+			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_CHANGELOG)) {
+				changeSynchronizer.registerPredeliveredChangelog(path);
 				return true;
 			}
-			
 		} catch (IOException e) {
-			logger.error("Predelivered Changelog is not valid", e);
+			logger.error("Predelivered Changelog at path [" + path + "] is not valid", e);
 		}
 
 		return false;

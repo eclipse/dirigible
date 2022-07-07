@@ -1,0 +1,162 @@
+:root {
+  --jstree-git: url("/services/v4/web/resources/images/jstree/git.svg");
+  --jstree-project: url("/services/v4/web/resources/images/jstree/project.svg");
+  --jstree-folder: url("/services/v4/web/resources/images/jstree/folder.svg");
+  --jstree-file: url("/services/v4/web/resources/images/jstree/file-code.svg");
+  --jstree-menu-arrow-right: url(/services/v4/web/resources/images/jstree/menu-arrow-right.svg);
+  --jstree-arrow-down: url("/services/v4/web/resources/images/jstree/arrow-down.svg");
+  --jstree-arrow-right: url("/services/v4/web/resources/images/jstree/arrow-right.svg");
+  --jstree-arrow-left: url("/services/v4/web/resources/images/jstree/arrow-left.svg");
+  --jstree-checkbox-checked: url("/services/v4/web/resources/images/jstree/checkbox-checked.svg");
+  --jstree-checkbox-unchecked: url("/services/v4/web/resources/images/jstree/checkbox-unchecked.svg");
+  --jstree-checkbox-tristate: url("/services/v4/web/resources/images/jstree/checkbox-tristate.svg");
+  --jstree-loader: url("/services/v4/web/resources/images/jstree/loading.svg");
+}
+html,
+body {
+  height: 100%;
+}
+
+.dg-table--no-outer-horizontal-borders {
+  border-top: hidden;
+  border-bottom: hidden;
+}
+
+.dg-table--no-outer-vertical-borders {
+  border-left: hidden;
+  border-right: hidden;
+}
+
+.dg-table__header-sticky th.fd-table__cell {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  -webkit-box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
+  box-shadow: inset 0 1px 0 var(--sapList_BorderColor), inset 0 -1px 0 var(--sapList_BorderColor);
+  border-bottom: hidden;
+  border-top: hidden;
+  z-index: 1;
+}
+
+.dg-table--no-outer-horizontal-borders .dg-table__header-sticky th.fd-table__cell,
+.fd-table--no-outer-border .dg-table__header-sticky th.fd-table__cell {
+  -webkit-box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
+  box-shadow: inset 0 1px 0 var(--sapList_HeaderBackground), inset 0 -1px 0 var(--sapList_BorderColor);
+}
+
+.dg-table__footer-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+}
+/* General helper classes */
+.dg-fill-parent {
+  width: 100%;
+  height: 100%;
+}
+
+.dg-full-height {
+  height: 100%;
+}
+.dg-full-width {
+  width: 100%;
+}
+
+.dg-vbox {
+  display: flex;
+  flex-direction: column;
+}
+
+.dg-hbox {
+  display: flex;
+  flex-direction: row;
+}
+
+.dg-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dg-contain-image {
+  object-fit: contain;
+  margin: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.dg-checkered-bg {
+  background-image:
+    linear-gradient(45deg, #949494 25%, transparent 25%, transparent 75%, #949494 75%),
+    linear-gradient(45deg, #949494 25%, #c1c1c1 25%, #c1c1c1 75%, #949494 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+.dg-menu__sublist--overflow {
+  overflow-y: auto;
+  max-height: 264px;
+  flex-wrap: nowrap;
+  background-color: var(--sapList_Background, #fff);
+}
+
+.dg-menu__sublist--overflow .fd-menu__separator {
+  padding-top: .0625rem;
+}
+
+.dg-popover--align-bottom-end {
+  left: auto;
+  right: var(--sapGroup_BorderWidth);
+}
+
+.dg-popover--align-top-start {
+  top: auto;
+  bottom: 100%;
+}
+
+.dg-popover--align-top-end {
+  top: auto;
+  bottom: 100%;
+  left: auto;
+  right: var(--sapGroup_BorderWidth);
+}
+
+.dg-popover--align-right-start {
+  top: var(--sapGroup_BorderWidth);
+  left: 100%;
+}
+
+.dg-popover--align-right-end {
+  top: auto;
+  left: 100%;
+  bottom: var(--sapGroup_BorderWidth);
+}
+/* fd-page helper classes */
+.dg-page__content-card {
+  padding: 2rem;
+}
+.dg-page__content-card > .fd-card {
+  margin: auto;
+  max-width: 1024px;
+  min-height: auto;
+}
+/* fd-wizard helper classes */
+.dg-flex--wizard {
+  display: flex;
+  flex-direction: column;
+}
+/* fd-form-layout-grid-container fixes */
+.fd-container.fd-form-layout-grid-container .fd-row .fd-col {
+  overflow: visible;
+}
+.fd-container.fd-form-layout-grid-container .fd-popover__body {
+  z-index: 5;
+}
+.fd-container.fd-form-layout-grid-container .fd-input-group {
+  margin: 0;
+}
+/* Dialog padding fixes */
+.fd-dialog__body.fd-scrollbar:not(.fd-dialog__body--no-vertical-padding) {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

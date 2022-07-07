@@ -236,14 +236,14 @@ public class JobSynchronizer extends AbstractSynchronizer {
 			if (!schedulerCoreService.existsJob(jobDefinition.getName())) {
 				schedulerCoreService.createJob(jobDefinition.getName(), jobDefinition.getGroup(), jobDefinition.getClazz(),
 						jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
-						jobDefinition.isSingleton());
+						jobDefinition.isSingleton(), jobDefinition.getParameters());
 				logger.info("Synchronized a new Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
 			} else {
 				JobDefinition existing = schedulerCoreService.getJob(jobDefinition.getName());
 				if (!jobDefinition.equals(existing)) {
 					schedulerCoreService.updateJob(jobDefinition.getName(), jobDefinition.getGroup(), jobDefinition.getClazz(),
 							jobDefinition.getHandler(), jobDefinition.getEngine(), jobDefinition.getDescription(), jobDefinition.getExpression(),
-							jobDefinition.isSingleton());
+							jobDefinition.isSingleton(), jobDefinition.getParameters());
 					logger.info("Synchronized a modified Job [{}] from group: {}", jobDefinition.getName(), jobDefinition.getGroup());
 				}
 			}

@@ -9,13 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function () {
-	return {
-		"id": "git",
-		"name": "Git",
-		"factory": "frame",
-		"region": "left-top",
-		"label": "Git",
-		"link": "../ide-git/git/git.html"
-	};
+const viewData = {
+	id: "git",
+	factory: "frame",
+	region: "left",
+	label: "Git",
+	link: "../ide-git/git/git.html"
+};
+
+if (typeof exports !== 'undefined') {
+	exports.getView = function () {
+		return viewData;
+	}
 }

@@ -23,6 +23,8 @@
 		<module>resources-themes</module>
 		<module>resources-theme-default</module>
 		<module>resources-theme-fiori</module>
+		<module>resources-theme-quartz-dark</module>
+		<module>resources-theme-quartz-light</module>
 		<module>resources-flowable-libs</module>
 		<module>resources-mxgraph</module>
 	</modules>

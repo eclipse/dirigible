@@ -33,23 +33,22 @@ public class ExtensionsClasspathContentHandler extends AbstractClasspathContentH
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
 
 		try {
 			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSIONPOINT)) {
-				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtensionPoint(path);
+				return true;
 			}
 
 			if (path.endsWith(IExtensionsCoreService.FILE_EXTENSION_EXTENSION)) {
-				isValid = true;
 				extensionsSynchronizer.registerPredeliveredExtension(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Extension Point or Extension is not valid", e);
+			logger.error("Predelivered Extension Point or Extension at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

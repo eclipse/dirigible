@@ -33,22 +33,20 @@ public class SecurityClasspathContentHandler extends AbstractClasspathContentHan
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(ISecurityCoreService.FILE_EXTENSION_ACCESS)) {
-				isValid = true;
 				extensionsSynchronizer.registerPredeliveredAccess(path);
+				return true;
 			}
 			if (path.endsWith(ISecurityCoreService.FILE_EXTENSION_ROLES)) {
-				isValid = true;
 				extensionsSynchronizer.registerPredeliveredRoles(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Security Access or Roles artifact is not valid", e);
+			logger.error("Predelivered Security Access or Roles artifact at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

@@ -34,18 +34,16 @@ public class OpenAPIClasspathContentHandler extends AbstractClasspathContentHand
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IOpenAPICoreService.FILE_EXTENSION_OPENAPI)) {
-				isValid = true;
 				openAPISynchronizer.registerPredeliveredOpenAPI(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered OpenAPI is not valid", e);
+			logger.error("Predelivered OpenAPI at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

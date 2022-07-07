@@ -34,18 +34,16 @@ public class WebClasspathContentHandler extends AbstractClasspathContentHandler 
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(IWebCoreService.FILE_PROJECT_JSON)) {
-				isValid = true;
 				webSynchronizer.registerPredeliveredWeb(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Web is not valid", e);
+			logger.error("Predelivered Web at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

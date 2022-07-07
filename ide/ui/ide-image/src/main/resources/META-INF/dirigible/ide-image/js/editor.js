@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let editorView = angular.module('image-app', []);
+let editorView = angular.module('image-app', ['ideUI', 'ideView']);
 
-editorView.controller('ImageViewController', ['$scope', '$http', function ($scope) {
+editorView.controller('ImageViewController', ['$scope', function ($scope) {
     $scope.imageLink = "";
     $scope.dataLoaded = false;
 
-    function getViewParameters() {
+    $scope.getViewParameters = function () {
         if (window.frameElement.hasAttribute("data-parameters")) {
             let params = JSON.parse(window.frameElement.getAttribute("data-parameters"));
             $scope.file = params["file"];
@@ -25,8 +25,8 @@ editorView.controller('ImageViewController', ['$scope', '$http', function ($scop
         }
     }
 
-    function loadFileContents() {
-        getViewParameters();
+    $scope.loadFileContents = function () {
+        $scope.getViewParameters();
         if ($scope.file) {
             $scope.imageLink = '/services/v4/ide/workspaces' + $scope.file;
             $scope.dataLoaded = true;
@@ -35,6 +35,6 @@ editorView.controller('ImageViewController', ['$scope', '$http', function ($scop
         }
     }
 
-    loadFileContents();
+    $scope.loadFileContents();
 
 }]);

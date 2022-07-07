@@ -20,6 +20,7 @@ import org.eclipse.dirigible.core.git.GitConnectorException;
 import org.eclipse.dirigible.core.git.IGitConnector;
 import org.eclipse.dirigible.core.git.command.CloneCommand;
 import org.eclipse.dirigible.core.git.command.ResetCommand;
+import org.eclipse.dirigible.core.git.model.GitCloneModel;
 import org.eclipse.dirigible.core.test.AbstractDirigibleTest;
 import org.eclipse.dirigible.core.workspace.api.IProject;
 import org.eclipse.dirigible.core.workspace.api.IWorkspace;
@@ -63,15 +64,18 @@ public class ResetComandTest extends AbstractDirigibleTest {
 	public void createWorkspaceTest() throws GitConnectorException {
 		String gitEnabled = System.getenv(GitConnectorTest.DIRIGIBLE_TEST_GIT_ENABLED);
 		if (gitEnabled != null) {
-			String repositoryName = "sample_git_test";
-			cloneCommand.execute("https://github.com/dirigiblelabs/" + repositoryName + ".git", IGitConnector.GIT_MASTER, null, null, "workspace1", true, null);
 			IWorkspace workspace1 = workspacesCoreService.getWorkspace("workspace1");
+			GitCloneModel model = new GitCloneModel();
+			model.setRepository("https://github.com/dirigiblelabs/sample_git_test.git");
+			model.setBranch(IGitConnector.GIT_MASTER);
+			model.setPublish(true);
+			cloneCommand.execute(workspace1, model);
 			assertNotNull(workspace1);
 			assertTrue(workspace1.exists());
 			IProject project1 = workspace1.getProject("project1");
 			assertNotNull(project1);
 			assertTrue(project1.exists());
-			resetCommand.execute(workspace1.getName(), Arrays.asList(repositoryName));
+			resetCommand.execute(workspace1.getName(), Arrays.asList("sample_git_test"));
 		}
 	}
 

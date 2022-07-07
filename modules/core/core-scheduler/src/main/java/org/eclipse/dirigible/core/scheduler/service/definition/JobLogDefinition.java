@@ -12,6 +12,7 @@
 package org.eclipse.dirigible.core.scheduler.service.definition;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The PublishLogDefinition serialization object.
+ * The JobLogDefinition serialization object.
  */
 @Table(name = "DIRIGIBLE_JOB_LOGS")
 public class JobLogDefinition {
@@ -29,6 +30,16 @@ public class JobLogDefinition {
 	public static final short JOB_LOG_STATUS_FINISHED = 1;
 	
 	public static final short JOB_LOG_STATUS_FAILED = -1;
+	
+	public static final short JOB_LOG_STATUS_LOGGED = 2;
+	
+	public static final short JOB_LOG_STATUS_ERROR = 3;
+	
+	public static final short JOB_LOG_STATUS_WARN = 4;
+	
+	public static final short JOB_LOG_STATUS_INFO = 5;
+	
+	public static final short JOB_LOG_STATUS_UNKNOWN = 99;
 
 	/** The id. */
 	@Id
@@ -55,6 +66,7 @@ public class JobLogDefinition {
 	@Column(name = "JOBLOG_FINISHED_AT", columnDefinition = "TIMESTAMP", nullable = true)
 	private Timestamp finishedAt;
 
+	/** The status */
 	@Column(name = "JOBLOG_STATUS", columnDefinition = "SMALLINT", nullable = false)
 	private short status;
 
@@ -191,5 +203,26 @@ public class JobLogDefinition {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(finishedAt, handler, id, message, name, status, triggeredAt, triggeredId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JobLogDefinition other = (JobLogDefinition) obj;
+		return Objects.equals(finishedAt, other.finishedAt) && Objects.equals(handler, other.handler) && id == other.id
+				&& Objects.equals(message, other.message) && Objects.equals(name, other.name) && status == other.status
+				&& Objects.equals(triggeredAt, other.triggeredAt) && triggeredId == other.triggeredId;
+	}
+	
+	
 
 }

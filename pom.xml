@@ -137,7 +137,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.3.2</version>
+						<version>3.4.0</version>
 						<configuration>
 							<source>${java.version}</source>
 						</configuration>
@@ -343,13 +343,13 @@
 					<plugin>
 					  <groupId>com.github.spotbugs</groupId>
 					  <artifactId>spotbugs-maven-plugin</artifactId>
-					  <version>4.5.3.0</version>
+					  <version>4.7.0.0</version>
 					  <dependencies>
 					    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
 					    <dependency>
 					      <groupId>com.github.spotbugs</groupId>
 					      <artifactId>spotbugs</artifactId>
-					      <version>4.5.3</version>
+					      <version>4.7.1</version>
 					    </dependency>
 					  </dependencies>
 					</plugin>
@@ -366,7 +366,7 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.7</version>
+						<version>0.8.8</version>
 						<executions>
 							<execution>
 								<goals>
@@ -407,7 +407,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -420,7 +420,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.3.2</version>
+						<version>3.4.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -685,19 +685,19 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven.resource.plugin.version>3.2.0</maven.resource.plugin.version>
-		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
-		<maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<maven.scm.plugin.version>1.12.2</maven.scm.plugin.version>
+		<maven.scm.plugin.version>1.13.0</maven.scm.plugin.version>
 		<scmVersionType>branch</scmVersionType>
 		<commons.io>2.11.0</commons.io>
 		<commons.codec>1.15</commons.codec>
 		<commons.lang3>3.12.0</commons.lang3>
 		<commons.exec>1.3</commons.exec>
-		<cxf.version>3.5.0</cxf.version>
+		<cxf.version>3.5.3</cxf.version>
 		<gson.version>2.9.0</gson.version>
 		<mockito.version>4.6.1</mockito.version>
 		<powermock-api-mockito2.version>2.0.9</powermock-api-mockito2.version>
@@ -706,12 +706,12 @@
 		<hamcrest.all.version>1.3</hamcrest.all.version>
 		<retrofit.version>1.8.0</retrofit.version>
 		<okhttp.version>2.7.5</okhttp.version>
-		<slf4j.version>1.7.35</slf4j.version>
+		<slf4j.version>1.7.36</slf4j.version>
 		<slf4j.simple.version>1.7.12</slf4j.simple.version>
 		<logback.version>1.2.11</logback.version>
 		<commons-dbcp2.version>2.9.0</commons-dbcp2.version>
 		<h2database.version>2.0.206</h2database.version>
-		<postgresql.version>42.3.3</postgresql.version>
+		<postgresql.version>42.4.0</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
 		<activemq.version>5.17.1</activemq.version>
@@ -725,24 +725,43 @@
 		<jakarta.ws.rs-api.version>2.1.5</jakarta.ws.rs-api.version>
 		<license-maven-plugin.version>4.2.rc3</license-maven-plugin.version>
 		<persistence.api.version>2.2.3</persistence.api.version>
-		<jgit.version>6.0.0.202111291000-r</jgit.version>
+		<jgit.version>6.2.0.202206071550-r</jgit.version>
 		<javax.mail.api.version>1.6.4</javax.mail.api.version>
-		<olingo.version>2.0.11</olingo.version>
+		<olingo.version>2.0.12</olingo.version>
 		<kafka.version>3.2.0</kafka.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
-		<mongodb.version>3.12.7</mongodb.version>
-		<caffeine.version>3.0.5</caffeine.version>
-		<liquibase-core.version>4.7.1</liquibase-core.version>
+		<mongodb.version>3.12.11</mongodb.version>
+		<caffeine.version>3.1.1</caffeine.version>
+		<liquibase-core.version>4.12.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
-		<classgraph.version>4.8.139</classgraph.version>
+		<sap-theming__theming-base-content.version>11.1.40</sap-theming__theming-base-content.version>
+		<fundamental-styles.version>0.24.0</fundamental-styles.version>
+		<angular-aria.version>1.8.2</angular-aria.version>
+		<split.js.version>1.6.5</split.js.version>
+		<diff.version>5.0.0</diff.version>
+		<monaco-editor.version>0.33.0</monaco-editor.version>
+		<requirejs.version>2.3.6</requirejs.version>
+		<jstree.version>3.3.12</jstree.version>
+		<jquery.version>3.6.0</jquery.version>
+		<jqplot.version>1.0.8r1250</jqplot.version>
+		<bootstrap.version>3.3.7</bootstrap.version>
+		<es5-shim.version>4.6.7</es5-shim.version>
+		<angular-file-upload.version>2.6.1</angular-file-upload.version>
+		<angularjs.version>1.8.2</angularjs.version>
+		<fontawesome.version>4.7.0</fontawesome.version>
+		<classgraph.version>4.8.148</classgraph.version>
 		<commons-compress.version>1.21</commons-compress.version>
-		<testcontainers.elasticsearch.version>1.16.3</testcontainers.elasticsearch.version>
-		<logcaptor.version>2.7.8</logcaptor.version>
+		<testcontainers.elasticsearch.version>1.17.3</testcontainers.elasticsearch.version>
+		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
-		<jackson.databind.version>2.13.2.2</jackson.databind.version>
-		<spring.boot.version>2.6.6</spring.boot.version>
-		<webjars-locator>0.30</webjars-locator>
+		<jackson.databind.version>2.13.3</jackson.databind.version>
+		<spring.boot.version>2.7.1</spring.boot.version>
+		<webjars-locator>0.45</webjars-locator>
+		<keycloak-adapter-bom.version>18.0.2</keycloak-adapter-bom.version>
+		<hikaricp.version>5.0.1</hikaricp.version>
+		<validator.version>1.7</validator.version>
+		<quartz.version>2.3.2</quartz.version>
 
 		<profile.content.phase>none</profile.content.phase>
 

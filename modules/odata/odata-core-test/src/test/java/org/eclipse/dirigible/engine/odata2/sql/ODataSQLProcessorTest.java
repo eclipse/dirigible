@@ -235,7 +235,7 @@ public class ODataSQLProcessorTest extends AbstractSQLProcessorTest {
                 .accept("application/json")//
                 .content(content).param("content-type", "application/json")//
                 .contentSize(content.length()).executeRequest(POST);
-        assertEquals(500, response.getStatus());
+        assertEquals(201, response.getStatus());
     }
 
     @Test

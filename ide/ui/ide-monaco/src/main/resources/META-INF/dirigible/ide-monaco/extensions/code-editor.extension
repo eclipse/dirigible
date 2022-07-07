@@ -1,0 +1,5 @@
+{
+    "module": "ide-monaco/services/editor-view.js",
+    "extensionPoint": "ide-editor",
+    "description": "Code Editor"
+}

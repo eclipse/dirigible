@@ -15,99 +15,122 @@
 var FLOWABLE = FLOWABLE || {};
 FLOWABLE.TOOLBAR = {
     ACTIONS: {
-    	
+
         saveModel: function (services) {
 
 
 
-			// --- workaround for saving silently starts here
-			var saveSilently = function ($http, model, modelMetaData, editorManager) {
-		
-				var csrfToken = null;
-				$http.get("", {headers: {"X-CSRF-Token": "Fetch"}}).success(function(data, statusCode, headers) {
-					csrfToken = headers()["x-csrf-token"];
-				});
+            // --- workaround for saving silently starts here
+            var saveSilently = function ($http, model, modelMetaData, editorManager) {
 
-		        var json = model;
-		
-		        var params = {
-		            modeltype: modelMetaData.model.modelType,
-		            json_xml: JSON.stringify(json),
-		            name: model.properties.name,
-		            key: model.properties.process_id,
-		            lastUpdated: modelMetaData.lastUpdated
-		        };
-		
-		        // Update
-		        $http({    method: 'POST',
-		            data: params,
-		            ignoreErrors: true,
-		            headers: {
-		            	'Accept': 'application/json',
-		            	'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-		            	'X-Requested-With': 'Fetch',
-		            	'X-CSRF-Token': csrfToken
-		            },
-		            transformRequest: function (obj) {
-		                var str = [];
-		                for (var p in obj) {
-		                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-		                }
-		                return str.join("&");
-		            },
-		            url: FLOWABLE.URL.putModel(modelMetaData.modelId)})
-		
-		            .success(function (data, status, headers, config) {
-		                console.info(modelMetaData.modelId + ' saved successfully');
-		                // Fire event to all who is listening
-		                
-		                editorManager.handleEvents({
-		                    type: ORYX.CONFIG.EVENT_SAVED
-		                });
-		                
-		                var saveEvent = {
-		                    type: FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED,
-		                    model: params,
-		                    modelId: modelMetaData.modelId,
-				            eventType: 'update-model'
-		                };
-		                FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
-		                window.messageHub.post({data: modelMetaData.modelId}, 'editor.file.saved');
-			            window.messageHub.post({data: 'File [' + modelMetaData.modelId + '] saved.'}, 'status.message');
-		            })
-		            .error(function (data, status, headers, config) {
-		                if (status === 409) {
-		                	console.error(data.message);
-		                } else {
-		                	console.error(data.message);
-		                }
-		            });
-		    };
+                var csrfToken = null;
+                $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).success(function (data, statusCode, headers) {
+                    csrfToken = headers()["x-csrf-token"];
+                });
 
-			saveSilently(services.$http, services.editorManager.getModel(), services.$rootScope.modelData, services.editorManager);
-			// --- workaround for saving silently ends here
-			
+                var json = model;
 
-			// original code below
-//            _internalCreateModal({
-//                backdrop: true,
-//                keyboard: true,
-//                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
-//                scope: services.$scope
-//            }, services.$modal, services.$scope);
-//            
-            
+                var params = {
+                    modeltype: modelMetaData.model.modelType,
+                    json_xml: JSON.stringify(json),
+                    name: model.properties.name,
+                    key: model.properties.process_id,
+                    lastUpdated: modelMetaData.lastUpdated
+                };
+
+                // Update
+                $http({
+                    method: 'POST',
+                    data: params,
+                    ignoreErrors: true,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-Requested-With': 'Fetch',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        }
+                        return str.join("&");
+                    },
+                    url: FLOWABLE.URL.putModel(modelMetaData.modelId)
+                })
+
+                    .success(function (data, status, headers, config) {
+                        console.info(modelMetaData.modelId + ' saved successfully');
+                        // Fire event to all who is listening
+
+                        editorManager.handleEvents({
+                            type: ORYX.CONFIG.EVENT_SAVED
+                        });
+
+                        var saveEvent = {
+                            type: FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED,
+                            model: params,
+                            modelId: modelMetaData.modelId,
+                            eventType: 'update-model'
+                        };
+                        FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
+                        window.messageHub.post({
+                            name: modelMetaData.modelId.substring(modelMetaData.modelId.lastIndexOf('/') + 1),
+                            path: modelMetaData.modelId.substring(modelMetaData.modelId.indexOf('/', 1)),
+                            contentType: 'application/bpmn+xml', // TODO: Take this from data-parameters
+                            workspace: modelMetaData.modelId.substring(0, modelMetaData.modelId.indexOf('/', 1)),
+                        }, 'ide.file.saved');
+                        window.messageHub.post({ message: `File '${modelMetaData.modelId}' saved` }, 'ide.status.message');
+                    })
+                    .error(function (data, status, headers, config) {
+                        if (status === 409) {
+                            console.error(data.message);
+                        } else {
+                            console.error(data.message);
+                        }
+                    });
+            };
+
+            messageHub.subscribe(
+                function () {
+                    saveSilently(services.$http, services.editorManager.getModel(), services.$rootScope.modelData, services.editorManager);
+                },
+                "editor.file.save.all"
+            );
+
+            messageHub.subscribe(
+                function (msg) {
+                    let file = msg.data && typeof msg.data === 'object' && msg.data.file;
+                    if (file && file === services.$rootScope.modelData.modelId)
+                        saveSilently(services.$http, services.editorManager.getModel(), services.$rootScope.modelData, services.editorManager);
+                },
+                "editor.file.save"
+            );
+
+            saveSilently(services.$http, services.editorManager.getModel(), services.$rootScope.modelData, services.editorManager);
+            // --- workaround for saving silently ends here
+
+
+            // original code below
+            //            _internalCreateModal({
+            //                backdrop: true,
+            //                keyboard: true,
+            //                template: 'editor-app/popups/save-model.html?version=' + Date.now(),
+            //                scope: services.$scope
+            //            }, services.$modal, services.$scope);
+            //            
+
         },
-        
-        validate: function(services) {
-        	
-        	_internalCreateModal({
+
+        validate: function (services) {
+
+            _internalCreateModal({
                 backdrop: true,
                 keyboard: true,
                 template: 'editor-app/popups/validate-model.html?version=' + Date.now(),
                 scope: services.$scope
             }, services.$modal, services.$scope);
-		},
+        },
 
         undo: function (services) {
 
@@ -120,37 +143,34 @@ FLOWABLE.TOOLBAR = {
 
                 // Force refresh of selection, might be that the undo command
                 // impacts properties in the selected item
-                if (services.$rootScope && services.$rootScope.forceSelectionRefresh) 
-                {
-                	services.$rootScope.forceSelectionRefresh = true;
+                if (services.$rootScope && services.$rootScope.forceSelectionRefresh) {
+                    services.$rootScope.forceSelectionRefresh = true;
                 }
-                
+
                 // Rollback every command
                 for (var i = lastCommands.length - 1; i >= 0; --i) {
                     lastCommands[i].rollback();
                 }
-                
+
                 // Update and refresh the canvas
                 services.editorManager.handleEvents({
                     type: ORYX.CONFIG.EVENT_UNDO_ROLLBACK,
                     commands: lastCommands
                 });
-                
+
                 // Update
                 services.editorManager.getCanvas().update();
                 services.editorManager.updateSelection();
             }
-            
+
             var toggleUndo = false;
-            if (services.$scope.undoStack.length == 0)
-            {
-            	toggleUndo = true;
+            if (services.$scope.undoStack.length == 0) {
+                toggleUndo = true;
             }
-            
+
             var toggleRedo = false;
-            if (services.$scope.redoStack.length > 0)
-            {
-            	toggleRedo = true;
+            if (services.$scope.redoStack.length > 0) {
+                toggleRedo = true;
             }
 
             if (toggleUndo || toggleRedo) {
@@ -178,12 +198,11 @@ FLOWABLE.TOOLBAR = {
             if (lastCommands) {
                 // Add this commands to the undo stack
                 services.$scope.undoStack.push(lastCommands);
-                
+
                 // Force refresh of selection, might be that the redo command
                 // impacts properties in the selected item
-                if (services.$rootScope && services.$rootScope.forceSelectionRefresh) 
-                {
-                	services.$rootScope.forceSelectionRefresh = true;
+                if (services.$rootScope && services.$rootScope.forceSelectionRefresh) {
+                    services.$rootScope.forceSelectionRefresh = true;
                 }
 
                 // Execute those commands
@@ -270,14 +289,12 @@ FLOWABLE.TOOLBAR = {
 
             var enableAdd = !dockerPlugin.enabledAdd();
             dockerPlugin.setEnableAdd(enableAdd);
-            if (enableAdd)
-            {
-            	dockerPlugin.setEnableRemove(false);
-            	document.body.style.cursor = 'pointer';
+            if (enableAdd) {
+                dockerPlugin.setEnableRemove(false);
+                document.body.style.cursor = 'pointer';
             }
-            else
-            {
-            	document.body.style.cursor = 'default';
+            else {
+                document.body.style.cursor = 'default';
             }
         },
 
@@ -290,14 +307,12 @@ FLOWABLE.TOOLBAR = {
 
             var enableRemove = !dockerPlugin.enabledRemove();
             dockerPlugin.setEnableRemove(enableRemove);
-            if (enableRemove)
-            {
-            	dockerPlugin.setEnableAdd(false);
-            	document.body.style.cursor = 'pointer';
+            if (enableRemove) {
+                dockerPlugin.setEnableAdd(false);
+                document.body.style.cursor = 'pointer';
             }
-            else
-            {
-            	document.body.style.cursor = 'default';
+            else {
+                document.body.style.cursor = 'default';
             }
         },
 
@@ -309,8 +324,8 @@ FLOWABLE.TOOLBAR = {
          * as the clipboard is stored for the whole lifetime of the scope.
          */
         _getOryxEditPlugin: function (services) {
-        	var $scope = services.$scope;
-			var editorManager = services.editorManager;
+            var $scope = services.$scope;
+            var editorManager = services.editorManager;
             if ($scope.oryxEditPlugin === undefined || $scope.oryxEditPlugin === null) {
                 $scope.oryxEditPlugin = new ORYX.Plugins.Edit(editorManager.getEditor());
             }
@@ -324,47 +339,47 @@ FLOWABLE.TOOLBAR = {
         zoomOut: function (services) {
             FLOWABLE.TOOLBAR.ACTIONS._getOryxViewPlugin(services).zoom([1.0 - ORYX.CONFIG.ZOOM_OFFSET]);
         },
-        
+
         zoomActual: function (services) {
             FLOWABLE.TOOLBAR.ACTIONS._getOryxViewPlugin(services).setAFixZoomLevel(1);
         },
-        
+
         zoomFit: function (services) {
-        	FLOWABLE.TOOLBAR.ACTIONS._getOryxViewPlugin(services).zoomFitToModel();
+            FLOWABLE.TOOLBAR.ACTIONS._getOryxViewPlugin(services).zoomFitToModel();
         },
-        
+
         alignVertical: function (services) {
-        	FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_CENTER]);
+            FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_CENTER]);
         },
-        
+
         alignHorizontal: function (services) {
-        	FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_MIDDLE]);
+            FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_MIDDLE]);
         },
-        
+
         sameSize: function (services) {
-        	FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_SIZE]);
+            FLOWABLE.TOOLBAR.ACTIONS._getOryxArrangmentPlugin(services).alignShapes([ORYX.CONFIG.EDITOR_ALIGN_SIZE]);
         },
 
         help: function (services) {
             FLOWABLE_EDITOR_TOUR.gettingStarted(services.$scope, services.$translate, services.$q);
         },
-        
+
         /**
          * Helper method: fetches the Oryx View plugin from the provided scope,
          * if not on the scope, it is created and put on the scope for further use.
          */
         _getOryxViewPlugin: function (services) {
-        	var $scope = services.$scope;
-			var editorManager = services.editorManager;
+            var $scope = services.$scope;
+            var editorManager = services.editorManager;
             if ($scope.oryxViewPlugin === undefined || $scope.oryxViewPlugin === null) {
                 $scope.oryxViewPlugin = new ORYX.Plugins.View(editorManager.getEditor());
             }
             return $scope.oryxViewPlugin;
         },
-        
+
         _getOryxArrangmentPlugin: function (services) {
-        	var $scope = services.$scope;
-			var editorManager = services.editorManager;
+            var $scope = services.$scope;
+            var editorManager = services.editorManager;
             if ($scope.oryxArrangmentPlugin === undefined || $scope.oryxArrangmentPlugin === null) {
                 $scope.oryxArrangmentPlugin = new ORYX.Plugins.Arrangement(editorManager.getEditor());
             }
@@ -372,8 +387,8 @@ FLOWABLE.TOOLBAR = {
         },
 
         _getOryxDockerPlugin: function (services) {
-        	var $scope = services.$scope;
-			var editorManager = services.editorManager;
+            var $scope = services.$scope;
+            var editorManager = services.editorManager;
             if ($scope.oryxDockerPlugin === undefined || $scope.oryxDockerPlugin === null) {
                 $scope.oryxDockerPlugin = new ORYX.Plugins.AddDocker(editorManager.getEditor());
             }
@@ -384,192 +399,61 @@ FLOWABLE.TOOLBAR = {
 
 /** Custom controller for the save dialog */
 angular
-.module('flowableModeler')
-.factory('httpRequestInterceptor', function () {
-	var csrfToken = null;
-	return {
-		request: function (config) {
-			config.headers['X-Requested-With'] = 'Fetch';
-			config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
-			return config;
-		},
-		response: function(response) {
-			var token = response.headers()['x-csrf-token'];
-			if (token) {
-				csrfToken = token;
-			}
-			return response;
-		}
-	};
-})
-.config(['$httpProvider', function($httpProvider) {
-	$httpProvider.interceptors.push('httpRequestInterceptor');
-}])
-.controller('SaveModelCtrl', [ '$rootScope', '$scope', '$http', '$route', '$location', 'editorManager',
-    function ($rootScope, $scope, $http, $route, $location, editorManager) {
-
-	if (editorManager.getCurrentModelId() != editorManager.getModelId()) {
-		editorManager.edit(editorManager.getModelId());
-	}
-	
-    var modelMetaData = editorManager.getBaseModelData();
-
-    var description = '';
-    if (modelMetaData.description) {
-    	description = modelMetaData.description;
-    }
-    
-    var saveDialog = { 
-    	'name' : modelMetaData.name,
-    	'key' : modelMetaData.key,
-        'description' : description,
-        'newVersion' : false,
-        'comment' : ''
-    };
-    
-    $scope.saveDialog = saveDialog;
-    
-    $scope.status = {
-        loading: false
-    };
-
-    $scope.close = function () {
-    	$scope.$hide();
-    };
-
-    $scope.saveAndClose = function () {
-    	$scope.save(function() {
-            if (editorManager.getStencilData()) {
-                var stencilNameSpace = editorManager.getStencilData().namespace;
-                if (stencilNameSpace !== undefined && stencilNameSpace !== null && stencilNameSpace.indexOf('cmmn1.1') !== -1) {
-                    $location.path("/casemodels");
-                	return;
-            	}
-        	}
-        	$location.path('/processes');
-    	});
-    };
-    
-    $scope.save = function (successCallback) {
-        if (!$scope.saveDialog.name || $scope.saveDialog.name.length == 0 ||
-        	!$scope.saveDialog.key || $scope.saveDialog.key.length == 0) {
-        	
-            return;
-        }
-
-        // Indicator spinner image
-        $scope.status = {
-        	loading: true
-        };
-        
-        modelMetaData.name = $scope.saveDialog.name;
-        modelMetaData.key = $scope.saveDialog.key;
-        modelMetaData.description = $scope.saveDialog.description;
-
-        var json = editorManager.getModel();
-
-        var params = {
-            modeltype: modelMetaData.model.modelType,
-            json_xml: JSON.stringify(json),
-            name: $scope.saveDialog.name,
-            key: $scope.saveDialog.key,
-            description: $scope.saveDialog.description,
-            newversion: $scope.saveDialog.newVersion,
-            comment: $scope.saveDialog.comment,
-            lastUpdated: modelMetaData.lastUpdated
-        };
-
-        if ($scope.error && $scope.error.isConflict) {
-            params.conflictResolveAction = $scope.error.conflictResolveAction;
-            if ($scope.error.conflictResolveAction === 'saveAs') {
-                params.saveAs = $scope.error.saveAs;
-            }
-        }
-
-        // Update
-        $http({    method: 'POST',
-            data: params,
-            ignoreErrors: true,
-            headers: {'Accept': 'application/json',
-                      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-            transformRequest: function (obj) {
-                var str = [];
-                for (var p in obj) {
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                }
-                return str.join("&");
+    .module('flowableModeler')
+    .factory('httpRequestInterceptor', function () {
+        var csrfToken = null;
+        return {
+            request: function (config) {
+                config.headers['X-Requested-With'] = 'Fetch';
+                config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
+                return config;
             },
-            url: FLOWABLE.URL.putModel(modelMetaData.modelId)})
-
-            .success(function (data, status, headers, config) {
-                editorManager.handleEvents({
-                    type: ORYX.CONFIG.EVENT_SAVED
-                });
-                $scope.modelData.name = $scope.saveDialog.name;
-                $scope.modelData.key = $scope.saveDialog.key;
-                $scope.modelData.lastUpdated = data.lastUpdated;
-                
-                $scope.status.loading = false;
-                $scope.$hide();
-
-                // Fire event to all who is listening
-                var saveEvent = {
-                    type: FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED,
-                    model: params,
-                    modelId: modelMetaData.modelId,
-		            eventType: 'update-model'
-                };
-                FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
-
-                // Reset state
-                $scope.error = undefined;
-                $scope.status.loading = false;
-
-                // Execute any callback
-                if (successCallback) {
-                    successCallback();
+            response: function (response) {
+                var token = response.headers()['x-csrf-token'];
+                if (token) {
+                    csrfToken = token;
                 }
-
-            })
-            .error(function (data, status, headers, config) {
-                if (status == 409) {
-                	$scope.error = {};
-                    $scope.error.isConflict = true;
-                    $scope.error.userFullName = data.customData.userFullName;
-                    $scope.error.isNewVersionAllowed = data.customData.newVersionAllowed;
-                    $scope.error.saveAs = modelMetaData.name + "_2";
-                } else {
-                	$scope.error = undefined;
-                    $scope.saveDialog.errorMessage = data.message;
-                }
-                $scope.status.loading = false;
-            });
-    };
-
-    $scope.isOkButtonDisabled = function() {
-        if ($scope.status.loading) {
-            return false;
-        } else if ($scope.error && $scope.error.conflictResolveAction) {
-            if ($scope.error.conflictResolveAction === 'saveAs') {
-                return !$scope.error.saveAs || $scope.error.saveAs.length == 0;
-            } else {
-                return false;
+                return response;
             }
-        }
-        return true;
-    };
+        };
+    })
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push('httpRequestInterceptor');
+    }])
+    .controller('SaveModelCtrl', ['$rootScope', '$scope', '$http', '$route', '$location', 'editorManager',
+        function ($rootScope, $scope, $http, $route, $location, editorManager) {
 
-    $scope.okClicked = function() {
-        if ($scope.error) {
-            if ($scope.error.conflictResolveAction === 'discardChanges') {
-                $scope.close();
-                $route.reload();
-            } else if ($scope.error.conflictResolveAction === 'overwrite'
-                || $scope.error.conflictResolveAction === 'newVersion') {
-                $scope.save();
-            } else if($scope.error.conflictResolveAction === 'saveAs') {
-                $scope.save(function() {
-                    $rootScope.ignoreChanges = true;  // Otherwise will get pop up that changes are not saved.
+            if (editorManager.getCurrentModelId() != editorManager.getModelId()) {
+                editorManager.edit(editorManager.getModelId());
+            }
+
+            var modelMetaData = editorManager.getBaseModelData();
+
+            var description = '';
+            if (modelMetaData.description) {
+                description = modelMetaData.description;
+            }
+
+            var saveDialog = {
+                'name': modelMetaData.name,
+                'key': modelMetaData.key,
+                'description': description,
+                'newVersion': false,
+                'comment': ''
+            };
+
+            $scope.saveDialog = saveDialog;
+
+            $scope.status = {
+                loading: false
+            };
+
+            $scope.close = function () {
+                $scope.$hide();
+            };
+
+            $scope.saveAndClose = function () {
+                $scope.save(function () {
                     if (editorManager.getStencilData()) {
                         var stencilNameSpace = editorManager.getStencilData().namespace;
                         if (stencilNameSpace !== undefined && stencilNameSpace !== null && stencilNameSpace.indexOf('cmmn1.1') !== -1) {
@@ -578,71 +462,206 @@ angular
                         }
                     }
                     $location.path('/processes');
-            	});
-            }
-        }
-    };
+                });
+            };
 
-}]);
+            $scope.save = function (successCallback) {
+                if (!$scope.saveDialog.name || $scope.saveDialog.name.length == 0 ||
+                    !$scope.saveDialog.key || $scope.saveDialog.key.length == 0) {
 
-angular.module('flowableModeler').controller('ValidateModelCtrl',['$scope', '$http', 'editorManager',
+                    return;
+                }
+
+                // Indicator spinner image
+                $scope.status = {
+                    loading: true
+                };
+
+                modelMetaData.name = $scope.saveDialog.name;
+                modelMetaData.key = $scope.saveDialog.key;
+                modelMetaData.description = $scope.saveDialog.description;
+
+                var json = editorManager.getModel();
+
+                var params = {
+                    modeltype: modelMetaData.model.modelType,
+                    json_xml: JSON.stringify(json),
+                    name: $scope.saveDialog.name,
+                    key: $scope.saveDialog.key,
+                    description: $scope.saveDialog.description,
+                    newversion: $scope.saveDialog.newVersion,
+                    comment: $scope.saveDialog.comment,
+                    lastUpdated: modelMetaData.lastUpdated
+                };
+
+                if ($scope.error && $scope.error.isConflict) {
+                    params.conflictResolveAction = $scope.error.conflictResolveAction;
+                    if ($scope.error.conflictResolveAction === 'saveAs') {
+                        params.saveAs = $scope.error.saveAs;
+                    }
+                }
+
+                // Update
+                $http({
+                    method: 'POST',
+                    data: params,
+                    ignoreErrors: true,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+                    transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj) {
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        }
+                        return str.join("&");
+                    },
+                    url: FLOWABLE.URL.putModel(modelMetaData.modelId)
+                })
+
+                    .success(function (data, status, headers, config) {
+                        editorManager.handleEvents({
+                            type: ORYX.CONFIG.EVENT_SAVED
+                        });
+                        $scope.modelData.name = $scope.saveDialog.name;
+                        $scope.modelData.key = $scope.saveDialog.key;
+                        $scope.modelData.lastUpdated = data.lastUpdated;
+
+                        $scope.status.loading = false;
+                        $scope.$hide();
+
+                        // Fire event to all who is listening
+                        var saveEvent = {
+                            type: FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED,
+                            model: params,
+                            modelId: modelMetaData.modelId,
+                            eventType: 'update-model'
+                        };
+                        FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
+
+                        // Reset state
+                        $scope.error = undefined;
+                        $scope.status.loading = false;
+
+                        // Execute any callback
+                        if (successCallback) {
+                            successCallback();
+                        }
+
+                    })
+                    .error(function (data, status, headers, config) {
+                        if (status == 409) {
+                            $scope.error = {};
+                            $scope.error.isConflict = true;
+                            $scope.error.userFullName = data.customData.userFullName;
+                            $scope.error.isNewVersionAllowed = data.customData.newVersionAllowed;
+                            $scope.error.saveAs = modelMetaData.name + "_2";
+                        } else {
+                            $scope.error = undefined;
+                            $scope.saveDialog.errorMessage = data.message;
+                        }
+                        $scope.status.loading = false;
+                    });
+            };
+
+            $scope.isOkButtonDisabled = function () {
+                if ($scope.status.loading) {
+                    return false;
+                } else if ($scope.error && $scope.error.conflictResolveAction) {
+                    if ($scope.error.conflictResolveAction === 'saveAs') {
+                        return !$scope.error.saveAs || $scope.error.saveAs.length == 0;
+                    } else {
+                        return false;
+                    }
+                }
+                return true;
+            };
+
+            $scope.okClicked = function () {
+                if ($scope.error) {
+                    if ($scope.error.conflictResolveAction === 'discardChanges') {
+                        $scope.close();
+                        $route.reload();
+                    } else if ($scope.error.conflictResolveAction === 'overwrite'
+                        || $scope.error.conflictResolveAction === 'newVersion') {
+                        $scope.save();
+                    } else if ($scope.error.conflictResolveAction === 'saveAs') {
+                        $scope.save(function () {
+                            $rootScope.ignoreChanges = true;  // Otherwise will get pop up that changes are not saved.
+                            if (editorManager.getStencilData()) {
+                                var stencilNameSpace = editorManager.getStencilData().namespace;
+                                if (stencilNameSpace !== undefined && stencilNameSpace !== null && stencilNameSpace.indexOf('cmmn1.1') !== -1) {
+                                    $location.path("/casemodels");
+                                    return;
+                                }
+                            }
+                            $location.path('/processes');
+                        });
+                    }
+                }
+            };
+
+        }]);
+
+angular.module('flowableModeler').controller('ValidateModelCtrl', ['$scope', '$http', 'editorManager',
     function ($scope, $http, editorManager) {
-    
+
         var editor = editorManager.getEditor();
         var model = editorManager.getModel();
-        
+
         $scope.status = {
             loading: true
         };
 
         $scope.model = {
-        	errors: []
+            errors: []
         };
-        
+
         $scope.errorGrid = {
             data: $scope.model.errors,
             headerRowHeight: 28,
-        	enableRowSelection: true,
-        	enableRowHeaderSelection: false,
-        	multiSelect: false,
-        	modifierKeysToMultiSelect: false,
-        	enableHorizontalScrollbar: 0,
-			enableColumnMenus: false,
-			enableSorting: false,
+            enableRowSelection: true,
+            enableRowHeaderSelection: false,
+            multiSelect: false,
+            modifierKeysToMultiSelect: false,
+            enableHorizontalScrollbar: 0,
+            enableColumnMenus: false,
+            enableSorting: false,
             columnDefs: [
-                {field: 'activityName', displayName: 'Name', width:125},
-                {field: 'defaultDescription', displayName: 'Description'},
-                {field: 'warning', displayName: 'Critical', cellTemplate:'editor-app/configuration/properties/errorgrid-critical.html', width: 100}
+                { field: 'activityName', displayName: 'Name', width: 125 },
+                { field: 'defaultDescription', displayName: 'Description' },
+                { field: 'warning', displayName: 'Critical', cellTemplate: 'editor-app/configuration/properties/errorgrid-critical.html', width: 100 }
             ]
         };
-        
-        $scope.errorGrid.onRegisterApi = function(gridApi) {
-	        //set gridApi on scope
-	        $scope.gridApi = gridApi;
-	        gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-	            if (row.isSelected) {
-	                editorManager.navigateTo(row.entity.activityId);
-            		$scope.$hide();
-	            }
-	        });
-	    };
+
+        $scope.errorGrid.onRegisterApi = function (gridApi) {
+            //set gridApi on scope
+            $scope.gridApi = gridApi;
+            gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                if (row.isSelected) {
+                    editorManager.navigateTo(row.entity.activityId);
+                    $scope.$hide();
+                }
+            });
+        };
 
         $http({
             url: FLOWABLE.URL.validateModel(),
             method: 'POST',
             cache: false,
             headers: {
-                "Content-Type":"application/json;charset=utf-8"
+                "Content-Type": "application/json;charset=utf-8"
             },
             data: model
-            
-        }).then(function(response){
-        	$scope.status.loading = false;
+
+        }).then(function (response) {
+            $scope.status.loading = false;
             response.data.forEach(function (row) {
                 $scope.model.errors.push(row);
             });
-            
-        },function(response){
+
+        }, function (response) {
             console.log(response);
         });
     }

@@ -33,18 +33,16 @@ public class JobClasspathContentHandler extends AbstractClasspathContentHandler 
 	 */
 	@Override
 	protected boolean isValid(String path) {
-		boolean isValid = false;
-
 		try {
 			if (path.endsWith(ISchedulerCoreService.FILE_EXTENSION_JOB)) {
-				isValid = true;
 				jobSynchronizer.registerPredeliveredJob(path);
+				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Job is not valid", e);
+			logger.error("Predelivered Job at path [" + path + "] is not valid", e);
 		}
 
-		return isValid;
+		return false;
 	}
 
 	/*

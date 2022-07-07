@@ -42,7 +42,7 @@ public class ResetCommand {
 	 *            the workspace
 	 * @param repositories
 	 *            the repositories
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	public void execute(String workspace, List<String> repositories) throws GitConnectorException {
 		if (repositories.size() == 0) {
@@ -68,7 +68,7 @@ public class ResetCommand {
 	 *            the workspace
 	 * @param repositoryName
 	 *            the project
-	 * @throws GitConnectorException 
+	 * @throws GitConnectorException in case of exception
 	 */
 	private void hardReset(String workspace, String repositoryName) throws GitConnectorException {
 		String errorMessage = String.format("Error occurred while hard reseting repository [%s].", repositoryName);

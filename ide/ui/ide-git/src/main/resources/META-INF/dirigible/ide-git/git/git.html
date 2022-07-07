@@ -130,13 +130,6 @@
                             required="required">
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-xs-3 col-form-label">Project Name</label>
-                    <div class="col-xs-5">
-                        <input class="form-control" type="text" placeholder="myproject (for bare repository)"
-                            ng-model="workspace.projectName" required="required">
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" ng-click="workspace.okClone()" data-toggle="modal"
@@ -428,6 +421,10 @@
                             <input class="form-control" type="text" placeholder="" ng-model="workspace.email"
                                 required="required">
                         </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-3 col-form-label">Root project</label>
+                        <input type="checkbox" value="" ng-model="workspace.shareInRootFolder">
                     </div>
                 </form>
             </div>

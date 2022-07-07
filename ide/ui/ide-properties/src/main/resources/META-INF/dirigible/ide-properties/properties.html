@@ -9,7 +9,8 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="properties" ng-controller="PropertiesController">
+
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -17,76 +18,52 @@
 
     <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
 
-    <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Title directive -->
+    <title dg-view-title></title>
 
-    <!-- jQuery -->
-    <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+    <!-- View data -->
+    <script type="text/javascript" src="/services/v4/web/ide-properties/services/properties-view.js"></script>
 
-    <!-- Twitter Bootstrap with Theme Support -->
-    <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css" />
-    <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
 
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+    <theme></theme>
 
     <style>
-      body {
-        margin: 5px;
+      strong {
+        text-transform: capitalize;
       }
+
     </style>
 
-    <!-- Custom IDE Styles -->
-    <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-
-    <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
   </head>
 
-  <body ng-app="properties" ng-controller="PropertiesController as propsVm">
-    <div class="striped-container">
-      <div class="row striped-item" ng-repeat="(key, value) in propsVm.properties">
-        <div class="key">{{key}}</div>
-        <div class="value">{{value}}</div>
-      </div>
-    </div>
+  <body>
+    <table fd-table outer-borders="horizontal" display-mode="compact">
+      <thead fd-table-header>
+        <tr fd-table-row></tr>
+      </thead>
+      <tbody fd-table-body>
+        <tr fd-table-row ng-repeat="(key, value) in properties">
+          <td fd-table-cell><strong>{{ key }}</strong></td>
+          <td fd-table-cell>{{ value }}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <script>
-      angular
-        .module("properties", [])
-        .factory("$messageHub", [
-          function () {
-            let messageHub = new FramesMessageHub();
-            let message = function (evtName, data) {
-              messageHub.post({ data: data }, "properties." + evtName);
-            };
-            let on = function (topic, callback) {
-              messageHub.subscribe(callback, topic);
-            };
-            return {
-              message: message,
-              on: on,
-            };
-          },
-        ])
-        .controller("PropertiesController", [
-          "$scope",
-          "$http",
-          "$messageHub",
-          function ($scope, $http, $messageHub) {
-            this.properties;
-            $messageHub.on(
-              "workspace.file.selected",
-              function (f) {
-                this.properties = f.data;
-                for (let prop in f.data) {
-                  if (Array.isArray(f.data[prop])) {
-                    f.data[prop] = f.data[prop].length;
-                  }
-                }
-                $scope.$apply();
-              }.bind(this)
-            );
-          },
-        ]);
+      const propertiesView = angular.module("properties", ['ideUI', 'ideView']);
+
+      propertiesView.controller("PropertiesController", ["$scope", "messageHub", function ($scope, messageHub) {        
+        $scope.properties = {};
+        messageHub.onFileSelected(function (fileDescriptor) {
+          $scope.$apply(function () {
+            const {topic, ...props} = fileDescriptor;
+            $scope.properties = props;
+          });
+        });
+      }]);
     </script>
   </body>
+
 </html>

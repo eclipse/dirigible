@@ -1,10 +1,10 @@
 {
-  "realm": "${env.KEYCLOAK_REALM}",
-  "auth-server-url": "${env.KEYCLOAK_AUTH_SERVER_URL}",
-  "ssl-required": "${env.KEYCLOAK_SSL_REQUIRED}",
-  "resource": "${env.KEYCLOAK_CLIENT_ID}",
+  "realm": "${env.DIRIGIBLE_KEYCLOAK_REALM}",
+  "auth-server-url": "${env.DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL}",
+  "ssl-required": "${env.DIRIGIBLE_KEYCLOAK_SSL_REQUIRED}",
+  "resource": "${env.DIRIGIBLE_KEYCLOAK_CLIENT_ID}",
   "public-client": true,
   "principal-attribute": "preferred_username",
-  "confidential-port": "${env.KEYCLOAK_CONFIDENTIAL_PORT}",
+  "confidential-port": "${env.DIRIGIBLE_KEYCLOAK_CONFIDENTIAL_PORT}",
   "use-resource-role-mappings": true
 }

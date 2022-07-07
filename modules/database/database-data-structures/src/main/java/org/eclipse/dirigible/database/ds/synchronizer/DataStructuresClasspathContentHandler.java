@@ -39,7 +39,7 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 				dataStructuresSynchronizer.registerPredeliveredSchema(path);
 				return true;
 			}
-			
+
 			if (path.endsWith(IDataStructureModel.FILE_EXTENSION_TABLE)) {
 				dataStructuresSynchronizer.registerPredeliveredTable(path);
 				return true;
@@ -70,7 +70,7 @@ public class DataStructuresClasspathContentHandler extends AbstractClasspathCont
 				return true;
 			}
 		} catch (IOException e) {
-			logger.error("Predelivered Table or View is not valid", e);
+			logger.error("Predelivered Data Structure at path [" + path + "] is not valid", e);
 		}
 
 		return false;
