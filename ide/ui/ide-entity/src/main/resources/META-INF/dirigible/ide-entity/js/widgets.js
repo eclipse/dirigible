@@ -71,7 +71,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 
 			let columnCount = graph.model.getChildCount(parent) + 1;
 			//showPrompt('Enter name for new property', 'property'+columnCount, createNode);
-			createNode('property' + columnCount, parent.style === 'projection', parent.style === 'extension');
+			createNode('property' + columnCount, prototype.style === 'copied', parent.style === 'projection', parent.style === 'extension');
 		} else {
 			let entitiesCount = 0;
 			let childCount = graph.model.getChildCount(parent);
@@ -82,7 +82,12 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 				}
 			}
 			//showPrompt('Enter name for new entity', 'Entity'+(entitiesCount+1), createNode);
-			createNode('Entity' + (entitiesCount + 1), prototype.style === 'projection', prototype.style === 'extension');
+			createNode('Entity' + (entitiesCount + 1), prototype.style === 'copied', prototype.style === 'projection', prototype.style === 'extension');
+
+			if (prototype.style === 'copied') {
+				$scope.$cell = graph.getSelectionCell();
+				openCopiedEntity('Drop', 'Will be creating a Copy of an Entity', $scope, graph);
+			}
 
 			if (prototype.style === 'projection') {
 				$scope.$cell = graph.getSelectionCell();
@@ -95,7 +100,7 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 			}
 		}
 
-		function createNode(name, isProjection, isExtension) {
+		function createNode(name, isCopy, isProjection, isExtension) {
 			if (name !== null) {
 				let v1 = model.cloneCell(prototype);
 
@@ -111,6 +116,11 @@ function addSidebarIcon(graph, sidebar, prototype, image, hint, $scope) {
 					}
 					if (!isEntity && isExtension) {
 						v1.style = 'extensionproperty';
+					}
+
+					if (isEntity && isCopy) {
+						v1.style = 'copied';
+						v1.value.entityType = "COPIED";
 					}
 
 					var memento = undefined;
@@ -207,12 +217,10 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
 	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd'; // 'var(--modeler-entity-border)';//'#337ab7';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
-
 	style[mxConstants.STYLE_FILLCOLOR] = '#609dd2';
 	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
 	style[mxConstants.STYLE_STROKECOLOR] = '#88b5dd';
 	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
-
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_STARTSIZE] = '28';
 	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
@@ -231,6 +239,33 @@ function configureStylesheet(graph) {
 	style[mxConstants.STYLE_STROKEWIDTH] = '2';
 	style[mxConstants.STYLE_ROUNDED] = true;
 	style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
+
+	// Copied Style
+	style = new Object();
+	style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+	style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+	style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+	//style[mxConstants.STYLE_GRADIENTCOLOR] = 'var(--modeler-entity-fill)';
+	style[mxConstants.STYLE_FILLCOLOR] = '#407db2'; // 'var(--modeler-entity-header-background)';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff'; // 'var(--modeler-entity-background)';
+	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd'; // 'var(--modeler-entity-border)';//'#337ab7';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff'; // 'var(--modeler-entity-header-color)';
+	style[mxConstants.STYLE_FILLCOLOR] = '#407db2';
+	style[mxConstants.STYLE_SWIMLANE_FILLCOLOR] = '#ffffff';
+	style[mxConstants.STYLE_STROKECOLOR] = '#6895bd';
+	style[mxConstants.STYLE_FONTCOLOR] = '#fff';
+	style[mxConstants.STYLE_STROKEWIDTH] = '2';
+	style[mxConstants.STYLE_STARTSIZE] = '28';
+	style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+	style[mxConstants.STYLE_FONTSIZE] = '12';
+	style[mxConstants.STYLE_FONTSTYLE] = 1;
+	style[mxConstants.STYLE_ROUNDED] = true;
+	style[mxConstants.STYLE_ARCSIZE] = 4;
+	// Looks better without opacity if shadow is enabled
+	style[mxConstants.STYLE_OPACITY] = '80';
+	style[mxConstants.STYLE_SHADOW] = 1;
+	graph.getStylesheet().putCellStyle('copied', style);
 
 	// Projection Style
 	style = new Object();

@@ -16,6 +16,7 @@ function main(container, outline, toolbar, sidebar, status) {
 
 	var ICON_ENTITY = 'list-alt';//'list-alt';
 	var ICON_PROPERTY = 'bars';//'align-justify';
+	var ICON_COPIED = 'copy';//'copy';
 	var ICON_PROJECTION = 'sign-in';//'external-link';
 	var ICON_EXTENSION = 'puzzle-piece';//'puzzle-piece';
 
@@ -328,14 +329,12 @@ function main(container, outline, toolbar, sidebar, status) {
 		// Adds sidebar icon for the entity object
 		var entityObject = new Entity('EntityName');
 		var entity = new mxCell(entityObject, new mxGeometry(0, 0, 200, 28), 'entity');
-
 		entity.setVertex(true);
 		addSidebarIcon(graph, sidebar, entity, ICON_ENTITY, 'Drag this to the diagram to create a new Entity', $scope);
 
 		// Adds sidebar icon for the property object
 		var propertyObject = new Property('propertyName');
 		var property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
-
 		property.setVertex(true);
 		property.setConnectable(false);
 
@@ -398,29 +397,21 @@ function main(container, outline, toolbar, sidebar, status) {
 			}
 		};
 
+		// Adds sidebar icon for the copied entity object
+		var copiedObject = new Entity('EntityName');
+		var copied = new mxCell(copiedObject, new mxGeometry(0, 0, 200, 28), 'copied');
+		copied.setVertex(true);
+		addSidebarIcon(graph, sidebar, copied, ICON_COPIED, 'Drag this to the diagram to create a copy to an Entity from external model', $scope);
+
 		// Adds sidebar icon for the projection entity object
 		var projectionObject = new Entity('EntityName');
 		var projection = new mxCell(projectionObject, new mxGeometry(0, 0, 200, 28), 'projection');
-
 		projection.setVertex(true);
 		addSidebarIcon(graph, sidebar, projection, ICON_PROJECTION, 'Drag this to the diagram to create a reference to an Entity from external model', $scope);
-
-		// // Adds primary key field into projection entity
-		// var keyProperty = property.clone();
-
-		// keyProperty.value.name = 'Id';
-		// keyProperty.value.dataType = 'INTEGER';
-		// keyProperty.value.dataLength = 0;
-		// keyProperty.value.dataPrimaryKey = 'true';
-		// keyProperty.value.dataAutoIncrement = 'true';
-		// keyProperty.style = 'projectionproperty';
-
-		// projection.insert(keyProperty);
 
 		// Adds sidebar icon for the extension entity object
 		var extensionObject = new Entity('EntityName');
 		var extension = new mxCell(extensionObject, new mxGeometry(0, 0, 200, 28), 'extension');
-
 		extension.setVertex(true);
 		addSidebarIcon(graph, sidebar, extension, ICON_EXTENSION, 'Drag this to the diagram to create a new Extension Entity', $scope);
 

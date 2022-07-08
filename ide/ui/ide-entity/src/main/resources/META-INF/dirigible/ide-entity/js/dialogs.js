@@ -20,7 +20,7 @@ function showAlert(title, message, $scope) {
 function openReferEntity(title, message, $scope, graph) {
 	$scope.$parent.dialogTitle = title;
 	$scope.$parent.okReferEntity = function () {
-
+		debugger
 		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
 			$('#Delete').click();
 			return;
@@ -50,6 +50,59 @@ function openReferEntity(title, message, $scope, graph) {
 						}
 
 						newProperty.style = 'projectionproperty';
+
+						$scope.$cell.insert(newProperty);
+					});
+				}
+			});
+
+			model.setCollapsed($scope.$cell, true);
+
+		} finally {
+			model.endUpdate();
+		}
+		graph.refresh();
+	};
+	$scope.$parent.cancelReferEntity = function () {
+		$('#Delete').click();
+	}
+	$scope.$apply();
+	$('#referEntityOpen').click();
+}
+
+
+function openCopiedEntity(title, message, $scope, graph) {
+	$scope.$parent.dialogTitle = title;
+	$scope.$parent.okReferEntity = function () {
+		if (!$scope.$parent.referencedModel || !$scope.$parent.referencedEntity) {
+			$('#Delete').click();
+			return;
+		}
+
+		let model = graph.getModel();
+		model.beginUpdate();
+		try {
+			$scope.$cell.value.name = $scope.$parent.referencedEntity;
+			$scope.$cell.value.entityType = "COPIED";
+			$scope.$cell.value.projectionReferencedModel = $scope.$parent.referencedModel;
+			$scope.$cell.value.projectionReferencedEntity = $scope.$parent.referencedEntity;
+
+
+			let propertyObject = new Property('propertyName');
+			let property = new mxCell(propertyObject, new mxGeometry(0, 0, 0, 26));
+			property.setVertex(true);
+			property.setConnectable(false);
+
+			$scope.$parent.availableEntities.forEach(entity => {
+				if (entity.name === $scope.$parent.referencedEntity) {
+					entity.properties.forEach(projectionProperty => {
+						let newProperty = property.clone();
+
+						for (let attributeName in projectionProperty) {
+							newProperty.value[attributeName] = projectionProperty[attributeName];
+						}
+
+						//newProperty.style = 'property';
 
 						$scope.$cell.insert(newProperty);
 					});
