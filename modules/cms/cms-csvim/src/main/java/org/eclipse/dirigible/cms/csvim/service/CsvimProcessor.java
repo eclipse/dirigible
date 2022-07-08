@@ -146,12 +146,14 @@ public class CsvimProcessor {
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
 		String sql = selectBuilder.distinct().column("1 " + pkNameForCSVRecord).from(tableName).where(pkNameForCSVRecord + " = ?").build();
 		try (PreparedStatement pstmt = connection.prepareCall(sql)) {
+			ResultSet rs = null;
 			try {
 				pstmt.setString(1, pkValueForCSVRecord);
+				rs = pstmt.executeQuery();
 			} catch (Throwable e) {
 				pstmt.setInt(1, Integer.valueOf(pkValueForCSVRecord));
+				rs = pstmt.executeQuery();
 			}
-			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				try {
 					exists = "1".equals(rs.getString(1));
