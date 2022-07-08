@@ -142,18 +142,25 @@ public class CsvimProcessor {
 	}
 
 	private boolean recordExists(String tableName, String pkNameForCSVRecord, String pkValueForCSVRecord, Connection connection) throws SQLException {
+		boolean exists = false;
 		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
 		String sql = selectBuilder.distinct().column("1 " + pkNameForCSVRecord).from(tableName).where(pkNameForCSVRecord + " = ?").build();
 		try (PreparedStatement pstmt = connection.prepareCall(sql)) {
-			pstmt.setString(1, pkValueForCSVRecord);
+			try {
+				pstmt.setString(1, pkValueForCSVRecord);
+			} catch (Throwable e) {
+				pstmt.setInt(1, Integer.valueOf(pkValueForCSVRecord));
+			}
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				if ("1".equals(rs.getString(1))) {
-					return true;
+				try {
+					exists = "1".equals(rs.getString(1));
+				} catch(Throwable e) {
+					exists = 1 == rs.getInt(1);
 				}
 			}
 		}
-		return false;
+		return exists;
 	}
 
 	private void insertCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
