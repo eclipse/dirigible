@@ -81,8 +81,8 @@ public class CsvProcessor {
 				for (CsvRecordDefinition next : csvRecordDefinitions) {
 					populateInsertPreparedStatementValues(next, availableTableColumns, preparedStatement);
 					preparedStatement.addBatch();
-					logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
 				}
+				logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
 				preparedStatement.executeBatch();
 			} catch(Throwable t) {
 				String errorMessage = String.format("Error occurred while trying to BATCH INSERT CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
@@ -120,8 +120,8 @@ public class CsvProcessor {
 				for (CsvRecordDefinition next : csvRecordDefinitions) {
 					executeUpdatePreparedStatement(next, availableTableColumns, preparedStatement);
 					preparedStatement.addBatch();
-					logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
 				}
+				logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
 				preparedStatement.executeBatch();
 			} catch (Throwable t) {
 				String errorMessage = String.format("Error occurred while trying to BATCH UPDATE CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
