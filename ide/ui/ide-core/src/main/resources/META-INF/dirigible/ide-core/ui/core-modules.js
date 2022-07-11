@@ -66,7 +66,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             template: `<link rel="icon" type="image/x-icon" ng-href="{{icon}}">`
         };
     }])
-    .directive('ideContextmenu', ['messageHub', function (messageHub) {
+    .directive('ideContextmenu', ['messageHub', '$window', function (messageHub, $window) {
         return {
             restrict: 'E',
             replace: true,
@@ -84,6 +84,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 element.on('click', function (event) {
                     event.stopPropagation();
                     element[0].classList.add("dg-hidden");
+                    menu.classList.add('dg-invisible');
                     openedMenuId = '';
                     scope.hideAllSubmenus();
                 });
@@ -92,6 +93,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     event.preventDefault();
                     event.stopPropagation();
                     element[0].classList.add("dg-hidden");
+                    menu.classList.add('dg-invisible');
                     openedMenuId = '';
                     scope.hideAllSubmenus();
                 });
@@ -134,6 +136,13 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
+                    requestAnimationFrame(function () {
+                        let rect = submenu.getBoundingClientRect();
+                        let bottom = $window.innerHeight - rect.bottom;
+                        let right = $window.innerWidth - rect.right;
+                        if (bottom < 0) submenu.style.top = `${bottom}px`;
+                        if (right < 0) submenu.style.left = `${right}px`;
+                    });
                 };
 
                 messageHub.onDidReceiveMessage(
@@ -145,6 +154,14 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                             menu.style.top = `${msg.data.posY}px`;
                             menu.style.left = `${msg.data.posX}px`;
                             element[0].classList.remove("dg-hidden");
+                            requestAnimationFrame(function () {
+                                let rect = menu.getBoundingClientRect();
+                                let bottom = $window.innerHeight - rect.bottom;
+                                let right = $window.innerWidth - rect.right;
+                                if (bottom < 0) menu.style.top = `${rect.top + bottom}px`;
+                                if (right < 0) menu.style.left = `${rect.left + right}px`;
+                                menu.classList.remove('dg-invisible');
+                            });
                         });
                     },
                     true
@@ -153,7 +170,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenu.html'
         };
     }])
-    .directive('ideContextmenuSubmenu', function () {
+    .directive('ideContextmenuSubmenu', ['$window', function ($window) {
         return {
             restrict: 'E',
             replace: true,
@@ -198,11 +215,18 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     submenuLink.setAttribute("aria-expanded", true);
                     submenuLink.classList.add("is-expanded");
                     submenu.setAttribute("aria-hidden", false);
+                    requestAnimationFrame(function () {
+                        let rect = submenu.getBoundingClientRect();
+                        let bottom = $window.innerHeight - rect.bottom;
+                        let right = $window.innerWidth - rect.right;
+                        if (bottom < 0) submenu.style.top = `${bottom}px`;
+                        if (right < 0) submenu.style.left = `${right}px`;
+                    });
                 };
             },
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
         };
-    })
+    }])
     .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, messageHub) {
         return {
             restrict: 'E',
@@ -990,10 +1014,10 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                         for (let i = 0; i < scope.formDialog.items.length; i++) {
                             if (scope.formDialog.items[i].id === item.visibility.id && scope.formDialog.items[i].value === item.visibility.value) {
                                 if (item.visibility.hidden) {
-                                    scope.excludeFromRequired[item.id] = false;
+                                    scope.excludeFromRequired[item.id] = true;
                                     return false;
                                 } else {
-                                    scope.excludeFromRequired[item.id] = true;
+                                    scope.excludeFromRequired[item.id] = false;
                                     return true;
                                 }
                             }
@@ -1225,7 +1249,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     return required;
                 }
 
-                scope.inputValidation = function (isValid, item) {
+                scope.isValid = function (isValid, item) {
                     if (isValid) {
                         item.error = false;
                     } else {

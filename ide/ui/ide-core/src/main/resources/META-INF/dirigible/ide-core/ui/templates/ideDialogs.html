@@ -60,7 +60,7 @@
                     </div>
                     <div class="fd-bar__element" ng-repeat="btn in dialog.buttons">
                         <button class="fd-dialog__decisive-button fd-button fd-button--compact"
-                            ng-class="{'normal':'', 'emphasized':'fd-button--emphasized', 'transparent':'fd-button--transparent'}[btn.type]"
+                            ng-class="{'emphasized':'fd-button--emphasized','transparent':'fd-button--transparent','negative':'fd-button--negative'}[btn.type]"
                             ng-click="hideDialog(btn.id)">{{ btn.label }}</button>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                 <fieldset ng-hide="formDialog.loader" class="fd-fieldset" ng-form="formFieldset">
                     <div class="fd-form-group">
                         <div ng-repeat="item in formDialog.items">
-                            <div ng-if="item.type === 'input' " class="fd-form-item" ng-hide="shouldHide(item)">
+                            <div ng-if="item.type === 'input' && !shouldHide(item)" class="fd-form-item">
                                 <fd-form-label dg-colon="true" dg-required="{{ isRequired(item.id, item.required) }}"
                                     for="{{ item.id }}">
                                     {{ item.label }}
@@ -120,14 +120,14 @@
                                         state="{{ item.error ? 'error' : '' }}" name="{{ 'i' + item.id }}"
                                         ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
                                         ng-trim="false" ng-minlength="item.minlength || 0"
-                                        ng-maxlength="item.maxlength || -1" ng-pattern="item.pattern || ''"
-                                        ng-change="inputValidation(formFieldset['i' + item.id].$valid, item)">
+                                        ng-maxlength="item.maxlength || -1" dg-input-rules="item.inputRules || {}"
+                                        ng-change="isValid(formFieldset['i' + item.id].$valid, item)">
                                     </fd-input>
                                     <fd-form-message dg-type="error">{{ item.errorMsg || "Incorrect input" }}
                                     </fd-form-message>
                                 </fd-form-input-message-group>
                             </div>
-                            <div ng-if="item.type === 'checkbox'" class="fd-form-item" ng-hide="shouldHide(item)">
+                            <div ng-if="item.type === 'checkbox' && !shouldHide(item)" class="fd-form-item">
                                 <input type="checkbox" class="fd-checkbox fd-checkbox--compact"
                                     ng-class="{'is-error' : item.error }" id="{{ item.id }}" ng-model="item.value">
                                 <label class="fd-checkbox__label fd-checkbox__label--compact" for="{{ item.id }}">
@@ -136,18 +136,18 @@
                                     </div>
                                 </label>
                             </div>
-                            <div ng-if="item.type === 'radio'" class="fd-form-item" ng-hide="shouldHide(item)">
+                            <div ng-if="item.type === 'radio' && !shouldHide(item)" class="fd-form-item">
                                 <div class="fd-form-group__item fd-form-item" ng-repeat="radio in item.items">
                                     <input type="radio" class="fd-radio fd-radio--compact"
                                         ng-class="{'is-error' : radio.error }" id="{{ radio.id }}" ng-model="item.value"
-                                        ng-required="item.required" ng-value="radio.value">
+                                        ng-required="{{ isRequired(item.id, item.required) }}" ng-value="radio.value">
                                     <label class="fd-radio__label"
                                         aria-required="{{ isRequired(item.id, item.required) }}" for="{{ radio.id }}">
                                         {{ radio.label }}
                                     </label>
                                 </div>
                             </div>
-                            <div ng-if="item.type === 'dropdown'" class="fd-form-item" ng-hide="shouldHide(item)">
+                            <div ng-if="item.type === 'dropdown' && !shouldHide(item)" class="fd-form-item">
                                 <fd-form-label dg-colon="true" dg-required="{{ isRequired(item.id, item.required) }}"
                                     for="{{ item.id }}">
                                     {{ item.label }}
