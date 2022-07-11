@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -53,7 +54,15 @@ import org.eclipse.dirigible.repository.api.RepositoryReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
+
 public class CsvimProcessor {
+
+	private static final String DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE = "DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE";
+	private static final int DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT = 1000;
+
+	private static final String DIRIGIBLE_CSV_DATA_BATCH_SIZE = "DIRIGIBLE_CSV_DATA_BATCH_SIZE";
+	private static final int DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT = 100;
 
 	private static final Logger logger = LoggerFactory.getLogger(CsvimProcessor.class);
 	private static final String ARTEFACT_TYPE_CSV = new CsvSynchronizationArtefactType().getId();
@@ -100,7 +109,7 @@ public class CsvimProcessor {
 		return IOUtils.toString(new InputStreamReader(new ByteArrayInputStream(resource.getContent()), StandardCharsets.UTF_8));
 	}
 
-	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection) throws CsvimException, SQLException {
+	public void process(CsvFileDefinition csvFileDefinition, String content, Connection connection) throws CsvimException, SQLException, IOException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		CSVParser csvParser = getCsvParser(csvFileDefinition, content);
 		PersistenceTableModel tableMetadata = getTableMetadata(csvFileDefinition);
@@ -114,31 +123,58 @@ public class CsvimProcessor {
 	    String pkNameForCSVRecord = getPkNameForCSVRecord(tableName, csvParser.getHeaderNames());
 	    
 		Map<String, List<String>> keysMap = csvFileDefinition.getKeysAsMap();
-		for (CSVRecord csvRecord : csvParser) {
-			if (recordShouldBeIncluded(csvRecord, tableMetadata.getColumns(), keysMap)) {
+		List<CSVRecord> csvRecords = csvParser.getRecords();
+		int maxCompareSize = DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE_DEFAULT;
+		try {
+			maxCompareSize = Integer.parseInt(Configuration.get(DIRIGIBLE_CSV_DATA_MAX_COMPARE_SIZE));
+		} catch (NumberFormatException e) {
+			// Do nothing
+		}
+		List<PersistenceTableColumnModel> tableColumns = tableMetadata.getColumns();
+		if (csvRecords.size() > maxCompareSize) {
+			if (isEmptyTable(tableName, connection)) {
+				recordsToInsert = csvRecords.stream().filter(e -> recordShouldBeIncluded(e, tableColumns, keysMap)).collect(Collectors.toList());
+			}
+		} else {
+			for (CSVRecord csvRecord : csvRecords) {
+				if (recordShouldBeIncluded(csvRecord, tableColumns, keysMap)) {
 
-				String pkValueForCSVRecord = getPkValueForCSVRecord(csvRecord, tableName, csvParser.getHeaderNames());
+					String pkValueForCSVRecord = getPkValueForCSVRecord(csvRecord, tableName, csvParser.getHeaderNames());
 
-				if (pkValueForCSVRecord == null) {
-					logProcessorErrors(PROBLEM_MESSAGE_NO_PRIMARY_KEY, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-					throw new CsvimException(String.format(ERROR_MESSAGE_NO_PRIMARY_KEY, csvFileDefinition.getFile()));
-				}
+					if (pkValueForCSVRecord == null) {
+						logProcessorErrors(PROBLEM_MESSAGE_NO_PRIMARY_KEY, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+						throw new CsvimException(String.format(ERROR_MESSAGE_NO_PRIMARY_KEY, csvFileDefinition.getFile()));
+					}
 
-				if (csvRecord.size() != tableMetadata.getColumns().size()) {
-					logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-					throw new CsvimException(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord, csvFileDefinition.getFile()));
-				}
+					if (csvRecord.size() != tableColumns.size()) {
+						logProcessorErrors(String.format(PROBLEM_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+						throw new CsvimException(String.format(ERROR_MESSAGE_DIFFERENT_COLUMNS_SIZE, pkValueForCSVRecord, csvFileDefinition.getFile()));
+					}
 
-				if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
-					recordsToInsert.add(csvRecord);
-				} else {
-					recordsToUpdate.add(csvRecord);
+					if (!recordExists(tableName, pkNameForCSVRecord, pkValueForCSVRecord, connection)) {
+						recordsToInsert.add(csvRecord);
+					} else {
+						recordsToUpdate.add(csvRecord);
+					}
 				}
 			}
 		}
 
 		insertCsvRecords(recordsToInsert, csvParser.getHeaderNames(), csvFileDefinition);
 		updateCsvRecords(recordsToUpdate, csvParser.getHeaderNames(), csvFileDefinition);
+	}
+
+	private boolean isEmptyTable(String tableName, Connection connection) throws SQLException {
+		boolean isEmpty = false;
+		SelectBuilder selectBuilder = new SelectBuilder(SqlFactory.deriveDialect(connection));
+		String sql = selectBuilder.column("COUNT(*)").from(tableName).build();
+		try (PreparedStatement pstmt = connection.prepareCall(sql)) {
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				isEmpty = rs.getInt(1) == 0;
+			}
+		}
+		return isEmpty;
 	}
 
 	private boolean recordExists(String tableName, String pkNameForCSVRecord, String pkValueForCSVRecord, Connection connection) throws SQLException {
@@ -171,35 +207,50 @@ public class CsvimProcessor {
 
 		CsvRecordDefinition csvRecordDefinition = null;
 
-		for (CSVRecord csvRecord : recordsToProcess) {
-			try {
-				csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull());
-				csvProcessor.insert(csvRecordDefinition, csvFileDefinition);
-			} catch (SQLException e) {
-				String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
-				logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-				logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+		try {
+			for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
+				List<CsvRecordDefinition> csvRecordDefinitions = csvBatch.stream().map(
+						e -> new CsvRecordDefinition(e, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull()))
+						.collect(Collectors.toList()
+				);
+				csvProcessor.insert(csvRecordDefinitions, csvFileDefinition);
 			}
+		} catch (SQLException e) {
+			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
 		}
 	}
-	
+
 	private void updateCsvRecords(List<CSVRecord> recordsToProcess, List<String> headerNames, CsvFileDefinition csvFileDefinition) throws SQLException {
 		String tableName = convertToActualTableName(csvFileDefinition.getTable());
 		PersistenceTableModel tableModel = databaseMetadataUtil.getTableMetadata(tableName, DatabaseMetadataUtil.getTableSchema(getDataSource(), tableName));
 
 		CsvRecordDefinition csvRecordDefinition = null;
 
-		for (CSVRecord csvRecord : recordsToProcess) {
-			try {
-				csvRecordDefinition = new CsvRecordDefinition(csvRecord, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull());
-				csvProcessor.update(csvRecordDefinition);
-			} catch (SQLException e) {
-				String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
-				logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-				logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
+		try {
+			for (List<CSVRecord> csvBatch : Lists.partition(recordsToProcess, getCsvDataBatchSize())) {
+				List<CsvRecordDefinition> csvRecordDefinitions = csvBatch.stream().map(
+						e -> new CsvRecordDefinition(e, tableModel, headerNames, csvFileDefinition.getDistinguishEmptyFromNull()))
+						.collect(Collectors.toList()
+				);
+				csvProcessor.update(csvRecordDefinitions, csvFileDefinition);
 			}
+		} catch (SQLException e) {
+			String csvRecordValue = csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "<empty>";
+			logProcessorErrors(String.format(PROBLEM_MESSAGE_INSERT_RECORD, tableName, csvRecordValue), ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+			logger.error(String.format(ERROR_MESSAGE_INSERT_RECORD, tableName, csvRecordValue, csvFileDefinition.getFile()), e);
 		}
+	}
 
+	private int getCsvDataBatchSize() {
+		int batchSize = DIRIGIBLE_CSV_DATA_BATCH_SIZE_DEFAULT;
+		try {
+			batchSize = Integer.parseInt(Configuration.get(DIRIGIBLE_CSV_DATA_BATCH_SIZE));
+		} catch (NumberFormatException e) {
+			// Do nothing
+		}
+		return batchSize;
 	}
 
 	private boolean recordShouldBeIncluded(CSVRecord record, List<PersistenceTableColumnModel> columns,

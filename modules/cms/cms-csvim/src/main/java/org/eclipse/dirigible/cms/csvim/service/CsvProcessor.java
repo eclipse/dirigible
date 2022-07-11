@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -64,68 +65,68 @@ public class CsvProcessor {
 		return dataSource;
 	}
 
-	public void insert(CsvRecordDefinition csvRecordDefinition, CsvFileDefinition csvFileDefinition) throws SQLException {
-		String tableName = csvRecordDefinition.getTableMetadataModel().getTableName();
+	public void insert(List<CsvRecordDefinition> csvRecordDefinitions, CsvFileDefinition csvFileDefinition) throws SQLException {
+		String tableName = csvRecordDefinitions.get(0).getTableMetadataModel().getTableName();
+		String schemaName = csvRecordDefinitions.get(0).getTableMetadataModel().getSchemaName();
 		try (Connection connection = getDataSource().getConnection()) {
-			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName,
-					csvRecordDefinition.getTableMetadataModel().getSchemaName());
-			for (TableColumn availableTableColumn : availableTableColumns) {
-				logger.debug("    {}: {}", availableTableColumn.getName(), availableTableColumn.getType());
-			}
-
+			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName, schemaName);
 			InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
 			insertBuilder.into(tableName);
-			CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
-			for (int i = 0; i < csvRecord.size(); i++) {
+
+			for (int i = 0; i < csvRecordDefinitions.get(0).getCsvRecord().size(); i++) {
 				String columnName = availableTableColumns.get(i).getName();
 				insertBuilder.column("\"" + columnName + "\"").value("?");
 			}
-
-			try (PreparedStatement statement = connection.prepareStatement(insertBuilder.generate())) {
-				executeInsertPreparedStatement(csvRecordDefinition, availableTableColumns, statement);
-				logger.info(
-						String.format("Table row with id: %s was CREATED successfully in %s.", csvRecord.get(0), tableName));
-			} catch(Throwable throwable) {
-				String errorMessage = String
-						.format("Error occurred while trying to insert a record [%s] for table with name: %s", 
-								csvRecordDefinition != null ? csvRecordDefinition.getCsvRecord().toString() : "empty", tableName);
+			try (PreparedStatement preparedStatement = connection.prepareStatement(insertBuilder.generate())) {
+				for (CsvRecordDefinition next : csvRecordDefinitions) {
+					populateInsertPreparedStatementValues(next, availableTableColumns, preparedStatement);
+					preparedStatement.addBatch();
+					logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH INSERT for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+				}
+				preparedStatement.executeBatch();
+			} catch(Throwable t) {
+				String errorMessage = String.format("Error occurred while trying to BATCH INSERT CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
 				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
-				logger.error(errorMessage, throwable);
+				logger.error(errorMessage, t);
 			}
 		}
 	}
 
-	public void update(CsvRecordDefinition csvRecordDefinition) throws SQLException {
-		String tableName = csvRecordDefinition.getTableMetadataModel().getTableName();
+	public void update(List<CsvRecordDefinition> csvRecordDefinitions, CsvFileDefinition csvFileDefinition) throws SQLException {
+		String tableName = csvRecordDefinitions.get(0).getTableMetadataModel().getTableName();
+		String schemaName = csvRecordDefinitions.get(0).getTableMetadataModel().getSchemaName();
 		try (Connection connection = getDataSource().getConnection()) {
-			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName,
-					csvRecordDefinition.getTableMetadataModel().getSchemaName());
+			List<TableColumn> availableTableColumns = TableMetadataHelper.getColumns(connection, tableName, schemaName);
 			UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
 			updateBuilder.table(tableName);
-			for (TableColumn tableColumn : availableTableColumns) {
-				logger.debug("    {}: {}", tableColumn.getName(), tableColumn.getType());
-			}
 
-			CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
+			CSVRecord csvRecord = csvRecordDefinitions.get(0).getCsvRecord();
 			for (int i = 0; i < csvRecord.size(); i++) {
 				String columnName = availableTableColumns.get(i).getName();
-				if (columnName.equals(csvRecordDefinition.getPkColumnName())) {
+				if (columnName.equals(csvRecordDefinitions.get(0).getPkColumnName())) {
 					continue;
 				}
 
 				updateBuilder.set("\"" + columnName + "\"", "?");
 			}
 
-			if (csvRecordDefinition.getHeaderNames().size() > 0) {
-				updateBuilder.where(String.format("%s = ?", csvRecordDefinition.getPkColumnName()));
+			if (csvRecordDefinitions.get(0).getHeaderNames().size() > 0) {
+				updateBuilder.where(String.format("%s = ?", csvRecordDefinitions.get(0).getPkColumnName()));
 			} else {
 				updateBuilder.where(String.format("%s = ?", availableTableColumns.get(0).getName()));
 			}
 
-			try (PreparedStatement statement = connection.prepareStatement(updateBuilder.generate())) {
-				executeUpdatePreparedStatement(csvRecordDefinition, availableTableColumns, statement);
-				logger.info(
-						String.format("Table row with id: %s was UPDATED successfully in %s.", csvRecord.get(0), tableName));
+			try (PreparedStatement preparedStatement = connection.prepareStatement(updateBuilder.generate())) {
+				for (CsvRecordDefinition next : csvRecordDefinitions) {
+					executeUpdatePreparedStatement(next, availableTableColumns, preparedStatement);
+					preparedStatement.addBatch();
+					logger.info(String.format("CSV records with Ids [%s] were successfully added in BATCH UPDATED for table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName));
+				}
+				preparedStatement.executeBatch();
+			} catch (Throwable t) {
+				String errorMessage = String.format("Error occurred while trying to BATCH UPDATE CSV records [%s] into table [%s].", csvRecordDefinitions.stream().map(e -> e.getCsvRecord().get(0)).collect(Collectors.toList()), tableName);
+				logProcessorErrors(errorMessage, ERROR_TYPE_PROCESSOR, csvFileDefinition.getFile(), ARTEFACT_TYPE_CSV);
+				logger.error(errorMessage, t);
 			}
 		}
 	}
@@ -167,37 +168,29 @@ public class CsvProcessor {
 		}
 	}
 
-	private void executeInsertPreparedStatement(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
-			PreparedStatement statement) throws SQLException {
+	private void populateInsertPreparedStatementValues(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		if (csvRecordDefinition.getHeaderNames().size() > 0) {
 			insertCsvWithHeader(csvRecordDefinition, tableColumns, statement);
 		} else {
 			insertCsvWithoutHeader(csvRecordDefinition, tableColumns, statement);
 		}
-
-		statement.execute();
 	}
 
-	private void insertCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
-			PreparedStatement statement) throws SQLException {
-
+	private void insertCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		for (int i = 0; i < tableColumns.size(); i++) {
 			String columnName = tableColumns.get(i).getName();
 			int columnType = tableColumns.get(i).getType();
 			String value = csvRecordDefinition.getCsvValueForColumn(columnName);
-			setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value,
-					columnType);
+			setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
 		}
 	}
 
-	private void insertCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
-			PreparedStatement statement) throws SQLException {
+	private void insertCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		for (int i = 0; i < csvRecordDefinition.getCsvRecord().size(); i++) {
 			String value = csvRecordDefinition.getCsvRecord().get(i);
 			int columnType = tableColumns.get(i).getType();
 
-			setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value,
-					columnType);
+			setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i + 1, value, columnType);
 		}
 	}
 
@@ -212,14 +205,12 @@ public class CsvProcessor {
 		statement.execute();
 	}
 
-	private void updateCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
-			PreparedStatement statement) throws SQLException {
+	private void updateCsvWithHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
 
 		for (int i = 1; i < tableColumns.size(); i++) {
 			String columnName = tableColumns.get(i).getName();
 			String value = csvRecordDefinition.getCsvValueForColumn(columnName);
-
 			int columnType = tableColumns.get(i).getType();
 
 			setPreparedStatementValue(csvRecordDefinition.isDistinguishEmptyFromNull(), statement, i, value, columnType);
@@ -231,8 +222,7 @@ public class CsvProcessor {
 		setValue(statement, lastStatementPlaceholderIndex, pkColumnType, csvRecordDefinition.getCsvRecordPkValue());
 	}
 
-	private void updateCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns,
-			PreparedStatement statement) throws SQLException {
+	private void updateCsvWithoutHeader(CsvRecordDefinition csvRecordDefinition, List<TableColumn> tableColumns, PreparedStatement statement) throws SQLException {
 		CSVRecord csvRecord = csvRecordDefinition.getCsvRecord();
 		for (int i = 1; i < csvRecord.size(); i++) {
 			String value = csvRecord.get(i);

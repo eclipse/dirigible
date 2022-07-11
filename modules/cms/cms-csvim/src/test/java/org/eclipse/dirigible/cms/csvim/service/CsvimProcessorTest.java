@@ -13,6 +13,7 @@ package org.eclipse.dirigible.cms.csvim.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ import org.junit.Test;
 public class CsvimProcessorTest extends AbstractDirigibleTest {
 
 	@Test
-	public void testInsert() throws SQLException, CsvimException {
+	public void testInsert() throws SQLException, CsvimException, IOException {
 		CsvimProcessor csvimProcessor = new CsvimProcessor();
 		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
@@ -64,7 +65,7 @@ public class CsvimProcessorTest extends AbstractDirigibleTest {
 	}
 	
 	@Test
-	public void testUpdate() throws SQLException, CsvimException {
+	public void testUpdate() throws SQLException, CsvimException, IOException {
 		CsvimProcessor csvimProcessor = new CsvimProcessor();
 		DataSource dataSource = (DataSource) StaticObjects.get(StaticObjects.DATASOURCE);
 		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
