@@ -6,6 +6,7 @@ dirigible_local/
 bin/
 log/
 .idea
+.history
 
 # files
 .DS_Store
