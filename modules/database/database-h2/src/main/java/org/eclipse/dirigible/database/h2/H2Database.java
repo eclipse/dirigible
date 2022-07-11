@@ -135,15 +135,31 @@ public class H2Database extends AbstractDatabase {
 				String databaseUrl = Configuration.get("DIRIGIBLE_DATABASE_H2_URL");
 				String databaseUsername = Configuration.get("DIRIGIBLE_DATABASE_H2_USERNAME");
 				String databasePassword = Configuration.get("DIRIGIBLE_DATABASE_H2_PASSWORD");
+				
+				String databaseTimeout = Configuration.get("DIRIGIBLE_DATABASE_DEFAULT_WAIT_TIMEOUT", "180000");
+				int timeout = 180000;
+				try {
+					timeout = Integer.parseInt(databaseTimeout);
+				} catch (NumberFormatException e) {
+					timeout = 180000;
+				}
+				
 				if ((databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
 					HikariConfig config = new HikariConfig();
 
 					config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
-					config.setPoolName("H2SystemDBHikariPool");
+					config.setPoolName("H2DBHikariPool");
 					config.setConnectionTestQuery("VALUES 1");
 					config.addDataSourceProperty("URL", databaseUrl + "/" + name);
 					config.addDataSourceProperty("user", databaseUsername);
 					config.addDataSourceProperty("password", databasePassword);
+					config.setMinimumIdle(5);
+					config.setMaximumPoolSize(50);
+					config.setConnectionTimeout(timeout);
+					config.setLeakDetectionThreshold(timeout);
+					config.setIdleTimeout(600000);
+					config.setMaxLifetime(1800000);
+					config.setAutoCommit(true);
 
 					HikariDataSource ds = new HikariDataSource(config);
 
