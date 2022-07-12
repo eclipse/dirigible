@@ -22,22 +22,16 @@
     </dependency>
 
     <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>4.9.3</version>
+      <groupId>org.graalvm.tools</groupId>
+      <artifactId>chromeinspector</artifactId>
+      <version>${graalvm.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>io.github.classgraph</groupId>
       <artifactId>classgraph</artifactId>
-      <version>4.8.146</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
+      <version>${classgraph.version}</version>
     </dependency>
   </dependencies>
 </project>

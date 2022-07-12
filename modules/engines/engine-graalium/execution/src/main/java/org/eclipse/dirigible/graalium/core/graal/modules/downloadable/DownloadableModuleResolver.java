@@ -1,12 +1,11 @@
 package org.eclipse.dirigible.graalium.core.graal.modules.downloadable;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,18 +38,21 @@ public class DownloadableModuleResolver {
     }
 
     private Path downloadDependency(URI uri) {
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(uri.toString())
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest
+                .newBuilder()
+                .GET()
+                .uri(uri)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try {
+            var responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
+            var response = client.send(request, responseBodyHandler);
             Path dependencyFilePath = getDependencyFilePathForOutput(uri);
-            byte[] downloadedBytes = response.body().bytes();
+            byte[] downloadedBytes = response.body();
             Files.write(dependencyFilePath, downloadedBytes);
             return dependencyFilePath;
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

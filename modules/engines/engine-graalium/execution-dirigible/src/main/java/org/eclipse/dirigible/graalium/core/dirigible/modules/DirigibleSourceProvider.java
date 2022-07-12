@@ -5,7 +5,6 @@ import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +61,6 @@ public class DirigibleSourceProvider {
         return filePath + ".js";
     }
 
-    @Nullable
     private static byte[] tryGetFromRepository(String repositoryFilePathString) {
         IResource resource = REPOSITORY.getResource(repositoryFilePathString);
         if (!resource.exists()) {
@@ -71,7 +69,6 @@ public class DirigibleSourceProvider {
         return resource.getContent();
     }
 
-    @Nullable
     private static byte[] tryGetFromClassLoader(String repositoryAwareFilePathString, String filePathString) {
         try {
             try (InputStream bundled = DirigibleSourceProvider.class.getResourceAsStream("/META-INF/dirigible/" + filePathString)) {
