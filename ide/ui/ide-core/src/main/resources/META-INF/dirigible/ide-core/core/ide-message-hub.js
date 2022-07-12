@@ -88,7 +88,7 @@ angular.module('ideMessageHub', [])
                 body = "",
                 buttons = [{
                     id: "b1",
-                    type: "normal", // normal, emphasized, transparent
+                    type: "normal", // normal, emphasized, negative, transparent
                     label: "Ok",
                 }],
                 callbackTopic = null,
@@ -115,7 +115,7 @@ angular.module('ideMessageHub', [])
                 body = "",
                 buttons = [{
                     id: "b1",
-                    type: "normal", // normal, emphasized, transparent
+                    type: "normal", // normal, emphasized, negative, transparent
                     label: "Ok",
                 }],
                 loader = false,

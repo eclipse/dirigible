@@ -39,7 +39,7 @@ const defaultMenuItems = [
 		divider: false
 	},
 	{
-		label: "Check for Update",
+		label: "Check for Updates",
 		action: "open",
 		order: 5,
 		data: "http://download.dirigible.io/",

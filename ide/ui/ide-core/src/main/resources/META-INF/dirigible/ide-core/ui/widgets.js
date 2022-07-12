@@ -55,6 +55,42 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
         return classNames;
 
+    }).directive('dgInputRules', function ($parse) {
+        /**
+         * How to use:
+         * <input ng-model="inputModel" ng-required dg-input-rules="inputRules"
+         * Example object (inputRules):
+         * {
+         *    excluded: ['this', 'that'],
+         *    patterns: ['^[^/]*$'],
+         * }
+         */
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attr, controller) {
+                let parseFn = $parse(attr.dgInputRules);
+                scope.inputRules = parseFn(scope);
+
+                function validation(value) {
+                    if (value) {
+                        let isValid = true;
+                        if (scope.inputRules.excluded) isValid = !scope.inputRules.excluded.includes(value);
+                        if (isValid && scope.inputRules.patterns) {
+                            for (let i = 0; i < scope.inputRules.patterns.length; i++) {
+                                isValid = RegExp(scope.inputRules.patterns[i]).test(value);
+                                if (!isValid) break;
+                            }
+                        }
+                        controller.$setValidity('inputRules', isValid);
+                    } else {
+                        if (attr.required) controller.$setValidity('inputRules', false);
+                        else controller.$setValidity('inputRules', true);
+                    }
+                    return value;
+                }
+                controller.$parsers.push(validation);
+            }
+        };
     }).directive('fdScrollbar', [function () {
         return {
             restrict: 'AE',
@@ -1728,9 +1764,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'EA',
             transclude: true,
             replace: true,
-            require: '^fdListItem',
+            require: '?^fdListItem',
             link: function (scope, element, attrs, listItemCtrl) {
-                listItemCtrl.setRole('option');
+                if (listItemCtrl)
+                    listItemCtrl.setRole('option');
             },
             template: '<div class="fd-form-item fd-list__form-item" ng-transclude></div>'
         }
@@ -1877,7 +1914,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 <i ng-if="glyph" role="presentation" ng-class="glyph"></i>
             </span>`
         }
-    }]).directive('fdObjectStatus', [function () {
+    }]).directive('fdObjectStatus', ['classNames', function (classNames) {
         /**
          * status: String - One of 'negative', 'critical', 'positive' or 'informative'
          * glyph: String - Icon class.
@@ -1899,16 +1936,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 indication: '<',
                 large: '<'
             },
-            link: function (scope, element) {
+            controller: ['$scope', '$element', function (scope, element) {
                 const statuses = ['negative', 'critical', 'positive', 'informative'];
 
-                scope.getIconClasses = function () {
-                    let classList = ['fd-object-status__icon'];
-                    if (scope.glyph) {
-                        classList.push(scope.glyph);
-                    }
-                    return classList.join(' ');
+                this.setIsUploadCollection = function () {
+                    scope.isUploadCollection = true;
+                    element.addClass('fd-upload-collection__status-group-item');
                 }
+
+                scope.getIconClasses = () => classNames('fd-object-status__icon', scope.glyph);
+                scope.getTextClasses = () => classNames('fd-object-status__text', {
+                    'fd-upload-collection__status-group-item-text': scope.isUploadCollection
+                })
 
                 element.addClass('fd-object-status');
 
@@ -1966,9 +2005,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
 
                     element.addClass(`fd-object-status--indication-${indication}`);
                 });
-            },
+            }],
             template: `<i ng-if="glyph" ng-class="getIconClasses()" role="presentation"></i>
-                       <span ng-if="text" class="fd-object-status__text">{{text}}</span>`
+                       <span ng-if="text" ng-class="getTextClasses()">{{text}}</span>`
         }
     }]).directive('fdSelect', ['uuid', function (uuid) {
         /**
@@ -3288,5 +3327,199 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             transclude: true,
             replace: true,
             template: `<div class="fd-message-page__more" ng-transclude></div>`
+        }
+    }]).directive('fdUploadCollection', ['classNames', function (classNames) {
+        /**
+         * small: Boolean - Whether or not this is the small upload collection.
+         * selection: Boolean - Whether or not this upload collection supports selection.
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                small: '<',
+                selection: '<'
+            },
+            link: function (scope) {
+                scope.getClassNames = () => classNames('fd-list', 'fd-list--byline', 'fd-upload-collection', {
+                    'fd-upload-collection--sm': scope.small,
+                    'fd-list--selection': scope.selection
+                });
+            },
+            template: `<ul ng-class="getClassNames()" role="list" ng-transclude></ul>`
+        }
+    }]).directive('fdUploadCollectionItem', ['classNames', function (classNames) {
+        /**
+         * dgSelected: Boolean - Whether or not this item is selected
+         * fileName: Boolean - The name of the file, not including the type extension.
+         * extension: Boolean - The file type extension.
+         * fileNameChanged: Function - Event emitted when the user changes a file name. Args: (fileName : String)
+         * deleteClicked: Function - Event emitted when presses the delete button.
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                dgSelected: '<',
+                fileName: '@',
+                extension: '@',
+                fileNameChanged: '&',
+                deleteClicked: '&'
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.editing = false;
+                this.getFileName = function () {
+                    return $scope.fileName;
+                }
+                this.getEditedFileName = function () {
+                    return $scope.editedFileName;
+                }
+                this.getExtension = function () {
+                    return $scope.extension;
+                }
+                this.isEditing = function () {
+                    return $scope.editing;
+                }
+                this.setEditing = function (editing) {
+                    $scope.editing = editing;
+                    $scope.editedFileName = $scope.fileName;
+                }
+                this.fileNameChanged = function (fileName) {
+                    $scope.editedFileName = fileName;
+                }
+                this.applyFilenameChange = function () {
+                    $scope.fileName = $scope.editedFileName;
+                    this.setEditing(false);
+
+                    if ($scope.fileNameChanged)
+                        $scope.fileNameChanged({ fileName: $scope.fileName });
+                }
+
+                this.deleteItem = function () {
+                    if ($scope.deleteClicked)
+                        $scope.deleteClicked();
+                }
+
+                $scope.getClassNames = () => classNames('fd-list__item', 'fd-upload-collection__item', {
+                    'is-selected': $scope.dgSelected
+                });
+                $scope.getAriaSelected = () => $scope.dgSelected ? 'true' : undefined;
+            }],
+            template: `<li role="listitem" tabindex="0" ng-class="getClassNames()" ng-attr-aria-selected="{{ getAriaSelected() }}" ng-transclude></li>`
+        }
+    }]).directive('fdUploadCollectionItemContent', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-list__content" ng-transclude><div>`
+        }
+    }]).directive('fdUploadCollectionTitleContainer', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-upload-collection__title-container" ng-transclude></div>`
+        }
+    }]).directive('fdUploadCollectionTitle', [function () {
+        return {
+            restrict: 'EA',
+            replace: true,
+            require: '^^fdUploadCollectionItem',
+            link: function (scope, element, attr, itemCtrl) {
+                scope.getTitle = () => `${itemCtrl.getFileName()}.${itemCtrl.getExtension()}`;
+                scope.isEditing = () => itemCtrl.isEditing();
+            },
+            template: `<span ng-if="!isEditing()" class="fd-list__title fd-upload-collection__title">{{ getTitle() }}</span>`
+        }
+    }]).directive('fdUploadCollectionFormItem', [function () {
+        return {
+            restrict: 'EA',
+            replace: true,
+            require: '^^fdUploadCollectionItem',
+            link: function (scope, element, attr, itemCtrl) {
+                let editing;
+                scope.file = { name: itemCtrl.getFileName() };
+                scope.getExtension = () => itemCtrl.getExtension();
+                scope.isEditing = () => {
+                    if (editing !== itemCtrl.isEditing()) {
+                        scope.file.name = itemCtrl.getFileName();
+                        editing = itemCtrl.isEditing();
+                    }
+                    return editing;
+                }
+                scope.onFileNameChange = () => itemCtrl.fileNameChanged(scope.file.name);
+                scope.getInputState = () => scope.file.name ? null : 'error';
+            },
+            template: `<div ng-if="isEditing()" class="fd-upload-collection__form-item">
+                <fd-input type="text" placeholder="Filename" state="{{ getInputState() }}" ng-required ng-model="file.name" ng-change="onFileNameChange()" style="pointer-events: all"></fd-input>
+                <span class="fd-upload-collection__extension">.{{ getExtension() }}</span>
+            </div>`
+        }
+    }]).directive('fdUploadCollectionDescription', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-upload-collection__description" ng-transclude><div>`
+        }
+    }]).directive('fdUploadCollectionTextSeparator', [function () {
+        return {
+            restrict: 'EA',
+            replace: true,
+            template: `<span class="fd-upload-collection__text-separator"></span>`
+        }
+    }]).directive('fdUploadCollectionStatusGroup', [function () {
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            template: `<div class="fd-upload-collection__status-group" ng-transclude><div>`
+        }
+    }]).directive('fdUploadCollectionStatusItem', [function () {
+        return {
+            restrict: 'A',
+            require: 'fdObjectStatus',
+            link: function (scope, element, attr, objectStatusCtrl) {
+                objectStatusCtrl.setIsUploadCollection();
+            }
+        }
+    }]).directive('fdUploadCollectionButtonGroup', [function () {
+        return {
+            restrict: 'EA',
+            replace: true,
+            require: '^fdUploadCollectionItem',
+            link: function (scope, element, attr, itemCtrl) {
+                scope.isEditing = () => itemCtrl.isEditing();
+                scope.editClick = (e) => {
+                    e.stopPropagation();
+
+                    itemCtrl.setEditing(true);
+                }
+                scope.cancelClick = (e) => {
+                    e.stopPropagation();
+
+                    itemCtrl.setEditing(false);
+                }
+                scope.deleteClick = (e) => {
+                    e.stopPropagation();
+
+                    itemCtrl.deleteItem();
+                }
+                scope.okClick = (e) => {
+                    e.stopPropagation();
+
+                    itemCtrl.applyFilenameChange();
+                }
+                scope.getOkButtonState = () => itemCtrl.getEditedFileName() ? undefined : 'disabled';
+            },
+            template: `<div class="fd-upload-collection__button-group">
+                <fd-button ng-if="!isEditing()" aria-label="Edit" dg-type="transparent" glyph="sap-icon--edit" ng-click="editClick($event)"></fd-button>
+				<fd-button ng-if="!isEditing()" aria-label="Delete" dg-type="transparent" glyph="sap-icon--decline" ng-click="deleteClick($event)"></fd-button>
+                <fd-button ng-if="isEditing()" dg-label="Ok" state="{{ getOkButtonState() }}" dg-type="transparent" ng-click="okClick($event)"></fd-button>
+				<fd-button ng-if="isEditing()" dg-label="Cancel" dg-type="transparent" ng-click="cancelClick($event)"></fd-button>
+            <div>`
         }
     }]);
