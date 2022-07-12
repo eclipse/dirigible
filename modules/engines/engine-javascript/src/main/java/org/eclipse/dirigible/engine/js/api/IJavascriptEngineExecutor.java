@@ -33,17 +33,10 @@ public interface IJavascriptEngineExecutor extends IScriptEngineExecutor {
 	/** The Constant JAVASCRIPT_ENGINE_TYPE. */
 	public static final String JAVASCRIPT_ENGINE_TYPE = "__engine";
 
-	/** The Constant JAVASCRIPT_TYPE_RHINO. */
-	public static final String JAVASCRIPT_TYPE_RHINO = "rhino";
-
-	/** The Constant JAVASCRIPT_TYPE_NASHORN. */
-	public static final String JAVASCRIPT_TYPE_NASHORN = "nashorn";
-
-	/** The Constant JAVASCRIPT_TYPE_V8. */
-	public static final String JAVASCRIPT_TYPE_V8 = "v8";
-
 	/** The Constant JAVASCRIPT_TYPE_GRAALVM. */
 	public static final String JAVASCRIPT_TYPE_GRAALVM = "graalvm";
+
+	public static final String JAVASCRIPT_TYPE_GRAALIUM = "graalium";
 
 	/** The Constant JAVASCRIPT_TYPE_DEFAULT. */
 	public static final String JAVASCRIPT_TYPE_DEFAULT = "javascript";

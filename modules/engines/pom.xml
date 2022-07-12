@@ -17,13 +17,14 @@
 		<module>engine-api</module>
 		<module>engine-javascript</module>
 		<module>engine-javascript-graalvm</module>
+		<module>engine-graalium</module>
 		<module>engine-job</module>
 		<module>engine-listener</module>
 		<module>engine-web</module>
 		<module>engine-wiki</module>
 		<module>engine-command</module>
 		<module>engine-odata</module>
-	</modules>
+    </modules>
 
 	<properties>
 		<license.header.location>../../licensing-header.txt</license.header.location>
