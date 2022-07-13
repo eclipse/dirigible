@@ -13,6 +13,7 @@ package org.eclipse.dirigible.engine.js.graalvm.processor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +37,11 @@ import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.engine.js.graalvm.processor.truffle.RegistryTruffleFileSystem;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.graalvm.polyglot.*;
+import org.eclipse.dirigible.graalium.core.javascript.JSCodeRunner;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * The GraalVM Javascript Engine Executor.
  */
 @SuppressWarnings("restriction")
-public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor {
+public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor implements JSCodeRunner<String, Object> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineExecutor.class);
@@ -61,8 +66,8 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
     public static final String DEFAULT_DEBUG_PORT = "8081";
 
-    private GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-    private ExecutableFileTypeResolver executableFileTypeResolver = new ExecutableFileTypeResolver();
+    private final GraalVMRepositoryModuleSourceProvider sourceProvider = new GraalVMRepositoryModuleSourceProvider(this, IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+    private final ExecutableFileTypeResolver executableFileTypeResolver = new ExecutableFileTypeResolver();
 
     /*
      * (non-Javadoc)
@@ -117,6 +122,16 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
             e.printStackTrace();
             throw new ScriptingException(e);
         }
+    }
+
+    @Override
+    public Object run(Path codeFilePath) {
+        return executeServiceModule(codeFilePath.toString(), new HashMap<>());
+    }
+
+    @Override
+    public Object run(String codeSource) {
+        return executeServiceCode(codeSource, new HashMap<>());
     }
 
     public Object executeService(String moduleOrCode, Map<Object, Object> executionContext, boolean isModule, boolean commonJSModule) throws ScriptingException {
@@ -268,5 +283,10 @@ public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor 
 
     public IJavascriptModuleSourceProvider getSourceProvider() {
         return sourceProvider;
+    }
+
+    @Override
+    public void close() {
+
     }
 }

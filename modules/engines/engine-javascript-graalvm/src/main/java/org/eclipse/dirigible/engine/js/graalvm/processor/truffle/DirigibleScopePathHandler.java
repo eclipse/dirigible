@@ -38,12 +38,11 @@ class DirigibleScopePathHandler {
         if (pathString.startsWith("/@dirigible-native/")) {
             String packageName = parseImportedJavaPackage(pathString);
             List<ClassName> classes = getClassesInPackage(packageName);
-            String generated = generateJavaExports(classes);
-            return generated;
+            return generateJavaExports(classes);
         } else if (pathString.startsWith(Constants.DIRIGIBLE_SCOPE_VERSIONED)) {
             return resolveVersionedScopePath(pathString);
         } else if (pathString.startsWith(Constants.DIRIGIBLE_SCOPE_DEFAULT)) {
-            return resoveDefaultScopePath(pathString);
+            return resolveDefaultScopePath(pathString);
         }
 
         return "";  // Not a dirigible scope path, generate nothing!
@@ -58,7 +57,7 @@ class DirigibleScopePathHandler {
         return generator.generate(pathString, apiVersion);
     }
 
-    private String resoveDefaultScopePath(String pathString) {
+    private String resolveDefaultScopePath(String pathString) {
         pathString = pathString.substring(Constants.DIRIGIBLE_SCOPE_DEFAULT.length());
         pathString = pathString.replace(Constants.SCOPED_PATH_SEPARATOR, Constants.PATH_SEPARATOR);
         return generator.generate(pathString, "");

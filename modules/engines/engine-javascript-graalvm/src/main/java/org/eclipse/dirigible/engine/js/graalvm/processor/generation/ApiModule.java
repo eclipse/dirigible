@@ -11,7 +11,9 @@
  */
 package org.eclipse.dirigible.engine.js.graalvm.processor.generation;
 
-class ApiModule {
+import java.util.Objects;
+
+public class ApiModule {
     private final String name;
     private final String api;
     private final String[] versionedPaths;
@@ -32,27 +34,23 @@ class ApiModule {
         return name;
     }
 
-    String getApi() {
+    public String getApi() {
         return api;
     }
 
-    String[] getVersionedPaths() {
+    public String[] getVersionedPaths() {
         return versionedPaths;
     }
 
-    String getPathDefault() {
+    public String getPathDefault() {
         return pathDefault;
     }
 
-    boolean getShouldBeUnexposedToESM() {
-        if(shouldBeUnexposedToESM==null){
-            return false;
-        }
-
-        return shouldBeUnexposedToESM;
+    public boolean getShouldBeUnexposedToESM() {
+        return Objects.requireNonNullElse(shouldBeUnexposedToESM, false);
     }
 
-    boolean isPackageDescription() {
+    public boolean isPackageDescription() {
         return isPackageDescription;
     }
 }

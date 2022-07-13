@@ -297,22 +297,6 @@
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-core</artifactId>-->
-<!--			<version>0.5.0</version>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-launcher</artifactId>-->
-<!--			<version>0.5.4</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>io.etcd</groupId>-->
-<!--			<artifactId>jetcd-test</artifactId>-->
-<!--			<version>0.5.4</version>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
@@ -359,15 +343,21 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>4.10.0</version>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>4.1.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>engine-graalium-execution</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 	<properties>
-		<graalvm.version>22.1.0.1</graalvm.version>
+		<graalvm.version>22.0.0.2</graalvm.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 

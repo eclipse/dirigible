@@ -161,6 +161,7 @@ public abstract class FileSystemRepository implements IRepository {
 	 *
 	 * @return the repository path
 	 */
+	@Override
 	public String getRepositoryPath() {
 		return repositoryPath;
 	}
@@ -632,6 +633,11 @@ public abstract class FileSystemRepository implements IRepository {
 			throw new RepositorySearchException(e);
 		}
 		return new ArrayList<String>();
+	}
+
+	@Override
+	public String getInternalResourcePath(String resourcePath) {
+		return LocalWorkspaceMapper.getMappedName(this, resourcePath);
 	}
 
 }
