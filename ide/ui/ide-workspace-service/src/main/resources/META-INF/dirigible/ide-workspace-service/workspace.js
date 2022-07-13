@@ -59,7 +59,7 @@ angular.module('ideWorkspace', [])
 
             let rename = function (oldName, newName, path, workspaceName) {
                 let pathSegments = path.split('/');
-                pathSegments = pathSegments.slice(1, -1);
+                pathSegments = pathSegments.slice(1);
                 if (pathSegments.length >= 1) {
                     let url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
                     return $http.post(url, {

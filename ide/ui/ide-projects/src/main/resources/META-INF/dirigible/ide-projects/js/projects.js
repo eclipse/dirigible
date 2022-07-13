@@ -47,7 +47,9 @@ projectsView.controller('ProjectsViewController', [
             parent: '',
             workspace: '',
             path: '',
+            content: '',
         };
+        $scope.renameNodeData;
         $scope.duplicateProjectData = {};
         $scope.imageFileExts = ['ico', 'bmp', 'png', 'jpg', 'jpeg', 'gif', 'svg'];
         $scope.modelFileExts = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
@@ -137,62 +139,6 @@ projectsView.controller('ProjectsViewController', [
             }
         });
 
-        $scope.jstreeWidget.on('rename_node.jstree', function (event, data) {
-            if (!data.node.state.failedRename) {
-                if (data.old !== data.text) {
-                    let validate = new RegExp('^[^/]+$');
-                    if (!validate.test(data.text)) {
-                        data.node.state.failedRename = true;
-                        $scope.jstreeWidget.jstree(true).rename_node(data.node, data.old);
-                        messageHub.setStatusError(`Invalid name '${data.text}'. Reverted.`);
-                    } else {
-                        $scope.jstreeWidget.jstree(true).disable_node(data.node);
-                        let parent = $scope.jstreeWidget.jstree(true).get_node(data.node.parent);
-                        let spinnerId = showSpinner(parent);
-                        workspaceApi.rename(
-                            data.old,
-                            data.text,
-                            data.node.data.path,
-                            data.node.data.workspace
-                        ).then(function (response) {
-                            if (response.status === 201) {
-                                let guessedPath = `${data.node.data.path.substring(data.node.data.path.length - data.old.length, 0)}${data.text}`; // Temporary until back-end is fixed
-                                if (data.node.type === "file") {
-                                    workspaceApi.getMetadataByPath(data.node.data.workspace, guessedPath).then(function (metadata) {
-                                        if (metadata.status === 200) {
-                                            messageHub.closeEditor(`/${data.node.data.workspace}${data.node.data.path}`);
-                                            data.node.text = metadata.data.name;
-                                            data.node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
-                                            data.node.data.contentType = metadata.data.contentType;
-                                            data.node.state.status = metadata.data.status;
-                                            data.node.icon = getFileIcon(metadata.data.name);
-                                            $scope.jstreeWidget.jstree(true).redraw_node(data.node);
-                                        } else {
-                                            data.node.state.failedRename = true;
-                                            $scope.jstreeWidget.jstree(true).rename_node(data.node, data.old);
-                                            messageHub.setStatusError(`Unable to rename '${data.old}'. Reverted.`);
-                                        }
-                                    });
-                                } else {
-                                    for (let i = 0; i < data.node.children_d.length; i++) {
-                                        let child = $scope.jstreeWidget.jstree(true).get_node(data.node.children_d[i]);
-                                        child.data.path = guessedPath + child.data.path.substring(data.node.data.path.length);
-                                    }
-                                    data.node.data.path = guessedPath;
-                                }
-                            } else {
-                                data.node.state.failedRename = true;
-                                $scope.jstreeWidget.jstree(true).rename_node(data.node, data.old);
-                                messageHub.setStatusError(`Unable to rename '${data.old}'. Reverted.`);
-                            }
-                            hideSpinner(spinnerId);
-                            $scope.jstreeWidget.jstree(true).enable_node(data.node);
-                        });
-                    }
-                }
-            } else delete data.node.state.failedRename;
-        });
-
         $scope.jstreeWidget.on('copy_node.jstree', function (event, copyObj) {
             if (!copyObj.node.state.failedCopy) {
                 $scope.jstreeWidget.jstree(true).hide_node(copyObj.node);
@@ -273,15 +219,13 @@ projectsView.controller('ProjectsViewController', [
             } else delete moveObj.node.state.failedMove;
         });
 
-        function setMenuTemplateItems(parent, menuObj, workspace, nodePath, childrenIds) {
+        function setMenuTemplateItems(parent, menuObj, workspace, nodePath) {
             let priorityTemplates = true;
             let childExtensions = {};
-            for (let i = 0; i < childrenIds.length; i++) {
-                let child = $scope.jstreeWidget.jstree(true).get_node(childrenIds[i]);
-                if (child.type === 'file') {
-                    let lastIndex = child.text.lastIndexOf('.');
-                    if (lastIndex !== -1) childExtensions[child.text.substring(lastIndex + 1)] = true;
-                }
+            let children = getChildrenNames(parent, 'file');
+            for (let i = 0; i < children.length; i++) {
+                let lastIndex = children[i].lastIndexOf('.');
+                if (lastIndex !== -1) childExtensions[children[i].substring(lastIndex + 1)] = true;
             }
             for (let i = 0; i < $scope.menuTemplates.length; i++) {
                 let item = {
@@ -296,10 +240,13 @@ projectsView.controller('ProjectsViewController', [
                 if (!item.isDisabled) {
                     item.data = {
                         parent: parent,
-                        name: `New File.${$scope.menuTemplates[i].extension}`,
+                        extension: $scope.menuTemplates[i].extension,
                         path: nodePath,
                         content: $scope.menuTemplates[i].data,
                         workspace: workspace,
+                        name: $scope.menuTemplates[i].name,
+                        staticName: $scope.menuTemplates[i].staticName || false,
+                        nameless: $scope.menuTemplates[i].nameless || false,
                     };
                 }
                 if (priorityTemplates && !$scope.menuTemplates[i].hasOwnProperty('order')) {
@@ -494,7 +441,7 @@ projectsView.controller('ProjectsViewController', [
                         };
                         if ($scope.genericTemplates.length) {
                             menuObj.items.push(generateObj);
-                            setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
+                            setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         }
                         // menuObj.items.push(importObj);
                         menuObj.items.push(importZipObj);
@@ -523,7 +470,7 @@ projectsView.controller('ProjectsViewController', [
                                 importZipObj,
                             ]
                         };
-                        setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path, node.children);
+                        setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         return menuObj;
                     } else if (node.type === "file") {
                         let menuObj = {
@@ -1438,7 +1385,8 @@ projectsView.controller('ProjectsViewController', [
             "projects.formDialog.create.file",
             function (msg) {
                 if (msg.data.buttonId === "b1") {
-                    createFile($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path);
+                    createFile($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.workspace, $scope.newNodeData.path, $scope.newNodeData.content);
+                    $scope.newNodeData.content = '';
                 }
                 messageHub.hideFormDialog("projectsNewFileForm");
             },
@@ -1457,6 +1405,63 @@ projectsView.controller('ProjectsViewController', [
         );
 
         messageHub.onDidReceiveMessage(
+            "projects.formDialog.rename",
+            function (msg) {
+                if (msg.data.buttonId === "b1") {
+                    workspaceApi.rename(
+                        $scope.renameNodeData.text,
+                        msg.data.formData[0].value,
+                        $scope.renameNodeData.data.path.substring($scope.renameNodeData.data.path.length - $scope.renameNodeData.text.length, 0),
+                        $scope.renameNodeData.data.workspace
+                    ).then(function (response) {
+                        if (response.status === 201) {
+                            let guessedPath = `${$scope.renameNodeData.data.path.substring($scope.renameNodeData.data.path.length - $scope.renameNodeData.text.length, 0)}${msg.data.formData[0].value}`; // Temporary until back-end is fixed
+                            let node = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData);
+                            if ($scope.renameNodeData.type === "file") {
+                                workspaceApi.getMetadataByPath($scope.renameNodeData.data.workspace, guessedPath).then(function (metadata) {
+                                    if (metadata.status === 200) {
+                                        messageHub.closeEditor(`/${$scope.renameNodeData.data.workspace}${$scope.renameNodeData.data.path}`);
+                                        node.text = metadata.data.name;
+                                        node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
+                                        node.data.contentType = metadata.data.contentType;
+                                        node.state.status = metadata.data.status;
+                                        node.icon = getFileIcon(metadata.data.name);
+                                        $scope.jstreeWidget.jstree(true).redraw_node(node);
+                                        messageHub.announceFileRenamed({
+                                            oldName: $scope.renameNodeData.text,
+                                            name: node.text,
+                                            oldPath: $scope.renameNodeData.data.path,
+                                            path: node.data.path,
+                                            contentType: node.data.contentType,
+                                            workspace: node.data.workspace,
+                                        });
+                                    } else {
+                                        messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
+                                    }
+                                });
+                            } else {
+                                for (let i = 0; i < $scope.renameNodeData.children_d.length; i++) {
+                                    let child = $scope.jstreeWidget.jstree(true).get_node($scope.renameNodeData.children_d[i]);
+                                    messageHub.closeEditor(`/${child.data.workspace}${child.data.path}`);
+                                    child.data.path = guessedPath + child.data.path.substring($scope.renameNodeData.data.path.length);
+                                }
+                                node.text = msg.data.formData[0].value;
+                                node.data.path = guessedPath;
+                                $scope.jstreeWidget.jstree(true).redraw_node(node);
+                            }
+                        } else {
+                            messageHub.setStatusError(`Unable to rename '${$scope.renameNodeData.text}'.`);
+                        }
+                        messageHub.hideFormDialog("projectsRenameForm");
+                    });
+                } else {
+                    messageHub.hideFormDialog("projectsRenameForm");
+                }
+            },
+            true
+        );
+
+        messageHub.onDidReceiveMessage(
             'projects.tree.contextmenu',
             function (msg) {
                 if (msg.data.itemId === 'open') {
@@ -1467,9 +1472,10 @@ projectsView.controller('ProjectsViewController', [
                     $scope.newNodeData.parent = msg.data.data.parent;
                     $scope.newNodeData.workspace = msg.data.data.workspace;
                     $scope.newNodeData.path = msg.data.data.path;
+                    $scope.newNodeData.content = '';
                     messageHub.showFormDialog(
                         "projectsNewFileForm",
-                        "Create new file",
+                        "Create a new file",
                         [{
                             id: "fdti1",
                             type: "input",
@@ -1528,7 +1534,35 @@ projectsView.controller('ProjectsViewController', [
                         "Creating..."
                     );
                 } else if (msg.data.itemId === 'rename') {
-                    $scope.jstreeWidget.jstree(true).edit(msg.data.data);
+                    $scope.renameNodeData = msg.data.data;
+                    messageHub.showFormDialog(
+                        "projectsRenameForm",
+                        `Rename ${$scope.renameNodeData.type}`,
+                        [{
+                            id: "fdti1",
+                            type: "input",
+                            label: "Name",
+                            required: true,
+                            inputRules: {
+                                excluded: getChildrenNames($scope.renameNodeData.parent, 'file'),
+                                patterns: ['^[^/:]*$'],
+                            },
+                            value: $scope.renameNodeData.text,
+                        }],
+                        [{
+                            id: "b1",
+                            type: "emphasized",
+                            label: "Rename",
+                            whenValid: true
+                        },
+                        {
+                            id: "b2",
+                            type: "transparent",
+                            label: "Cancel",
+                        }],
+                        "projects.formDialog.rename",
+                        "Renameing..."
+                    );
                 } else if (msg.data.itemId === 'delete') {
                     messageHub.showDialogAsync(
                         `Delete '${msg.data.data.text}'?`,
@@ -1753,13 +1787,72 @@ projectsView.controller('ProjectsViewController', [
                         );
                     }
                 } else {
-                    createFile(
-                        msg.data.data.parent,
-                        msg.data.data.name,
-                        msg.data.data.workspace,
-                        msg.data.data.path,
-                        msg.data.data.content
-                    );
+                    if (msg.data.data.nameless) {
+                        createFile(
+                            msg.data.data.parent,
+                            `.${msg.data.data.extension}`,
+                            msg.data.data.workspace,
+                            msg.data.data.path,
+                            msg.data.data.content
+                        );
+                    } else {
+                        let name;
+                        let excludedNames = getChildrenNames(msg.data.data.parent, 'file');
+                        let i = 1;
+                        if (msg.data.data.extension) {
+                            name = `${msg.data.data.name}.${msg.data.data.extension}`;
+                            while (excludedNames.includes(name)) {
+                                name = `${msg.data.data.name} ${i++}.${msg.data.data.extension}`;
+                            }
+                        } else {
+                            name = msg.data.data.name;
+                            while (excludedNames.includes(name)) {
+                                name = `${msg.data.data.name} ${i++}`;
+                            }
+                        }
+                        if (msg.data.data.staticName) {
+                            createFile(
+                                msg.data.data.parent,
+                                name,
+                                msg.data.data.workspace,
+                                msg.data.data.path,
+                                msg.data.data.content
+                            );
+                        } else {
+                            $scope.newNodeData.parent = msg.data.data.parent;
+                            $scope.newNodeData.workspace = msg.data.data.workspace;
+                            $scope.newNodeData.path = msg.data.data.path;
+                            $scope.newNodeData.content = msg.data.data.content;
+                            messageHub.showFormDialog(
+                                "projectsNewFileForm",
+                                "Create a new file",
+                                [{
+                                    id: "fdti1",
+                                    type: "input",
+                                    label: "Name",
+                                    required: true,
+                                    inputRules: {
+                                        excluded: excludedNames,
+                                        patterns: ['^[^/:]*$'],
+                                    },
+                                    value: name,
+                                }],
+                                [{
+                                    id: "b1",
+                                    type: "emphasized",
+                                    label: "Create",
+                                    whenValid: true
+                                },
+                                {
+                                    id: "b2",
+                                    type: "transparent",
+                                    label: "Cancel",
+                                }],
+                                "projects.formDialog.create.file",
+                                "Creating..."
+                            );
+                        }
+                    }
                 }
             },
             true

@@ -71,24 +71,21 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 let parseFn = $parse(attr.dgInputRules);
                 scope.inputRules = parseFn(scope);
 
-                function validation(value) {
-                    if (value) {
+                function validation(modelValue, viewValue) {
+                    if (viewValue) {
                         let isValid = true;
-                        if (scope.inputRules.excluded) isValid = !scope.inputRules.excluded.includes(value);
+                        if (scope.inputRules.excluded) isValid = !scope.inputRules.excluded.includes(viewValue);
                         if (isValid && scope.inputRules.patterns) {
                             for (let i = 0; i < scope.inputRules.patterns.length; i++) {
-                                isValid = RegExp(scope.inputRules.patterns[i]).test(value);
+                                isValid = RegExp(scope.inputRules.patterns[i]).test(viewValue);
                                 if (!isValid) break;
                             }
                         }
-                        controller.$setValidity('inputRules', isValid);
-                    } else {
-                        if (attr.required) controller.$setValidity('inputRules', false);
-                        else controller.$setValidity('inputRules', true);
-                    }
-                    return value;
+                        return isValid;
+                    } else if (attr.required) return false;
+                    return true;
                 }
-                controller.$parsers.push(validation);
+                controller.$validators.pattern = validation;
             }
         };
     }).directive('fdScrollbar', [function () {
@@ -2651,10 +2648,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
             }
         }
-    }]).directive('fdComboboxInput', ['uuid', function (uuid) {
+    }]).directive('fdComboboxInput', ['uuid', 'classNames', function (uuid, classNames) {
         /**
          * dropdownItems: Array[{ text: String, secondaryText: String, value: Any }] - Items to be filtered in the search input.
-         * selectedValue: Any - The value of the selected item
+         * selectedValue: Any|Array[Any] - The value of the selected item. If multiSelect is set to true this must be an array 
          * dgPlaceholder: String - Placeholder of the search input
          * compact: Boolean - Whether the search input should be displayed in compact mode
          * dgDisabled: Boolean - Whether the search input is disabled
@@ -2662,6 +2659,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
          * message: String - Optional text displayed within the dropdown list
          * inputId: String - Id attribute for input element inside Combobox component
          * dgAriaLabel: String - Aria-label for Combobox
+         * multiSelect: Boolean - When true the combobox allows selecting multiple items
          */
         return {
             restrict: 'EA',
@@ -2675,20 +2673,34 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 state: '@',
                 message: '@',
                 inputId: '@',
-                dgAriaLabel: '@'
+                dgAriaLabel: '@',
+                multiSelect: '<'
             },
             link: function (scope, element) {
-                const inputEl = element.find('input');
-                const initiallySelectedItem = scope.dropdownItems.find(x => x.value === scope.selectedValue);
-                scope.searchTerm = initiallySelectedItem ? initiallySelectedItem.text : '';
+                scope.search = { term: '' };
+                if (!scope.multiSelect) {
+                    const initiallySelectedItem = scope.dropdownItems.find(x => x.value === scope.selectedValue);
+                    scope.search.term = initiallySelectedItem ? initiallySelectedItem.text : '';
+                } else {
+                    if (scope.selectedValue === undefined) {
+                        scope.selectedValue = [];
+                    }
+                    if (!Array.isArray(scope.selectedValue)) {
+                        console.error(`fd-combobox-input error: When multi-select is true 'selected-value' must be an array`);
+                        scope.selectedValue = [];
+                    }
+                }
+
                 scope.dropdownItems = scope.dropdownItems || [];
                 scope.filteredDropdownItems = scope.dropdownItems;
-                scope.bodyId = `combobox-body-${uuid.generate()}`;
+                scope.bodyId = `cb-body-${uuid.generate()}`;
+                scope.checkboxIds = {};
 
                 scope.onControllClick = function () {
                     scope.bodyExpanded = !scope.bodyExpanded;
-                    if (scope.bodyExpanded)
-                        inputEl.focus();
+                    if (scope.bodyExpanded) {
+                        element.find('input').focus();
+                    }
                 }
 
                 scope.closeDropdown = function () {
@@ -2706,13 +2718,15 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 scope.onInputChange = function () {
                     scope.filterValues();
 
-                    const item = scope.dropdownItems.find(x => x.text.toLowerCase() === scope.searchTerm.toLowerCase());
-                    scope.selectedValue = item ? item.value : null;
+                    if (!scope.multiSelect) {
+                        const item = scope.dropdownItems.find(x => x.text.toLowerCase() === scope.search.term.toLowerCase());
+                        scope.selectedValue = item ? item.value : null;
+                    }
                 }
 
                 scope.filterValues = function () {
-                    if (scope.searchTerm) {
-                        scope.filteredDropdownItems = scope.dropdownItems.filter(x => x.text.toLowerCase().startsWith(scope.searchTerm.toLowerCase()));
+                    if (scope.search.term) {
+                        scope.filteredDropdownItems = scope.dropdownItems.filter(x => x.text.toLowerCase().startsWith(scope.search.term.toLowerCase()));
                     } else {
                         scope.filteredDropdownItems = scope.dropdownItems;
                     }
@@ -2722,6 +2736,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     const ARROW_UP = 38;
                     const ARROW_DOWN = 40;
                     if (event.keyCode === ARROW_UP || event.keyCode === ARROW_DOWN) {
+                        const inputEl = element.find('input');
                         const elements = [inputEl[0], ...element.find('.fd-popover__body li')];
                         const index = elements.findIndex(x => x === event.target);
                         if (index === -1) return;
@@ -2740,30 +2755,102 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                 }
 
-                scope.selectItem = function (item) {
-                    scope.selectedValue = item.value;
-                    scope.searchTerm = item.text;
+                scope.onSearchKeyDown = function (event) {
+                    switch (event.key) {
+                        case 'Backspace':
+                            if (scope.search.term.length === 0 && scope.selectedValue.length)
+                                scope.selectedValue.splice(-1, 1);
+                            break;
+                        case 'Enter':
+                            if (scope.search.term.length && scope.filteredDropdownItems.length) {
+                                scope.addItemToSelection(scope.filteredDropdownItems[0]);
+                                scope.search.term = '';
+                                scope.filterValues();
+                            }
+                            break;
+                    }
+                }
+
+                scope.removeItemFromSelection = function (item) {
+                    const itemIndex = scope.selectedValue.indexOf(item.value);
+                    if (itemIndex >= 0)
+                        scope.selectedValue.splice(itemIndex, 1);
+                }
+
+                scope.addItemToSelection = function (item) {
+                    const itemIndex = scope.selectedValue.indexOf(item.value);
+                    if (itemIndex === -1)
+                        scope.selectedValue.push(item.value);
+                }
+
+                scope.onItemClick = function (item) {
+                    if (scope.multiSelect) {
+                        const itemIndex = scope.selectedValue.indexOf(item.value);
+                        if (itemIndex >= 0)
+                            scope.selectedValue.splice(itemIndex, 1);
+                        else
+                            scope.selectedValue.push(item.value);
+                    } else {
+                        scope.selectedValue = item.value;
+                        scope.search.term = item.text;
+                    }
                     scope.filterValues();
-                    scope.closeDropdown();
+
+                    if (!scope.multiSelect)
+                        scope.closeDropdown();
+                }
+
+                scope.isSelected = function (item) {
+                    if (scope.multiSelect) {
+                        return scope.selectedValue.includes(item.value);
+                    } else {
+                        return item.value === scope.selectedValue;
+                    }
                 }
 
                 scope.getHighlightedText = function (value) {
-                    return scope.shouldRendedHighlightedText(value) ? value.substring(0, scope.searchTerm.length) : null;
+                    return scope.shouldRendedHighlightedText(value) ? value.substring(0, scope.search.term.length) : null;
                 }
 
                 scope.shouldRendedHighlightedText = function (value) {
-                    return value.toLowerCase().startsWith(scope.searchTerm.toLowerCase()) && value.length > scope.searchTerm.length;
+                    return value.toLowerCase().startsWith(scope.search.term.toLowerCase()) && value.length > scope.search.term.length;
                 }
 
                 scope.getLabel = function (value) {
-                    return scope.shouldRendedHighlightedText(value) ? value.substring(scope.searchTerm.length) : value;
+                    return scope.shouldRendedHighlightedText(value) ? value.substring(scope.search.term.length) : value;
                 }
 
                 scope.isDisabled = function () {
                     return scope.dgDisabled ? true : undefined;
                 }
 
+                scope.getListClasses = function () {
+                    return classNames({
+                        'fd-list--multi-input': scope.multiSelect
+                    });
+                }
+
+                scope.getCheckboxId = function (value) {
+                    let id = scope.checkboxIds[value];
+                    if (!id) scope.checkboxIds[value] = id = `cb-checkbox-${uuid.generate()}`;
+                    return id;
+                }
+
+                scope.getSelectedItems = function () {
+                    return scope.selectedValue.map(value => scope.dropdownItems.find(item => item.value === value));
+                }
+
+                scope.onTokenClick = function (item) {
+                    if (scope.bodyExpanded) {
+                        element.find('input').focus();
+                    }
+                    scope.removeItemFromSelection(item);
+                }
+
                 element.on('focusout', function (e) {
+                    if (!scope.bodyExpanded)
+                        return;
+
                     if (!e.relatedTarget || !element[0].contains(e.relatedTarget)) {
                         scope.$apply(scope.closeDropdown);
                     }
@@ -2772,7 +2859,12 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             template: `<div class="fd-popover" ng-keydown="onKeyDown($event)">
                 <div class="fd-popover__control" ng-attr-disabled="{{ isDisabled() }}" ng-attr-aria-disabled="{{isDisabled() }}" aria-expanded="{{ isBodyExpanded() }}" aria-haspopup="true" aria-controls="{{ bodyId }}">
                     <fd-input-group class="fd-input-group--control" dg-disabled="{{isDisabled() }}" state="{{ state }}">
-                        <fd-input ng-attr-id="{{ inputId }}" type="text" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" compact="{{ compact }}" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="$parent.$parent.searchTerm"></fd-input>
+                        <fd-tokenizer ng-if="multiSelect" compact="compact">
+                            <fd-token ng-repeat="item in getSelectedItems()" close-clicked="onTokenClick(item)" compact="compact" dg-text="{{item.text}}" close-button-aria-label="unselect option: {{item.text}}" tabindex="0"></fd-token>
+                            <fd-token-indicator></fd-token-indicator>
+                            <fd-input ng-attr-id="{{ inputId }}" type="text" class="fd-tokenizer__input" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" compact="{{ compact }}" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term" ng-keydown="onSearchKeyDown($event)"></fd-input>
+                        </fd-tokenizer>
+                        <fd-input ng-if="!multiSelect" ng-attr-id="{{ inputId }}" type="text" autocomplete="off" placeholder="{{ dgPlaceholder }}" in-group="true" compact="{{ compact }}" ng-focus="openDropdown()" ng-change="onInputChange()" ng-model="search.term"></fd-input>
                         <fd-input-group-addon has-button="true" compact="{{ compact }}">
                             <fd-button class="fd-select__button" in-group="true" compact="{{ compact }}" glyph="sap-icon--navigation-down-arrow" dg-type="transparent" state="{{ isBodyExpanded() ? 'expanded' : '' }}" ng-click="onControllClick()"
                                 ng-attr-aria-label="{{ dgAriaLabel }}"
@@ -2784,8 +2876,13 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 <div ng-if="!dgDisabled" id="{{ bodyId }}" class="fd-popover__body fd-popover__body--no-arrow fd-popover__body--dropdown fd-popover__body--dropdown-fill" aria-hidden="{{ !isBodyExpanded() }}" ng-attr-aria-label="{{ dgAriaLabel }}">
                     <div class="fd-popover__wrapper">
                         <fd-list-message ng-if="message" state="{{ state }}">{{ message }}</fd-list-message>
-                        <fd-list dropdown-mode="true" compact="compact" has-message="!!message">
-                            <fd-list-item ng-repeat="item in filteredDropdownItems" role="option" tabindex="0" dg-selected="item.value === selectedValue" ng-click="selectItem(item)">
+                        <fd-list class="{{getListClasses()}}" dropdown-mode="true" compact="compact" has-message="!!message">
+                            <fd-list-item ng-repeat="item in filteredDropdownItems" role="option" tabindex="0" dg-selected="isSelected(item)" ng-click="onItemClick(item)">
+                                <fd-list-form-item ng-if="multiSelect">
+                                    <fd-checkbox id="{{getCheckboxId(item.value)}}" compact="compact" ng-checked="isSelected(item)">
+                                    </fd-checkbox>
+                                    <fd-checkbox-label empty="true" compact="compact" for="{{getCheckboxId(item.value)}}" ng-click="$event.preventDefault()"></fd-checkbox-label>
+                                </fd-list-form-item>
                                 <fd-list-title>
                                     <span ng-if="shouldRendedHighlightedText(item.text)" class="fd-list__bold">{{ getHighlightedText(item.text) }}</span>{{ getLabel(item.text) }}
                                 </fd-list-title>
@@ -2982,8 +3079,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 this.isValidSize = function (size) {
-                    if (size) return validSizes.includes(size);
-                    return validSizes.includes($scope.dgSize);
+                    return validSizes.includes(size);
                 }
 
                 this.getValidSizes = function () {
@@ -3008,7 +3104,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     return wizCtrl.getSteps();
                 }
                 scope.getProgressBarClasses = () => classNames('fd-wizard__progress-bar', {
-                    [`fd-wizard__progress-bar--${wizCtrl.getSize()}`]: wizCtrl.isValidSize()
+                    [`fd-wizard__progress-bar--${wizCtrl.getSize()}`]: wizCtrl.isValidSize(wizCtrl.getSize())
                 });
                 scope.getConnectorClasses = (step) => classNames('fd-wizard__connector', {
                     'fd-wizard__connector--active': wizCtrl.isStepCompleted(step)
@@ -3521,5 +3617,174 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 <fd-button ng-if="isEditing()" dg-label="Ok" state="{{ getOkButtonState() }}" dg-type="transparent" ng-click="okClick($event)"></fd-button>
 				<fd-button ng-if="isEditing()" dg-label="Cancel" dg-type="transparent" ng-click="cancelClick($event)"></fd-button>
             <div>`
+        }
+    }]).directive('fdTokenizer', [function () {
+        /**
+         * compact: Boolean - Whether the tokenizer is compact
+         * focusable: Boolean - Whether tokenizer should have fake focus indicator, when input is focused inside
+         * scrollable: Boolean - Whether tokenizer is scrollable. When false displays 'more' indicator with the number of the hidden tokens
+         */
+        return {
+            restrict: 'EA',
+            transclude: true,
+            replace: true,
+            scope: {
+                compact: '<',
+                focusable: '<',
+                scrollable: '<'
+            },
+            controller: ['$scope', '$element', 'classNames', function ($scope, $element, classNames) {
+                $scope.tokenElements = [];
+                $scope.numberOfVisibleTokens = 0;
+
+                const tokenElementWidths = new Map();
+                const scrollable = !!$scope.scrollable;
+                let tokenizerRO, tokensRO;
+
+                function findNumberOfVisibleTokens() {
+                    let width = 0;
+                    const indicatorWidth = 50;
+                    const inputMinWidth = getInputMinWidth();
+                    const containerWidth = $element.width();
+                    const availableWidth = containerWidth - inputMinWidth - indicatorWidth;
+                    for (let i = 0; i < $scope.tokenElements.length; i++) {
+                        let el = $scope.tokenElements[i];
+                        width += tokenElementWidths.get(el[0]);
+                        if (availableWidth - width < 0) {
+                            $scope.numberOfVisibleTokens = i;
+                            return;
+                        }
+                    }
+                    $scope.numberOfVisibleTokens = $scope.tokenElements.length;
+                }
+
+                function getInputMinWidth() {
+                    const input = $element.find('.fd-tokenizer__input');
+                    const minWidth = input.css('min-width');
+                    return minWidth ? parseInt(minWidth, 10) : 0;
+                }
+
+                this.addToken = function (tokenElement) {
+                    $scope.tokenElements.push(tokenElement);
+
+                    if (!scrollable) {
+                        const el = tokenElement[0];
+                        tokenElementWidths.set(el, tokenElement.outerWidth(true));
+                        tokensRO.observe(el);
+                        findNumberOfVisibleTokens();
+                    }
+                }
+
+                this.removeToken = function (tokenElement) {
+                    const index = $scope.tokenElements.indexOf(tokenElement);
+                    if (index >= 0) {
+                        $scope.tokenElements.splice(index, 1);
+
+                        if (!scrollable) {
+                            const el = tokenElement[0];
+                            tokenElementWidths.delete(el);
+                            tokensRO.unobserve(el);
+                            findNumberOfVisibleTokens();
+                        }
+                    }
+                }
+
+                this.isTokenVisible = function (tokenElement) {
+                    if (scrollable)
+                        return true;
+
+                    const index = $scope.tokenElements.indexOf(tokenElement);
+                    return index < $scope.numberOfVisibleTokens;
+                }
+
+                this.getNumberOfHiddenTokens = function () {
+                    if (scrollable)
+                        return 0;
+
+                    const count = $scope.tokenElements.length - $scope.numberOfVisibleTokens;
+                    return count < 0 ? 0 : count;
+                }
+
+                $scope.getClasses = () => classNames('fd-tokenizer', {
+                    'fd-tokenizer--compact': $scope.compact,
+                    'is-focus': $scope.focusable,
+                    'fd-tokenizer--scrollable': $scope.scrollable
+                });
+
+                if (!scrollable) {
+                    tokenizerRO = new ResizeObserver(() => {
+                        $scope.$apply(findNumberOfVisibleTokens);
+                    });
+
+                    tokenizerRO.observe($element[0]);
+
+                    tokensRO = new ResizeObserver(entries => {
+                        for (let entry of entries) {
+                            if (entry.contentRect.width > 0)
+                                tokenElementWidths.set(entry.target, $(entry.target).outerWidth(true));
+                        }
+                        $scope.$apply(findNumberOfVisibleTokens);
+                    });
+
+                    $scope.$on('$destroy', function () {
+                        tokenizerRO.disconnect();
+                        tokensRO.disconnect();
+                    });
+                }
+            }],
+            template: `<div ng-class="getClasses()">
+            <div class="fd-tokenizer__inner" tabindex="0" ng-transclude></div>
+        </div>`
+        }
+    }]).directive('fdToken', ['classNames', function (classNames) {
+        /**
+         * dgText: String - The text of the token
+         * compact: Boolean - Whether the token is compact.
+         * dgReadOnly: Boolean - Whether the token is read-only.
+         * closeButtonAriaLabel: String - Aria label for the close button
+         * closeClicked: Function - A callback called when the close button has been clicked 
+         */
+        return {
+            restrict: 'EA',
+            replace: true,
+            require: '?^fdTokenizer',
+            scope: {
+                dgText: '@',
+                compact: '<',
+                dgReadOnly: '<',
+                closeButtonAriaLabel: '@',
+                closeClicked: '&'
+            },
+            link: function (scope, element, attr, tokenizerCtrl) {
+                if (tokenizerCtrl) {
+                    tokenizerCtrl.addToken(element);
+
+                    scope.$on('$destroy', function () {
+                        tokenizerCtrl.removeToken(element);
+                    });
+                }
+
+                scope.getClasses = () => classNames('fd-token', {
+                    'fd-token--compact': scope.compact,
+                    'fd-token--readonly': scope.dgReadOnly
+                })
+
+                scope.isVisible = () => tokenizerCtrl ? tokenizerCtrl.isTokenVisible(element) : true;
+            },
+            template: `<span ng-show="isVisible()" ng-class="getClasses()" role="button">
+            <span class="fd-token__text">{{dgText}}</span>
+            <button ng-if="!dgReadOnly" class="fd-token__close" aria-label="{{closeButtonAriaLabel}}" ng-click="closeClicked()"></button>
+        </span>`
+        }
+    }]).directive('fdTokenIndicator', [function () {
+        return {
+            restrict: 'EA',
+            replace: true,
+            require: '^fdTokenizer',
+            link: function (scope, element, attr, tokenizerCtrl) {
+                scope.getNumberOfHiddenTokens = () => tokenizerCtrl.getNumberOfHiddenTokens();
+                scope.getText = () => `${tokenizerCtrl.getNumberOfHiddenTokens()} more`;
+            },
+            template: `<span ng-if="getNumberOfHiddenTokens() > 0" class="fd-tokenizer__indicator">{{ getText() }}</span>`
         }
     }]);
