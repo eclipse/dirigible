@@ -13,6 +13,7 @@ package org.eclipse.dirigible.database.dynamic;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +21,13 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.dirigible.database.api.AbstractDatabase;
+import org.eclipse.dirigible.database.api.wrappers.WrappedDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * The Dynamic Database
@@ -83,23 +87,50 @@ public class DynamicDatabase extends AbstractDatabase {
 	 * @throws IOException 
 	 */
 	public static DataSource createDataSource(String name, String databaseDriver, String databaseUrl, String databaseUsername, String databasePassword, String databaseConnectionProperties) throws IOException {
+		DataSource dataSource = DATASOURCES.get(name);
+		if (dataSource != null) {
+			logger.warn(String.format("Dynamic datasource with name [%s] already exists.", name));
+			return dataSource;
+		}
 		if ((databaseDriver != null) && (databaseUrl != null) && (databaseUsername != null) && (databasePassword != null)) {
-			BasicDataSource basicDataSource = new BasicDataSource();
-			basicDataSource.setDriverClassName(databaseDriver);
-			basicDataSource.setUrl(databaseUrl);
-			basicDataSource.setUsername(databaseUsername);
-			basicDataSource.setPassword(databasePassword);
-			basicDataSource.setDefaultAutoCommit(true);
-			basicDataSource.setAccessToUnderlyingConnectionAllowed(true);
-			if (databaseConnectionProperties != null) {
-				Properties properties = new Properties();
-				properties.load(new StringReader(databaseConnectionProperties));
-				basicDataSource.setConnectionProperties(databaseConnectionProperties);
+			
+			Properties props = new Properties();
+			props.setProperty("driverClassName", databaseDriver);
+			props.setProperty("dataSource.user", databaseUsername);
+			props.setProperty("dataSource.password", databasePassword);
+			props.setProperty("jdbcUrl", databaseUrl);
+			props.setProperty("leakDetectionThreshold", "10000" );
+			props.setProperty("poolName", name + "HikariPool");
+
+			if (databaseConnectionProperties != null
+					&& !"".equals(databaseConnectionProperties.trim())) {
+				Properties definedProps = new Properties();
+				definedProps.load(new StringReader(databaseConnectionProperties));
+				Map<String, String> hikariProperties = getHikariProperties(definedProps);
+				hikariProperties.forEach(props::setProperty);
 			}
-			DATASOURCES.put(name, basicDataSource);
-			return basicDataSource;
+
+			HikariConfig config = new HikariConfig(props);
+			HikariDataSource ds = new HikariDataSource(config);
+
+			WrappedDataSource wrappedDataSource = new WrappedDataSource(ds);
+			DATASOURCES.put(name, wrappedDataSource);
+			return wrappedDataSource;
 		}
 		throw new IllegalArgumentException("Invalid configuration for the dynamic datasource: " + name);
+	}
+	
+	private static Map<String, String> getHikariProperties(Properties definedProps) {
+		Map<String, String> properties = new HashMap<>();
+		String hikariDelimiter = "HIKARI_";
+		int hikariDelimiterLength = hikariDelimiter.length();
+		String[] array = new String[definedProps.keySet().size()];
+		definedProps.keySet().toArray(array);
+		Arrays.stream(array).filter(key -> key.startsWith(hikariDelimiter))
+			.map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
+			.forEach(key -> properties.put(key, (String) definedProps.get(hikariDelimiter + key)));
+
+		return properties;
 	}
 
 	/*
