@@ -202,7 +202,7 @@ public class JSWebService extends AbstractRestService implements IRestService {
 	public boolean isValid(String inputPath) {
 		String registryPath = getDirigibleWorkingDirectory().toString();
 		String normalizedInputPath = java.nio.file.Path.of(inputPath).normalize().toString();
-		var file = new File(registryPath, normalizedInputPath);
+		File file = new File(registryPath, normalizedInputPath);
 		try {
 			return file.getCanonicalPath().startsWith(registryPath);
 		} catch (IOException e) {
