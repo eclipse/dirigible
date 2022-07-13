@@ -293,7 +293,7 @@ public class CsvProcessor {
 		} else if (Types.DOUBLE == dataType) {
 			value = numberize(value);
 			preparedStatement.setDouble(i, Double.parseDouble(value));
-		} else if (Types.BOOLEAN == dataType) {
+		} else if (Types.BOOLEAN == dataType || Types.BIT == dataType) {
 			preparedStatement.setBoolean(i, Boolean.parseBoolean(value));
 		} else if (Types.DECIMAL == dataType) {
 			value = numberize(value);
