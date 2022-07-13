@@ -48,7 +48,7 @@ exports.getTemplate = function (parameters) {
     templateParameters = templateParameters.concat(odataTemplate.parameters);
 
     return {
-        name: "Application - full stack (AngularJS)",
+        name: "Application - Full Stack",
         description: "Application - full stack with a Database Schema, a set of REST Services and an AngularJS User Interfaces",
         extension: "model",
         sources: templateSources,
