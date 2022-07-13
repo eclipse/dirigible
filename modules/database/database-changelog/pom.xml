@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-database-parent</artifactId>
-		<version>6.3.11</version>
+		<version>7.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,12 +34,12 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-config</artifactId>
-            <version>6.3.11</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-api</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 		    <groupId>org.eclipse.persistence</groupId>
@@ -49,37 +49,37 @@
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-api</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-data-models</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
 		<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-persistence</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-core-scheduler</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-api</artifactId>
-            <version>6.3.11</version>
+            <version>7.0.0-SNAPSHOT</version>
         </dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-api-facade-security</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-data-structures</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
     	</dependency>
     	
     	<dependency>
@@ -91,19 +91,19 @@
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-derby</artifactId>
-			<version>6.3.11</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>test</scope>
     	</dependency>
     	<dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-repository-local</artifactId>
-            <version>6.3.11</version>
+            <version>7.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>
