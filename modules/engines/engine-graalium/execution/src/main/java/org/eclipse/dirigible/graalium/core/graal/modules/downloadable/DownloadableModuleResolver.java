@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,16 +39,16 @@ public class DownloadableModuleResolver {
     }
 
     private Path downloadDependency(URI uri) {
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
                 .newBuilder()
                 .GET()
                 .uri(uri)
                 .build();
 
         try {
-            var responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
-            var response = client.send(request, responseBodyHandler);
+        	BodyHandler<byte[]> responseBodyHandler = HttpResponse.BodyHandlers.ofByteArray();
+        	HttpResponse<byte[]> response = client.send(request, responseBodyHandler);
             Path dependencyFilePath = getDependencyFilePathForOutput(uri);
             byte[] downloadedBytes = response.body();
             Files.write(dependencyFilePath, downloadedBytes);

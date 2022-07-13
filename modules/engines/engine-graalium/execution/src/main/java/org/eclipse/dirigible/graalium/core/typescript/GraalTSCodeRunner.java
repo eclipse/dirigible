@@ -22,11 +22,11 @@ public class GraalTSCodeRunner implements TSCodeRunner<Source, Value> {
 
     @Override
     public Value run(Path codeFilePath) {
-        var codeFilePathString = codeFilePath.toString();
-        var typescriptCompiler = new TSCompiler(codeRunner.getCurrentWorkingDirectoryPath());
+        String codeFilePathString = codeFilePath.toString();
+        TSCompiler typescriptCompiler = new TSCompiler(codeRunner.getCurrentWorkingDirectoryPath());
         typescriptCompiler.compile(codeFilePathString);
-        var compiledCodeFilePathString = codeFilePathString.replace(".ts", ".js");
-        var compiledCodeFilePath = Path.of(compiledCodeFilePathString);
+        String compiledCodeFilePathString = codeFilePathString.replace(".ts", ".js");
+        Path compiledCodeFilePath = Path.of(compiledCodeFilePathString);
         return codeRunner.run(compiledCodeFilePath);
     }
 

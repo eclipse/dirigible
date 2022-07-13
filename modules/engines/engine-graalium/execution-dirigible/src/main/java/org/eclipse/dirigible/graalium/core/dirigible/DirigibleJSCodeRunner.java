@@ -21,9 +21,9 @@ public class DirigibleJSCodeRunner implements JSCodeRunner<Source, Value> {
     private final JSCodeRunner<Source, Value> codeRunner;
 
     public DirigibleJSCodeRunner() {
-        var workingDirectoryPath = getDirigibleWorkingDirectory();
-        var cachePath = workingDirectoryPath.resolve("caches");
-        var coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
+        Path workingDirectoryPath = getDirigibleWorkingDirectory();
+        Path cachePath = workingDirectoryPath.resolve("caches");
+        Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
 
         codeRunner = GraalJSCodeRunner.newBuilder(workingDirectoryPath, cachePath)
                 .addJSPolyfill(new RequirePolyfill())
@@ -39,7 +39,7 @@ public class DirigibleJSCodeRunner implements JSCodeRunner<Source, Value> {
     }
 
     private Path getDirigibleWorkingDirectory() {
-        var repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+    	IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
         String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
         return Path.of(publicRegistryPath);
     }

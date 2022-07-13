@@ -1,6 +1,7 @@
 package org.eclipse.dirigible.graalium.core.graal.polyfills;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public interface JSPolyfill {
@@ -11,7 +12,7 @@ public interface JSPolyfill {
 
     default String getPolyfillFromResources(String polyfillPathInResources) {
         try {
-            var polyfillCodeStream = JSPolyfill.class.getResourceAsStream(polyfillPathInResources);
+        	InputStream polyfillCodeStream = JSPolyfill.class.getResourceAsStream(polyfillPathInResources);
             if (polyfillCodeStream == null) {
                 throw new RuntimeException("Polyfill '" + polyfillPathInResources + "' not found in resources!");
             }

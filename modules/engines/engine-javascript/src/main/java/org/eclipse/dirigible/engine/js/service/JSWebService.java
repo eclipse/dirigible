@@ -194,7 +194,7 @@ public class JSWebService extends AbstractRestService implements IRestService {
 	}
 
 	private java.nio.file.Path getDirigibleWorkingDirectory() {
-		var repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
+		IRepository repository = (IRepository) StaticObjects.get(StaticObjects.REPOSITORY);
 		String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
 		return java.nio.file.Path.of(publicRegistryPath);
 	}
@@ -202,7 +202,7 @@ public class JSWebService extends AbstractRestService implements IRestService {
 	public boolean isValid(String inputPath) {
 		String registryPath = getDirigibleWorkingDirectory().toString();
 		String normalizedInputPath = java.nio.file.Path.of(inputPath).normalize().toString();
-		var file = new File(registryPath, normalizedInputPath);
+		File file = new File(registryPath, normalizedInputPath);
 		try {
 			return file.getCanonicalPath().startsWith(registryPath);
 		} catch (IOException e) {
