@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.eclipse.dirigible</groupId>
         <artifactId>dirigible-ide-ui-parent</artifactId>
-        <version>6.3.10</version>
+        <version>6.3.11</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

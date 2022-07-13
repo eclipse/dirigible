@@ -4,7 +4,7 @@
   <parent>
     <artifactId>engine-graalium</artifactId>
     <groupId>org.eclipse.dirigible</groupId>
-    <version>6.3.10</version>
+    <version>6.3.11</version>
   </parent>
 
   <artifactId>engine-graalium-execution</artifactId>
