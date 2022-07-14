@@ -9,31 +9,35 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('about', [])
+angular.module('about', ['ideUI', 'ideView'])
 	.controller('AboutController', ['$scope', '$http', function ($scope, $http) {
+		$scope.jobs = [];
+
+		$scope.getHealthStatus = function () {
+			$http({
+				method: 'GET',
+				url: '/services/v4/healthcheck'
+			}).then(function (healthStatus) {
+				$scope.jobs.length = 0;
+				for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
+					$scope.jobs.push({
+						name: key,
+						status: value,
+					});
+				}
+			}, function (e) {
+				console.error("Error retreiving the health status", e);
+			});
+		};
+
+		setInterval(function () {
+			$scope.getHealthStatus();
+		}, 10000);
 
 		$http.get('/services/v4/version').then(function (response) {
 			$scope.version = response.data;
 		});
 
-		setInterval(function () {
-
-			$http({
-				method: 'GET',
-				url: '/services/v4/healthcheck'
-			}).then(function (healthStatus) {
-				let jobs = [];
-				for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
-					let job = new Object();
-					job.name = key;
-					job.status = value;
-					jobs.push(job);
-				}
-				$scope.jobs = jobs;
-			}, function (e) {
-				console.error("Error retreiving the health status", e);
-			});
-
-		}, 10000);
+		$scope.getHealthStatus();
 
 	}]);

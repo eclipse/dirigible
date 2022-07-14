@@ -59,8 +59,12 @@ editorView.directive('validateInput', () => {
                 }
                 if (attrs.hasOwnProperty("id")) {
                     if (attrs["id"] === "table") scope.$parent.showTableError(!correct);
-                    else if (attrs["id"] === "schema") scope.$parent.showSchemaError(!correct);
-                    else if (attrs["id"] === "filepath") {
+                    else if (attrs["id"] === "schema") {
+                        if (value === '' || value === null || value === undefined) {
+                            scope.$parent.showSchemaError(false);
+                            correct = true;
+                        } else scope.$parent.showSchemaError(!correct);
+                    } else if (attrs["id"] === "filepath") {
                         scope.$parent.fileExists = true;
                         scope.$parent.showFilepathError(!correct);
                     }
@@ -402,6 +406,9 @@ editorView.controller('CsvimViewController', ['$scope', '$http', '$messageHub', 
      */
     function cleanForOutput(key, value) {
         if (key === "name" || key === "visible") {
+            return undefined;
+        }
+        if (key === "schema" && value === "") {
             return undefined;
         }
         return value;

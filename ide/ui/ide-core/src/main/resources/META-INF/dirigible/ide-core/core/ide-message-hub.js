@@ -407,6 +407,17 @@ angular.module('ideMessageHub', [])
                     throw Error('Callback argument must be a function');
                 return messageHub.subscribe(callbackFunc, 'ide.file.deleted');
             };
+            /**
+             * fileDescriptor object for rename:
+             * {
+             *   oldName: 'sample.js',
+             *   name: 'example.js',
+             *   oldPath: '/project/folder/sample.js',
+             *   path: '/project/folder/example.js',
+             *   contentType: 'text/javascript',
+             *   workspace: 'example'
+             * }
+            */
             let announceFileRenamed = function (fileDescriptor) {
                 if (fileDescriptor !== undefined && !(typeof fileDescriptor === 'object' && !Array.isArray(fileDescriptor) && fileDescriptor !== null))
                     throw Error('You must provide an appropriate file descriptor object, containing name, path, contentType and workspace');

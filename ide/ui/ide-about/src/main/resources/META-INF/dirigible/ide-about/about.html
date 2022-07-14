@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -9,108 +9,125 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="about" ng-controller="AboutController as about">
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-
-        <script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+        <title dg-view-title></title>
+        <script type="text/javascript" src="services/about-window.js"></script>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
         <script type="text/javascript" src="js/about.js"></script>
-
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-
     </head>
 
-    <body class="view" ng-app="about" ng-controller="AboutController as about">
+    <body class="fd-scrollbar">
+        <div class="fd-padding">
+            <fd-panel expanded="true" ng-if="version">
+                <fd-panel-header>
+                    <fd-panel-expand></fd-panel-expand>
+                    <h4 fd-panel-title>{{version.productName}}</h4>
+                </fd-panel-header>
+                <fd-panel-content aria-label="Panel Content">
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header>
+                            <tr fd-table-row></tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Version</strong></td>
+                                <td fd-table-cell>{{version.productVersion}}</td>
+                            </tr>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Commit Id</strong></td>
+                                <td fd-table-cell><a style="color:inherit"
+                                        href="{{version.productRepository}}/commit/{{version.productCommitId}}"
+                                        target="_blank" rel="noopener noreferrer">{{version.productCommitId}}</a>
+                                </td>
+                            </tr>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Type</strong></td>
+                                <td fd-table-cell>{{version.productType}}</td>
+                            </tr>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Instance</strong></td>
+                                <td fd-table-cell>{{version.instanceName}}</td>
+                            </tr>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Repository</strong></td>
+                                <td fd-table-cell>{{version.repositoryProvider}}</td>
+                            </tr>
+                            <tr fd-table-row>
+                                <td fd-table-cell><strong>Database</strong></td>
+                                <td fd-table-cell>{{version.databaseProvider}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fd-panel-content>
+            </fd-panel>
 
-        <div class="container">
-            <div class="page-header">
-                <h1>{{version.productName}}</h1>
-            </div>
-            <form>
-                <div class="form-group">
-                    <label>Version:</label> <strong class="badge">{{version.productVersion}}</strong>
-                </div>
-                <div class="form-group">
-                    <label>Commit Id:</label> <strong class="badge"><a style="color:inherit"
-                            href="{{version.productRepository}}/commit/{{version.productCommitId}}" target="_blank"
-                            rel="noopener noreferrer">{{version.productCommitId}}</a></strong>
-                </div>
-                <div class="form-group">
-                    <label>Type:</label> <strong class="badge">{{version.productType}}</strong>
-                </div>
-                <div class="form-group">
-                    <label>Instance:</label> <strong class="badge">{{version.instanceName}}</strong>
-                </div>
-                <div class="form-group">
-                    <label>Repository:</label> <strong class="badge">{{version.repositoryProvider}}</strong>
-                </div>
-                <div class="form-group">
-                    <label>Database:</label> <strong class="badge">{{version.databaseProvider}}</strong>
-                </div>
-                <div class="form-group">
-                    <table class="table table-striped" ng-cloak>
-                        <thead>
-                            <tr>
-                                <th>Modules</th>
-                            </tr>
+            <fd-panel expanded="true">
+                <fd-panel-header>
+                    <fd-panel-expand></fd-panel-expand>
+                    <h4 fd-panel-title>Modules</h4>
+                </fd-panel-header>
+                <fd-panel-content aria-label="Panel Content">
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header>
+                            <tr fd-table-row></tr>
                         </thead>
-                        <tbody>
-                            <tr ng-repeat="next in version.modules">
-                                <td>{{next}}</td>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="module in version.modules">
+                                <td fd-table-cell>{{module}}</td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="form-group">
-                    <table class="table table-striped" ng-cloak>
-                        <thead>
-                            <tr>
-                                <th>Engines</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="next in version.engines">
-                                <td>{{next}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="form-group">
-                    <table class="table table-striped" ng-cloak>
-                        <thead>
-                            <tr>
-                                <th>Synchronizer</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="job in jobs">
-                                <td>{{job.name}}</td>
-                                <td class="{{job.status}}">{{job.status}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                </fd-panel-content>
+            </fd-panel>
 
-            </form>
+            <fd-panel expanded="true">
+                <fd-panel-header>
+                    <fd-panel-expand></fd-panel-expand>
+                    <h4 fd-panel-title>Engines</h4>
+                </fd-panel-header>
+                <fd-panel-content aria-label="Panel Content">
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header>
+                            <tr fd-table-row></tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="engine in version.engines">
+                                <td fd-table-cell>{{engine}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fd-panel-content>
+            </fd-panel>
+
+            <fd-panel expanded="true">
+                <fd-panel-header>
+                    <fd-panel-expand></fd-panel-expand>
+                    <h4 fd-panel-title>Engines</h4>
+                </fd-panel-header>
+                <fd-panel-content aria-label="Panel Content">
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header>
+                            <tr fd-table-row>
+                                <th fd-table-header-cell>Synchronizer</th>
+                                <th fd-table-header-cell>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row ng-repeat="job in jobs">
+                                <td fd-table-cell fit-content="true"><strong>{{job.name}}</strong></td>
+                                <td fd-table-cell>{{job.status}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fd-panel-content>
+            </fd-panel>
         </div>
     </body>
 
