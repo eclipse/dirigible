@@ -17,7 +17,6 @@ const perspectiveData = {
 	image: "clipboard", // deprecated
 	icon: "../ide-documents/images/documents.svg",
 };
-
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = function () {
 		return perspectiveData;

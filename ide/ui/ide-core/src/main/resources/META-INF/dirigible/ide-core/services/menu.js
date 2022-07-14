@@ -9,11 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let extensions = require('core/v4/extensions');
-let response = require('http/v4/response');
+const request = require("http/v4/request");
+const extensions = require('core/v4/extensions');
+const response = require('http/v4/response');
 
+const menuExtensionId = request.getParameter("id");
 let mainmenu = [];
-let menuExtensions = extensions.getExtensions('ide-menu');
+let menuExtensions = extensions.getExtensions(menuExtensionId);
 
 for (let i = 0; i < menuExtensions.length; i++) {
 	let module = menuExtensions[i];

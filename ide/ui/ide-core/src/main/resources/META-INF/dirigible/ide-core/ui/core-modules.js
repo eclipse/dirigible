@@ -227,13 +227,12 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
             templateUrl: '/services/v4/web/ide-core/ui/templates/contextmenuSubmenu.html'
         };
     }])
-    .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, messageHub) {
+    .directive('ideHeader', ['$window', '$cookies', '$resource', 'branding', 'theming', 'User', 'Menu', 'messageHub', function ($window, $cookies, $resource, branding, theming, User, Menu, messageHub) {
         return {
             restrict: 'E',
             replace: true,
             scope: {
-                url: '@menuDataUrl',
-                menu: '=?menuData'
+                menuExtId: '@',
             },
             link: function (scope, element) {
                 let isMenuOpen = false;
@@ -288,7 +287,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                 }
 
                 function loadMenu() {
-                    $resource(scope.url).query().$promise
+                    Menu.query({ id: scope.menuExtId }).$promise
                         .then(function (data) {
                             scope.menu = data;
                         });
@@ -349,7 +348,7 @@ angular.module('idePerspective', ['ngResource', 'ngCookies', 'ideTheming', 'ideM
                     true
                 );
 
-                if (!scope.menu && scope.url)
+                if (scope.menuExtId)
                     loadMenu.call(scope);
 
                 scope.menuClick = function (item) {
