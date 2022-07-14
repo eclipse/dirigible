@@ -28,7 +28,7 @@ rs.service()
 		let path = unescapePath(ctx.queryParameters.path || "/");
 
 		let result = documentsProcessor.list(path);
-
+		response.setContentType("application/json");
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
@@ -43,7 +43,7 @@ rs.service()
 		let documents = upload.parseRequest();
 
 		let result = documentsProcessor.create(path, documents, overwrite);
-
+		response.setContentType("application/json");
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
@@ -56,7 +56,7 @@ rs.service()
 		}
 
 		documentsProcessor.rename(path, name);
-
+		response.setContentType("application/json");
 		response.setStatus(response.OK);
 		response.print(JSON.stringify(name));
 	})
@@ -82,7 +82,7 @@ rs.service()
 		}
 
 		let result = documentsProcessor.createFolder(parentFolder, name);
-
+		response.setContentType("application/json");
 		response.setStatus(response.CREATED);
 		response.print(JSON.stringify(result));
 	})
@@ -115,6 +115,7 @@ rs.service()
 		for (let i = 0; i < documents.size(); i++) {
 			result.push(zipUtils.unpackZip(path, documents.get(i)));
 		}
+		response.setContentType("application/json");
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
@@ -131,7 +132,7 @@ rs.service()
 		let documents = upload.parseRequest();
 
 		let result = imageProcessor.resize(path, documents, width, height);
-
+		response.setContentType("application/json");
 		response.println(JSON.stringify(result));
 	})
 	.catch(function (ctx, error, request, response) {
@@ -178,6 +179,7 @@ function printError(response, httpCode, errCode, errMessage) {
 		}
 	};
 	console.error(JSON.stringify(body));
+	response.setContentType("application/json");
 	response.setStatus(httpCode);
 	response.println(JSON.stringify(body));
 }

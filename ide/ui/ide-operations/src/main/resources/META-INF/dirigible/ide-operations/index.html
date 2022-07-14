@@ -9,53 +9,41 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" ng-app="operations" ng-controller="OperationsController as controller"
-    xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="operations" ng-controller="OperationsController" xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
-
         <title dg-brand-title></title>
-
         <script type="text/javascript" src="/services/v4/web/ide-operations/services/operations-perspective.js">
         </script>
-
         <theme></theme>
         <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-js"></script>
-
         <link type="text/css" rel="stylesheet"
             href="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-css" />
     </head>
 
     <body>
-
-        <ide-header menu-data-url="/services/v4/js/ide-core/services/menu.js"></ide-header>
+        <ide-header menu-ext-id="ide-operations-menu"></ide-header>
         <ide-contextmenu></ide-contextmenu>
-
         <ide-container>
-            <ide-layout views-layout-model="controller.layoutModel"></ide-layout>
+            <ide-layout views-layout-model="layoutModel"></ide-layout>
         </ide-container>
         <ide-dialogs></ide-dialogs>
         <ide-status-bar></ide-status-bar>
-
         <script type="text/javascript">
-            angular.module('operations', ['ngResource', 'ideLayout', 'ideUI'])
-                .config(["messageHubProvider", function (messageHubProvider) {
-                    messageHubProvider.eventIdPrefix = 'operations';
-                }])
-                .controller('OperationsController', ["$scope", "messageHub", function ($scope, messageHub) {
-
-                    this.layoutModel = {
-                        views: ['registry', 'repository', 'extensions', 'configurations', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'logs', 'console'],
-                    };
-
-                }]);
+            angular.module('operations', ['ideLayout', 'ideUI'])
+            .config(["messageHubProvider", function (messageHubProvider) {
+                messageHubProvider.eventIdPrefix = 'operations';
+            }])
+            .controller('OperationsController', ["$scope", "messageHub", function ($scope, messageHub) {
+                $scope.layoutModel = {
+                    views: ['registry', 'repository', 'extensions', 'configurations', 'jobs', 'listeners', 'datastructures', 'access', 'roles', 'logs', 'console'],
+                };
+            }]);
         </script>
-
     </body>
 
 </html>

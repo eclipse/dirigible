@@ -14,7 +14,7 @@ let extensions = require('core/v4/extensions');
 exports.getMenu = function () {
 	let menu = {
 		label: "Window",
-		order: 2,
+		order: 800,
 		items: [
 			{
 				label: "Open Perspective",

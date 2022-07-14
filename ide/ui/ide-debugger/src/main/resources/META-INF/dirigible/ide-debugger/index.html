@@ -9,72 +9,65 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" ng-app="debugger" ng-controller="DebuggerController as debugger" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="debugger" ng-controller="DebuggerController" xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
-
         <title dg-brand-title></title>
-
         <script type="text/javascript" src="/services/v4/web/ide-debugger/services/debugger-perspective.js">
         </script>
-
         <theme></theme>
         <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-js"></script>
-
         <link type="text/css" rel="stylesheet"
             href="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-css" />
     </head>
 
     <body>
 
-        <ide-header menu-data-url="/services/v4/js/ide-debugger/services/menu-debugger.js"></ide-header>
+        <ide-header menu-ext-id="ide-debugger-menu"></ide-header>
         <ide-contextmenu></ide-contextmenu>
-
         <ide-container>
-            <ide-layout views-layout-model="debugger.layoutModel"></ide-layout>
+            <ide-layout views-layout-model="layoutModel"></ide-layout>
         </ide-container>
         <ide-dialogs></ide-dialogs>
         <ide-status-bar></ide-status-bar>
-
         <script type="text/javascript">
-            angular.module('debugger', ['ngResource', 'ideLayout', 'ideUI'])
+            angular.module('debugger', ['ideLayout', 'ideUI'])
             .config(["messageHubProvider", function (messageHubProvider) {
-                messageHubProvider.evtNamePrefix = 'debugger';
+                messageHubProvider.eventIdPrefix = 'debugger';
             }])
             .controller('DebuggerController', ["$scope", "messageHub", function ($scope, messageHub) {
-
-                this.layoutModel = {
+                $scope.layoutModel = {
                     views: ['workspace', 'debugger', 'debug-preview', 'console'],
-					viewSettings: {
-                        'workspace': { isClosable: false },
-                        'debugger': { isClosable: false },
-                        'debug-preview': { isClosable: false }
-                    },
                     events: {
                         'debugger.editor.open': function (msg) {
-                            Layouts.manager.openEditor(msg.data.path, msg.data.label);
+                            messageHub.openEditor(
+                                msg.data.path,
+                                msg.data.label,
+                            );
                         },
                         'workspace.file.open': function (msg) {
-                            Layouts.manager.openEditor(msg.data.file.path, msg.data.file.label, msg.data.file.contentType, msg.data.editor);
+                            messageHub.openEditor(
+                                msg.data.file.path,
+                                msg.data.file.label,
+                                msg.data.file.contentType,
+                                msg.data.editor,
+                            );
                         }
                     }
                 };
 
             }]);
         </script>
-
         <script language="JavaScript">
             window.addEventListener('beforeunload', function (e) {
             e.preventDefault();
             e.returnValue = '';
         });
         </script>
-
     </body>
 
 </html>
