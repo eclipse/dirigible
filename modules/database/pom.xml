@@ -27,6 +27,7 @@
 		<module>database-changelog</module>
 		<module>database-databases</module>
 		<module>database-defined</module>
+		<module>database-data-transfer</module>
 	</modules>
 
 	<properties>

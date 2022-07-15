@@ -99,11 +99,15 @@ public class PersistenceTableColumnModel {
 	 *            the type
 	 * @param primaryKey
 	 */
-	public PersistenceTableColumnModel(String name, String type, boolean nullable, boolean primaryKey) {
+	public PersistenceTableColumnModel(String name, String type, boolean nullable, boolean primaryKey, int length, int precision,
+			int scale) {
 		this.name = name;
 		this.type = type;
 		this.nullable = nullable;
 		this.primaryKey = primaryKey;
+		this.length = length;
+		this.precision = precision;
+		this.scale = scale;
 	}
 
 	/**

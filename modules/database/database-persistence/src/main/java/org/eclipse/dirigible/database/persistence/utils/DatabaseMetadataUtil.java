@@ -16,6 +16,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -37,9 +38,13 @@ public class DatabaseMetadataUtil {
 
     private DataSource dataSource = null;
 
-    public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
-    public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
-    public static final String JDBC_NULLABLE = "NULLABLE";
+    public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
+    public static final String JDBC_COLUMN_TYPE_PROPERTY = "TYPE_NAME";
+    public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
+    public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
+    public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
+    public static final String JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY = "NUM_PREC_RADIX";
+    
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
@@ -57,10 +62,17 @@ public class DatabaseMetadataUtil {
     public PersistenceTableModel getTableMetadata(String tableName) throws SQLException {
         return getTableMetadata(tableName, null);
     }
-
+    
     public PersistenceTableModel getTableMetadata(String tableName, String schemaName) throws SQLException {
+    	return getTableMetadata(tableName, schemaName, null);
+    }
+
+    public PersistenceTableModel getTableMetadata(String tableName, String schemaName, DataSource dataSource) throws SQLException {
+    	if (dataSource == null) {
+    		dataSource = getDataSource();
+    	}
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
             addFields(databaseMetadata, connection, tableMetadata, schemaName);
             addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
@@ -122,7 +134,7 @@ public class DatabaseMetadataUtil {
     private static void iteratePrimaryKeys(PersistenceTableModel tableMetadata, ResultSet primaryKeys)
             throws SQLException {
         do {
-            setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_PROPERTY), tableMetadata);
+            setColumnPrimaryKey(primaryKeys.getString(JDBC_COLUMN_NAME_PROPERTY), tableMetadata);
         } while (primaryKeys.next());
     }
 
@@ -154,10 +166,14 @@ public class DatabaseMetadataUtil {
         do {
             tableMetadata.getColumns().add(
                     new PersistenceTableColumnModel(
-                            columns.getString(JDBC_COLUMN_PROPERTY),
-                            columns.getString(JDBC_COLUMN_TYPE),
-                            columns.getBoolean(JDBC_NULLABLE),
-                            false));
+                            columns.getString(JDBC_COLUMN_NAME_PROPERTY),
+                            columns.getString(JDBC_COLUMN_TYPE_PROPERTY),
+                            columns.getBoolean(JDBC_COLUMN_SIZE_PROPERTY),
+                            false,
+                            columns.getInt(JDBC_COLUMN_SIZE_PROPERTY),
+                            columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY),
+                            columns.getInt(JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY)
+                            ));
         } while (columns.next());
     }
 
@@ -201,6 +217,18 @@ public class DatabaseMetadataUtil {
                 return rs.getString("TABLE_SCHEM");
             }
             return null;
+        }
+    }
+    
+    public static List<String> getTablesInSchema(DataSource dataSource, String schemaName) throws SQLException {
+    	List<String> tableNames = new ArrayList<String>();
+        try (Connection connection = dataSource.getConnection()) {
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
+            while (rs.next()) {
+            	tableNames.add(rs.getString("TABLE_NAME"));
+            }
+            return tableNames;
         }
     }
 

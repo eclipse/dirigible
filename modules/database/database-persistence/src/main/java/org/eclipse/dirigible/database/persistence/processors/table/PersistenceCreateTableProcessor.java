@@ -52,7 +52,12 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 	protected String generateScript(Connection connection, PersistenceTableModel tableModel) {
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create().table(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
-			DataType dataType = DataType.valueOf(columnModel.getType());
+			DataType dataType;
+			if (columnModel.getType().equalsIgnoreCase("CHARACTER VARYING")) {
+				dataType = DataType.VARCHAR;
+			} else {
+				dataType = DataType.valueOf(columnModel.getType());
+			}
 			switch (dataType) {
 				case VARCHAR:
 					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
