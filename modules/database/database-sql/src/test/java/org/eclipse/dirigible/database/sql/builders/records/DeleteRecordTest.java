@@ -18,7 +18,6 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeleteTest.
  */
