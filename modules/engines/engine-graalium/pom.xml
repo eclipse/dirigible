@@ -10,7 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>engine-graalium</artifactId>
+    <artifactId>dirigible-engine-graalium</artifactId>
     <packaging>pom</packaging>
     <name>Engine - Graalium</name>
 
@@ -29,8 +29,8 @@
 
     <modules>
         <module>execution</module>
-        <module>execution-dirigible</module>
-        <module>execution-dirigible-web</module>
+        <module>execution-core</module>
+        <module>execution-web</module>
     </modules>
 
 </project>

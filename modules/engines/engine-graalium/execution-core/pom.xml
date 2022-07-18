@@ -7,8 +7,8 @@
     <version>7.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>engine-graalium-execution-dirigible</artifactId>
-  <name>Engine - Graalium - Execution - Dirigible</name>
+  <artifactId>dirigible-engine-graalium-execution-core</artifactId>
+  <name>Engine - Graalium - Execution - Core</name>
 
   <properties>
     <license.skip>true</license.skip>

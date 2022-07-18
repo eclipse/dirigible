@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>engine-graalium-execution-dirigible-web</artifactId>
-    <name>Engine - Graalium - Execution - Dirigible - Web</name>
+    <artifactId>dirigible-engine-graalium-execution-web</artifactId>
+    <name>Engine - Graalium - Execution - Web</name>
 
     <properties>
         <license.skip>true</license.skip>
