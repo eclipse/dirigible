@@ -139,13 +139,13 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
 
     messageHub.subscribe(function (command) {
         let artifact = command.data.split('.');
-        let url = "/services/v4/ide/data/" + $scope.database + "/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        let url = "/services/v4/ide/data/export/" + $scope.database + "/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
         window.open(url);
     }, "database.data.export.artifact");
 
     messageHub.subscribe(function (command) {
         let schema = command.data;
-        let url = "/services/v4/ide/data/" + $scope.database + "/" + $scope.datasource + "/" + schema;
+        let url = "/services/v4/ide/data/export/" + $scope.database + "/" + $scope.datasource + "/" + schema;
         window.open(url);
     }, "database.data.export.schema");
 

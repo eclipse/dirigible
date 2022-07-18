@@ -43,7 +43,7 @@ import io.swagger.annotations.Authorization;
 /**
  * Front facing REST service serving the raw data.
  */
-@Path("/ide/data")
+@Path("/ide/data/export")
 @Api(value = "IDE - Data", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden") })
 public class DataRestService extends AbstractRestService implements IRestService {
