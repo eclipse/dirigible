@@ -38,7 +38,7 @@ public class DataTransferManager {
 	
 	public static final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, IDataTransferCallbackHandler handler) throws DataTransferException {
 		
-		if (handler != null) {
+		if (handler == null) {
 			handler = new DummyDataTransferCallbackHandler();
 		}
 		
