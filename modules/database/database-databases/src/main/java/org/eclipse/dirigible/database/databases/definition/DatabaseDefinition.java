@@ -30,7 +30,7 @@ public class DatabaseDefinition implements IArtefactDefinition {
 	/** The id. */
 	@Id
 	@GeneratedValue
-	@Column(name = "JOBLOG_ID", columnDefinition = "BIGINT", nullable = false)
+	@Column(name = "DATABASE_ID", columnDefinition = "BIGINT", nullable = false)
 	private long id;
 	
 	/** The name */
