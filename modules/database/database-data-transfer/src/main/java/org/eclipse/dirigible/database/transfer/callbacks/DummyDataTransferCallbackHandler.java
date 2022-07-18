@@ -9,11 +9,13 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.transfer;
+package org.eclipse.dirigible.database.transfer.callbacks;
 
 import java.util.List;
 
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.transfer.api.DataTransferConfiguration;
+import org.eclipse.dirigible.database.transfer.api.IDataTransferCallbackHandler;
 
 public class DummyDataTransferCallbackHandler implements IDataTransferCallbackHandler {
 
@@ -90,7 +92,7 @@ public class DummyDataTransferCallbackHandler implements IDataTransferCallbackHa
 	}
 
 	@Override
-	public void tableTransferFinished(String table) {
+	public void tableTransferFinished(String table, int transferedRecords) {
 		// TODO Auto-generated method stub
 		
 	}

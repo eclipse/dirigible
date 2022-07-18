@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package org.eclipse.dirigible.database.transfer;
+package org.eclipse.dirigible.database.transfer.api;
 
 /**
  * The Data Transfer Exception.

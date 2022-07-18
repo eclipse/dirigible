@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.transfer;
+package org.eclipse.dirigible.database.transfer.manager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,17 +24,29 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
+import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
 import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.transfer.api.DataTransferConfiguration;
+import org.eclipse.dirigible.database.transfer.api.DataTransferDefinition;
+import org.eclipse.dirigible.database.transfer.api.DataTransferException;
+import org.eclipse.dirigible.database.transfer.api.IDataTransferCallbackHandler;
+import org.eclipse.dirigible.database.transfer.callbacks.DummyDataTransferCallbackHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataTransferManager {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferManager.class);
+	
+	public static final void transfer(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
+		DataSource source = DatabaseModule.getDataSource(definition.getSource().getType(), definition.getSource().getName());
+		DataSource target = DatabaseModule.getDataSource(definition.getTarget().getType(), definition.getTarget().getName());
+		transfer(source,  target, definition.getConfiguration(), handler);
+	}
 	
 	public static final void transfer(DataSource source, DataSource target, DataTransferConfiguration configuration, IDataTransferCallbackHandler handler) throws DataTransferException {
 		
@@ -138,6 +150,8 @@ public class DataTransferManager {
 				
 				handler.tableSelectSQL(selectSQL);
 				
+				int transferedRecords = 0;
+				
 				try (PreparedStatement pstmtSource = sourceConnection.prepareStatement(selectSQL)) {
 					try (ResultSet rs = pstmtSource.executeQuery()) {
 						ResultSetMetaData resultSetMetaData = rs.getMetaData();
@@ -153,7 +167,6 @@ public class DataTransferManager {
 						String insertSQL = insertBuilder.build();
 						handler.tableInsertSQL(insertSQL);
 						
-						int transfertRecords = 0;
 						try (PreparedStatement pstmtTarget = targetConnection.prepareStatement(insertSQL)) {
 							while (rs.next()) {
 								for (int i=1; i<=resultSetMetaData.getColumnCount(); i++) {
@@ -252,7 +265,7 @@ public class DataTransferManager {
 									}
 								}
 								pstmtTarget.executeUpdate();
-								handler.recordTransferFinished(tableModel.getTableName(), ++transfertRecords);
+								handler.recordTransferFinished(tableModel.getTableName(), ++transferedRecords);
 							}
 						}
 					}
@@ -261,7 +274,7 @@ public class DataTransferManager {
 				String message = String.format("Data of table %s has been transferred successfully.", tableModel.getTableName());
 				logger.info(message);
 				
-				handler.tableTransferFinished(tableModel.getTableName());
+				handler.tableTransferFinished(tableModel.getTableName(), transferedRecords);
 				
 			} catch(Exception e) {
 				String error = "Error occured while transferring the data for table: " + tableModel.getTableName();

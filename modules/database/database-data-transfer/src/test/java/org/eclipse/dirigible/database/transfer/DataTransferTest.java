@@ -23,6 +23,9 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.database.h2.H2Database;
+import org.eclipse.dirigible.database.transfer.api.DataTransferConfiguration;
+import org.eclipse.dirigible.database.transfer.api.DataTransferException;
+import org.eclipse.dirigible.database.transfer.manager.DataTransferManager;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.database.transfer;
+package org.eclipse.dirigible.database.transfer.api;
 
 public class DataTransferConfiguration {
 	
