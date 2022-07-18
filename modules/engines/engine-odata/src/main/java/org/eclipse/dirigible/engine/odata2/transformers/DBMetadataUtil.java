@@ -37,9 +37,13 @@ public class DBMetadataUtil {
 
     private DataSource dataSource = null;
 
-    public static final String JDBC_COLUMN_PROPERTY = "COLUMN_NAME";
-    public static final String JDBC_COLUMN_TYPE = "TYPE_NAME";
-    public static final String JDBC_NULLABLE = "NULLABLE";
+    public static final String JDBC_COLUMN_NAME_PROPERTY = "COLUMN_NAME";
+    public static final String JDBC_COLUMN_TYPE_PROPERTY = "TYPE_NAME";
+    public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
+    public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
+    public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
+    public static final String JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY = "NUM_PREC_RADIX";
+    
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
     public static final String JDBC_PK_NAME_PROPERTY = "PK_NAME";
@@ -157,7 +161,7 @@ public class DBMetadataUtil {
 
         List<String> primaryKeyColumns = new ArrayList<>();
         while (primaryKeys.next()) {
-            primaryKeyColumns.add(primaryKeys.getString(JDBC_COLUMN_PROPERTY));
+            primaryKeyColumns.add(primaryKeys.getString(JDBC_COLUMN_NAME_PROPERTY));
         }
 
         return primaryKeyColumns;
@@ -174,12 +178,15 @@ public class DBMetadataUtil {
 
         List<PersistenceTableColumnModel> tableColumnModels = new ArrayList<>();
         while (columns.next()) {
-            String columnName = columns.getString(JDBC_COLUMN_PROPERTY);
-            String columnType = convertSqlTypeToOdataEdmType(columns.getString(JDBC_COLUMN_TYPE));
-            boolean isNullable = columns.getBoolean(JDBC_NULLABLE);
+            String columnName = columns.getString(JDBC_COLUMN_NAME_PROPERTY);
+            String columnType = convertSqlTypeToOdataEdmType(columns.getString(JDBC_COLUMN_TYPE_PROPERTY));
+            boolean isNullable = columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY);
             boolean isPrimaryKey = primaryKeys.contains(columnName);
+            int length = columns.getInt(JDBC_COLUMN_SIZE_PROPERTY);
+            int precision = columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY);
+            int scale = columns.getInt(JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY);
 
-            tableColumnModels.add(new PersistenceTableColumnModel(columnName, columnType, isNullable, isPrimaryKey));
+            tableColumnModels.add(new PersistenceTableColumnModel(columnName, columnType, isNullable, isPrimaryKey, length, precision, scale));
         }
 
         return tableColumnModels;
