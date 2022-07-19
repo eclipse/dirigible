@@ -367,6 +367,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             if (odata2EventHandler.isUsingAfterCreateEntity(uriInfo, requestContentType, contentType)) {
                 if (response != null) {
+                    // Read entry from response and set entity again since it is consumed after being parsed
                     try (ByteArrayOutputStream entityOutputStream = new ByteArrayOutputStream()) {
                         ((InputStream) response.getEntity()).transferTo(entityOutputStream);
                         try (InputStream entityInputStream = new ByteArrayInputStream(entityOutputStream.toByteArray());
