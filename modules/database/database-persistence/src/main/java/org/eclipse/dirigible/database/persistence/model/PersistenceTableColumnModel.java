@@ -28,8 +28,6 @@ public class PersistenceTableColumnModel {
 
 	private boolean primaryKey;
 
-	private int precision;
-
 	private int scale;
 
 	private String generated;
@@ -55,8 +53,6 @@ public class PersistenceTableColumnModel {
 	 *            whether null values are allowed
 	 * @param primaryKey
 	 *            whether it is a primary key
-	 * @param precision
-	 *            the precision for floating point values
 	 * @param scale
 	 *            the scale for floating point values
 	 * @param generated
@@ -68,7 +64,7 @@ public class PersistenceTableColumnModel {
 	 * @param enumerated
 	 *            whether it is enumerated
 	 */
-	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey, int precision,
+	public PersistenceTableColumnModel(String field, String name, String type, int length, boolean nullable, boolean primaryKey,
 			int scale, String generated, boolean unique, boolean identity, String enumerated) {
 		this.field = field;
 		this.name = name;
@@ -76,7 +72,6 @@ public class PersistenceTableColumnModel {
 		this.length = length;
 		this.nullable = nullable;
 		this.primaryKey = primaryKey;
-		this.precision = precision;
 		this.scale = scale;
 		this.generated = generated;
 		this.unique = unique;
@@ -99,14 +94,12 @@ public class PersistenceTableColumnModel {
 	 *            the type
 	 * @param primaryKey
 	 */
-	public PersistenceTableColumnModel(String name, String type, boolean nullable, boolean primaryKey, int length, int precision,
-			int scale) {
+	public PersistenceTableColumnModel(String name, String type, boolean nullable, boolean primaryKey, int length, int scale) {
 		this.name = name;
 		this.type = type;
 		this.nullable = nullable;
 		this.primaryKey = primaryKey;
 		this.length = length;
-		this.precision = precision;
 		this.scale = scale;
 	}
 
@@ -222,25 +215,6 @@ public class PersistenceTableColumnModel {
 	 */
 	public void setPrimaryKey(boolean primaryKey) {
 		this.primaryKey = primaryKey;
-	}
-
-	/**
-	 * Getter for the precision.
-	 *
-	 * @return the precision
-	 */
-	public int getPrecision() {
-		return precision;
-	}
-
-	/**
-	 * Setter for the precision.
-	 *
-	 * @param precision
-	 *            the precision
-	 */
-	public void setPrecision(int precision) {
-		this.precision = precision;
 	}
 
 	/**

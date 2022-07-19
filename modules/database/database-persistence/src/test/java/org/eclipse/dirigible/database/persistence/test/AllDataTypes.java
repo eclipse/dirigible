@@ -67,7 +67,7 @@ public class AllDataTypes {
 	@Column(name = "ALL_BLOB", columnDefinition = "BLOB", nullable = false)
 	private byte[] _blob;
 	
-	@Column(name = "ALL_DECIMAL", columnDefinition = "DECIMAL", nullable = false, precision = 10, scale = 2)
+	@Column(name = "ALL_DECIMAL", columnDefinition = "DECIMAL", nullable = false, length = 10, scale = 2)
 	private BigDecimal _decimal;
 	
 	@Column(name = "ALL_BIT", columnDefinition = "BIT", nullable = false)

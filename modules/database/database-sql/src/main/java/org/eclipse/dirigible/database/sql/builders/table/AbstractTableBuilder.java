@@ -382,7 +382,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String... args) {
-        return column(name, DataType.valueOf(type), isPrimaryKey, isNullable, isUnique, args);
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, isUnique, args);
     }
 
     /**
@@ -396,7 +396,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return column(name, DataType.valueOf(type), isPrimaryKey, isNullable, isUnique, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, isUnique, new String[]{});
     }
 
     /**
@@ -409,7 +409,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable) {
-        return column(name, DataType.valueOf(type), isPrimaryKey, isNullable, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, false, new String[]{});
     }
 
     /**
@@ -421,7 +421,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey) {
-        return column(name, DataType.valueOf(type), isPrimaryKey, true, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, true, false, new String[]{});
     }
 
     /**
@@ -432,7 +432,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type) {
-        return column(name, DataType.valueOf(type), false, true, false, new String[]{});
+        return column(name, DataType.valueOfByName(type), false, true, false, new String[]{});
     }
 
     /**
@@ -447,7 +447,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @return the creates the table builder
      */
     public TABLE_BUILDER column(String name, String type, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique, String args) {
-        return column(name, DataType.valueOf(type), isPrimaryKey, isNullable, isUnique, splitValues(args));
+        return column(name, DataType.valueOfByName(type), isPrimaryKey, isNullable, isUnique, splitValues(args));
     }
 
     /**
@@ -1607,7 +1607,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * Column decimal.
      *
      * @param name         the name
-     * @param precision    the precision
+     * @param length    the length
      * @param scale        the scale
      * @param isPrimaryKey the is primary key
      * @param isNullable   the is nullable
@@ -1616,18 +1616,18 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param args         the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
                                        Boolean isIdentity, String... args) {
-        String[] definition = new String[]{OPEN + precision + "," + scale + CLOSE};
-        String[] coulmn = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
-        return this.column(name, DataType.DECIMAL, isPrimaryKey, isNullable, isUnique, isIdentity, false, coulmn);
+        String[] definition = new String[]{OPEN + length + "," + scale + CLOSE};
+        String[] column = Stream.of(definition, args).flatMap(Stream::of).toArray(String[]::new);
+        return this.column(name, DataType.DECIMAL, isPrimaryKey, isNullable, isUnique, isIdentity, false, column);
     }
 
     /**
      * Column decimal.
      *
      * @param name         the name
-     * @param precision    the precision
+     * @param length    the length
      * @param scale        the scale
      * @param isPrimaryKey the is primary key
      * @param isNullable   the is nullable
@@ -1636,63 +1636,63 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param args         the args
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique,
                                        Boolean isIdentity, String args) {
-        return columnDecimal(name, precision, scale, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
+        return columnDecimal(name, length, scale, isPrimaryKey, isNullable, isUnique, isIdentity, splitValues(args));
     }
 
     /**
      * Column decimal.
      *
      * @param name         the name
-     * @param precision    the precision
+     * @param length    the length
      * @param scale        the scale
      * @param isPrimaryKey the is primary key
      * @param isNullable   the is nullable
      * @param isUnique     the is unique
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
-        return columnDecimal(name, precision, scale, isPrimaryKey, isNullable, isUnique, false);
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable, Boolean isUnique) {
+        return columnDecimal(name, length, scale, isPrimaryKey, isNullable, isUnique, false);
     }
 
     /**
      * Column decimal.
      *
      * @param name         the name
-     * @param precision    the precision
+     * @param length    the length
      * @param scale        the scale
      * @param isPrimaryKey the is primary key
      * @param isNullable   the is nullable
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey, Boolean isNullable) {
-        return columnDecimal(name, precision, scale, isPrimaryKey, isNullable, false);
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey, Boolean isNullable) {
+        return columnDecimal(name, length, scale, isPrimaryKey, isNullable, false);
     }
 
     /**
      * Column decimal.
      *
      * @param name         the name
-     * @param precision    the precision
+     * @param length    the length
      * @param scale        the scale
      * @param isPrimaryKey the is primary key
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale, Boolean isPrimaryKey) {
-        return columnDecimal(name, precision, scale, isPrimaryKey, true);
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale, Boolean isPrimaryKey) {
+        return columnDecimal(name, length, scale, isPrimaryKey, true);
     }
 
     /**
      * Column decimal.
      *
      * @param name      the name
-     * @param precision the precision
+     * @param length the length
      * @param scale     the scale
      * @return the creates the table builder
      */
-    public TABLE_BUILDER columnDecimal(String name, int precision, int scale) {
-        return columnDecimal(name, precision, scale, false);
+    public TABLE_BUILDER columnDecimal(String name, int length, int scale) {
+        return columnDecimal(name, length, scale, false);
     }
 
     /**

@@ -27,6 +27,8 @@ public class ColumnMetadata {
 	private boolean key;
 
 	private String kind = "column";
+	
+	private int scale;
 
 	/**
 	 * Instantiates a new column metadata.
@@ -42,13 +44,14 @@ public class ColumnMetadata {
 	 * @param key
 	 *            the key
 	 */
-	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key) {
+	public ColumnMetadata(String name, String type, int size, boolean nullable, boolean key, int scale) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.size = size;
 		this.nullable = nullable;
 		this.key = key;
+		this.scale = scale;
 	}
 
 	/**
@@ -164,5 +167,21 @@ public class ColumnMetadata {
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
+
+	/**
+	 * @return the scale
+	 */
+	public int getScale() {
+		return scale;
+	}
+
+	/**
+	 * @param scale the scale to set
+	 */
+	public void setScale(int scale) {
+		this.scale = scale;
+	}
+	
+	
 
 }

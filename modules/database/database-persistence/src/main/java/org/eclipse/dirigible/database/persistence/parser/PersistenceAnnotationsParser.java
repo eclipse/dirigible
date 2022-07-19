@@ -169,6 +169,9 @@ public class PersistenceAnnotationsParser {
 			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.VARCHAR)) {
 				length = DataTypeUtils.VARCHAR_DEFAULT_LENGTH;
 			}
+			if ((length == 0) && (DataTypeUtils.getDatabaseTypeByJavaType(field.getType().getClass()) == Types.DECIMAL)) {
+				length = DataTypeUtils.DECIMAL_DEFAULT_LENGTH;
+			}
 			boolean unique = column.unique();
 			// @Id
 			Annotation annotationId = field.getAnnotation(Id.class);
@@ -214,7 +217,7 @@ public class PersistenceAnnotationsParser {
 			}
 
 			PersistenceTableColumnModel persistenceTableColumnModel = new PersistenceTableColumnModel(field.getName(), column.name(), type, length,
-					column.nullable(), primaryKey, column.precision(), column.scale(), generated, unique, identity, enumerated);
+					column.nullable(), primaryKey, column.scale(), generated, unique, identity, enumerated);
 			persistenceModel.getColumns().add(persistenceTableColumnModel);
 		}
 

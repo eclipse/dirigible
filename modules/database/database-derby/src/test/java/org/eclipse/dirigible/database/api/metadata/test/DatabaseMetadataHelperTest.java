@@ -33,13 +33,12 @@ import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper.IndicesIte
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DatabaseMetadataHelperTest.
  */
 public class DatabaseMetadataHelperTest {
 
-	/** The data srouce. */
+	/** The data source. */
 	private DataSource dataSource = null;
 
 	/**
@@ -230,7 +229,7 @@ public class DatabaseMetadataHelperTest {
 			connection = dataSource.getConnection();
 			DatabaseMetadataHelper.iterateTableDefinition(connection, null, "SYS", "SYSKEYS", new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey, int scale) {
 					assertNotNull(columnName);
 				}
 			}, new IndicesIteratorCallback() {

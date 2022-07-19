@@ -43,7 +43,6 @@ public class DatabaseMetadataUtil {
     public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
     public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
     public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
-    public static final String JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY = "NUM_PREC_RADIX";
     
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
@@ -171,8 +170,7 @@ public class DatabaseMetadataUtil {
                             columns.getBoolean(JDBC_COLUMN_SIZE_PROPERTY),
                             false,
                             columns.getInt(JDBC_COLUMN_SIZE_PROPERTY),
-                            columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY),
-                            columns.getInt(JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY)
+                            columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY)
                             ));
         } while (columns.next());
     }

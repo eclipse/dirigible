@@ -42,7 +42,6 @@ public class DBMetadataUtil {
     public static final String JDBC_COLUMN_NULLABLE_PROPERTY = "NULLABLE";
     public static final String JDBC_COLUMN_SIZE_PROPERTY = "COLUMN_SIZE";
     public static final String JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY = "DECIMAL_DIGITS";
-    public static final String JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY = "NUM_PREC_RADIX";
     
     public static final String JDBC_FK_TABLE_NAME_PROPERTY = "FKTABLE_NAME";
     public static final String JDBC_FK_NAME_PROPERTY = "FK_NAME";
@@ -183,10 +182,9 @@ public class DBMetadataUtil {
             boolean isNullable = columns.getBoolean(JDBC_COLUMN_NULLABLE_PROPERTY);
             boolean isPrimaryKey = primaryKeys.contains(columnName);
             int length = columns.getInt(JDBC_COLUMN_SIZE_PROPERTY);
-            int precision = columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY);
-            int scale = columns.getInt(JDBC_COLUMN_NUM_PREC_RADIX_PROPERTY);
+            int scale = columns.getInt(JDBC_COLUMN_DECIMAL_DIGITS_PROPERTY);
 
-            tableColumnModels.add(new PersistenceTableColumnModel(columnName, columnType, isNullable, isPrimaryKey, length, precision, scale));
+            tableColumnModels.add(new PersistenceTableColumnModel(columnName, columnType, isNullable, isPrimaryKey, length, scale));
         }
 
         return tableColumnModels;

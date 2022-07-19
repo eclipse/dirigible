@@ -26,6 +26,13 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	
 	private static final Logger logger = LoggerFactory.getLogger(WriterDataTransferCallbackHandler.class);
 	
+	private static final String SEVERITY_INFO = "INFO";
+	
+	private static final String SEVERITY_ERROR = "ERROR";
+	
+	private static final String SEVERITY_WARNING = "WARNING";
+	
+	
 	private Writer writer;
 	
 	private String identifier;
@@ -35,9 +42,9 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 		this.identifier = identifier;
 	}
 	
-	private void write(String s) {
+	private void write(String s, String severity) {
 		try {
-			String message = String.format("[%s] %s", identifier, s);
+			String message = String.format("[%s][%s] %s", identifier, severity, s);
 			this.writer.write(message);
 			this.writer.write("\n");
 			this.writer.flush();
@@ -59,33 +66,33 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 
 	@Override
 	public void transferStarted(DataTransferConfiguration configuration) {
-		write("Transfer has been started...");
+		write("Transfer has been started...", SEVERITY_INFO);
 	}
 
 	@Override
 	public void transferFinished(int count) {
-		write("Transfer has been finished successfully for tables count: " + count);
+		write("Transfer has been finished successfully for tables count: " + count, SEVERITY_INFO);
 	}
 
 	@Override
 	public void transferFailed(String error) {
-		write("Transfer failed with error: " + error);
+		write("Transfer failed with error: " + error, SEVERITY_ERROR);
 	}
 
 	@Override
 	public void metadataLoadingStarted() {
-		write("Loading of metadata has been started...");
+		write("Loading of metadata has been started...", SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void metadataLoadingFinished(int count) {
-		write("Loading of metadata has been finished successfully - tables count is: " + count);
+		write("Loading of metadata has been finished successfully - tables count is: " + count, SEVERITY_INFO);
 	}
 
 	@Override
 	public void sortingStarted(List<PersistenceTableModel> tables) {
-		write("Topological sorting of tables via dependencies has been started...");
+		write("Topological sorting of tables via dependencies has been started...", SEVERITY_INFO);
 	}
 
 	@Override
@@ -94,36 +101,36 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 		for (PersistenceTableModel model : result) {
 			buffer.append(model.getTableName() + ", ");
 		}
-		write("Loading of metadata has been finished successfully - tables count is: " + buffer.substring(0, buffer.length()-2));
+		write("Loading of metadata has been finished successfully - tables count is: " + buffer.substring(0, buffer.length()-2), SEVERITY_INFO);
 	}
 
 	@Override
 	public void dataTransferStarted() {
-		write("Data transfer has been started...");
+		write("Data transfer has been started...", SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void dataTransferFinished() {
-		write("Data transfer has been finished successfully.");
+		write("Data transfer has been finished successfully.", SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void tableTransferStarted(String table) {
-		write("Data transfer has been started for table: " + table);
+		write("Data transfer has been started for table: " + table, SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void tableTransferFinished(String table, int transferedRecords) {
-		write("Data transfer has been finished successfully for table: " + table + " with records count: " + transferedRecords);
+		write("Data transfer has been finished successfully for table: " + table + " with records count: " + transferedRecords, SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void tableTransferFailed(String table, String error) {
-		write("Data transfer has been failed for table: " + table + " with error: " + error);
+		write("Data transfer has been failed for table: " + table + " with error: " + error, SEVERITY_ERROR);
 	}
 
 	@Override
@@ -133,13 +140,19 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 
 	@Override
 	public void tableSelectSQL(String selectSQL) {
-		logger.debug("Table select SQL script is: " + selectSQL);
+		logger.debug("Table select SQL script is: " + selectSQL, SEVERITY_INFO);
 		
 	}
 
 	@Override
 	public void tableInsertSQL(String insertSQL) {
-		logger.debug("Table select SQL script is: " + insertSQL);
+		logger.debug("Table select SQL script is: " + insertSQL, SEVERITY_INFO);
+	}
+
+	@Override
+	public void tableSkipped(String table, String reason) {
+		logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);
+		
 	}
 
 }

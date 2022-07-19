@@ -30,6 +30,8 @@ public class DataTypeUtils {
 
 	/** The default length */
 	public static final int VARCHAR_DEFAULT_LENGTH = 512;
+	
+	public static final int DECIMAL_DEFAULT_LENGTH = 100000;
 
 	private static final Map<Integer, DataType> DATABASE_TYPE_TO_DATA_TYPE = Collections.synchronizedMap(new HashMap<Integer, DataType>());
 

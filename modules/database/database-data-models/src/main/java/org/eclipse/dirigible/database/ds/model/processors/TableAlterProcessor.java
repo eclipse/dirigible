@@ -75,27 +75,29 @@ public class TableAlterProcessor {
 			if (caseSensitive) {
 				name = "\"" + name + "\"";
 			}
-			DataType type = DataType.valueOf(columnModel.getType());
+			DataType type = DataType.valueOfByName(columnModel.getType());
 			String length = columnModel.getLength();
 			boolean isNullable = columnModel.isNullable();
 			boolean isPrimaryKey = columnModel.isPrimaryKey();
 			boolean isUnique = columnModel.isUnique();
 			String defaultValue = columnModel.getDefaultValue();
-			String precision = columnModel.getPrecision();
 			String scale = columnModel.getScale();
 			String args = "";
 			if (length != null) {
-				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR)) {
+				if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR) || type.equals(DataType.NVARCHAR) 
+						|| type.equals(DataType.CHARACTER_VARYING) || type.equals(DataType.CHARACTER)) {
 					args = ISqlKeywords.OPEN + length + ISqlKeywords.CLOSE;
 				}
-			} else if ((precision != null) && (scale != null)) {
-				if (type.equals(DataType.DECIMAL)) {
-					args = ISqlKeywords.OPEN + precision + "," + scale + ISqlKeywords.CLOSE;
+				if (scale != null) {
+					if (type.equals(DataType.DECIMAL)) {
+						args = ISqlKeywords.OPEN + length + "," + scale + ISqlKeywords.CLOSE;
+					}
 				}
 			}
 			if (defaultValue != null) {
 				if ("".equals(defaultValue)) {
-					if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)  || type.equals(DataType.NVARCHAR)) {
+					if (type.equals(DataType.VARCHAR) || type.equals(DataType.CHAR)  || type.equals(DataType.NVARCHAR) 
+							|| type.equals(DataType.CHARACTER_VARYING) || type.equals(DataType.CHARACTER)) {
 						args += " DEFAULT '" + defaultValue + "' ";
 					}
 				} else {

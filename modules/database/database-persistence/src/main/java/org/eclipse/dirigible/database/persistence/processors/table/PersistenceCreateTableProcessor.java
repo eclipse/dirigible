@@ -53,13 +53,13 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 		CreateTableBuilder createTableBuilder = SqlFactory.getNative(SqlFactory.deriveDialect(connection)).create().table(tableModel.getTableName());
 		for (PersistenceTableColumnModel columnModel : tableModel.getColumns()) {
 			DataType dataType;
-			if (columnModel.getType().equalsIgnoreCase("CHARACTER VARYING")) {
-				dataType = DataType.VARCHAR;
-			} else {
-				dataType = DataType.valueOf(columnModel.getType());
-			}
+			dataType = DataType.valueOfByName(columnModel.getType());
 			switch (dataType) {
 				case VARCHAR:
+					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
+					break;
+				case CHARACTER_VARYING:
 					createTableBuilder.columnVarchar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
@@ -68,6 +68,10 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case CHAR:
+					createTableBuilder.columnChar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
+							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
+					break;
+				case CHARACTER:
 					createTableBuilder.columnChar(columnModel.getName(), columnModel.getLength(), columnModel.isPrimaryKey(),
 							columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
@@ -111,6 +115,10 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 					createTableBuilder.columnDouble(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());
 					break;
+				case DOUBLE_PRECISION:
+					createTableBuilder.columnDouble(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
+							columnModel.isUnique());
+					break;
 				case BOOLEAN:
 					createTableBuilder.columnBoolean(columnModel.getName(), columnModel.isPrimaryKey(), columnModel.isNullable(),
 							columnModel.isUnique());
@@ -118,14 +126,23 @@ public class PersistenceCreateTableProcessor extends AbstractPersistenceProcesso
 				case BLOB:
 					createTableBuilder.columnBlob(columnModel.getName(), columnModel.isNullable());
 					break;
+				case CLOB:
+					createTableBuilder.columnBlob(columnModel.getName(), columnModel.isNullable());
+					break;
 				case DECIMAL:
-					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.getPrecision(), columnModel.getScale(),
+					createTableBuilder.columnDecimal(columnModel.getName(), columnModel.getLength(), columnModel.getScale(),
 							columnModel.isPrimaryKey(), columnModel.isNullable(), columnModel.isUnique(), columnModel.isIdentity());
 					break;
 				case BIT:
 					createTableBuilder.columnBit(columnModel.getName(), columnModel.isNullable());
 					break;
 				case VARBINARY:
+					createTableBuilder.columnVarbinary(columnModel.getName(), columnModel.isNullable());
+					break;
+				case BINARY_LARGE_OBJECT:
+					createTableBuilder.columnVarbinary(columnModel.getName(), columnModel.isNullable());
+					break;
+				case CHARACTER_LARGE_OBJECT:
 					createTableBuilder.columnVarbinary(columnModel.getName(), columnModel.isNullable());
 					break;
 				default:

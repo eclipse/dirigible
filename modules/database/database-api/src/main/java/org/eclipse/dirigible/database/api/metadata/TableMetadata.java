@@ -69,9 +69,9 @@ public class TableMetadata {
 		if (deep) {
 			DatabaseMetadataHelper.iterateTableDefinition(connection, catalogName, schemaName, name, new ColumnsIteratorCallback() {
 				@Override
-				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey) {
+				public void onColumn(String columnName, String columnType, String columnSize, boolean isNullable, boolean isKey, int scale) {
 					columns.add(new ColumnMetadata(columnName, columnType, columnSize != null ? Integer.parseInt(columnSize) : 0,
-							isNullable, isKey));
+							isNullable, isKey, scale));
 				}
 			}, new IndicesIteratorCallback() {
 				@Override

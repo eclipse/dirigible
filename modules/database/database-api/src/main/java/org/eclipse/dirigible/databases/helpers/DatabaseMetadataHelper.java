@@ -100,6 +100,8 @@ public class DatabaseMetadataHelper {
 	
 	private static final String REMARKS = "REMARKS"; //$NON-NLS-1$
 	
+	public static final String DECIMAL_DIGITS = "DECIMAL_DIGITS"; //$NON-NLS-1$
+	
 	
 	
 	
@@ -497,7 +499,7 @@ public class DatabaseMetadataHelper {
 		 * @param isKey
 		 *            the is key
 		 */
-		void onColumn(String name, String type, String size, boolean isNullable, boolean isKey);
+		void onColumn(String name, String type, String size, boolean isNullable, boolean isKey, int scale);
 	}
 	
 	/**
@@ -623,7 +625,7 @@ public class DatabaseMetadataHelper {
 				if (columnsIteratorCallback != null) {
 					String cname = columns.getString(COLUMN_NAME);
 					columnsIteratorCallback.onColumn(cname, columns.getString(TYPE_NAME), columns.getInt(COLUMN_SIZE) + EMPTY,
-							columns.getBoolean(IS_NULLABLE), pkList.contains(cname));
+							columns.getBoolean(IS_NULLABLE), pkList.contains(cname), columns.getInt(DECIMAL_DIGITS));
 				}
 			}
 			while (indexes.next()) {

@@ -139,8 +139,26 @@ public class DataTransferManager {
 			handler.tableTransferStarted(tableModel.getTableName());
 			try {
 				
-				PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor(null);
-				createTableProcessor.create(targetConnection, tableModel);
+				if (!SqlFactory.getNative(sourceConnection).exists(targetConnection, tableModel.getTableName())) {
+					PersistenceCreateTableProcessor createTableProcessor = new PersistenceCreateTableProcessor(null);
+					createTableProcessor.create(targetConnection, tableModel);
+				} else {
+					String countSQL = SqlFactory.getNative(sourceConnection)
+							.select()
+							.column("count(*)")
+							.from(tableModel.getTableName())
+							.build();
+					try (PreparedStatement pstmtTarget = targetConnection.prepareStatement(countSQL)) {
+						ResultSet rs = pstmtTarget.executeQuery();
+						while (rs.next()) {
+							int count = rs.getInt(1);
+							if (count > 0) {
+								handler.tableSkipped(tableModel.getTableName(), "table exists and it is not empty");
+								continue;
+							}
+						}
+					}
+				}
 				
 				String selectSQL = SqlFactory.getNative(sourceConnection)
 						.select()
@@ -279,7 +297,7 @@ public class DataTransferManager {
 			} catch(Exception e) {
 				String error = "Error occured while transferring the data for table: " + tableModel.getTableName();
 				logger.error(error, e);
-				handler.tableTransferFailed(tableModel.getTableName(), error);
+				handler.tableTransferFailed(tableModel.getTableName(), error + " -> " + e.getMessage());
 			}
 		}
 		

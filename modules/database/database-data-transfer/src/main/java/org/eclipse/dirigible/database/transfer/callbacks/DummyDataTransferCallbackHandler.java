@@ -121,4 +121,10 @@ public class DummyDataTransferCallbackHandler implements IDataTransferCallbackHa
 		
 	}
 
+	@Override
+	public void tableSkipped(String table, String reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -28,8 +28,6 @@ public class DataStructureTableColumnModel {
 	
 	private String defaultValue;
 	
-	private String precision;
-	
 	private String scale;
 	
 	private boolean unique;
@@ -50,12 +48,11 @@ public class DataStructureTableColumnModel {
 	 * @param nullable            whether null values are allowed
 	 * @param primaryKey            whether it is a primary key
 	 * @param defaultValue            the default value
-	 * @param precision            the precision value for floating point types
 	 * @param scale            the scale value for floating point types
 	 * @param unique the unique
 	 */
 	public DataStructureTableColumnModel(String name, String type, String length, boolean nullable, boolean primaryKey, String defaultValue,
-			String precision, String scale, boolean unique) {
+			String scale, boolean unique) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -63,7 +60,6 @@ public class DataStructureTableColumnModel {
 		this.nullable = nullable;
 		this.primaryKey = primaryKey;
 		this.defaultValue = defaultValue;
-		this.precision = precision;
 		this.scale = scale;
 		this.unique = unique;
 	}
@@ -174,24 +170,6 @@ public class DataStructureTableColumnModel {
 	 */
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
-	}
-
-	/**
-	 * Getter for the precision value.
-	 *
-	 * @return the precision value
-	 */
-	public String getPrecision() {
-		return precision;
-	}
-
-	/**
-	 * Setter for the precision value.
-	 *
-	 * @param precision            the precision value
-	 */
-	public void setPrecision(String precision) {
-		this.precision = precision;
 	}
 
 	/**
