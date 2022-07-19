@@ -191,6 +191,7 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 			Connection connection = null;
 			try {
 				connection = getDataSource().getConnection();
+				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS").toString();
 				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
 				publishRequestPersistenceManager.execute(connection, sql);
@@ -235,6 +236,7 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 			Connection connection = null;
 			try {
 				connection = getDataSource().getConnection();
+				publishRequestPersistenceManager.tableCheck(connection, PublishRequestDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_REQUESTS")
 						.where("PUBREQ_CREATED_AT < ?")
 						.build();
@@ -414,6 +416,7 @@ public class PublisherCoreService implements IPublisherCoreService, ICleanupServ
 			Connection connection = null;
 			try {
 				connection = getDataSource().getConnection();
+				publishLogPersistenceManager.tableCheck(connection, PublishLogDefinition.class);
 				String sql = SqlFactory.getNative(connection).delete().from("DIRIGIBLE_PUBLISH_LOGS")
 						.where("PUBLOG_CREATED_AT < ?")
 						.build();
