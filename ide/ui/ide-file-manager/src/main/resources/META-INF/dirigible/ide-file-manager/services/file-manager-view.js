@@ -10,14 +10,14 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: "repository",
-	label: "Repository",
-	factory: "frame",
-	region: "left",
-	link: "../ide-repository/repository.html"
+    id: "fileManager",
+    label: "File Manager",
+    factory: "frame",
+    region: "left",
+    link: "../ide-file-manager/file-manager.html"
 };
 if (typeof exports !== 'undefined') {
-	exports.getView = function () {
-		return viewData;
-	}
+    exports.getView = function () {
+        return viewData;
+    }
 }

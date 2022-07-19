@@ -1042,11 +1042,11 @@ projectsView.controller('ProjectsViewController', [
                                 )
                             );
                         } else {
-                            messageHub.showAlertError('Could not create file', `There was an error while creating '${name}'`);
+                            messageHub.showAlertError('Could not create a file', `There was an error while creating '${name}'`);
                         }
                     });
                 } else {
-                    messageHub.showAlertError('Could not create file', `There was an error while creating '${name}'`);
+                    messageHub.showAlertError('Could not create a file', `There was an error while creating '${name}'`);
                 }
             });
         }
@@ -1068,6 +1068,8 @@ projectsView.controller('ProjectsViewController', [
                             },
                         )
                     );
+                } else {
+                    messageHub.showAlertError('Could not create a folder', `There was an error while creating '${name}'`);
                 }
             });
         }

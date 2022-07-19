@@ -32,6 +32,8 @@
 		<module>ide-transport-service</module>
 		<module>ide-workspace-service</module>
 		<module>ide-generate-service</module>
+	  <module>ide-registry-service</module>
+	  <module>ide-repository-service</module>
 		<module>ide-search</module>
 		<module>ide-import</module>
 		<module>ide-properties</module>
@@ -61,6 +63,7 @@
 		<module>ide-listeners-menu</module>
 		<module>ide-data-structures</module>
 		<module>ide-registry</module>
+	  <module>ide-file-manager</module>
 		<module>ide-plugins</module>
 		<module>ide-websockets</module>
 		<module>ide-websockets-menu</module>

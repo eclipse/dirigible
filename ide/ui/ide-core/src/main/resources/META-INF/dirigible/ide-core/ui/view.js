@@ -59,6 +59,16 @@ angular.module('ideView', ['ngResource', 'ideTheming'])
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('baseHttpInterceptor');
     }])
+    .service('ViewParameters', ['$window', function ($window) {
+        return {
+            get: function () {
+                if ($window.frameElement.hasAttribute("data-parameters")) {
+                    return JSON.parse($window.frameElement.getAttribute("data-parameters"));
+                }
+                return {};
+            }
+        };
+    }])
     .directive('embeddedView', ['Views', 'view', function (Views, view) {
         return {
             restrict: 'E',
