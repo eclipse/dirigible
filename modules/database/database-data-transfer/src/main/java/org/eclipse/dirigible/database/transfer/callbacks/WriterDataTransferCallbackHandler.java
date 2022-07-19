@@ -38,7 +38,8 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	private void write(String s) {
 		try {
 			String message = String.format("[%s] %s", identifier, s);
-			this.writer.write(message + "\n");
+			this.writer.write(message);
+			this.writer.write("\n");
 			this.writer.flush();
 			logger.info(message);
 		} catch (IOException e) {
