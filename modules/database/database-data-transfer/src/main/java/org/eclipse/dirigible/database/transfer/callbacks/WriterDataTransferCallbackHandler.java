@@ -123,7 +123,7 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 
 	@Override
 	public void tableTransferFailed(String table, String error) {
-		write("Data transfer has been started for table: " + table);
+		write("Data transfer has been failed for table: " + table + " with error: " + error);
 	}
 
 	@Override
