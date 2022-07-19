@@ -578,14 +578,14 @@ jobs:
 
 #-----------------Update Trial Instance------------------#
 
-    - name: Kubectl tool installer
-      uses: Azure/setup-kubectl@v1
-    - name: Setup Kube Config File
-      run: |
-        mkdir $HOME/.kube
-        echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
-    - name: Update Trial Instance
-      run: kubectl -n trial set image deployment/trial dirigible=dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
+#     - name: Kubectl tool installer
+#       uses: Azure/setup-kubectl@v1
+#     - name: Setup Kube Config File
+#       run: |
+#         mkdir $HOME/.kube
+#         echo "${{ secrets.KUBE_CONFIG }}" >> $HOME/.kube/config
+#     - name: Update Trial Instance
+#       run: kubectl -n trial set image deployment/trial dirigible=dirigiblelabs/dirigible-keycloak:$DIRIGIBLE_VERSION
 
 #-----------------Update Trial Instance------------------#
 
