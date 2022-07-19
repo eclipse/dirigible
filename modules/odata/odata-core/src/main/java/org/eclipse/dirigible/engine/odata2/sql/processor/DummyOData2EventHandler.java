@@ -38,8 +38,13 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public boolean usingOnCreateEntity(PostUriInfo uriInfo, String requestContentType,
-			String contentType) {
+	public boolean isUsingOnCreateEntity(PostUriInfo uriInfo, String requestContentType,
+										 String contentType) {
+		return false;
+	}
+
+	@Override
+	public boolean isUsingAfterCreateEntity(PostUriInfo uriInfo, String requestContentType, String contentType) {
 		return false;
 	}
 
@@ -68,8 +73,8 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public boolean usingOnUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
-			boolean merge, String contentType) {
+	public boolean isUsingOnUpdateEntity(PutMergePatchUriInfo uriInfo, String requestContentType,
+										 boolean merge, String contentType) {
 		return false;
 	}
 
@@ -96,7 +101,7 @@ public class DummyOData2EventHandler implements OData2EventHandler {
 	}
 
 	@Override
-	public boolean usingOnDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
+	public boolean isUsingOnDeleteEntity(DeleteUriInfo uriInfo, String contentType) {
 		return false;
 	}
 
