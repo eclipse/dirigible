@@ -15,6 +15,7 @@ importView.controller('ImportViewController', [
     '$scope',
     '$window',
     'messageHub',
+    'ViewParameters',
     'workspaceApi',
     'transportApi',
     'FileUploader',
@@ -22,6 +23,7 @@ importView.controller('ImportViewController', [
         $scope,
         $window,
         messageHub,
+        ViewParameters,
         workspaceApi,
         transportApi,
         FileUploader,
@@ -30,36 +32,45 @@ importView.controller('ImportViewController', [
         $scope.selectedWorkspace = { name: 'workspace' }; // Default
         $scope.workspaceNames = [];
         $scope.inDialog = false;
+        $scope.importRepository = false;
         $scope.inputAccept = '.zip';
         $scope.dropAreaTitle = 'Import Projects';
         $scope.dropAreaSubtitle = 'Drop zip file(s) here, or use the "+" button.';
         $scope.dropAreaMore = '';
         $scope.uploadPath = '';
+        $scope.queueLength = 100;
         $scope.uploader = new FileUploader({
             url: projectImportUrl
         });
 
-        $scope.getViewParameters = function () {
-            let params = JSON.parse($window.frameElement.getAttribute("data-parameters"));
+        $scope.initImport = function () {
+            let params = ViewParameters.get();
             if (params.container === 'dialog') {
                 $scope.inDialog = true;
-                $scope.uploadPath = params.uploadPath;
-                $scope.selectedWorkspace.name = params.workspace;
-                if (params.importType === 'file') {
-                    $scope.inputAccept = '';
-                    $scope.importType = params.importType;
-                    $scope.dropAreaTitle = 'Import files';
-                    $scope.dropAreaSubtitle = 'Drop file(s) here, or use the "+" button.';
-                    $scope.dropAreaMore = `Files will be imported in "${params.uploadPath}"`;
+                if (params.importRepository) {
+                    $scope.importRepository = true;
+                    $scope.queueLength = 1;
+                    $scope.uploader.url = transportApi.getSnapshotUrl();
+                    $scope.dropAreaTitle = 'Import repository from zip';
+                    $scope.dropAreaSubtitle = 'Drop snaphot here, or use the "+" button.';
                 } else {
-                    $scope.dropAreaTitle = 'Import files from zip';
-                    $scope.dropAreaMore = `Files will be extracted in "${params.uploadPath}"`;
-                    let pathSegments = params.uploadPath.split('/');
-                    $scope.uploader.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path(params.workspace).path(pathSegments).build();
-                    if (pathSegments.length <= 2) $scope.uploader.url += '/%252F';
+                    $scope.uploadPath = params.uploadPath;
+                    $scope.selectedWorkspace.name = params.workspace;
+                    if (params.importType === 'file') {
+                        $scope.inputAccept = '';
+                        $scope.importType = params.importType;
+                        $scope.dropAreaTitle = 'Import files';
+                        $scope.dropAreaSubtitle = 'Drop file(s) here, or use the "+" button.';
+                        $scope.dropAreaMore = `Files will be imported in "${params.uploadPath}"`;
+                    } else {
+                        $scope.dropAreaTitle = 'Import files from zip';
+                        $scope.dropAreaMore = `Files will be extracted in "${params.uploadPath}"`;
+                        let pathSegments = params.uploadPath.split('/');
+                        $scope.uploader.url = new UriBuilder().path(transportApi.getZipImportUrl().split('/')).path(params.workspace).path(pathSegments).build();
+                        if (pathSegments.length <= 2) $scope.uploader.url += '/%252F';
+                    }
                 }
-            }
-            else $scope.reloadWorkspaceList();
+            } else $scope.reloadWorkspaceList();
         }
 
         $scope.uploader.filters.push({
@@ -70,31 +81,34 @@ importView.controller('ImportViewController', [
                     if (type != 'zip' && type != 'x-zip' && type != 'x-zip-compressed') {
                         return false;
                     }
-                return this.queue.length < 100;
+                return this.queue.length < $scope.queueLength;
             }
         });
 
         $scope.uploader.onBeforeUploadItem = function (item) {
-            if (!$scope.inDialog) {
-                item.url = new UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
-            } else if ($scope.inDialog && $scope.importType === 'file') {
-                item.headers = {
-                    'Dirigible-Editor': 'Editor',
-                    'Content-Type': 'application/octet-stream',
-                    'Content-Transfer-Encoding': 'base64'
-                };
-                item.url = new UriBuilder().path('/services/v4/ide/workspaces'.split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+            if (!$scope.importRepository) {
+                if (!$scope.inDialog) {
+                    item.url = new UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
+                } else if ($scope.inDialog && $scope.importType === 'file') {
+                    item.headers = {
+                        'Dirigible-Editor': 'Editor',
+                        'Content-Type': 'application/octet-stream',
+                        'Content-Transfer-Encoding': 'base64'
+                    };
+                    item.url = new UriBuilder().path('/services/v4/ide/workspaces'.split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+                }
             }
         };
 
         $scope.uploader.onCompleteAll = function () {
-            if ($scope.inDialog) {
+            if ($scope.importRepository) {
+                messageHub.announceRepositoryModified();
+            } else if ($scope.inDialog) {
                 // Temporary, publishes all files in the import directory, not just imported ones
                 messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { path: $scope.uploadPath } });
             } else {
                 messageHub.announceWorkspaceChanged({ name: $scope.selectedWorkspace.name, publish: { workspace: true } });
             }
-
         };
 
         $scope.isSelectedWorkspace = function (name) {
@@ -136,5 +150,5 @@ importView.controller('ImportViewController', [
         });
 
         // Initialization
-        $scope.getViewParameters();
+        $scope.initImport();
     }]);

@@ -47,15 +47,20 @@
             <fd-button ng-show="uploader.queue.length > 0 && uploader.isUploading" dg-label="Cancel" title="Cancel"
                 dg-type="transparent" glyph="sap-icon--cancel" ng-click="uploader.cancelAll()">
             </fd-button>
-            <fd-button ng-show="uploader.queue.length > 0 && !uploader.isUploading" state="{{ canUpload() }}"
-                dg-label="Upload All" title="Upload All" dg-type="transparent" glyph="sap-icon--upload"
-                ng-click="uploader.uploadAll()">
+            <fd-button ng-if="!importRepository" ng-show="uploader.queue.length > 0 && !uploader.isUploading"
+                state="{{ canUpload() }}" dg-label="Upload All" title="Upload All" dg-type="transparent"
+                glyph="sap-icon--upload" ng-click="uploader.uploadAll()">
+            </fd-button>
+            <fd-button ng-if="importRepository" ng-show="uploader.queue.length > 0 && !uploader.isUploading"
+                state="{{ canUpload() }}" dg-label="Upload" title="Upload" dg-type="transparent"
+                glyph="sap-icon--upload" ng-click="uploader.uploadAll()">
             </fd-button>
             <fd-toolbar-separator ng-show="uploader.queue.length > 0"></fd-toolbar-separator>
             <fd-button ng-if="!inDialog" dg-type="transparent" state="{{ uploader.isUploading ? 'disabled' : '' }}"
                 glyph="sap-icon--add" title="Add files" aria-label="Add files" ng-click="addFiles()">
             </fd-button>
-            <fd-button ng-if="inDialog" dg-type="transparent" state="{{ uploader.isUploading ? 'disabled' : '' }}"
+            <fd-button ng-if="inDialog" dg-type="transparent"
+                state="{{ uploader.isUploading || uploader.queue.length >= queueLength ? 'disabled' : '' }}"
                 glyph="sap-icon--add" title="Add files" dg-label="Add" ng-click="addFiles()">
             </fd-button>
             <fd-toolbar-separator ng-hide="inDialog"></fd-toolbar-separator>

@@ -29,10 +29,21 @@ angular.module('ideTransport', [])
                 return new UriBuilder().path(this.transportServiceUrl.split('/')).path('zipimport').build();
             }.bind(this);
 
+            let getSnapshotUrl = function () {
+                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
+            }.bind(this);
+
+            let exportRepository = function () {
+                let url = new UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
+                $window.open(url, '_blank');
+            }.bind(this);
+
             return {
                 exportProject: exportProject,
                 getProjectImportUrl: getProjectImportUrl,
                 getZipImportUrl: getZipImportUrl,
+                getSnapshotUrl: getSnapshotUrl,
+                exportRepository: exportRepository,
             };
         }];
     });

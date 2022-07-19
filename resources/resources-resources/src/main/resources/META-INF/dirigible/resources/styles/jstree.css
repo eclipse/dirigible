@@ -21,6 +21,9 @@
 .jstree-fiori--fill.jstree-fiori--context-menu {
   height: calc(100% - 2rem);
 }
+.jstree-fiori--fill.jstree-fiori--context-menu.fd-scrollbar {
+  padding-bottom: 2rem;
+}
 .jstree .jstree-container-ul > li > .jstree-wholerow {
   border-bottom: var(--sapList_BorderWidth, 0.0625rem) solid var(--sapList_BorderColor, #e5e5e5);
 }

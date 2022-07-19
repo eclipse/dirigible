@@ -488,6 +488,14 @@ angular.module('ideMessageHub', [])
                     throw Error('Callback argument must be a function');
                 return messageHub.subscribe(callbackFunc, 'ide.workspaces.modified');
             };
+            let announceRepositoryModified = function () {
+                trigger('ide.repository.modified', true);
+            };
+            let onRepositoryModified = function (callbackFunc) {
+                if (typeof callbackFunc !== 'function')
+                    throw Error('Callback argument must be a function');
+                return messageHub.subscribe(callbackFunc, 'ide.repository.modified');
+            };
             return {
                 showStatusBusy: showStatusBusy,
                 hideStatusBusy: hideStatusBusy,
@@ -545,6 +553,8 @@ angular.module('ideMessageHub', [])
                 onWorkspaceChanged: onWorkspaceChanged,
                 announceWorkspacesModified: announceWorkspacesModified,
                 onWorkspacesModified: onWorkspacesModified,
+                announceRepositoryModified: announceRepositoryModified,
+                onRepositoryModified: onRepositoryModified,
             };
         }];
     });

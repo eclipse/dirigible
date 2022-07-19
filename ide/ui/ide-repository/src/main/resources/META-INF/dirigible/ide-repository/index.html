@@ -41,25 +41,7 @@
             .controller("RepositoryController", ["$scope", "messageHub",
                 function ($scope, messageHub) {
                     $scope.layoutModel = {
-                        views: ["repository", "snapshot", "editor", "console"],
-                        events: {
-                            "repository.resource.open": function (msg) {
-                                messageHub.openEditor(
-                                    msg.data.path,
-                                    msg.data.label,
-                                    msg.data.contentType,
-                                    undefined,
-                                    {
-                                        readOnly: true,
-                                        resourceType: "repository",
-                                    }
-                                );
-                            },
-                            "repository.resource.deleted": function (msg) {
-                                //TODO: check if deleted file is currently open in editor and close the editor window
-                                console.log("resource deleted recieved:" + msg);
-                            },
-                        },
+                        views: ['fileManager', 'console'],
                     };
                 },
             ]);
