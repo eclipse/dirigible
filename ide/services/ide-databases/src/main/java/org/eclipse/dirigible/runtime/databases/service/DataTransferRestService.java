@@ -11,22 +11,16 @@
  */
 package org.eclipse.dirigible.runtime.databases.service;
 
-import static java.text.MessageFormat.format;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -37,8 +31,6 @@ import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.dirigible.api.v3.security.UserFacade;
 import org.eclipse.dirigible.commons.api.service.AbstractRestService;
 import org.eclipse.dirigible.commons.api.service.IRestService;
-import org.eclipse.dirigible.database.databases.api.DatabasesException;
-import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
 import org.eclipse.dirigible.database.transfer.api.DataTransferDefinition;
 import org.eclipse.dirigible.database.transfer.api.DataTransferException;
 import org.eclipse.dirigible.database.transfer.callbacks.WriterDataTransferCallbackHandler;
@@ -72,11 +64,28 @@ public class DataTransferRestService extends AbstractRestService implements IRes
 	 * Request data transfer.
 	 *
 	 * @return the response
-	 * @throws DataTransferException 
+	 * @throws DataTransferException in case of error
+	 * 
+	 * Sample request:
+	 * 
+	 * {
+	 *     "source": {
+	 *         "type": "local",
+	 *         "name": "SystemDB"
+	 *     },
+	 *     "target": {
+	 *         "type": "defined",
+	 *         "name": "MyDB"
+	 *     },
+ 	 *    "configuration": {
+ 	 *        "sourceSchema": "PUBLIC",
+	 *         "targetSchema": "PUBLIC"
+ 	 *    }
+	 * }
 	 */
-	@POST
+	@GET
 	@Path("")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@ApiOperation("Transfer data")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Request data transfer", response = String.class) })
 	public Response createDefinedDatabases(@ApiParam(value = "Data transfer definition", required = true) DataTransferDefinition definition) throws DataTransferException {
