@@ -130,6 +130,10 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
                 cleanScope();
                 if (!isNaN(result.data)) {
                     result = 'Rows updated: ' + result.data;
+                } else if (result.data !== null) {
+                    $scope.result = result.data;
+                } else {
+                    $scope.result = 'Empty result';
                 }
                 $scope.result = result.data;
             });

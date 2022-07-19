@@ -48,8 +48,9 @@
         <div>
             <div>
                 <fd-scrollbar>
-
-
+                    <p class="fd-text" ng-hide="columns">
+                        {{result}}
+                    </p>
 
                     <table fd-table display-mode="compact" ng-hide="hasMultipleProcedureResults" ng-show="columns">
                         <thead fd-table-header sticky="true">
