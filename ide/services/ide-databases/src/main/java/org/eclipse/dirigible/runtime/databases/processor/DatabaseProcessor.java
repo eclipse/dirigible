@@ -37,7 +37,7 @@ import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
 import org.eclipse.dirigible.database.databases.service.DatabasesCoreService;
 import org.eclipse.dirigible.database.transfer.api.DataTransferDefinition;
 import org.eclipse.dirigible.database.transfer.api.DataTransferException;
-import org.eclipse.dirigible.database.transfer.callbacks.WriterDataTransferCallbackHandler;
+import org.eclipse.dirigible.database.transfer.api.IDataTransferCallbackHandler;
 import org.eclipse.dirigible.database.transfer.manager.DataTransferManager;
 import org.eclipse.dirigible.databases.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
@@ -539,7 +539,7 @@ public class DatabaseProcessor {
 		databasesCoreService.createDatabase(definition);
 	}
 	
-	public void transferData(DataTransferDefinition definition, WriterDataTransferCallbackHandler handler) throws DataTransferException {
+	public void transferData(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
 		DataTransferManager.transfer(definition, handler);
 	}
 

@@ -61,6 +61,9 @@ public class DataTransferManager {
 			try (Connection targetConnection = target.getConnection()) {
 				
 				List<PersistenceTableModel> tables = reverseTables(source, configuration.getSourceSchema(), handler);
+				if (handler.isStopped()) {
+					return;
+				}
 				tables = sortTables(tables, handler);
 				sourceConnection.setSchema(configuration.getSourceSchema());
 				targetConnection.setSchema(configuration.getTargetSchema());
@@ -135,6 +138,9 @@ public class DataTransferManager {
 		handler.dataTransferStarted();
 		
 		for (PersistenceTableModel tableModel : tables) {
+			if (handler.isStopped()) {
+				return;
+			}
 			logger.info(String.format("Data transfer of table %s has been started...", tableModel.getTableName()));
 			handler.tableTransferStarted(tableModel.getTableName());
 			try {
@@ -187,6 +193,9 @@ public class DataTransferManager {
 						
 						try (PreparedStatement pstmtTarget = targetConnection.prepareStatement(insertSQL)) {
 							while (rs.next()) {
+								if (handler.isStopped()) {
+									return;
+								}
 								for (int i=1; i<=resultSetMetaData.getColumnCount(); i++) {
 									int type = resultSetMetaData.getColumnType(i);
 									switch (type) {

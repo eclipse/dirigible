@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+
+<html lang="en" ng-app="transfer" ng-controller="TransferController as controller" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- Font Awesome -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- Twitter Bootstrap with Theme Support -->
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+        <!-- View data -->
+        <script type="text/javascript" src="services/transfer-view.js"></script>
+
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
+        <script type="text/javascript" src="transfer.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+
+    </head>
+
+    <body>
+        <div>
+            <div>
+                <fd-scrollbar>
+
+                    <label class="fd-form-label">Source: </label>
+                    <select ng-model="definition.selectedSourceDatabase" ng-options="o as o for o in databases"
+                        ng-change="databaseSourceChanged()"
+                        class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Source Databases"></select>
+                    <select ng-model="definition.selectedSourceDatasource"
+                        ng-options="o as o for o in sourceDatasources" ng-change="datasourceSourceChanged()"
+                        class="dropdown btn btn-default dropdown-toggle dropdown-top"
+                        title="Source Datasources"></select>
+                    <select ng-model="definition.selectedSourceScheme" ng-options="o as o.name for o in sourceSchemes"
+                        ng-change="schemeSourceChanged()" class="dropdown btn btn-default dropdown-toggle dropdown-top"
+                        title="Source Schemes"></select>
+
+                    <label class="fd-form-label">Target: </label>
+                    <select ng-model="definition.selectedTargetDatabase" ng-options="o as o for o in databases"
+                        ng-change="databaseTargetChanged()"
+                        class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Target Databases"></select>
+                    <select ng-model="definition.selectedTargetDatasource"
+                        ng-options="o as o for o in targetDatasources" ng-change="datasourceTargetChanged()"
+                        class="dropdown btn btn-default dropdown-toggle dropdown-top"
+                        title="Target Datasources"></select>
+                    <select ng-model="definition.selectedTargetScheme" ng-options="o as o.name for o in targetSchemes"
+                        ng-change="schemeTargetChanged()" class="dropdown btn btn-default dropdown-toggle dropdown-top"
+                        title="Target Schemes"></select>
+
+                    <fd-button dg-type="transparent" glyph="sap-icon--media-play" title="Start Transfer"
+                        aria-label="Start Transfer" ng-click="startTransfer()" aria-hidden="true">
+                    </fd-button>
+                    <fd-button dg-type="transparent" glyph="sap-icon--media-pause" title="Stop Transfer"
+                        aria-label="Stop Transfer" ng-click="stopTransfer()" aria-hidden="true">
+                    </fd-button>
+                    <fd-button dg-type="transparent" glyph="sap-icon--eraser" title="Clear Log" aria-label="Clear Log"
+                        ng-click="clearLog()" aria-hidden="true">
+                    </fd-button>
+
+                    <div id="logContent" class="console-log">
+                        <fd-list compact="true" no-border="true">
+                            <fd-list-item ng-repeat="next in logs">
+                                <fd-list-title class="{{ logLevelStatuses[next.level] }}">[{{next.date}}]
+                                    {{next.message}}
+                                </fd-list-title>
+                            </fd-list-item>
+                        </fd-list>
+                    </div>
+
+                </fd-scrollbar>
+            </div>
+        </div>
+
+    </body>

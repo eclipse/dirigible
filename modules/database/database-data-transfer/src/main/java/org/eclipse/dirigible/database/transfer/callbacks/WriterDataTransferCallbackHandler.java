@@ -37,6 +37,8 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	
 	private String identifier;
 	
+	private boolean stopped = false;
+	
 	public WriterDataTransferCallbackHandler(Writer writer, String identifier) {
 		this.writer = writer;
 		this.identifier = identifier;
@@ -72,6 +74,11 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 	@Override
 	public void transferFinished(int count) {
 		write("Transfer has been finished successfully for tables count: " + count, SEVERITY_INFO);
+		try {
+			this.writer.close();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override
@@ -154,5 +161,17 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 		logger.debug("Table " + table + " has been skipped due to: " + reason, SEVERITY_WARNING);
 		
 	}
+
+	@Override
+	public void stopTransfer() {
+		stopped = true;
+		logger.debug("Transfer has been stopped.", SEVERITY_WARNING);
+	}
+	
+	@Override
+	public boolean isStopped() {
+		return stopped;
+	}
+
 
 }

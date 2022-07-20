@@ -127,4 +127,15 @@ public class DummyDataTransferCallbackHandler implements IDataTransferCallbackHa
 		
 	}
 
+	@Override
+	public void stopTransfer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isStopped() {
+		return false;
+	}
+
 }

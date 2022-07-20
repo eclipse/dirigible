@@ -52,5 +52,9 @@ public interface IDataTransferCallbackHandler {
 	void tableInsertSQL(String insertSQL);
 	
 	void tableSkipped(String table, String reason);
+	
+	public void stopTransfer();
+
+	boolean isStopped();
 
 }
