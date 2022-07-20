@@ -344,7 +344,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                 return response;
             }
 
-
             if (this.odata2EventHandler.isUsingOnCreateEntity(uriInfo, requestContentType, contentType)) {
                 updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 response = this.odata2EventHandler.onCreateEntity(uriInfo, content,
