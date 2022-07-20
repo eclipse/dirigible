@@ -38,7 +38,7 @@ class GraalVMJavaScriptContextBuilder {
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN = "DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_NASHORN";
     private static final String DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA = "DIRIGIBLE_JAVASCRIPT_GRAALVM_COMPATIBILITY_MODE_MOZILLA";
 
-    public static final String DEFAULT_DEBUG_PORT = "8081";
+    public static final String DEFAULT_DEBUG_PORT = GraalVMJavascriptEngineExecutor.DEFAULT_DEBUG_PORT;
 
     Context createJavaScriptContext(String moduleOrCode, Function<String, RegistryTruffleFileSystem> truffleFileSystemProvider) {
         Context.Builder contextBuilder = Context.newBuilder("js")
