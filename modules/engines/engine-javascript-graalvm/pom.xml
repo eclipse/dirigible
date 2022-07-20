@@ -357,7 +357,7 @@
     </dependencies>
 
 	<properties>
-		<graalvm.version>22.1.0.1</graalvm.version>
+		<graalvm.version>22.2.0</graalvm.version>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
 	</properties>
 
