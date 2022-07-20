@@ -1,1 +1,8 @@
-{"guid":"ide-repository","repository":{"type":"git","branch":"master","url":"https://github.com/dirigiblelabs/ide-repository.git"}}
+{
+    "guid": "ide-repository",
+    "repository": {
+        "type": "git",
+        "branch": "master",
+        "url": "https://github.com/dirigiblelabs/ide-repository.git"
+    }
+}

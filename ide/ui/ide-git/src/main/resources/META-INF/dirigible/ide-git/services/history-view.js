@@ -12,7 +12,7 @@
 const viewData = {
     id: "history",
     factory: "frame",
-    region: "center-bottom",
+    region: "bottom",
     label: "History",
     link: "../ide-git/git/history.html"
 };

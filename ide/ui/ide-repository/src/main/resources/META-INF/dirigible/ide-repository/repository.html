@@ -8,22 +8,23 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="fileManager" ng-controller="FileManagerViewController">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="repository" ng-controller="RepositoryViewController">
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title dg-view-title></title>
-        <script type="text/javascript" src="services/file-manager-view.js"></script>
+        <script type="text/javascript" src="services/repository-view.js"></script>
         <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
         <theme></theme>
         <script type="text/javascript" src="/services/v4/web/ide-core/ui/editors.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-transport-service/transport.js"></script>
         <script type="text/javascript" src="/services/v4/web/ide-repository-service/repository.js"></script>
         <script type="text/javascript" src="/webjars/jstree/3.3.12/jstree.min.js"></script>
         <link type="text/css" rel="stylesheet" href="/services/v4/web/resources/styles/jstree.css" />
         <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
-        <script type="text/javascript" src="js/file-manager.js"></script>
+        <script type="text/javascript" src="js/repository.js"></script>
     </head>
 
     <body class="dg-vbox">
@@ -35,11 +36,16 @@
             <fd-button compact="true" dg-type="{{ searchVisible ? 'emphasized' : 'transparent' }}"
                 glyph="sap-icon--search" title="Toggle search" aria-label="Toggle search" ng-click="toggleSearch()">
             </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--upload-to-cloud" title="Import"
+                aria-label="Import" ng-click="importRepository()"></fd-button>
+            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--download-from-cloud" title="Export"
+                aria-label="Export" ng-click="exportRepository()"></fd-button>
         </fd-toolbar>
         <fd-toolbar dg-size="cozy" ng-show="searchVisible">
             <fd-input type="search" placeholder="Search" ng-keyup="search()" ng-model="searchField.text"></fd-input>
         </fd-toolbar>
-        <div id="dgFileManager" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"
+        <div id="dgRepository" class="jstree-fiori--fill jstree-fiori--context-menu fd-scrollbar"
             dg-contextmenu="contextMenuContent"></div>
     </body>
 

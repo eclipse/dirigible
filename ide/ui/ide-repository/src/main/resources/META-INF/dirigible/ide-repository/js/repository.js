@@ -9,18 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let fileManagerView = angular.module('fileManager', ['ideUI', 'ideView', 'ideEditors', 'ideRepository']);
-fileManagerView.controller('FileManagerViewController', [
+let repositoryView = angular.module('repository', ['ideUI', 'ideView', 'ideEditors', 'ideTransport', 'ideRepository']);
+repositoryView.controller('RepositoryViewController', [
     '$scope',
     'messageHub',
-    'ViewParameters',
     'Editors',
+    'transportApi',
     'repositoryApi',
     function (
         $scope,
         messageHub,
-        ViewParameters,
         Editors,
+        transportApi,
         repositoryApi
     ) {
         $scope.searchVisible = false;
@@ -36,7 +36,7 @@ fileManagerView.controller('FileManagerViewController', [
         $scope.treeData = [];
         $scope.basePath = '/';
 
-        $scope.jstreeWidget = angular.element('#dgFileManager');
+        $scope.jstreeWidget = angular.element('#dgRepository');
         $scope.spinnerObj = {
             text: "Loading...",
             type: "spinner",
@@ -80,7 +80,7 @@ fileManagerView.controller('FileManagerViewController', [
                     return 0;
                 }
             },
-            state: { key: 'ide-file-manager' },
+            state: { key: 'ide-repository' },
             types: {
                 "default": {
                     icon: "sap-icon--question-mark",
@@ -107,6 +107,17 @@ fileManagerView.controller('FileManagerViewController', [
                 openFile(node, 'monaco'); // Temporarily set monaco
             }
         });
+
+        $scope.importRepository = function () {
+            messageHub.showDialogWindow(
+                "import",
+                { importRepository: true }
+            );
+        };
+
+        $scope.exportRepository = function () {
+            transportApi.exportRepository();
+        };
 
         function getChildrenNames(node, type = '') {
             let root = $scope.jstreeWidget.jstree(true).get_node(node);
@@ -159,7 +170,7 @@ fileManagerView.controller('FileManagerViewController', [
                     let closest = element.closest("li");
                     if (closest) id = closest.id;
                     else return {
-                        callbackTopic: "file-manager.tree.contextmenu",
+                        callbackTopic: "repository.tree.contextmenu",
                         items: [
                             {
                                 id: "folder",
@@ -218,7 +229,7 @@ fileManagerView.controller('FileManagerViewController', [
                         data: node,
                     };
                     let menuObj = {
-                        callbackTopic: 'file-manager.tree.contextmenu',
+                        callbackTopic: 'repository.tree.contextmenu',
                         items: [],
                     };
                     if (node.type === "folder") {
@@ -348,7 +359,7 @@ fileManagerView.controller('FileManagerViewController', [
                 node.data.contentType,
                 editor,
                 {
-                    readOnly: $scope.parameters.perspectiveId !== 'workbench',
+                    readOnly: true,
                     resourceType: "repository",
                 },
             );
@@ -445,7 +456,7 @@ fileManagerView.controller('FileManagerViewController', [
         });
 
         messageHub.onDidReceiveMessage(
-            'file-manager.tree.select',
+            'repository.tree.select',
             function (msg) {
                 let objects = $scope.jstreeWidget.jstree(true).get_json(
                     '#',
@@ -467,29 +478,29 @@ fileManagerView.controller('FileManagerViewController', [
         );
 
         messageHub.onDidReceiveMessage(
-            "file-manager.formDialog.create.file",
+            "repository.formDialog.create.file",
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     createFile($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.path);
                 }
-                messageHub.hideFormDialog("fileManagerNewFileForm");
+                messageHub.hideFormDialog("repositoryNewFileForm");
             },
             true
         );
 
         messageHub.onDidReceiveMessage(
-            "file-manager.formDialog.create.folder",
+            "repository.formDialog.create.folder",
             function (msg) {
                 if (msg.data.buttonId === "b1") {
                     createFolder($scope.newNodeData.parent, msg.data.formData[0].value, $scope.newNodeData.path);
                 }
-                messageHub.hideFormDialog("fileManagerNewFolderForm");
+                messageHub.hideFormDialog("repositoryNewFolderForm");
             },
             true
         );
 
         messageHub.onDidReceiveMessage(
-            'file-manager.tree.contextmenu',
+            'repository.tree.contextmenu',
             function (msg) {
                 if (msg.data.itemId === 'open') {
                     openFile(msg.data.data, 'monaco'); // Temporarily set monaco
@@ -501,7 +512,7 @@ fileManagerView.controller('FileManagerViewController', [
                         $scope.newNodeData.path = $scope.basePath;
                     } else $scope.newNodeData.path = msg.data.data.path;
                     messageHub.showFormDialog(
-                        "fileManagerNewFileForm",
+                        "repositoryNewFileForm",
                         "Create a new file",
                         [{
                             id: "fmnffi1",
@@ -525,7 +536,7 @@ fileManagerView.controller('FileManagerViewController', [
                             type: "transparent",
                             label: "Cancel",
                         }],
-                        "file-manager.formDialog.create.file",
+                        "repository.formDialog.create.file",
                         "Creating..."
                     );
                 } else if (msg.data.itemId === 'folder') {
@@ -534,7 +545,7 @@ fileManagerView.controller('FileManagerViewController', [
                         $scope.newNodeData.path = $scope.basePath;
                     } else $scope.newNodeData.path = msg.data.data.path;
                     messageHub.showFormDialog(
-                        "fileManagerNewFolderForm",
+                        "repositoryNewFolderForm",
                         "Create new folder",
                         [{
                             id: "fmnffi1",
@@ -558,7 +569,7 @@ fileManagerView.controller('FileManagerViewController', [
                             type: "transparent",
                             label: "Cancel",
                         }],
-                        "file-manager.formDialog.create.folder",
+                        "repository.formDialog.create.folder",
                         "Creating..."
                     );
                 } else if (msg.data.itemId === 'delete') {
@@ -590,5 +601,4 @@ fileManagerView.controller('FileManagerViewController', [
 
         // Initialization
         $scope.reloadFileTree($scope.basePath, true);
-        $scope.parameters = ViewParameters.get();
     }]);

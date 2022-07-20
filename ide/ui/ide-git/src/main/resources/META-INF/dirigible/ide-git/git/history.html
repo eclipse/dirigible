@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="historyApp" ng-controller="HistoryContoller as history">
 
 	<head>
 		<meta charset="utf-8" />
@@ -17,64 +17,58 @@
 
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-		<title>Eclipse Dirigible - Git</title>
+		<!-- Title directive -->
+		<title dg-view-title></title>
 
-		<script type="text/javascript" src="/services/v4/web/ide-core/ui/message-hub.js"></script>
+		<!-- View data -->
+		<script type="text/javascript" src="../services/history-view.js"></script>
 
-		<link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-		<!-- jQuery -->
-		<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-		<!-- AngularJS -->
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-animate.min.js"></script>
-		<script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-sanitize.min.js"></script>
-
-		<!-- Twitter Bootstrap with Theme Support -->
-		<link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-		<script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-		<!-- Custom IDE Styles -->
-		<link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-
-		<script type="text/javascript" src="/services/v4/web/ide-core/ui/ui-bootstrap-tpls-0.14.3.min.js"></script>
+		<script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
 
 		<script type="text/javascript" src="history.js"></script>
 
-
+		<link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+		<theme></theme>
 	</head>
 
-	<body ng-app="historyApp" ng-controller="HistoryContoller as history" class="sidepanel">
-		<div class="view-fixed-top">
-			<button type="button" class="btn btn-default btn-top" title="Refresh" ng-click="refreshRepository()"><i
-					class="fa fa-refresh"></i></button>
-			Project: <b> {{selectedProject}} </b>
+	<body>
+		<div class="dg-vbox dg-fill-parent">
+			<fd-toolbar dg-type="solid" dg-size="cozy">
+				<h4 ng-if="selectedProject">{{selectedProject}}</h4>
+				<span ng-if="selectedFile">/{{selectedFile}}</span>
+				<fd-toolbar-spacer></fd-toolbar-spacer>
+				<fd-button glyph="sap-icon--refresh" aria-label="Refresh" dg-type="transparent"
+					state="{{selectedProject ? undefined: 'disabled'}}" ng-click="refreshRepository()">
+				</fd-button>
+			</fd-toolbar>
+			<div class="dg-stretch">
+				<fd-scrollbar class="dg-full-height">
+					<table fd-table display-mode="compact">
+						<thead fd-table-header sticky="true">
+							<tr fd-table-row>
+								<th fd-table-header-cell>Id</th>
+								<th fd-table-header-cell>Message</th>
+								<th fd-table-header-cell>Author</th>
+								<th fd-table-header-cell>Date Time</th>
+							</tr>
+						</thead>
+						<tbody fd-table-body>
+							<tr fd-table-row ng-repeat="next in history track by next.id">
+								<td fd-table-cell>{{next.shortId}}</td>
+								<td fd-table-cell>{{next.message}}</td>
+								<td fd-table-cell>{{next.author}}
+									<{{next.emailAddress}}>
+								</td>
+								<td fd-table-cell>{{next.dateTime}}</td>
+							</tr>
+							<tr ng-if="showEmptyRow()" fd-table-row>
+								<td fd-table-cell no-data="true">{{getNoDataMessage()}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</fd-scrollbar>
+			</div>
 		</div>
-		<div class="workspace scrollpanel" style="height: 100%">
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th class="col-md-1">Id</th>
-						<th class="col-md-6">Message</th>
-						<th class="col-md-2">Author</th>
-						<th class="col-md-3">Date Time</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="next in history">
-						<td class="col-md-1">{{next.shortId}}</td>
-						<td class="col-md-6">{{next.message}}</td>
-						<td class="col-md-2">{{next.author}}
-							<{{next.emailAddress}}>
-						</td>
-						<td class="col-md-3">{{next.dateTime}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
 	</body>
 
 </html>
