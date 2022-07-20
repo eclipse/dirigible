@@ -13,7 +13,7 @@ const viewData = {
 	id: "datatransfer",
 	factory: "frame",
 	region: "bottom",
-	label: "Transfer",
+	label: "Data Transfer",
 	link: "../ide-databases/transfer.html"
 };
 
