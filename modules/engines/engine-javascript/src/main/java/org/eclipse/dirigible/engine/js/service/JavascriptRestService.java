@@ -52,9 +52,10 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	@Path(HTTP_PATH_MATCHER)
 	public Response get(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@GET
@@ -62,18 +63,20 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response get(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
 	@POST
 	@Path(HTTP_PATH_MATCHER)
 	public Response post(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@POST
@@ -81,18 +84,20 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response post(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
 	@PUT
 	@Path(HTTP_PATH_MATCHER)
 	public Response put(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@PUT
@@ -100,18 +105,20 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response put(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
 	@PATCH
 	@Path(HTTP_PATH_MATCHER)
 	public Response patch(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@PATCH
@@ -119,18 +126,20 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response patch(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
 	@DELETE
 	@Path(HTTP_PATH_MATCHER)
 	public Response delete(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@DELETE
@@ -138,18 +147,20 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response delete(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
 	@HEAD
 	@Path(HTTP_PATH_MATCHER)
 	public Response head(
 			@PathParam("projectName") String projectName,
-			@PathParam("projectFilePath") String projectFilePath
+			@PathParam("projectFilePath") String projectFilePath,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath);
+		return executeJavaScript(projectName, projectFilePath, debug != null);
 	}
 
 	@HEAD
@@ -157,22 +168,23 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	public Response head(
 			@PathParam("projectName") String projectName,
 			@PathParam("projectFilePath") String projectFilePath,
-			@PathParam("projectFilePathParam") String projectFilePathParam
+			@PathParam("projectFilePathParam") String projectFilePathParam,
+			@QueryParam("debug") String debug
 	) {
-		return executeJavaScript(projectName, projectFilePath, projectFilePathParam);
+		return executeJavaScript(projectName, projectFilePath, projectFilePathParam, debug != null);
 	}
 
-	private Response executeJavaScript(String projectName, String projectFilePath) {
-		return executeJavaScript(projectName, projectFilePath, "");
+	private Response executeJavaScript(String projectName, String projectFilePath, boolean debug) {
+		return executeJavaScript(projectName, projectFilePath, "", debug);
 	}
 
-	private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam) {
+	private Response executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
 		try {
 			if (!isValid(projectName) || !isValid(projectFilePath)) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 
-			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam);
+			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam, debug);
 			return Response.ok().build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";

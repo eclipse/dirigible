@@ -63,13 +63,15 @@ angular.module('debugger', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 		let devToolsLocation = "/services/v4/web/dev-tools/js_app.html"
 		// TODO: The debug port can be configured
 		let debugPort = 8081;
-		let debuggerLocation = devToolsLocation + "?" + protocol + "=" + host + ":" + debugPort;
+		let debuggerLocation = devToolsLocation + "?" + protocol + "=" + host + ":" + debugPort + "/debug";
 
 		function refreshDebugger(resourcePath) {
-			$scope.previewUrl = debuggerLocation + resourcePath;
-			let tokenParam = 'refreshToken=' + new Date().getTime();
-			$scope.previewUrl += ($scope.previewUrl.indexOf('?') > 0 ? ($scope.previewUrl.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam));
-			$scope.$apply();
+			if ($scope.previewUrl == null) {
+				$scope.previewUrl = debuggerLocation;// + resourcePath;
+				let tokenParam = 'refreshToken=' + new Date().getTime();
+				$scope.previewUrl += ($scope.previewUrl.indexOf('?') > 0 ? ($scope.previewUrl.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam));
+				$scope.$apply();
+			}
 		}
 		$messageHub.on('workspace.file.selected', function (msg) {
 			let resourcePath = msg.data.path.substring(msg.data.path.indexOf('/', 1));
@@ -79,4 +81,5 @@ angular.module('debugger', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'])
 		$messageHub.on('debugger.refresh', function (msg) {
 			refreshDebugger(msg.data.resourcePath);
 		});
+
 	}]);

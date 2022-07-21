@@ -16,11 +16,11 @@ import org.graalvm.polyglot.Value;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-public class DirigibleJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
+public class DirigibleJavascriptCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
     private final JavascriptCodeRunner<Source, Value> codeRunner;
 
-    public DirigibleJSCodeRunner() {
+    public DirigibleJavascriptCodeRunner(boolean debug) {
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
         Path cachePath = workingDirectoryPath.resolve("caches");
         Path coreModulesESMProxiesCachePath = cachePath.resolve("core-modules-proxies-cache");
@@ -30,7 +30,7 @@ public class DirigibleJSCodeRunner implements JavascriptCodeRunner<Source, Value
                 .addGlobalObject(new DirigibleContextGlobalObject(new HashMap<>()))
                 .addGlobalObject(new DirigibleEngineTypeGlobalObject())
                 .addModuleResolver(new DirigibleModuleResolver(coreModulesESMProxiesCachePath))
-                .waitForDebugger(DirigibleJSCodeRunner::shouldEnableDebug)
+                .waitForDebugger(debug && DirigibleJavascriptCodeRunner.shouldEnableDebug())
                 .build();
     }
 

@@ -63,7 +63,7 @@ angular.module('preview', [])
 			if (url) {
 				url = url.indexOf('?refreshToken') > 0 ? url.substring(0, url.indexOf('?refreshToken')) : url;
 				let tokenParam = 'refreshToken=' + new Date().getTime();
-				this.previewUrl = url + (url.indexOf('?') > 0 ? (url.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam));
+				this.previewUrl = url + (url.indexOf('?') > 0 ? (url.endsWith('?') ? tokenParam : ('&' + tokenParam)) : ('?' + tokenParam)) + "&debug=true";
 				if (url.indexOf('/graalvm/') > 0) {
 					resourcePath = url.substring(url.indexOf('/graalvm/') + '/graalvm/'.length);
 				} else if (url.indexOf('/js/') > 0) {

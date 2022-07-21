@@ -19,7 +19,7 @@ public class DefaultJavascriptHandler implements JavascriptHandler {
     private final JavascriptEngineProcessor processor = new JavascriptEngineProcessor();
 
     @Override
-    public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam) {
+    public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         String path = projectName + IRepository.SEPARATOR + projectFilePath + IRepository.SEPARATOR + projectFilePathParam;
         processor.executeService(path);
     }

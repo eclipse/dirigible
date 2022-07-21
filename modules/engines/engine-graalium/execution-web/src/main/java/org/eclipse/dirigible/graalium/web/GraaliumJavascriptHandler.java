@@ -1,7 +1,7 @@
 package org.eclipse.dirigible.graalium.web;
 
 import org.eclipse.dirigible.engine.js.service.JavascriptHandler;
-import org.eclipse.dirigible.graalium.core.dirigible.DirigibleJSCodeRunner;
+import org.eclipse.dirigible.graalium.core.dirigible.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.dirigible.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 
@@ -13,7 +13,7 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
 
     @Override
-    public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam) {
+    public void handleRequest(String projectName, String projectFilePath, String projectFilePathParam, boolean debug) {
         try {
             if (HttpRequestFacade.isValid()) {
                 HttpRequestFacade.setAttribute(HttpRequestFacade.ATTRIBUTE_REST_RESOURCE_PATH, projectFilePathParam);
@@ -25,7 +25,7 @@ public class GraaliumJavascriptHandler implements JavascriptHandler {
             }
 
             Path jsCodePath = dirigibleSourceProvider.getAbsoluteSourcePath(projectName, projectFilePath);
-            new DirigibleJSCodeRunner().run(jsCodePath);
+            new DirigibleJavascriptCodeRunner(debug).run(jsCodePath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

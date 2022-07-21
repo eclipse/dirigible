@@ -18,10 +18,10 @@ public class GraalJSEngineCreator {
     public static Engine getOrCreateDebuggableEngine() {
         if (debuggableEngine == null) {
             debuggableEngine = getDefaultEngineBuilder()
-                    .option("inspect", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PORT", "9229"))
+                    .option("inspect", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PORT", "8081"))
                     .option("inspect.Secure", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SECURE", "false"))
-                    .option("inspect.Suspend", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SUSPEND", "false"))
-                    .option("inspect.Path", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PATH", "execution-debug"))
+                    .option("inspect.Suspend", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_SUSPEND", "true"))
+                    .option("inspect.Path", Configuration.get("DIRIGIBLE_GRAALIUM_DEBUG_PATH", "debug"))
                     .build();
         }
 
