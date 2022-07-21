@@ -4,10 +4,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/js")
-public class GraaliumJSWebService {
+public class GraaliumJavascriptRestService {
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
     private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
-    private final GraaliumJSWebHandler requestHandler = new GraaliumJSWebHandler();
+    private final GraaliumJavascriptHandler requestHandler = new GraaliumJavascriptHandler();
 
     @GET
     @Path(HTTP_PATH_MATCHER)

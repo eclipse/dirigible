@@ -41,10 +41,10 @@ import java.lang.reflect.InvocationTargetException;
 @Api(value = "JavaScript Engine", authorizations = { @Authorization(value = "basicAuth", scopes = {}) })
 @ApiResponses({ @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbidden"),
 		@ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 500, message = "Internal Server Error") })
-public class JSWebService extends AbstractRestService implements IRestService {
+public class JavascriptRestService extends AbstractRestService implements IRestService {
 
-	private static final Logger logger = LoggerFactory.getLogger(JSWebService.class.getCanonicalName());
-	private static final String DIRIGIBLE_JS_WEB_HANDLER_CLASS_NAME_KEY = "DIRIGIBLE_JS_WEB_HANDLER_CLASS_NAME";
+	private static final Logger logger = LoggerFactory.getLogger(JavascriptRestService.class.getCanonicalName());
+	private static final String DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME";
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
 	private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
 
@@ -172,7 +172,7 @@ public class JSWebService extends AbstractRestService implements IRestService {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 
-			getJSWebHandler().handleJSRequest(projectName, projectFilePath, projectFilePathParam);
+			getJavascriptHandler().handleJSRequest(projectName, projectFilePath, projectFilePathParam);
 			return Response.ok().build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";
@@ -180,16 +180,16 @@ public class JSWebService extends AbstractRestService implements IRestService {
 		}
 	}
 
-	private JSWebHandler getJSWebHandler() {
-		String jsWebHandlerClassName = Configuration.get(DIRIGIBLE_JS_WEB_HANDLER_CLASS_NAME_KEY, null);
-		if (jsWebHandlerClassName == null) {
-			return new DefaultJSWebHandler();
+	private JavascriptHandler getJavascriptHandler() {
+		String javascriptHandlerClassName = Configuration.get(DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME, null);
+		if (javascriptHandlerClassName == null) {
+			return new DefaultJavascriptHandler();
 		}
 
 		try {
-			return (JSWebHandler) Class.forName(jsWebHandlerClassName).getDeclaredConstructor().newInstance();
+			return (JavascriptHandler) Class.forName(javascriptHandlerClassName).getDeclaredConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-			throw new RuntimeException("Could not use " + jsWebHandlerClassName, e);
+			throw new RuntimeException("Could not use " + javascriptHandlerClassName, e);
 		}
 	}
 
@@ -216,7 +216,7 @@ public class JSWebService extends AbstractRestService implements IRestService {
 	 */
 	@Override
 	public Class<? extends IRestService> getType() {
-		return JSWebService.class;
+		return JavascriptRestService.class;
 	}
 
 	/*

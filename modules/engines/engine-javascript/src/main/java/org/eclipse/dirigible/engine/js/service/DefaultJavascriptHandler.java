@@ -14,7 +14,7 @@ package org.eclipse.dirigible.engine.js.service;
 import org.eclipse.dirigible.engine.js.processor.JavascriptEngineProcessor;
 import org.eclipse.dirigible.repository.api.IRepository;
 
-public class DefaultJSWebHandler implements JSWebHandler {
+public class DefaultJavascriptHandler implements JavascriptHandler {
 
     private final JavascriptEngineProcessor processor = new JavascriptEngineProcessor();
 

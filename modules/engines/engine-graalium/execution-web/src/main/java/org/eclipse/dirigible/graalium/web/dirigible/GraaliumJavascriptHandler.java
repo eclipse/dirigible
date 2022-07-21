@@ -1,6 +1,6 @@
 package org.eclipse.dirigible.graalium.web.dirigible;
 
-import org.eclipse.dirigible.engine.js.service.JSWebHandler;
+import org.eclipse.dirigible.engine.js.service.JavascriptHandler;
 import org.eclipse.dirigible.graalium.core.dirigible.DirigibleJSCodeRunner;
 import org.eclipse.dirigible.graalium.core.dirigible.modules.DirigibleSourceProvider;
 import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
@@ -8,7 +8,7 @@ import org.eclipse.dirigible.api.v3.http.HttpRequestFacade;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class GraaliumJSWebHandler implements JSWebHandler {
+public class GraaliumJavascriptHandler implements JavascriptHandler {
 
     private final DirigibleSourceProvider dirigibleSourceProvider = new DirigibleSourceProvider();
 
