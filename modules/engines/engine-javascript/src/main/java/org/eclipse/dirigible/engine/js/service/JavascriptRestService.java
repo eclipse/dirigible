@@ -172,7 +172,7 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 
-			getJavascriptHandler().handleJSRequest(projectName, projectFilePath, projectFilePathParam);
+			getJavascriptHandler().handleRequest(projectName, projectFilePath, projectFilePathParam);
 			return Response.ok().build();
 		} catch (RepositoryNotFoundException e) {
 			String message = e.getMessage() + ". Try to publish the service before execution.";

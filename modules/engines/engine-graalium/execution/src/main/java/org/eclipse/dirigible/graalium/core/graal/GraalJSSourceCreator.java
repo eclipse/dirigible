@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import org.eclipse.dirigible.graalium.core.javascript.JSModuleType;
+import org.eclipse.dirigible.graalium.core.javascript.JavascriptModuleType;
 import org.graalvm.polyglot.Source;
 
 public class GraalJSSourceCreator {
 
-    private final JSModuleType jsModuleType;
+    private final JavascriptModuleType jsModuleType;
 
-    public GraalJSSourceCreator(JSModuleType jsModuleType) {
+    public GraalJSSourceCreator(JavascriptModuleType jsModuleType) {
         this.jsModuleType = jsModuleType;
     }
 
@@ -34,7 +34,7 @@ public class GraalJSSourceCreator {
 
     private Source createSource(Source.Builder sourceBuilder) {
         try {
-            if (JSModuleType.ESM.equals(jsModuleType)) {
+            if (JavascriptModuleType.ESM.equals(jsModuleType)) {
                 sourceBuilder.mimeType("application/javascript+module");
             }
 

@@ -1,6 +1,6 @@
 package org.eclipse.dirigible.graalium.core.graal.polyfills;
 
-public class GlobalPolyfill implements JSPolyfill {
+public class GlobalPolyfill implements JavascriptPolyfill {
     private static final String POLYFILL_PATH_IN_RESOURCES = "/polyfills/global.js";
 
     @Override

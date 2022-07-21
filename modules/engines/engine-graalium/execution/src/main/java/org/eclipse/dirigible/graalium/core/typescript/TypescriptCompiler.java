@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 
-class TSCompiler {
+class TypescriptCompiler {
 
     private final Path cwd;
 
-    public TSCompiler(Path cwd) {
+    public TypescriptCompiler(Path cwd) {
         this.cwd = cwd;
     }
 
@@ -43,7 +43,7 @@ class TSCompiler {
             }
             process.waitFor();
         } catch (InterruptedException | IOException e) {
-            throw new TSCompilationException("Could not run tsc", e);
+            throw new TypescriptCompilationException("Could not run tsc", e);
         }
     }
 }

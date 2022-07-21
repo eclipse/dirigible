@@ -6,7 +6,7 @@ import org.eclipse.dirigible.graalium.core.graal.GraalJSTypeMap;
 import org.eclipse.dirigible.graalium.core.graal.modules.downloadable.DownloadableModuleResolver;
 import org.eclipse.dirigible.graalium.core.graal.modules.ModuleResolver;
 import org.eclipse.dirigible.graalium.core.graal.globals.JSGlobalObject;
-import org.eclipse.dirigible.graalium.core.graal.polyfills.JSPolyfill;
+import org.eclipse.dirigible.graalium.core.graal.polyfills.JavascriptPolyfill;
 import org.eclipse.dirigible.graalium.core.graal.GraalJSContextCreator;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GraalJSCodeRunner implements JSCodeRunner<Source, Value> {
+public class GraalJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
     private final Path currentWorkingDirectoryPath;
     private final Context graalContext;
@@ -66,7 +66,7 @@ public class GraalJSCodeRunner implements JSCodeRunner<Source, Value> {
         globalObjects.forEach(global -> contextBindings.putMember(global.getName(), global.getValue()));
     }
 
-    private void registerPolyfills(Context context, List<JSPolyfill> jsPolyfills) {
+    private void registerPolyfills(Context context, List<JavascriptPolyfill> jsPolyfills) {
         jsPolyfills
                 .stream()
                 .map(polyfill -> graalJSSourceCreator.createInternalSource(polyfill.getSource(), polyfill.getFileName()))
@@ -130,8 +130,8 @@ public class GraalJSCodeRunner implements JSCodeRunner<Source, Value> {
         private final Path workingDirectoryPath;
         private final Path dependenciesCachePath;
         private boolean waitForDebugger = false;
-        private JSModuleType jsModuleType = JSModuleType.BASED_ON_FILE_EXTENSION;
-        private final List<JSPolyfill> jsPolyfills = new ArrayList<>();
+        private JavascriptModuleType jsModuleType = JavascriptModuleType.BASED_ON_FILE_EXTENSION;
+        private final List<JavascriptPolyfill> jsPolyfills = new ArrayList<>();
         private final List<JSGlobalObject> globalObjects = new ArrayList<>();
         private final List<Consumer<Context.Builder>> onBeforeContextCreatedListeners = new ArrayList<>();
         private final List<Consumer<Context>> onAfterContextCreatedListener = new ArrayList<>();
@@ -144,7 +144,7 @@ public class GraalJSCodeRunner implements JSCodeRunner<Source, Value> {
             this.dependenciesCachePath = cachesPath.resolve("dependencies-cache");
         }
 
-        public Builder withJSModuleType(JSModuleType jsModuleType) {
+        public Builder withJSModuleType(JavascriptModuleType jsModuleType) {
             this.jsModuleType = jsModuleType;
             return this;
         }
@@ -159,7 +159,7 @@ public class GraalJSCodeRunner implements JSCodeRunner<Source, Value> {
             return this;
         }
 
-        public Builder addJSPolyfill(JSPolyfill jsPolyfill) {
+        public Builder addJSPolyfill(JavascriptPolyfill jsPolyfill) {
             jsPolyfills.add(jsPolyfill);
             return this;
         }

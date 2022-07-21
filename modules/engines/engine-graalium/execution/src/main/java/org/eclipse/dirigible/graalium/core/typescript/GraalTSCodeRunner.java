@@ -8,7 +8,7 @@ import org.graalvm.polyglot.Value;
 
 import java.nio.file.Path;
 
-public class GraalTSCodeRunner implements TSCodeRunner<Source, Value> {
+public class GraalTSCodeRunner implements TypescriptCodeRunner<Source, Value> {
 
     private final GraalJSCodeRunner codeRunner;
 
@@ -23,7 +23,7 @@ public class GraalTSCodeRunner implements TSCodeRunner<Source, Value> {
     @Override
     public Value run(Path codeFilePath) {
         String codeFilePathString = codeFilePath.toString();
-        TSCompiler typescriptCompiler = new TSCompiler(codeRunner.getCurrentWorkingDirectoryPath());
+        TypescriptCompiler typescriptCompiler = new TypescriptCompiler(codeRunner.getCurrentWorkingDirectoryPath());
         typescriptCompiler.compile(codeFilePathString);
         String compiledCodeFilePathString = codeFilePathString.replace(".ts", ".js");
         Path compiledCodeFilePath = Path.of(compiledCodeFilePathString);

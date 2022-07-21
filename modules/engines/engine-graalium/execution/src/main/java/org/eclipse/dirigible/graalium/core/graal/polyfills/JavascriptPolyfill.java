@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public interface JSPolyfill {
+public interface JavascriptPolyfill {
 
     String getSource();
 
@@ -12,7 +12,7 @@ public interface JSPolyfill {
 
     default String getPolyfillFromResources(String polyfillPathInResources) {
         try {
-        	InputStream polyfillCodeStream = JSPolyfill.class.getResourceAsStream(polyfillPathInResources);
+        	InputStream polyfillCodeStream = JavascriptPolyfill.class.getResourceAsStream(polyfillPathInResources);
             if (polyfillCodeStream == null) {
                 throw new RuntimeException("Polyfill '" + polyfillPathInResources + "' not found in resources!");
             }

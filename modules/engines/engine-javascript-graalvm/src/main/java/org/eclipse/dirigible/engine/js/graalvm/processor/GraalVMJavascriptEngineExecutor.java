@@ -37,7 +37,7 @@ import org.eclipse.dirigible.engine.js.graalvm.callbacks.Require;
 import org.eclipse.dirigible.engine.js.graalvm.debugger.GraalVMJavascriptDebugProcessor;
 import org.eclipse.dirigible.engine.js.graalvm.processor.truffle.RegistryTruffleFileSystem;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.graalium.core.javascript.JSCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Source;
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * The GraalVM Javascript Engine Executor.
  */
 @SuppressWarnings("restriction")
-public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor implements JSCodeRunner<String, Object> {
+public class GraalVMJavascriptEngineExecutor extends AbstractJavascriptExecutor implements JavascriptCodeRunner<String, Object> {
 
 
     private static final Logger logger = LoggerFactory.getLogger(GraalVMJavascriptEngineExecutor.class);

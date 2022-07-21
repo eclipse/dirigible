@@ -12,5 +12,5 @@
 package org.eclipse.dirigible.engine.js.service;
 
 public interface JavascriptHandler {
-    void handleJSRequest(String projectName, String projectFilePath, String projectFilePathParam);
+    void handleRequest(String projectName, String projectFilePath, String projectFilePathParam);
 }

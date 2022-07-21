@@ -9,16 +9,16 @@ import org.eclipse.dirigible.graalium.core.dirigible.globals.DirigibleEngineType
 import org.eclipse.dirigible.graalium.core.dirigible.modules.DirigibleModuleResolver;
 import org.eclipse.dirigible.graalium.core.dirigible.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.graalium.core.javascript.GraalJSCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.JSCodeRunner;
+import org.eclipse.dirigible.graalium.core.javascript.JavascriptCodeRunner;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 
-public class DirigibleJSCodeRunner implements JSCodeRunner<Source, Value> {
+public class DirigibleJSCodeRunner implements JavascriptCodeRunner<Source, Value> {
 
-    private final JSCodeRunner<Source, Value> codeRunner;
+    private final JavascriptCodeRunner<Source, Value> codeRunner;
 
     public DirigibleJSCodeRunner() {
         Path workingDirectoryPath = getDirigibleWorkingDirectory();
