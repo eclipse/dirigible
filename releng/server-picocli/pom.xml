@@ -174,7 +174,7 @@
 	</build>
 
 	<properties>
-		<spring.boot.version>2.7.1</spring.boot.version>
+		<spring.boot.version>2.7.2</spring.boot.version>
 		<picocli.version>4.6.3</picocli.version>
 		<webjars-locator>0.45</webjars-locator>
 		<license.header.location>../../licensing-header.txt</license.header.location>

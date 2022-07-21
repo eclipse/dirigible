@@ -756,7 +756,7 @@
 		<logcaptor.version>2.7.10</logcaptor.version>
 		<exec.maven.plugin>3.0.0</exec.maven.plugin>
 		<jackson.databind.version>2.13.3</jackson.databind.version>
-		<spring.boot.version>2.7.1</spring.boot.version>
+		<spring.boot.version>2.7.2</spring.boot.version>
 		<webjars-locator>0.45</webjars-locator>
 		<keycloak-adapter-bom.version>18.0.2</keycloak-adapter-bom.version>
 		<hikaricp.version>5.0.1</hikaricp.version>
