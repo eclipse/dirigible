@@ -47,7 +47,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
 
     private static final String DIRIGIBLE_ODATA_WRAPPER_MODULE_ON_EVENT = "odata/wrappers/onEvent";
 
-    private static final String ERROR_EXECUTING_XSJSLIB_HANDLER = "Error executing .xsjslib handler: ";
+    private static final String ERROR_EXECUTING_SCRIPTING_HANDLER = "Error executing scripting handler: ";
 
     private ODataCoreService odataCoreService = new ODataCoreService();
 
@@ -68,7 +68,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -90,7 +90,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -126,7 +126,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException | EntityProviderException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -165,7 +165,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -188,7 +188,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -219,7 +219,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException | EntityProviderException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -254,7 +254,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -273,7 +273,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }
@@ -309,7 +309,7 @@ public class ScriptingOData2EventHandler implements OData2EventHandler {
         } catch (EdmException | ODataException | EntityProviderException e) {
             logger.error(e.getMessage(), e);
         } catch (ScriptingException e) {
-            throw new ODataException(ERROR_EXECUTING_XSJSLIB_HANDLER + e.getMessage(), e);
+            throw new ODataException(ERROR_EXECUTING_SCRIPTING_HANDLER + e.getMessage(), e);
         }
         return null;
     }

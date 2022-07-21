@@ -11,7 +11,6 @@
  */
 package org.eclipse.dirigible.engine.odata2.sql.processor;
 
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.olingo.odata2.api.batch.BatchHandler;
 import org.apache.olingo.odata2.api.batch.BatchRequestPart;
@@ -19,7 +18,6 @@ import org.apache.olingo.odata2.api.batch.BatchResponsePart;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.commons.InlineCount;
 import org.apache.olingo.odata2.api.edm.*;
-import org.apache.olingo.odata2.api.edm.provider.EntitySet;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderBatchProperties;
 import org.apache.olingo.odata2.api.ep.EntityProviderReadProperties;
@@ -38,7 +36,6 @@ import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.PathInfo;
 import org.apache.olingo.odata2.api.uri.UriInfo;
 import org.apache.olingo.odata2.api.uri.info.*;
-import org.apache.olingo.odata2.core.commons.ContentType;
 import org.apache.olingo.odata2.core.uri.KeyPredicateImpl;
 import org.apache.olingo.odata2.core.uri.UriInfoImpl;
 import org.eclipse.dirigible.engine.odata2.sql.api.*;
@@ -52,9 +49,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
 
@@ -66,10 +61,14 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractSQLProcessor.class);
 
+
     private final OData2EventHandler odata2EventHandler;
     private DataSource dataSource;
     private final ResultSetReader resultSetReader;
 
+    private static final String ENTITY_SET_CONTEXT_KEY = "entitySet";
+    private static final String ENTRY_CONTEXT_KEY = "entry";
+    private static final String SQL_BUILDER_CONTEXT_KEY = "sqlBuilder";
     private static final String DUMMY_BUILDER_CONTEXT_KEY = "dummyBuilder";
     private static final String SELECT_BUILDER_CONTEXT_KEY = "selectBuilder";
     private static final String INSERT_BUILDER_CONTEXT_KEY = "insertBuilder";
@@ -337,7 +336,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         Map<Object, Object> handlerContext = new HashMap<>();
         ODataResponse response;
         try (Connection connection = getDataSource().getConnection()) {
-            updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
+            initializeEventHandlerContext(handlerContext, connection, entitySet);
             response = this.odata2EventHandler.beforeCreateEntity(uriInfo,
                     requestContentType, contentType, entry, handlerContext);
             if (isErroneousResponse(response)) {
@@ -345,7 +344,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
             }
 
             if (this.odata2EventHandler.isUsingOnCreateEntity(uriInfo, requestContentType, contentType)) {
-                updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
+                updateEventHandlerContext(handlerContext, entry);
                 response = this.odata2EventHandler.onCreateEntity(uriInfo, content,
                         requestContentType, contentType, handlerContext);
                 if (isErroneousResponse(response)) {
@@ -372,12 +371,12 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                         try (InputStream entityInputStream = new ByteArrayInputStream(entityOutputStream.toByteArray());
                              InputStream responseInputStream = new ByteArrayInputStream(entityOutputStream.toByteArray())) {
                             entry = parseEntry(entitySet, entityInputStream, response.getContentHeader(), false);
+                            updateEventHandlerContext(handlerContext, entry);
                             updateUriInfoKeyPredicates((UriInfo) uriInfo, entry, keyProperties);
                             response = ODataResponse.fromResponse(response).entity(responseInputStream).build();
                         }
                     }
                 }
-                updateCreateEventHandlerContext(handlerContext, connection, uriInfo, entry);
                 ODataResponse afterCreateEntityResponse = this.odata2EventHandler.afterCreateEntity(uriInfo, requestContentType, contentType, entry, handlerContext);
                 if (isErroneousResponse(afterCreateEntityResponse)) {
                     return afterCreateEntityResponse;
@@ -418,7 +417,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         return EntityProvider.writeEntry(contentType, entitySet, entry.getProperties(), writeProperties);
     }
 
-    public final ODataEntry parseEntry(final EdmEntitySet entitySet, final InputStream content,
+    public static final ODataEntry parseEntry(final EdmEntitySet entitySet, final InputStream content,
                                        final String requestContentType, final boolean merge) throws ODataBadRequestException {
         try {
             EntityProviderReadProperties entityProviderProperties = EntityProviderReadProperties.init()
@@ -441,14 +440,13 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         try (Connection connection = getDataSource().getConnection()) {
             Map<Object, Object> handlerContext = new HashMap<>();
             final EdmEntitySet entitySet = uriInfo.getTargetEntitySet();
-            updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection, entitySet);
+            initializeEventHandlerContext(handlerContext, connection, entitySet);
             response = this.odata2EventHandler.beforeDeleteEntity(uriInfo, contentType, handlerContext);
             if (isErroneousResponse(response)) {
                 return response;
             }
 
             if (this.odata2EventHandler.isUsingOnDeleteEntity(uriInfo, contentType)) {
-                updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection, entitySet);
                 response = this.odata2EventHandler.onDeleteEntity(uriInfo, contentType, handlerContext);
                 if (isErroneousResponse(response)) {
                     return response;
@@ -459,7 +457,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                 }
             }
 
-            updateDeleteEventHandlerContext(handlerContext, uriInfo, keys, connection, entitySet);
             response = this.odata2EventHandler.afterDeleteEntity(uriInfo, contentType, handlerContext);
             if (isErroneousResponse(response)) {
                 return response;
@@ -470,7 +467,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         }
     }
 
-    private static Map<String, Object> mapKeys(final List<KeyPredicate> keys) throws EdmException {
+    public static Map<String, Object> mapKeys(final List<KeyPredicate> keys) throws EdmException {
         Map<String, Object> keyMap = new HashMap<>();
         for (final KeyPredicate key : keys) {
             final EdmProperty property = key.getProperty();
@@ -499,14 +496,14 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         Map<Object, Object> handlerContext = new HashMap<>();
         ODataResponse response;
         try (Connection connection = getDataSource().getConnection()) {
-            updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry, targetEntitySet);
+            initializeEventHandlerContext(handlerContext, connection, targetEntitySet);
             response = this.odata2EventHandler.beforeUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
             if (isErroneousResponse(response)) {
                 return response;
             }
 
             if (this.odata2EventHandler.isUsingOnUpdateEntity(uriInfo, requestContentType, merge, contentType)) {
-                updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry, targetEntitySet);
+                updateEventHandlerContext(handlerContext, entry);
                 response = this.odata2EventHandler.onUpdateEntity(uriInfo, content, requestContentType, merge, contentType, handlerContext);
                 if (isErroneousResponse(response)) {
                     return response;
@@ -533,7 +530,6 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
                 }
             }
 
-            updateUpdateEventHandlerContext(handlerContext, connection, uriInfo, entry, targetEntitySet);
             response = this.odata2EventHandler.afterUpdateEntity(uriInfo, requestContentType, merge, contentType, entry, handlerContext);
             if (isErroneousResponse(response)) {
                 return response;
@@ -666,7 +662,7 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         if (!keyProperties.isEmpty()) {
             for (EdmProperty keyProperty : keyProperties) {
                 if (entry.getProperties().get(keyProperty.getName()) == null) {
-                    throw new ODataException("Cannot create entity without key(s)");
+                    throw new ODataException("Missing entity key: " + keyProperty.getName());
                 }
             }
         }
@@ -685,42 +681,15 @@ public abstract class AbstractSQLProcessor extends ODataSingleProcessor implemen
         ((UriInfoImpl) uriInfo).setKeyPredicates(keyPredicates);
     }
 
-    private void updateCreateEventHandlerContext(Map<Object, Object> context, Connection connection, PostUriInfo uriInfo, ODataEntry entry) throws SQLException, ODataException {
-        context.put(DUMMY_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
-        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(INSERT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildInsertEntityQuery((UriInfo) uriInfo, entry, getContext()));
+    private void initializeEventHandlerContext(Map<Object, Object> context, Connection connection, EdmEntitySet entitySet) throws SQLException {
+        context.put(SQL_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder());
         context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
         context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
         context.put(ODATA_CONTEXT_CONTEXT_KEY, getContext());
+        context.put(ENTITY_SET_CONTEXT_KEY, entitySet);
     }
 
-    private void updateDeleteEventHandlerContext(Map<Object, Object> context, DeleteUriInfo uriInfo, Map<String, Object> keys, Connection connection, EdmEntitySet entitySet) throws ODataException, SQLException {
-        context.put(DUMMY_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildDeleteEntityQuery((UriInfo) uriInfo, keys, getContext()));
-        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
-        context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
-
-        putEntryInsertBuilderInContext(context, BEFORE_DELETE_ENTRY_JSON, (UriInfo) uriInfo, entitySet);
-    }
-
-    private void updateUpdateEventHandlerContext(Map<Object, Object> context, Connection connection, PutMergePatchUriInfo uriInfo, ODataEntry entry, EdmEntitySet entitySet) throws ODataException, SQLException {
-        context.put(DUMMY_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
-                mapKeys(uriInfo.getKeyPredicates()), getContext()));
-        context.put(SELECT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildSelectEntityQuery((UriInfo) uriInfo, getContext()));
-        context.put(UPDATE_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildUpdateEntityQuery((UriInfo) uriInfo, entry,
-                mapKeys(uriInfo.getKeyPredicates()), getContext()));
-        context.put(SQL_CONTEXT_CONTEXT_KEY, createSQLContext(connection));
-        context.put(DATASOURCE_CONTEXT_KEY, getDataSource());
-
-        putEntryInsertBuilderInContext(context, BEFORE_UPDATE_ENTRY_JSON, (UriInfo) uriInfo, entitySet);
-    }
-
-    private void putEntryInsertBuilderInContext(Map<Object, Object> context, String key, UriInfo uriInfo, EdmEntitySet entitySet) throws ODataException {
-        if (context.containsKey(key)) {
-            String beforeUpdateEntryJSON = (String) context.get(key);
-            InputStream entryContent = new ByteArrayInputStream(beforeUpdateEntryJSON.getBytes(StandardCharsets.UTF_8));
-            ODataEntry parsedEntry = parseEntry(entitySet, entryContent, ContentType.APPLICATION_JSON.toContentTypeString(), false);
-            context.put(INSERT_BUILDER_CONTEXT_KEY, this.getSQLQueryBuilder().buildInsertEntityQuery(uriInfo, parsedEntry, getContext()));
-        }
+    private void updateEventHandlerContext(Map<Object, Object> context, ODataEntry entry) {
+        context.put(ENTRY_CONTEXT_KEY, entry);
     }
 }
