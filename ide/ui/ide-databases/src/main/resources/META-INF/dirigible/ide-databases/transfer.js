@@ -23,22 +23,21 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
 
     $scope.databases = [];
     $scope.definition = {};
-    $scope.definition.selectedSourceDatabase;
-    $scope.definition.selectedTargetDatabase;
-    $scope.sourceDatasources;
-    $scope.targetDatasources;
-    $scope.definition.selectedSourceDatasource;
-    $scope.definition.selectedTargetDatasource;
-    $scope.sourceSchemes;
-    $scope.targetSchemes;
-    $scope.definition.selectedSourceScheme;
-    $scope.definition.selectedTargetScheme;
+    $scope.definition.selectedSourceDatabase = 0;
+    $scope.definition.selectedTargetDatabase = 0;
+    $scope.sourceDatasources = [];
+    $scope.targetDatasources = [];
+    $scope.definition.selectedSourceDatasource = 0;
+    $scope.definition.selectedTargetDatasource = 0;
+    $scope.sourceSchemes = [];
+    $scope.targetSchemes = [];
+    $scope.definition.selectedSourceScheme = 0;
+    $scope.definition.selectedTargetScheme = 0;
 
     $scope.allLogs = [];
     $scope.logs = [];
     $scope.autoScroll = true;
 
-    let logContentEl = $('#logContent');
     let transferWebsocket = null;
 
     $scope.logLevelStatuses = {
@@ -47,28 +46,33 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
         'ERROR': 'fd-object-status--negative'
     }
 
-    function getDatabases() {
+    $scope.test = function () {
+        $scope.definition.selectedSourceDatabase = 1;
+    };
+
+    $scope.getDatabases = function () {
         $http.get(databasesSvcUrl)
             .then(function (data) {
-                $scope.databases = data.data;
-                if ($scope.databases.length > 0) {
-                    $scope.definition.selectedSourceDatabase = $scope.databases[0];
-                    $scope.definition.selectedTargetDatabase = $scope.databases[0];
-                    if ($scope.definition.selectedSourceDatabase) {
-                        $http.get(databasesSvcUrl + "/" + $scope.definition.selectedSourceDatabase).then(function (data) {
-                            $scope.sourceDatasources = data.data;
-                            $scope.targetDatasources = data.data;
-                            if ($scope.sourceDatasources.length > 0) {
-                                $scope.definition.selectedSourceDatasource = $scope.sourceDatasources[0];
-                                $scope.definition.selectedTargetDatasource = $scope.targetDatasources[0];
-                                if ($scope.definition.selectedSourceDatasource) {
-                                    $http.get(databasesSvcUrl + "/" + $scope.definition.selectedSourceDatabase + "/" + $scope.definition.selectedSourceDatasource).then(function (data) {
-                                        $scope.sourceSchemes = data.data.schemas;
-                                        $scope.targetSchemes = data.data.schemas;
+                if (data.data.length > 0) {
+                    for (let i = 0; i < data.data.length; i++) {
+                        $scope.databases.push({ text: data.data[i], value: i });
+                    }
+                    if ($scope.databases[$scope.definition.selectedSourceDatabase]) {
+                        $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedSourceDatabase].text).then(function (sourceData) {
+                            if (sourceData.data.length > 0) {
+                                for (let i = 0; i < sourceData.data.length; i++) {
+                                    $scope.sourceDatasources.push({ text: sourceData.data[i], value: i });
+                                    $scope.targetDatasources.push({ text: sourceData.data[i], value: i });
+                                }
+                                if ($scope.sourceDatasources[$scope.definition.selectedSourceDatasource].text) {
+                                    $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedSourceDatabase].text + "/" + $scope.sourceDatasources[$scope.definition.selectedSourceDatasource].text).then(function (schemaData) {
+                                        $scope.sourceSchemes = schemaData.data.schemas;
+                                        $scope.targetSchemes = schemaData.data.schemas;
                                         if ($scope.sourceSchemes.length > 0) {
-                                            $scope.definition.selectedSourceScheme = $scope.sourceSchemes[0].name;
-                                            $scope.definition.selectedTargetScheme = $scope.targetSchemes[0].name;
-
+                                            for (let i = 0; i < $scope.sourceSchemes.length; i++) {
+                                                $scope.sourceSchemes[i]['value'] = i;
+                                                $scope.targetSchemes[i]['value'] = i;
+                                            }
                                         }
                                     });
                                 }
@@ -78,20 +82,24 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
                 }
             });
     }
-    setTimeout(getDatabases, 500);
+    setTimeout($scope.getDatabases, 500); // This is absolutely awful. Must be fixed.
     connect();
 
-    $scope.databaseSourceChanged = function (evt) {
-        $http.get(databasesSvcUrl + '/' + $scope.definition.selectedSourceDatabase)
+    $scope.databaseSourceChanged = function () {
+        $http.get(databasesSvcUrl + '/' + $scope.databases[$scope.definition.selectedSourceDatabase].text)
             .then(function (data) {
-                $scope.sourceDatasources = data.data;
-                if ($scope.sourceDatasources[0]) {
-                    $scope.definition.selectedSourceDatasource = $scope.sourceDatasources[0];
-                    if ($scope.definition.selectedSourceDatasource) {
-                        $http.get(databasesSvcUrl + "/" + $scope.definition.selectedSourceDatabase + "/" + $scope.definition.selectedSourceDatasource).then(function (data) {
-                            $scope.sourceSchemes = data.data.schemas;
-                            if ($scope.sourceSchemes.length > 0) {
-                                $scope.definition.selectedSourceScheme = $scope.sourceSchemes[0];
+                $scope.sourceDatasources.length = 0;
+                for (let i = 0; i < data.data.length; i++) {
+                    $scope.sourceDatasources.push({ text: data.data[i], value: i });
+                }
+                if ($scope.sourceDatasources.length > 0) {
+                    $scope.definition.selectedSourceDatasource = 0;
+                    if ($scope.sourceDatasources[$scope.definition.selectedSourceDatasource]) {
+                        $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedSourceDatabase].text + "/" + $scope.sourceDatasources[$scope.definition.selectedSourceDatasource].text).then(function (sdata) {
+                            $scope.sourceSchemes = sdata.data.schemas;
+                            $scope.definition.selectedSourceScheme = 0;
+                            for (let i = 0; i < $scope.sourceSchemes.length; i++) {
+                                $scope.sourceSchemes[i]['value'] = i;
                             }
                         });
                     }
@@ -102,17 +110,21 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
             });
     };
 
-    $scope.databaseTargetChanged = function (evt) {
-        $http.get(databasesSvcUrl + '/' + $scope.definition.selectedTargetDatabase)
+    $scope.databaseTargetChanged = function () {
+        $http.get(databasesSvcUrl + '/' + $scope.databases[$scope.definition.selectedTargetDatabase].text)
             .then(function (data) {
-                $scope.targetDatasources = data.data;
-                if ($scope.targetDatasources[0]) {
-                    $scope.definition.selectedTargetDatasource = $scope.targetDatasources[0];
-                    if ($scope.definition.selectedTargetDatasource) {
-                        $http.get(databasesSvcUrl + "/" + $scope.definition.selectedTargetDatabase + "/" + $scope.definition.selectedTargetDatasource).then(function (data) {
-                            $scope.targetSchemes = data.data.schemas;
-                            if ($scope.targetSchemes.length > 0) {
-                                $scope.definition.selectedTargetScheme = $scope.targetSchemes[0];
+                $scope.targetDatasources.length = 0;
+                for (let i = 0; i < data.data.length; i++) {
+                    $scope.targetDatasources.push({ text: data.data[i], value: i });
+                }
+                if ($scope.targetDatasources.length > 0) {
+                    $scope.definition.selectedTargetDatasource = 0;
+                    if ($scope.targetDatasources[$scope.definition.selectedTargetDatasource]) {
+                        $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedTargetDatabase].text + "/" + $scope.targetDatasources[$scope.definition.selectedTargetDatasource].text).then(function (sdata) {
+                            $scope.targetSchemes = sdata.data.schemas;
+                            $scope.definition.selectedTargetScheme = 0;
+                            for (let i = 0; i < $scope.targetSchemes.length; i++) {
+                                $scope.targetSchemes[i]['value'] = i;
                             }
                         });
                     }
@@ -123,47 +135,49 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
             });
     };
 
-    $scope.datasourceSourceChanged = function (evt) {
-        if ($scope.definition.selectedSourceDatasource) {
-            $http.get(databasesSvcUrl + "/" + $scope.definition.selectedSourceDatabase + "/" + $scope.definition.selectedSourceDatasource).then(function (data) {
+    $scope.datasourceSourceChanged = function () {
+        if ($scope.sourceDatasources[$scope.definition.selectedSourceDatasource]) {
+            $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedSourceDatabase].text + "/" + $scope.sourceDatasources[$scope.definition.selectedSourceDatasource].text).then(function (data) {
                 $scope.sourceSchemes = data.data.schemas;
-                if ($scope.sourceSchemes.length > 0) {
-                    $scope.definition.selectedSourceScheme = $scope.sourceSchemes[0];
+                $scope.definition.selectedSourceScheme = 0;
+                for (let i = 0; i < $scope.sourceSchemes.length; i++) {
+                    $scope.sourceSchemes[i]['value'] = i;
                 }
             });
         }
     };
 
-    $scope.datasourceTargetChanged = function (evt) {
-        if ($scope.definition.selectedTargetDatasource) {
-            $http.get(databasesSvcUrl + "/" + $scope.definition.selectedTargetDatabase + "/" + $scope.definition.selectedTargetDatasource).then(function (data) {
+    $scope.datasourceTargetChanged = function () {
+        if ($scope.targetDatasources[$scope.definition.selectedTargetDatasource]) {
+            $http.get(databasesSvcUrl + "/" + $scope.databases[$scope.definition.selectedTargetDatabase].text + "/" + $scope.targetDatasources[$scope.definition.selectedTargetDatasource].text).then(function (data) {
                 $scope.targetSchemes = data.data.schemas;
-                if ($scope.targetSchemes.length > 0) {
-                    $scope.definition.selectedTargetScheme = $scope.targetSchemes[0];
+                $scope.definition.selectedTargetScheme = 0;
+                for (let i = 0; i < $scope.targetSchemes.length; i++) {
+                    $scope.targetSchemes[i]['value'] = i;
                 }
             });
         }
     };
 
     $scope.startTransfer = function () {
-        if ($scope.definition.selectedSourceDatabase
-            && $scope.definition.selectedSourceDatasource
-            && $scope.definition.selectedSourceScheme
-            && $scope.definition.selectedTargetDatabase
-            && $scope.definition.selectedTargetDatasource
-            && $scope.definition.selectedTargetScheme) {
+        if ($scope.databases[$scope.definition.selectedSourceDatabase]
+            && $scope.sourceDatasources[$scope.definition.selectedSourceDatasource]
+            && $scope.sourceSchemes[$scope.definition.selectedSourceScheme]
+            && $scope.databases[$scope.definition.selectedTargetDatabase]
+            && $scope.targetDatasources[$scope.definition.selectedTargetDatasource]
+            && $scope.targetSchemes[$scope.definition.selectedTargetScheme]) {
             let config = {
                 "source": {
-                    "type": $scope.definition.selectedSourceDatabase,
-                    "name": $scope.definition.selectedSourceDatasource
+                    "type": $scope.databases[$scope.definition.selectedSourceDatabase].text,
+                    "name": $scope.sourceDatasources[$scope.definition.selectedSourceDatasource].text
                 },
                 "target": {
-                    "type": $scope.definition.selectedTargetDatabase,
-                    "name": $scope.definition.selectedTargetDatasource
+                    "type": $scope.databases[$scope.definition.selectedTargetDatabase].text,
+                    "name": $scope.targetDatasources[$scope.definition.selectedTargetDatasource].text
                 },
                 "configuration": {
-                    "sourceSchema": $scope.definition.selectedSourceScheme.name,
-                    "targetSchema": $scope.definition.selectedTargetScheme.name
+                    "sourceSchema": $scope.sourceSchemes[$scope.definition.selectedSourceScheme].name,
+                    "targetSchema": $scope.targetSchemes[$scope.definition.selectedTargetScheme].name
                 }
             };
 
@@ -233,7 +247,7 @@ transferView.controller('TransferController', ['$scope', '$http', 'messageHub', 
     }
 
     $scope.clearLog = function () {
-        $scope.logs = [];
+        $scope.logs.length = 0;
     };
 
 }]);

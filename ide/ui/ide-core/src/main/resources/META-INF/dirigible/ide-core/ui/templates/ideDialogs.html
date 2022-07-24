@@ -153,7 +153,7 @@
                                     {{ item.label }}
                                 </fd-form-label>
                                 <fd-select dg-placeholder="{{ item.placeholder }}" label-id="{{ item.id }}"
-                                    ng-required="{{ isRequired(item.id, item.required) }}" selected-value="item.value"
+                                    ng-required="{{ isRequired(item.id, item.required) }}" ng-model="item.value"
                                     dropdown-fixed="true" ng-model="item.value">
                                     <fd-option text="{{ menuItem.label }}" value="menuItem.value"
                                         ng-repeat="menuItem in item.items">

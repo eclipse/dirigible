@@ -67,9 +67,17 @@ body {
   flex-direction: column;
 }
 
+.dg-vbox > .fd-container {
+  flex: 0;
+}
+
 .dg-hbox {
   display: flex;
   flex-direction: row;
+}
+
+.dg-hbox > .fd-container {
+  flex: 0;
 }
 
 .dg-center {
@@ -88,6 +96,14 @@ body {
 .dg-stretch {
   flex-grow: 1;
   min-height: 0;
+}
+
+.dg-border-bottom {
+  border-bottom: solid 0.0625rem var(--sapGroup_TitleBorderColor, #d9d9d9);
+}
+
+.dg-page-header-bg {
+  background: var(--sapPageHeader_Background, #fff);
 }
 
 .dg-checkered-bg {
@@ -164,4 +180,7 @@ body {
 .fd-dialog__body.fd-scrollbar:not(.fd-dialog__body--no-vertical-padding) {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+.fd-container.fd-form-layout-grid-container .fd-row .fd-col .fd-select__control {
+  margin: 0;
 }

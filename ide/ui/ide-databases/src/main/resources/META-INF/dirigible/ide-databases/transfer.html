@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2020 SAP and others.
+  ~ Copyright (c) 2010-2021 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -14,86 +14,110 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
-
-        <!-- Title directive -->
         <title dg-view-title></title>
-
-        <!-- Font Awesome -->
-        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-
-        <!-- jQuery -->
-        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
-        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-        <!-- View data -->
         <script type="text/javascript" src="services/transfer-view.js"></script>
-
         <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
-
-        <script type="text/javascript" src="transfer.js"></script>
-
         <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
-
+        <script type="text/javascript" src="transfer.js"></script>
     </head>
 
-    <body>
-        <div>
-            <div>
-                <fd-scrollbar>
+    <body class="dg-vbox">
+        <div class="fd-container fd-form-layout-grid-container">
+            <div class="fd-row">
+                <div class="fd-col fd-col-lg--12 fd-col--wrap">
+                    <div class="fd-row">
+                        <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
+                            <div class="fd-row">
+                                <div class="fd-col fd-col--6">
+                                    <label class="fd-form-label" for="input-workspace">Source:
+                                    </label>
+                                </div>
+                                <div class="fd-col fd-col--6">
+                                    <label class="fd-form-label" for="input-projects">Target:
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fd-col fd-col--12 fd-col-md--12 fd-col-lg--12">
+                            <div class="fd-row">
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatabase"
+                                        ng-change="databaseSourceChanged()" dropdown-fixed="true">
+                                        <fd-option text="{{ database.text }}" value="database.value"
+                                            ng-repeat="database in databases">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedSourceDatasource"
+                                        ng-change="datasourceSourceChanged()">
+                                        <fd-option text="{{ datasource.text }}" value="datasource.value"
+                                            ng-repeat="datasource in sourceDatasources">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedSourceScheme">
+                                        <fd-option text="{{ schema.name }}" value="schema.value"
+                                            ng-repeat="schema in sourceSchemes">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
 
-                    <label class="fd-form-label">Source: </label>
-                    <select ng-model="definition.selectedSourceDatabase" ng-options="o as o for o in databases"
-                        ng-change="databaseSourceChanged()"
-                        class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Source Databases"></select>
-                    <select ng-model="definition.selectedSourceDatasource"
-                        ng-options="o as o for o in sourceDatasources" ng-change="datasourceSourceChanged()"
-                        class="dropdown btn btn-default dropdown-toggle dropdown-top"
-                        title="Source Datasources"></select>
-                    <select ng-model="definition.selectedSourceScheme" ng-options="o as o.name for o in sourceSchemes"
-                        ng-change="schemeSourceChanged()" class="dropdown btn btn-default dropdown-toggle dropdown-top"
-                        title="Source Schemes"></select>
-
-                    <label class="fd-form-label">Target: </label>
-                    <select ng-model="definition.selectedTargetDatabase" ng-options="o as o for o in databases"
-                        ng-change="databaseTargetChanged()"
-                        class="dropdown btn btn-default dropdown-toggle dropdown-top" title="Target Databases"></select>
-                    <select ng-model="definition.selectedTargetDatasource"
-                        ng-options="o as o for o in targetDatasources" ng-change="datasourceTargetChanged()"
-                        class="dropdown btn btn-default dropdown-toggle dropdown-top"
-                        title="Target Datasources"></select>
-                    <select ng-model="definition.selectedTargetScheme" ng-options="o as o.name for o in targetSchemes"
-                        ng-change="schemeTargetChanged()" class="dropdown btn btn-default dropdown-toggle dropdown-top"
-                        title="Target Schemes"></select>
-
-                    <fd-button dg-type="transparent" glyph="sap-icon--media-play" title="Start Transfer"
-                        aria-label="Start Transfer" ng-click="startTransfer()" aria-hidden="true">
-                    </fd-button>
-                    <fd-button dg-type="transparent" glyph="sap-icon--media-pause" title="Stop Transfer"
-                        aria-label="Stop Transfer" ng-click="stopTransfer()" aria-hidden="true">
-                    </fd-button>
-                    <fd-button dg-type="transparent" glyph="sap-icon--eraser" title="Clear Log" aria-label="Clear Log"
-                        ng-click="clearLog()" aria-hidden="true">
-                    </fd-button>
-
-                    <div id="logContent" class="console-log">
-                        <fd-list compact="true" no-border="true">
-                            <fd-list-item ng-repeat="next in logs">
-                                <fd-list-title class="{{ logLevelStatuses[next.level] }}">[{{next.date}}]
-                                    {{next.message}}
-                                </fd-list-title>
-                            </fd-list-item>
-                        </fd-list>
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatabase"
+                                        ng-change="databaseTargetChanged()" dropdown-fixed="true">
+                                        <fd-option text="{{ database.text }}" value="database.value"
+                                            ng-repeat="database in databases">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedTargetDatasource"
+                                        ng-change="datasourceTargetChanged()">
+                                        <fd-option text="{{ datasource.text }}" value="datasource.value"
+                                            ng-repeat="datasource in targetDatasources">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
+                                <div class="fd-col fd-col--2 fd-col-md--2 fd-col-lg--2 fd-col-xl--2">
+                                    <fd-select class="dg-full-width" ng-model="definition.selectedTargetScheme">
+                                        <fd-option text="{{ schema.name }}" value="schema.value"
+                                            ng-repeat="schema in targetSchemes">
+                                        </fd-option>
+                                    </fd-select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                </fd-scrollbar>
+                </div>
             </div>
         </div>
+        <fd-toolbar>
+            <fd-toolbar-spacer></fd-toolbar-spacer>
+            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--media-play" title="Start Transfer"
+                aria-label="Start Transfer" ng-click="startTransfer()">
+            </fd-button>
+            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--media-pause" title="Stop Transfer"
+                aria-label="Stop Transfer" ng-click="stopTransfer()">
+            </fd-button>
+            <fd-toolbar-separator></fd-toolbar-separator>
+            <fd-button compact="true" dg-type="transparent" glyph="sap-icon--clear-all" title="Clear Log"
+                aria-label="Clear Log" ng-click="clearLog()">
+            </fd-button>
+        </fd-toolbar>
 
+        <fd-scrollbar>
+            <div id="logContent">
+                <fd-list compact="true" no-border="true">
+                    <fd-list-item ng-repeat="next in logs track by $index">
+                        <fd-list-title class="{{ logLevelStatuses[next.level] }}">[{{next.date}}]
+                            {{next.message}}
+                        </fd-list-title>
+                    </fd-list-item>
+                </fd-list>
+            </div>
+        </fd-scrollbar>
     </body>

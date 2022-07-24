@@ -2010,7 +2010,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         /**
          * dgSize: String - The size of the select. One of 'compact' or 'large'. 
          * dgDisabled: Boolean - Disable the select
-         * selectedValue: Any - The value of the currently selected item
+         * ngModel: Any - The value of the currently selected item
          * state: String - Optional semantic state. Could be one of 'success', 'error', 'warning' or 'information'
          * message: String - Optional text displayed within the dropdown list.
          * dgPlaceholder: String - Short hint displayed when no item is selected yet.
@@ -2023,6 +2023,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             restrict: 'EA',
             replace: true,
             transclude: true,
+            require: '?ngModel',
             scope: {
                 dgSize: '@',
                 dgDisabled: '<',
@@ -2034,6 +2035,18 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 labelId: '@',
                 dropdownFixed: '@',
                 placement: '@',
+            },
+            link: function (scope, element, attrs, ngModel) {
+                if (ngModel) {
+                    scope.$watch('selectedValue', function (value) {
+                        ngModel.$setViewValue(value);
+                        ngModel.$validate();
+                    });
+
+                    ngModel.$render = function () {
+                        scope.selectedValue = ngModel.$viewValue;
+                    }
+                }
             },
             controller: ['$scope', '$element', function ($scope, $element) {
                 $scope.items = [];
@@ -2148,7 +2161,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 }
 
                 $scope.getSelectedItem = function () {
-                    if (!$scope.selectedValue)
+                    if ($scope.selectedValue === undefined || $scope.selectedValue === null)
                         return null;
 
                     let index = $scope.items.findIndex(x => x.value === $scope.selectedValue);
@@ -2651,7 +2664,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdComboboxInput', ['uuid', 'classNames', function (uuid, classNames) {
         /**
          * dropdownItems: Array[{ text: String, secondaryText: String, value: Any }] - Items to be filtered in the search input.
-         * selectedValue: Any|Array[Any] - The value of the selected item. If multiSelect is set to true this must be an array 
+         * ngModel: Any|Array[Any] - The value of the selected item. If multiSelect is set to true this must be an array 
          * dgPlaceholder: String - Placeholder of the search input
          * compact: Boolean - Whether the search input should be displayed in compact mode
          * dgDisabled: Boolean - Whether the search input is disabled
@@ -2664,9 +2677,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
         return {
             restrict: 'EA',
             replace: true,
+            require: '?ngModel',
             scope: {
                 dropdownItems: '<',
-                selectedValue: '=?',
                 dgPlaceholder: '@',
                 compact: '<',
                 dgDisabled: '<',
@@ -2676,20 +2689,65 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 dgAriaLabel: '@',
                 multiSelect: '<'
             },
-            link: function (scope, element) {
-                scope.search = { term: '' };
-                if (!scope.multiSelect) {
-                    const initiallySelectedItem = scope.dropdownItems.find(x => x.value === scope.selectedValue);
-                    scope.search.term = initiallySelectedItem ? initiallySelectedItem.text : '';
-                } else {
-                    if (scope.selectedValue === undefined) {
-                        scope.selectedValue = [];
+            link: function (scope, element, attrs, ngModel) {
+
+                if (ngModel) {
+                    const onSelectedValueChanged = function (value) {
+                        if (!angular.equals(value, ngModel.$viewValue)) {
+                            ngModel.$setViewValue(scope.multiSelect ? [...value] : value);
+                        }
+                        ngModel.$validate();
                     }
-                    if (!Array.isArray(scope.selectedValue)) {
-                        console.error(`fd-combobox-input error: When multi-select is true 'selected-value' must be an array`);
-                        scope.selectedValue = [];
+
+                    if (scope.multiSelect) {
+                        scope.$watchCollection('selectedValue', onSelectedValueChanged);
+                    } else {
+                        scope.$watch('selectedValue', onSelectedValueChanged);
+                    }
+
+                    ngModel.$isEmpty = function (value) {
+                        return !value || (scope.multiSelect && value.length === 0);
+                    }
+
+                    ngModel.$render = function () {
+                        let selectedValue = ngModel.$viewValue;
+
+                        if (!scope.multiSelect) {
+                            const selectedItem = scope.dropdownItems.find(x => x.value === selectedValue);
+                            scope.search.term = selectedItem ? selectedItem.text : '';
+                            scope.clearFilter();
+                        } else {
+                            if (selectedValue === undefined) {
+                                selectedValue = [];
+                            } else if (!Array.isArray(selectedValue)) {
+                                console.error(`fd-combobox-input error: When multi-select is true 'selected-value' must be an array`);
+                                selectedValue = [];
+                            } else {
+                                selectedValue = [...selectedValue];
+                            }
+                        }
+
+                        scope.selectedValue = selectedValue;
+                    }
+
+                    // we have to add an extra watch since ngModel doesn't work well with arrays - it
+                    // doesn't trigger rendering if only an item in the array changes.
+
+                    if (scope.multiSelect) {
+                        // we have to do it on each watch since ngModel watches reference, but
+                        // we need to work of an array, so we need to see if anything was inserted/removed
+                        var lastView, lastViewRef = NaN;
+                        scope.$watch(function selectMultipleWatch() {
+                            if (lastViewRef === ngModel.$viewValue && !angular.equals(lastView, ngModel.$viewValue)) {
+                                lastView = [...ngModel.$viewValue];
+                                ngModel.$render();
+                            }
+                            lastViewRef = ngModel.$viewValue;
+                        });
                     }
                 }
+
+                scope.search = { term: '' };
 
                 scope.dropdownItems = scope.dropdownItems || [];
                 scope.filteredDropdownItems = scope.dropdownItems;
@@ -2732,6 +2790,10 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     }
                 }
 
+                scope.clearFilter = function () {
+                    scope.filteredDropdownItems = scope.dropdownItems;
+                }
+
                 scope.onKeyDown = function (event) {
                     const ARROW_UP = 38;
                     const ARROW_DOWN = 40;
@@ -2765,7 +2827,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                             if (scope.search.term.length && scope.filteredDropdownItems.length) {
                                 scope.addItemToSelection(scope.filteredDropdownItems[0]);
                                 scope.search.term = '';
-                                scope.filterValues();
+                                scope.clearFilter();
                             }
                             break;
                     }
@@ -2793,8 +2855,8 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                     } else {
                         scope.selectedValue = item.value;
                         scope.search.term = item.text;
+                        scope.clearFilter();
                     }
-                    scope.filterValues();
 
                     if (!scope.multiSelect)
                         scope.closeDropdown();
