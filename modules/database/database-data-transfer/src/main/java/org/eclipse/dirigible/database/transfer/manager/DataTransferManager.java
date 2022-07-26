@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.eclipse.dirigible.commons.api.topology.TopologicalSorter;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
@@ -40,7 +41,13 @@ import org.slf4j.LoggerFactory;
 
 public class DataTransferManager {
 	
+	
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferManager.class);
+	
+	private static final String DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE = "DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE";
+	private static final String DEFAULT_BATCH_SIZE = "1000";
+	
+	private static int BATCH_SIZE = 1000; 
 	
 	public static final void transfer(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
 		DataSource source = DatabaseModule.getDataSource(definition.getSource().getType(), definition.getSource().getName());
@@ -52,6 +59,12 @@ public class DataTransferManager {
 		
 		if (handler == null) {
 			handler = new DummyDataTransferCallbackHandler();
+		}
+		
+		try {
+			BATCH_SIZE = Integer.parseInt(Configuration.get(DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE, DEFAULT_BATCH_SIZE));
+		} catch (NumberFormatException e1) {
+			logger.warn("Wrong configuration for " + DIRIGIBLE_DATABASE_TRANSFER_BATCH_SIZE);
 		}
 		
 		handler.transferStarted(configuration);
@@ -290,9 +303,16 @@ public class DataTransferManager {
 										pstmtTarget.setObject(i, rs.getObject(i));
 										break;
 									}
+									
 								}
-								pstmtTarget.executeUpdate();
 								handler.recordTransferFinished(tableModel.getTableName(), ++transferedRecords);
+								pstmtTarget.addBatch();
+								if (transferedRecords % BATCH_SIZE == 0) {
+									pstmtTarget.executeBatch();
+								}
+							}
+							if (transferedRecords % BATCH_SIZE != 0) {
+								pstmtTarget.executeBatch();
 							}
 						}
 					}

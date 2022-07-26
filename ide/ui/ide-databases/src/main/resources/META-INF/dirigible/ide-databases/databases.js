@@ -27,6 +27,8 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
 
     $scope.newDatabase = function () {
         $scope.database = {};
+        $scope.database.username = "";
+        $scope.database.password = "";
         $scope.isNew = true;
     }
 
@@ -60,6 +62,24 @@ databasesView.controller('DatabaseController', ['$scope', '$http', 'messageHub',
             }, function (response) {
                 console.error(response.data);
             });
+    }
+
+    $scope.drivers = [];
+    $scope.drivers.push({ "text": "H2 - org.h2.Driver", "value": "org.h2.Driver" });
+    $scope.drivers.push({ "text": "PostgreSQL - org.postgresql.Driver", "value": "org.postgresql.Driver" });
+    $scope.drivers.push({ "text": "MySQL - com.mysql.jdbc.Driver", "value": "com.mysql.jdbc.Driver" });
+    $scope.drivers.push({ "text": "SAP HANA - com.sap.db.jdbc.Driver", "value": "com.sap.db.jdbc.Driver" });
+
+    $scope.urls = {};
+    $scope.urls["org.h2.Driver"] = "jdbc:h2:path/name";
+    $scope.urls["org.postgresql.Driver"] = "jdbc:postgresql://host:port/database";
+    $scope.urls["com.mysql.jdbc.Driver"] = "jdbc:mysql://host:port/database";
+    $scope.urls["com.sap.db.jdbc.Driver"] = "jdbc:sap://host:port/?encrypt=true&validateCertificate=false";
+
+    $scope.driverChanged = function () {
+        $scope.database.url = $scope.urls[$scope.database.driver];
+        $scope.database.username = "";
+        $scope.database.password = "";
     }
 
 }]);
