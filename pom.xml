@@ -343,7 +343,7 @@
 					<plugin>
 					  <groupId>com.github.spotbugs</groupId>
 					  <artifactId>spotbugs-maven-plugin</artifactId>
-					  <version>4.7.1.0</version>
+					  <version>4.7.1.1</version>
 					  <dependencies>
 					    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
 					    <dependency>
@@ -684,7 +684,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
-		<maven.resource.plugin.version>3.2.0</maven.resource.plugin.version>
+		<maven.resource.plugin.version>3.3.0</maven.resource.plugin.version>
 		<maven.clean.plugin.version>3.2.0</maven.clean.plugin.version>
 		<maven.clean.plugin.directory>src/main/resources/META-INF/dirigible</maven.clean.plugin.directory>
 		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
@@ -732,7 +732,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.11</mongodb.version>
 		<caffeine.version>3.1.1</caffeine.version>
-		<liquibase-core.version>4.13.0</liquibase-core.version>
+		<liquibase-core.version>4.14.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.1.40</sap-theming__theming-base-content.version>
