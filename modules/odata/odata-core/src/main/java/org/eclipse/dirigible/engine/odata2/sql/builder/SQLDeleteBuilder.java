@@ -31,6 +31,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
     private final List<String> deleteKeysColumnNames = new ArrayList<>();
     private Map<String, Object> deleteKeys;
     private EdmEntityType target;
+    private String tableName;
 
     public SQLDeleteBuilder(final EdmTableBindingProvider tableMappingProvider) {
         super(tableMappingProvider);
@@ -55,7 +56,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
         return deleteKeys;
     }
 
-    protected String buildFrom(final SQLContext context) throws EdmException {
+    protected String buildFrom() throws EdmException {
         grantTableAliasForStructuralTypeInQuery(target);
 
         for (EdmProperty deleteProperty : target.getKeyProperties()) { //we iterate first the own properties of the type
@@ -120,7 +121,7 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
                 StringBuilder builder = new StringBuilder();
                 builder.append("DELETE ");
                 builder.append(" FROM ");
-                builder.append(buildFrom(context));
+                builder.append(getTargetTableName());
 
                 SQLWhereClause where = new SQLWhereClause(buildDeleteWhereClauseOnKeys(context));
                 where.and(getWhereClause()); //add any update where clause set by the interceptors
@@ -141,5 +142,14 @@ public class SQLDeleteBuilder extends AbstractQueryBuilder {
                 return deleteKeys.isEmpty();
             }
         };
+    }
+
+    public SQLDeleteBuilder setTableName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
+
+    public String getTargetTableName() throws EdmException {
+        return tableName != null ? tableName : buildFrom();
     }
 }
