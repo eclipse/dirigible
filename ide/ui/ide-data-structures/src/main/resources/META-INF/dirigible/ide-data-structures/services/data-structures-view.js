@@ -12,7 +12,7 @@
 const viewData = {
 	id: "datastructures",
 	factory: "frame",
-	region: "center",
+	region: "bottom",
 	label: "Data Structures",
 	link: "../ide-data-structures/views/data-structures.html"
 };
