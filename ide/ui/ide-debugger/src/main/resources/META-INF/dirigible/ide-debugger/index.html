@@ -35,38 +35,16 @@
         <ide-dialogs></ide-dialogs>
         <ide-status-bar></ide-status-bar>
         <script type="text/javascript">
-            angular.module('debugger', ['ideLayout', 'ideUI'])
+            angular.module('debugger', ['ngResource', 'ideLayout', 'ideUI'])
             .config(["messageHubProvider", function (messageHubProvider) {
                 messageHubProvider.eventIdPrefix = 'debugger';
             }])
             .controller('DebuggerController', ["$scope", "messageHub", function ($scope, messageHub) {
                 $scope.layoutModel = {
-                    views: ['workspace', 'debugger', 'debug-preview', 'console'],
-                    events: {
-                        'debugger.editor.open': function (msg) {
-                            messageHub.openEditor(
-                                msg.data.path,
-                                msg.data.label,
-                            );
-                        },
-                        'workspace.file.open': function (msg) {
-                            messageHub.openEditor(
-                                msg.data.file.path,
-                                msg.data.file.label,
-                                msg.data.file.contentType,
-                                msg.data.editor,
-                            );
-                        }
-                    }
+                    views: ['projects', 'debugger', 'debug-preview', 'console'],
                 };
 
             }]);
-        </script>
-        <script language="JavaScript">
-            window.addEventListener('beforeunload', function (e) {
-            e.preventDefault();
-            e.returnValue = '';
-        });
         </script>
     </body>
 
