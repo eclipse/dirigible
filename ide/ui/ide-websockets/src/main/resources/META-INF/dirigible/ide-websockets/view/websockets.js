@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('websockets', [])
-	.controller('WebsocketsController', ['$scope', '$http', function ($scope, $http) {
+const websocketsView = angular.module('websockets', ['ideUI', 'ideView']);
 
-		$http.get('/services/v4/ops/websockets').then(function (response) {
-			$scope.websocketsList = response.data;
-		});
+websocketsView.config(["messageHubProvider", function (messageHubProvider) {
+	messageHubProvider.eventIdPrefix = 'websockets-view';
+}]);
 
-	}]);
+websocketsView.controller('WebsocketsController', ['$scope', '$http', function ($scope, $http) {
+
+	$http.get('/services/v4/ops/websockets').then(function (response) {
+		$scope.list = response.data;
+	});
+
+}]);

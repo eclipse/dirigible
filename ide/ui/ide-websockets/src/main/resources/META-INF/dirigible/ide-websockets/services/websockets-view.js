@@ -9,13 +9,18 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function () {
-	return {
-		"id": "websockets",
-		"name": "Websockets",
-		"factory": "frame",
-		"region": "center-middle",
-		"label": "Websockets",
-		"link": "../ide-websockets/view/websockets.html"
-	};
+const viewData = {
+	id: "websockets",
+	name: "WebSockets",
+	factory: "frame",
+	region: "bottom",
+	label: "WebSockets",
+	link: "../ide-websockets/view/websockets.html"
 };
+
+if (typeof exports !== 'undefined') {
+	exports.getView = function () {
+		return viewData;
+	}
+}
+
