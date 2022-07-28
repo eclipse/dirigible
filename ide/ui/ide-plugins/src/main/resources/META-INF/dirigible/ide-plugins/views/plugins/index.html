@@ -9,92 +9,67 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" ng-app="plugins">
+<html lang="en" ng-app="plugins" ng-controller="PluginsController as controller">
 
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-        <title>Eclipse Dirigible &trade; | Plugins </title>
+        <!-- Title directive -->
+        <title dg-view-title></title>
 
-        <!-- FontAwesome icon set -->
-        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- View data -->
+        <script type="text/javascript" src="plugins-view.js"></script>
 
-        <!-- Twitter Bootstrap with Theme Support -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
 
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
 
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+        <script type="text/javascript" src="plugins.js"></script>
+        <theme></theme>
 
     </head>
 
-    <body ng-controller="PluginsController">
-        <div class="container">
-            <div ng-repeat="next in depots">
-                <h4>
-                    <label>Depot:</label>
-                    <a href="{{next.depot}}" title="{{next.depot}}" target="_blank"
-                        rel="noopener noreferrer">{{next.name}}</a>
-                </h4>
-                <h4>
-                    <i>{{next.description}}</i>
-                </h4>
-                <hr>
-                <td>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Version</th>
-                                <th>Action</th>
+    <body>
+
+        <div>
+            <div>
+                <fd-scrollbar>
+                    <table fd-table fd-table-group style="margin-top: 20px">
+                        <thead fd-table-header>
+                            <tr fd-table-row>
+                                <th fd-table-header-cell>Name</th>
+                                <th fd-table-header-cell>Version</th>
+                                <th fd-table-header-cell>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr ng-repeat="plugin in next.plugins">
-                                <td>{{$index + 1}}</td>
-                                <td><a href="{{plugin.site}}" title="{{plugin.description}}" target="_blank"
-                                        rel="noopener noreferrer">{{plugin.name}}</a></td>
-                                <td>{{plugin.version}}</td>
-                                <td><a class="btn btn-primary btn-xs"
+                        <tbody fd-table-body ng-repeat="next in depots">
+                            <tr fd-table-row>
+
+                                <td fd-table-group-cell nesting-level="1" expanded="true">
+                                    <label class="fd-form-label" for="input-workspace">Depot:
+                                    </label>
+                                    <a href="{{next.depot}}" title="{{next.depot}}" target="_blank"
+                                        rel="noopener noreferrer">{{next.name}}</a> {{next.description}}
+                                </td>
+                            </tr>
+                            <tr fd-table-row ng-repeat="plugin in next.plugins">
+                                <td fd-table-cell><a href="{{plugin.site}}" title="{{plugin.description}}"
+                                        target="_blank" rel="noopener noreferrer">{{plugin.name}}</a></td>
+                                <td fd-table-cell>{{plugin.version}}</td>
+                                <td fd-table-cell><a class="fd-button fd-button--compact is-selected"
                                         href="/services/v4/web/ide-git/index.html?repository={{plugin.repository}}"
                                         title="Install {{plugin.name}}" target="_blank"
                                         rel="noopener noreferrer">install</a></td>
                             </tr>
                         </tbody>
                     </table>
-                </td>
+                </fd-scrollbar>
             </div>
         </div>
 
-        <script>
-            angular.module('plugins', [])
-            .controller('PluginsController', function ($scope, $http) {
-
-                let pluginsApi = 'https://www.dirigible.io/depots.json';
-
-                function loadPlugins() {
-                    $http.get(pluginsApi)
-                        .then(function (data) {
-                            $scope.depots = data.data;
-                            $scope.depots.forEach(function (depot) {
-                                $http.get(depot.depot)
-                                    .then(function (data) {
-                                        depot.plugins = data.data;
-                                    });
-                            });
-                        });
-                }
-
-                loadPlugins();
-            });
-        </script>
     </body>
 
 </html>

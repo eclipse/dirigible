@@ -9,13 +9,22 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function () {
-	return {
-		"id": "plugins",
-		"name": "Plugins",
-		"factory": "frame",
-		"region": "left-top",
-		"label": "Plugins",
-		"link": "../ide-plugins/views/plugins/index.html"
-	};
-};
+const pluginsView = angular.module('plugins', ['ideUI', 'ideView']);
+
+pluginsView.config(["messageHubProvider", function (messageHubProvider) {
+	messageHubProvider.eventIdPrefix = 'plugins-view';
+}]);
+
+pluginsView.controller('PluginsController', ['$scope', '$http', 'messageHub', function ($scope, $http, messageHub) {
+
+	let pluginsApi = '/services/v4/js/ide-plugins/views/plugins/plugins-service.js';
+
+	function loadPlugins() {
+		$http.get(pluginsApi)
+			.then(function (data) {
+				$scope.depots = data.data;
+			});
+	}
+
+	loadPlugins();
+}]);
