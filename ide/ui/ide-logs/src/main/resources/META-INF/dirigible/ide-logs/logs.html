@@ -9,7 +9,7 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="logs" ng-controller="LogsController as controller">
 
     <head>
         <meta charset="utf-8" />
@@ -17,41 +17,71 @@
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- Font Awesome -->
         <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
 
         <!-- jQuery -->
         <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 
-        <!-- AngularJS -->
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
-
         <!-- Twitter Bootstrap with Theme Support -->
         <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
         <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <!-- View data -->
+        <script type="text/javascript" src="logs-view.js"></script>
+
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
         <script type="text/javascript" src="logs.js"></script>
 
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
-        <link href="css/fluid-media.css" type="text/css" rel="stylesheet" />
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
+
+        <style>
+            .main-container {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+            }
+
+            .logs-area {
+                flex-grow: 1;
+                overflow: auto;
+                min-height: 0;
+            }
+
+        </style>
 
     </head>
 
-    <body ng-app="logs" ng-controller="LogsController as logs" class="view">
+    <body>
 
-        <div class="form-horizontal">
-            <div class="col-sm-12" style="padding: 0">
-                <div class="input-group logs-dropdown logs-dropdown">
-                    <div class="input-group-addon view-toolbar form-group sticky-top">
-                        <select ng-model="selectedLog" ng-options="o as o for o in logsList" ng-change='logChanged()'
-                            class="dropdown dropdown-toggle dropdown-top form-control logs-dropdown"
-                            title="Logs"></select>
-                    </div>
+        <div>
+            <div class="fd-toolbar fd-toolbar--cozy">
+                <div class="fd-col fd-col--1 fd-col-md--1 fd-col-lg--1 fd-col-xl--1">
+                    <fd-form-label for="log" dg-required="false" dg-colon="true">Log File</fd-form-label>
+                </div>
+                <div>
+                    <fd-select id="log" class="dg-full-width" ng-model="selectedLog" ng-change="logChanged()"
+                        dropdown-fixed="true">
+                        <fd-option text="{{ log }}" value="log" ng-repeat="log in logsList">
+                        </fd-option>
+                    </fd-select>
                 </div>
             </div>
+
+            <div class="main-container">
+                <textarea class="fd-textarea fd-textarea--compact logs-area">{{ logContent }}</textarea>
+            </div>
+
+
         </div>
-        <pre class="form-control col-lg-12 logs-area">{{ logContent }}</pre>
 
     </body>
 

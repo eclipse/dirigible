@@ -9,146 +9,168 @@
   ~ SAP - initial API and implementation
   -->
 
-<html lang="en" ng-app="logconfigurations">
+<html lang="en" ng-app="logconfigurations" ng-controller="LogConfigurationsController as controller">
 
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 
-        <!-- FontAwesome icon set -->
-        <link type="text/css" href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Title directive -->
+        <title dg-view-title></title>
+
+        <!-- Font Awesome -->
+        <link href="/webjars/fontawesome/4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+        <!-- jQuery -->
+        <script type="text/javascript" src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 
         <!-- Twitter Bootstrap with Theme Support -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <link rel="stylesheet" href="/services/v4/js/theme/resources.js/bootstrap.min.css">
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <!-- Custom IDE Styles -->
-        <link type="text/css" rel="stylesheet" href="/services/v4/js/theme/resources.js/ide.css" />
+        <!-- View data -->
+        <script type="text/javascript" src="log-config-view.js"></script>
 
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular.min.js"></script>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
         <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-route.min.js"></script>
-        <script type="text/javascript" src="/webjars/angularjs/1.8.2/angular-resource.min.js"></script>
+
+        <script type="text/javascript" src="log-config.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+        <theme></theme>
 
     </head>
 
-    <body ng-controller="LogConfigurationsController">
-        <div class="form-group row">
-            <label class="col-sm-1 col-form-label">Search: </label>
-            <div class="col-sm-11">
-                <input class="form-control" ng-model="search.name" />
+    <body>
+
+        <div>
+            <div>
+                <fd-scrollbar>
+
+                    <div class="fd-toolbar fd-toolbar--cozy">
+                        <div class="fd-col fd-col--1 fd-col-md--1 fd-col-lg--1 fd-col-xl--1">
+                            <fd-form-label for="filter" dg-required="false" dg-colon="true">Filter</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col--6 fd-col-md--6 fd-col-lg--6 fd-col-xl--6">
+                            <fd-input id="filter" class="fd-input--compact" type="text" placeholder="Enter filter"
+                                ng-model="search.name" required="required">
+                            </fd-input>
+                        </div>
+                        <fd-button compact="true" dg-type="transparent" glyph="sap-icon--clear-all" title="Clear Log"
+                            aria-label="Clear Log" ng-click="search.name = ''">
+                        </fd-button>
+                    </div>
+
+                    <table fd-table display-mode="compact">
+                        <thead fd-table-header sticky="true">
+                            <tr fd-table-row>
+                                <th fd-table-header-cell>#</th>
+                                <th fd-table-header-cell>Name</th>
+                                <th fd-table-header-cell>Severity</th>
+                                <th fd-table-header-cell>Trace</th>
+                                <th fd-table-header-cell>Debug</th>
+                                <th fd-table-header-cell>Info</th>
+                                <th fd-table-header-cell>Warning</th>
+                                <th fd-table-header-cell>Error</th>
+                            </tr>
+                        </thead>
+                        <tbody fd-table-body>
+                            <tr fd-table-row
+                                ng-repeat="configuration in logConfigurations | filter: {name: search.name}"
+                                hoverable="true" activable="false">
+                                <td fd-table-cell>{{$index + 1}}</td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{configuration.name}}</div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div class="tdSingleLine">{{configuration.severity}}</div>
+                                </td>
+                                <td fd-table-cell>
+
+                                    <div ng-show="configuration.severity === ' ALL' || configuration.severity==='TRACE'"
+                                        class=" tdSingleLine">
+                                        <fd-button class="sap-icon--color-negative" dg-type="transparent"
+                                            glyph="sap-icon--connected" title="Disable" aria-label="Disable"
+                                            ng-click="setSeverity(configuration.name, 'TRACE')">
+                                        </fd-button>
+                                    </div>
+                                    <div ng-hide="configuration.severity === 'ALL' || configuration.severity === 'TRACE'"
+                                        class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-neutral" dg-type="transparent"
+                                            glyph="sap-icon--disconnected" title="Enable" aria-label="Enable"
+                                            ng-click="setSeverity(configuration.name, 'TRACE')">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div ng-show="configuration.severity === 'DEBUG'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-negative" dg-type="transparent"
+                                            glyph="sap-icon--connected" title="Disable" aria-label="Disable"
+                                            ng-click="setSeverity(configuration.name, 'DEBUG')">
+                                        </fd-button>
+                                    </div>
+                                    <div ng-hide="configuration.severity === 'DEBUG'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-neutral" dg-type="transparent"
+                                            glyph="sap-icon--disconnected" title="Enable" aria-label="Enable"
+                                            ng-click="setSeverity(configuration.name, 'DEBUG')">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div ng-show="configuration.severity === 'INFO'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-negative" dg-type="transparent"
+                                            glyph="sap-icon--connected" title="Disable" aria-label="Disable"
+                                            ng-click="setSeverity(configuration.name, 'INFO')">
+                                        </fd-button>
+                                    </div>
+                                    <div ng-hide="configuration.severity === 'INFO'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-neutral" dg-type="transparent"
+                                            glyph="sap-icon--disconnected" title="Enable" aria-label="Enable"
+                                            ng-click="setSeverity(configuration.name, 'INFO')">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div ng-show="configuration.severity === 'WARN'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-negative" dg-type="transparent"
+                                            glyph="sap-icon--connected" title="Disable" aria-label="Disable"
+                                            ng-click="setSeverity(configuration.name, 'WARN')">
+                                        </fd-button>
+                                    </div>
+                                    <div ng-hide="configuration.severity === 'WARN'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-neutral" dg-type="transparent"
+                                            glyph="sap-icon--disconnected" title="Enable" aria-label="Enable"
+                                            ng-click="setSeverity(configuration.name, 'WARN')">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                                <td fd-table-cell>
+                                    <div ng-show="configuration.severity === 'ERROR'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-negative" dg-type="transparent"
+                                            glyph="sap-icon--connected" title="Disable" aria-label="Disable"
+                                            ng-click="setSeverity(configuration.name, 'ERROR')">
+                                        </fd-button>
+                                    </div>
+                                    <div ng-hide="configuration.severity === 'ERROR'" class="tdSingleLine">
+                                        <fd-button class="sap-icon--color-neutral" dg-type="transparent"
+                                            glyph="sap-icon--disconnected" title="Enable" aria-label="Enable"
+                                            ng-click="setSeverity(configuration.name, 'ERROR')">
+                                        </fd-button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </fd-scrollbar>
             </div>
         </div>
-        <table class="table table-striped tableFixHead">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Severity</th>
-                    <th>Trace</th>
-                    <th>Debug</th>
-                    <th>Warning</th>
-                    <th>Info</th>
-                    <th>Error</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="configuration in logConfigurations | filter: {name: search.name}">
-                    <td>{{$index + 1}}</td>
-                    <td>
-                        <div class="tdSingleLine">{{configuration.name}}</div>
-                    </td>
-                    <td>
-                        <div class="tdSingleLine">{{configuration.severity}}</div>
-                    </td>
-                    <td>
-                        <div ng-show="configuration.severity === 'ALL' || configuration.severity === 'TRACE'"
-                            class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'TRACE')"><i
-                                    class="fa fa-toggle-on" aria-hidden="true"></i></button>
-                        </div>
-                        <div ng-hide="configuration.severity === 'ALL' || configuration.severity === 'TRACE'"
-                            class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'TRACE')"><i
-                                    class="fa fa-toggle-off" aria-hidden="true"></i></button>
-                        </div>
-                    </td>
-                    <td>
-                        <div ng-show="configuration.severity === 'DEBUG'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'DEBUG')"><i
-                                    class="fa fa-toggle-on" aria-hidden="true"></i></button>
-                        </div>
-                        <div ng-hide="configuration.severity === 'DEBUG'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'DEBUG')"><i
-                                    class="fa fa-toggle-off" aria-hidden="true"></i></button>
-                        </div>
-                    </td>
-                    <td>
-                        <div ng-show="configuration.severity === 'WARN'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'WARN')"><i
-                                    class="fa fa-toggle-on" aria-hidden="true"></i></button>
-                        </div>
-                        <div ng-hide="configuration.severity === 'WARN'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'WARN')"><i
-                                    class="fa fa-toggle-off" aria-hidden="true"></i></button>
-                        </div>
-                    </td>
-                    <td>
-                        <div ng-show="configuration.severity === 'INFO'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'INFO')"><i
-                                    class="fa fa-toggle-on" aria-hidden="true"></i></button>
-                        </div>
-                        <div ng-hide="configuration.severity === 'INFO'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'INFO')"><i
-                                    class="fa fa-toggle-off" aria-hidden="true"></i></button>
-                        </div>
-                    </td>
-                    <td>
-                        <div ng-show="configuration.severity === 'ERROR'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'ERROR')"><i
-                                    class="fa fa-toggle-on" aria-hidden="true"></i></button>
-                        </div>
-                        <div ng-hide="configuration.severity === 'ERROR'" class="tdSingleLine">
-                            <button class="btn" ng-click="setSeverity(configuration.name, 'ERROR')"><i
-                                    class="fa fa-toggle-off" aria-hidden="true"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
-        <script>
-            angular.module('logconfigurations', ["ngRoute"])
-            .controller('LogConfigurationsController', function ($scope, $http, $route) {
-
-                let logConfigurationsApi = '/services/v4/ops/logconfig';
-
-                function loadLogConfigurations() {
-                    $http.get(logConfigurationsApi)
-                        .then(function (data) {
-                            $scope.logConfigurations = data.data;
-                        });
-                }
-
-                $scope.setSeverity = function (loggerName, loggerLevel) {
-                    $http.post(logConfigurationsApi + "/severity/" + loggerName, loggerLevel)
-                        .then(function (data) {
-                            let logger = (element) => element.name === loggerName;
-                            let i = $scope.logConfigurations.findIndex(logger);
-                            $scope.logConfigurations[i].severity = data.data;
-                            $route.reload();
-                        }), function (data) {
-                            let logger = (element) => element.name === loggerName;
-                            let i = $scope.logConfigurations.findIndex(logger);
-                            $scope.logConfigurations[i].severity = data.data;
-                            $route.reload()
-                        }
-                    ;
-                }
-                loadLogConfigurations();
-            });
-        </script>
     </body>
 
 </html>

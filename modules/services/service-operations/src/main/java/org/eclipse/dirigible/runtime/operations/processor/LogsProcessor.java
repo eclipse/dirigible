@@ -101,15 +101,16 @@ public class LogsProcessor {
 	}
 
 	public Object getSeverity(String loggerName) {
-		if (LoggerFactory.getLogger(loggerName).isTraceEnabled()) {
+		org.slf4j.Logger logger = LoggerFactory.getLogger(loggerName);
+		if (logger.isTraceEnabled()) {
 			return Level.TRACE.toString();
-		} else if (LoggerFactory.getLogger(loggerName).isDebugEnabled()) {
+		} else if (logger.isDebugEnabled()) {
 			return Level.DEBUG.toString();
-		} else if (LoggerFactory.getLogger(loggerName).isWarnEnabled()) {
-			return Level.WARN.toString();
-		} else if (LoggerFactory.getLogger(loggerName).isInfoEnabled()) {
+		} else if (logger.isInfoEnabled()) {
 			return Level.INFO.toString();
-		} else if (LoggerFactory.getLogger(loggerName).isErrorEnabled()) {
+		} else if (logger.isWarnEnabled()) {
+			return Level.WARN.toString();
+		} else if (logger.isErrorEnabled()) {
 			return Level.ERROR.toString();
 		}
 		
