@@ -34,7 +34,12 @@ exports.getMenu = function () {
 
 	for (let i = 0; i < perspectiveExtensions.length; i++) {
 		let module = perspectiveExtensions[i];
-		perspectiveExtensionDefinitions.push(require(module).getPerspective());
+		try {
+			perspectiveExtensionDefinitions.push(require(module).getPerspective());
+		} catch (error) {
+			console.error('Error occured while loading metadata for the menu for perspective: ' + module);
+			console.error(error);
+		}
 	}
 
 	perspectiveExtensionDefinitions = perspectiveExtensionDefinitions.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
@@ -53,7 +58,12 @@ exports.getMenu = function () {
 	let viewExtensionDefinitions = [];
 	for (let i = 0; i < viewExtensions.length; i++) {
 		let module = viewExtensions[i];
-		viewExtensionDefinitions.push(require(module).getView());
+		try {
+			viewExtensionDefinitions.push(require(module).getView());
+		} catch (error) {
+			console.error('Error occured while loading metadata for the menu for view: ' + module);
+			console.error(error);
+		}
 	}
 	viewExtensionDefinitions = viewExtensionDefinitions.sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
 
