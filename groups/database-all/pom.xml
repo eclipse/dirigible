@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-groups-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>6.3.15</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,52 +34,52 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-api</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-data-models</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-data-structures</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-persistence</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-sql</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-dynamic</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-changelog</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-databases</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-defined</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-database-data-transfer</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <version>6.3.15</version>
         </dependency>
 
         <!-- Database Implementations -->
