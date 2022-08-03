@@ -61,10 +61,10 @@ exports.refresh = function () {
             return 0;
         })
         .forEach(e => {
-            console.log(`Refreshing ModuleInfo: ${e.name}`);
+            console.debug(`Refreshing ModuleInfo: ${e.name}`);
             exports.get(e.name)
         });
-    console.log("Refreshing ModuleInfo Finished");
+    console.debug("Refreshing ModuleInfo Finished");
 };
 
 exports.clear = function () {
