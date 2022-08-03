@@ -11,7 +11,7 @@
  */
 exports.getTemplate = function () {
     return {
-        "name": "cvsim",
+        "name": "csvim",
         "label": "CSVIM file",
         "extension": "csvim",
         "data": '[]'
