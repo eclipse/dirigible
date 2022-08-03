@@ -439,7 +439,7 @@ projectsView.controller('ProjectsViewController', [
                                 unpublishObj,
                             ]
                         };
-                        if ($scope.genericTemplates.length) {
+                        if ($scope.menuTemplates.length) {
                             menuObj.items.push(generateObj);
                             setMenuTemplateItems(node.id, menuObj, node.data.workspace, node.data.path);
                         }
