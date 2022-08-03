@@ -51,6 +51,7 @@
 	    	<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-commons-test</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
+			<scope>test</scope>
     	</dependency>
     </dependencies>
 
