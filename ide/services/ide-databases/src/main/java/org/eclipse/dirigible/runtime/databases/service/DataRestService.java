@@ -95,7 +95,7 @@ public class DataRestService extends AbstractRestService implements IRestService
 	}
 	
 	/**
-	 * Execute artifact export.
+	 * Execute schema export.
 	 *
 	 * @param type
 	 *            the type
