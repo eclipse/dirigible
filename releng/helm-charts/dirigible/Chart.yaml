@@ -12,7 +12,7 @@ version: #{DirigibleVersion}#
 appVersion: #{DirigibleVersion}#
 
 #Require kubernetes version
-kubeVersion: "> 1.18.20"
+kubeVersion: "> 1.18.20-0"
 
 keywords:
   - kyma
