@@ -54,6 +54,12 @@ public class DummyDataTransferCallbackHandler implements IDataTransferCallbackHa
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void metadataLoadingError(String error) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void metadataLoadingFinished(int count) {

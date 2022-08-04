@@ -153,6 +153,18 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', function (
         window.open(url);
     }, "database.data.export.schema");
 
+    messageHub.subscribe(function (command) {
+        let artifact = command.data.split('.');
+        let url = "/services/v4/ide/metadata/export/" + $scope.database + "/" + $scope.datasource + "/" + artifact[0] + "/" + artifact[1];
+        window.open(url);
+    }, "database.metadata.export.artifact");
+
+    messageHub.subscribe(function (command) {
+        let schema = command.data;
+        let url = "/services/v4/ide/metadata/export/" + $scope.database + "/" + $scope.datasource + "/" + schema;
+        window.open(url);
+    }, "database.metadata.export.schema");
+
     function cleanScope() {
         $scope.result = null;
         $scope.columns = null;

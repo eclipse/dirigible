@@ -73,10 +73,16 @@ public class DatabaseMetadataUtil {
         PersistenceTableModel tableMetadata = new PersistenceTableModel(tableName, new ArrayList<>(), new ArrayList<>());
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetadata = connection.getMetaData();
-            addFields(databaseMetadata, connection, tableMetadata, schemaName);
-            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
-            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            try (ResultSet rs = databaseMetadata.getTables(null, schemaName, tableName, null)) {
+            	if (rs.next()) {
+		            addFields(databaseMetadata, connection, tableMetadata, schemaName);
+		            addPrimaryKeys(databaseMetadata, connection, tableMetadata, schemaName);
+		            addForeignKeys(databaseMetadata, connection, tableMetadata, schemaName);
+		            addTableType(databaseMetadata, connection, tableMetadata, schemaName);
+            	} else {
+            		return null;
+            	}
+            }
             tableMetadata.setSchemaName(schemaName);
         } catch (SQLException e) {
             throw e;
@@ -222,12 +228,17 @@ public class DatabaseMetadataUtil {
     	List<String> tableNames = new ArrayList<String>();
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
-            while (rs.next()) {
-            	tableNames.add(rs.getString("TABLE_NAME"));
+            ResultSet schemas = databaseMetaData.getSchemas(null, schemaName);
+            if (schemas.next()) {
+            		
+	            ResultSet rs = databaseMetaData.getTables(connection.getCatalog(), schemaName, null, new String[]{ISqlKeywords.KEYWORD_TABLE});
+	            while (rs.next()) {
+	            	tableNames.add(rs.getString("TABLE_NAME"));
+	            }
+	            return tableNames;
             }
-            return tableNames;
         }
+        return null;
     }
 
 }

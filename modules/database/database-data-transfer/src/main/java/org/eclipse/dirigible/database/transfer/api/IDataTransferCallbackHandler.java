@@ -28,6 +28,8 @@ public interface IDataTransferCallbackHandler {
 	void transferFailed(String error);
 
 	void metadataLoadingStarted();
+	
+	void metadataLoadingError(String error);
 
 	void metadataLoadingFinished(int count);
 

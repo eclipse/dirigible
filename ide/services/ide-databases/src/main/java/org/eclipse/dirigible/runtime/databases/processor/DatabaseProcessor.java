@@ -35,10 +35,18 @@ import org.eclipse.dirigible.database.databases.api.DatabasesException;
 import org.eclipse.dirigible.database.databases.api.IDatabasesCoreService;
 import org.eclipse.dirigible.database.databases.definition.DatabaseDefinition;
 import org.eclipse.dirigible.database.databases.service.DatabasesCoreService;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableColumnModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableConstraintForeignKeyModel;
+import org.eclipse.dirigible.database.ds.model.DataStructureTableModel;
+import org.eclipse.dirigible.database.ds.model.util.DatabaseModelUtils;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableColumnModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
+import org.eclipse.dirigible.database.persistence.model.PersistenceTableRelationModel;
 import org.eclipse.dirigible.database.transfer.api.DataTransferDefinition;
 import org.eclipse.dirigible.database.transfer.api.DataTransferException;
 import org.eclipse.dirigible.database.transfer.api.IDataTransferCallbackHandler;
 import org.eclipse.dirigible.database.transfer.manager.DataTransferManager;
+import org.eclipse.dirigible.database.transfer.manager.DataTransferReverseTableProcessor;
 import org.eclipse.dirigible.databases.helpers.DatabaseErrorHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseMetadataHelper;
 import org.eclipse.dirigible.databases.helpers.DatabaseQueryHelper;
@@ -541,6 +549,21 @@ public class DatabaseProcessor {
 	
 	public void transferData(DataTransferDefinition definition, IDataTransferCallbackHandler handler) throws DataTransferException {
 		DataTransferManager.transfer(definition, handler);
+	}
+
+	public String exportArtifactMetadata(String type, String name, String schema, String artifact) throws SQLException {
+		DataSource dataSource = getDataSource(type, name);
+		PersistenceTableModel model = DataTransferReverseTableProcessor.reverseTable(dataSource, schema, artifact);
+		if (model != null) {
+			return GsonHelper.GSON.toJson(DatabaseModelUtils.tableModelToStructure(model));
+		}
+		return null;
+	}
+
+	public String exportSchemaMetadata(String type, String name, String schema) throws SQLException {
+		DataSource dataSource = getDataSource(type, name);
+		List<PersistenceTableModel> models = DataTransferReverseTableProcessor.reverseTables(dataSource, schema, null);
+		return GsonHelper.GSON.toJson(DatabaseModelUtils.tableModelsToSchema(schema, models));
 	}
 
 }

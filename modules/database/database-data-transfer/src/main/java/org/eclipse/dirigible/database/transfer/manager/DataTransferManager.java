@@ -28,7 +28,6 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.api.DatabaseModule;
 import org.eclipse.dirigible.database.persistence.model.PersistenceTableModel;
 import org.eclipse.dirigible.database.persistence.processors.table.PersistenceCreateTableProcessor;
-import org.eclipse.dirigible.database.persistence.utils.DatabaseMetadataUtil;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
 import org.eclipse.dirigible.database.transfer.api.DataTransferConfiguration;
@@ -40,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataTransferManager {
-	
 	
 	private static final Logger logger = LoggerFactory.getLogger(DataTransferManager.class);
 	
@@ -73,7 +71,7 @@ public class DataTransferManager {
 			
 			try (Connection targetConnection = target.getConnection()) {
 				
-				List<PersistenceTableModel> tables = reverseTables(source, configuration.getSourceSchema(), handler);
+				List<PersistenceTableModel> tables = DataTransferReverseTableProcessor.reverseTables(source, configuration.getSourceSchema(), handler);
 				if (handler.isStopped()) {
 					return;
 				}
@@ -98,24 +96,6 @@ public class DataTransferManager {
 			throw new DataTransferException(e);
 		}
 		
-	}
-
-	private static List<PersistenceTableModel> reverseTables(DataSource dataSource, String schemaName, IDataTransferCallbackHandler handler) throws SQLException {
-		
-		handler.metadataLoadingStarted();
-		
-		List<PersistenceTableModel> tables = new ArrayList<PersistenceTableModel>();
-		DatabaseMetadataUtil databaseMetadataUtil = new DatabaseMetadataUtil();
-		
-		List<String> tableNames = DatabaseMetadataUtil.getTablesInSchema(dataSource, schemaName);
-		for (String tableName : tableNames) {
-			PersistenceTableModel persistenceTableModel = databaseMetadataUtil.getTableMetadata(tableName, schemaName, dataSource);
-			tables.add(persistenceTableModel);
-		}
-		
-		handler.metadataLoadingFinished(tables.size());
-		
-		return tables;
 	}
 	
 	private static List<PersistenceTableModel> sortTables(List<PersistenceTableModel> tables, IDataTransferCallbackHandler handler) {

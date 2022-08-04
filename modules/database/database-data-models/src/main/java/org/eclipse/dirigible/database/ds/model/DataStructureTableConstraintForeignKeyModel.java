@@ -19,6 +19,27 @@ public class DataStructureTableConstraintForeignKeyModel extends DataStructureTa
 	private String referencedTable;
 	
 	private String[] referencedColumns;
+	
+	
+	
+	/**
+	 * Default constructor
+	 */
+	public DataStructureTableConstraintForeignKeyModel() {
+		super();
+	}
+
+	/**
+	 * Fields constructor
+	 * 
+	 * @param referencedTable the table name
+	 * @param referencedColumns the column names
+	 */
+	public DataStructureTableConstraintForeignKeyModel(String referencedTable, String[] referencedColumns) {
+		super();
+		this.referencedTable = referencedTable;
+		this.referencedColumns = referencedColumns;
+	}
 
 	/**
 	 * Gets the referenced table.

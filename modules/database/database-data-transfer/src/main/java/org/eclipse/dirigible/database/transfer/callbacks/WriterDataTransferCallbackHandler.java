@@ -88,7 +88,12 @@ public class WriterDataTransferCallbackHandler implements IDataTransferCallbackH
 
 	@Override
 	public void metadataLoadingStarted() {
-		write("Loading of metadata has been started...", SEVERITY_INFO);
+		write("Loading of metadata has been started...", SEVERITY_INFO);	
+	}
+	
+	@Override
+	public void metadataLoadingError(String error) {
+		write(error, SEVERITY_ERROR);
 		
 	}
 
