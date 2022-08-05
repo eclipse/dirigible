@@ -22,7 +22,7 @@ public class GraaliumJavascriptRestService extends AbstractRestService implement
 	
 	private static final Logger logger = LoggerFactory.getLogger(GraaliumJavascriptRestService.class.getCanonicalName());
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
-    private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
+    private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam:.*}";
     private final GraaliumJavascriptHandler requestHandler = new GraaliumJavascriptHandler();
 
     @GET

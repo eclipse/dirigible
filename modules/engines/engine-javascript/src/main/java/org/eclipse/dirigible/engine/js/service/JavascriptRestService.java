@@ -46,7 +46,7 @@ public class JavascriptRestService extends AbstractRestService implements IRestS
 	private static final Logger logger = LoggerFactory.getLogger(JavascriptRestService.class.getCanonicalName());
 	private static final String DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME = "DIRIGIBLE_JAVASCRIPT_HANDLER_CLASS_NAME";
 	private static final String HTTP_PATH_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}";
-	private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam}";
+	private static final String HTTP_PATH_WITH_PARAM_MATCHER = "/{projectName}/{projectFilePath:.*\\.js|.*\\.mjs}/{projectFilePathParam:.*}";
 
 	@GET
 	@Path(HTTP_PATH_MATCHER)
