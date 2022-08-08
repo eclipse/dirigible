@@ -734,7 +734,7 @@
 		<caffeine.version>3.1.1</caffeine.version>
 		<liquibase-core.version>4.14.0</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
-		<jquery-ui.version>1.13.0</jquery-ui.version>
+		<jquery-ui.version>1.13.2</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.1.40</sap-theming__theming-base-content.version>
 		<fundamental-styles.version>0.24.0</fundamental-styles.version>
 		<angular-aria.version>1.8.2</angular-aria.version>
