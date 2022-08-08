@@ -54,6 +54,91 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 	}
 	setTimeout(getDatabases, 500);
 
+	var expandColumns = function (evt, data) {
+		let parent = $('.database').jstree().get_node(data.node);
+		let tableParent = $('.database').jstree().get_node(data.node.parent);
+		let schemaParent = $('.database').jstree().get_node(tableParent.parent);
+
+		$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
+		let position = 'last';
+
+		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+			+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
+			.then(function (data) {
+				data.data.columns.forEach(function (column) {
+					let icon = "fa fa-th-large";
+					if (column.key) {
+						icon = "fa fa-key";
+					} else {
+						switch (column.type.toLowerCase()) {
+							case "varchar":
+							case "nvarchar":
+								icon = "fa fa-sort-alpha-asc";
+								break;
+							case "char":
+								icon = "fa fa-font";
+								break;
+							case "date":
+								icon = "fa fa-calendar";
+								break;
+							case "datetime":
+							case "timestamp":
+								icon = "fa fa-clock-o";
+								break;
+							case "smallint":
+							case "tinyint":
+							case "integer":
+								icon = "fa fa-list-ol";
+								break;
+							case "float":
+							case "double":
+							case "decimal":
+								icon = "fa fa-percent"
+								break;
+							case "bigint":
+								icon = "fa fa-signal";
+								break;
+							case "boolean":
+								icon = "fa fa-toggle-on";
+								break;
+							case "clob":
+							case "blob":
+								icon = "fa fa-ellipsis-h";
+								break;
+						}
+					}
+					let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")</i>";
+					let newNode = {
+						id: parent.id + "$" + column.name,
+						state: "open",
+						text: nodeText,
+						column: column,
+						icon: icon
+					};
+					let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
+				})
+			});
+	}
+
+	var expandIndices = function (evt, data) {
+		let parent = $('.database').jstree().get_node(data.node);
+		let tableParent = $('.database').jstree().get_node(data.node.parent);
+		let schemaParent = $('.database').jstree().get_node(tableParent.parent);
+
+		$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
+		let position = 'last';
+
+		$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
+			+ '/' + schemaParent.text + '/' + tableParent.text)
+			.then(function (data) {
+				data.data.indices.forEach(function (index) {
+					let nodeText = index.name;
+					let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-list-ul" };
+					let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
+				})
+			});
+	}
+
 	$scope.refreshDatabase = function () {
 		if ($scope.selectedDatabase && $scope.selectedDatasource) {
 			$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource)
@@ -119,8 +204,161 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												messageHub.post({ data: sqlCommand }, 'database.sql.execute');
 											}.bind(this)
 										};
+
+										// Generate scripts
+										debugger
+										let tree = $('.database').jstree();
+										let columnsMaybe = tree.get_node(node.children[0]);
+										let internalMaybe = null;
+										if (columnsMaybe) {
+											internalMaybe = tree.get_node(columnsMaybe.children[0]);
+										}
+										// Select
+										if ((node.original.type === 'table' || node.original.type === 'base table' || node.original.type === 'view')
+											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
+											ctxmenu.selectScript = {
+												"separator_before": true,
+												"label": "Select",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let columns = tree.get_node(node.children[0]);
+													let sqlCommand = "SELECT ";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+														sqlCommand += ", ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+													sqlCommand += " FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+													$('.database').jstree(true).refresh();
+
+												}.bind(this)
+											};
+										}
+
+										// Insert
+										if ((node.original.type === 'table' || node.original.type === 'base table')
+											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
+											ctxmenu.insertScript = {
+												"separator_before": false,
+												"label": "Insert",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let columns = tree.get_node(node.children[0]);
+													let sqlCommand = "INSERT INTO \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" (";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += tree.get_node(columns.children[i]).original.column.name;
+														sqlCommand += ", ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+													sqlCommand += ") VALUES (";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += "'" + tree.get_node(columns.children[i]).original.column.type;
+														sqlCommand += "', ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+													sqlCommand += ")";
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+													$('.database').jstree(true).refresh();
+
+												}.bind(this)
+											};
+										}
+
+										// Update
+										if ((node.original.type === 'table' || node.original.type === 'base table')
+											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
+											ctxmenu.updateScript = {
+												"separator_before": false,
+												"label": "Update",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let columns = tree.get_node(node.children[0]);
+													let sqlCommand = "UPDATE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\" SET ";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+															" = '" + tree.get_node(columns.children[i]).original.column.type
+														sqlCommand += "', ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 2);
+													sqlCommand += " WHERE ";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+															" = '" + tree.get_node(columns.children[i]).original.column.type
+														sqlCommand += "' AND ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+													$('.database').jstree(true).refresh();
+
+												}.bind(this)
+											};
+										}
+
+										// Delete
+										if ((node.original.type === 'table' || node.original.type === 'base table')
+											&& (internalMaybe !== null && internalMaybe.original !== "Loading Columns..." && internalMaybe.original !== "Loading Indices...")) {
+											ctxmenu.deleteScript = {
+												"separator_before": false,
+												"label": "Delete",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let columns = tree.get_node(node.children[0]);
+													let sqlCommand = "DELETE FROM \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+													sqlCommand += " WHERE ";
+													for (let i = 0; i < columns.children.length; i++) {
+														sqlCommand += tree.get_node(columns.children[i]).original.column.name +
+															" = '" + tree.get_node(columns.children[i]).original.column.type
+														sqlCommand += "' AND ";
+													}
+													sqlCommand = sqlCommand.substring(0, sqlCommand.length - 5);
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+													$('.database').jstree(true).refresh();
+
+												}.bind(this)
+											};
+										}
+
+										// Drop table
+										if (node.original.type === 'table' || node.original.type === 'base table') {
+											ctxmenu.dropScript = {
+												"separator_before": false,
+												"label": "Drop",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+												}.bind(this)
+											};
+										}
+										// Drop view
+										if (node.original.type === 'view') {
+											ctxmenu.dropScript = {
+												"separator_before": false,
+												"label": "Drop",
+												"action": function (data) {
+													let tree = $.jstree.reference(data.reference);
+													let node = tree.get_node(data.reference);
+													let parentNodeName = tree.get_node(node.parent).text;
+													let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
+													messageHub.post({ data: sqlCommand }, 'database.sql.script');
+												}.bind(this)
+											};
+										}
+
+
 										ctxmenu.exportData = {
-											"separator_before": false,
+											"separator_before": true,
 											"label": "Export Data",
 											"action": function (data) {
 												let tree = $.jstree.reference(data.reference);
@@ -141,55 +379,19 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 												messageHub.post({ data: sqlCommand }, 'database.metadata.export.artifact');
 											}.bind(this)
 										};
-										// Drop table
-										if (node.original.type === 'table' || node.original.type === 'base table') {
-											ctxmenu.dropTable = {
-												"separator_before": true,
-												"label": "Drop Table",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													if (confirmRemove("TABLE", parentNodeName + "." + node.original.text)) {
-														let sqlCommand = "DROP TABLE \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-														messageHub.post({ data: sqlCommand }, 'database.sql.execute');
-														$('.database').jstree(true).refresh();
-													}
-												}.bind(this)
-											};
-										}
-										// Drop view
-										if (node.original.type === 'view') {
-											ctxmenu.dropTable = {
-												"separator_before": true,
-												"label": "Drop View",
-												"action": function (data) {
-													let tree = $.jstree.reference(data.reference);
-													let node = tree.get_node(data.reference);
-													let parentNodeName = tree.get_node(node.parent).text;
-													if (confirmRemove("VIEW", node.original.text)) {
-														let sqlCommand = "DROP VIEW \"" + parentNodeName + "\"" + "." + "\"" + node.original.text + "\"";
-														messageHub.post({ data: sqlCommand }, 'database.sql.execute');
-														$('.database').jstree(true).refresh();
-													}
-												}.bind(this)
-											};
-										}
+
 									}
 
 									// Procedure related actions
 									if (node.original.kind === 'procedure') {
 										ctxmenu.dropProcedure = {
 											"separator_before": false,
-											"label": "Drop Procedure",
+											"label": "Drop",
 											"action": function (data) {
 												let tree = $.jstree.reference(data.reference);
 												let node = tree.get_node(data.reference);
-												if (confirmRemove("PROCEDURE", node.original.text)) {
-													let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
-													messageHub.post({ data: sqlCommand }, 'database.sql.execute');
-													$('.database').jstree(true).refresh();
-												}
+												let sqlCommand = "DROP PROCEDURE \"" + node.original.text + "\"";
+												messageHub.post({ data: sqlCommand }, 'database.sql.script');
 											}.bind(this)
 										};
 									}
@@ -233,87 +435,9 @@ angular.module('database', []).controller('DatabaseController', function ($scope
 							})
 							.on('open_node.jstree', function (evt, data) {
 								if (data.node.children.length === 1 && $('.database').jstree().get_node(data.node.children[0]).original === "Loading Columns...") {
-
-									let parent = $('.database').jstree().get_node(data.node);
-									let tableParent = $('.database').jstree().get_node(data.node.parent);
-									let schemaParent = $('.database').jstree().get_node(tableParent.parent);
-
-									$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
-									let position = 'last';
-
-									$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-										+ '/' + schemaParent.text + '/' + tableParent.text + "?kind=" + tableParent.original.kind.toUpperCase())
-										.then(function (data) {
-											data.data.columns.forEach(function (column) {
-												let icon = "fa fa-th-large";
-												if (column.key) {
-													icon = "fa fa-key";
-												} else {
-													switch (column.type.toLowerCase()) {
-														case "varchar":
-														case "nvarchar":
-															icon = "fa fa-sort-alpha-asc";
-															break;
-														case "char":
-															icon = "fa fa-font";
-															break;
-														case "date":
-															icon = "fa fa-calendar";
-															break;
-														case "datetime":
-														case "timestamp":
-															icon = "fa fa-clock-o";
-															break;
-														case "smallint":
-														case "tinyint":
-														case "integer":
-															icon = "fa fa-list-ol";
-															break;
-														case "float":
-														case "double":
-														case "decimal":
-															icon = "fa fa-percent"
-															break;
-														case "bigint":
-															icon = "fa fa-signal";
-															break;
-														case "boolean":
-															icon = "fa fa-toggle-on";
-															break;
-														case "clob":
-														case "blob":
-															icon = "fa fa-ellipsis-h";
-															break;
-													}
-												}
-												let nodeText = column.name + ' - <i style="font-size: smaller;">' + column.type + "(" + (column.size !== undefined ? column.size : (column.length !== undefined ? column.length : "N/A")) + ")</i>";
-												let newNode = {
-													id: parent.id + "$" + column.name,
-													state: "open",
-													text: nodeText,
-													icon: icon
-												};
-												let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
-											})
-										});
+									expandColumns(evt, data);
 								} else if (data.node.children.length === 1 && $('.database').jstree().get_node(data.node.children[0]).original === "Loading Indices...") {
-
-									let parent = $('.database').jstree().get_node(data.node);
-									let tableParent = $('.database').jstree().get_node(data.node.parent);
-									let schemaParent = $('.database').jstree().get_node(tableParent.parent);
-
-									$('.database').jstree("delete_node", $('.database').jstree().get_node(data.node.children[0]));
-									let position = 'last';
-
-									$http.get(databasesSvcUrl + '/' + $scope.selectedDatabase + '/' + $scope.selectedDatasource
-										+ '/' + schemaParent.text + '/' + tableParent.text)
-										.then(function (data) {
-											data.data.indices.forEach(function (index) {
-												let nodeText = index.name;
-												let newNode = { state: "open", "text": nodeText, "id": parent.id + "$" + index.name, "icon": "fa fa-list-ul" };
-												let child = $('.database').jstree("create_node", parent, newNode, position, false, false);
-											})
-										});
+									expandIndices(evt, data);
 								}
 
 								//data.instance.set_icon(data.node, 'fa fa-folder-open-o');
