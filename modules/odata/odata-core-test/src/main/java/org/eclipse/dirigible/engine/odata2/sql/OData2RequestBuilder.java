@@ -327,7 +327,6 @@ public class OData2RequestBuilder {
      * @param method the method
      * @param easyMockSupport the easyMockSupport
      * @param servletRequest the servletRequest
-     * @return the servlet input stream
      * @throws IOException in case of error
      */
     protected void getServletInputStream(final ODataHttpMethod method, final EasyMockSupport easyMockSupport,
