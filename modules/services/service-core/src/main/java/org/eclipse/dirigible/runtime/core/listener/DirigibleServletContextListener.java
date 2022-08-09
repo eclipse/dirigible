@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
  * This class handles the initialization of all modules and all REST API
  * resources.
  *
- * @see DirigibleServletContextEvent
  */
 public class DirigibleServletContextListener implements ServletContextListener {
 
