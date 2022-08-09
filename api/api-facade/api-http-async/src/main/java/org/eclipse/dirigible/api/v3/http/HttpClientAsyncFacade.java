@@ -109,7 +109,6 @@ public final class HttpClientAsyncFacade implements IScriptingFacade {
 	 * @param url            the URL
 	 * @param options            the options
 	 * @param httpResponseCallback            the callback
-	 * @return the async
 	 */
 	public void getAsync(String url, String options, HttpResponseCallback httpResponseCallback) {
 		requestsCounter ++;
