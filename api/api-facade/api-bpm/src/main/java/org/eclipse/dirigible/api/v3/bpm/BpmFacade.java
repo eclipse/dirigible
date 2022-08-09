@@ -113,7 +113,6 @@ public class BpmFacade {
 	 *
 	 * @param taskId the task id
 	 * @param variables serialized as JSON string
-	 * @return the task variables
 	 */
 	public static void getTaskVariables(String taskId, String variables) {
 		BpmModule.getProcessEngineProvider().setTaskVariables(taskId, variables);
